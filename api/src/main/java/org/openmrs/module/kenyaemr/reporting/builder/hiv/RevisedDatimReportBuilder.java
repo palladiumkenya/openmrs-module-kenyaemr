@@ -72,30 +72,12 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
         cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cohortDsd.addDimension("age", ReportUtils.map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
         cohortDsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
-
-        ColumnParameters colInfants = new ColumnParameters(null, "<1", "age=<1");
-
-        ColumnParameters children_1_to_9 = new ColumnParameters(null, "1-9", "age=1-9");
-
         ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
 
         /*DatimQ4 Column parameters*/
 
-        ColumnParameters colInfant = new ColumnParameters(null, "<1", "age=<1");
         ColumnParameters all0_to_2m = new ColumnParameters(null, "0-2", "age=0-2");
         ColumnParameters all2_to_12m = new ColumnParameters(null, "2-12", "age=2-12");
-        ColumnParameters f1_to_9 = new ColumnParameters(null, "1-9, Female", "gender=F|age=1-9");
-        ColumnParameters f10_14 = new ColumnParameters(null, "10-14, Female", "gender=F|age=10-14");
-        ColumnParameters m10_14 = new ColumnParameters(null, "10-14, Male", "gender=M|age=10-14");
-        ColumnParameters f15_19 = new ColumnParameters(null, "15-19, Female", "gender=F|age=15-19");
-        ColumnParameters m15_19 = new ColumnParameters(null, "15-19, Male", "gender=M|age=15-19");
-        ColumnParameters f20_24 = new ColumnParameters(null, "20-24, Female", "gender=F|age=20-24");
-        ColumnParameters m20_24 = new ColumnParameters(null, "20-24, Male", "gender=M|age=20-24");
-        ColumnParameters f25_49 = new ColumnParameters(null, "25-49, Female", "gender=F|age=20-49");
-        ColumnParameters m25_49 = new ColumnParameters(null, "25-49, Male", "gender=M|age=20-49");
-        ColumnParameters f_Over_50 = new ColumnParameters(null, "50+, Female", "gender=F|age=50+");
-        ColumnParameters m_Over_50 = new ColumnParameters(null, "50+, Male", "gender=M|age=50+");
-        ColumnParameters colTot = new ColumnParameters(null, "Total", "");
 
         /*New age disaggregations*/
         ColumnParameters fInfant = new ColumnParameters(null, "<1, Female", "gender=F|age=<1");
@@ -143,19 +125,8 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
                 Arrays.asList(fInfant, mInfant, f1_to4, m1_to4, f5_to9, m5_to9, f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24,
                         f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50,colTotal );
 
-        List<ColumnParameters> datimHTSSelfTestAgeDisaggregation =
-                Arrays.asList(f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39,
-                        m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50 );
-
-        List<ColumnParameters> datimPMTCTANCAgeDisaggregation =
+          List<ColumnParameters> datimPMTCTANCAgeDisaggregation =
                 Arrays.asList(funder10, f10_to14, f15_to19, f20_to24, f25_to29, f30_to34, f35_to39, f40_to44, f45_to49, fAbove50,colTotal);
-
-        List<ColumnParameters> datimOtherReportsAgeDisaggregation = Arrays.asList(all1_to9, all10_to14, all15_to19, all20_to24, allOver25);
-
-        List<ColumnParameters> datimDCMAgeDisaggregation =
-                Arrays.asList(all0_to4, all5_to9, all10_to14, all15_to19, all20_to24, all25_to29, all30_to34, all35_to39, all40_to44, all45_to49, allAbove50);
-
-        List<ColumnParameters> datimPAMAAgeDisaggregation = Arrays.asList(all0_to14);
 
         List<ColumnParameters> datimAgeDisaggregationMonths = Arrays.asList(all0_to_2m, all2_to_12m,colTotal);
 
@@ -163,24 +134,12 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
         String endDateParams = "endDate=${endDate}";
         // 3.1 (On CTX Prophylaxis)
 
-        /*EmrReportingUtils.addRow(cohortDsd, "TX_New", "Started on Art", ReportUtils.map(datimIndicators.startedOnArt(), indParams), allAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"));
-
-        cohortDsd.addColumn("TX_New_TB_co_infected", "Started on ART and TB co-infected", ReportUtils.map(datimIndicators.startedOnARTAndTBCoinfected(), indParams), "");
-        cohortDsd.addColumn("TX_New_pregnant", "Started on ART and pregnant ", ReportUtils.map(datimIndicators.startedOnARTAndPregnant(), indParams), "");*/
-
         //TX_New
         //Disaggregated by Age / Sex
         EmrReportingUtils.addRow(cohortDsd, "TX_New", "Newly Started ART", ReportUtils.map(datimIndicators.newlyStartedARTByAgeSex(), indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
 
-        //Newly Started ART While Confirmed TB and / or TB Treated
-        //cohortDsd.addColumn("TX_New_TB", "Newly Started ART with TB", ReportUtils.map(datimIndicators.newlyStartedARTWithTB(), indParams), "");
-
-        //Newly Started ART While Pregnant
-        //cohortDsd.addColumn("TX_New_Pregnant", "Newly Started ART While Pregnant", ReportUtils.map(datimIndicators.newlyStartedARTWhilePregnant(), indParams), "");
-
         //Newly Started ART While BreastFeeding
         cohortDsd.addColumn("TX_New_BF", "Newly Started ART While Breastfeeding", ReportUtils.map(datimIndicators.newlyStartedARTWhileBF(), indParams), "");
-
 
         //TX_CURR
 
@@ -229,11 +188,6 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
 
         //Newly enrolled to ANC
         cohortDsd.addColumn( "PMTCT_STAT_Denominator", "Newly enrolled to ANC", ReportUtils.map(datimIndicators.clientsNewlyEnrolledToANC(), indParams), "");
-
-        //Number of clients with known HIV status at ANC
-        //EmrReportingUtils.addRow(cohortDsd, "PMTCT_STAT_Known_Status", "Known HIV status at ANC", ReportUtils.map(datimIndicators.clientsWithKnownHIVStatusAtANC(), indParams), datimPMTCTANCAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07","08","09","10","11"));
-        //Number of clients with known HIV status at ANC
-        //EmrReportingUtils.addRow(cohortDsd, "PMTCT_STAT_Unknown_status", "Unknown HIV status at ANC", ReportUtils.map(datimIndicators.clientsWithUnKnownHIVStatusAtANC(), indParams), datimPMTCTANCAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07","08","09","10","11"));
 
         //TX_ML
         //TX_ML_DIED Number of ART patients with no clinical contact since their last expected contact due to Death (confirmed)
@@ -294,18 +248,6 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
         //90-90-90 Viral Suppression
         //TX_PVLS
 
-        //TX_PVLS (Routine) Number of adults and pediatric patients on ART with suppressed viral load results (<1,000 copies/ml) documented in the medical records and/or supporting laboratory results within the past 12 months.
-        //cohortDsd.addColumn("TX_PVLS_SUPP_ROUTINE_ALL", "On ART with suppressed viral load results (<1,000 copies/ml) Routine Test", ReportUtils.map(datimIndicators.onARTSuppRoutineVLLast12Months(), indParams), "");
-
-        //TX_PVLS (Targeted) Number of adults and pediatric patients on ART with suppressed viral load results (<1,000 copies/ml) documented in the medical records and/or supporting laboratory results within the past 12 months.
-        //cohortDsd.addColumn("TX_PVLS_SUPP_TARGETED_ALL", "On ART with suppressed viral load results (<1,000 copies/ml) Targeted Test", ReportUtils.map(datimIndicators.onARTSuppTargetedVLLast12Months(), indParams), "");
-
-        //TX_PVLS (Undocumented) Number of adults and pediatric patients on ART with suppressed viral load results (<1,000 copies/ml) documented in the medical records and/or supporting laboratory results within the past 12 months.
-        //cohortDsd.addColumn("TX_PVLS_SUPP_UNDOCUMENTED_ALL", "Number of patients on ART with suppressed viral load results (<1,000 copies/ml) Undocumented Test", ReportUtils.map(datimIndicators.onARTSuppUndocumentedVLLast12Months(), indParams), "");
-
-        //TX_PVLS (Routine) Number of adults and pediatric patients on ART with suppressed viral load results (<1,000 copies/ml) documented in the medical records and/or supporting laboratory results within the past 12 months.
-        //cohortDsd.addColumn("TX_PVLS_SUPP_ROUTINE_ALL", "On ART with suppressed viral load results (<1,000 copies/ml) Routine Test", ReportUtils.map(datimIndicators.onARTSuppRoutineVLLast12Months(), indParams), "");
-
         //TX_PVLS Number of adults and pediatric patients on ART with suppressed viral load results (<1,000 copies/ml) within the past 12 months. Disaggregated by Age/Sex Routine
         EmrReportingUtils.addRow(cohortDsd, "TX_PVLS_SUPP_ROUTINE", "On ART with suppressed routine viral load results (<1,000 copies/ml)", ReportUtils.map(datimIndicators.onARTSuppRoutineVLAgeSex(),indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
 
@@ -359,14 +301,6 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
 
         //TX_PVLS Number of patients on ART with  viral load results  within the past 12 months. Disaggregated by BF / Undocumented
         cohortDsd.addColumn("TX_PVLS_DENOMINATOR_BF_UNDOCUMENTED", "On ART with  viral load results  BF undocumented Test", ReportUtils.map(datimIndicators.breastfeedingOnARTUndocumentedVLLast12Months(), indParams), "");
-
-        //Disaggregated by Targeted
-        //TX_PVLS Denominator viral load result last 12 months with Targeted test result
-        //cohortDsd.addColumn("TX_PVLS_DENOMINATOR_TARGETED_ALL", "On ART within last 12 Months and viral load Targeted test result", ReportUtils.map(datimIndicators.onARTTargetedVLLast12Months(), indParams), "");
-
-        //Disaggregated by Undocumented
-        //TX_PVLS Denominator viral load result last 12 months with Undocumented test result
-        //cohortDsd.addColumn("TX_PVLS_DENOMINATOR_UNDOCUMENTED_ALL", "On ART within last 12 Months and viral load Undocumented test result", ReportUtils.map(datimIndicators.totalARTWithUndocumentedVLLast12Months(), indParams), "");
 
         //HTS_INDEX_OFFERED Index services
         EmrReportingUtils.addRow(cohortDsd, "HTS_INDEX_OFFERED", "Indexes offered Index testing services", ReportUtils.map(datimIndicators.offeredIndexServices(),indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
@@ -486,23 +420,6 @@ public class RevisedDatimReportBuilder extends AbstractReportBuilder {
 
         //Tested Positive at PITC Other
         EmrReportingUtils.addRow(cohortDsd, "HTS_TST_Other_Positive", "Tested Positive at PITC Other", ReportUtils.map(datimIndicators.testedPositiveAtPITCOther(), indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
-
-        /* TX_RET has been retired
-        //TX_RET Number of mothers who are still alive and on treatment at 12 months after initiating ART
-        cohortDsd.addColumn("TX_RET_PREGNANT", "Mothers pregnant and Still on ART upto 12 months since start", ReportUtils.map(datimIndicators.alivePregnantOnARTLast12Months(), indParams), "");
-        cohortDsd.addColumn("TX_RET_BREASTFEEDING", "Mothers breastfeeding and still on ART for 12 months since start", ReportUtils.map(datimIndicators.aliveBfOnARTLast12Months(), indParams), "");
-        //12 months retention Disaggregated by age/gender
-        EmrReportingUtils.addRow(cohortDsd, "TX_RET_ALIVE", "12 Months ART retention by Age / sex", ReportUtils.map(datimIndicators.aliveOnlyOnARTInLast12MonthsByAgeSex(), indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
-        //TX_RET Denominator Started ART last 12 months and breastfeeding
-        cohortDsd.addColumn("TX_RET_BF", "Started ART within last 12 Months and Breastfeeding", ReportUtils.map(datimIndicators.totalBFStartedARTLast12Months(), indParams), "");
-        //TX_RET Denominator Started ART last 12 months and pregnant
-        cohortDsd.addColumn("TX_RET_DENOMINATOR_PREGNANT", "Started ART with past 12 Months and pregnant", ReportUtils.map(datimIndicators.totalPregnantStartedARTLast12Months(), indParams), "");
-        //TX_RET (Denominator) All started ART last 12 months disaggregated by Age/sex
-        EmrReportingUtils.addRow(cohortDsd, "TX_RET_ART_ALL", "All started ART with last 12 Months by Age / sex", ReportUtils.map(datimIndicators.allOnARTLast12MonthsByAgeSex(), indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
-        */
-
-        //HTS_RECENT Persons aged ≥15 years newly diagnosed with HIV-1 infection who have a test for recent infection
-        //EmrReportingUtils.addRow(cohortDsd, "HTS_RECENT", "Persons aged ≥15 years newly diagnosed with HIV-1 infection who have a test for recent infection", ReportUtils.map(datimIndicators.recentHIVInfections(),indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
 
         return cohortDsd;
 

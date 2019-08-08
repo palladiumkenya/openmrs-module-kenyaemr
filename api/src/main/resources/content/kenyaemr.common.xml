@@ -386,18 +386,6 @@
 		<property name="template" value="kenyaemr:moh731_Greencard_Revised_Template.xls" />
 	</bean>
 
-	<!-- introduction of viral load alert-->
-	<!--<bean id="kenyaemr.etl.common.report.datim" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
-		<property name="targetUuid" value="ed84df22-6f07-486e-8f64-749decb08365" />
-		<property name="name" value="DATIM Report" />
-		<property name="description" value="DATIM Report" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.reports" />
-			</set></property>
-		<property name="template" value="kenyaemr:datim_report_template.xls" />
-	</bean>-->
-
 	<!-- Datim Revised report-->
 	<bean id="kenyaemr.etl.common.report.datim" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="d6e5dd4c-e3f5-11e8-9f32-f2801f1b9fd1" />
