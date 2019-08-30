@@ -17,37 +17,13 @@
     <script type="text/javascript">
 
         jQuery(function () {
-            var contacted_linked = "<lookup expression="fn.latestObs(159811).getValueCoded()"/>";
-            //linked status selected
-            jq('#contact-status select').change(linkStatusSelected);
-            jq("#linkage").hide();
-            //Auto populate if previously contacted
-            if (contacted_linked == 1065) {
-                jq("#linkage").show();
-            }else{
-                jq("#linkage").hide()
-            }
+
             //Default location
-            jq('#default-location').click(defaultLocationChange);
+            jq('#default-location').click(defaultLocationChange);//Default location
+            jq('#location-referred').click(defaultReferralLocationChange);      //Default referred locations
 
         });
-        function linkStatusSelected() {
-            var linkStatusSelected = getField('contact-status.value').val();
-            if (linkStatusSelected == 1065 ){
-                jq("#linkage").show();
-            }
-            if (linkStatusSelected == 1066 ){
-                jq("#linkage").hide()
-                clearHiddenSections(jq('#facility'));
-                clearHiddenSections(jq('.upn'));
-                clearHiddenSections(jq('.hcw-handedto'));
-                clearHiddenSections(jq('.hcw-cadre'));
-                clearHiddenSections(jq('.linkage-date'));
-                clearHiddenSections(jq('.art-date'));
-                clearHiddenSections(jq('.remarks'));
-            }
-        }
-        //Ckeckbox to prepopulate default location
+        //Checkbox to prepopulate default location
         var defaultLocationChange = function () {
             var val = jq(this).val();
             var default_location = "<lookup expression="kenyaemr.location()" />";
@@ -58,9 +34,19 @@
                 clearHiddenSections(jq('#default-location'));
             }
         }
+        //Checkbox to prepopulate default referrals location
+        var defaultReferralLocationChange = function () {
+            var val = jq(this).val();
+            var default_referral_location = "<lookup expression="kenyaemr.location()" />";
+            if (jq(this).is(':checked')){
+                getField('referred-facility.value').val(default_referral_location);
+            }else{
+                getField('referred-facility.value').val("");
+                clearHiddenSections(jq('#location-referred'));
+            }
+        }
         //Before Submit
         beforeSubmit.push(function() {
-            var PATIENT_UPN = "<lookup expression="patient.getPatientIdentifier(3)"/>";
             var upn = jq('#hiv-id input').val();
 
             if(upn != null &amp;&amp; upn != "") {
@@ -103,25 +89,25 @@
     </div>
 
     <div class="ke-form-content">
-
-        <fieldset>
-            <legend>Patient Tracing</legend>
-
-            <table id="tracing-patient" style="display: inline-block">
-
-                    <tr>
-                        <td>Contact type:
-                            <obs id="contact-type" conceptId="164966"
-                                 answerConceptIds="1650AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,164965"
-                                 answerLabels="Phone tracing,Physical tracing"
-                                 style="dropdown" />
-                        </td>
-                     <td> &#160;&#160;&#160;Status : &#160;&#160;&#160;
-                            <obs id="contact-status" conceptId="159811AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 style="dropdown" answerLabels="Contacted and linked,Contacted but not linked"/>
-                        </td>
-                    </tr>
+        <fieldset id="referral">
+            <legend>Referral</legend>
+            <table id="tbl-referral">
+                <tr>
+                    <td>&#160;&#160;&#160;&#160;&#160;&#160;Facility referred to: </td>
+                    <td> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs id="referred-facility" conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+                        <span class="value"><recentObs conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="facility-referred" id="location-referred" />
+                        This facility
+                    </td>
+                    <td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Date to be enrolled : </td>
+                    <td>
+                        <obs conceptId="161561AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="date-referred"   allowFutureDates="true" />
+                        <span class="value"><recentObs conceptId="161561AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                    </td>
+                </tr>
             </table>
         </fieldset>
         <fieldset id="linkage">

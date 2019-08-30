@@ -34,8 +34,8 @@
 				<ref bean="kenyaemr.common.form.htsinitialtest"/>
 				<ref bean="kenyaemr.common.form.htsconfirmatorytest"/>
 				<ref bean="kenyaemr.common.form.referralAndLinkage"/>
-				<ref bean="prep.prep.form.behaviorRiskAssessment"/>
-				<ref bean="kenyaemr_hiv_testing.common.form.htsScreeningForm"/>
+				<ref bean="kenyaemr.common.form.htsClientTracing"/>
+				<!--<ref bean="prep.prep.form.behaviorRiskAssessment"/>-->
 			</set>
 		</property>
 	</bean>
@@ -155,7 +155,7 @@
 				<ref bean="kenyaemr.app.clinician" />
 				<ref bean="kenyaemr.app.chart" />
 				<ref bean="kenyaemr.app.hts" />
-				<ref bean="kenyaemr.app.prep" />
+				<!--<ref bean="kenyaemr.app.prep" />-->
 			</set>
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png" />
@@ -312,7 +312,6 @@
 				<ref bean="kenyaemr.app.clinician" />
 				<ref bean="kenyaemr.app.chart" />
 				<ref bean="kenyaemr.app.hts" />
-				<ref bean="kenyaemr.app.prep" />
 			</set>
 		</property>
 		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.hiv.hts.PatientsEligibleForHtsLinkageAndReferralCalculation" />
@@ -321,8 +320,24 @@
 		<property name="order" value="201002" />
 	</bean>
 
+	<!-- HTS Client tracing form -->
+	<bean id="kenyaemr.common.form.htsClientTracing" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="15ed03d2-c972-11e9-a32f-2a2ae2dbcce4" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:hts/htsClientTracing.html" />
+		<property name="order" value="201003" />
+	</bean>
+
 	<!-- Prep behavior risk assessment form -->
-	<bean id="prep.prep.form.behaviorRiskAssessment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+	<!--<bean id="prep.prep.form.behaviorRiskAssessment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="40374909-05fc-4af8-b789-ed9c394ac785" />
 		<property name="apps">
 			<set>
@@ -334,7 +349,7 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="prep:prep/behaviorRiskAssessment.html" />
-	</bean>
+	</bean>-->
 
 	<!-- HTS screening form -->
 	<bean id="kenyaemr_hiv_testing.common.form.htsScreeningForm" class="org.openmrs.module.kenyacore.form.FormDescriptor">
@@ -422,6 +437,18 @@
 		<!--<property name="template" value="kenyaemr:moh731_greencard_template.xls" />-->
 		<property name="template" value="kenyaemr:moh731_Greencard_Revised_Template.xls" />
 	</bean>
+
+	<!-- introduction of viral load alert-->
+	<!--<bean id="kenyaemr.etl.common.report.datim" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="ed84df22-6f07-486e-8f64-749decb08365" />
+		<property name="name" value="DATIM Report" />
+		<property name="description" value="DATIM Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:datim_report_template.xls" />
+	</bean>-->
 
 	<!-- Datim Revised report-->
 	<bean id="kenyaemr.etl.common.report.datim" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
