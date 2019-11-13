@@ -15,6 +15,9 @@ import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.Filters;
 import org.openmrs.Program;
+import org.openmrs.Patient;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 
@@ -33,6 +36,7 @@ public class EligibleForOtzProgramCalculation extends AbstractPatientCalculation
 	 */
 	@Override
 	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> params, PatientCalculationContext context) {
+		PatientService patientService = Context.getPatientService();
 		CalculationResultMap ret = new CalculationResultMap();
 		Set<Integer> alive = Filters.alive(cohort, context);
 		Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
@@ -41,8 +45,9 @@ public class EligibleForOtzProgramCalculation extends AbstractPatientCalculation
 
 
 		for (int ptId : cohort) {
+			Patient patient = patientService.getPatient(ptId);
 			boolean onOtz = false;
-			if(inOtzProgram.contains(ptId)) {
+			if(inOtzProgram.contains(ptId) && patient.getAge() >=10 && patient.) {
 				onOtz = true;
 			}
 			ret.put(ptId, new BooleanResult(onOtz, this));

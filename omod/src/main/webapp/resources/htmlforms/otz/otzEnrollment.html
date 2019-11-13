@@ -15,9 +15,51 @@
 	
 	<script type="text/javascript">
 		jQuery(function($){
+			jq('#previous-module').hide();
+			jq('#yes-label').hide();
+			jq('#yes-field').hide();
+			jq('#transfer-in-status :input[type=radio]').click(isTransferIn);
 
 		});
+		function isTransferIn() {
+			var val = jq(this).val();
+			if(val ==1065) {
+				jq('#yes-label').show();
+				jq('#yes-field').show();
+				jq('#previous-module').show();
+
+			}else {
+				jq('#yes-label').hide();
+				jq('#yes-field').hide();
+				jq('#previous-module').hide();
+			}
+
+		}
 	</script>
+	<style>
+		.simple-table {
+			border: solid 1px #DDEEEE;
+			border-collapse: collapse;
+			border-spacing: 0;
+			font: normal 13px Arial, sans-serif;
+		}
+
+		.simple-table thead th {
+			background-color: #DDEFEF;
+			border: solid 1px #DDEEEE;
+			color: #336B6B;
+			padding: 10px;
+			text-align: left;
+			text-shadow: 1px 1px 1px #fff;
+		}
+
+		.simple-table td {
+			border: solid 1px #DDEEEE;
+			color: #333;
+			padding: 10px;
+			text-shadow: 1px 1px 1px #fff;
+		}
+	</style>
 
 	<div class="ke-form-header">
 		<table width="100%">
@@ -34,11 +76,53 @@
 	<div class="ke-form-content">
 		<fieldset>
 			<legend>Transfer In</legend>
+			<table class="simple-table">
+				<tr>
+					<td>Is client transfer in?</td>
+					<td>
+						<obs
+								id="transfer-in-status" conceptId="160563" style="radio"
+								answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								answerLabels="Yes,No"
+								required="true"
+						/>
+					</td>
+					<td id="yes-label">If Yes,date initially enrolled to OTZ</td>
+					<td id="yes-field"><obs conceptId="160534AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="transfer-in-date"/></td>
+				</tr>
+			</table>
 
 		</fieldset>
 	</div>
 
-	<div class="ke-form-content">
+	<div class="ke-form-content" id="previous-module">
+		<fieldset>
+			<legend>Modules previously covered</legend>
+		<table class="simple-table" id="assessment-questions">
+			<tr>
+				<td id="modules-previously-covered-label">Modules previously covered?</td>
+				<td id="modules-previously-covered">
+
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Orientation" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="159935AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Participation" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="164997"
+						 answerLabel="OTZ Leadership" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160588AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Making decision for the future" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="164401AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Transition to Adult care" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="161888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Treatment literacy" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="161888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ SRH" style="checkbox" /><br/>
+					<obs conceptId="1743AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="161888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						 answerLabel="OTZ Beyond the 3rd 90" style="checkbox" /><br/>
+				</td>
+			</tr>
+		</table>
+		</fieldset>
 
 	</div>
 
