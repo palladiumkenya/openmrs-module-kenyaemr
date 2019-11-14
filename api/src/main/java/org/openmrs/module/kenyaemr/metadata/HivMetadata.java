@@ -105,7 +105,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(form("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.HIV_CONSULTATION, "1", _Form.ENHANCED_ADHERENCE_SCREENING));
 		install(form("CCC Defaulter Tracing", "Defaulter Tracing Form", _EncounterType.CCC_DEFAULTER_TRACING, "1", _Form.CCC_DEFAULTER_TRACING));
 
-		install(patientIdentifierType("Unique Patient Number", "Assigned to every HIV patient", "^[0-9]{10,11}$", "Facility code followed by sequential number",
+		install(patientIdentifierType("Unique Patient Number", "Assigned to every HIV patient", null, "Facility code followed by sequential number",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.UNIQUE_PATIENT_NUMBER));
 
 		install(program("HIV", "Treatment for HIV-positive patients", Dictionary.HIV_PROGRAM, _Program.HIV));
