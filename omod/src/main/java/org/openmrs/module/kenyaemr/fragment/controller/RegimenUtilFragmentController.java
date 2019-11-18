@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.fragment.controller;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -379,7 +381,7 @@ public class RegimenUtilFragmentController {
 					 enrollmentDate = programs.get(0).getDateEnrolled();
 				 }
 				// Don't allow regimen start date to be before enrollment date
-				if(changeDate.before(enrollmentDate) ) {
+				if(DateUtils.truncate(changeDate, Calendar.DAY_OF_MONTH).before(DateUtils.truncate(enrollmentDate, Calendar.DAY_OF_MONTH)) ) {
 					errors.rejectValue("changeDate", "Start date can't be before enrollment date");
 				}
 
