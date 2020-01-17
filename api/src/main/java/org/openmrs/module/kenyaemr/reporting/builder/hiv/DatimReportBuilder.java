@@ -15,6 +15,7 @@ import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.DurationToNextAppointmentDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
@@ -192,6 +193,27 @@ public class DatimReportBuilder extends AbstractReportBuilder {
 
         //Number of Breastfeeding mothers with HIV infection receiving antiretroviral therapy (ART)
         cohortDsd.addColumn("TX_CURR_BF", "Breast Feeding mothers with HIV receiving ART", ReportUtils.map(datimIndicators.bfMothersCurrentlyOnART(), indParams), "");
+
+        // ADDED BY BEN
+
+        //One month before next appointment
+        cohortDsd.addColumn("TX_CURR_ONE_MONTH_DRUGS", "One month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTOneMonthDrugsDispensed(durationMapper("1 Month","0 and 30")), indParams), "");
+
+        //two month before next appointment
+        cohortDsd.addColumn("TX_CURR_TWO_MONTHS_DRUGS", "Two month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTTwoMonthsDrugsDispensed(durationMapper("2 Month","31 and 60")), indParams), "");
+
+        //three month before next appointment
+        cohortDsd.addColumn("TX_CURR_THREE_MONTHS_DRUGS", "Three month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTThreeMonthsDrugsDispensed(durationMapper("3 Month","61 and 90")), indParams), "");
+
+        //four month before next appointment
+        cohortDsd.addColumn("TX_CURR_FOUR_MONTHS_DRUGS", "Four month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTFourMonthsDrugsDispensed(durationMapper("4 Month","91 and 120")), indParams), "");
+
+        //five month before next appointment
+        cohortDsd.addColumn("TX_CURR_FIVE_MONTHS_DRUGS", "Five month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTFiveMonthsDrugsDispensed(durationMapper("5 Month","121 and 150")), indParams), "");
+
+        //six month before next appointment
+        cohortDsd.addColumn("TX_CURR_SIX_MONTHS_DRUGS", "Six month before next appointment", ReportUtils.map(datimIndicators.currentlyOnARTSixMonthsDrugsDispensed(durationMapper("6 Month","151 and 180")), indParams), "");
+
 
         //PMTCT_ART
 
@@ -493,6 +515,11 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         //EmrReportingUtils.addRow(cohortDsd, "HTS_RECENT", "Persons aged ≥15 years newly diagnosed with HIV-1 infection who have a test for recent infection", ReportUtils.map(datimIndicators.recentHIVInfections(),indParams), datimNewAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12","13","14","15","16","17","18","19","20","21","22","23","24","25"));
 
         return cohortDsd;
+
+    }
+    private DurationToNextAppointmentDataDefinition durationMapper (String name, String duration){
+        DurationToNextAppointmentDataDefinition durationTonextVisit = new DurationToNextAppointmentDataDefinition(name,duration);
+        return durationTonextVisit;
 
     }
 }
