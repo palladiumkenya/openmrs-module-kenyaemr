@@ -302,7 +302,7 @@ kenyaemrApp.controller('PeerSearchResults', ['$scope', '$http','$q','$timeout', 
      * Refreshes the person search
      */
     $scope.refresh = function() {
-        $http.get(ui.fragmentActionLink('kenyaemr', 'search', 'patients', { appId: $scope.appId, q: $scope.query, which: $scope.which })).
+        $http.get(ui.fragmentActionLink('kenyaemr', 'search', 'peerEducators', { appId: $scope.appId, q: $scope.query, which: $scope.which })).
         success(function(data) {
             $scope.results = data;
 
