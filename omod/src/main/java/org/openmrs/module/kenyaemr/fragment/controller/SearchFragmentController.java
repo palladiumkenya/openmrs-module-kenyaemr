@@ -473,7 +473,7 @@ public class SearchFragmentController {
 
 	private boolean patientIsPeerEducator(Patient patient) {
 		for (Relationship relationship : Context.getPersonService().getRelationshipsByPerson(patient)) {
-			if (relationship.getRelationshipType().getaIsToB().equals("Peer-educator")) {
+			if (relationship.getPersonA().equals(patient) && relationship.getRelationshipType().getaIsToB().equals("Peer-educator")) {
 				return true;
 			}
 		}
