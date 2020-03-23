@@ -81,6 +81,8 @@ public class EditPatientFragmentController {
 		model.addAttribute("civilStatusConcept", Dictionary.getConcept(Dictionary.CIVIL_STATUS));
 		model.addAttribute("occupationConcept", Dictionary.getConcept(Dictionary.OCCUPATION));
 		model.addAttribute("educationConcept", Dictionary.getConcept(Dictionary.EDUCATION));
+		model.addAttribute("countryOfResidenceConcept", Dictionary.getConcept(Dictionary.COUNTRY_OF_RESIDENCE));
+
 
 		// create list of counties
 
@@ -207,6 +209,12 @@ public class EditPatientFragmentController {
 		private Concept maritalStatus;
 		private Concept occupation;
 		private Concept education;
+		private Concept countryOfResidence;
+		private Concept dateOfArrivalInKenya;
+		private Concept airline;
+		private Concept flightNumber;
+		private Concept seatNumber;
+		private Concept destinationCity;
 		private Concept inSchool;
 		private Concept orphan;
 		private Obs savedMaritalStatus;
@@ -214,6 +222,9 @@ public class EditPatientFragmentController {
 		private Obs savedEducation;
 		private Obs savedInSchool;
 		private Obs savedOrphan;
+		private Obs savedCountryOfResidence;
+		private Obs savedAirline;
+		private Obs savedFlightNumber;
 		private Boolean dead = false;
 		private Date deathDate;
 		private String nationalIdNumber;
@@ -315,6 +326,17 @@ public class EditPatientFragmentController {
 			if (savedOrphan != null) {
 				orphan = savedOrphan.getValueCoded();
 			}
+			savedCountryOfResidence = getLatestObs(patient, Dictionary.COUNTRY_OF_RESIDENCE);
+			if (savedCountryOfResidence != null) {
+				countryOfResidence = savedCountryOfResidence.getValueCoded();
+			}
+
+			savedAirline = getLatestObs(patient, Dictionary.AIRLINE);
+			if (savedAirline != null) {
+				airline = savedAirline.getValueCoded();
+			}
+
+
 
 		}
 
@@ -498,6 +520,9 @@ public class EditPatientFragmentController {
 			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.EDUCATION), savedEducation, education);
 			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.IN_SCHOOL), savedInSchool, inSchool);
 			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.ORPHAN), savedOrphan, orphan);
+			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.COUNTRY_OF_RESIDENCE), savedCountryOfResidence, countryOfResidence);
+			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.AIRLINE), savedAirline, airline);
+			handleOncePerPatientObs(ret, obsToSave, obsToVoid, Dictionary.getConcept(Dictionary.FLIGHT_NUMBER), savedFlightNumber, flightNumber);
 
 
 			for (Obs o : obsToVoid) {
@@ -729,6 +754,56 @@ public class EditPatientFragmentController {
 		public Concept getEducation() {
 			return education;
 		}
+
+		public Concept getFlightNumber() {
+			return flightNumber;
+		}
+
+		public Concept getSeatNumber() {
+			return seatNumber;
+		}
+
+		public void setFlightNumber(Concept flightNumber) {
+			this.flightNumber = flightNumber;
+		}
+
+		public void setSeatNumber(Concept seatNumber) {
+			this.seatNumber = seatNumber;
+		}
+
+		public Concept getCountryOfResidence() {
+			return countryOfResidence;
+		}
+
+		public void setCountryOfResidence(Concept countryOfResidence) {
+			this.countryOfResidence = countryOfResidence;
+		}
+
+		public Concept getDateOfArrivalInKenya() {
+			return dateOfArrivalInKenya;
+		}
+
+		public void setDateOfArrivalInKenya(Concept dateOfArrivalInKenya) {
+			this.dateOfArrivalInKenya = dateOfArrivalInKenya;
+		}
+
+		public Concept getAirline() {
+			return airline;
+		}
+
+		public void setAirline(Concept airline) {
+			this.airline = airline;
+		}
+
+		public Concept getDestinationCity() {
+			return destinationCity;
+		}
+
+		public void setDestinationCity(Concept destinationCity) {
+			this.destinationCity = destinationCity;
+		}
+
+
 
 		/**
 		 * @param education the education to set

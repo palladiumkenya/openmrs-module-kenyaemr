@@ -12,17 +12,19 @@
 
     def otherDemogFieldRows = [
             [
-                    [object: command, property: "maritalStatus", label: "Marital status", config: [style: "list", options: maritalStatusOptions]],
-                    [object: command, property: "occupation", label: "Occupation", config: [style: "list", options: occupationOptions]],
-                    [object: command, property: "education", label: "Education", config: [style: "list", options: educationOptions]]
+                    [object: command, property: "countryOfResidence", label: "Country of residence", config: [style: "list", options: maritalStatusOptions]],
+                    [object: command, property: "dateOfArrivalInKenya", label: "Date of arrival in Kenya", config: [style: "list", options: occupationOptions]],
+                    [object: command, property: "airline", label: "Airline", config: [style: "list", options: educationOptions]],
+                    [object: command, property: "flightNumber", label: "Flight number:", config: [style: "list", options: educationOptions]],
+                    [object: command, property: "seatNumber", label: "Seat number(s):", config: [style: "list", options: educationOptions]]
             ]
     ]
-    def deathFieldRows = [
+    def moreDemoFieldRows = [
             [
-                    [object: command, property: "dead", label: "Deceased"],
-                    [object: command, property: "deathDate", label: "Date of death"]
+                    [object: command, property: "destinationCity", label: "Destination city in Kenya:", config: [style: "list", options: educationOptions]],
             ]
     ]
+
 
     def nextOfKinFieldRows = [
             [
@@ -74,34 +76,6 @@
         </div>
 
         <fieldset>
-            <legend>ID Numbers</legend>
-
-            <table>
-                <% if (command.inHivProgram) { %>
-                <tr>
-                    <td class="ke-field-label">Unique Patient Number</td>
-                    <td>${
-                            ui.includeFragment("kenyaui", "widget/field", [object: command, property: "uniquePatientNumber"])}</td>
-                    <td class="ke-field-instructions">(HIV program<% if (!command.uniquePatientNumber) { %>, if assigned<%
-                            } %>)</td>
-                </tr>
-                <% } %>
-                <tr>
-                    <td class="ke-field-label">Patient Clinic Number</td>
-                    <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "patientClinicNumber"])}</td>
-                    <td class="ke-field-instructions"><% if (!command.patientClinicNumber) { %>(if available)<%
-                        } %></td>
-                </tr>
-                <tr>
-                    <td class="ke-field-label">National ID Number</td>
-                    <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "nationalIdNumber"])}</td>
-                    <td class="ke-field-instructions"><% if (!command.nationalIdNumber) { %>(If the patient is below 18 years of age, enter the guardian`s National Identification Number if available.)<% } %></td>
-                </tr>
-            </table>
-
-        </fieldset>
-
-        <fieldset>
             <legend>Demographics</legend>
 
             <% nameFields.each { %>
@@ -139,13 +113,6 @@
                     </td>
                 </tr>
             </table>
-
-            <% otherDemogFieldRows.each { %>
-            ${ui.includeFragment("kenyaui", "widget/rowOfFields", [fields: it])}
-            <% } %>
-            <% deathFieldRows.each { %>
-            ${ui.includeFragment("kenyaui", "widget/rowOfFields", [fields: it])}
-            <% } %>
 
         </fieldset>
 
@@ -188,23 +155,15 @@
         </fieldset>
 
         <fieldset>
-            <legend>Next of Kin Details</legend>
+            <legend>Contact Person Details</legend>
             <table>
                 <tr>
                     <td class="ke-field-label" style="width: 260px">Name</td>
-                    <td class="ke-field-label" style="width: 260px">Relationship</td>
                 </tr>
 
                 <tr>
                     <td style="width: 260px">${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "nameOfNextOfKin"])}</td>
-                    <td style="width: 260px">
-                        <select name="nextOfKinRelationship">
-                            <option></option>
-                            <%nextOfKinRelationshipOptions.each { %>
-                            <option value="${it}">${it}</option>
-                            <%}%>
-                        </select>
-                    </td>
+
                 </tr>
             </table>
             <% nextOfKinFieldRows.each { %>

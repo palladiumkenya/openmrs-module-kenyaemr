@@ -180,6 +180,21 @@ public class PatientWrapper extends AbstractPatientWrapper {
 	}
 
 	/**
+	 * Gets patient's  phone contact
+	 * @return phone contact
+	 */
+	public String getPhoneContact() {
+		return getAsAttribute(CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+	}
+	/**
+	 * Sets patient's phone contact
+	 */
+	public void setPhoneContact(String contact) {
+		setAsAttribute(CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT, contact);
+	}
+
+
+	/**
 	 * Gets patient's alternate phone contact
 	 * @return phone contact
 	 */
@@ -192,6 +207,9 @@ public class PatientWrapper extends AbstractPatientWrapper {
 	public void setAlternativePhoneContact(String contact) {
 		setAsAttribute(CommonMetadata._PersonAttributeType.ALTERNATE_PHONE_CONTACT, contact);
 	}
+
+
+
 	/**
 	 * Gets patient's alternate phone contact
 	 * @return phone contact
