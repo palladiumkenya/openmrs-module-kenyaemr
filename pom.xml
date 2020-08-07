@@ -68,6 +68,7 @@
         <reportingVersion>0.9.8.1</reportingVersion>
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
         <uiframeworkVersion>3.8</uiframeworkVersion>
+        <registrationCoreVersion>1.9.0</registrationCoreVersion>
         <!--
         <kenyaemrChartsVersion>1.0</kenyaemrChartsVersion>
         <kenyaemrHivTestingVersion>1.0</kenyaemrHivTestingVersion>-->
@@ -283,6 +284,13 @@
             <version>1.9.13</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>registrationcore-api</artifactId>
+            <version>${registrationCoreVersion}</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
