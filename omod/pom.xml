@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>kenyaemr</artifactId>
-		<version>17.1.0</version>
+		<version>17.2.0</version>
 	</parent>
 
 	<artifactId>kenyaemr-omod</artifactId>

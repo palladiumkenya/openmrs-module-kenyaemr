@@ -18,7 +18,7 @@ public class EmrConstants {
 	 * Module ID
 	 */
 	public static final String MODULE_ID = "kenyaemr";
-
+	public static final String KP_MODULE_ID = "kenyakeypop";
 	/**
 	 * Application IDs
 	 */
@@ -37,6 +37,7 @@ public class EmrConstants {
 	public static final String APP_DEFAULTER_TRACING = MODULE_ID + ".defaultertracing";
 	public static final String APP_HIV_TESTING = MODULE_ID + ".hivtesting";
 	public static final String APP_PREP = MODULE_ID + ".prep";
+	public static final String APP_KP = KP_MODULE_ID + ".keypopulation.provider";
 
 	/**
 	 * Global property names
@@ -47,11 +48,12 @@ public class EmrConstants {
 	public static final String GP_SUPPORT_EMAIL_ADDRESS = MODULE_ID + ".supportEmailAddress";
 	public static final String GP_EXTERNAL_HELP_URL = MODULE_ID + ".externalHelpUrl";
 	public static final String GP_DHIS2_DATASET_MAPPING = MODULE_ID + ".adxDatasetMapping";
+	public static final String GP_3PM_DATASET_MAPPING = KP_MODULE_ID + ".adx3pmDatasetMapping";
 
 	/**
 	 * Default global property values
 	 */
-	public static final String DEFAULT_SUPPORT_PHONE_NUMBER = "0800720701";
-	public static final String DEFAULT_SUPPORT_EMAIL_ADDRESS = "help@kenyaemr.org";
+	public static final String DEFAULT_SUPPORT_PHONE_NUMBER = "0800 722 440";
+	public static final String DEFAULT_SUPPORT_EMAIL_ADDRESS = "help@palladiumgroup.on.spiceworks.com";
 	public static final String DEFAULT_EXTERNAL_HELP_URL = "/help";
 }
