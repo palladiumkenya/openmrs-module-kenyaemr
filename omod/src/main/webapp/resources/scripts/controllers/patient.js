@@ -119,41 +119,83 @@ kenyaemrApp.controller('PatientSearchResults', ['$scope', '$http', function($sco
  */
 kenyaemrApp.controller('SimilarPatients', ['$scope', '$http', function($scope, $http) {
 
-    $scope.givenName = '';
-    $scope.familyName = '';
-    $scope.results = [];
+	$scope.givenName = '';
+	$scope.familyName = '';
+	$scope.birthdate = '';
+	$scope.gender = '';
+	$scope.results = [];
 
-    /**
-     * Initializes the controller
-     * @param appId the current app id
-     * @param which
-     */
-    $scope.init = function(appId, pageProvider, page) {
-        $scope.appId = appId;
-        $scope.pageProvider = pageProvider;
-        $scope.page = page;
-        $scope.refresh();
-    };
+	/**
+	 * Initializes the controller
+	 * @param appId the current app id
+	 * @param which
+	 */
+	$scope.init = function(appId, pageProvider, page) {
+		$scope.appId = appId;
+		$scope.pageProvider = pageProvider;
+		$scope.page = page;
+		$scope.refresh();
+	};
 
-    /**
-     * Refreshes the patient search
-     */
-    $scope.refresh = function() {
-        var query = $scope.givenName + ' ' + $scope.familyName;
-        $http.get(ui.fragmentActionLink('kenyaemr', 'search', 'patients', { appId: $scope.appId, q: query, which: 'all' })).
-        success(function(data) {
-            $scope.results = data;
-        });
-    };
+	/**
+	 * Refreshes the patient search
+	 */
+	$scope.refresh = function() {
+		var data = $.param({
+			givenName: $scope.givenName,
+			familyName: $scope.familyName,
+			birthdate: $scope.birthdate,
+			gender: $scope.gender
+		})
+		
+		$http.post(ui.fragmentActionLink('kenyaemr', 'matchingPatients', 'getSimilarPatients', { appId: $scope.appId }), data, { headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'} } ).
+			success(function(data) {
+				$scope.results = data;
+			});
+	};
 
-    /**
-     * Result click event handler
-     * @param patient the clicked patient
-     */
-    $scope.onResultClick = function(patient) {
-        ui.navigate($scope.pageProvider, $scope.page, { patientId: patient.id });
-    };
+	/**
+	 * Result click event handler
+	 * @param patient the clicked patient
+	 */
+	$scope.onResultClick = function(patient) {
+		ui.navigate($scope.pageProvider, $scope.page, { patientId: patient.id });
+	};
+  
+	/**
+	 * MPI Import event handler
+	 * @param 
+	 */
+	$scope.onMpiImportClick = function($event, patient) {
+	    $event.stopPropagation();
+	    $event.preventDefault();	    
+	    
+		if (confirm('Are you sure you want to import this patient?')) {
+			let id = patient.uuid
 
+            for (var i = 0; i < patient.identifiers.length; i += 1) {
+                identifier = patient.identifiers[i];
+                if (identifier.name === 'GODS Number') {
+                    id = identifier.value;
+                    break;
+                }
+            }
+						
+		    $.getJSON(ui.fragmentActionLink("kenyaemr", "registerPatient", "importMpiPatient", {mpiPersonId: id}))
+	        .success(function (response) {
+	        	ui.navigate('kenyaemr', 'registration/registrationViewPatient', { patientId: response.message });
+	        	
+				alert('imported sucessfully');
+
+	        })
+	       .error(function (xhr, status, err) {
+	            alert('Unable to import patient because record already exists');
+	            console.log(xhr.responseText);
+	        });
+		    
+		}
+	}
+	
 }]);
 
 /**
