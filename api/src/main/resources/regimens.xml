@@ -487,7 +487,7 @@
         </group>
 
         <group code="adult-continuation" name="Continuation Phase (Adult)">
-            <regimen name="RHE" conceptRef="159851AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" orderSetRef="db2189a2-6d29-46aa-8197-9a04a19cc426">
+            <regimen name="RH" conceptRef="159851AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" orderSetRef="db2189a2-6d29-46aa-8197-9a04a19cc426">
                 <component drugCode="R150" dose="2" units="tab" frequency="OD" />
                 <component drugCode="H75" dose="2" units="tab" frequency="OD" />
                 <component drugCode="E275" dose="2" units="tab" frequency="OD" />
