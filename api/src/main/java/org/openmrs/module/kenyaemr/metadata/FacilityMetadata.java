@@ -48,7 +48,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 	 */
 	@Override
 	public void install() throws Exception {
-		install(true);
+		install(false);
 	}
 
 	/**

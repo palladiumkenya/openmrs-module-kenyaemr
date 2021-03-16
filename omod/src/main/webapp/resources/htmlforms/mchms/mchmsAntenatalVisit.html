@@ -948,6 +948,34 @@
 								</tr>
 							</table>
 							<table>
+								<br />
+								<legend><strong>Ultrasound</strong></legend>
+								<hr />
+<!--                                 consider adding obs group-->
+								<tr>
+									<td>Number of fetuses</td>
+									<td>
+										<obs conceptId="3e9d739a-2d7f-40b0-a5de-938ab9c48613" id="no-fetuses"/>
+										<span class="value"><recentObs conceptId="3e9d739a-2d7f-40b0-a5de-938ab9c48613"/></span>
+									</td>
+									<td>Amniotic fluid</td>
+									<td>
+										<obs conceptId="163446AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+											 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,afd799df-69e8-4592-9c35-27a324b950c5,159985AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+											 answerLabels="Normal,Excess,Scanty"/>
+										<span class="value"><recentObs conceptId="163446AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+									</td>
+									<td>Fetal growth</td>
+									<td>
+										<obs conceptId="8cf1fc95-7806-4520-957e-f6f16a9d9782"
+											 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118245AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+											 answerLabels="Normal,Fetal growth restriction(IUGR)"/>
+										<span class="value"><recentObs conceptId="8cf1fc95-7806-4520-957e-f6f16a9d9782"/></span>
+									</td>
+								</tr>
+							</table>
+
+							<table>
 								<br/>
 								<legend><strong>Urinalysis</strong></legend>
 								<hr />
@@ -1101,6 +1129,45 @@
 			</table>
 		</td>
 	</tr>
+
+	<tr>
+		<td colspan="2">
+			<fieldset>
+				<legend>Danger Signs </legend>
+				<table align="center" width="100%" class="tb1">
+					<tr>
+						<td>Severe Anemia:
+							<obs conceptId="162044AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Yes,No"/>
+							<span class="value"><recentObs conceptId="162044AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+						</td>
+						<td>Severe Jaundice:
+							<obs conceptId="497a42e7-d0c3-4bb0-b8d1-cad3ff6566b0"
+								 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Yes,No"/>
+							<span class="value"><recentObs conceptId="497a42e7-d0c3-4bb0-b8d1-cad3ff6566b0"/></span>
+						</td>
+					</tr>
+					<tr>
+						<td>Cervical Insufficiency:
+							<obs conceptId="120785AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Yes,No"/>
+							<span class="value"><recentObs conceptId="120785AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+						</td>
+						<td>Scar Tenderness:
+							<obs conceptId="6d9e727f-41ee-468b-8135-4afeb7fed41e"
+								 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Yes,No"/>
+							<span class="value"><recentObs conceptId="6d9e727f-41ee-468b-8135-4afeb7fed41e"/></span>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+
 	<tr>
 		<td colspan="2">
 			<fieldset>
@@ -1407,6 +1474,7 @@
 			</fieldset>
 		</td>
 	</tr>
+
 	<tr>
 		<td colspan="2">
 			<fieldset>
