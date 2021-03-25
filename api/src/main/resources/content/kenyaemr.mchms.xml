@@ -114,7 +114,7 @@
 		<property name="targetUuid" value="d3ea25c7-a3e8-4f57-a6a9-e802c3565a30"/>
 		<property name="apps">
 			<set>
-				<ref bean="kenyaemr.app.clinician"/>
+<!--				<ref bean="kenyaemr.app.clinician"/>-->
 				<ref bean="kenyaemr.app.chart"/>
 			</set>
 		</property>
