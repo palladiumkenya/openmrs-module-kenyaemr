@@ -128,6 +128,8 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("VDRL Done", new ANCVDRLDoneDataDefinition(), "");
         dsd.addColumn("VDRL Results", new ANCVDRLResultsDataDefinition(), "");
         dsd.addColumn("VDRL Treated", new ANCVDRLTreatedDataDefinition(), "");
+        dsd.addColumn("Blood Group",new ANCBloodGroupDataDefinition(),"");
+        dsd.addColumn("Malaria Test",new ANCMalariaTestDataDefinition(),"");
         dsd.addColumn("Blood Glucose", new ANCBloodGlucoseDataDefinition(), "");
         dsd.addColumn("HIV Status preANC", new ANCHIVStatusBeforeFirstANCDataDefinition(), "");
         dsd.addColumn("HIV Test Type", new ANCHIVTestTypeDataDefinition(), "");
