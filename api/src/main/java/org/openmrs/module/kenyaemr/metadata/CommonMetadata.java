@@ -159,8 +159,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(patientIdentifierType("Patient Clinic Number", "Assigned to the patient at a clinic service (not globally unique)",
 				".{1,15}", "At most 15 characters long", null,
 				LocationBehavior.NOT_USED, false, _PatientIdentifierType.PATIENT_CLINIC_NUMBER));
-		install(patientIdentifierType("National ID", "Kenyan national identity card number",
-				"\\d{5,10}", "Between 5 and 10 consecutive digits", null,
+		install(patientIdentifierType("National ID", "Kenyan national identity card number/ Study Id incase of study",
+				"\\d{2,10}", "Between 2 and 10 consecutive digits", null,
 				LocationBehavior.NOT_USED, false, _PatientIdentifierType.NATIONAL_ID));
 		install(patientIdentifierType("National Unique patient identifier", "National Unique patient identifier",
 				".{1,14}", "At most 14 characters long", null,

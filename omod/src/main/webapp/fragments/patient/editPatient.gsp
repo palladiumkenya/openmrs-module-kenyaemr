@@ -102,7 +102,7 @@
                         } %></td>
                 </tr>
                 <tr>
-                    <td class="ke-field-label">National ID Number</td>
+                    <td class="ke-field-label">Study ID Number *</td>
                     <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "nationalIdNumber"])}</td>
                     <td class="ke-field-instructions"><% if (!command.nationalIdNumber) { %>(If the patient is below 18 years of age, enter the guardian`s National Identification Number if available.)<% } %></td>
                 </tr>
