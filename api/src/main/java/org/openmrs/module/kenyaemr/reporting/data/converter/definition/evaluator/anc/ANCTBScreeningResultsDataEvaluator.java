@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 
 /**
- * Evaluates Data Definition to produce TB screning results
+ * Evaluates Data Definition to produce TB screening results
  */
 @Handler(supports=ANCTBScreeningResultsDataDefinition.class, order=50)
 public class ANCTBScreeningResultsDataEvaluator implements EncounterDataEvaluator {
@@ -34,10 +34,9 @@ public class ANCTBScreeningResultsDataEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "v.encounter_id,\n" +
-                "(case v.breast_exam_done when 1065 then \"Yes\" when 1066 then \"No\" else \"\" end) as breast_exam\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
+        String qry = "select v.encounter_id, (case v.tb_screening when 1660 then \"No signs\" when 142177 then \"TB presumed\" when 164128 then \"No signs and started on INH\"\n" +
+                " when 1662 then \"TB Rx\" when 160737 then \"Not done (ND)\" else \"\" end) as tb_screening\n" +
+                " from kenyaemr_etl.etl_mch_antenatal_visit v;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -42,6 +42,6 @@ public class ANCParityDataDefinition extends BaseDataDefinition implements Encou
      * @see org.openmrs.module.reporting.data.DataDefinition#getDataType()
      */
     public Class<?> getDataType() {
-        return Double.class;
+        return String.class;
     }
 }
