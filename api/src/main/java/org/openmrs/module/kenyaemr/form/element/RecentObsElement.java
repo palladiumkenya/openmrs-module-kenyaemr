@@ -10,6 +10,8 @@
 package org.openmrs.module.kenyaemr.form.element;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
@@ -29,7 +31,7 @@ public class RecentObsElement implements HtmlGeneratorElement {
 	private String conceptId;
 	private boolean showDate = true;
 	private String noneMessage;
-
+	private final Log log = LogFactory.getLog(this.getClass());
 	/**
 	 * Creates a new element
 	 * @param context the form entry context
@@ -64,9 +66,10 @@ public class RecentObsElement implements HtmlGeneratorElement {
 
 		Obs obs = patient.lastObs(MetadataUtils.existing(Concept.class, conceptId));
 
-		StringBuilder sb = new StringBuilder("<span>");
 
+		StringBuilder sb = new StringBuilder("<span>");
 		if (obs != null) {
+			log.info("working with concept "+ conceptId+" and obs: "+obs.getObsId() );
 			sb.append(kenyaui.formatObsValue(obs));
 
 			if (showDate) {

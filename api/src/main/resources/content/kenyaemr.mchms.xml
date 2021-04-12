@@ -34,6 +34,7 @@
 			<set>
 				<ref bean="kenyaemr.mchms.form.antenatalVisit"/>
 				<ref bean="kenyaemr.mchms.form.postnatalVisit"/>
+				<ref bean="kenyaemr.mchms.form.clientExperience"/>
 				<ref bean="kenyaemr.common.form.tbScreening"/>
 				<ref bean="kenyaemr.common.form.geneXpert"/>
 			</set>
@@ -92,6 +93,20 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsAntenatalVisit.html"/>
+		<property name="order" value="4"/>
+	</bean>
+
+	<!-- MCHMS Client Experience -->
+	<bean id="kenyaemr.mchms.form.clientExperience" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="c36d8189-98bc-11eb-8de2-080027039628"/>
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician"/>
+				<ref bean="kenyaemr.app.chart"/>
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png"/>
+		<property name="htmlform" value="kenyaemr:mchms/mchmsClientExperience.html"/>
 		<property name="order" value="1"/>
 	</bean>
 
