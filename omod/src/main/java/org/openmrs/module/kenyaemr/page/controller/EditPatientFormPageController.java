@@ -26,7 +26,7 @@ import java.util.List;
 @SharedPage
 public class EditPatientFormPageController {
 	
-	public String controller(@RequestParam("appId") String appId,
+	public String controller(@RequestParam(required = false,value = "appId") String appId,
 							 @RequestParam("patientId") Patient patient,
 	                         @RequestParam("formUuid") String formUuid,
 	                         @RequestParam("returnUrl") String returnUrl) {

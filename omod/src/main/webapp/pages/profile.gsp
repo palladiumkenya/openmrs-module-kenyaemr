@@ -28,6 +28,7 @@
 
 <div class="ke-page-content">
 	${ ui.includeFragment("kenyaemr", "account/personDetails", [ person: person ]) }
+	${ ui.includeFragment("kenyaemr", "practitionerForms", [ person: person ]) }
 
 	${ ui.includeFragment("kenyaemr", "profileLoginDetails", [ tempPassword: tempPassword ]) }
 </div>
