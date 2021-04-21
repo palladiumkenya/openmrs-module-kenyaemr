@@ -31,7 +31,6 @@ public class RecentObsElement implements HtmlGeneratorElement {
 	private String conceptId;
 	private boolean showDate = true;
 	private String noneMessage;
-	private final Log log = LogFactory.getLog(this.getClass());
 	/**
 	 * Creates a new element
 	 * @param context the form entry context
@@ -69,7 +68,6 @@ public class RecentObsElement implements HtmlGeneratorElement {
 
 		StringBuilder sb = new StringBuilder("<span>");
 		if (obs != null) {
-			log.info("working with concept "+ conceptId+" and obs: "+obs.getObsId() );
 			sb.append(kenyaui.formatObsValue(obs));
 
 			if (showDate) {
