@@ -34,10 +34,20 @@ public class ANCCounselledDoneDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "v.encounter_id,\n" +
-                "(case v.counselled when 1065 then \"Yes\" when 1066 then \"No\" else \"\" end) as counselled\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
+        String qry ="SELECT v.encounter_id, (case v.counselled when 1065 then\n" +
+                "                  concat('Yes \\n(',\n" +
+                "                              concat_ws(',',max(if(o.value_coded=159758,'1',null)),max(if(o.value_coded=159857,'2',null)),max(if(o.value_coded=156277,'3',null)),\n" +
+                "                              max(if(o.value_coded=1914,'4',null)),max(if(o.value_coded=159854,'5',null)),max(if(o.value_coded=159856,'6',null)),\n" +
+                "                              max(if(o.value_coded=161651,'7',null)),max(if(o.value_coded=1381,'8',null)),\n" +
+                "                              ')')\n" +
+                "                ) when 1066 then \"No\" else \"\" end) as counselled\n" +
+                "                from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                left join openmrs.obs o on o.encounter_id=v.encounter_id and o.concept_id=159853\n" +
+                "                GROUP BY v.encounter_id;";
+//                "select\n" +
+//                "v.encounter_id,\n" +
+//                "(case v.counselled when 1065 then \"Yes\" when 1066 then \"No\" else \"\" end) as counselled\n" +
+//                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

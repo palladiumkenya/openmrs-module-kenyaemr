@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCVDRLResultsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCVillageDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -22,29 +22,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
-/**
- * Evaluates Definition if tested for syphilis test results
- */
-@Handler(supports=ANCVDRLResultsDataDefinition.class, order=50)
-public class ANCVDRLResultsDataEvaluator implements EncounterDataEvaluator {
 
+@Handler(supports= ANCVillageDataDefinition.class, order=50)
+public class ANCVillageDataEvaluator implements EncounterDataEvaluator {
     @Autowired
     private EvaluationService evaluationService;
 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry ="select\n" +
-                "       v.encounter_id,\n" +
-                "       CONCAT_WS('\\r\\n',(case v.syphilis_test_status when 1229 then \"Negative\" when 1228 then \"Positive\" when 1271 then \"Requested\" when 1402 then \"Not Tested\" when 1304 then \"Poor Sample quality\" else \"\" end),\n" +
-                "       (case v.syphilis_treated_status when 1065 then \"Yes\" when 1066 then \"No\" else \"\" end))as syphilis_done_results\n" +
-                "       from kenyaemr_etl.etl_mch_antenatal_visit v;";
-
-//                "select\n" +
-//                "      v.encounter_id,\n" +
-//                "     CONCAT_WS('\\r\\n',(case v.syphilis_test_status when 1229 then \"Yes\" when 1228 then \"Yes\" when 1304 then \"Yes\" when 1402 then \"No\" else \"Not Done\" end),\n" +
-//                "     (case v.syphilis_treated_status when 1065 then \"Yes\" when 1066 then \"No\"  else \"\" end))as syphilis_done_results\n" +
-//                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
+        String qry = "SELECT v.encounter_id, a.village\n" +
+                " from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                " left join kenyaemr_etl.etl_person_address a on a.patient_id = v.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
@@ -52,4 +41,5 @@ public class ANCVDRLResultsDataEvaluator implements EncounterDataEvaluator {
         c.setData(data);
         return c;
     }
+
 }

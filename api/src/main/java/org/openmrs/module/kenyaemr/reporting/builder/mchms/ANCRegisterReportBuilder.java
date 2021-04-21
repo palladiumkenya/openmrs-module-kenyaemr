@@ -76,6 +76,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
         dsd.setName("ancRegister");
         dsd.setDescription("Visit information");
+        dsd.addSortCriteria("id", SortCriteria.SortDirection.ASC);
         dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -105,6 +106,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("First ANC Visit", new FirstANCVisitDataDefinition(), "");
         dsd.addColumn("Number of ANC Visits", new ANCNumberOfVisitsDataDefinition(), "");
         dsd.addColumn("Name", nameDef, "");
+        dsd.addColumn("Village", new ANCVillageDataDefinition(), "");
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
         dsd.addColumn("Date of Birth", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age", new AgeDataDefinition(), "");
