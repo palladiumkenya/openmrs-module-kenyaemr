@@ -55,6 +55,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_PREVENTIVE_SERVICES = "d3ea25c7-a3e8-4f57-a6a9-e802c3565a30";
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
 		public static final String MCHMS_CLIENT_EXPERIENCE= "c36d8189-98bc-11eb-8de2-080027039628";
+		public static final String MCHMS_SERVICE_DELIVERY= "a0485b72-a413-11eb-b7e8-080027039628";
 		public static final String MCHMS_PRACTITIONER_EXPERIENCE= "9fc00eb9-9c53-11eb-8e03-080027039628";
 	}
 
@@ -102,7 +103,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(encounterType("MCH Mother Enrollment", "Enrollment of mother onto MCH program", _EncounterType.MCHMS_ENROLLMENT));
 		install(encounterType("MCH Mother Consultation", "Collection of mother data during MCH visit", _EncounterType.MCHMS_CONSULTATION));
 		install(encounterType("MCH Mother Discontinuation", "Discontinuation of mother from MCH program", _EncounterType.MCHMS_DISCONTINUATION));
-		install(encounterType("MCH Mother questionnaire", "Patient/Practitioner experience questionnnaire", _EncounterType.MCMH_SURVEY));
+		install(encounterType("MCH Mother Questionnaire", "Patient/Practitioner experience questionnnaire", _EncounterType.MCMH_SURVEY));
 
 		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
 		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
@@ -113,6 +114,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
         install(form("MCH Client Experience", "MCH Client Experience", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_CLIENT_EXPERIENCE));
+        install(form("MCH Service Delivery", "MCH Service Delivery", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_SERVICE_DELIVERY));
         install(form("MCH Practitioner Experience", "MCH Practitioner Experience", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_PRACTITIONER_EXPERIENCE));
 		install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
 	}

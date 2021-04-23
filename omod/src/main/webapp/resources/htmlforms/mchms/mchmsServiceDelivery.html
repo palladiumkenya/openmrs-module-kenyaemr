@@ -1,0 +1,245 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+  -->
+<htmlform>
+
+    <style type="text/css">
+        table.tb {
+            background-color: #B3C2F0;
+            border: 1px solid black;
+        }
+
+        table.tb1 {
+            border: 1px solid black;
+            vertical-align: baseline;
+            text-align: left;
+            background-color: #E1E1FF;
+        }
+
+        table.tb1 tr th, table.tb1 tr td {
+            border: 0;
+            padding: 10px;
+        }
+
+        .arv-med {
+        }
+    </style>
+    <script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
+
+    <script type="text/javascript">
+
+    </script>
+
+    <div class="ke-form-header">
+        <table style="width: 100%">
+            <tr>
+                <td>
+
+                    Date:
+                    <encounterDate id="encounter-date" showTime="true"/>
+                </td>
+                <td>Provider:
+                    <encounterProvider default="currentUser"/>
+                </td>
+                <td>Location:
+                    <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="ke-form-content">
+        <table align="center" border="0" class="tb" cellspacing="10">
+            <tr>
+                <td colspan="2">
+                    <div class="ke-form-instructions">
+                        <b>*</b>
+                        indicates a required field
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <legend>Identification details </legend>
+                    <table align="top" width="100%" class="tb1">
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td> 1) Visit Number:</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs conceptId="1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="visit-number"/>
+                                            <span class="value"><recentObs conceptId="1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!--Service delivery-->
+            <tr>
+                <td>
+                    <legend>Service delivery</legend>
+                    <table align="top" width="100%" class="tb1">
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>2) How long did it take (in minutes) before you were attended to?</td>
+                                        <td>3) Was this waiting time acceptable to you?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="time-before-attended-to" conceptId="1785AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+                                            <span class="value"><recentObs conceptId="1785AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                                        </td>
+                                        <td>
+                                            <obs id="waiting-time-acceptable"
+                                                 conceptId="7e7053e0-1f63-4489-b188-fa3612475e6e"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Yes,No"/>
+                                            <span class="value"><recentObs conceptId="7e7053e0-1f63-4489-b188-fa3612475e6e"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4) Did you have to pay cash for any services?</td>
+                                        <td>5) Which of these services did you get during the ANC visit?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="cash-for-any-service"
+                                                 conceptId="d74a2841-6739-4adc-ab88-2ba7eefaac7d"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="checkbox" answerLabels="Yes,No"
+                                            />
+                                            <span class="value"><recentObs conceptId="d74a2841-6739-4adc-ab88-2ba7eefaac7d"/></span>
+                                        </td>
+                                        <td>
+                                            <obs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="147122AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Bp measurement" style="checkbox" />
+                                            <obs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="804b5718-4f19-4442-935d-9301453ae97b" answerLabel="Weight measurement" style="checkbox" />
+                                            <obs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="fdb55c71-80a0-4c91-9d87-149d2c7edd90" answerLabel="Haemoglobin measurement" style="checkbox" id="walking" />
+                                            <br/>
+                                            <obs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1356AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="HIV testing" style="checkbox" />
+                                            <obs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Issue of LLIN" style="checkbox" />
+                                            <span class="value"><recentObs conceptId="1592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>6) What was the main reason for not getting all services?</td>
+                                        <td>7) Were you treated with dignity and respect?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="reason-for-not-getting-all-services"
+                                                 conceptId="bcb7212d-35de-4c47-9302-c603c5ead94e"
+                                                 answerConceptIds="d18d861a-8ee8-4a89-ac8c-3a4d735be5c7,c10f6efa-950f-490b-a23a-29faaad3eb02,b7cfe8ac-c510-4c9e-ab1f-c55148fbe5df"
+                                                 style="dropdown" answerLabels="Lack of funds to pay,Supplies were out of stock,Service provider not available"
+                                            />
+                                            <span class="value"><recentObs conceptId="bcb7212d-35de-4c47-9302-c603c5ead94e"/></span>
+                                        </td>
+                                        <td>
+                                            <obs id="treated-with-dignity-respect"
+                                                 conceptId="388a6876-8c34-43dc-a213-a4cbdef02847"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Yes,No"
+                                            />
+                                            <span class="value"><recentObs conceptId="388a6876-8c34-43dc-a213-a4cbdef02847"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>8) Were you encouraged to ask health-related questions?</td>
+                                        <td>9) Were all procedures and processes explained by the health professional?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="encouraged-to-ask-questions"
+                                                 conceptId="2db0d53b-e89e-4024-9b4a-0b731434ded6"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Yes,No"
+                                            />
+                                            <span class="value"><recentObs conceptId="2db0d53b-e89e-4024-9b4a-0b731434ded6"/></span>
+                                        </td>
+                                        <td>
+                                            <obs id="procedures-explained-by-health-provider"
+                                                 conceptId="b2c12816-3c52-4a73-861e-2d2fb7744438"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Yes,No"
+                                            />
+                                            <span class="value"><recentObs conceptId="b2c12816-3c52-4a73-861e-2d2fb7744438"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>10) Overall satisfaction?</td>
+                                        <td>11) How satisfied are you with the ANC services in the facility?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="overall-satisfaction"
+                                                 conceptId="fabbc0e9-0a27-4b50-9671-32d55b16e3e2"
+                                                 answerConceptIds="aad3c648-b531-47ec-a581-474663ad7983,8ef5d653-8697-4c16-aa29-e00ab4acbfc4,39d81149-4a81-4ba2-baa6-70241718f27a,9fa28661-da62-46b9-9e4f-63d3bfe3bd1e,e82450da-4357-45dc-8bdc-f5c68f5b1230,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Very satisfied,Satisfied,
+                                                 Neither satisfied nor disagree,Dissatisfied,Very dissatisfied,Don't know"
+                                            />
+                                            <span class="value"><recentObs conceptId="fabbc0e9-0a27-4b50-9671-32d55b16e3e2"/></span>
+                                        </td>
+                                        <td>
+                                            <obs id="satisfaction-with-anc-services"
+                                                 conceptId="61972157-7fdf-4e2c-8532-d5bd6c006d58"
+                                                 answerConceptIds="aad3c648-b531-47ec-a581-474663ad7983,8ef5d653-8697-4c16-aa29-e00ab4acbfc4,39d81149-4a81-4ba2-baa6-70241718f27a,9fa28661-da62-46b9-9e4f-63d3bfe3bd1e,e82450da-4357-45dc-8bdc-f5c68f5b1230,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Very satisfied,Satisfied,Neither satisfied nor disagree,
+                                                 Dissatisfied,Very dissatisfied,Don't know"
+                                            />
+                                            <span class="value"><recentObs conceptId="61972157-7fdf-4e2c-8532-d5bd6c006d58"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>12) What are the reasons for dissatisfaction?</td>
+                                        <td>13) Would you recommend any pregnant woman to come and seek ANC services at this facility?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <obs id="reasons-for-dissatisfaction"
+                                                 conceptId="182ab1d7-313a-498f-aad2-62dd53cb72f6"
+                                                 answerConceptIds="ce8f143c-c554-4827-b10b-d2f9ffb52c05,d18d861a-8ee8-4a89-ac8c-3a4d735be5c7,387a9592-98ff-41a0-895c-b2a0356ffbbe,6445401f-25b4-4e96-b3f6-711fcc6e50dd,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="checkbox" answerLabels="Long waiting time,Couldn't afford to pay,
+                                                 Poor staff attitude,Poor state of sanitary facilities,Other"
+                                            />
+                                            <span class="value"><recentObs conceptId="182ab1d7-313a-498f-aad2-62dd53cb72f6"/></span>
+                                        </td>
+                                        <td>
+                                            <obs id="recommend-others-to-facility"
+                                                 conceptId="fa961900-cb5d-4d38-a240-d417aeccec30"
+                                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 style="dropdown" answerLabels="Yes,No,Don't know"
+                                            />
+                                            <span class="value"><recentObs conceptId="fa961900-cb5d-4d38-a240-d417aeccec30"/></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="ke-form-footer">
+        <submit/>
+    </div>
+
+</htmlform>
