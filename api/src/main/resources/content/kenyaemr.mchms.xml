@@ -25,7 +25,6 @@
 		<property name="patientForms">
 			<set>
 				<!--<ref bean="kenyaemr.mchms.form.infantFeeding"/>-->
-				<ref bean="kenyaemr.mchms.form.practitionerExperience"/>
 				<ref bean="kenyaemr.mchms.form.preventiveServices"/>
 				<ref bean="kenyaemr.mchms.form.clientExperience"/>
 				<ref bean="kenyaemr.mchms.form.delivery"/>
@@ -123,21 +122,6 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsServiceDelivery.html"/>
-		<property name="order" value="1"/>
-	</bean>
-
-
-	<!-- MCHMS Practitioner Experience -->
-	<bean id="kenyaemr.mchms.form.practitionerExperience" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="9fc00eb9-9c53-11eb-8e03-080027039628"/>
-		<property name="apps">
-			<set>
-<!--				<ref bean="kenyaemr.app.clinician"/>-->
-<!--				<ref bean="kenyaemr.app.chart"/>-->
-			</set>
-		</property>
-		<property name="icon" value="kenyaui:forms/generic.png"/>
-		<property name="htmlform" value="kenyaemr:mchms/mchmsPractitionerExperience.html"/>
 		<property name="order" value="1"/>
 	</bean>
 

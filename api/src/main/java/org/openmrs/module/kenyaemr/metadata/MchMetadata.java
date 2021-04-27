@@ -37,7 +37,9 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_ENROLLMENT = "3ee036d8-7c13-4393-b5d6-036f2fe45126";
 		public static final String MCHMS_CONSULTATION = "c6d09e05-1f25-4164-8860-9f32c5a02df0";
 		public static final String MCHMS_DISCONTINUATION = "7c426cfc-3b47-4481-b55f-89860c21c7de";
-		public static final String MCMH_SURVEY = "ccb40e36-9c53-11eb-8e03-080027039628";
+		public static final String MCH_SURVEY = "ccb40e36-9c53-11eb-8e03-080027039628";
+		public static final String MCHPS_ENROLLMENT = "55c25dfa-a734-11eb-b308-42010a8e0010";
+		public static final String MCHPS_DISCONTINUATION = "464f9723-a734-11eb-b308-42010a8e0010";
 	}
 
 	public static final class _Form {
@@ -56,7 +58,9 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
 		public static final String MCHMS_CLIENT_EXPERIENCE= "c36d8189-98bc-11eb-8de2-080027039628";
 		public static final String MCHMS_SERVICE_DELIVERY= "a0485b72-a413-11eb-b7e8-080027039628";
-		public static final String MCHMS_PRACTITIONER_EXPERIENCE= "9fc00eb9-9c53-11eb-8e03-080027039628";
+		public static final String MCHPS_PRACTITIONER_EXPERIENCE = "9fc00eb9-9c53-11eb-8e03-080027039628";
+		public static final String MCHPS_ENROLLMENT = "ae6268ba-a685-11eb-b7e8-080027039628";
+		public static final String MCHPS_DISCONTINUATION = "b5bd68df-a685-11eb-b7e8-080027039628";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -67,6 +71,11 @@ public class MchMetadata extends AbstractMetadataBundle {
 	public static final class _Program {
 		public static final String MCHCS = Metadata.Program.MCH_CS;
 		public static final String MCHMS = Metadata.Program.MCH_MS;
+		public static final String MCHPS = "bd522bff-a673-11eb-b7e8-080027039628";
+	}
+
+	public static final class _Concept {
+      public static final String PRACTITIONER_PROGRAM = "5757091d-b3d5-4339-a30c-89f77feb4acd";
 	}
 
 	/**
@@ -103,7 +112,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(encounterType("MCH Mother Enrollment", "Enrollment of mother onto MCH program", _EncounterType.MCHMS_ENROLLMENT));
 		install(encounterType("MCH Mother Consultation", "Collection of mother data during MCH visit", _EncounterType.MCHMS_CONSULTATION));
 		install(encounterType("MCH Mother Discontinuation", "Discontinuation of mother from MCH program", _EncounterType.MCHMS_DISCONTINUATION));
-		install(encounterType("MCH Mother Questionnaire", "Patient/Practitioner experience questionnnaire", _EncounterType.MCMH_SURVEY));
+		install(encounterType("MCH Questionnaire", "Patient/Practitioner experience questionnaire", _EncounterType.MCH_SURVEY));
 
 		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
 		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
@@ -113,9 +122,22 @@ public class MchMetadata extends AbstractMetadataBundle {
 		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
-        install(form("MCH Client Experience", "MCH Client Experience", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_CLIENT_EXPERIENCE));
-        install(form("MCH Service Delivery", "MCH Service Delivery", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_SERVICE_DELIVERY));
-        install(form("MCH Practitioner Experience", "MCH Practitioner Experience", _EncounterType.MCMH_SURVEY, "1.0", _Form.MCHMS_PRACTITIONER_EXPERIENCE));
+        install(form("MCH Client Experience", "MCH Client Experience", _EncounterType.MCH_SURVEY, "1.0", _Form.MCHMS_CLIENT_EXPERIENCE));
+        install(form("MCH Service Delivery", "MCH Service Delivery", _EncounterType.MCH_SURVEY, "1.0", _Form.MCHMS_SERVICE_DELIVERY));
+
 		install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
+
+
+
+		///////////////////////////// MCH practitioner services ////////////////////////////////
+		install(encounterType("MCH Practitioner Enrollment", "Enrollment of practitioner to MCH PS program", _EncounterType.MCHPS_ENROLLMENT));
+		install(encounterType("MCH Practitioner Discontinuation", "Discontinuation of practitioner to MCH PS program", _EncounterType.MCHPS_DISCONTINUATION));
+
+		install(form("MCH-PS Enrollment", "MCH-PS Enrollment", _EncounterType.MCHPS_ENROLLMENT, "1.0", _Form.MCHPS_ENROLLMENT));
+		install(form("MCH-PS Discontinuation", "MCH-PS Discontinuation", _EncounterType.MCHPS_DISCONTINUATION, "1.0", _Form.MCHPS_DISCONTINUATION));
+		install(form("MCH Practitioner Experience", "MCH Practitioner Experience", _EncounterType.MCH_SURVEY, "1.0", _Form.MCHPS_PRACTITIONER_EXPERIENCE));
+
+		install(program("MCH - Practitioner Services", "Practitioner related forms", _Concept.PRACTITIONER_PROGRAM, _Program.MCHPS));
+
 	}
 }

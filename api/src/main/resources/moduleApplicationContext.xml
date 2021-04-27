@@ -21,6 +21,7 @@
 	<import resource="content/kenyaemr.hiv.xml" />
 	<import resource="content/kenyaemr.mchms.xml" />
 	<import resource="content/kenyaemr.mchcs.xml" />
+	<import resource="content/kenyaemr.mchps.xml" />
 	<import resource="content/kenyaemr.tb.xml" />
 	<import resource="content/kenyaemr.cohort.analysis.xml" />
 	<import resource="content/kenyaemr.ipt.xml" />

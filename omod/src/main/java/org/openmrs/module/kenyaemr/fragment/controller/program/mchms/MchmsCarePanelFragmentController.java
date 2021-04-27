@@ -54,7 +54,7 @@ public class MchmsCarePanelFragmentController {
         EncounterWrapper lastMchFollowUpWrapped = null;
 
         Encounter lastMchEnrollment = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT));
-        Encounter lastMchFollowup = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION));
+        Encounter lastMchFollowup = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_CONSULTATION));
          //Check whether already in hiv program
         CalculationResultMap enrolled = Calculations.firstEnrollments(hivProgram, Arrays.asList(patient.getPatientId()), context);
         PatientProgram program = EmrCalculationUtils.resultForPatient(enrolled, patient.getPatientId());
