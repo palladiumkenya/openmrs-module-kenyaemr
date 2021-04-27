@@ -9,14 +9,20 @@
  */
 package org.openmrs.module.kenyaemr.calculation.library.mchps;
 
+import org.openmrs.Patient;
+import org.openmrs.PatientProgram;
+import org.openmrs.Program;
 import org.openmrs.api.PersonService;
+import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
+import org.openmrs.module.kenyaemr.metadata.MchMetadata;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class EligibleForMchpsProgramCalculator extends AbstractPatientCalculation {
@@ -25,10 +31,15 @@ public class EligibleForMchpsProgramCalculator extends AbstractPatientCalculatio
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> params, PatientCalculationContext context) {
         CalculationResultMap ret = new CalculationResultMap();
         PersonService service = Context.getPersonService();
-
+        boolean eligible = false;
         for (int ptId : cohort) {
-
-            boolean eligible = service.getPerson(ptId).getAge() > 18? true: false;
+            ProgramWorkflowService pws = Context.getProgramWorkflowService();
+            Program mchProgram = pws.getProgramByUuid(MchMetadata._Program.MCHMS);
+            List<PatientProgram> mchPrograms =  pws.getPatientPrograms(new Patient(ptId), mchProgram,null,
+                    null, null, null, false );
+            if(mchPrograms.isEmpty() && (service.getPerson(ptId).getAge() > 18)){
+                eligible = true;
+            }
             ret.put(ptId, new BooleanResult(eligible, this));
         }
         return ret;
