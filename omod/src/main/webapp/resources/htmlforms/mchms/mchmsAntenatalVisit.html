@@ -104,7 +104,9 @@
         jq('#anc-number:text').val(ANC_NUMBER);
 		//Chronic illness validation
         jq("#tbl-chronic-illness").hide();
+        jq("#tbl-urinalysis").hide();
         jq('#chronic-illness :input[type=radio]').change(chronicIllnessesSelected);
+        jq('#urinalysis-done :input[type=radio]').change(urinalysisDoneSelected);
         //chronicIllnessesSelected();
        //Cacx screening method  cacx-screening-method
         jq('#cacx-screening-method').hide();
@@ -303,6 +305,18 @@
             jq("#tbl-chronic-illness").show();
         }
     }
+
+	var urinalysisDoneSelected = function() {
+		var val = getValue('urinalysis-done.value');
+		if (val == "false" || val == 1066){
+
+			jq("#tbl-urinalysis").hide();
+
+			// getField('illness-chronic.error').html('Please specify the chronic illness.').hide();
+		}else {
+			jq("#tbl-urinalysis").show();
+		}
+	}
     function onANCCounselChange() {
         if (getValue('counselled.value') == 1065) {
             jq('#anc-counselling').show();
@@ -1019,106 +1033,117 @@
 								<br/>
 								<legend><strong>Urinalysis</strong></legend>
 								<hr />
-								<obsgroup groupingConceptId="161446AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
 								<tr>
-									<td>Urine Microscopy</td>
-									<td>
-										<obs conceptId="56AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="38"/>
-									<span class="value"><recentObs conceptId="56AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urine Leukocyte Esterase Test</td>
-									<td>
-										<obs conceptId="161441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,Trace,One Plus(+),Two Plus(++),Three Plus(+++)"/>
-										<span class="value"><recentObs conceptId="161441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+									<td>Urinalysis done?
+										<obs id="urinalysis-done" conceptId="18cfade5-f2e9-4c14-ba77-23f62fc28ec6"
+											 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+											 style="radio" answerLabels="Yes,No"
+										/><td><recentObs conceptId="18cfade5-f2e9-4c14-ba77-23f62fc28ec6"/></td>
 									</td>
 								</tr>
-								<tr>
-									<td>Urinary Albumin</td>
-									<td>
-										<obs conceptId="1875AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1365AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,Trace - 15,One Plus(+) - 30,Two Plus(++) - 100,Three Plus(+++) - 300,Four Plus(++++) - 1000"/>
-										mg/dL
-										<span class="value"><recentObs conceptId="1875AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urinary Ketone</td>
-									<td>
-										<obs conceptId="161442AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,Trace - 5,One Plus(+) - 15,Two Plus(++) - 50,Three Plus(+++) - 150"/>
-										mg/dL
-										<span class="value"><recentObs conceptId="161442AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								<tr>
-									<td>Glucose Measurement (Qualitative)</td>
-									<td>
-										<obs conceptId="159734AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1365AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Normal,Trace,One Plus(+),Two Plus(++),Three Plus(+++),Four Plus(++++)"/>
-										<span class="value"><recentObs conceptId="159734AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urine Bile Salt Test</td>
-									<td>
-										<obs conceptId="161444AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Normal,Trace - 1,One Plus(+) - 4,Two Plus(++) - 8,Three Plus(+++) - 12"/>
-										mg/dL
-										<span class="value"><recentObs conceptId="161444AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								<tr>
-									<td>Urine pH</td>
-									<td>
-										<obs conceptId="161438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="urine-ph"/>
-										<span class="value"><recentObs conceptId="161438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urine Bile Pigment Test</td>
-									<td>
-										<obs conceptId="161443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,One Plus(+),Two Plus(++),Three Plus(+++)"/>
-										<span class="value"><recentObs conceptId="161443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								<tr>
-									<td>Urine Specific Gravity</td>
-									<td>
-										<obs conceptId="161439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="urine-specific-gravity"/>
-										<span class="value"><recentObs conceptId="161439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urine Color</td>
-									<td>
-										<obs conceptId="162106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-										<span class="value"><recentObs conceptId="162106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								<tr>
-									<td>Urine Nitrite Test</td>
-									<td>
-										<obs conceptId="161440AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,Positive,One Plus(+),Two Plus(++)"/>
-										<span class="value"><recentObs conceptId="161440AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-									<td>Urine Turbidity</td>
-									<td>
-										<obs conceptId="162101AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-										<span class="value"><recentObs conceptId="162101AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								<tr>
-									<td>Urine Dipstick for Blood</td>
-									<td>
-										<obs conceptId="162096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-											 answerLabels="Negative,Trace,One Plus(+),Two Plus(++),Three Plus(+++)"/>
-										<span class="value"><recentObs conceptId="162096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-									</td>
-								</tr>
-								</obsgroup>
+								<table id="tbl-urinalysis">
+									<obsgroup id="tbl-urinalysis" groupingConceptId="161446AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+										<tr>
+											<td>Urine Microscopy</td>
+											<td>
+												<obs conceptId="56AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="38"/>
+												<span class="value"><recentObs conceptId="56AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urine Leukocyte Esterase Test</td>
+											<td>
+												<obs conceptId="161441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,Trace,One Plus(+),Two Plus(++),Three Plus(+++)"/>
+												<span class="value"><recentObs conceptId="161441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Urinary Albumin</td>
+											<td>
+												<obs conceptId="1875AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1365AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,Trace - 15,One Plus(+) - 30,Two Plus(++) - 100,Three Plus(+++) - 300,Four Plus(++++) - 1000"/>
+												mg/dL
+												<span class="value"><recentObs conceptId="1875AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urinary Ketone</td>
+											<td>
+												<obs conceptId="161442AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,Trace - 5,One Plus(+) - 15,Two Plus(++) - 50,Three Plus(+++) - 150"/>
+												mg/dL
+												<span class="value"><recentObs conceptId="161442AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Glucose Measurement (Qualitative)</td>
+											<td>
+												<obs conceptId="159734AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1365AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Normal,Trace,One Plus(+),Two Plus(++),Three Plus(+++),Four Plus(++++)"/>
+												<span class="value"><recentObs conceptId="159734AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urine Bile Salt Test</td>
+											<td>
+												<obs conceptId="161444AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Normal,Trace - 1,One Plus(+) - 4,Two Plus(++) - 8,Three Plus(+++) - 12"/>
+												mg/dL
+												<span class="value"><recentObs conceptId="161444AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Urine pH</td>
+											<td>
+												<obs conceptId="161438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="urine-ph"/>
+												<span class="value"><recentObs conceptId="161438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urine Bile Pigment Test</td>
+											<td>
+												<obs conceptId="161443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,One Plus(+),Two Plus(++),Three Plus(+++)"/>
+												<span class="value"><recentObs conceptId="161443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Urine Specific Gravity</td>
+											<td>
+												<obs conceptId="161439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="urine-specific-gravity"/>
+												<span class="value"><recentObs conceptId="161439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urine Color</td>
+											<td>
+												<obs conceptId="162106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+												<span class="value"><recentObs conceptId="162106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Urine Nitrite Test</td>
+											<td>
+												<obs conceptId="161440AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,Positive,One Plus(+),Two Plus(++)"/>
+												<span class="value"><recentObs conceptId="161440AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+											<td>Urine Turbidity</td>
+											<td>
+												<obs conceptId="162101AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+												<span class="value"><recentObs conceptId="162101AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+										<tr>
+											<td>Urine Dipstick for Blood</td>
+											<td>
+												<obs conceptId="162096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerConceptIds="664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1874AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1362AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1363AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1364AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+													 answerLabels="Negative,Trace,One Plus(+),Two Plus(++),Three Plus(+++)"/>
+												<span class="value"><recentObs conceptId="162096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+											</td>
+										</tr>
+									</obsgroup>
+								</table>
+
 								<tr>
 									<br/>
 									<td>
