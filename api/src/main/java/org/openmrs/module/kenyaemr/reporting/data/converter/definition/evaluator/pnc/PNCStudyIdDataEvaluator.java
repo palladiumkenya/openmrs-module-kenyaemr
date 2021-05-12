@@ -7,17 +7,14 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.maternity;
+package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.pnc;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity.MaternityStudyIdDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PNCStudyIdDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
-import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
-import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -26,21 +23,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
-@Handler(supports = MaternityStudyIdDataDefinition.class, order = 50)
-public class MaternityStudyIdDataEvaluator  implements PersonDataEvaluator {
+@Handler(supports = PNCStudyIdDataDefinition.class, order = 50)
+public class PNCStudyIdDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
+    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-
-        String qry = "SELECT v.patient_id,pi.identifier\n" +
-                "  from kenyaemr_etl.etl_mchs_delivery v\n" +
+        String qry = "SELECT v.encounter_id,pi.identifier\n" +
+                "  from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
                 "  INNER JOIN openmrs.patient_identifier pi on v.patient_id = pi.patient_id\n" +
                 "  INNER JOIN openmrs.patient_identifier_type pit on pit.patient_identifier_type_id = pi.identifier_type\n" +
-                "  and pit.uuid = '" + CommonMetadata._PatientIdentifierType.NATIONAL_ID + "';";
+                "  and pit.uuid = '"+ CommonMetadata._PatientIdentifierType.NATIONAL_ID +"';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -7,22 +7,21 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity;
+package org.openmrs.module.kenyaemr.reporting.data.converter.definition;
 
 import org.openmrs.module.reporting.data.BaseDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
+import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 @Caching(strategy= ConfigurationPropertyCachingStrategy.class)
-public class MaternityStudyIdDataDefinition extends BaseDataDefinition implements PersonDataDefinition {
+public class PNCStudyIdDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+    public PNCStudyIdDataDefinition() {
+    super(); }
 
-    public MaternityStudyIdDataDefinition() { super();}
-
-    public MaternityStudyIdDataDefinition(String name) {
+    public PNCStudyIdDataDefinition(String name) {
         super(name);
     }
-
     public Class<?> getDataType() {
         return String.class;
     }
