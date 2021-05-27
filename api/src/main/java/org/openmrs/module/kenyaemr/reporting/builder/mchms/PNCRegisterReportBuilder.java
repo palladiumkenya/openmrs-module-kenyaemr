@@ -90,6 +90,7 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         // new columns
         dsd.addColumn("Register Number", new PNCRegisterNumberDataDefinition(),"");
         dsd.addColumn("Admission Number", new PNCAdmissionNumberDataDefinition(),"");
+        dsd.addColumn("Study ID", new PNCStudyIdDataDefinition() , "");
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
         //dsd.addColumn("Date of Birth", new PNCDateOfBirthAndAgeDataDefinition(),"");
