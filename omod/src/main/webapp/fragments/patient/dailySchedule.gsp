@@ -18,7 +18,7 @@
 	<div class="ke-panel-heading">{{ scheduled.length }} Patients ${ heading }</div>
 	<div class="ke-panel-content">
 		<div class="ke-stack-item ke-navigable" ng-repeat="patient in scheduled" ng-click="onResultClick(patient)">
-			${ ui.includeFragment("kenyaemr", "patient/result.full") }
+			${ ui.includeFragment("kenyaemr", "patient/appointment.result.full") }
 		</div>
 		<div ng-if="scheduled.length == 0" style="text-align: center; font-style: italic">None</div>
 	</div>
