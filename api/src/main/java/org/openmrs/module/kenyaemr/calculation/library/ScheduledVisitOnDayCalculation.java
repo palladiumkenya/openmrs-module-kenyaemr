@@ -11,6 +11,7 @@ package org.openmrs.module.kenyaemr.calculation.library;
 
 import org.openmrs.Concept;
 import org.openmrs.api.PatientSetService.TimeModifier;
+import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
@@ -59,7 +60,7 @@ public class ScheduledVisitOnDayCalculation extends AbstractPatientCalculation {
 		DateObsCohortDefinition homeVisitAppt = new DateObsCohortDefinition();
 		homeVisitAppt.setName("homeVisitAppointment");
 		homeVisitAppt.setTimeModifier(TimeModifier.ANY);
-		homeVisitAppt.setQuestion(returnVisitDate);
+		homeVisitAppt.setQuestion(Context.getConceptService().getConcept(165577));
 		homeVisitAppt.setOperator1(RangeComparator.GREATER_EQUAL);
 		homeVisitAppt.setValue1(startOfDay);
 		homeVisitAppt.setOperator2(RangeComparator.LESS_EQUAL);
