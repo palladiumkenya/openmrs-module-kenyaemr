@@ -12,6 +12,7 @@ package org.openmrs.module.kenyaemr.calculation.library;
 import org.openmrs.Cohort;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
+import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.result.ListResult;
@@ -34,6 +35,7 @@ import java.util.Map;
  */
 public class AppointmentTypeCalculation extends AbstractPatientCalculation {
 
+	private static final Integer HOME_VISIT_APPOINTMENT_CONCEPT = 165577;
 	/**
 	 * @see org.openmrs.calculation.patient.PatientCalculation#evaluate(Collection, Map, PatientCalculationContext)
 	 */
@@ -55,21 +57,34 @@ public class AppointmentTypeCalculation extends AbstractPatientCalculation {
 		d.setWhich(TimeQualifier.ANY);
 		d.setQuestion(returnVisitDate);
 
+		ObsForPersonDataDefinition homeVisitDataDefinition = new ObsForPersonDataDefinition();
+		homeVisitDataDefinition.setValueDatetimeOrAfter(startOfDay);
+		homeVisitDataDefinition.setValueDatetimeOnOrBefore(endOfDay);
+		homeVisitDataDefinition.setWhich(TimeQualifier.ANY);
+		homeVisitDataDefinition.setQuestion(Context.getConceptService().getConcept(HOME_VISIT_APPOINTMENT_CONCEPT));
+
 		EvaluationContext ctx = new EvaluationContext();
 		ctx.setBaseCohort(new Cohort(cohort));
 
 		CalculationResultMap apptObsResult = CalculationUtils.evaluateWithReporting(d, cohort, parameterValues, null, context);
+		CalculationResultMap homeVisitObsResult = CalculationUtils.evaluateWithReporting(homeVisitDataDefinition, cohort, parameterValues, null, context);
+
 
 		CalculationResultMap ret = new CalculationResultMap();
 		for (Integer ptId : cohort) {
 			ListResult result = (ListResult) apptObsResult.get(ptId);
+			ListResult homeBasedresult = (ListResult) homeVisitObsResult.get(ptId);
 			List<Obs> obs = CalculationUtils.extractResultValues(result);
+			List<Obs> homeBasedobs = CalculationUtils.extractResultValues(homeBasedresult);
 
 			if (!obs.isEmpty()) {
 				if (obs.get(0).getConcept().getUuid().equals(Dictionary.RETURN_VISIT_DATE)) {
 					ret.put(ptId, new SimpleResult("ANC Clinic Visit", this));
-				} else { // relook at this if you want to handle additional concepts/appointment types
-					ret.put(ptId, new SimpleResult("ANC Home visit", this));				}
+				}
+			} else if (!homeBasedobs.isEmpty()) {
+				if (homeBasedobs.get(0).getConcept().getConceptId().equals(HOME_VISIT_APPOINTMENT_CONCEPT)) {
+					ret.put(ptId, new SimpleResult("ANC Home visit", this));
+				}
 			}
 		}
 		return ret;

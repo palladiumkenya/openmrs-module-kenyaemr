@@ -34,6 +34,7 @@ import java.util.Map;
  */
 public class ScheduledVisitOnDayCalculation extends AbstractPatientCalculation {
 
+	private static final Integer HOME_VISIT_APPOINTMENT_CONCEPT = 165577;
 	/**
 	 * @see org.openmrs.calculation.patient.PatientCalculation#evaluate(java.util.Collection, java.util.Map, org.openmrs.calculation.patient.PatientCalculationContext)
 	 */
@@ -60,7 +61,7 @@ public class ScheduledVisitOnDayCalculation extends AbstractPatientCalculation {
 		DateObsCohortDefinition homeVisitAppt = new DateObsCohortDefinition();
 		homeVisitAppt.setName("homeVisitAppointment");
 		homeVisitAppt.setTimeModifier(TimeModifier.ANY);
-		homeVisitAppt.setQuestion(Context.getConceptService().getConcept(165577));
+		homeVisitAppt.setQuestion(Context.getConceptService().getConcept(HOME_VISIT_APPOINTMENT_CONCEPT));
 		homeVisitAppt.setOperator1(RangeComparator.GREATER_EQUAL);
 		homeVisitAppt.setValue1(startOfDay);
 		homeVisitAppt.setOperator2(RangeComparator.LESS_EQUAL);
