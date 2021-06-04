@@ -11,13 +11,16 @@ package org.openmrs.module.kenyaemr.calculation.library;
 
 import org.openmrs.Concept;
 import org.openmrs.api.PatientSetService.TimeModifier;
+import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.CalculationUtils;
+import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
+import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.DateObsCohortDefinition;
 import org.openmrs.module.reporting.common.DateUtil;
 import org.openmrs.module.reporting.common.RangeComparator;
@@ -31,6 +34,7 @@ import java.util.Map;
  */
 public class ScheduledVisitOnDayCalculation extends AbstractPatientCalculation {
 
+	private static final Integer HOME_VISIT_APPOINTMENT_CONCEPT = 165577;
 	/**
 	 * @see org.openmrs.calculation.patient.PatientCalculation#evaluate(java.util.Collection, java.util.Map, org.openmrs.calculation.patient.PatientCalculationContext)
 	 */
@@ -45,16 +49,32 @@ public class ScheduledVisitOnDayCalculation extends AbstractPatientCalculation {
 		Date endOfDay = DateUtil.getEndOfDay(date);
 		Concept returnVisitDate = Dictionary.getConcept(Dictionary.RETURN_VISIT_DATE);
 
-		DateObsCohortDefinition cd = new DateObsCohortDefinition();
-		cd.setTimeModifier(TimeModifier.ANY);
-		cd.setQuestion(returnVisitDate);
-		cd.setOperator1(RangeComparator.GREATER_EQUAL);
-		cd.setValue1(startOfDay);
-		cd.setOperator2(RangeComparator.LESS_EQUAL);
-		cd.setValue2(endOfDay);
-		
-		EvaluatedCohort withScheduledVisit = CalculationUtils.evaluateWithReporting(cd, cohort, null, context);
-		
+		DateObsCohortDefinition clinicalAppt = new DateObsCohortDefinition();
+		clinicalAppt.setName("clinicalAppointment");
+		clinicalAppt.setTimeModifier(TimeModifier.ANY);
+		clinicalAppt.setQuestion(returnVisitDate);
+		clinicalAppt.setOperator1(RangeComparator.GREATER_EQUAL);
+		clinicalAppt.setValue1(startOfDay);
+		clinicalAppt.setOperator2(RangeComparator.LESS_EQUAL);
+		clinicalAppt.setValue2(endOfDay);
+
+		DateObsCohortDefinition homeVisitAppt = new DateObsCohortDefinition();
+		homeVisitAppt.setName("homeVisitAppointment");
+		homeVisitAppt.setTimeModifier(TimeModifier.ANY);
+		homeVisitAppt.setQuestion(Context.getConceptService().getConcept(HOME_VISIT_APPOINTMENT_CONCEPT));
+		homeVisitAppt.setOperator1(RangeComparator.GREATER_EQUAL);
+		homeVisitAppt.setValue1(startOfDay);
+		homeVisitAppt.setOperator2(RangeComparator.LESS_EQUAL);
+		homeVisitAppt.setValue2(endOfDay);
+
+		CompositionCohortDefinition compositionCohortDefinition = new CompositionCohortDefinition();
+		compositionCohortDefinition.setName("has clinical or home visit appointment");
+		compositionCohortDefinition.addSearch("clinicalAppointment", ReportUtils.map(clinicalAppt));
+		compositionCohortDefinition.addSearch("homeVisitAppointment", ReportUtils.map(homeVisitAppt));
+		compositionCohortDefinition.setCompositionString("clinicalAppointment OR homeVisitAppointment");
+
+		EvaluatedCohort withScheduledVisit = CalculationUtils.evaluateWithReporting(compositionCohortDefinition, cohort, null, context);
+
 		CalculationResultMap ret = new CalculationResultMap();
 		for (Integer ptId : cohort) {
 			ret.put(ptId, new BooleanResult(withScheduledVisit.contains(ptId), this));
