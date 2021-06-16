@@ -31,10 +31,13 @@ public class ANCRiskStratificationDataEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "v.encounter_id,\n" +
-                "v.risk_stratification\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
+        String qry = "SELECT encounter_id, concat(risk_stratification,'(',indicators,')') stratification\n" +
+                "  from (\n" +
+                "SELECT e.encounter_id, e.risk_stratification, group_concat(risk_indicator order by risk_indicator ASC) indicators\n" +
+                "from risk_stratification_encounter e\n" +
+                "  inner join risk_flag f on e.id = f.stratification_encounter and f.voided = 0\n" +
+                "  WHERE e.stratification_type = 'MCH_ANC_VISIT'\n" +
+                "GROUP BY e.encounter_id) s;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
