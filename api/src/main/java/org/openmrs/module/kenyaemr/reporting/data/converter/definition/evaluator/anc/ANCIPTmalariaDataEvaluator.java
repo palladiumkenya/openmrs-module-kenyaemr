@@ -35,7 +35,7 @@ public class ANCIPTmalariaDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select\n" +
-                "   v.encounter_id, if(ps.sequence != '' and ps.sequence is not null, concat_ws('\\n',v.IPT_malaria, ps.sequence,''), v.IPT_malaria ) service_and_sequence\n" +
+                "   v.encounter_id, if(ps.sequence != '' and ps.sequence is not null, concat_ws(CHAR(13),v.IPT_malaria, ps.sequence,''), v.IPT_malaria ) service_and_sequence\n" +
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
                 "   left join kenyaemr_etl.etl_anc_preventive_services ps on ps.encounter_id = v.encounter_id and ps.preventive_service = 159610\n" +
                 "GROUP BY v.encounter_id;";

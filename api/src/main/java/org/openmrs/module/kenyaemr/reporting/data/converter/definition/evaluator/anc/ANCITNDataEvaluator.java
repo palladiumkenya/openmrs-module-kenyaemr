@@ -35,7 +35,7 @@ public class ANCITNDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select\n" +
-                "   v.encounter_id, if(ps.sequence != '' and ps.sequence is not null, concat_ws('\\n',v.bed_nets, ps.sequence,''), v.bed_nets ) service_and_sequence\n" +
+                "   v.encounter_id, if(ps.sequence != '' and ps.sequence is not null, concat_ws(CHAR(13),v.bed_nets, ps.sequence,''), v.bed_nets ) service_and_sequence\n" +
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
                 "   left join kenyaemr_etl.etl_anc_preventive_services ps on ps.encounter_id = v.encounter_id and ps.preventive_service = 160428\n" +
                 "GROUP BY v.encounter_id;";
