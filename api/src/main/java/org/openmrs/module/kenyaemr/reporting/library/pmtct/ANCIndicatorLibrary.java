@@ -10,10 +10,10 @@
 package org.openmrs.module.kenyaemr.reporting.library.pmtct;
 
 import org.openmrs.module.kenyacore.report.ReportUtils;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.*;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.pmtct.anc.*;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
@@ -24,6 +24,8 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndi
 @Component
 public class ANCIndicatorLibrary {
 
+    @Autowired
+    private MchCohortLibrary mchCohorts;
 
 	public CohortIndicator newClientsANC() {
 		return cohortIndicator("New Clients", ReportUtils.<CohortDefinition>map(new NewClientsANCCohortDefinition(), ""));
@@ -124,4 +126,141 @@ public class ANCIndicatorLibrary {
         return cohortIndicator("Adolescents Started 10 - 19 at ANC", ReportUtils.<CohortDefinition>map(new AdolescentsStartedHaart_10_19_AtANCCohortDefinition(), ""));
     }
 
+    // add custom indicators for ANC - Ilara
+
+    /**
+     * Patients enrolled in MCH during a period
+     * @return the indicator
+     */
+    public CohortIndicator enrolledInMchDuringReportingPeriod() {
+        return cohortIndicator("Enrolled in MCH", ReportUtils.map(mchCohorts.enrolledInMchDuringReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage enrollment in MCH
+     * @return
+     */
+    public CohortIndicator mchEnrollmentPercent() {
+        return cohortIndicator("Enrollment percentage", ReportUtils.map(mchCohorts.enrolledInMchDuringReportingPeriod(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
+
+    /**
+     * Patients ever enrolled in MCH
+     * @return the indicator
+     */
+    public CohortIndicator everEnrolledInMch() {
+        return cohortIndicator("Ever enrolled in MCH", ReportUtils.map(mchCohorts.everEnrolledInMch(), ""));
+    }
+
+    /**
+     * Patients enrolled at 1st anc attendance
+     * @return the indicator
+     */
+    public CohortIndicator enrolledInMCHAtFirstAncAttendance() {
+        return cohortIndicator("Enrolled at first attendance", ReportUtils.map(mchCohorts.enrolledInMCHAtFirstAncAttendance(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage enrollment in MCH at first anc attendance
+     * @return
+     */
+    public CohortIndicator enrolledInMCHAtFirstAncAttendancePercentage() {
+        return cohortIndicator("Enrollment percentage", ReportUtils.map(mchCohorts.enrolledInMCHAtFirstAncAttendance(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
+
+    /**
+     * Patients enrolled at 4th anc attendance
+     * @return the indicator
+     */
+    public CohortIndicator fourthAncVisitAttendance() {
+        return cohortIndicator("Visit at fourth anc", ReportUtils.map(mchCohorts.fourthAncVisitAttendance(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage enrollment in MCH at fourth anc attendance
+     * @return
+     */
+    public CohortIndicator fourthAncVisitAttendancePercentage() {
+        return cohortIndicator("Percentage at 4th anc visit", ReportUtils.map(mchCohorts.fourthAncVisitAttendance(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.enrolledInMCHAtFirstAncAttendance(), "startDate=${startDate},endDate=${endDate}") );
+    }
+
+    /**
+     * Patients enrolled at 8th anc attendance
+     * @return the indicator
+     */
+    public CohortIndicator eighthAncVisitAttendance() {
+        return cohortIndicator("Visit at 8th anc", ReportUtils.map(mchCohorts.eighthAncVisitAttendance(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage of eighth anc attendance
+     * @return
+     */
+    public CohortIndicator eighthAncVisitAttendancePercentage() {
+        return cohortIndicator("Percentage of 8th anc visit", ReportUtils.map(mchCohorts.eighthAncVisitAttendance(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.enrolledInMCHAtFirstAncAttendance(), "startDate=${startDate},endDate=${endDate}") );
+    }
+
+    /**
+     * Patients who received all preventive services
+     * @return the indicator
+     */
+    public CohortIndicator receivedAllPreventiveServices() {
+        return cohortIndicator("Received all preventive services", ReportUtils.map(mchCohorts.receivedAllPreventiveServices(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage of clients who received all preventive services
+     * @return
+     */
+    public CohortIndicator receivedAllPreventiveServicesPercentage() {
+        return cohortIndicator("Percentage of all preventive services", ReportUtils.map(mchCohorts.receivedAllPreventiveServices(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
+
+    /**
+     * Patients who received some preventive services
+     * @return the indicator
+     */
+    public CohortIndicator receivedSomePreventiveServices() {
+        return cohortIndicator("Received some preventive services", ReportUtils.map(mchCohorts.receivedSomePreventiveServices(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage of clients who received some preventive services
+     * @return
+     */
+    public CohortIndicator receivedSomePreventiveServicesPercentage() {
+        return cohortIndicator("Percentage of all preventive services", ReportUtils.map(mchCohorts.receivedSomePreventiveServices(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
+
+    /**
+     * Patients who received some anc profiling
+     * @return the indicator
+     */
+    public CohortIndicator receivedSomeAncProfiling() {
+        return cohortIndicator("Received some anc profiling", ReportUtils.map(mchCohorts.receivedSomeAncProfiling(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage of clients who received some profiling
+     * @return
+     */
+    public CohortIndicator receivedSomeAncProfilingPercentage() {
+        return cohortIndicator("Percentage of partial anc profiling", ReportUtils.map(mchCohorts.receivedSomeAncProfiling(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
+
+    /**
+     * Patients who received all anc profiling
+     * @return the indicator
+     */
+    public CohortIndicator receivedAllAncProfiling() {
+        return cohortIndicator("Received all anc profiling", ReportUtils.map(mchCohorts.receivedAllAncProfiling(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Percentage of clients who received some profiling
+     * @return
+     */
+    public CohortIndicator receivedAllAncProfilingPercentage() {
+        return cohortIndicator("Percentage of complete anc profiling", ReportUtils.map(mchCohorts.receivedAllAncProfiling(), "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(mchCohorts.everEnrolledInMch(), "") );
+    }
 }
