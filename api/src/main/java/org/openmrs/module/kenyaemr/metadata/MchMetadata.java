@@ -55,6 +55,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_DISCHARGE = "af273344-a5f9-11e8-98d0-529269fb1459";
 		public static final String MCHMS_INFANT_FEEDING = "f4d763bb-8428-476c-be8a-73c705bbc347";
 		public static final String MCHMS_PREVENTIVE_SERVICES = "d3ea25c7-a3e8-4f57-a6a9-e802c3565a30";
+		public static final String MCHMS_CHV_ASSIGNMENT = "458c70ca-eb86-11eb-8312-42010a8a0004";
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
 		public static final String MCHMS_CLIENT_EXPERIENCE= "c36d8189-98bc-11eb-8de2-080027039628";
 		public static final String MCHMS_SERVICE_DELIVERY= "a0485b72-a413-11eb-b7e8-080027039628";
@@ -121,6 +122,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
 		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
+		install(form("CHV Assignment", "MCH-MS CHV assignment form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_CHV_ASSIGNMENT));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
         install(form("MCH Client Experience", "MCH Client Experience", _EncounterType.MCH_SURVEY, "1.0", _Form.MCHMS_CLIENT_EXPERIENCE));
         install(form("MCH Service Delivery", "MCH Service Delivery", _EncounterType.MCH_SURVEY, "1.0", _Form.MCHMS_SERVICE_DELIVERY));
