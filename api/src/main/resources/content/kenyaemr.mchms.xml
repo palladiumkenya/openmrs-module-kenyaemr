@@ -28,6 +28,7 @@
 				<ref bean="kenyaemr.mchms.form.preventiveServices"/>
 				<ref bean="kenyaemr.mchms.form.delivery"/>
 				<ref bean="kenyaemr.mchms.form.discharge"/>
+				<ref bean="kenyaemr.mchms.form.chvAssignment"/>
 			</set>
 		</property>
 		<property name="visitForms">
@@ -136,6 +137,21 @@
 		<property name="htmlform" value="kenyaemr:mchms/mchmsDelivery.html"/>
 		<property name="order" value="2"/>
 	</bean>
+
+	<!-- MCHMS CHV Assignment -->
+	<bean id="kenyaemr.mchms.form.chvAssignment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="458c70ca-eb86-11eb-8312-42010a8a0004"/>
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician"/>
+				<ref bean="kenyaemr.app.chart"/>
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png"/>
+		<property name="htmlform" value="kenyaemr:mchms/mchmsChvAssignment.html"/>
+		<property name="order" value="2"/>
+	</bean>
+
 	<!--Commented infant feeding as the questions are already covered in discharge form-->
 	<!--&lt;!&ndash; MCHMS Infant Feeding &ndash;&gt; -->
 	<!--<bean id="kenyaemr.mchms.form.infantFeeding" class="org.openmrs.module.kenyacore.form.FormDescriptor">-->
