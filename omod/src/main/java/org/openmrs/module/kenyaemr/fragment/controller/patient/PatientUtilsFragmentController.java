@@ -11,6 +11,8 @@ package org.openmrs.module.kenyaemr.fragment.controller.patient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Transaction;
+import org.hibernate.jdbc.Work;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -21,6 +23,7 @@ import org.openmrs.Person;
 import org.openmrs.Relationship;
 import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.patient.PatientCalculationService;
 import org.openmrs.calculation.result.CalculationResult;
@@ -51,6 +54,7 @@ import org.openmrs.ui.framework.session.Session;
 import org.openmrs.util.PersonByNameComparator;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,7 +96,53 @@ public class PatientUtilsFragmentController {
 				return Collections.singletonList(SimpleObject.create("message", "ERROR EVALUATING '" +  calc.getFlagMessage() + "'"));
 			}
 		}
+		try {
+			flags.add(SimpleObject.create("message", getRiskStratification(patientId)));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return flags;
+	}
+
+	public String getRiskStratification(int patientId) throws SQLException {
+		final String[] riskStratification = new String[1];
+		final String selectRiskStratificationSql = "select risk_stratification from risk_stratification_encounter where patient_id ='" + patientId + "';";
+		DbSessionFactory sf = Context.getRegisteredComponents(DbSessionFactory.class).get(0);
+		Transaction tx = null;
+		try {
+
+			tx = sf.getHibernateSessionFactory().getCurrentSession().beginTransaction();
+			final Transaction finalTx = tx;
+			sf.getCurrentSession().doWork(new Work() {
+
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement statement = connection.prepareStatement(selectRiskStratificationSql);
+					try {
+
+						ResultSet resultSet = statement.executeQuery();
+						if (resultSet != null) {
+							ResultSetMetaData metaData = resultSet.getMetaData();
+
+							while (resultSet.next()) {
+								riskStratification[0] = resultSet.getString("risk_stratification");
+							}
+						}
+						finalTx.commit();
+					} finally {
+						try {
+							if (statement != null) {
+								statement.close();
+							}
+						} catch (Exception e) {
+						}
+					}
+				}
+			});
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Unable to execute query", e);
+		}
+		return riskStratification[0];
 	}
 
 	/**
