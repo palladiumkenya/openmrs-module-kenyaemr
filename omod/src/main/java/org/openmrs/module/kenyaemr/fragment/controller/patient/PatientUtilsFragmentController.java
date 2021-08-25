@@ -97,7 +97,7 @@ public class PatientUtilsFragmentController {
 			}
 		}
 		try {
-			flags.add(SimpleObject.create("message", getRiskStratification(patientId)));
+			flags.add(SimpleObject.create("riskStratification", getRiskStratification(patientId)));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

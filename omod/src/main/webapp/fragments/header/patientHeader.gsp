@@ -38,6 +38,7 @@
 		<span ng-if="patient.dead" class="ke-deadtag">Deceased since <strong>{{ patient.deathDate | keDateAuto }}</strong></span>
 		<span ng-if="patient.voided" class="ke-voidedtag">Voided since <strong>{{ patient.dateVoided | keDateAuto }}</strong></span>
 		<span ng-repeat="flag in flags" class="ke-flagtag" style="margin-right: 5px">{{ flag.message }}</span>
+		<span ng-repeat="flag in flags" class="ke-flagtag" style="margin-right: 5px">{{ flag.riskStratification }}</span>
 	</div>
 
 	<div style="width: 50%; float: right; overflow: auto; text-align: right">
