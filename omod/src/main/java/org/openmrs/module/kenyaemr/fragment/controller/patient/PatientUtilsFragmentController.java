@@ -98,7 +98,7 @@ public class PatientUtilsFragmentController {
 		}
 		try {
 			String riskStratification = getRiskStratification(patientId).replaceAll("_", " ").toLowerCase();
-			flags.add(SimpleObject.create("riskStratification", riskStratification.substring(0, 1).toUpperCase() + riskStratification.substring(1)));
+			flags.add(SimpleObject.create("message", riskStratification.substring(0, 1).toUpperCase() + riskStratification.substring(1)));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
