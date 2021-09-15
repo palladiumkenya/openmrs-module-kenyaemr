@@ -171,4 +171,18 @@
 		</sql>
 	</changeSet>
 
+	<changeSet id="${project.parent.artifactId}-20210915-1314" author="nathan">
+		<preConditions onFail="MARK_RAN" onError="WARN">
+			<not>
+				<columnExists tableName="mch_antenatal_visit" columnName="language"/>
+			</not>
+		</preConditions>
+		<comment>
+			Adding patient preferred language
+		</comment>
+		<addColumn tableName="mch_antenatal_visit">
+			<column name="language" type="char(30)"/>
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>
