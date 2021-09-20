@@ -174,13 +174,27 @@
 	<changeSet id="${project.parent.artifactId}-20210915-1314" author="nathan">
 		<preConditions onFail="MARK_RAN" onError="WARN">
 			<not>
-				<columnExists tableName="mch_antenatal_visit" columnName="preferred_language"/>
+				<columnExists tableName="etl_mch_antenatal_visit" schemaName="kenyaemr_etl" columnName="preferred_language"/>
 			</not>
 		</preConditions>
 		<comment>
 			Adding patient preferred language
 		</comment>
-		<addColumn tableName="mch_antenatal_visit">
+		<addColumn schemaName="kenyaemr_etl" tableName="etl_mch_antenatal_visit">
+			<column name="preferred_language" type="char(30)"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="${project.parent.artifactId}-20210915-1320" author="nathan">
+		<preConditions onFail="MARK_RAN" onError="WARN">
+			<not>
+				<columnExists tableName="mch_antenatal_visit" schemaName="kenyaemr_datatools" columnName="preferred_language"/>
+			</not>
+		</preConditions>
+		<comment>
+			Adding patient preferred language
+		</comment>
+		<addColumn schemaName="kenyaemr_datatools" tableName="mch_antenatal_visit">
 			<column name="preferred_language" type="char(30)"/>
 		</addColumn>
 	</changeSet>
