@@ -167,6 +167,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Clinical Notes", new ANCClinicalNotesDataDefinition(), "");
         dsd.addColumn("Practitioner type", new ANCPractitionerTypeDataDefinition(), "");
         dsd.addColumn("Practitioner name", new ANCPractitionerNameDataDefinition(), "");
+        dsd.addColumn("Preferred language", new ANCPreferredLanguageDataDefinition(), "");
 
         ANCRegisterCohortDefinition cd = new ANCRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
