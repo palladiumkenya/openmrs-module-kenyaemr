@@ -151,7 +151,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Urinalysis Done",new ANCUrinalysisDoneDataDefinition() , "");
         dsd.addColumn("Other Illnesses", new ANCOtherIllnessesDataDefinition(), "");
         dsd.addColumn("Deworming", new ANCDewormingDataDefinition(), "");
-        dsd.addColumn("IPT malaria", new ANCIPTmalariaDataDefinition(), "");
+        dsd.addColumn("IPT maANCPreferredLanguageDataDefinitionlaria", new ANCIPTmalariaDataDefinition(), "");
         dsd.addColumn("TTT", new ANCTTTDataDefinition(), "");
         dsd.addColumn("Suppliment", new ANCSupplimentDataDefinition(), "");
         dsd.addColumn("ITN", new ANCITNDataDefinition(), "");
@@ -167,7 +167,6 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Clinical Notes", new ANCClinicalNotesDataDefinition(), "");
         dsd.addColumn("Practitioner type", new ANCPractitionerTypeDataDefinition(), "");
         dsd.addColumn("Practitioner name", new ANCPractitionerNameDataDefinition(), "");
-        dsd.addColumn("Preferred language", new ANCPreferredLanguageDataDefinition(), "");
 
         ANCRegisterCohortDefinition cd = new ANCRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
