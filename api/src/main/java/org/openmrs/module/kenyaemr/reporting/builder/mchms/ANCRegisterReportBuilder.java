@@ -151,7 +151,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Urinalysis Done",new ANCUrinalysisDoneDataDefinition() , "");
         dsd.addColumn("Other Illnesses", new ANCOtherIllnessesDataDefinition(), "");
         dsd.addColumn("Deworming", new ANCDewormingDataDefinition(), "");
-        dsd.addColumn("IPT maANCPreferredLanguageDataDefinitionlaria", new ANCIPTmalariaDataDefinition(), "");
+        dsd.addColumn("IPT malaria", new ANCIPTmalariaDataDefinition(), "");
         dsd.addColumn("TTT", new ANCTTTDataDefinition(), "");
         dsd.addColumn("Suppliment", new ANCSupplimentDataDefinition(), "");
         dsd.addColumn("ITN", new ANCITNDataDefinition(), "");
