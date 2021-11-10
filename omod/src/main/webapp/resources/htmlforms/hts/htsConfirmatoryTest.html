@@ -67,6 +67,7 @@
             var val = jq(this).val();
             jq("#strategy option[value='161557']").show();  //IT
             jq("#strategy option[value='159939']").show();  //MO
+            jq("#strategy option[value='166606']").show();  //SNS
             jq("#strategy option[value='5622']").show();     //O
             jq("#hts-entry-point option[value='5622']").show();     //O
             if (val == 1537 ) {   //Facility setting selected
@@ -509,6 +510,7 @@
             jq("#strategy option[value='159938']").hide();    //HB
             jq("#strategy option[value='161557']").hide();  //IT
             jq("#strategy option[value='159939']").hide();  //MO
+            jq("#strategy option[value='166606']").hide();  //SNS
             jq("#strategy option[value='5622']").hide();     //O
             //Entry points
             jq("#hts-entry-point option[value='163096']").hide();    //CT
@@ -542,7 +544,7 @@
                 jq('#disability').show();
             }
             if (prev_disabilityType != "" || prev_disabilityType != null) {
-                jq("#disability input[type=checkbox][value=" + prev_disabilityType+ "]").prop("checked",true);
+                jq("#disability input[type=checkbox][value='+ prev_disabilityType+']").prop("checked",true);
             }
             if (prev_disability == 1066) {
                 jq("#has-disability input[value=1066]").prop("checked", true);
@@ -557,7 +559,7 @@
                 jq('#key-population').hide();
             }
             if (prev_keyPopulationType != "" || prev_keyPopulationType != null) {
-                jq("#key-population input[type=checkbox][value=" + prev_keyPopulationType+ "]").prop("checked",true);
+                jq("#key-population input[type=checkbox][value='+prev_keyPopulationType+']").prop("checked",true);
             }
             if (prev_EverTested == 1065) {
                 jq("#ever-tested input[value=1065]").prop("checked", true);
@@ -799,15 +801,6 @@
                 getField('kit-name-2.error').html('Please use a different kit.').hide();
             }
 
-            var popTypeSelected = getField("population-type.value");
-            if (popTypeSelected == 164929 ){
-                jq("#key-population").show();
-                jq("#priority-population").hide();
-            }
-            if (popTypeSelected == 138643 ){
-                jq("#priority-population").show();
-                jq("#key-population").hide();
-            }
         });
     </script>
 
@@ -825,7 +818,6 @@
                     <ifMode mode="EDIT">
                         <script type="text/javascript">
                             jq(function(){
-
                                 //facility referral
                                 var val = getField("referral-to.value").val();
                                 var default_location = "<lookup expression="kenyaemr.location()" />";
@@ -839,7 +831,16 @@
                                     getField('other-facility.value').val("");
                                     getField('this-facility.value').val(default_location);
                                 }
-
+                                //if key pop show which type
+                                var popTypeSelected = getValue('population-type.value');
+                                if (popTypeSelected == 164929 ){
+                                    jq("#key-population").show();
+                                    jq("#priority-population").hide();
+                                }
+                                if (popTypeSelected == 138643 ){
+                                    jq("#priority-population").show();
+                                    jq("#key-population").hide();
+                                }
                                 //First test
                                 var firstTest = getField("hiv-test1-result.value").val();
                                 //Negative
@@ -914,6 +915,7 @@
                                     var val = jq(this).val();
                                     jq("#strategy option[value='161557']").show();  //IT
                                     jq("#strategy option[value='159939']").show();  //MO
+                                    jq("#strategy option[value='166606']").show();  //SNS
                                     jq("#strategy option[value='5622']").show();     //O
                                     jq("#hts-entry-point option[value='5622']").show();     //O
                                     if (val == 1537 ) {   //Facility setting selected
@@ -1001,6 +1003,10 @@
                             <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160579AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                  answerLabel="Female sex Worker" style="checkbox" id="female-sex-worker" /><br/>
                         </includeIf>
+                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="People in prison and other closed settings" style="checkbox"  id="prisoner"/><br/>
+                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165100"
+                             answerLabel="Transgender" style="checkbox"  id="transgender"/><br/>
                         <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabel="Other" style="checkbox" id="other" /><br/>
                     </td>
@@ -1157,6 +1163,7 @@
                                                159938AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                159939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                161557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                               166606AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="HP:Provider Initiated Testing(PITC),
                                            NP: HTS for non-patients,
@@ -1165,6 +1172,7 @@
                                            Home Based Testing,
                                            MO: Mobile Outreach HTS,
                                            Index testing,
+                                           SNS - Social Networks,
                                            O: Others"
                              />
 
