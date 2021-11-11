@@ -48,44 +48,7 @@ public class PartiallyVaccinatedCovid19CohortDefinitionEvaluator implements Coho
         Cohort newCohort = new Cohort();
 
         String qry = "select p.patient_id\n" +
-                "from (select t.patient_id\n" +
-                "      from (select fup.visit_date,\n" +
-                "                   fup.patient_id,\n" +
-                "                   max(e.visit_date)                                                                as enroll_date,\n" +
-                "                   greatest(max(e.visit_date),\n" +
-                "                            ifnull(max(date(e.transfer_in_date)), '0000-00-00'))                    as latest_enrolment_date,\n" +
-                "                   greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n" +
-                "                   greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
-                "                            ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n" +
-                "                   d.patient_id                                                                     as disc_patient,\n" +
-                "                   d.effective_disc_date                                                            as effective_disc_date,\n" +
-                "                   max(d.visit_date)                                                                as date_discontinued,\n" +
-                "                   de.patient_id                                                                    as started_on_drugs\n" +
-                "            from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
-                "                   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
-                "                   join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
-                "                   left outer join kenyaemr_etl.etl_drug_event de\n" +
-                "                     on e.patient_id = de.patient_id and de.program = 'HIV' and date(date_started) <= date(:endDate)\n" +
-                "                   left outer JOIN (select patient_id,\n" +
-                "                                           coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-                "                                           max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
-                "                                    from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "                                    where date(visit_date) <= date(:endDate)\n" +
-                "                                      and program_name = 'HIV'\n" +
-                "                                    group by patient_id) d on d.patient_id = fup.patient_id\n" +
-                "            where fup.visit_date <= date(:endDate)\n" +
-                "            group by patient_id\n" +
-                "            having (started_on_drugs is not null and started_on_drugs <> '')\n" +
-                "               and (\n" +
-                "                       (\n" +
-                "                           ((timestampdiff(DAY, date(latest_tca), date(:endDate)) <= 30 or\n" +
-                "                             timestampdiff(DAY, date(latest_tca), date(curdate())) <= 30) and\n" +
-                "                            ((date(d.effective_disc_date) > date(:endDate) or\n" +
-                "                              date(enroll_date) > date(d.effective_disc_date)) or d.effective_disc_date is null))\n" +
-                "                             and (date(latest_vis_date) >= date(date_discontinued) or\n" +
-                "                                  date(latest_tca) >= date(date_discontinued) or disc_patient is null)\n" +
-                "                           )\n" +
-                "                       )) t\n" +
+                "from (SELECT t.patient_id from kenyaemr_etl.etl_current_in_care t\n" +
                 "             inner join (\n" +
                 "                        select patient_id from kenyaemr_etl.etl_covid19_assessment\n" +
                 "                        group by patient_id\n" +
