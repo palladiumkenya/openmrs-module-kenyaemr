@@ -10,7 +10,6 @@
   ~ under the License.
   ~
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
-
 -->
 <htmlform>
 
@@ -1163,10 +1162,10 @@
             <table id="priority-population">
                 <tr>
                     <td>
-                           <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="159674AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="159674AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabel="Fisher folk" style="checkbox" /><br/>
-                            <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabel="Truck driver" style="checkbox" /><br/>
+                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Truck driver" style="checkbox" /><br/>
                         <includeIf velocityTest="$patient.gender == 'F'">
                             <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160549AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                  answerLabel="Adolescent and young girls" style="checkbox" id="adyg" /><br/>
@@ -1206,7 +1205,7 @@
                         <obs conceptId="162558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabel="Other" style="checkbox" id="has-other-disability"  /><br/>
 
-                       <table id="tbl-other-disability">
+                        <table id="tbl-other-disability">
                             <tr>
                                 <td>  &#160;&#160;&#160; Specify :
                                     <obs id="other-disability" conceptId="160632" />
@@ -1235,7 +1234,7 @@
                         />
                         &#160;&#160;&#160;
                     </td>
-                 </tr>
+                </tr>
             </table>
             <table id="tbl-hiv-selftest">
                 <tr>
@@ -1292,7 +1291,7 @@
             <table id="tbl-approach">
                 <tr>
                     <td>HTS Approach: &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                                      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
                         <obs id="approach" conceptId="163556"  answerConceptIds="164163,164953"
                              style="dropdown" answerLabels="Provider Initiated Testing(PITC),Client Initiated Testing (CITC)" />
                     </td>
@@ -1330,13 +1329,13 @@
                     </td>
                     <td>
                         <table id="tbl-other-strategy">
-                             <tr>
+                            <tr>
                                 <td>  &#160;&#160;&#160; Specify :
                                     <obs id="other-strategy" conceptId="163761" />
                                     &#160;&#160;&#160;
                                 </td>
-                           </tr>
-                          </table>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
@@ -1409,7 +1408,7 @@
             <table id="tbl-hiv-test">
                 <obsgroup groupingConceptId="164410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
                     <tr>
-                          <td>&#160;&#160;&#160;&#160; Kit Name
+                        <td>&#160;&#160;&#160;&#160; Kit Name
                             <obs class="kit-name"
                                  id="kit-name-1"
                                  conceptId="164962"
@@ -1436,12 +1435,12 @@
                                  style="dropdown" answerLabels="Positive,Negative,Invalid"/>
                         </td>
                         <td>
-                        <div id="dual-results-1" style="display:none;" >&#160;&#160;&#160;&#160; Syphilis Results
-                            <obs conceptId="299AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 id="syphilis-test-results-1"
-                                 answerConceptIds="1229AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1228AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Negative,Positive"/>
-                        </div>
+                            <div id="dual-results-1" style="display:none;" >&#160;&#160;&#160;&#160; Syphilis Results
+                                <obs conceptId="299AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     id="syphilis-test-results-1"
+                                     answerConceptIds="1229AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1228AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabels="Negative,Positive"/>
+                            </div>
                         </td>
 
                     </tr>
@@ -1487,16 +1486,16 @@
                              answerLabels="Positive,Negative,Inconclusive"/>
                     </td>
                     <td>
-                    <table id="tbl-results-given">
+                        <table id="tbl-results-given">
                             <tr>
-                            <td>&#160;&#160;&#160;&#160;Results given to client?&#160;&#160;&#160;&#160;
-                                <obs class="result-given" conceptId="164848AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     style="dropdown" answerLabels="YES,NO" id="results-given"/>
-                                <span style="color:red;"><strong>*</strong></span>
-                            </td>
-                        </tr>
-                    </table>
+                                <td>&#160;&#160;&#160;&#160;Results given to client?&#160;&#160;&#160;&#160;
+                                    <obs class="result-given" conceptId="164848AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         style="dropdown" answerLabels="YES,NO" id="results-given"/>
+                                    <span style="color:red;"><strong>*</strong></span>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
