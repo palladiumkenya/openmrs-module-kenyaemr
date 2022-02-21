@@ -93,7 +93,7 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
                 }
 
                 // no cervical cancer screening done within the past year
-                if(listObsCacx.size() == 0 && (lastCacxObs == null || lastCacxObs.getValueCoded().equals(no))) {
+                if(lastCacxObs != null && lastCacxObs.getValueCoded().equals(no)) {
                     needsCacxTest = true;
                 }
 
