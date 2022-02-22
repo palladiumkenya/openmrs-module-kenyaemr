@@ -63,13 +63,13 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
         Concept positive = Dictionary.getConcept(Dictionary.POSITIVE);
         Concept negitive = Dictionary.getConcept(Dictionary.NEGATIVE);
 
-        // check for last cacx screening recorded in assesment
+        // check for last cacx assesment recorded in assesment
         CalculationResultMap cacxLast = Calculations.lastObs(Context.getConceptService().getConcept(164934), cohort, context);
         // check for last screening method
         CalculationResultMap cacxLastMethod = Calculations.lastObs(Context.getConceptService().getConcept(163589), cohort, context);
         // check for last screening results
         CalculationResultMap cacxLastResults = Calculations.lastObs(Context.getConceptService().getConcept(165196), cohort, context);
-        //get a list of all the cacx screening
+        //get a list of all the cacx assesment
         CalculationResultMap cacxList = Calculations.allObs(Context.getConceptService().getConcept(164934), aliveAndFemale, context);
 
         CalculationResultMap lastCacxDate = calculate(new LastCacxTestDateCalculation(), aliveAndFemale, context);
@@ -80,11 +80,11 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
             Obs lastCacxObs = EmrCalculationUtils.obsResultForPatient(cacxLast, ptId);
             Obs lastCacxMethod = EmrCalculationUtils.obsResultForPatient(cacxLastMethod, ptId);
             Obs lastCacxResults = EmrCalculationUtils.obsResultForPatient(cacxLastResults, ptId);
-            // last cacx not art
+
             Date dateInitiated = EmrCalculationUtils.datetimeResultForPatient(lastCacxDate, ptId);
             ListResult listResult = (ListResult) cacxList.get(ptId);
             List<Obs> listObsCacx = CalculationUtils.extractResultValues(listResult);
-            // Newly initiated and without cervical cancer test
+            // In hiv program and above 15
             if(inHivProgram.contains(ptId) && patient.getAge() >= 15){
 
                 // have never taken the cacx test and new to hiv program
@@ -92,8 +92,8 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
                     needsCacxTest = true;
                 }
 
-                // no cervical cancer screening done within the past year
-                if(lastCacxObs != null && lastCacxObs.getValueCoded().equals(no)) {
+                // exsisting clients assesed but no test results because no screening occured
+                if(lastCacxObs != null && lastCacxResults == null) {
                     needsCacxTest = true;
                 }
 
