@@ -32,6 +32,33 @@
 		}
 	</style>
 
+	<script type="text/javascript">
+
+		jq(function () {
+			jq('#mchms-discontinuation-reason input').click(onDiscontinuationReasonChange);
+			onDiscontinuationReasonChange();
+		});
+
+		beforeSubmit.push(function () {
+			if (!jq('#other-reason').is(':visible')) {
+				clearOtherReason();
+			}
+			return true;
+		});
+
+		function onDiscontinuationReasonChange() {
+			if (getValue('mchms-discontinuation-reason.value') == 5622) {
+				jq('#other-reason-table').show();
+			} else {
+				jq('#other-reason-table').hide();
+			}
+		}
+
+		function clearOtherReason() {
+			setValue('other-reason.value') == null;
+		}
+	</script>
+
 	<div class="ke-form-header">
 		<table style="width: 100%">
 			<tr>
@@ -66,13 +93,26 @@
 							<td width="250">Reason:</td>
 							<td>
 								<obs conceptId="161555AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-									 answerConceptIds="160035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159492AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,50AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1267AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+									 answerConceptIds="160035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159492AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,50AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1267AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 									 answerLabels="Completed Follow Up,Transferred out,Miscarriage,Abortion,End of study,Consent withdrawn,Died"/>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2">
+					<table id="other-reason-table">
+						<tr>
+							<td>Other (specify):</td>
+							<td>
+								<obs conceptId="160632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="other-reason" size="100"/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
 		</table>
 		<completeProgram programId="b5d9e05f-f5ab-4612-98dd-adb75438ed34"/>
 	</div>
