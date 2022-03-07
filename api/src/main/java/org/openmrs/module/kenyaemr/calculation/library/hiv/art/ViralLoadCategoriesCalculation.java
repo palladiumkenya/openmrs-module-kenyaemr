@@ -8,31 +8,30 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.calculation.library.hiv.art;
-        import org.apache.commons.logging.Log;
-        import org.apache.commons.logging.LogFactory;
-        import org.openmrs.calculation.patient.PatientCalculationContext;
-        import org.openmrs.calculation.result.CalculationResult;
-        import org.openmrs.calculation.result.CalculationResultMap;
-        import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
-        import org.openmrs.module.kenyacore.calculation.BooleanResult;
-        import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
-        import org.openmrs.module.kenyaemr.calculation.library.hiv.StablePatientsCalculation;
-        import org.openmrs.ui.framework.SimpleObject;
-        import java.util.Collection;
-        import java.util.Date;
-        import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.Program;
+import org.openmrs.calculation.patient.PatientCalculationContext;
+import org.openmrs.calculation.result.CalculationResult;
+import org.openmrs.calculation.result.CalculationResultMap;
+import org.openmrs.module.kenyacore.calculation.*;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.LostToFollowUpCalculation;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.ui.framework.SimpleObject;
 
-        import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSince;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
-
-
-        public class ViralLoadCategoriesCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
-        private String vlLevel;
-        protected static final Log log = LogFactory.getLog(StablePatientsCalculation.class);
+import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSince;
+public class ViralLoadCategoriesCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+        private String vlMessage;
+        protected static final Log log = LogFactory.getLog(ViralLoadCategoriesCalculation.class);
         /*
         KHP3-525: Get the Last VL load- Categorize them into Unsuppressed (>1000), high viremia (400-999), low viremia (0-399)
-
         * If VL level is above 1000 in the last 12 months, the patient is unsuppressed
         *
         * If VL level is between 400 and 999 in the last 12 months, the patient has high viremia
@@ -41,52 +40,67 @@ package org.openmrs.module.kenyaemr.calculation.library.hiv.art;
         * */
         @Override
         public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
-        LastViralLoadResultCalculation lastVlResultCalculation = new LastViralLoadResultCalculation();
-        CalculationResultMap lastVlResults = lastVlResultCalculation.evaluate(cohort, null, context);
+                Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
+                Set<Integer> alive = Filters.alive(cohort, context);
+                Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
+                Set<Integer> allOnArt = CalculationUtils.patientsThatPass(calculate(new OnArtCalculation(), cohort, context));
 
-        CalculationResultMap ret = new CalculationResultMap();
-        for(Integer ptId:cohort) {
-        boolean needsViralLoadTest = false;
-        String lastVlResult = null;
-        String lastVlResultLDL = null;
-        Double lastVlResultValue = null;
-        Date lastVLResultDate = null;
-        CalculationResult lastvlresult = lastVlResults.get(ptId);
+                //Checks for ltfu
+                Set<Integer> ltfu = CalculationUtils.patientsThatPass(calculate(new LostToFollowUpCalculation(), cohort, context));
+                // All on ART already
+                LastViralLoadResultCalculation lastVlResultCalculation = new LastViralLoadResultCalculation();
+                CalculationResultMap lastVlResults = lastVlResultCalculation.evaluate(cohort, null, context);
+                CalculationResultMap ret = new CalculationResultMap();
+                for(Integer ptId:cohort) {
+                        boolean eligibleForFlag = false;
+                       if(!ltfu.contains(ptId) && inHivProgram.contains(ptId)){
+                                String lastVlResult = null;
+                                Double lastVlResultValue = null;
+                                Date lastVLResultDate = null;
+                                CalculationResult lastvlresult = lastVlResults.get(ptId);
+                                if (lastvlresult != null && lastvlresult.getValue() != null) {
+                                        Object lastVl = lastvlresult.getValue();
+                                        SimpleObject res = (SimpleObject) lastVl;
+                                        lastVlResult = res.get("lastVl").toString();
+                                        lastVLResultDate = (Date) res.get("lastVlDate");
+                                        if (daysSince(lastVLResultDate, context) <= 365) {
+                                                if(lastVlResult =="LDL"){
+                                                        vlMessage = "Low Viremia";
+                                                } else {
+                                                        lastVlResultValue = Double.parseDouble(lastVlResult);
+                                                        categorizeViralLoad(lastVlResultValue);
+                                                }
+                                                eligibleForFlag = true;
+                                        }
 
-        if (lastvlresult != null && lastvlresult.getValue() != null) {
-        Object lastVl = lastvlresult.getValue();
-        SimpleObject res = (SimpleObject) lastVl;
-        lastVlResult = res.get("lastVl").toString();
+                               }
+                        }
+                        ret.put(ptId, new BooleanResult(eligibleForFlag, this));
 
-        lastVLResultDate = (Date) res.get("lastVlDate");
-
-        if(lastVlResult =="LDL"){
-        lastVlResultLDL = "LDL";
-        }else{
-        lastVlResultValue =  Double.parseDouble(lastVlResult);
-        }
-        }
-        //If VL level is above 1000 in the last 12 months, the patient is unsuppressed
-        if (lastvlresult !=null && (lastVlResultLDL != null || lastVlResultValue >= 1000) && daysSince(lastVLResultDate,context) < 365){
-        vlLevel = "Unsuppressed";
-        }
-        //If VL level is between 400 and 999 in the last 12 months, the patient has high viremia
-        if (lastvlresult !=null && (lastVlResultLDL != null || (lastVlResultValue >= 400 && lastVlResultValue <= 999)) && daysSince(lastVLResultDate,context) < 365){
-        vlLevel = "High Virema";
-        }
-        //If VL level is between 0 and 399 in the last 12 months, the patient has low viremia
-        if (lastvlresult !=null && (lastVlResultLDL != null || (lastVlResultValue == 0 && lastVlResultValue <= 399)) && daysSince(lastVLResultDate,context) < 365){
-        vlLevel = "Low Virema";
+                }
+                return ret;
         }
 
-        ret.put(ptId, new BooleanResult(true, this));
-        }
-        return ret;
+        private void categorizeViralLoad(Double lastVlResultValue) {
+                //If VL level is above 1000 in the last 12 months, the patient is unsuppressed
+                if ((lastVlResultValue >= 1000)) {
+                        vlMessage = "Unsuppressed";
+                        log.info("UNSUPPRESSED==="+lastVlResultValue);
+                }
+                //If VL level is between 400 and 999 in the last 12 months, the patient has high viremia
+                if (lastVlResultValue >= 400 && lastVlResultValue <= 999) {
+                        vlMessage = "High Viremia";
+                        log.info("High Viremia==="+lastVlResultValue);
+                }
+                //If VL level is between 0 and 399 in the last 12 months, the patient has low viremia
+                if (lastVlResultValue == 0 && lastVlResultValue <= 399) {
+                        vlMessage = "Low Virema";
+                        log.info("Low Viremia==="+lastVlResultValue);
+                }
         }
 
         @Override
         public String getFlagMessage() {
-        return vlLevel;
-
+                return vlMessage;
         }
-        }
+}
