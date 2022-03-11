@@ -121,9 +121,9 @@
                 <tr class="patient-details">
                     <td>BP</td>
                     <td>
-                        <obs conceptId="5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="systolic"/>
+                        <obs conceptId="5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="systolic" required="true"/>
                         /
-                        <obs conceptId="5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="diastolic"/>
+                        <obs conceptId="5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="diastolic" required="true"/>
                         mmHg
                     </td>
                     <td><span class="value"><recentObs conceptId="5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/> / <recentObs
@@ -132,14 +132,14 @@
                 <tr class="patient-details">
                     <td>Pulse Rate</td>
                     <td>
-                        <obs conceptId="5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pulse"/>
+                        <obs conceptId="5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pulse" required="true"/>
                     </td>
                     <td><span class="value"><recentObs conceptId="5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span></td>
                 </tr>
                 <tr class="patient-details">
                     <td>Temperature</td>
                     <td>
-                        <obs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="temp"/> &#176;C
+                        <obs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="temp" required="true"/> &#176;C
                     </td>
                     <td>
                         <span class="value"><recentObs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
@@ -150,15 +150,15 @@
                     <td>
                         <obs id="penis-elevated" conceptId="162871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             style="radio" />
+                             style="radio" required="true" />
                     </td>
                 </tr>
                 <tr>
                     <td>Client given post procedure instruction?</td>
                     <td>
-                        <obs id="post-procedure-instructions" conceptId="162871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <obs id="post-procedure-instructions" conceptId="166639AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             style="radio" />
+                             style="radio" required="true" />
                     </td>
                 </tr>
                 <tr>
@@ -221,14 +221,14 @@
                 </tr>
                 <tr>
                     <td>Discharged by: </td>
-                    <td> <obs conceptId="1473AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="discharged-by"  /> </td>
+                    <td> <obs conceptId="1473AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="discharged-by" required="true" /> </td>
                 </tr>
                 <tr>
                     <td>Cadre: </td>
                     <td>
                         <obs conceptId="1542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerConceptIds="162591AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162592AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1577AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="MO,CO,Nurse" id="clinician_cadre" style="radio" />
+                             answerLabels="MO,CO,Nurse" id="clinician_cadre" required="true" style="radio" />
                     </td>
                 </tr>
 
