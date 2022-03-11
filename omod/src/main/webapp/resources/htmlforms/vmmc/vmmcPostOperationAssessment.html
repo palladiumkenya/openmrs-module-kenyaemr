@@ -70,26 +70,52 @@
             }
         }
 
+        //Before Submit
+        beforeSubmit.push(function() {
+
+            // validations on medication
+            var specifyMedication = getValue('other-medication.value');
+
+            var analgesicMedication = jq("#medication-analgesic input:checkbox:checked");
+            var antibioticsMedication = jq("#medication-antibiotics input:checkbox:checked");
+            var ttcvMedication = jq("#medication-ttcv input:checkbox:checked");
+            var otherMedication = jq("#medication-other input:checkbox:checked");
+
+            console.log("otherMedication", otherMedication);
+            console.log("specifyMedication", specifyMedication);
+
+            if(analgesicMedication.length == 0 &amp;&amp; antibioticsMedication.length == 0 &amp;&amp; ttcvMedication.length == 0  &amp;&amp; otherMedication.length == 0) {
+                getField('medication-none.error').html('Please specify if any medication was given').show();
+                return false;
+            }
+
+            if(otherMedication.length > 0 &amp;&amp; specifyMedication == "" ) {
+                getField('other-medication.error').html('Please specify other medication').show();
+                return false;
+            }
+        });
+
     </script>
 
     <ifMode mode="EDIT">
         <script type="text/javascript">
             $(document).ready(function () {
-            // if none in medications is selected
-            jq("#tbl-medications").show();
-            jq('#medications-select :input[type=checkbox]').change(medicationSelected);
-        });
-
-        var medicationSelected = function(){
-            var val = jq(this).val();
-            var medicationChecked = jq("#medications-select input:checkbox:checked");
-            if(val == 1107 &amp;&amp; medication.length ==1){
-                jq("#tbl-medications").hide();
-            }
-            if(medicationChecked.length ==0){
+                // if none in medications is selected
                 jq("#tbl-medications").show();
+                jq('#medications-select :input[type=checkbox]').change(medicationSelected);
+            });
+
+            var medicationSelected = function(){
+                var val = jq(this).val();
+                var medicationChecked = jq("#medications-select input:checkbox:checked");
+                if(val == 1107 &amp;&amp; medication.length ==1){
+                    jq("#tbl-medications").hide();
+                }
+                if(medicationChecked.length ==0){
+                    jq("#tbl-medications").show();
+                }
             }
-        }
+
         </script>
     </ifMode>
 
@@ -168,31 +194,31 @@
                 <tr>
 
                     <td>
-                        <obsgroup groupingConceptId="159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                        <obsgroup groupingConceptId="159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="medications">
                 <tr id="complaints-checked">
                     <td>Post operation medication given?</td>
                     <td>
                         <obs conceptId="159369AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1107AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="None" style="checkbox" id="medications-select" /><br/>
+                             answerLabel="None" style="checkbox" id="medication-none" /><br/>
                     </td>
                     <td>
                         <table id="tbl-medications" class="simple-table tb1">
-                            <tr>
+                            <tr id="medication-checked">
                                 <td>
                                     <obs conceptId="159369AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="103294AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Analgesic" style="checkbox" /><br/>
+                                         answerLabel="Analgesic" style="checkbox" id="medication-analgesic" /><br/>
                                 </td>
                                 <td>
                                     <obs conceptId="159369AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1195AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Antibiotics" style="checkbox" /><br/>
+                                         answerLabel="Antibiotics" style="checkbox" id="medication-antibiotics" /><br/>
                                 </td>
                                 <td>
                                     <obs conceptId="159369AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="84879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="TTCV" style="checkbox" /><br/>
+                                         answerLabel="TTCV" style="checkbox" id="medication-ttcv" /><br/>
                                 </td>
                                 <td>
                                     <obs conceptId="159369AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Other" style="checkbox" /><br/>
+                                         answerLabel="Other" style="checkbox" id="medication-other" /><br/>
                                 </td>
                                 <td> Specify: </td>
                                 <td>

@@ -959,29 +959,29 @@
         <fieldset id="vmmc-source-info">
             <legend>VMMC source Info </legend>
             <table class ="simple-table">
-               <tr id="tr-assent">
-                   <td> Assent given? </td>
-                   <td>
-                       <obs id="assent-given" conceptId="162696AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                            answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                            answerLabel="Yes,No"
-                            style="radio" />
-                       <br/>
-                   </td>
-               </tr>
-               <tr id="tr-consent">
-                   <includeIf velocityTest="$patient.age &lt; 18">
-                   <td> &#160;&#160;&#160;&#160;&#160; If Yes - Parent/ Guardian Consent given? </td>
-                   </includeIf>
-                   <includeIf velocityTest="$patient.age &gt; 17">
-                       <td> &#160;&#160;&#160;&#160;&#160; Consent given? </td>
-                   </includeIf>
-                   <td>
-                       <obs id="consent-given" conceptId="1710"
-                            style="yes_no" />
-                       <br/>
-                   </td>
-               </tr>
+                <tr id="tr-assent">
+                    <td> Assent given? </td>
+                    <td>
+                        <obs id="assent-given" conceptId="162696AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Yes,No"
+                             style="radio" />
+                        <br/>
+                    </td>
+                </tr>
+                <tr id="tr-consent">
+                    <includeIf velocityTest="$patient.age &lt; 18">
+                        <td> &#160;&#160;&#160;&#160;&#160; If Yes - Parent/ Guardian Consent given? </td>
+                    </includeIf>
+                    <includeIf velocityTest="$patient.age &gt; 17">
+                        <td> &#160;&#160;&#160;&#160;&#160; Consent given? </td>
+                    </includeIf>
+                    <td>
+                        <obs id="consent-given" conceptId="1710"
+                             style="yes_no" />
+                        <br/>
+                    </td>
+                </tr>
             </table>
         </fieldset>
 
@@ -1019,71 +1019,71 @@
             </table>
             <br/>
             <table  class ="simple-table" id="tbl-enrolled-positive-details">
-            <tr>
-                <td width="250">CCC Number:</td>
-                <td>
-                    <div> <span id="hiv-id"><patient id="upn" field="identifier" identifierTypeId="05ee9cf4-7242-4a17-b4d4-00f707265c8a" required="false"/></span> </div>
-                </td>
-                <td width="250">Current Regimen:</td>
-                <td>
-                    <span id="current-regimen" class="value"></span>
-                </td>
-                <td width="250">Adherence to drugs</td>
-                <td>
-                    <span id="adherence-score" class="value"></span>
-                </td>
-            </tr>
-            <tr>
-                <td width="250">Last VL:</td>
-                <td>
-                    <input type="text" name="vl-value" id="vl-value" readonly="True" />
-                </td>
-                <td width="250">CD4 Count:</td>
-                <td>
-                    <input type="text" name="cd4-count" id="cd4-count" readonly="True" />
-                </td>
-                <td width="250">Date of next appointment:</td>
-                <td>
-                    <obs id="patient-tca-date" conceptId="5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="true" />
-                </td>
-            </tr>
-        </table>
-        <table  class ="simple-table" id="tbl-reported-positive-details">
-            <tr>
-                <td>Facility of HIV Care :  </td>
-                <td>
-                    <obs id="care-facility" conceptId="165239"
-                         answerConceptIds="163266AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
-                                               164407AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                         style="dropdown" answerLabels="This health facility,Other health facility" />
-
-                    <br/>
-                    <table id="tbl-other-facility">
-                        <tr>
-                            <td>  &#160;&#160;&#160; Facility name :
-                                <obs id="other-facility" conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
-                                &#160;&#160;&#160;
-                            </td>
-                        </tr>
-                    </table>
-                    <br/>
-                    <table id="tbl-this-facility">
-                        <tr>
-                            <td>  &#160;&#160;&#160; Name :
-                                <obs id="this-facility" conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="40"/>
-                                &#160;&#160;&#160;
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="250">Date of next appointment:</td>
-                <td>
-                    <obs id="patient-tca-date" conceptId="5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="true" />
-                </td>
-            </tr>
                 <tr>
                     <td width="250">CCC Number:</td>
-                    <td>                       
+                    <td>
+                        <div> <span id="hiv-id"><patient id="upn" field="identifier" identifierTypeId="05ee9cf4-7242-4a17-b4d4-00f707265c8a" required="false"/></span> </div>
+                    </td>
+                    <td width="250">Current Regimen:</td>
+                    <td>
+                        <span id="current-regimen" class="value"></span>
+                    </td>
+                    <td width="250">Adherence to drugs</td>
+                    <td>
+                        <span id="adherence-score" class="value"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="250">Last VL:</td>
+                    <td>
+                        <input type="text" name="vl-value" id="vl-value" readonly="True" />
+                    </td>
+                    <td width="250">CD4 Count:</td>
+                    <td>
+                        <input type="text" name="cd4-count" id="cd4-count" readonly="True" />
+                    </td>
+                    <td width="250">Date of next appointment:</td>
+                    <td>
+                        <obs id="patient-tca-date" conceptId="5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="true" />
+                    </td>
+                </tr>
+            </table>
+            <table  class ="simple-table" id="tbl-reported-positive-details">
+                <tr>
+                    <td>Facility of HIV Care :  </td>
+                    <td>
+                        <obs id="care-facility" conceptId="165239"
+                             answerConceptIds="163266AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                               164407AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             style="dropdown" answerLabels="This health facility,Other health facility" />
+
+                        <br/>
+                        <table id="tbl-other-facility">
+                            <tr>
+                                <td>  &#160;&#160;&#160; Facility name :
+                                    <obs id="other-facility" conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+                                    &#160;&#160;&#160;
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table id="tbl-this-facility">
+                            <tr>
+                                <td>  &#160;&#160;&#160; Name :
+                                    <obs id="this-facility" conceptId="161550AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="40"/>
+                                    &#160;&#160;&#160;
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="250">Date of next appointment:</td>
+                    <td>
+                        <obs id="patient-tca-date" conceptId="5096AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="250">CCC Number:</td>
+                    <td>
                         <div> <obs class="upn" conceptId="162053" id="upn-concept" size ="20" /></div>
                         <span id="upnError" class="error"></span>
                     </td>
@@ -1126,7 +1126,7 @@
                         <obs id="vl" conceptId="856AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
                         copies/ml
 
-                    <obs conceptId="1305AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1302AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="LDL" id="ldl" />
+                        <obs conceptId="1305AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1302AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="LDL" id="ldl" />
                     </td>
                     <td width="250">CD4 Count:</td>
                     <td>
@@ -1142,66 +1142,66 @@
                 <tr>
                     <td>
 
-                            <obsgroup groupingConceptId="160741AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                            <tr>
-                                <td>  Client's known history of: <br/></td>
-                                <td>
-                                    <obs conceptId="1628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Bleeding Disorder" style="checkbox" /><br/>
-                                    <obs conceptId="1628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Diabetes " style="checkbox" /><br/>
-                                </td>
-                            </tr>
-                            </obsgroup>
+                        <obsgroup groupingConceptId="160741AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                <tr>
+                    <td>  Client's known history of: <br/></td>
+                    <td>
+                        <obs conceptId="1628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Bleeding Disorder" style="checkbox" /><br/>
+                        <obs conceptId="1628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Diabetes " style="checkbox" /><br/>
                     </td>
+                </tr>
+                </obsgroup>
+                </td>
                 </tr>
                 <tr>
                     <td>
-                            <obsgroup groupingConceptId="159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                                <tr id="complaints-checked">
-                                    <td>  Client presenting with complaint: <br/><br/>
-                                        <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
-                                        <span style="color:red;"><strong>*</strong></span>
-                                          </td>
-                                    <td>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="123529AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Urethral Discharge" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="118990AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Genital Sore" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163606AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Pain on Urination" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="125203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Swelling of the scrotum" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163831AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Difficulty in retracting foreskin" style="checkbox" /><br/>
-                                    </td>
-                                    <td>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="130845AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Difficulty in returning foreskin to normal" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="116123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Concerns about erection/sexual function" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163813AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Epispadia" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="138010AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Hypospadia" style="checkbox" /><br/>
-                                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabel="Others" style="checkbox" id="complaint-error" />  <span style="color:red;"><strong>*</strong></span><br/>
-
-                                    </td>
-                                            <td>
-                                                <br/>
-                                                <table id="tbl-other-complaint">
-                                                    <tr>
-                                                        <td>  &#160;&#160;&#160; Specify :
-                                                            <obs id="other-complaint" conceptId="163047AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
-                                                            &#160;&#160;&#160;
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                </tr>
-                            </obsgroup>
+                        <obsgroup groupingConceptId="159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                <tr id="complaints-checked">
+                    <td>  Client presenting with complaint: <br/><br/>
+                        <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
+                        <span style="color:red;"><strong>*</strong></span>
                     </td>
+                    <td>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="123529AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Urethral Discharge" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="118990AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Genital Sore" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163606AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Pain on Urination" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="125203AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Swelling of the scrotum" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163831AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Difficulty in retracting foreskin" style="checkbox" /><br/>
+                    </td>
+                    <td>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="130845AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Difficulty in returning foreskin to normal" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="116123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Concerns about erection/sexual function" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="163813AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Epispadia" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="138010AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Hypospadia" style="checkbox" /><br/>
+                        <obs conceptId="1728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Others" style="checkbox" id="complaint-error" />  <span style="color:red;"><strong>*</strong></span><br/>
+
+                    </td>
+                    <td>
+                        <br/>
+                        <table id="tbl-other-complaint">
+                            <tr>
+                                <td>  &#160;&#160;&#160; Specify :
+                                    <obs id="other-complaint" conceptId="163047AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+                                    &#160;&#160;&#160;
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </obsgroup>
+                </td>
 
                 </tr>
             </table>
@@ -1254,58 +1254,58 @@
                         </table>
                     </td>
                 </tr>
-           <tr>
-           <td>
-                Any known allergies? &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                <obs id="known-allergies" conceptId="160557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  style="yes_no"/>
-               <span style="color:red;"><strong>*</strong></span>
-           </td>
-            <td>
-            <table id="tbl-known-allergies">
                 <tr>
-                    <td colspan="2">Record any known allergies<br/>
-                        <table>
+                    <td>
+                        Any known allergies? &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs id="known-allergies" conceptId="160557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  style="yes_no"/>
+                        <span style="color:red;"><strong>*</strong></span>
+                    </td>
+                    <td>
+                        <table id="tbl-known-allergies">
                             <tr>
-                                <th>Causative agent</th>
-                                <th>Reaction</th>
-                                <th>Severity</th>
-                                <th>Date of Onset</th>
-                            </tr>
-                            <repeat>
-                                <template>
-                                    <obsgroup groupingConceptId="121689AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                <td colspan="2">Record any known allergies<br/>
+                                    <table>
                                         <tr>
-                                            <td><obs class="allergen" conceptId="160643AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                     answerConceptIds="162543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,72609AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162544AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162545AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162171AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162546AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162547AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162172AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                            <th>Causative agent</th>
+                                            <th>Reaction</th>
+                                            <th>Severity</th>
+                                            <th>Date of Onset</th>
+                                        </tr>
+                                        <repeat>
+                                            <template>
+                                                <obsgroup groupingConceptId="121689AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                                    <tr>
+                                                        <td><obs class="allergen" conceptId="160643AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                                 answerConceptIds="162543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,72609AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162544AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162545AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162171AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162546AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162547AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162172AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                                             162176AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162548AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162177AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162542AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162536AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162538AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162539AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162540AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                                               	162541AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                     answerLabels="Beef,Caffeine,Chocolate,Dairy Food,Eggs,Fish,Milk Protein,Peanuts,Shellfish,Soy,Strawberries,Wheat,Adhesive Tape,Bee Stings,Dust,Latex,Mold,Pollen,Ragweed,Other"
-                                                     style="dropdown" id="allergy-field"
-                                            />
-                                            </td>
-                                            <td><obs class="reaction" conceptId="159935AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                     answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121629AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148787AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120148AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118773AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140039AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159098AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                                 answerLabels="Beef,Caffeine,Chocolate,Dairy Food,Eggs,Fish,Milk Protein,Peanuts,Shellfish,Soy,Strawberries,Wheat,Adhesive Tape,Bee Stings,Dust,Latex,Mold,Pollen,Ragweed,Other"
+                                                                 style="dropdown" id="allergy-field"
+                                                        />
+                                                        </td>
+                                                        <td><obs class="reaction" conceptId="159935AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                                 answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121629AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148787AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120148AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118773AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140039AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159098AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                                             111061AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121677AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159347AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                     answerLabels="Unknown,Anaemia,Anaphylaxis,Angioedema,Arrhythmia,Bronchospasm,Cough,Diarrhea,Dystonia,Fever,Flushing,GI upset,Headache,Hepatotoxicity,Hives,Hypertension,Itching,Mental status change,Musculoskeletal pain,Myalgia,Rash,Other"
-                                                     style="dropdown"
-                                            /></td>
-                                            <td><obs class="severity" conceptId="162760AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  answerConceptIds="160754AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160755AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160756AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160758AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabels="Mild,Moderate,Severe,Fatal,Unknown" /></td>
-                                            <td><obs class="allergy-date" conceptId="160753AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " /></td>
-                                        </tr>
-                                    </obsgroup>
-                                </template>
-                                <render n="1" concept=" " />
-                                <render n="2" concept=" " />
-                                <render n="3" concept=" " />
-                                <render n="4" concept=" " />
-                                <render n="5" concept=" " />
-                            </repeat>
-                              </table>
-                                 </td>
+                                                                 answerLabels="Unknown,Anaemia,Anaphylaxis,Angioedema,Arrhythmia,Bronchospasm,Cough,Diarrhea,Dystonia,Fever,Flushing,GI upset,Headache,Hepatotoxicity,Hives,Hypertension,Itching,Mental status change,Musculoskeletal pain,Myalgia,Rash,Other"
+                                                                 style="dropdown"
+                                                        /></td>
+                                                        <td><obs class="severity" conceptId="162760AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  answerConceptIds="160754AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160755AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160756AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160758AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabels="Mild,Moderate,Severe,Fatal,Unknown" /></td>
+                                                        <td><obs class="allergy-date" conceptId="160753AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " /></td>
+                                                    </tr>
+                                                </obsgroup>
+                                            </template>
+                                            <render n="1" concept=" " />
+                                            <render n="2" concept=" " />
+                                            <render n="3" concept=" " />
+                                            <render n="4" concept=" " />
+                                            <render n="5" concept=" " />
+                                        </repeat>
+                                    </table>
+                                </td>
                             </tr>
                         </table>
-                        </td>
-                   </tr>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         Client ever had a surgical operation?
@@ -1347,7 +1347,7 @@
                         <table id="tbl-booster-date">
                             <tr>
                                 <td>
-                        <obs id="tetanus-booster-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+                                    <obs id="tetanus-booster-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
                                 </td>
                             </tr>
                         </table>
@@ -1389,7 +1389,7 @@
                     <td> In good health: </td>
                     <td>
                         <obs id="good-health" conceptId="1855AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                               style="yes_no" />
+                             style="yes_no" />
                         <br/>
                     </td>
                     <td> Counseled: </td>
@@ -1411,10 +1411,10 @@
                     </td>
                 </tr>
                 <tr>
-                        <td> If No for any of the above, explain: </td>
-                            <td>
-                                <obs id="explain-noneligibility" conceptId="162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="50"/>
-                            </td>
+                    <td> If No for any of the above, explain: </td>
+                    <td>
+                        <obs id="explain-noneligibility" conceptId="162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="50"/>
+                    </td>
                 </tr>
             </table>
         </fieldset>
@@ -1446,18 +1446,18 @@
                                                        Other"
                                          style="radio"/>
                                     <br/>
-                                  </td>
-                                   <td>
-                                   <table id="tb-other-conventional-method">
-                                       <tr>
-                                           <td> Specify: </td>
+                                </td>
+                                <td>
+                                    <table id="tb-other-conventional-method">
+                                        <tr>
+                                            <td> Specify: </td>
                                             <td>
                                                 <obs id="other-conventional-method" conceptId="163042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="50"/>
                                             </td>
-                                       </tr>
-                                   </table>
-                                   </td>
-                                </tr>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
                             <tr id="tr-device-method-types">
                                 <td>
                                     Device name:
@@ -1470,10 +1470,10 @@
                                 <td>
                                     <table id="tb-other-device-name">
                                         <tr>
-                                <td> Specify: </td>
-                                <td>
-                                    <obs id="other-device-name" conceptId="163042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="50"/>
-                                </td>
+                                            <td> Specify: </td>
+                                            <td>
+                                                <obs id="other-device-name" conceptId="163042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" size="50"/>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -1484,7 +1484,7 @@
 
                                 </td>
                             </tr>
-                       </table>
+                        </table>
                     </td>
                 </tr>
             </table>
