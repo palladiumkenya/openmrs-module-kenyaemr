@@ -73,6 +73,7 @@ kenyaemrApp.controller('PatientSearchResults', ['$scope', '$http', function($sco
 
     $scope.query = '';
     $scope.results = [];
+    $scope.showLoader = false;
 
     /**
      * Initializes the controller
@@ -91,6 +92,7 @@ kenyaemrApp.controller('PatientSearchResults', ['$scope', '$http', function($sco
     $scope.$on('patient-search', function(event, data) {
         $scope.query = data.query;
         $scope.which = data.which;
+        $scope.showLoader = true;
         $scope.refresh();
     });
 
@@ -101,6 +103,7 @@ kenyaemrApp.controller('PatientSearchResults', ['$scope', '$http', function($sco
         $http.get(ui.fragmentActionLink('kenyaemr', 'search', 'patients', { appId: $scope.appId, q: $scope.query, which: $scope.which })).
         success(function(data) {
             $scope.results = data;
+            $scope.showLoader = false;
         });
     };
 
