@@ -21,6 +21,7 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.art.CurrentArtRegimen
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadResultCalculation;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQASimpleObjectRegimenConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.LastServicePointDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.data.DataDefinition;
@@ -92,6 +93,7 @@ public class PatientsOnMCHReportBuilder extends AbstractHybridReportBuilder {
         dsd.addColumn("CCC No", identifierDef, "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("Age", new AgeDataDefinition(), "", null);
+        dsd.addColumn("Last Service Point", new LastServicePointDataDefinition(),"");
         dsd.addColumn("Current Regimen", new CalculationDataDefinition("Current Regimen", new CurrentArtRegimenCalculation()), "", null);
         dsd.addColumn("Last VL Result", new CalculationDataDefinition("Recent Viral Load Result", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("data"));
         dsd.addColumn("Last VL Date", new CalculationDataDefinition("Recent Viral Load Result Date", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("date"));
