@@ -103,6 +103,23 @@ public class PatientWrapper extends AbstractPatientWrapper {
 	public void setHudumaNumber(String value, Location location) {
 		setAsIdentifier(CommonMetadata._PatientIdentifierType.HUDUMA_NUMBER, value, location);
 	}
+	/**
+	 * Gets the UPI number
+	 * @return the identifier value
+	 */
+	public String getUPINumber() {
+		return getAsIdentifier(CommonMetadata._PatientIdentifierType.GODS_NUMBER);
+	}
+
+
+	/**
+	 * Sets the UPI number
+	 * @param value the identifier value
+	 * @param location the identifier location
+	 */
+	public void setUPINumber(String value, Location location) {
+		setAsIdentifier(CommonMetadata._PatientIdentifierType.GODS_NUMBER, value, location);
+	}
 
 	/**
 	 * Gets the birth certificate number

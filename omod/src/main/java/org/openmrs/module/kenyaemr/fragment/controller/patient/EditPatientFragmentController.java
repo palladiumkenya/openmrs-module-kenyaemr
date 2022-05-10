@@ -295,6 +295,7 @@ public class EditPatientFragmentController {
 		private String birthCertificateNumber;
 		private String alienIdNumber;
 		private String drivingLicenseNumber;
+		private String upiNumber;
 
 
 
@@ -351,6 +352,7 @@ public class EditPatientFragmentController {
 			hudumaNumber = wrapper.getHudumaNumber();
 			alienIdNumber = wrapper.getAlienIdNumber();
 			drivingLicenseNumber = wrapper.getDrivingLicenseNumber();
+			upiNumber = wrapper.getUPINumber();
 			birthCertificateNumber = wrapper.getBirthCertificateNumber();
 			nationalIdNumber = wrapper.getNationalIdNumber();
 			nameOfNextOfKin = wrapper.getNextOfKinName();
@@ -466,6 +468,7 @@ public class EditPatientFragmentController {
 			validateIdentifierField(errors, "birthCertificateNumber", CommonMetadata._PatientIdentifierType.BIRTH_CERTIFICATE_NUMBER);
 			validateIdentifierField(errors, "alienIdNumber", CommonMetadata._PatientIdentifierType.ALIEN_ID_NUMBER);
 			validateIdentifierField(errors, "drivingLicenseNumber", CommonMetadata._PatientIdentifierType.DRIVING_LICENSE);
+			validateIdentifierField(errors, "upiNumber", CommonMetadata._PatientIdentifierType.GODS_NUMBER);
 
 
 
@@ -561,6 +564,7 @@ public class EditPatientFragmentController {
 			wrapper.setBirthCertificateNumber(birthCertificateNumber, location);
 			wrapper.setAlienIdNumber(alienIdNumber, location);
 			wrapper.setDrivingLicenseNumber(drivingLicenseNumber, location);
+			wrapper.setUPINumber(upiNumber, location);
 
 
 			wrapper.setNextOfKinName(nameOfNextOfKin);
@@ -569,6 +573,7 @@ public class EditPatientFragmentController {
 			wrapper.setNextOfKinAddress(nextOfKinAddress);
 			wrapper.setSubChiefName(subChiefName);
 			wrapper.setAlternativePhoneContact(alternatePhoneContact);
+
 			wrapper.setNearestHealthFacility(nearestHealthFacility);
 			wrapper.setEmailAddress(emailAddress);
 			wrapper.setGuardianFirstName(guardianFirstName);
@@ -816,8 +821,18 @@ public class EditPatientFragmentController {
 		public void setDrivingLicenseNumber(String drivingLicenseNumber) {
 			this.drivingLicenseNumber = drivingLicenseNumber;
 		}
-
-
+		/**
+		 * @return the upiNumber
+		 */
+		public String getUpiNumber() {
+			return upiNumber;
+		}
+		/**
+		 * @param upiNumber the upiNumber to set
+		 */
+		public void setUpiNumber(String upiNumber) {
+			this.upiNumber = upiNumber;
+		}
 		/**
 		 * @return the hivIdNumber
 		 */

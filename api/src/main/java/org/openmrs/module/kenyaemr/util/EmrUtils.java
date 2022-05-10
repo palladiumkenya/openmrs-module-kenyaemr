@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.util;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.codehaus.jackson.JsonNode;
@@ -32,6 +33,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.Dictionary;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -279,5 +281,47 @@ public class EmrUtils {
 		return passed;
 	}
 
+	/**
+	 * Creates a node factory
+	 *
+	 * @return
+	 */
+	public static JsonNodeFactory getJsonNodeFactory() {
+		final JsonNodeFactory factory = JsonNodeFactory.instance;
+		return factory;
+	}
+
+	/**
+	 * Extracts the request body and return it as string
+	 *
+	 * @param reader
+	 * @return
+	 */
+	public static String fetchRequestBody(BufferedReader reader) {
+		String requestBodyJsonStr = "";
+		try {
+
+			BufferedReader br = new BufferedReader(reader);
+			String output = "";
+			while ((output = reader.readLine()) != null) {
+				requestBodyJsonStr += output;
+			}
+		}
+		catch (IOException e) {
+
+			System.out.println("IOException: " + e.getMessage());
+
+		}
+		return requestBodyJsonStr;
+	}
+	public static Obs getLatestObs(Patient patient, String conceptIdentifier) {
+		Concept concept = Dictionary.getConcept(conceptIdentifier);
+		List<Obs> obs = Context.getObsService().getObservationsByPersonAndConcept(patient, concept);
+		if (obs.size() > 0) {
+			// these are in reverse chronological order
+			return obs.get(0);
+		}
+		return null;
+	}
 
 }

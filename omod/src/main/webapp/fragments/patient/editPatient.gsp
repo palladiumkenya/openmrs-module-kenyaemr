@@ -243,6 +243,11 @@
                 <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "drivingLicenseNumber"])}</td>
                 <td class="ke-field-instructions"><% if (!command.drivingLicenseNumber) { %>(if available)<% } %></td>
             </tr>
+            <tr id="upi-number">
+                <td class="ke-field-label">Unique Patient Identifier</td>
+                <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "upiNumber"])}</td>
+                <td class="ke-field-instructions"><% if (!command.upiNumber) { %>(if available)<% } %></td>
+            </tr>
 
             <tr id="kdod-service-no">
                 <td class="ke-field-label">Service Number *</td>
@@ -390,6 +395,7 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
         jQuery('#huduma-no').hide();
         jQuery('#passport-no').hide();
         jQuery('#driving-license').hide();
+        jQuery('#upi-number').hide();
         jQuery('#other-identifiers').click(otherIdentifiersChange);
 
         //On Edit prepopulate patient Identifiers
@@ -568,6 +574,7 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
             jQuery('#huduma-no').show();
             jQuery('#passport-no').show();
             jQuery('#birth-cert-no').show();
+            jQuery('#upi-number').show();
             var age = Math.floor((new Date() - new Date(selectedDob)) / 1000 / 60 / 60 / 24 / 365.25);
             if(age > 17){
                 jQuery('#driving-license').show();
@@ -577,6 +584,7 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
             jQuery('#alien-no').hide();
             jQuery('#huduma-no').hide();
             jQuery('#passport-no').hide();
+            jQuery('#upi-number').hide();
             jQuery('#driving-license').hide();
         }
     }
