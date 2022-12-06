@@ -64,6 +64,8 @@
         jq('#syphilis-test-results select').change(onSyphilisResultChange);
         jq('#partner-tested select').change(onPartnerTestedChange);
         jq('#cacx-screening select').change(onCacxResultChange);
+        jq('#treatment-done').hide();
+        jq('#hepatitis-b-screening input').change(onHepatitisChange);
         jq('#chronic-illness').change(onCacxResultChange);
 		getField('weight.value').change(onWeightOrHeightChange);
 		getField('height.value').change(onWeightOrHeightChange);
@@ -319,7 +321,13 @@
 		}
 		jq('#calculated-bmi').html(display);
 	}
-
+     function onHepatitisChange() {
+        if (getValue('hepatitis-b-screening.value') == 703) {
+            jq('#treatment-done').show();
+        }else{
+            jq('#treatment-done').hide();
+        }
+    }
 	function validateOtherFields() {
 		var fundalHeight = getValue('fundal.value');
 		var urinePh = getValue('urine-ph.value');
@@ -1197,6 +1205,23 @@
 									</td>
 								</tr>
 							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>Hepatitis B Screening? :</td>
+						<td><obs
+								conceptId="165040"
+								answerConceptIds="703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								answerLabels="Positive,Negative,Not Done"
+								style="radio" id="hepatitis-b-screening"/>
+						</td>
+					</tr>
+					<tr id="treatment-done">
+						<td>If positive, was the treatment done?
+						<td><obs conceptId="166665AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 style="radio"
+								 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Yes,No"/></td>
 						</td>
 					</tr>
 				</table>
