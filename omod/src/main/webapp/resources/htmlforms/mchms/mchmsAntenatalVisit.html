@@ -67,6 +67,8 @@
         jq('#chronic-illness').change(onCacxResultChange);
 		getField('weight.value').change(onWeightOrHeightChange);
 		getField('height.value').change(onWeightOrHeightChange);
+		jq('#fgm-associated-complications').hide();
+		jq('#fgm-done input').change(onFgmDoneChange);
 		onWeightOrHeightChange();
         onEncounterDateChange();
 		//Prepopulate anc number
@@ -319,7 +321,13 @@
 		}
 		jq('#calculated-bmi').html(display);
 	}
-
+     function onFgmDoneChange() {
+        if (getValue('fgm-done.value') == 1065) {
+            jq('#fgm-associated-complications').show();
+        }else{
+            jq('#fgm-associated-complications').hide();
+        }
+    }
 	function validateOtherFields() {
 		var fundalHeight = getValue('fundal.value');
 		var urinePh = getValue('urine-ph.value');
@@ -1237,6 +1245,44 @@
 								 answerConceptIds="80586AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 								 answerLabels="Yes,No,N/A"
 								 style="radio" id="nvp-dispensed" />
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr id="female-health-related-issues">
+		<td colspan="2">
+			<fieldset>
+				<legend>Female Health related issues</legend>
+				<table align="center" width="100%" class="tb1">
+					<tr>
+						<td>Was FGM done?</td>
+						<td><obs
+								conceptId="165099"
+								answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								answerLabels="Yes,No"
+								style="radio" id="fgm-done"/>
+						</td>
+					</tr>
+					<tr id="fgm-associated-complications">
+						<td>What were the FGM associated complications?</td>
+						<td>
+							<obs class ="fgm-associated-complications"
+								 conceptId="120198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerConceptIds="122949AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,136308AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141615AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111633AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="Scarring,Keloids,dyspaneuria,UTI"
+								 style="radio" id="fgm-associated-complications" />
+						</td>
+					</tr>
+					<tr>
+						<td>Which Postpartum family planning method was the client counselled on?</td>
+						<td>
+							<obs class ="postpartum-family-planning"
+								 conceptId="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerConceptIds="5275AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159589AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1472AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								 answerLabels="IUD,Implants,BTL"
+								 style="radio" id="postpartum-family-planning" />
 						</td>
 					</tr>
 				</table>
