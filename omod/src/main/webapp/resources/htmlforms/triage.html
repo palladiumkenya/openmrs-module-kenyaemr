@@ -61,12 +61,13 @@
             onWeightOrHeightChange();
             displayRecentBmi();
             jq('#miscariage input').change(onMiscariageChange);
-            jq('#baby-last-week').hide();
             //limit letters only in text field
             if(PATIENT_PREGNANT == 'true') {
                 jq('#pregnancy-screening').hide();
+                jq('#triage-note').hide();
              }else{
-                jp('#pregnancy-screening').show();
+                jq('#pregnancy-screening').show();
+                jp('#triage-note').show();
              }
             jQuery('#rsn').keypress(function(event) {
                 var code = (event.keyCode ? event.keyCode : event.which);
@@ -77,9 +78,9 @@
 
             function onMiscariageChange() {
                 if (getValue('miscariage.value') == 1065) {
-                    jq('#baby-last-week').show();
-                }else{
                     jq('#baby-last-week').hide();
+                }else{
+                    jq('#baby-last-week').show();
                 }
             }
             var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
@@ -99,7 +100,6 @@
             }
         });
     </script>
-
     <div class="ke-form-header">
         <table style="width: 100%">
             <tr>
@@ -189,6 +189,14 @@
                         <td>
                             <recentObs conceptId="5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
                         </td>
+                        <includeIf velocityTest="($patient.gender == 'F') &amp;&amp; ($patient.age &gt; 9) &amp;&amp; ($patient.age &lt; 14)">
+                        <td>Client Vaccinated against HPV? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                            <obs conceptId="160325AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                 style="radio"
+                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                 answerLabels="Yes,No"/>
+                        </td>
+                        </includeIf>
                     </tr>
                     <tr>
                         <td>Height</td>
@@ -228,110 +236,81 @@
                         </tr>
 
                     </includeIf>
-                    <includeIf velocityTest="($patient.gender == 'F') &amp;&amp; ($patient.age &gt; 9) &amp;&amp; ($patient.age &lt; 14)">
-                        <tr id="hpv-vaccine">
-                            <td>Client Vaccinated against HPV? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                                <obs conceptId="160325AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     style="radio"
-                                     answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabels="Yes,No"/>
-                            </td><td></td>
-                        </tr>
-                    </includeIf>
                 </table>
             </td>
 
         </fieldset>
-        <includeIf velocityTest="$patient.gender == 'F' ">
+        <includeIf velocityTest="($patient.gender == 'F') &amp;&amp; ($patient.age &gt; 10) &amp;&amp; ($patient.age &lt; 49)">
             <fieldset id="pregnancy-screening">
-                <tr>
-                    <td colspan="2">
-                        <fieldset>
-                            <legend>Pregnancy Screening</legend>
-                            <table align="center" width="100%" class="tb1">
-                                <tr>
-                                    <td>Have you abstained from sexual intercourse from your last menstrual period/delivery?
-                                        <obs class ="sexual-abstained"
-                                             conceptId="160109AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="sexual-abstained" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Did your last menstrual period start within the past 7 days ?
-                                        <obs class ="last-menstrual-period"
-                                             conceptId="48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="last-menstrual-period" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Are you on FP method ?
-                                        <obs class ="fplanning"
-                                             conceptId="160653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="965AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160652AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="fplanning" />
-                                    </td>
-                                </tr>
+            <legend>Pregnancy Screening</legend>
+                <table align="center" width="100%" class="tb1">
+                    <div>
+                        Have you abstained from sexual intercourse from your last menstrual period/delivery?  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs conceptId="160109"
+                             answerConceptIds="1065,1066"
+                             answerLabels="Yes,No" id="sexual-abstained"
+                             style="radio" />
+                    </div>
+                    <div>
+                        Did your last menstrual period start within the past 7 days ?  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs conceptId="160596"
+                             answerConceptIds="1065,1066"
+                             answerLabels="Yes,No" id="last-menstrual-period"
+                             style="radio" />
+                    </div>
+                    <div>
+                        Are you on FP method ? &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs conceptId="160653"
+                             answerConceptIds="965,160652"
+                             answerLabels="Yes,No" id="fplanning"
+                             style="radio" />
+                    </div>
+                    <div>
+                        Have you had a miscarriage in the past 7 days ?  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs conceptId="48"
+                             answerConceptIds="1065,1066"
+                             answerLabels="Yes,No" id="miscariage"
+                             style="radio" />
+                    </div>
+                    <div id="baby-last-week">
+                        Have you had a baby in the last 4 weeks? &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                        <obs conceptId="1657"
+                             answerConceptIds="1065,1066"
+                             answerLabels="Yes,No"
+                             style="radio" />
+                    </div>
 
 
-
-                                <tr>
-                                    <td>Have you had a miscarriage in the past 7 days?
-                                        <obs class ="miscariage"
-                                             conceptId="1657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="miscariage" />
-                                    </td>
-                                </tr>
-                                <tr id="baby-last-week">
-                                    <td>Have you had a baby in the last 4 weeks?
-                                        <obs class ="baby-last-week"
-                                             conceptId="1657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="baby-last-week" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <fieldset>
-                            <legend>Triage Notes</legend>
-                            <table align="center" width="100%" class="tb1">
-
-                                <tr>
-                                    <td>Did you refer the client for a Pregnancy test?
-                                        <obs class ="refer-client-for-pregnancy"
-                                             conceptId="1282AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                             style="radio" id="refer-client-for-pregnancy" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Triage Notes:</td>
-
-                                </tr>
-                                <tr>
-
-                                    <td>
-                                        <obs conceptId="159395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="100"
-                                             style="textarea"/>
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                    </td>
-                </tr>
+                </table>
             </fieldset>
+            <fieldset id="triage-note">
+            <legend>Triage Notes</legend>
+                <table align="center" width="100%" class="tb1">
+
+                    <tr>
+                        <td>Did you refer the client for a Pregnancy test?
+                            <obs class ="refer-client-for-pregnancy"
+                                 conceptId="1282AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                 answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                 answerLabels="Yes,No"
+                                 style="radio" id="refer-client-for-pregnancy" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Triage Notes:</td>
+
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <obs conceptId="159395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="100"
+                                 style="textarea"/>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+
         </includeIf>
     </div>
 

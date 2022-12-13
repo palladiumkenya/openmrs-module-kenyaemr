@@ -51,11 +51,14 @@ public class EligibleForPregnancyCalculation extends AbstractPatientCalculation 
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
+        Program mchcsProgram = MetadataUtils.existing(Program.class, MchMetadata._Program.MCHCS);
         Set<Integer> aliveAndFemale = Filters.female(Filters.alive(cohort, context), context);
         PatientService patientService = Context.getPatientService();
         Set<Integer> alive = Filters.alive(cohort, context);
         CalculationResultMap ret = new CalculationResultMap();
         Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
+        Set<Integer> inMchcsProgram = Filters.inProgram(mchcsProgram, alive, context);
+
         EncounterType mchEnrollment = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT);
         EncounterType mchDiscontinuation = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_DISCONTINUATION);
 
@@ -65,6 +68,13 @@ public class EligibleForPregnancyCalculation extends AbstractPatientCalculation 
         for (Integer ptId :aliveAndFemale) {
             boolean result = false;
             Patient patient = patientService.getPatient(ptId);
+            Form antenatalVisitForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_ANTENATAL_VISIT);
+            Form matVisitForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_DELIVERY);
+            Form pncVisitForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_POSTNATAL_VISIT);
+            EncounterType mchConsultationEncounterType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_CONSULTATION);
+            Encounter lastANCHtsEnc = EmrUtils.lastEncounter(patient,mchConsultationEncounterType,antenatalVisitForm );
+            Encounter lastMatHtsEnc = EmrUtils.lastEncounter(patient,mchConsultationEncounterType,matVisitForm );
+            Encounter lastPNCHtsEnc = EmrUtils.lastEncounter(patient,mchConsultationEncounterType,pncVisitForm );
             Encounter lastTriageTestingEnc = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
             ConceptService cs = Context.getConceptService();
             Concept sexualAbstainedResult = cs.getConcept(SEXUAL_ABSTAINED);
@@ -93,7 +103,9 @@ public class EligibleForPregnancyCalculation extends AbstractPatientCalculation 
             if (inHivProgram.contains(ptId)) {
                 result = true;
             }
-
+            if(inMchcsProgram.contains(ptId) && lastPNCHtsEnc == null && lastMatHtsEnc == null && lastANCHtsEnc == null ){
+                result = true;
+            }
             if(encounter != null && encounterDiscontinuation != null && encounterDiscontinuation.getEncounterDatetime().after(encounter.getEncounterDatetime())){
                 result = true;
             }
