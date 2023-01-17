@@ -36,7 +36,6 @@ public class HighRiskClientCategorization extends AbstractPatientCalculation imp
         return "High risk client categorization";
     }
 
-
     /**
      * Evaluates the calculation
      * @should calculate if the patient is in HIV program
@@ -66,6 +65,9 @@ public class HighRiskClientCategorization extends AbstractPatientCalculation imp
             Double lastVlResultValue = null;
             CalculationResult lastvlresult = lastVlResults.get(ptId);
             Date transferInDateValue = EmrCalculationUtils.datetimeResultForPatient(transferInDate, ptId);
+            EncounterType mchEnrollment = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT);
+            Form antenatalVisitForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_ANTENATAL_VISIT);
+            Encounter mchMsEnc = EmrUtils.lastEncounter(patient,mchEnrollment,antenatalVisitForm );
 
             if (inHivProgram.contains(ptId)) {
                 result = true;
@@ -78,6 +80,9 @@ public class HighRiskClientCategorization extends AbstractPatientCalculation imp
             }
             if (inHivProgram.contains(ptId) && transferInDateValue != null ) {
                 result = true;
+            }
+            if(mchMsEnc != null){
+                result  = true;
             }
 
             ret.put(ptId, new BooleanResult(result, this));
