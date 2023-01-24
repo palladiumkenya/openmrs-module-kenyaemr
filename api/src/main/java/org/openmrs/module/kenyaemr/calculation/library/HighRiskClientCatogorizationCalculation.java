@@ -11,25 +11,28 @@ package org.openmrs.module.kenyaemr.calculation.library;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.openmrs.*;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
-import org.openmrs.calculation.result.ListResult;
 import org.openmrs.module.kenyacore.calculation.*;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.DateOfEnrollmentHivCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferInDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.models.Cd4ValueAndDate;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.DateUtil;
 import org.openmrs.module.reporting.common.DurationUnit;
 
 import java.util.*;
+
+
 
 /**
  * There is a need to categorize high-risk PMTCT Client
@@ -37,7 +40,6 @@ import java.util.*;
 
         public class HighRiskClientCatogorizationCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
         protected static final Log log = LogFactory.getLog(HighRiskClientCatogorizationCalculation.class);
-
 
         @Override
         public String getFlagMessage() {
@@ -50,55 +52,72 @@ import java.util.*;
          *All infected AGYW < 19 including OVC & DREAM girls
          * All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
          * Tranfer Ins or Transist clients
+         * Gender based violence
          */
 
         @Override
         public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
-
             Set<Integer> alive =Filters.alive(cohort, context);
-            CalculationResultMap hivPositive = Calculations.allObs(Dictionary.getConcept(Dictionary.HIV_POSITIVE), cohort, context);
-            CalculationResultMap hivEnrollmentDate = calculate(new DateOfEnrollmentHivCalculation(), cohort, context);
             Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
+            CalculationResultMap inHivProgram = Calculations.activeEnrollment(hivProgram, alive, context);
             Program ovcDreamProgram = MetadataUtils.existing(Program.class, OVCMetadata._Program.OVC);
             PatientService patientService = Context.getPatientService();
-
+            Set<Integer> inHivProgram1 = Filters.inProgram(hivProgram, alive, context);
             CalculationResultMap transferInDate = calculate(new TransferInDateCalculation(), cohort, context);
-            Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
+            EncounterService encounterService = Context.getEncounterService();
+            EncounterType genderBasedViolence = encounterService.getEncounterTypeByUuid(HivMetadata._EncounterType.GENDER_BASED_VIOLENCE);
             Set<Integer> inOvcDreamProgram = Filters.inProgram(ovcDreamProgram, alive, context);
             CalculationResultMap ret = new CalculationResultMap();
 
-            for (Integer ptId :alive) {
+            Concept latestVL = Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD);
+            CalculationResultMap lastVLObs = Calculations.lastObs(latestVL, inHivProgram1, context);
+
+
+            for (Integer ptId :cohort) {
                     boolean result = false;
-                    Cd4ValueAndDate vlValue = null;
-                    ListResult listResult = (ListResult) hivPositive.get(ptId);
-                    Date enrollmentDate = EmrCalculationUtils.datetimeResultForPatient(hivEnrollmentDate, ptId);
-                    List<Obs> allObsAsList = CalculationUtils.extractResultValues(listResult);
+                    Integer hivEnrollmentDiffDays = 0;
+                    Date currentDate =new Date();
+
+                    PatientProgram patientProgramHiv = EmrCalculationUtils.resultForPatient(inHivProgram, ptId);
+                    Date hivEnrolmentDate = patientProgramHiv.getDateEnrolled();
+                    hivEnrollmentDiffDays = daysBetween(currentDate, hivEnrolmentDate);
 
                     Patient patient = patientService.getPatient(ptId);
-
+                    Encounter lastGenderBasedViolenceEncounter = EmrUtils.lastEncounter(patient, genderBasedViolence);
+                    Double vl = EmrCalculationUtils.numericObsResultForPatient(lastVLObs, ptId);
                     Date transferInDateValue = EmrCalculationUtils.datetimeResultForPatient(transferInDate, ptId);
 
-                    for(Obs obs:allObsAsList){
-                        Date obsDate = obs.getObsDatetime();
-                        if(enrollmentDate != null && obsDate.before(dateLimit(enrollmentDate, 31))) {
+                    // Check new HIV+ clients enrolled in the past one month
+                    if(hivEnrollmentDiffDays <= 31 ){
                             result = true;
-                        }
-                     }
-
+                    }
+                   //All infected AGYW < 19 including OVC & DREAM girls
                      if(patient.getGender().equals("F") && patient.getAge() >= 10 && patient.getAge() <= 19 && inOvcDreamProgram.contains(ptId)) {
                          result = true;
                       }
-                     if (vlValue != null && vlValue.getCd4Value() >= 200) {
+                /// All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
+                     if ( vl != null && vl >= 200.0) {
+                           result = true;
+                     }
+
+                    //All transfer in clients
+                     if (transferInDateValue != null ) {
                          result = true;
                      }
-                     if (inHivProgram.contains(ptId) && transferInDateValue != null ) {
-                         result = true;
-                     }
+                     //Gender based violence
+                    if(lastGenderBasedViolenceEncounter !=null){
+                        result = true;
+                    }
                 ret.put(ptId, new BooleanResult(result, this));
             }
 
             return ret;
         }
+    private int daysBetween(Date date1, Date date2) {
+        DateTime d1 = new DateTime(date1.getTime());
+        DateTime d2 = new DateTime(date2.getTime());
+        return Math.abs(Days.daysBetween(d1, d2).getDays());
+    }
         private  Date dateLimit(Date date1, Integer days) {
 
             return DateUtil.adjustDate(date1, days, DurationUnit.DAYS);
