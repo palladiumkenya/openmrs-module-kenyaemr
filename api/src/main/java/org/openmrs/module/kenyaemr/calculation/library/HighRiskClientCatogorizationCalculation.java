@@ -23,6 +23,7 @@ import org.openmrs.module.kenyacore.calculation.*;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferInDateCalculation;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
@@ -38,90 +39,84 @@ import java.util.*;
  * There is a need to categorize high-risk PMTCT Client
  */
 
-        public class HighRiskClientCatogorizationCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
-        protected static final Log log = LogFactory.getLog(HighRiskClientCatogorizationCalculation.class);
+public class HighRiskClientCatogorizationCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+    protected static final Log log = LogFactory.getLog(HighRiskClientCatogorizationCalculation.class);
 
-        @Override
-        public String getFlagMessage() {
+    @Override
+    public String getFlagMessage() {
         return "High Risk Client";
-        }
+    }
 
-        /**
-         * Evaluates the calculation
-         * Allow new HV positive irrespective of time identified
-         *All infected AGYW < 19 including OVC & DREAM girls
-         * All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
-         * Tranfer Ins or Transist clients
-         *
-         */
+    /**
+     * Evaluates the calculation
+     * Allow new HV positive irrespective of time identified
+     *All infected AGYW < 19 including OVC & DREAM girls
+     * All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
+     * Tranfer Ins or Transist clients
+     *
+     */
 
-        @Override
-        public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
-            Set<Integer> alive =Filters.alive(cohort, context);
-            Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
-            CalculationResultMap inHivProgram = Calculations.activeEnrollment(hivProgram, alive, context);
-            Program ovcDreamProgram = MetadataUtils.existing(Program.class, OVCMetadata._Program.OVC);
-            PatientService patientService = Context.getPatientService();
-            Set<Integer> inHivProgram1 = Filters.inProgram(hivProgram, alive, context);
-            CalculationResultMap transferInDate = calculate(new TransferInDateCalculation(), cohort, context);
+    @Override
+    public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
+        Set<Integer> alive =Filters.alive(cohort, context);
+        Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
+        CalculationResultMap inHivProgram = Calculations.activeEnrollment(hivProgram, alive, context);
+        Program ovcDreamProgram = MetadataUtils.existing(Program.class, OVCMetadata._Program.OVC);
+        PatientService patientService = Context.getPatientService();
+        Set<Integer> inHivProgram1 = Filters.inProgram(hivProgram, alive, context);
+        CalculationResultMap transferInDate = calculate(new TransferInDateCalculation(), cohort, context);
 
-            Set<Integer> inOvcDreamProgram = Filters.inProgram(ovcDreamProgram, alive, context);
-            CalculationResultMap ret = new CalculationResultMap();
+        Set<Integer> inOvcDreamProgram = Filters.inProgram(ovcDreamProgram, alive, context);
+        CalculationResultMap ret = new CalculationResultMap();
 
-            Concept latestVL = Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD);
-            CalculationResultMap lastVLObs = Calculations.lastObs(latestVL, inHivProgram1, context);
+        Concept latestVL = Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD);
+        CalculationResultMap lastVLObs = Calculations.lastObs(latestVL, inHivProgram1, context);
 
 
-            for (Integer ptId :cohort) {
-                    boolean result = false;
-                    Integer hivEnrollmentDiffDays = 0;
-                    Date currentDate =new Date();
+        for (Integer ptId :cohort) {
+            boolean result = false;
+            Integer hivEnrollmentDiffDays = 0;
+            Date currentDate =new Date();
 
-                    PatientProgram patientProgramHiv = EmrCalculationUtils.resultForPatient(inHivProgram, ptId);
-                    Date hivEnrolmentDate = patientProgramHiv.getDateEnrolled();
-                    hivEnrollmentDiffDays = daysBetween(currentDate, hivEnrolmentDate);
+            PatientProgram patientProgramHiv = EmrCalculationUtils.resultForPatient(inHivProgram, ptId);
+            Date hivEnrolmentDate = patientProgramHiv.getDateEnrolled();
+            hivEnrollmentDiffDays = daysBetween(currentDate, hivEnrolmentDate);
 
-                    Patient patient = patientService.getPatient(ptId);
-                    Double vl = EmrCalculationUtils.numericObsResultForPatient(lastVLObs, ptId);
-                    Date transferInDateValue = EmrCalculationUtils.datetimeResultForPatient(transferInDate, ptId);
+            Patient patient = patientService.getPatient(ptId);
+            Double vl = EmrCalculationUtils.numericObsResultForPatient(lastVLObs, ptId);
+            Date transferInDateValue = EmrCalculationUtils.datetimeResultForPatient(transferInDate, ptId);
 
-                    //Patient in alcohol,drug and substance abuse
-                    EncounterService encounterService = Context.getEncounterService();
-                    EncounterType et = encounterService.getEncounterTypeByUuid(HivMetadata._EncounterType.ALCOHOL_AND_DRUGS_ABUSE);
-                    Encounter alcoholDrugAbuse = EmrUtils.lastEncounter(patient, et);
-
-                    // Check new HIV+ clients enrolled in the past one month
-                    if(hivEnrollmentDiffDays <= 31 ){
-                            result = true;
-                    }
-                   //All infected AGYW < 19 including OVC & DREAM girls
-                     if(patient.getGender().equals("F") && patient.getAge() >= 10 && patient.getAge() <= 19 || inOvcDreamProgram.contains(ptId)) {
-                         result = true;
-                      }
-                /// All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
-                     if ( vl != null && vl >= 200.0) {
-                           result = true;
-                     }
-
-                    //All transfer in clients
-                     if (transferInDateValue != null ) {
-                         result = true;
-                     }
-                     //Patient in alcohol,drug and substance abuse
-                    if (alcoholDrugAbuse != null ) {
-                         result = true;
-                    }
-                ret.put(ptId, new BooleanResult(result, this));
+            // Check new HIV+ clients enrolled in the past one month
+            if(hivEnrollmentDiffDays <= 31 ){
+                result = true;
+            }
+            //All infected AGYW < 19 including OVC & DREAM girls
+            if(patient.getGender().equals("F") && patient.getAge() >= 10 && patient.getAge() <= 19 || inOvcDreamProgram.contains(ptId)) {
+                result = true;
+            }
+            /// All clients with detectable VL > 200 copies/ml at baseline for known positive or anytime in the PMTCT followUP period
+            if ( vl != null && vl >= 200.0) {
+                result = true;
             }
 
-            return ret;
+            //All transfer in clients
+            if (transferInDateValue != null ) {
+                result = true;
+            }
+
+
+            ret.put(ptId, new BooleanResult(result, this));
         }
+
+        return ret;
+    }
     private int daysBetween(Date date1, Date date2) {
         DateTime d1 = new DateTime(date1.getTime());
         DateTime d2 = new DateTime(date2.getTime());
         return Math.abs(Days.daysBetween(d1, d2).getDays());
     }
-        private  Date dateLimit(Date date1, Integer days) {
+    private  Date dateLimit(Date date1, Integer days) {
 
-            return DateUtil.adjustDate(date1, days, DurationUnit.DAYS);
-         }}
+        return DateUtil.adjustDate(date1, days, DurationUnit.DAYS);
+    }}
+
