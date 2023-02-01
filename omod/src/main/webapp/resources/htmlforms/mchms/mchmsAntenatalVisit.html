@@ -14,32 +14,32 @@
 <htmlform>
 
 	<style type="text/css">
-	table.tb {
-		background-color: #B3C2F0;
-		border: 1px solid black;
-	}
+   table.tb {
+      background-color: #B3C2F0;
+      border: 1px solid black;
+   }
 
-	table.tb1 {
-		border: 1px solid black;
-		vertical-align: baseline;
-		text-align: left;
-		background-color: #E1E1FF;
-	}
+   table.tb1 {
+      border: 1px solid black;
+      vertical-align: baseline;
+      text-align: left;
+      background-color: #E1E1FF;
+   }
 
-	table.tb1 tr th, table.tb1 tr td {
-		border: 0;
-		padding: 10px;
-	}
+   table.tb1 tr th, table.tb1 tr td {
+      border: 0;
+      padding: 10px;
+   }
 
-	.arv-med {
-	}
+   .arv-med {
+   }
 </style>
 	<script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
 	<script type="text/javascript">
 
-	var ARV_CONCEPT_ID = 1148;
-	var HAART_CONCEPT_ID = 1149;
-	var NA_CONCEPT_ID = 1175;
+   var ARV_CONCEPT_ID = 1148;
+   var HAART_CONCEPT_ID = 1149;
+   var NA_CONCEPT_ID = 1175;
     var NOT_HIV_TESTED_ID = 1402;
     var NEGATIVE = 664;
     var UNKNOWN = 1067;
@@ -52,37 +52,39 @@
     var LATEST_VIRAL_LOAD_VALUE = "<lookup expression="fn.latestObs(856).valueNumeric"/>"
     var LATEST_LDL_DATE = "<lookup expression="fn.latestObs(1305).getObsDatetime()"/>";
     var HAART_START_DATE = "<lookup expression="fn.latestObs(163784).getValueDatetime()"/>";
+    console.log(HAART_START_DATE);
     var ANC_NUMBER = "<lookup expression="fn.latestObs(163530).getValueText()"/>";
     var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
     var PATIENT_ON_ART = GREENCARD_VELOCITY.split(",")[2].split(":")[1];
     var REGIMEN_NAME = GREENCARD_VELOCITY.split(",")[4].split(":")[1];
-    var HIGH_RISK_CATEGORIZATION = "<lookup expression="kenyaemr.HighRiskClientCategorization()" />";
+     var HTS_LAST_OBS = "<lookup expression="fn.latestObs(159427).getValueCoded()"/>"; // this is hts last obs
+
     //Start on ready
-	jq(function () {
+   jq(function () {
         jq('#anc-counselling').hide();
-		jq('#counselled input').change(onANCCounselChange);
+      jq('#counselled input').change(onANCCounselChange);
         jq('#package-group').hide();
-		jq('#package-care').hide();
-		jq('#antenatal-care input').change(onPackageChange);
-		jq('#treatment-done').hide();
-		jq('#hepatitis-b-screening input').change(onHepatitisChange);
-		jq('#fgm-done input').change(onFgmDoneChange);
-		jq('#fgm-associated-complications').hide();
-		jq('#ovm').hide();
-		jq('#treatmentVisit input').change(onPresumptiveChange);
+      jq('#package-care').hide();
+      jq('#antenatal-care input').change(onPackageChange);
+      jq('#treatment-done').hide();
+      jq('#hepatitis-b-screening input').change(onHepatitisChange);
+      jq('#fgm-done input').change(onFgmDoneChange);
+      jq('#fgm-associated-complications').hide();
+      jq('#ovm').hide();
+      jq('#treatmentVisit input').change(onPresumptiveChange);
         jq('#treatment-dose').hide();
         jq('.syphilis-treated').hide();
         jq('#syphilis-test-results select').change(onSyphilisResultChange);
         jq('#partner-tested select').change(onPartnerTestedChange);
         jq('#cacx-screening select').change(onCacxResultChange);
         jq('#chronic-illness').change(onCacxResultChange);
-		getField('weight.value').change(onWeightOrHeightChange);
-		getField('height.value').change(onWeightOrHeightChange);
-		onWeightOrHeightChange();
+      getField('weight.value').change(onWeightOrHeightChange);
+      getField('height.value').change(onWeightOrHeightChange);
+      onWeightOrHeightChange();
         onEncounterDateChange();
-		//Prepopulate anc number
+      //Prepopulate anc number
         jq('#anc-number:text').val(ANC_NUMBER);
-		//Chronic illness validation
+      //Chronic illness validation
         jq("#tbl-chronic-illness").hide();
         jq('#chronic-illness :input[type=radio]').change(chronicIllnessesSelected);
         //chronicIllnessesSelected();
@@ -103,7 +105,7 @@
         jq('#showNumberBooked').hide();
         jq("#returnVisitDate input[type=hidden]").change(getPatientsBookedOnDate);
 
-		//Validation for client if already hiv positive or enrolled
+      //Validation for client if already hiv positive or enrolled
         if(PATIENT_IS_REPORTED_HIV.replace(/[^\d]/g, '') == 703 || PATIENT_IS_ENROLLED_HIV){
             jq('#tbl-known-positive').show();
             jq('#hiv-known-positive:text').val('Positive');
@@ -119,7 +121,6 @@
             }
         }else if(PATIENT_IS_REPORTED_HIV.replace(/[^\d]/g, '') == 664) {
             jq('#tbl-hiv-test').show();
-            jq('#package-group').show();
             jq('#tbl-unknown-status').show();
             jq('#hiv-status:text').val("Negative");
             jq('#art-and-prophylaxis').hide();
@@ -139,6 +140,9 @@
             jq('#tbl-haart-given').hide();
 
         }
+        if(HTS_LAST_OBS.replace(/[^\d]/g, '') == 664){
+           jq('#package-group').show();
+        }
 
         if(HAART_START_DATE !="" || HAART_START_DATE != "false"){
             getField('haart-start-date.value').val(HAART_START_DATE);
@@ -146,7 +150,7 @@
             getField('haart-start-date.value').val("");
         }
         //Validation of recent HIV tests between vl and ldl
-		if(LATEST_VIRAL_LOAD_DATE != "" &amp;&amp; LATEST_LDL_DATE != "") {
+      if(LATEST_VIRAL_LOAD_DATE != "" &amp;&amp; LATEST_LDL_DATE != "") {
             //Latest VL or LDl
             var isLatestVlBeforeLatestLDl = moment(moment(moment(LATEST_VIRAL_LOAD_DATE, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD')).isBefore(moment(moment(LATEST_LDL_DATE, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'));
             if (isLatestVlBeforeLatestLDl) {
@@ -160,10 +164,10 @@
             jq('#vl-date:text').val(LATEST_VIRAL_LOAD_DATE);
             jq('#vl-value:text').val(LATEST_VIRAL_LOAD_VALUE);
 
-		}else if(LATEST_LDL_DATE != "" &amp;&amp; LATEST_VIRAL_LOAD_DATE == ""){
+      }else if(LATEST_LDL_DATE != "" &amp;&amp; LATEST_VIRAL_LOAD_DATE == ""){
             jq('#vl-date:text').val(LATEST_LDL_DATE);
             jq('#vl-value:text').val('LDL');
-		}
+      }
        //Partner testing
         jq('#partner-hiv-status select').prop("disabled", true);
         //skip pattern
@@ -237,19 +241,19 @@
             jq("#nvp-dispensed input[value=80586]").prop("checked", true);
         }else{
             jq("#nvp-dispensed input[value=80586]").prop("checked", false);
-		}
-	});
+      }
+   });
 //End on ready
 
-	beforeSubmit.push(function () {
-		if (validateOtherFields()) {
-			if (!jq('#arv-medication').is(':visible')) {
-				clearArvMeds();
-			}
-			return true;
-		}
-		return false;
-	});
+   beforeSubmit.push(function () {
+      if (validateOtherFields()) {
+         if (!jq('#arv-medication').is(':visible')) {
+            clearArvMeds();
+         }
+         return true;
+      }
+      return false;
+   });
     // get count of patients booked on a date
     function getPatientsBookedOnDate() {
         var tca_date = jq('#returnVisitDate input[type=hidden]').val();
@@ -346,55 +350,55 @@
             getField('partner-hiv-status.value').val("");
         }
     }
-	function clearArvMeds() {
-		jq('.arv-med').each(function () {
-			var elementId = jq(this).attr('id');
-			setValue(elementId + '.value', null);
-		});
-	}
+   function clearArvMeds() {
+      jq('.arv-med').each(function () {
+         var elementId = jq(this).attr('id');
+         setValue(elementId + '.value', null);
+      });
+   }
 
-	function onWeightOrHeightChange() {
-		var display = '';
-		var weightKg = parseFloat(getValue('weight.value'));
-		var heightM = parseFloat(getValue('height.value')) / 100;
-		if (!isNaN(weightKg) &amp;&amp; !isNaN(heightM)) {
-			var bmi = weightKg / (heightM * heightM);
-			if (isNaN(bmi) || bmi &lt; 10 || bmi &gt; 50) {
-				display = 'Abnormal value. Were height and height entered correctly?';
-			}
-			else {
-				display = bmi.toFixed(2);
-			}
-		}
-		jq('#calculated-bmi').html(display);
-	}
+   function onWeightOrHeightChange() {
+      var display = '';
+      var weightKg = parseFloat(getValue('weight.value'));
+      var heightM = parseFloat(getValue('height.value')) / 100;
+      if (!isNaN(weightKg) &amp;&amp; !isNaN(heightM)) {
+         var bmi = weightKg / (heightM * heightM);
+         if (isNaN(bmi) || bmi &lt; 10 || bmi &gt; 50) {
+            display = 'Abnormal value. Were height and height entered correctly?';
+         }
+         else {
+            display = bmi.toFixed(2);
+         }
+      }
+      jq('#calculated-bmi').html(display);
+   }
 
-	function validateOtherFields() {
-		var fundalHeight = getValue('fundal.value');
-		var urinePh = getValue('urine-ph.value');
-		var urineSpecificGravity = getValue('urine-specific-gravity.value');
+   function validateOtherFields() {
+      var fundalHeight = getValue('fundal.value');
+      var urinePh = getValue('urine-ph.value');
+      var urineSpecificGravity = getValue('urine-specific-gravity.value');
         var encounterDate = getValue('encounter-date.value');
         var tca_date = getValue('returnVisitDate.value');
         var visit_number = getValue('visit-number.value');
 
-		if (fundalHeight &lt; 0 || fundalHeight &gt; 40) {
-			getField('fundal.error').html('Fundal Height should be between 0 and 40.').show();
-			return false;
-		}
-		if (urinePh != null) {
-			var urinePhValue = parseFloat(urinePh);
-			if (urinePhValue &lt; 5.0 || urinePhValue &gt; 9.0) {
-				getField('urine-ph.error').html('Urine pH must be between 5.0 and 9.0..').show();
-				return false;
-			}
-		}
-		if (urineSpecificGravity != null) {
-			var urineSpecificGravityValue = parseFloat(urineSpecificGravity);
-			if (urineSpecificGravityValue &lt; 1.0000 || urineSpecificGravityValue &gt; 1.1000) {
-				getField('urine-specific-gravity.error').html('Urine specific gravity must be between 1.000 and 1.1000..').show();
-				return false;
-			}
-		}
+      if (fundalHeight &lt; 0 || fundalHeight &gt; 40) {
+         getField('fundal.error').html('Fundal Height should be between 0 and 40.').show();
+         return false;
+      }
+      if (urinePh != null) {
+         var urinePhValue = parseFloat(urinePh);
+         if (urinePhValue &lt; 5.0 || urinePhValue &gt; 9.0) {
+            getField('urine-ph.error').html('Urine pH must be between 5.0 and 9.0..').show();
+            return false;
+         }
+      }
+      if (urineSpecificGravity != null) {
+         var urineSpecificGravityValue = parseFloat(urineSpecificGravity);
+         if (urineSpecificGravityValue &lt; 1.0000 || urineSpecificGravityValue &gt; 1.1000) {
+            getField('urine-specific-gravity.error').html('Urine specific gravity must be between 1.000 and 1.1000..').show();
+            return false;
+         }
+      }
         if (visit_number == "") {
             getField('visit-number.error').html('Please specify visit number.').show();
             return false;
@@ -413,8 +417,8 @@
         }else{
             getField('returnVisitDate.error').html('Return visit date should not be earlier than encounter date.').hide();
         }
-		return true;
-	}
+      return true;
+   }
     //First and second test validation
     var firstTestSelected  = function () {
         var firstTest = getField("hiv-test1-result.value").val();
@@ -656,17 +660,12 @@
 
 
                             var antenatalPackage = getValue('antenatal-care.value');
-						      if(antenatalPackage == 1065){
+                        if(antenatalPackage == 1065){
                                 jq('#package-care').show();
                                }
 
-                            var treatmentVisit = getValue('treatmentVisit.value');
-                            if(treatmentVisit == 1065){
-                                jq('#treatment-dose').show();
-                            }
-
                         });
-					</script>
+               </script>
 					</ifMode>
 
 					Date:
@@ -1180,7 +1179,7 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-					<fieldset>				<legend>Client monitoring</legend>
+					<fieldset>          <legend>Client monitoring</legend>
 						<table align="center" width="100%" class="tb1">
 							<tr>
 								<td>Has the client undergone antenatal exercises? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
@@ -1579,6 +1578,10 @@
 															 answerConceptId="159777"
 															 answerLabel="Condom Provision" style="checkbox"/>
 														<br />
+														<obs conceptId="1592"
+															 answerConceptId="161557AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+															 answerLabel="Partner Testing/HIVST" style="checkbox"/>
+														<br />
 													</div>
 												</td>
 												<td>
@@ -1684,3 +1687,4 @@
 	</div>
 
 </htmlform>
+
