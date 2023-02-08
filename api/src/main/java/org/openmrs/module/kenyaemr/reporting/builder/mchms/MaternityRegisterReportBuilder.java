@@ -18,6 +18,8 @@ import org.openmrs.module.kenyacore.report.builder.AbstractHybridReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
+import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.MaternityRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.*;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity.*;
@@ -53,6 +55,8 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 
 	@Autowired
 	PMTCTIndicatorLibrary pmtctMATIndicators;
+	@Autowired
+	private PMTCTIndicatorLibrary pmtctIndicators;
 
 	@Override
 	protected Mapped<CohortDefinition> buildCohort(HybridReportDescriptor descriptor, PatientDataSetDefinition dsd) {dsd.setName("maternityRegister");
@@ -172,8 +176,18 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		cohortDsd.setName("cohortIndicator");
 		cohortDsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
+		ColumnParameters f10_to14 = new ColumnParameters(null, "10-14, Female", "gender=F|age=10-14");
+		ColumnParameters f15_to19 = new ColumnParameters(null, "15-19, Female", "gender=F|age=15-19");
+		ColumnParameters f10_to19 = new ColumnParameters(null, "10-19, Female", "gender=F|age=10-19");
+		ColumnParameters f20_to24 = new ColumnParameters(null, "20-24, Female", "gender=F|age=20-24");
+		ColumnParameters fAbove25 = new ColumnParameters(null, "25+, Female", "gender=F|age=25+");
+
+		List<ColumnParameters>  maternityAgeDisaggregation = Arrays.asList(f10_to14, f15_to19, f20_to24, fAbove25,colTotal);
+		List<ColumnParameters>  maternityAdolescentsAgeDisaggregation = Arrays.asList(f10_to19,colTotal);
 		String indParams = "startDate=${startDate},endDate=${endDate}";
 
+		EmrReportingUtils.addRow(cohortDsd, "Maternity clients", "", ReportUtils.map(pmtctIndicators.maternityClients(), indParams), maternityAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
 		cohortDsd.addColumn("clientsWithAPH", "Clients With APH", ReportUtils.map(pmtctMATIndicators.clientsWithAPH(), indParams), "");
         cohortDsd.addColumn("clientsWithPPH", "Clients With PPH", ReportUtils.map(pmtctMATIndicators.clientsWithPPH(), indParams), "");
         cohortDsd.addColumn("clientsWithEclampsia", "Clients With Eclampsia", ReportUtils.map(pmtctMATIndicators.clientsWithEclampsia(), indParams), "");
@@ -199,6 +213,21 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
         cohortDsd.addColumn("uterotonicGiven", "Uterotonic Given", ReportUtils.map(pmtctMATIndicators.uterotonicGiven(), indParams), "");
         cohortDsd.addColumn("carbetocin", "Carbetocin", ReportUtils.map(pmtctMATIndicators.carbetocin(), indParams), "");
         cohortDsd.addColumn("oxytocin", "Oxytocin", ReportUtils.map(pmtctMATIndicators.oxytocin(), indParams), "");
+		cohortDsd.addColumn("deformity", "Deformity", ReportUtils.map(pmtctMATIndicators.deformity(), indParams), "");
+		cohortDsd.addColumn("maceratedStillbirth", "Macerated Stillbirth", ReportUtils.map(pmtctMATIndicators.maceratedStillbirth(), indParams), "");
+		cohortDsd.addColumn("apgar", "Apgar", ReportUtils.map(pmtctMATIndicators.lowApgar(), indParams), "");
+		cohortDsd.addColumn("deaths10to14Years", "Maternal deaths 10-14Years", ReportUtils.map(pmtctMATIndicators.deaths10to14Years(), indParams), "");
+		cohortDsd.addColumn("deaths15to19Years", "Maternal deaths 15-19Years", ReportUtils.map(pmtctMATIndicators.deaths15to19Years(), indParams), "");
+		cohortDsd.addColumn("deaths20toplus", "Maternal deaths 20 years plus", ReportUtils.map(pmtctMATIndicators.deaths20toplus(), indParams), "");
+		cohortDsd.addColumn("deathAudited", "Maternal death audited", ReportUtils.map(pmtctMATIndicators.deathAudited(), indParams), "");
+		cohortDsd.addColumn("appliedChlorhexidine", "Babies applied chlorhexidine for cord care", ReportUtils.map(pmtctMATIndicators.appliedChlorhexidine(), indParams), "");
+		cohortDsd.addColumn("givenTetracycline", "Babies given tetracycline at birth", ReportUtils.map(pmtctMATIndicators.givenTetracycline(), indParams), "");
+		cohortDsd.addColumn("infantsIntiatiedOnBreastfeeding", "Infants intiatied on breastfeeding within 1 hour after birth", ReportUtils.map(pmtctMATIndicators.infantsIntiatiedOnBreastfeeding(), indParams), "");
+		cohortDsd.addColumn("vitaminK", "Vitamin K given ", ReportUtils.map(pmtctMATIndicators.vitaminK(), indParams), "");
+		cohortDsd.addColumn("startedHaart10to19", "Adolescents (10-19 yrs) Started HAART maternity", ReportUtils.map(pmtctMATIndicators.startedHaart10to19(), indParams), "");
+
+
+
 		return cohortDsd;
 	}
 }
