@@ -263,11 +263,6 @@ public class PMTCTIndicatorLibrary {
         return cohortIndicator("Vitamin K given", ReportUtils.<CohortDefinition>map(pmtctCohorts.vitaminK(), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator startedHaart10to19() {
-        return cohortIndicator("Adolescents (10-19 yrs) Started HAART maternity ", ReportUtils.<CohortDefinition>map(pmtctCohorts.startedHaart10to19(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-
     //PNC INDICTORS
     public CohortIndicator pncClients() {
         return cohortIndicator("PNC Clients", ReportUtils.<CohortDefinition>map(pmtctCohorts.pncClients(), "startDate=${startDate},endDate=${endDate}"));

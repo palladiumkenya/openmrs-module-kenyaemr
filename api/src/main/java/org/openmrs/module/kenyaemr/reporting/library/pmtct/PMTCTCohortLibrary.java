@@ -510,26 +510,6 @@ public class PMTCTCohortLibrary {
         return cd;
     }
 
-    public CohortDefinition startedHaart10to19() {
-        String sqlQuery = "select ld.patient_id\n" +
-                "from kenyaemr_etl.etl_mchs_delivery ld\n" +
-                "         inner join kenyaemr_etl.etl_drug_event d on d.patient_id = ld.patient_id\n" +
-                "         left join kenyaemr_etl.etl_mch_postnatal_visit pnc on pnc.patient_id = ld.patient_id\n" +
-                "         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON\n" +
-                "    d.patient_id = ld.patient_id\n" +
-                "where d.program = 'HIV'\n" +
-                "and timestampdiff(year, d.DOB, ld.visit_date) BETWEEN 10 AND 19\n" +
-                "  and d.date_started >= ld.visit_date\n" +
-                "  and d.date_started < pnc.visit_date\n" +
-                "  and date(ld.visit_date) between date(:startDate) and date(:endDate);";
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("Adolescents (10-19 yrs) Started HAART maternity ");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Adolescents (10-19 yrs) Started HAART maternity ");
-        return cd;
-    }
     public  CohortDefinition infantsIntiatiedOnBreastfeeding() {
         String sqlQuery="select ld.patient_id from kenyaemr_etl.etl_mchs_delivery ld where ld.bf_within_one_hour=1065 and date(visit_date)\n" +
                 "    between date(:startDate) and date(:endDate);";
@@ -985,14 +965,14 @@ public class PMTCTCohortLibrary {
         String sqlQuery = "select distinct v.patient_id  from kenyaemr_etl.etl_mchs_delivery v\n" +
                 "        inner join kenyaemr_etl.etl_mch_enrollment e on e.patient_id= v.patient_id\n" +
                 "        inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = v.patient_id\n" +
-                "        where timestampdiff(year,d.DOB,v.visit_date) ABOVE 20 and\n" +
+                "        where timestampdiff(year,d.DOB,v.visit_date) >= 20 and\n" +
                 "        v.condition_of_mother = 134612 and v.visit_date between date(:startDate) AND date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("adolescentsTestedPositive_10_19_AtANCCohortDefinition");
+        cd.setName("Maternal deaths 20 years plus");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Adolescents Tested Positive 10-19 at ANC within the reporting period");
+        cd.setDescription("Maternal deaths 20 years plus");
         return cd;
     }
     //PNC COHORTS
