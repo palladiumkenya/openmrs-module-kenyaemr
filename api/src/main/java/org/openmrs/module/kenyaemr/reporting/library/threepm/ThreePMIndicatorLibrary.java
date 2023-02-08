@@ -82,5 +82,15 @@ public class ThreePMIndicatorLibrary {
     public CohortIndicator kpCurrOnPrEPWithSTI(String kpType) {
         return cohortIndicator("KPV2_Result: Number of KPs currently on PrEP", map(threePMCohorts.kpCurrOnPrEPWithSTI(kpType), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator kpCurrentOnARTOffsite(String kpType) {
+        return cohortIndicator("KPV2_Result: Number of KPs currently active on ART at other CCC", map(threePMCohorts.kpCurrentOnARTOffsite(kpType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator ppCurrentOnARTOffsite(String ppType) {
+        return cohortIndicator("PP: Number of PP current on ART - Other Facilities", map(threePMCohorts.ppCurrentOnARTOffsite(ppType), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator ppCurrentOnARTOnSite(String ppType) {
+        return cohortIndicator("PP: Number of PP current on ART - This PP DICE", map(threePMCohorts.ppCurrentOnARTOnSite(ppType), "startDate=${startDate},endDate=${endDate}"));
+    }
 }
 

@@ -43,14 +43,24 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     private ThreePMIndicatorLibrary threePMIndicators;
 
     @Autowired
-    private ThreePMIndicatorLibrary threePMIndicators;
+    private ETLMoh731GreenCardIndicatorLibrary moh731GreenCardIndicators;
 
+    //Key Populations
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String FSW = "FSW";
     public static final String MSM = "MSM";
     public static final String PWID = "PWID";
     public static final String TG = "Transgender";
     public static final String IN_PRISONS = "People in prison and other closed settings";
+
+    //Priority Populations
+    public static final String SEX_WORKERS_CLIENTS = "Clients of sex workers";
+    public static final String DISPLACED_PERSONS = "Displaced persons";
+    public static final String FISHING_COMMUNITIES = "Fishing communities";
+    public static final String MILITARY_UNIFORMED_SERVICES = "Military and other uniformed services";
+    public static final String MOBILE_POPULATIONS = "Mobile populations";
+    public static final String NON_INJECTING_DRUG_USER = "Non-injecting drug user";
+    public static final String OTHER = "Other";
 
     /*Age/sex disaggregations*/
     ColumnParameters female = new ColumnParameters(null, "<Female", "gender=F");
@@ -88,8 +98,8 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
             f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50);
 
     List<ColumnParameters> ct3geAndSexDisaggregation = Arrays.asList(
-            f0_to14, m0_to14, f15_to19, m15_to19, f20_to24, m20_to24,f25AndAbove, m25AndAbove);
-    List<ColumnParameters> sexDisaggregation = Arrays.asList(female,male);
+            f0_to14, m0_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25AndAbove, m25AndAbove);
+    List<ColumnParameters> sexDisaggregation = Arrays.asList(female, male);
 
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
@@ -186,7 +196,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-FSW", ReportUtils.map(threePMIndicators.kpCurr(FSW), indParams), "");
         dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-MSM", ReportUtils.map(threePMIndicators.kpCurr(MSM), indParams), "");
         EmrReportingUtils.addRow(dsd, "mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-PWID", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
-        dsd.addColumn( "mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-FSW", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(FSW), indParams), "");
+        dsd.addColumn("mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-FSW", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(FSW), indParams), "");
         dsd.addColumn("mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-MSM", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(MSM), indParams), "");
 
         EmrReportingUtils.addRow(dsd, "AMVV35LIVS7", "KPV2_Result: Number of KPs currently on PrEP-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEP(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
@@ -197,11 +207,29 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-FSW", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(FSW), indParams), "");
         dsd.addColumn("QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-MSM", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(MSM), indParams), "");
 
-        EmrReportingUtils.addRow(dsd, "Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
-        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-FSW", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(FSW), indParams), "");
-        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-MSM", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(MSM), indParams), "");
+        /*EmrReportingUtils.addRow(dsd, "Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-PWID", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
+        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-FSW", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(FSW), indParams), "");
+        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-MSM", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(MSM), indParams), "");*/
 
-        //moh731bIndicators.currentlyOnARTOffSite
+        EmrReportingUtils.addRow(dsd, "Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-PWID", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
+        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-FSW", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(FSW), indParams), "");
+        dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-MSM", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(MSM), indParams), "");
+
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Clients of Sex Workers", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(SEX_WORKERS_CLIENTS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Displaced persons", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(DISPLACED_PERSONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Fishing communities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Mobile populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Other Priority populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(OTHER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Clients of Sex Workers", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(SEX_WORKERS_CLIENTS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Displaced persons", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(DISPLACED_PERSONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Fishing communities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Mobile populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Other Priority populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(OTHER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
 
         return (dsd);
     }

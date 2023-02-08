@@ -37,7 +37,6 @@ public class ETLMoh731PlusCohortLibrary {
 	
 	@Autowired
 	private DatimCohortLibrary datimCohorts;
-	
 	/**
 	 * Returns clients who belongs to a certain kp type
 	 * 

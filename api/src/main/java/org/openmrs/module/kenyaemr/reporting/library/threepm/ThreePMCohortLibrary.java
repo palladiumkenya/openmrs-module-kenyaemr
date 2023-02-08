@@ -45,7 +45,7 @@ import java.util.Date;
 public class ThreePMCohortLibrary {
 
     @Autowired
-    private DatimCohortLibrary datimCohortLibrary;
+    private DatimCohortLibrary datimCohorts;
     @Autowired
     private ETLMoh731PlusCohortLibrary moh731PlusCohortLibrary;
     @Autowired
@@ -98,13 +98,13 @@ public class ThreePMCohortLibrary {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select c.client_id from kenyaemr_etl.etl_contact c\n"
                 + "where date(c.visit_date) <= date(:endDate)\n"
-                + "group by c.client_id having mid(max(concat(date(c.visit_date), c.key_population_type)), 11) = '" + kpType
+                + "group by c.client_id having mid(max(concat(date(c.visit_date), c.priority_population_type)), 11) = '" + ppType
                 + "';";
-        cd.setName("kpType");
+        cd.setName("ppType");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("kpType");
+        cd.setDescription("ppType");
         return cd;
     }
 
@@ -115,6 +115,26 @@ public class ThreePMCohortLibrary {
         cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("currOnARTOffsite",ReportUtils.map(moh731PlusCohortLibrary.reportedCurrentOnARTElsewhereClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("ppType AND currOnARTOffsite");
+        return cd;
+    }
+
+    public CohortDefinition ppCurrentOnARTOnSite(String ppType) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("currentOnART",ReportUtils.map(datimCohorts.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("ppType AND currentOnART");
+        return cd;
+    }
+
+    public CohortDefinition kpCurrentOnARTOffsite(String ppType) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("kpType", ReportUtils.map(kpifCohorts.kpType(ppType), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("currOnARTOffsite",ReportUtils.map(moh731PlusCohortLibrary.reportedCurrentOnARTElsewhereClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("kpType AND currOnARTOffsite");
         return cd;
     }
 }
