@@ -12,8 +12,6 @@ package org.openmrs.module.kenyaemr.reporting.library.shared.common;
 import org.openmrs.Concept;
 import org.openmrs.EncounterType;
 import org.openmrs.Program;
-import org.openmrs.module.reporting.cohort.definition.AgeCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.BaseObsCohortDefinition.TimeModifier;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.cohort.definition.CalculationCohortDefinition;
 import org.openmrs.module.kenyacore.report.cohort.definition.DateObsValueBetweenCohortDefinition;
@@ -23,17 +21,10 @@ import org.openmrs.module.kenyaemr.calculation.library.InProgramCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.IsPregnantCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.RecordedDeceasedCalculation;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemrorderentry.reporting.cohort.definition.CadreCohortDefinition;
-import org.openmrs.module.kenyaemrorderentry.reporting.cohort.definition.ContactAgeCohortDefinition;
-import org.openmrs.module.kenyaemrorderentry.reporting.cohort.definition.ContactGenderCohortDefinition;
+import org.openmrs.module.kenyaemrorderentry.reporting.cohort.definition.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.reporting.cohort.definition.CodedObsCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.EncounterCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.GenderCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.AgeCohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.ProgramEnrollmentCohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.*;
+import org.openmrs.module.reporting.cohort.definition.BaseObsCohortDefinition.TimeModifier;
 import org.openmrs.module.reporting.common.DurationUnit;
 import org.openmrs.module.reporting.common.SetComparator;
 import org.openmrs.module.reporting.common.TimeQualifier;
@@ -427,4 +418,93 @@ public class CommonCohortLibrary {
 		return cd;
 	}
 
+	//Key populations
+	public CohortDefinition fsw() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("FSW");
+		cd.setFswIncluded(true);
+		return cd;
+	}
+	public CohortDefinition pwid() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("PWID");
+		cd.setPwidIncluded(true);
+		return cd;
+	}
+	public CohortDefinition msm() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("MSM");
+		cd.setMsmIncluded(true);
+		return cd;
+	}
+	public CohortDefinition transgender() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("Transgender");
+		cd.setTransgenderIncluded(true);
+		return cd;
+	}
+	public CohortDefinition peopleInPrisonsClosedAndSettings() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("People in prison and other closed settings");
+		cd.setPrisonersIncluded(true);
+		return cd;
+	}
+	public CohortDefinition pwud() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("PWUD");
+		cd.setPrisonersIncluded(true);
+		return cd;
+	}
+	public CohortDefinition otherKeyPopulation() {
+		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+		cd.setName("Other");
+		cd.setOtherIncluded(true);
+		return cd;
+	}
+
+	//Priority Populations
+	public CohortDefinition clientsOfSexWorkers() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Clients of sex workers");
+		cd.setClientOfSexWorkerIncluded(true);
+		return cd;
+	}
+
+	public CohortDefinition displacedPersons() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Displaced persons");
+		cd.setDisplacedPersonsIncluded(true);
+		return cd;
+	}
+
+	public CohortDefinition fishingCommunities() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Fishing communities");
+		cd.setFishingCommunitiesIncluded(true);
+		return cd;
+	}
+	public CohortDefinition militaryUniformedServices() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Military and other uniformed services");
+		cd.setMilitaryIncluded(true);
+		return cd;
+	}
+	public CohortDefinition mobilePopulations() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Mobile populations");
+		cd.setMobilePopsIncluded(true);
+		return cd;
+	}
+	public CohortDefinition nonInjectingDrugUser() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Non-injecting drug user");
+		cd.setNonInjectingDrugUsersIncluded(true);
+		return cd;
+	}
+	public CohortDefinition otherPriorityPopulation() {
+		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+		cd.setName("Other");
+		cd.setOtherPriorityPopsIncluded(true);
+		return cd;
+	}
 }

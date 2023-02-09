@@ -76,11 +76,13 @@ public class CommonDimensionLibrary {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
         dim.setName("fine age between(<1, btw 1 and 9, btw 10 and 14, btw 15 and 19, btw 20 and 24, btw 25 and 49, 50+");
         dim.addParameter(new Parameter("onDate", "Date", Date.class));
+        dim.addCohortDefinition("0+", map(commonCohortLibrary.agedAtLeast(0), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("<1", map(commonCohortLibrary.agedAtMost(0), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("<10", map(commonCohortLibrary.agedAtMost(9), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("1-4", map(commonCohortLibrary.agedAtLeastAgedAtMost(1, 4), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("5-9", map(commonCohortLibrary.agedAtLeastAgedAtMost(5, 9), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("1-9", map(commonCohortLibrary.agedAtLeastAgedAtMost(1, 9), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("0-14", map(commonCohortLibrary.agedAtLeastAgedAtMost(0, 14), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("10-14", map(commonCohortLibrary.agedAtLeastAgedAtMost(10, 14), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("10-19", map(commonCohortLibrary.agedAtLeastAgedAtMost(10, 19), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("15-19", map(commonCohortLibrary.agedAtLeastAgedAtMost(15, 19), "effectiveDate=${onDate}"));
@@ -107,7 +109,6 @@ public class CommonDimensionLibrary {
 
         dim.addCohortDefinition("<15", map(commonCohortLibrary.agedAtMost(14), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("15+", map(commonCohortLibrary.agedAtLeast(15), "effectiveDate=${onDate}"));
-        dim.addCohortDefinition("25+", map(commonCohortLibrary.agedAtLeast(25), "effectiveDate=${onDate}"));
         //Age group in days
         dim.addCohortDefinition("0-60", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(0, 60),"effectiveDate=${onDate}"));
 
@@ -257,6 +258,35 @@ public class CommonDimensionLibrary {
         dim.setName("contactGender");
         dim.addCohortDefinition("M", map(commonCohortLibrary.malePatientContacts()));
         dim.addCohortDefinition("F", map(commonCohortLibrary.femalePatientContacts()));
+        return dim;
+    }
+    /**
+     * KP Type dimensions
+     * @return the dimension
+     */
+    public CohortDefinitionDimension kpType() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("kpType");
+        dim.addCohortDefinition("FSW", map(commonCohortLibrary.fsw()));
+        dim.addCohortDefinition("MSM", map(commonCohortLibrary.msm()));
+        dim.addCohortDefinition("PWID", map(commonCohortLibrary.pwid()));
+        dim.addCohortDefinition("Transgender", map(commonCohortLibrary.transgender()));
+        dim.addCohortDefinition("People in prison and other closed settings", map(commonCohortLibrary.peopleInPrisonsClosedAndSettings()));
+        dim.addCohortDefinition("PWUD", map(commonCohortLibrary.pwud()));
+        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherKeyPopulation()));
+        return dim;
+    }
+    //Priority population types
+    public CohortDefinitionDimension priorityPopulationType() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("ppType");
+        dim.addCohortDefinition("Clients of sex workers", map(commonCohortLibrary.clientsOfSexWorkers()));
+        dim.addCohortDefinition("Displaced persons", map(commonCohortLibrary.displacedPersons()));
+        dim.addCohortDefinition("Fishing communities", map(commonCohortLibrary.fishingCommunities()));
+        dim.addCohortDefinition("Military and other uniformed services", map(commonCohortLibrary.militaryUniformedServices()));
+        dim.addCohortDefinition("Mobile populations", map(commonCohortLibrary.mobilePopulations()));
+        dim.addCohortDefinition("Non-injecting drug user", map(commonCohortLibrary.nonInjectingDrugUser()));
+        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherPriorityPopulation()));
         return dim;
     }
 /**

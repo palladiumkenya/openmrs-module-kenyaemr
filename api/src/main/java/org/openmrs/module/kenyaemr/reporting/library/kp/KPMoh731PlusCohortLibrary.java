@@ -30,7 +30,7 @@ import java.util.Date;
  * incorporated green card components
  */
 @Component
-public class ETLMoh731PlusCohortLibrary {
+public class KPMoh731PlusCohortLibrary {
 	
 	@Autowired
 	private ETLMoh731GreenCardCohortLibrary moh731Cohorts;

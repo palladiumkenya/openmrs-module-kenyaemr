@@ -20,10 +20,9 @@ package org.openmrs.module.kenyaemr.reporting.library.threepm;
  */
 
 import org.openmrs.module.kenyacore.report.ReportUtils;
-import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardCohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.kp.ETLMoh731PlusCohortLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.kp.MonthlyReportCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.kp.KPMoh731PlusCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.kp.KPMonthlyReportCohortLibrary;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -47,9 +46,9 @@ public class ThreePMCohortLibrary {
     @Autowired
     private DatimCohortLibrary datimCohorts;
     @Autowired
-    private ETLMoh731PlusCohortLibrary moh731PlusCohortLibrary;
+    private KPMoh731PlusCohortLibrary moh731PlusCohortLibrary;
     @Autowired
-    private MonthlyReportCohortLibrary kpifCohorts;
+    private KPMonthlyReportCohortLibrary kpifCohorts;
     /**
      * Screened for HIV test
      * @return
@@ -108,23 +107,23 @@ public class ThreePMCohortLibrary {
         return cd;
     }
 
-    public CohortDefinition ppCurrentOnARTOffsite(String ppType) {
+    public CohortDefinition ppCurrentOnARTOffsite() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
+        //cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("currOnARTOffsite",ReportUtils.map(moh731PlusCohortLibrary.reportedCurrentOnARTElsewhereClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("ppType AND currOnARTOffsite");
+        cd.setCompositionString("currOnARTOffsite");
         return cd;
     }
 
-    public CohortDefinition ppCurrentOnARTOnSite(String ppType) {
+    public CohortDefinition ppCurrentOnARTOnSite() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
+      //  cd.addSearch("ppType", ReportUtils.map(ppType(ppType), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("currentOnART",ReportUtils.map(datimCohorts.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("ppType AND currentOnART");
+        cd.setCompositionString("currentOnART");
         return cd;
     }
 

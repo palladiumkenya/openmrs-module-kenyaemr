@@ -29,13 +29,13 @@ import java.util.Date;
  */
 @Component
 //activeFsw
-public class MonthlyReportCohortLibrary {
+public class KPMonthlyReportCohortLibrary {
 	
 	@Autowired
 	private DatimCohortLibrary datimCohortLibrary;
 	
 	@Autowired
-	private ETLMoh731PlusCohortLibrary moh731BCohorts;
+	private KPMoh731PlusCohortLibrary moh731BCohorts;
 	
 	static String startOfYear = "0000-10-01";
 	
@@ -170,8 +170,6 @@ public class MonthlyReportCohortLibrary {
 	/**
 	 * Returns KPs who had a clinical encounter or peer outreach encounter within the reporting
 	 * period
-	 * 
-	 * @param kpType
 	 * @return
 	 */
 	public CohortDefinition kpPrevBaseCurrentPeriod() {
@@ -198,8 +196,6 @@ public class MonthlyReportCohortLibrary {
 	/**
 	 * Returns KPs who had a clinical encounter or peer outreach encounter since beginning of FY
 	 * till previous month to reporting period
-	 * 
-	 * @param kpType
 	 * @return
 	 */
 	public CohortDefinition kpPrevBasePreviousPeriod() {
@@ -330,16 +326,32 @@ public class MonthlyReportCohortLibrary {
 		return cd;
 	}
 	
-	public CohortDefinition kpCurr(String kpType) {
+	public CohortDefinition kpCurr() {
 		
 		SqlCohortDefinition cd = new SqlCohortDefinition();
-		String sqlQuery = "select c.client_id from kenyaemr_etl.etl_contact c \n"
-		        + "left join (select p.client_id from kenyaemr_etl.etl_peer_calendar p where p.voided = 0 group by p.client_id having max(p.visit_date) between date_sub(date(:endDate), INTERVAL 3 MONTH ) and date(:endDate)) cp on c.client_id=cp.client_id\n"
-		        + "  left join (select v.client_id from kenyaemr_etl.etl_clinical_visit v where v.voided = 0 group by v.client_id having max(v.visit_date) between date_sub(date(:endDate), INTERVAL 3 MONTH ) and date(:endDate)) cv on c.client_id=cv.client_id\n"
-		        + "  left join (select d.patient_id, max(d.visit_date) latest_visit from kenyaemr_etl.etl_patient_program_discontinuation d where d.program_name='KP' group by d.patient_id) d on c.client_id = d.patient_id\n"
-		        + "where (d.patient_id is null or d.latest_visit > date(:endDate)) and c.voided = 0 and c.key_population_type = '"
-		        + kpType + "'\n" + "  and (cp.client_id is not null or cv.client_id is not null)\n"
-		        + "  group by c.client_id;\n";
+		String sqlQuery = "select c.client_id\n" +
+				"from kenyaemr_etl.etl_contact c\n" +
+				"         left join (select p.client_id\n" +
+				"                    from kenyaemr_etl.etl_peer_calendar p\n" +
+				"                    where p.voided = 0 and p.visit_date <= date(:endDate)\n" +
+				"                    group by p.client_id\n" +
+				"                    having max(p.visit_date) between date_sub(date(:endDate), INTERVAL 3 MONTH) and date(:endDate)) cp\n" +
+				"                   on c.client_id = cp.client_id\n" +
+				"         left join (select v.client_id,v.visit_date\n" +
+				"                    from kenyaemr_etl.etl_clinical_visit v\n" +
+				"                    where v.voided = 0 and v.visit_date <= date(:endDate)\n" +
+				"                    group by v.client_id\n" +
+				"                    having max(v.visit_date) between date_sub(date(:endDate), INTERVAL 3 MONTH) and date(:endDate)\n" +
+				"             ) cv\n" +
+				"                   on c.client_id = cv.client_id\n" +
+				"         left join (select d.patient_id, max(d.visit_date) latest_visit\n" +
+				"                    from kenyaemr_etl.etl_patient_program_discontinuation d\n" +
+				"                    where d.program_name = 'KP'\n" +
+				"                    group by d.patient_id) d on c.client_id = d.patient_id\n" +
+				"where (d.patient_id is null or d.latest_visit > date(:endDate))\n" +
+				"  and c.voided = 0\n" +
+				"  and (cp.client_id is not null or cv.client_id is not null)\n" +
+				"group by c.client_id;";
 		cd.setName("kpCurr");
 		cd.setQuery(sqlQuery);
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -542,7 +554,7 @@ public class MonthlyReportCohortLibrary {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(kpType), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("knownPositiveKPs", ReportUtils.map(knownPositiveKPs(), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("currentInKP AND knownPositiveKPs");
 		return cd;
@@ -595,7 +607,7 @@ public class MonthlyReportCohortLibrary {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(kpType), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("newlyStartedOnART",
 		    ReportUtils.map(datimCohortLibrary.startedOnART(), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("currentInKP AND newlyStartedOnART");
@@ -1018,7 +1030,7 @@ public class MonthlyReportCohortLibrary {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(kpType), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("txRtt", ReportUtils.map(datimCohortLibrary.txRTT(), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("currentInKP AND txRtt");
 		return cd;
@@ -1761,7 +1773,7 @@ public class MonthlyReportCohortLibrary {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(kpType), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("currentInKP", ReportUtils.map(kpCurr(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("prepCT", ReportUtils.map(datimCohortLibrary.prepCT(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("kpPrepNewDice", ReportUtils.map(kpPrepNewDice(kpType), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("currentInKP AND (prepCT or kpPrepNewDice)");

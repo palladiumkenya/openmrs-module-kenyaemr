@@ -9,11 +9,9 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.threepm;
 
-import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardCohortLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.kp.ETLMoh731PlusCohortLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.kp.MonthlyReportCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.kp.KPMoh731PlusCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.kp.KPMonthlyReportCohortLibrary;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,9 +33,9 @@ public class ThreePMIndicatorLibrary {
     @Autowired
     private ThreePMCohortLibrary threePMCohorts;
     @Autowired
-    private MonthlyReportCohortLibrary kpifCohorts;
+    private KPMonthlyReportCohortLibrary kpifCohorts;
     @Autowired
-    private ETLMoh731PlusCohortLibrary kpCohorts;
+    private KPMoh731PlusCohortLibrary kpCohorts;
 
     public CohortIndicator htsScreened() {
         return cohortIndicator("Number screened",
@@ -70,8 +68,8 @@ public class ThreePMIndicatorLibrary {
     public CohortIndicator knownPositiveAtFirstANC() {
         return cohortIndicator("1st ANC visit clients Known positive", map(moh731Cohorts.knownPositiveAtFirstANC(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator kpCurr(String kpType) {
-        return cohortIndicator("KPV2_Result: Number of KPs currently active in the DICE/Program", map(kpifCohorts.kpCurr(kpType), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator kpCurr() {
+        return cohortIndicator("KPV2_Result: Number of KPs currently active in the DICE/Program", map(kpifCohorts.kpCurr(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator currentlyOnARTOnSite(String kpType) {
         return cohortIndicator("KPV2_Result: Number of KPs currently active on ART at the DICE", map(kpifCohorts.currOnARTKP(kpType), "startDate=${startDate},endDate=${endDate}"));
@@ -85,12 +83,12 @@ public class ThreePMIndicatorLibrary {
     public CohortIndicator kpCurrentOnARTOffsite(String kpType) {
         return cohortIndicator("KPV2_Result: Number of KPs currently active on ART at other CCC", map(threePMCohorts.kpCurrentOnARTOffsite(kpType), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator ppCurrentOnARTOffsite(String ppType) {
-        return cohortIndicator("PP: Number of PP current on ART - Other Facilities", map(threePMCohorts.ppCurrentOnARTOffsite(ppType), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator ppCurrentOnARTOffsite() {
+        return cohortIndicator("PP: Number of PP current on ART - Other Facilities", map(threePMCohorts.ppCurrentOnARTOffsite(), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator ppCurrentOnARTOnSite(String ppType) {
-        return cohortIndicator("PP: Number of PP current on ART - This PP DICE", map(threePMCohorts.ppCurrentOnARTOnSite(ppType), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator ppCurrentOnARTOnSite() {
+        return cohortIndicator("PP: Number of PP current on ART - This PP DICE", map(threePMCohorts.ppCurrentOnARTOnSite(), "startDate=${startDate},endDate=${endDate}"));
     }
 }
 
