@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.ActivePatientsSnapshotCohortDefinition;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -50,6 +51,8 @@ public class ActivePatientsSnapshotCohortDefinitionEvaluator implements CohortDe
 
 		Cohort newCohort = new Cohort();
 
+		int facility = EmrUtils.getFacilityByLoggedInUser();
+
 		String qry="select t.patient_id\n" +
 				"from(\n" +
 				"    select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,\n" +
@@ -69,7 +72,7 @@ public class ActivePatientsSnapshotCohortDefinitionEvaluator implements CohortDe
 				"              where date(visit_date) <= date(:endDate) and program_name='HIV'\n" +
 				"              group by patient_id\n" +
 				"             ) d on d.patient_id = fup.patient_id\n" +
-				"    where fup.visit_date <= date(:endDate)\n" +
+				"    where fup.visit_date <= date(:endDate) and fup.location_id = " + facility + "\n" +
 				"    group by patient_id\n" +
 				"    having (started_on_drugs is not null and started_on_drugs <> '') and (\n" +
 				"        (\n" +

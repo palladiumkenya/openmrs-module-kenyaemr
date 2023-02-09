@@ -21,6 +21,7 @@ import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
+import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
@@ -29,6 +30,7 @@ import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.Provider;
+import org.openmrs.ProviderAttribute;
 import org.openmrs.User;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
@@ -300,6 +302,24 @@ public class EmrUtils {
 		}
 		Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		return subCountyList;
+	}
+
+	public static int getFacilityByLoggedInUser() {
+		int facility = 0;
+		Person user = Context.getAuthenticatedUser().getPerson();
+
+		Collection<Provider> provider = Context.getProviderService().getProvidersByPerson(user);
+		for (Provider p : provider) {
+			Collection<ProviderAttribute> attribute = p.getActiveAttributes();
+			for (ProviderAttribute at : attribute) {
+				if (at.getAttributeType().getUuid().equals(CommonMetadata._ProviderAttributeType.PRIMARY_FACILITY)) {
+
+					Location primaryFacility = (Location) at.getValue();
+					facility = primaryFacility.getLocationId();
+				}
+			}
+		}
+		return facility;
 	}
 
 }
