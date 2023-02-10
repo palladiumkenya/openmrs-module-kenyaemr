@@ -94,43 +94,43 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
 
     // PP
-    ColumnParameters f10_to14_csw = new ColumnParameters(null, "10-14, Female Clients of sex workers", "gender=F|age=10-14|ppType=Clients of sex workers");
-    ColumnParameters m10_to14_csw = new ColumnParameters(null, "10-14, Male Clients of sex workers", "gender=M|age=10-14|ppType=Clients of sex workers");
-    ColumnParameters f15_to19_csw = new ColumnParameters(null, "15-19, Female Clients of sex workers", "gender=F|age=15-19|ppType=Clients of sex workers");
-    ColumnParameters m15_to19_csw = new ColumnParameters(null, "15-19, Male Clients of sex workers", "gender=M|age=15-19|ppType=Clients of sex workers");
-    ColumnParameters f20_to24_csw = new ColumnParameters(null, "20-24, Female Clients of sex workers", "gender=F|age=20-24|ppType=Clients of sex workers");
-    ColumnParameters m20_to24_csw = new ColumnParameters(null, "20-24, Male Clients of sex workers", "gender=M|age=20-24|ppType=Clients of sex workers");
-    ColumnParameters f25_to29_csw = new ColumnParameters(null, "25-29, Female Clients of sex workers", "gender=F|age=25-29|ppType=Clients of sex workers");
-    ColumnParameters m25_to29_csw = new ColumnParameters(null, "25-29, Male Clients of sex workers", "gender=M|age=25-29|ppType=Clients of sex workers");
-    ColumnParameters f30_to34_csw = new ColumnParameters(null, "30-34, Female Clients of sex workers", "gender=F|age=30-34|ppType=Clients of sex workers");
-    ColumnParameters m30_to34_csw = new ColumnParameters(null, "30-34, Male Clients of sex workers", "gender=M|age=30-34|ppType=Clients of sex workers");
-    ColumnParameters f35_to39_csw = new ColumnParameters(null, "35-39, Female Clients of sex workers", "gender=F|age=35-39|ppType=Clients of sex workers");
-    ColumnParameters m35_to39_csw = new ColumnParameters(null, "35-39, Male Clients of sex workers", "gender=M|age=35-39|ppType=Clients of sex workers");
-    ColumnParameters f40_to44_csw = new ColumnParameters(null, "40-44, Female Clients of sex workers", "gender=F|age=40-44|ppType=Clients of sex workers");
-    ColumnParameters m40_to44_csw = new ColumnParameters(null, "40-44, Male Clients of sex workers", "gender=M|age=40-44|ppType=Clients of sex workers");
-    ColumnParameters f45_to49_csw = new ColumnParameters(null, "45-49, Female Clients of sex workers", "gender=F|age=45-49|ppType=Clients of sex workers");
-    ColumnParameters m45_to49_csw = new ColumnParameters(null, "45-49, Male Clients of sex workers", "gender=M|age=45-49|ppType=Clients of sex workers");
-    ColumnParameters fAbove50_csw = new ColumnParameters(null, "50+, Female Clients of sex workers", "gender=F|age=50+|ppType=Clients of sex workers");
-    ColumnParameters mAbove50_csw = new ColumnParameters(null, "50+, Male Clients of sex workers", "gender=M|age=50+|ppType=Clients of sex workers");
+    ColumnParameters f10_to14_csw = new ColumnParameters(null, "10-14, Female Clients of sex workers", "gender=F|age=10-14|ppType=Clients_of_sex_workers");
+    ColumnParameters m10_to14_csw = new ColumnParameters(null, "10-14, Male Clients of sex workers", "gender=M|age=10-14|ppType=Clients_of_sex_workers");
+    ColumnParameters f15_to19_csw = new ColumnParameters(null, "15-19, Female Clients of sex workers", "gender=F|age=15-19|ppType=Clients_of_sex_workers");
+    ColumnParameters m15_to19_csw = new ColumnParameters(null, "15-19, Male Clients of sex workers", "gender=M|age=15-19|ppType=Clients_of_sex_workers");
+    ColumnParameters f20_to24_csw = new ColumnParameters(null, "20-24, Female Clients of sex workers", "gender=F|age=20-24|ppType=Clients_of_sex_workers");
+    ColumnParameters m20_to24_csw = new ColumnParameters(null, "20-24, Male Clients of sex workers", "gender=M|age=20-24|ppType=Clients_of_sex_workers");
+    ColumnParameters f25_to29_csw = new ColumnParameters(null, "25-29, Female Clients of sex workers", "gender=F|age=25-29|ppType=Clients_of_sex_workers");
+    ColumnParameters m25_to29_csw = new ColumnParameters(null, "25-29, Male Clients of sex workers", "gender=M|age=25-29|ppType=Clients_of_sex_workers");
+    ColumnParameters f30_to34_csw = new ColumnParameters(null, "30-34, Female Clients of sex workers", "gender=F|age=30-34|ppType=Clients_of_sex_workers");
+    ColumnParameters m30_to34_csw = new ColumnParameters(null, "30-34, Male Clients of sex workers", "gender=M|age=30-34|ppType=Clients_of_sex_workers");
+    ColumnParameters f35_to39_csw = new ColumnParameters(null, "35-39, Female Clients of sex workers", "gender=F|age=35-39|ppType=Clients_of_sex_workers");
+    ColumnParameters m35_to39_csw = new ColumnParameters(null, "35-39, Male Clients of sex workers", "gender=M|age=35-39|ppType=Clients_of_sex_workers");
+    ColumnParameters f40_to44_csw = new ColumnParameters(null, "40-44, Female Clients of sex workers", "gender=F|age=40-44|ppType=Clients_of_sex_workers");
+    ColumnParameters m40_to44_csw = new ColumnParameters(null, "40-44, Male Clients of sex workers", "gender=M|age=40-44|ppType=Clients_of_sex_workers");
+    ColumnParameters f45_to49_csw = new ColumnParameters(null, "45-49, Female Clients of sex workers", "gender=F|age=45-49|ppType=Clients_of_sex_workers");
+    ColumnParameters m45_to49_csw = new ColumnParameters(null, "45-49, Male Clients of sex workers", "gender=M|age=45-49|ppType=Clients_of_sex_workers");
+    ColumnParameters fAbove50_csw = new ColumnParameters(null, "50+, Female Clients of sex workers", "gender=F|age=50+|ppType=Clients_of_sex_workers");
+    ColumnParameters mAbove50_csw = new ColumnParameters(null, "50+, Male Clients of sex workers", "gender=M|age=50+|ppType=Clients_of_sex_workers");
 
-    ColumnParameters f10_to14_displaced = new ColumnParameters(null, "10-14, Female Displaced persons", "gender=F|age=10-14|ppType=Displaced persons");
-    ColumnParameters m10_to14_displaced = new ColumnParameters(null, "10-14, Male Displaced persons", "gender=M|age=10-14|ppType=Displaced persons");
-    ColumnParameters f15_to19_displaced = new ColumnParameters(null, "15-19, Female Displaced persons", "gender=F|age=15-19|ppType=Displaced persons");
-    ColumnParameters m15_to19_displaced = new ColumnParameters(null, "15-19, Male Displaced persons", "gender=M|age=15-19|ppType=Displaced persons");
-    ColumnParameters f20_to24_displaced = new ColumnParameters(null, "20-24, Female Displaced persons", "gender=F|age=20-24|ppType=Displaced persons");
-    ColumnParameters m20_to24_displaced = new ColumnParameters(null, "20-24, Male Displaced persons", "gender=M|age=20-24|ppType=Displaced persons");
-    ColumnParameters f25_to29_displaced = new ColumnParameters(null, "25-29, Female Displaced persons", "gender=F|age=25-29|ppType=Displaced persons");
-    ColumnParameters m25_to29_displaced = new ColumnParameters(null, "25-29, Male Displaced persons", "gender=M|age=25-29|ppType=Displaced persons");
-    ColumnParameters f30_to34_displaced = new ColumnParameters(null, "30-34, Female Displaced persons", "gender=F|age=30-34|ppType=Displaced persons");
-    ColumnParameters m30_to34_displaced = new ColumnParameters(null, "30-34, Male Displaced persons", "gender=M|age=30-34|ppType=Displaced persons");
-    ColumnParameters f35_to39_displaced = new ColumnParameters(null, "35-39, Female Displaced persons", "gender=F|age=35-39|ppType=Displaced persons");
-    ColumnParameters m35_to39_displaced = new ColumnParameters(null, "35-39, Male Displaced persons", "gender=M|age=35-39|ppType=Displaced persons");
-    ColumnParameters f40_to44_displaced = new ColumnParameters(null, "40-44, Female Displaced persons", "gender=F|age=40-44|ppType=Displaced persons");
-    ColumnParameters m40_to44_displaced = new ColumnParameters(null, "40-44, Male Displaced persons", "gender=M|age=40-44|ppType=Displaced persons");
-    ColumnParameters f45_to49_displaced = new ColumnParameters(null, "45-49, Female Displaced persons", "gender=F|age=45-49|ppType=Displaced persons");
-    ColumnParameters m45_to49_displaced = new ColumnParameters(null, "45-49, Male Displaced persons", "gender=M|age=45-49|ppType=Displaced persons");
-    ColumnParameters fAbove50_displaced = new ColumnParameters(null, "50+, Female Displaced persons", "gender=F|age=50+|ppType=Displaced persons");
-    ColumnParameters mAbove50_displaced = new ColumnParameters(null, "50+, Male Displaced persons", "gender=M|age=50+|ppType=Displaced persons");
+    ColumnParameters f10_to14_displaced = new ColumnParameters(null, "10-14, Female Displaced persons", "gender=F|age=10-14|ppType=Displaced_persons");
+    ColumnParameters m10_to14_displaced = new ColumnParameters(null, "10-14, Male Displaced persons", "gender=M|age=10-14|ppType=Displaced_persons");
+    ColumnParameters f15_to19_displaced = new ColumnParameters(null, "15-19, Female Displaced persons", "gender=F|age=15-19|ppType=Displaced_persons");
+    ColumnParameters m15_to19_displaced = new ColumnParameters(null, "15-19, Male Displaced persons", "gender=M|age=15-19|ppType=Displaced_persons");
+    ColumnParameters f20_to24_displaced = new ColumnParameters(null, "20-24, Female Displaced persons", "gender=F|age=20-24|ppType=Displaced_persons");
+    ColumnParameters m20_to24_displaced = new ColumnParameters(null, "20-24, Male Displaced persons", "gender=M|age=20-24|ppType=Displaced_persons");
+    ColumnParameters f25_to29_displaced = new ColumnParameters(null, "25-29, Female Displaced persons", "gender=F|age=25-29|ppType=Displaced_persons");
+    ColumnParameters m25_to29_displaced = new ColumnParameters(null, "25-29, Male Displaced persons", "gender=M|age=25-29|ppType=Displaced_persons");
+    ColumnParameters f30_to34_displaced = new ColumnParameters(null, "30-34, Female Displaced persons", "gender=F|age=30-34|ppType=Displaced_persons");
+    ColumnParameters m30_to34_displaced = new ColumnParameters(null, "30-34, Male Displaced persons", "gender=M|age=30-34|ppType=Displaced_persons");
+    ColumnParameters f35_to39_displaced = new ColumnParameters(null, "35-39, Female Displaced persons", "gender=F|age=35-39|ppType=Displaced_persons");
+    ColumnParameters m35_to39_displaced = new ColumnParameters(null, "35-39, Male Displaced persons", "gender=M|age=35-39|ppType=Displaced_persons");
+    ColumnParameters f40_to44_displaced = new ColumnParameters(null, "40-44, Female Displaced persons", "gender=F|age=40-44|ppType=Displaced_persons");
+    ColumnParameters m40_to44_displaced = new ColumnParameters(null, "40-44, Male Displaced persons", "gender=M|age=40-44|ppType=Displaced_persons");
+    ColumnParameters f45_to49_displaced = new ColumnParameters(null, "45-49, Female Displaced persons", "gender=F|age=45-49|ppType=Displaced_persons");
+    ColumnParameters m45_to49_displaced = new ColumnParameters(null, "45-49, Male Displaced persons", "gender=M|age=45-49|ppType=Displaced_persons");
+    ColumnParameters fAbove50_displaced = new ColumnParameters(null, "50+, Female Displaced persons", "gender=F|age=50+|ppType=Displaced_persons");
+    ColumnParameters mAbove50_displaced = new ColumnParameters(null, "50+, Male Displaced persons", "gender=M|age=50+|ppType=Displaced_persons");
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
 
     List<ColumnParameters> childrenAgeDisaggregation = Arrays.asList(
@@ -274,7 +274,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-FSW", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(FSW), indParams), "");
         dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-MSM", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(MSM), indParams), "");
 */
-        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexCSWPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+      //  EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexCSWPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
         EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexDisplacedPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
        /* EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Fishing communities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
         EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
