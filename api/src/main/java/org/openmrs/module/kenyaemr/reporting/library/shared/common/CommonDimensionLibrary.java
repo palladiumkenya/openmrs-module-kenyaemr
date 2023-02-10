@@ -271,7 +271,7 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("MSM", map(commonCohortLibrary.msm()));
         dim.addCohortDefinition("PWID", map(commonCohortLibrary.pwid()));
         dim.addCohortDefinition("Transgender", map(commonCohortLibrary.transgender()));
-        dim.addCohortDefinition("People_in_prison_and_other_closed_settings", map(commonCohortLibrary.peopleInPrisonsClosedAndSettings()));
+        dim.addCohortDefinition("People in prison and other closed settings", map(commonCohortLibrary.peopleInPrisonsClosedAndSettings()));
         dim.addCohortDefinition("PWUD", map(commonCohortLibrary.pwud()));
         dim.addCohortDefinition("Other", map(commonCohortLibrary.otherKeyPopulation()));
         return dim;
@@ -280,12 +280,12 @@ public class CommonDimensionLibrary {
     public CohortDefinitionDimension priorityPopulationType() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
         dim.setName("ppType");
-        dim.addCohortDefinition("Clients_of_sex_workers", map(commonCohortLibrary.clientsOfSexWorkers()));
-        dim.addCohortDefinition("Displaced_persons", map(commonCohortLibrary.displacedPersons()));
-        dim.addCohortDefinition("Fishing_communities", map(commonCohortLibrary.fishingCommunities()));
-        dim.addCohortDefinition("Military_and_other_uniformed_services", map(commonCohortLibrary.militaryUniformedServices()));
-        dim.addCohortDefinition("Mobile_populations", map(commonCohortLibrary.mobilePopulations()));
-        dim.addCohortDefinition("Non-injecting_drug_user", map(commonCohortLibrary.nonInjectingDrugUser()));
+        dim.addCohortDefinition("Clients of sex workers", map(commonCohortLibrary.clientsOfSexWorkers()));
+        dim.addCohortDefinition("Displaced persons", map(commonCohortLibrary.displacedPersons()));
+        dim.addCohortDefinition("Fishing communities", map(commonCohortLibrary.fishingCommunities()));
+        dim.addCohortDefinition("Military and other uniformed services", map(commonCohortLibrary.militaryUniformedServices()));
+        dim.addCohortDefinition("Mobile populations", map(commonCohortLibrary.mobilePopulations()));
+        dim.addCohortDefinition("Non-injecting drug user", map(commonCohortLibrary.nonInjectingDrugUser()));
         dim.addCohortDefinition("Other", map(commonCohortLibrary.otherPriorityPopulation()));
         return dim;
     }

@@ -445,7 +445,7 @@ public class CommonCohortLibrary {
 	}
 	public CohortDefinition peopleInPrisonsClosedAndSettings() {
 		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("People_in_prison_and_other_closed settings");
+		cd.setName("People in prison and other closed settings");
 		cd.setPrisonersIncluded(true);
 		return cd;
 	}
@@ -465,39 +465,39 @@ public class CommonCohortLibrary {
 	//Priority Populations
 	public CohortDefinition clientsOfSexWorkers() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Clients_of_sex workers");
+		cd.setName("Clients of sex workers");
 		cd.setClientOfSexWorkerIncluded(true);
 		return cd;
 	}
 
 	public CohortDefinition displacedPersons() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Displaced_persons");
+		cd.setName("Displaced persons");
 		cd.setDisplacedPersonsIncluded(true);
 		return cd;
 	}
 
 	public CohortDefinition fishingCommunities() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Fishing_communities");
+		cd.setName("Fishing communities");
 		cd.setFishingCommunitiesIncluded(true);
 		return cd;
 	}
 	public CohortDefinition militaryUniformedServices() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Military_and_other_uniformed services");
+		cd.setName("Military and other uniformed services");
 		cd.setMilitaryIncluded(true);
 		return cd;
 	}
 	public CohortDefinition mobilePopulations() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Mobile_populations");
+		cd.setName("Mobile populations");
 		cd.setMobilePopsIncluded(true);
 		return cd;
 	}
 	public CohortDefinition nonInjectingDrugUser() {
 		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Non-injecting_drug_user");
+		cd.setName("Non-injecting drug user");
 		cd.setNonInjectingDrugUsersIncluded(true);
 		return cd;
 	}
