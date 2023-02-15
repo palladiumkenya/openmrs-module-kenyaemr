@@ -256,6 +256,9 @@ Green Card follow-up visit form
             jq('#population-type :input[type=radio]').change(populationTypeSelected);
             jq("#complaint-field select").change(otherComplaintSelected);
 
+            getField('tempInputeValue.value').change(onTemperatureChange);
+            jq('#sari-screening').hide();
+
 //Stability assessment
             jq("#stability").change(stabilitySelected);       //boolean
             jq("#returnVisitReason select").change(returnReasonSelected);       //non boolean
@@ -336,7 +339,7 @@ Green Card follow-up visit form
 //Using recent LMP
                     var formattedRecentlmp=moment(moment(recentLMP, 'DD-MMM-YYYY').toDate()).format('DD-MMM-YYYY');
                     var expectedDeliveryDateByRecentLMP = moment(formattedRecentlmp, "DD-MMM-YYYY").add(280, 'days').format('DD-MMM-YYYY');
-//Calculation
+c
                     if(recentEDD !=""){
                         getField('patient-edd.value').val(recentEDD);
                     }else if(recentLMP !="") {
@@ -706,6 +709,22 @@ Green Card follow-up visit form
                 });
             }
         }
+
+<!--            Sari Screening-->
+
+          function onTemperatureChange() {
+            var display = '';
+            var temp = parseFloat(getValue('tempInputeValue.value'));
+            if (!isNaN(temp) &amp;&amp; !isNaN(temp)) {
+                if ( temp &gt; 37) {
+                     jq('#sari-screening').show();
+                }
+                else {
+                    jq('#sari-screening').hide();
+                }
+            }
+
+          }
 
         function recordIptFollowupInformation() {
             var iptDueDate = jq("#txtIptDueDate").val();
@@ -2807,6 +2826,28 @@ Management<br />
                                 <obs conceptId="1343AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="muac"/>
                             </td>
                             <td><span class="value"><recentObs conceptId="1343AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <!-- SARI Screening -->
+                <fieldset id="sari-screening">
+                    <legend>SARI/ILI Screening</legend>
+                    <table>
+                        <tr>
+                            <td>Did the patient report a history or has a measured fever >=38C?  &#160;&#160; </td>
+                            <td><obs conceptId="140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabels="Yes,No,Don't Know"
+                                     style="radio" id="sari-fever-measured" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Is the patient presenting with a cough? &#160;&#160;</td>
+                            <td><obs conceptId="143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="sari-presenting-cough" labelText=" " answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No,Don't Know" /></td>
+
+                        </tr>
+                        <tr>
+                            <td>Was the onset of symptoms within the last 10 days ? &#160; </td>
+                            <td><obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  id="sari-onset-symptoms" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No, Don.t Know" /></td>
                         </tr>
                     </table>
                 </fieldset>
