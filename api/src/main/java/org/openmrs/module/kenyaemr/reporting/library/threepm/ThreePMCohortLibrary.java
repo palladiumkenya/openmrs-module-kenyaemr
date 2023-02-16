@@ -20,6 +20,7 @@ package org.openmrs.module.kenyaemr.reporting.library.threepm;
  */
 
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardCohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.kp.KPMoh731PlusCohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.kp.KPMonthlyReportCohortLibrary;
@@ -49,13 +50,27 @@ public class ThreePMCohortLibrary {
     private KPMoh731PlusCohortLibrary moh731PlusCohortLibrary;
     @Autowired
     private KPMonthlyReportCohortLibrary kpifCohorts;
+    @Autowired
+    private ETLMoh731GreenCardCohortLibrary moh731Cohorts;
     /**
      * Screened for HIV test
      * @return
      */
-    public CohortDefinition htsScreened() {
+
+    public CohortDefinition screenedFromMobileDepartment(Integer department) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where date(s.visit_date) between date(:startDate) and date(:endDate);";
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.department = "+department+" and date(s.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("Screening department");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Screening department");
+
+        return cd;
+    }
+    public CohortDefinition htsScreened(Integer department) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.department = "+department+" and date(s.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("totalHTSScreened");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -64,20 +79,161 @@ public class ThreePMCohortLibrary {
 
         return cd;
     }
+    //ANC 1 CLIENTS
 
+    public CohortDefinition htsTested() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t where date(t.visit_date) between date(:startDate) and date(:endDate) and t.test_type = 1;";
+        cd.setName("HTS tested");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HTS tested");
+
+        return cd;
+    }
+
+    public CohortDefinition htsTestedByDepartment(Integer department) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t where date(t.visit_date) between date(:startDate) and date(:endDate) and t.test_type = 1 and t.hts_entry_point = "+department+";";
+        cd.setName("HTS tested mobile");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HTS tested mobile");
+
+        return cd;
+    }
+/*    public CohortDefinition htsTestedPositiveMobileDepartment() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t where date(t.visit_date) between date(:startDate) and date(:endDate) and t.test_type = 1 and t.final_test_result ='Positive' and t.hts_entry_point = 159939;";
+        cd.setName("HTS tested Positive mobile");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HTS tested Positive mobile");
+
+        return cd;
+    }*/
+    public CohortDefinition htsTestedPositive() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t where date(t.visit_date) between date(:startDate) and date(:endDate) and t.test_type = 1 and t.final_test_result ='Positive';";
+        cd.setName("HTS tested Positive");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HTS tested Positive");
+
+        return cd;
+    }
+    public CohortDefinition htsScreenedMobile(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("screenedFromMobileDepartment",
+                ReportUtils.map(screenedFromMobileDepartment(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND screenedFromMobileDepartment");
+        return cd;
+    }
+    public CohortDefinition htsEligibleMobile(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("eligibleForHIVTest",
+                ReportUtils.map(eligibleForHIVTest(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("screenedFromMobileDepartment",
+                ReportUtils.map(screenedFromMobileDepartment(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("eligibleForHIVTest AND screenedFromMobileDepartment");
+        return cd;
+    }
+    public CohortDefinition htsScreenedANC1(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("firstANCVisit",
+                ReportUtils.map(moh731Cohorts.firstANCVisitMchmsAntenatal(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("screened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("firstANCVisit AND screened");
+        return cd;
+    }
+
+    public CohortDefinition htsTested(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        /*cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));*/
+        cd.addSearch("htsTestedByDepartment",
+                ReportUtils.map(htsTestedByDepartment(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsTestedByDepartment");
+        return cd;
+    }
+
+    // Known positive from HTS screening
+    public CohortDefinition htsKnownPositiveHTSScreening() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.tested_hiv_before = 1065 and s.test_results = 703\n" +
+                "    and date(s.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("Known positive HTS screening");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Known positive HTS screening");
+
+        return cd;
+    }
+
+    /**
+     * Known positive individuals from hts eligibility screening through mobile department
+     * @return
+     */
+    public CohortDefinition htsKnownPositive(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsKnownPositiveHTSScreening",
+                ReportUtils.map(htsKnownPositiveHTSScreening(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND htsKnownPositiveHTSScreening");
+        return cd;
+    }
     public CohortDefinition eligibleForHIVTest() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select s.patient_id\n" +
-                "from kenyaemr_etl.etl_hts_eligibility_screening s\n" +
-                "where s.visit_date between date(:startDate) and date(:endDate)\n" +
-                "group by s.patient_id\n" +
-                "having mid(max(concat(s.visit_date, s.eligible_for_test)), 11) = 1065;";
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.eligible_for_test = 1065 and date(s.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("Eligible for HIV test");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.setDescription("Eligible for HIV test");
 
+        return cd;
+    }
+    //}htsNewPositiveMobile,htsLinkedToHAARTMobile,moh731Cohorts.htsNumberTestedPositive,moh731Cohorts.htsAllNumberTestedPositiveAndLinked()
+    public CohortDefinition htsNewPositiveMobile(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsTestedPositive",
+                ReportUtils.map(htsTestedPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsTestedMobile",
+                ReportUtils.map(htsTested(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsTestedPositive AND htsTestedMobile");
+        return cd;
+    }
+
+    public CohortDefinition htsLinkedToHAARTMobile(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsNewPositiveMobile",
+                ReportUtils.map(htsNewPositiveMobile(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsAllNumberTestedPositiveAndLinked",
+                ReportUtils.map(moh731Cohorts.htsNumberTestedPositiveAndLinked(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsNewPositiveMobile AND htsAllNumberTestedPositiveAndLinked");
         return cd;
     }
 

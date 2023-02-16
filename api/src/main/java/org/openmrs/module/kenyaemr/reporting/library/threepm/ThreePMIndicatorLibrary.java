@@ -37,28 +37,36 @@ public class ThreePMIndicatorLibrary {
     @Autowired
     private KPMoh731PlusCohortLibrary kpCohorts;
 
-    public CohortIndicator htsScreened() {
+    public CohortIndicator htsScreenedMobile(Integer department) {
         return cohortIndicator("Number screened",
-                map(threePMCohorts.htsScreened(), "startDate=${startDate},endDate=${endDate}")
+                map(threePMCohorts.htsScreenedMobile(department), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
-    public CohortIndicator eligibleForHIVTest() {
+    public CohortIndicator htsEligibleMobile(Integer department) {
         return cohortIndicator("Eligible for HIV Test",
-                map(threePMCohorts.eligibleForHIVTest(), "startDate=${startDate},endDate=${endDate}")
+                map(threePMCohorts.htsEligibleMobile(department), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
-    public CohortIndicator htsNumberTested() {
-        return cohortIndicator("Individuals tested", map(moh731Cohorts.htsNumberTested(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator htsScreenedANC1(Integer department) {
+        return cohortIndicator("Screened for HIV Test at ANC 1",
+                map(threePMCohorts.htsScreenedANC1(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator htsTested(Integer department) {
+        return cohortIndicator("Individuals tested", map(threePMCohorts.htsTested(department), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator newPositive() {
-        return cohortIndicator("Newly tested HIV positive", map(moh731Cohorts.htsNumberTestedPositive(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator htsKnownPositive(Integer department) {
+        return cohortIndicator("Known Positive from HTS mobile screening", map(threePMCohorts.htsKnownPositive(department), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator htsNewPositiveMobile(Integer department) {
+        return cohortIndicator("Newly tested HIV positive", map(threePMCohorts.htsNewPositiveMobile(department), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator linked() {
-        return cohortIndicator("Linked to care", map(moh731Cohorts.htsAllNumberTestedPositiveAndLinked(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator htsLinkedToHAARTMobile(Integer department) {
+        return cohortIndicator("Linked to care", map(threePMCohorts.htsLinkedToHAARTMobile(department), "startDate=${startDate},endDate=${endDate}"));
     }
 
     public CohortIndicator firstANCVisitMchmsAntenatal() {

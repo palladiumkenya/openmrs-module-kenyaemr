@@ -18,7 +18,7 @@ import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.threepm.ThreePMIndicatorLibrary;
-import org.openmrs.module.kenyaemr.task.AutoCloseActiveVisitsTask;
+import org.openmrs.module.kenyaemr.util.HtsConstants;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
@@ -48,8 +48,6 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     @Autowired
     private ETLMoh731GreenCardIndicatorLibrary moh731GreenCardIndicators;
 
-    private static final Logger log = LoggerFactory.getLogger(AutoCloseActiveVisitsTask.class);
-
     //Key Populations
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String FSW = "FSW";
@@ -71,6 +69,8 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     ColumnParameters female_pwid = new ColumnParameters(null, "Female,PWID", "gender=F|kpType=PWID");
     ColumnParameters male_pwid = new ColumnParameters(null, "Male,PWID", "gender=M|kpType=PWID");
     ColumnParameters infant = new ColumnParameters(null, "<1, Male and Female", "age=<1");
+    ColumnParameters fUnder1 = new ColumnParameters(null, "<1", "gender=F|age=<1");
+    ColumnParameters f1To9 = new ColumnParameters(null, "1-9", "gender=F|age=1-9");
     ColumnParameters all1_to9 = new ColumnParameters(null, "1-9, Male and female", "age=1-9");
     ColumnParameters f0_to14 = new ColumnParameters(null, "0-14, Female", "gender=F|age=0-14");
     ColumnParameters m0_to14 = new ColumnParameters(null, "0-14, Male", "gender=M|age=0-14");
@@ -151,6 +151,8 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
     List<ColumnParameters> sparseAgeAndSexDisaggregation = Arrays.asList(
             f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to49, m40_to49, fAbove50, mAbove50);
+    List<ColumnParameters> mnchMotherAgeADisaggregation = Arrays.asList(
+            fUnder1,f1To9,f10_to14,f15_to19,f20_to24,f25_to29,f30_to34,f35_to39,f40_to49,fAbove50);
 
     List<ColumnParameters> kpAgeAndSexDisaggregation = Arrays.asList(
             f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to49, m40_to49, fAbove50, mAbove50);
@@ -173,11 +175,11 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor, ReportDefinition reportDefinition) {
         return Arrays.asList(
-                ReportUtils.map(careAndTreatmentDataset(), "startDate=${startDate},endDate=${endDate}")
-                /*//HTS
-                ReportUtils.map(htsDataset(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(careAndTreatmentDataset(), "startDate=${startDate},endDate=${endDate}"),
+              //HTS
+                ReportUtils.map(htsDataset(), "startDate=${startDate},endDate=${endDate}")
                 //VMMC
-                ReportUtils.map(vmmcDataset(), "startDate=${startDate},endDate=${endDate}"),
+               /*   ReportUtils.map(vmmcDataset(), "startDate=${startDate},endDate=${endDate}"),
                 //HCT
                 ReportUtils.map(hctDataset(), "startDate=${startDate},endDate=${endDate}"),
                 //PMTCT
@@ -215,14 +217,31 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
         dsd.setDescription("HIV testing services");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addDimension("age", ReportUtils.map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
+        dsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
-        dsd.addColumn("Screened", "Screened", ReportUtils.map(threePMIndicators.htsScreened(), indParams), "");
-        //dsd.addColumn("Known Positive", "Known Positive", ReportUtils.map(threePMIndicators.getKnownPositive(), indParams), "");
-        dsd.addColumn("Eligible", "Total Screened", ReportUtils.map(threePMIndicators.eligibleForHIVTest(), indParams), "");
-        dsd.addColumn("Tested", "Total tested", ReportUtils.map(threePMIndicators.htsNumberTested(), indParams), "");
-        dsd.addColumn("New Positive", "Newly tested HIV positive", ReportUtils.map(threePMIndicators.newPositive(), indParams), "");
-        dsd.addColumn("Linked", "Newly tested HIV positive", ReportUtils.map(threePMIndicators.linked(), indParams), "");
+
+        //Mobile
+        EmrReportingUtils.addRow(dsd, "QnSletgoPla", "CHTSV2_Result: Mobile Testing - Screened", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsEligibleMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "N42RUbWfr6F", "CHTSV2_Result: Mobile Testing - Tested", ReportUtils.map(threePMIndicators.htsTested(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "Ct0CcuOl9Wb", "CHTSV2_Result: Mobile Testing - Known HIV Positive", ReportUtils.map(threePMIndicators.htsKnownPositive(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+       //EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "YHyt08aRsoD", "CHTSV2_Result: Mobile Testing - Newly Identified Positive", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        // Review the linked query in moh731
+        EmrReportingUtils.addRow(dsd, "jn8Boh188o6", "CHTSV2_Result: Mobile Testing - Linked to HAART", ReportUtils.map(threePMIndicators.htsLinkedToHAARTMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+
+        //MNCH -ANC
+        EmrReportingUtils.addRow(dsd, "yHHWaNDFzES", "HTSV2_Result:MNCH - ANC Department - Number of 1st ANC visit clients Screened", ReportUtils.map(threePMIndicators.htsScreenedANC1(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        EmrReportingUtils.addRow(dsd, "R6BJK9kAjtA", "HTSV2_Result:MNCH - ANC Department - Number of clients on 1st ANC visit", ReportUtils.map(moh731GreenCardIndicators.firstANCVisitMchmsAntenatal(), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        //EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsEligibleMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        EmrReportingUtils.addRow(dsd, "COn6aObrQm8", "HTSV2_Result:MNCH - ANC Department - Tested", ReportUtils.map(threePMIndicators.htsTested(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        EmrReportingUtils.addRow(dsd, "Gwk0JOcf33J", "HTSV2_Result:MNCH - ANC Department - Known Positive", ReportUtils.map(threePMIndicators.htsKnownPositive(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        //EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "YHyt08aRsoD", "CHTSV2_Result: Mobile Testing - Newly Identified Positive", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+        // Review the linked query in moh731
+        EmrReportingUtils.addRow(dsd, "jn8Boh188o6", "CHTSV2_Result: Mobile Testing - Linked to HAART", ReportUtils.map(threePMIndicators.htsLinkedToHAARTMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
 
         //MNCH-ANC
         dsd.addColumn("1st ANC visit clients", "1st ANC visit clients", ReportUtils.map(threePMIndicators.firstANCVisitMchmsAntenatal(), indParams), "");
@@ -255,6 +274,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
+        //Care and Treatment indicators
         EmrReportingUtils.addRow(dsd, "Kekp0WkqyBp", "CTV2_Result:Children", ReportUtils.map(moh731GreenCardIndicators.currentlyOnArt(), indParams), childrenAgeDisaggregation, Arrays.asList("01", "02"));
         /*EmrReportingUtils.addRow(dsd, "ynQPCzoY3Vp", "CTV2_Result:10 years and above", ReportUtils.map(moh731GreenCardIndicators.currentlyOnArt(), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         EmrReportingUtils.addRow(dsd, "FEyLrThIhS3", "CTV3: Current on treatment", ReportUtils.map(moh731GreenCardIndicators.currentlyOnArt(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));*/

@@ -23,8 +23,22 @@ public class HtsConstants {
     public static final Integer SUCCESSFUL_LINKAGE_CONCEPT_ID = 1065;
     public static final Integer HTS_TRACING_OUTCOME_QUESTION_CONCEPT_ID = 159811;
     public static final Integer HTS_SUCCESSFULL_TRACING_OUTCOME_CONCEPT_ID = 1065;
-
-
+    public static final Integer IN_PATIENT_DEPARTMENT_CONCEPT_ID = 5485;
+    public static final Integer OUT_PATIENT_DEPARTMENT_CONCEPT_ID = 160542;
+    public static final Integer PEDIATRIC_CLINIC_CONCEPT_ID = 162181;
+    public static final Integer MALNUTRITION_CLINIC_CONCEPT_ID = 160552;
+    public static final Integer MNCH_ANC_CLINIC_CONCEPT_ID = 160538;
+    public static final Integer MNCH_MAT_CLINIC_CONCEPT_ID = 160456;
+    public static final Integer MNCH_PNC_CLINIC_CONCEPT_ID = 1623;
+    public static final Integer TB_CLINIC_CONCEPT_ID = 160541;
+    public static final Integer VCT_CLINIC_CONCEPT_ID = 159940;
+    public static final Integer VMMC_CLINIC_CONCEPT_ID = 162223;
+    public static final Integer STI_CLINIC_CONCEPT_ID = 160546;
+    public static final Integer EMERGENCY_DEPARTMENT_CONCEPT_ID = 160522;
+    public static final Integer COMMUNITY_TESTING_CONCEPT_ID = 163096;
+    public static final Integer HOME_BASED_TESTING_CONCEPT_ID = 159938;
+    public static final Integer MOBILE_OUTREACH_TESTING_CONCEPT_ID = 159939;
+    public static final Integer OTHER_TESTING_CONCEPT_ID = 5622;
     public static final Form htsInitialForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.HTS_INITIAL_TEST);
     public static final Form htsRetestForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.HTS_CONFIRMATORY_TEST);
     public static final Form htsLinkageForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.HTS_LINKAGE);
