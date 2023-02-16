@@ -13708,3 +13708,8 @@ Code,Officialname,Province,County,Sub county,Ward,Facility type,Owner type,,,,Co
 27527,HOPE Worldwide Kenya Savannah,Nairobi,Nairobi,Embakasi,Pipeline,Medical Clinic,Private Practice,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 26373,HOPE Worldwide Kenya Landimawe,Nairobi,Nairobi,Makadara,Makongeni,Medical Clinic,Private Practice,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 28742,Swop Majengo Clinic,Nairobi,Nairobi,Starehe,Pumwani,Medical Clinic,Private Practice,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+50000,CCC,,,,,Queue location for CCC,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+50001,MCH,,,,,Queue location for MCH,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+50002,Pharmacy,,,,,Queue location for Pharmacy,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+50003,Laboratory,,,,,Queue location for Laboratory,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+50004,HTS,,,,,Queue location for HTS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
