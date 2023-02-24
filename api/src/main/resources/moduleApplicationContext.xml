@@ -27,6 +27,7 @@
 	<import resource="content/kenyaemr.otz.xml" />
 	<import resource="content/kenyaemr.ovc.xml" />
 	<import resource="content/kenyaemr.vmmc.xml" />
+	<import resource="content/kenyaemr.sari.xml"/>
 
 	<!-- ===================== App descriptors ===================== -->
 
@@ -140,14 +141,6 @@
 		<constructor-arg value="kenyaemr/upi/upiVerificationHome.page" />
 		<constructor-arg value="kenyaemr:apps/upi.png" />
 		<constructor-arg value="840" />
-	</bean>
-
-	<bean id="kenyaemr.app.openmrs3Shortcut" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
-		<constructor-arg value="kenyaemr.openmrs3Shortcut" />
-		<constructor-arg value="KenyaEMR on 3.x" />
-		<constructor-arg value="kenyaemr/shortcuts/o3Home.page" />
-		<constructor-arg value="kenyaemr:apps/O3.png" />
-		<constructor-arg value="999999" />
 	</bean>
 
 	<bean id="kenyaemr.app.developer" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">

@@ -21,4 +21,6 @@
 	<ref key="SURGICAL_AND_MEDICAL_HISTORY" uuid="4f3c9bd8-c117-4a5e-a7eb-12a627c29de6" />
 	<ref key="TB_SCREENING" uuid="59ed8e62-7f1f-40ae-a2e3-eabe350277ce" />
 	<ref key="TRIAGE" uuid="37f6bd8d-586a-4169-95fa-5781f987fe62" />
+	<ref key="SARI_SCREENING" uuid="c56140ca-7ad5-4069-9236-ef3495bbd43d" />
+	<ref key="ILI_SCREENING" uuid="9abf25dd-ed48-4c8d-ba0e-78d68543a05a" />
 </refs>

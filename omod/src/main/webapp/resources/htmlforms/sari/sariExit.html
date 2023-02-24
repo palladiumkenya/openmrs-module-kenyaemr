@@ -1,0 +1,642 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+-->
+<htmlform>
+
+    <script type="text/javascript">
+        var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
+        var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
+        jQuery(function () {
+
+            var miscariageVal = getValue('miscariage.value');
+            var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
+            var pgender = "<lookup expression="patient.gender" />";
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+
+            var anaemiaStatus = "<lookup expression="fn.latestObs(156625).getValueCoded()"/>";
+            var  pneumoniaBronchopneumoniaStatus = "<lookup expression="fn.latestObs(122496).getValueCoded()"/>";
+            var malariaStatus = "<lookup expression="fn.latestObs(164485).getValueCoded()"/>";
+            var covidStatus = "<lookup expression="fn.latestObs(165866).getValueCoded()"/>";
+            var hypertensionStatus = "<lookup expression="fn.latestObs(160223).getValueCoded()"/>";
+            var gastroenteritisStatus = "<lookup expression="fn.latestObs(142412).getValueCoded()"/>";
+            var asthmaExacerbationStatus = "<lookup expression="fn.latestObs(121375).getValueCoded()"/>";
+            var malnutritionStatus = "<lookup expression="fn.latestObs(115122).getValueCoded()"/>";
+            var dehydrationStatus = "<lookup expression="fn.latestObs(1497).getValueCoded()"/>";
+            var meningitisEncephalitisStatus = "<lookup expression="fn.latestObs(118656).getValueCoded()"/>";
+
+             jq('#final_outcome_facility_name').hide();
+             jq('#pregnancy_status_discharge').hide();
+             jq('#pregnancy_status_outcome').hide();
+             jq('#hiv_test_results').hide();
+             jq('#method_used_malaria_testing').hide();
+             jq('#malaria-results-done').hide();
+             jq('#patient_tested_for_malaria').hide();
+             jq('#icu-where').hide();
+             jq('#icu-acu').hide();
+             erythrocyteChange();
+             lymphocytesChange();
+             whiteBloodChange();
+             neutrophilChange();
+             haemoglobinChange();
+            jq('#final_outcome :input[type=radio]').change(onFinalOutcomeChange);
+            jq('#tested-hiv-admission :input[type=radio]').change(onTestedHivChange);
+            jq('#malaria-testing :input[type=radio]').change(onMalariaTestingChange);
+            jq('#malaria-results-done :input[type=radio]').change(onMalariaResultsDoneChange);
+            jq('#icu-acute-unit :input[type=radio]').change(onIcuAcuteUnitChange);
+
+            if(anaemiaStatus == 1065 || anaemiaStatus == 1066){
+                jq("#anaemia input").prop("checked", true);
+            }else{
+                jq("#anaemia input").prop("checked", false);
+            }
+            if(pneumoniaBronchopneumoniaStatus == 1065 || pneumoniaBronchopneumoniaStatus == 1066){
+                jq("#pneumonia-bronchopneumonia input").prop("checked", true);
+            }else{
+                jq("#pneumonia-bronchopneumonia input").prop("checked", false);
+            }
+            if(malariaStatus == 1065 || malariaStatus == 1066){
+                jq("#malaria input").prop("checked", true);
+            }else{
+                jq("#malaria input").prop("checked", false);
+            }
+            if(covidStatus == 1065 || covidStatus == 1066){
+                jq("#covid input").prop("checked", true);
+            }else{
+                jq("#covid input").prop("checked", false);
+            }
+            if(hypertensionStatus == 1065 || hypertensionStatus == 1066){
+                jq("#hypertension input").prop("checked", true);
+            }else{
+                jq("#hypertension input").prop("checked", false);
+            }
+            if(gastroenteritisStatus == 1065 || gastroenteritisStatus == 1066){
+                jq("#gastroenteritis input").prop("checked", true);
+            }else{
+                jq("#gastroenteritis input").prop("checked", false);
+            }
+            if(asthmaExacerbationStatus == 1065 || asthmaExacerbationStatus == 1066){
+                jq("#asthma-exacerbation input").prop("checked", true);
+            }else{
+                jq("#asthma-exacerbation input").prop("checked", false);
+            }
+            if(malnutritionStatus == 1065 || malnutritionStatus == 1066){
+                jq("#malnutrition input").prop("checked", true);
+            }else{
+                jq("#malnutrition input").prop("checked", false);
+            }
+            if(dehydrationStatus == 1065 || dehydrationStatus == 1066){
+                jq("#dehydration input").prop("checked", true);
+            }else{
+                jq("#dehydration input").prop("checked", false);
+            }
+            if(meningitisEncephalitisStatus == 1065 || meningitisEncephalitisStatus == 1066){
+                jq("#meningitis-encephalitis input").prop("checked", true);
+            }else{
+                jq("#meningitis-encephalitis input").prop("checked", false);
+            }
+
+
+           if(PATIENT_PREGNANT == 'true' ) {
+                  jq('#pregnancy_status_discharge').show();
+                    jq('#pregnancy_status_outcome').show();
+             }else{
+                  jq('#pregnancy_status_discharge').hide();
+                 jq('#pregnancy_status_outcome').hide();
+             }
+
+
+
+
+        });
+
+        function onFinalOutcomeChange() {
+			var val = jq(this).val();
+			if(val == 160431){
+                jq('#final_outcome_facility_name').show();
+			} else{
+                jq('#final_outcome_facility_name').hide();
+                clearHiddenSections(jq('#final_outcome_facility_name'));
+			}
+		}
+
+
+		 function onMalariaTestingChange() {
+			var val = jq(this).val();
+			if(val == 1065){
+                jq('#method_used_malaria_testing').show();
+                jq('#malaria-results-done').show();
+			} else{
+                jq('#method_used_malaria_testing').hide();
+                jq('#malaria-results-done').hide();
+                 jq('#patient_tested_for_malaria').hide();
+                clearHiddenSections(jq('#method_used_malaria_testing'));
+                clearHiddenSections(jq('#malaria-results-done'));
+                 clearHiddenSections(jq('#patient_tested_for_malaria'));
+
+			}
+		}
+
+		function onIcuAcuteUnitChange() {
+			var val = jq(this).val();
+			if(val == 1065){
+                jq('#icu-acu').show();
+                jq('#icu-where').show();
+			} else{
+                jq('#icu-acu').hide();
+                jq('#icu-where').hide();
+                clearHiddenSections(jq('#icu-acu'));
+                 clearHiddenSections(jq('#patient_tested_for_malaria'));
+
+			}
+		}
+		 function onMalariaResultsDoneChange() {
+			var val = jq(this).val();
+			if(val == 703){
+                jq('#patient_tested_for_malaria').show();
+			} else{
+                jq('#patient_tested_for_malaria').hide();
+                clearHiddenSections(jq('#patient_tested_for_malaria'));
+			}
+		}
+          function haemoglobinChange(){
+             var haemoglobinM = "<lookup expression="fn.latestObs(21).valueNumeric"/>"
+              if (isNaN(haemoglobinM) || haemoglobinM == '') {
+                }
+               else {
+                   getField('haemoglobin.value').val(haemoglobinM);
+                }
+          }
+
+
+          function whiteBloodChange(){
+             var whiteBloodM = "<lookup expression="fn.latestObs(678).valueNumeric"/>"
+              if (isNaN(whiteBloodM) || whiteBloodM == '') {
+                }
+               else {
+                   getField('white-blood.value').val(whiteBloodM);
+                }
+          }
+          function neutrophilChange(){
+             var neutrophilM = "<lookup expression="fn.latestObs(1022).valueNumeric"/>"
+              if (isNaN(neutrophilM) || neutrophilM == '') {
+                }
+               else {
+                   getField('neutrophil.value').val(whiteBloodM);
+                }
+          }
+
+          function lymphocytesChange(){
+             var lymphocytesM = "<lookup expression="fn.latestObs(1319).valueNumeric"/>"
+              if (isNaN(lymphocytesM) || lymphocytesM == '') {
+                }
+               else {
+                   getField('lymphocytes.value').val(lymphocytesM);
+                }
+          }
+          function erythrocyteChange(){
+             var erythrocyteM = "<lookup expression="fn.latestObs(855).valueNumeric"/>"
+              if (isNaN(erythrocyteM) || erythrocyteM == '') {
+                }
+               else {
+                   getField('erythrocyte.value').val(erythrocyteM);
+                }
+          }
+
+
+
+
+		function onTestedHivChange() {
+			var val = jq(this).val();
+			if(val == 1065){
+                jq('#hiv_test_results').show();
+			} else{
+                jq('#hiv_test_results').hide();
+                clearHiddenSections(jq('#hiv_test_results'));
+			}
+		}
+         //Clear hidden sections
+          clearHiddenSections = function(parentObj) {
+        parentObj.find('input[type=radio]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=checkbox]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=text]').each(function() {
+            jq(this).val("");
+        });
+        parentObj.find('select').each(function() {
+            this.selectedIndex =0;
+        });
+    }
+
+    </script>
+
+    <div class="ke-form-header">
+        <table style="width: 100%">
+            <tr>
+                <td align="left">Date:
+                    <encounterDate id="encounter-date" showTime="true"/>
+                </td>
+                <td align="right">Location:
+                    <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete"/>
+                </td>
+            </tr>
+        </table>
+       </div>
+    <fieldset id="admission-diagnosis">
+        <legend>Admission Diagnosis</legend>
+        <table>
+            <tr>
+                <td>Acute respiratory illness&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Asthma/COPD exacerbation&#160;&#160; </td>
+                <td><obs conceptId="121375" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Pneumonia&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Other, respiratory or cardiac conditions&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Acute febrile illness&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Other (neither respiratory nor cardiac)&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Unknown&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No/Not recorded"
+                         style="radio"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset id="patient-management">
+        <legend>Admission Diagnosis</legend>
+        <table>
+
+            <tr>
+                <td>Was the patient tested for HIV during this admission?&#160;&#160; </td>
+                <td><obs conceptId="164401" id="tested-hiv-admission" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="hiv_test_results">
+                <td>What was the HIV test result?&#160;&#160; </td>
+                <td><obs conceptId="159427" id="hiv--test-result" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Positive,Negative,Unknown"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Was the patient tested for malaria during this admission?&#160;&#160; </td>
+                <td><obs conceptId="163725" id="malaria-testing" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="method_used_malaria_testing">
+                <td>Malaria method used for testing:&#160;&#160; </td>
+                <td><obs conceptId="167265" id="method_used_malaria" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Blood slide,Malaria RDT,Malaria PCR,Unknown"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="malaria-results-done">
+                <td>What was the malaria test result?&#160;&#160; </td>
+                <td><obs conceptId="1643" id="malaria_results_done" labelText=" "  answerConceptIds="703,664,1067"
+                         answerLabels="Positive,Negative,Unknown"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="patient_tested_for_malaria">
+                <td>Was patient treated for malaria?&#160;&#160; </td>
+                <td><obs conceptId="162686" id="patient-tested-for-malaria" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Was TB therapy started during this admission?&#160;&#160; </td>
+                <td><obs conceptId="162309" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Were IV fluids given during admission?&#160;&#160; </td>
+                <td><obs conceptId="161927" id="iv-fluids-given" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Was blood transfusion done during admission?&#160;&#160; </td>
+                <td><obs conceptId="161927" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Did the patient receive oxygen during this admission?&#160;&#160; </td>
+                <td><obs conceptId="165864" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Was the patient admitted to ICU/acute care unit during this admission?&#160;&#160; </td>
+                <td><obs conceptId="165644" id="icu-acute-unit" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+
+            <tr id="icu-where">
+                <td>Where?&#160;&#160; </td>
+                <td><obs conceptId="167395" id="pregnancy-status" labelText=" "  answerConceptIds="161936,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="ICU,Acute care unit,ICU and Acute care unit"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="icu-acu">
+                <td>ICU &#160;&#160;
+                    <obs conceptId="165230"/>
+                </td>
+                <td>ACU&#160;&#160;
+                    <obs conceptId="165230"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Did the patient receive mechanical ventilation during this admission?&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset id="investigation-results">
+        <legend>Investigation results</legend>
+        <table>
+            <tr>
+                <td>Hemoglobin level </td>
+                <td>
+                   <obs conceptId="21" id="haemoglobin"/>
+                    (g/dl)
+                </td>
+            </tr>
+            <tr>
+                <td>White blood cell count</td>
+                <td>
+                    <obs conceptId="678" id="white-blood"/>
+                    (x 10/L)
+                </td>
+            </tr>
+            <tr>
+                <td>Neutrophil count</td>
+                <td>
+                    <obs conceptId="1022" id="neutrophil"/>
+                    (x 10/L)
+                </td>
+            </tr>
+            <tr>
+                <td>Lymphocytes count  </td>
+                <td>
+                    <obs conceptId="1319" id="lymphocytes"/>
+                    (x 10/L)
+                </td>
+            </tr>
+            <tr>
+                <td>Erythrocyte sedimentation rate</td>
+                <td>
+                    <obs conceptId="855" id="erythrocyte"/>
+                    (mm/h)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset id="clinical-outcomes">
+        <legend>Discharge diagnosis</legend>
+        <table>
+
+            <tr>
+                <td>Malaria&#160;&#160; </td>
+                <td><obs conceptId="164485" id="malaria" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Pneumonia / Bronchopneumonia&#160;&#160; </td>
+                <td><obs conceptId="122496" id="pneumonia-bronchopneumonia" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Sepsis&#160;&#160; </td>
+                <td><obs conceptId="5272" id="sepsis" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Meningitis / encephalitis&#160;&#160; </td>
+                <td><obs conceptId="118656" id="meningitis-encephalitis" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Dehydration&#160;&#160; </td>
+                <td><obs conceptId="1497" id="dehydration" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Malnutrition&#160;&#160; </td>
+                <td><obs conceptId="115122" id="malnutrition" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Bronchitis&#160;&#160; </td>
+                <td><obs conceptId="5272" id="bronchitis" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Asthma exacerbation&#160;&#160; </td>
+                <td><obs conceptId="121375" id="asthma-exacerbation" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Acute respiratory distress syndrome (ARDS)&#160;&#160; </td>
+                <td><obs conceptId="5272" id="ards" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>TB&#160;&#160; </td>
+                <td><obs conceptId="5272" id="tb-outcome" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Gastroenteritis / diarrhea&#160;&#160; </td>
+                <td><obs conceptId="142412" id="gastroenteritis" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Hypertension&#160;&#160; </td>
+                <td><obs conceptId="160223" id="hypertension" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>COVID-19&#160;&#160; </td>
+                <td><obs conceptId="165866" id="covid" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Anaemia&#160;&#160; </td>
+                <td><obs conceptId="156625" id="anaemia" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabels="Yes,No"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Other &#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                    <obs conceptId="165230"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset id="discharge-outcomes">
+        <legend>Discharge Outcomes</legend>
+        <table>
+            <tr>
+                <td>Primary discharge diagnosis</td>
+                <td>
+                    <obs conceptId="165230"/>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Secondary discharge diagnosis 1</td>
+                <td>
+                    <obs conceptId="160632"/>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Secondary discharge diagnosis 2</td>
+                <td>
+                    <obs conceptId="161011"/>
+
+                </td>
+            </tr>
+            <tr id="pregnancy_status_discharge">
+                <td>Indicate pregnancy status at discharge:&#160;&#160; </td>
+                <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status-discharge" labelText=" "  answerConceptIds="1434,166634,1607,5622"
+                         answerLabels="Still Pregnant,No longer,Unknown,Other(Specify)"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="pregnancy_status_outcome">
+                <td>Pregnancy outcome at discharge:Pregnancy outcome at discharge:&#160;&#160; </td>
+                <td><obs conceptId="161033" id="pregnancy-status-outcome" labelText=" "  answerConceptIds="48,126127,125872,151849,1607"
+                         answerLabels="Miscarriage,Abortion,Newborn died,Healthy newborn,Unknown"
+                         style="radio"/>
+                </td>
+            </tr>
+
+        </table>
+    </fieldset>
+    <fieldset id="final-outcomes">
+        <legend>Discharge Outcomes</legend>
+        <table>
+            <tr>
+                <td>Date of final outcome?</td>
+                <td>
+                    <obs conceptId="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="final_outcome_date" allowFutureDates="false" />
+                </td>
+            </tr>
+            <tr>
+                <td>What was the final outcome?&#160;&#160; </td>
+                <td><obs conceptId="160433" id="final_outcome" labelText=" "  answerConceptIds="1692,159,127750,160431,160431"
+                         answerLabels="Discharge from hospital(alive),Death,Refused Hospital,Absconded,Referred to another facility"
+                         style="radio"/>
+                </td>
+            </tr>
+            <tr id="final_outcome_facility_name">
+                <td>Name of Facility:</td>
+                <td>
+                    <obs conceptId="162724"/>
+
+                </td>
+            </tr>
+
+        </table>
+    </fieldset>
+    <completeProgram programId="a764eaae-5220-44d7-9149-359c30cbd05e" />
+    <div class="ke-form-footer">
+        <submit/>
+    </div>
+
+</htmlform>

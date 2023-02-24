@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.sari.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="${metadata.program.SARI}" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.sari.EligibleForSariProgramCalculation" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.sari.form.enrollment" />
+		<property name="defaultCompletionForm" ref="kenyaemr.sari.form.completion" />
+		<property name="visitForms" >
+			<set>
+				<ref bean="kenyaemr.sari.form.sarFollowup" />
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				<entry key="enrollment-summary" value="kenyaemr:program/sari/sariEnrollmentSummary" />
+				<entry key="care-panel" value="kenyaemr:program/sari/sariCarePanel" />
+				<entry key="completion-summary" value="kenyaemr:program/sari/sariOutcomeSummary" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- ===================== Forms ===================== -->
+
+	<!--Sari Enrolment-->
+	<bean id="kenyaemr.sari.form.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="1bdadb8f-a01a-4c6f-9174-25e85bcd73cb" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:sari/sariEnrollment.html" />
+	</bean>
+	<!--SARI Exit -->
+	<bean id="kenyaemr.sari.form.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="617e91eb-d900-4904-b9be-08bd06707173" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.sari.EligibleForSariExitCalculation" />
+		<property name="htmlform" value="kenyaemr:sari/sariExit.html" />
+	</bean>
+	<!--Sari Follow up -->
+	<bean id="kenyaemr.sari.form.sarFollowup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="cc3a9c9a-55f6-4e78-bc13-104cf91f62d3" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.sari.EligibleForSariFollowupCalculation" />
+		<property name="htmlform" value="kenyaemr:sari/sariFollowup.html" />
+	</bean>
+
+
+</beans>
