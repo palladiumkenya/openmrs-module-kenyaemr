@@ -207,7 +207,7 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:sariScreening.html"/>
-		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForSariILICalculation"/>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForSariScreeningCalculation"/>
 		<property name="order" value="200011"/>
 	</bean>
 	<!-- ILI SCREENING-->
@@ -227,7 +227,7 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:sariIliScreening.html" />
-		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForSariILICalculation"/>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForILIScreeningCalculation"/>
 		<property name="order" value="200016" />
 	</bean>
 	<!-- Clinical Encounter -->

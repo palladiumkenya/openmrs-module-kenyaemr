@@ -18,26 +18,26 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
-import org.openmrs.module.kenyacore.calculation.*;
-import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
+import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
+import org.openmrs.module.kenyacore.calculation.BooleanResult;
+import org.openmrs.module.kenyacore.calculation.Filters;
+import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.metadata.SARIMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
-import org.openmrs.module.kenyaemr.wrapper.PatientWrapper;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.util.OpenmrsUtil;
 
-import java.util.*;
-
-import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Calculates the eligibility for SARI/ILI patients
  */
 
-        public class EligibleForSariILICalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
-        protected static final Log log = LogFactory.getLog(EligibleForSariILICalculation.class);
+        public class EligibleForILIScreeningCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+        protected static final Log log = LogFactory.getLog(EligibleForILIScreeningCalculation.class);
 
        public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
        public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
@@ -57,12 +57,14 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate
 
     @Override
         public String getFlagMessage() {
-        return "Screen for SARI/ILI";
+        return "Screen for ILI Screening";
         }
         Integer MEASURE_FEVER = 140238;
         Integer COUGH_PRESENCE = 143264;
         Integer SYMPTOMS = 1729;
+        Integer PATIENT_TYPE = 1896;
         Integer POSITIVE = 1065;
+        Integer NEGATIVE = 1066;
         /**
          * Evaluates the calculation
          */
@@ -81,24 +83,27 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate
             Patient patient = patientService.getPatient(ptId);
 
             Encounter lastTriageEnc = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
-            Encounter lastSariInc = EmrUtils.lastEncounter(patient, sariScreenType, sariScreeningForm);
+            Encounter lastIliInc = EmrUtils.lastEncounter(patient, iliEncType, iliScreeningForm);
             Encounter lastEnrollEnc = EmrUtils.lastEncounter(patient, sariEnrollType, sariEnrolForm);
                 ConceptService cs = Context.getConceptService();
                 Concept measureFeverResult = cs.getConcept(MEASURE_FEVER);
                 Concept coughPresenceResult = cs.getConcept(COUGH_PRESENCE);
                 Concept symptomsResult = cs.getConcept(SYMPTOMS);
+                Concept PatientTypeResult = cs.getConcept(PATIENT_TYPE);
                 Concept positive = cs.getConcept(POSITIVE);
-                boolean patientSexualAbstainedResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, measureFeverResult, positive) : false;
-                boolean pantientLmpResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, coughPresenceResult, positive) : false;
-                boolean patientFamilyPlanningResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, symptomsResult, positive) : false;
+                Concept negative = cs.getConcept(NEGATIVE);
+                boolean patientFeverResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, measureFeverResult, positive) : false;
+                boolean pantientCoughResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, coughPresenceResult, positive) : false;
+                boolean patientSymptomsResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, symptomsResult, positive) : false;
+                boolean patientTypeResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, PatientTypeResult, negative) : false;
 //||
 
             if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime())) {
                 result = false; // lastSariInc is not empty, return false
-            }else if(lastSariInc != null  && lastEnrollEnc !=null){
+            }else if(lastIliInc != null){
                 result = false;
             } else {
-                if (patientSexualAbstainedResult && pantientLmpResult && patientFamilyPlanningResult) {
+                if (patientFeverResult && pantientCoughResult && patientSymptomsResult && patientTypeResult) {
                     result = true;
                 }
             }

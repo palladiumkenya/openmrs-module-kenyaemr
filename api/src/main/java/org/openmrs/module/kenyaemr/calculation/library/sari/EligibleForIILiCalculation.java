@@ -60,8 +60,7 @@ import java.util.Set;
             boolean result = false;
             Patient patient = patientService.getPatient(ptId);
             Encounter lastIliEnc = EmrUtils.lastEncounter(patient, iliEncType, iliScreeningForm);
-            Encounter lastSariEnc = EmrUtils.lastEncounter(patient, sariEncType, sariScreeningForm);
-            if ( lastIliEnc != null  && lastSariEnc != null ) {
+            if ( lastIliEnc != null) {
                 result = true;
 
             }
