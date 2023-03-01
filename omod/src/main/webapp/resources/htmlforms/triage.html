@@ -16,6 +16,7 @@
     <script type="text/javascript">
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
+        var IS_SARI_SITE = <lookup expression="kenyaemr.getSariSite()" />;
         function onWeightOrHeightChange() {
             var display = '';
             var weightKg = parseFloat(getValue('weight.value'));
@@ -78,6 +79,12 @@
                 jq('#pregnancy-screening').show();
                 jq('#triage-notes').show();
              }
+
+            if(IS_SARI_SITE==false){
+                jq('#client-inpatient').hide();
+            }else{
+                jq('#client-inpatient').show();
+            }
           function onTemperatureChange() {
             var display = '';
             var temp = parseFloat(getValue('tempInputeValue.value'));
@@ -227,7 +234,10 @@
                     <td>Was the onset of symptoms within the last 10 days ? &#160; </td>
                     <td><obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  id="sari-onset-symptoms" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No, Don.t Know" /></td>
                 </tr>
-
+                <tr id="client-inpatient">
+                    <td>Is the client an inpatient ? &#160; </td>
+                    <td><obs conceptId="1896AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  id="client-inpatient-answers" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No, Don.t Know" /></td>
+                </tr>
 
             </table>
         </fieldset>

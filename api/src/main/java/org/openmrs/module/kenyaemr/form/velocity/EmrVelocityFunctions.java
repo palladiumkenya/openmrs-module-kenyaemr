@@ -279,6 +279,14 @@ public class EmrVelocityFunctions {
 		}
 		return "false";
 	}
+	public String getSariSite() {
+		AdministrationService administrationService = org.openmrs.api.context.Context.getAdministrationService();
+		GlobalProperty globalProperty = administrationService.getGlobalPropertyObject("kenyaemr.isSariSite");
+		if (globalProperty.getValue() != null) {
+			return globalProperty.getPropertyValue();
+		}
+		return "false";
+	}
 
 	/**
 	 * This facility types will have their UPN Generation enabled
