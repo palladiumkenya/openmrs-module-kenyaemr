@@ -478,17 +478,6 @@
 		<property name="template" value="kenyaemr:moh731.xls" />
 	</bean>
 
-	<!-- <bean id="kenyaemr.etl.common.report.htsprediction" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
-		<property name="targetUuid" value="76edc288-d49a-47b5-91ff-804b513ddc05" />
-		<property name="name" value="HTS Prediction Report" />
-		<property name="description" value="HTS Prediction Report" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.reports" />
-			</set></property>
-		<property name="template" value="kenyaemr:hts_prediction.xls" />
-	</bean> -->
-
 	<bean id="kenyaemr.etl.common.report.htsprediction" class="org.openmrs.module.kenyacore.report.CalculationReportDescriptor">
         <property name="targetUuid" value="76edc288-d49a-47b5-91ff-804b513ddc05" />
         <property name="name" value="HTS Prediction Report" />

@@ -12,21 +12,13 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.module.kenyacore.report.CohortReportDescriptor;
 import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyacore.report.builder.CalculationReportBuilder;
-import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.DateOfEnrollmentArtCalculation;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemr.reporting.calculation.converter.DateArtStartDateConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.IdentifierConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLArtStartDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegLineDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegimenDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstRegimenDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVisitDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLStabilityDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLDateForMLDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultForMLDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionCategoryDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionScoreDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.reporting.common.SortCriteria;
 import org.openmrs.module.reporting.data.DataDefinition;
 import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
@@ -45,25 +37,16 @@ public class HTSPredictionReportBuilder extends CalculationReportBuilder {
 
         @Override
         protected void addColumns(CohortReportDescriptor report, PatientDataSetDefinition dsd) {
-                PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                        HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-                DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                        upn.getName(), upn), new IdentifierConverter());
+                PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+                DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), new IdentifierConverter());
                 
                 addStandardColumns(report, dsd);
                 dsd.addColumn("UPN", identifierDef, "");
-                // dsd.addColumn("Last risk score", new CalculationDataDefinition("Last risk score (%)", new LastRiskScoreCalculation()), "", null);
-                // dsd.addColumn("Evaluation Date", new CalculationDataDefinition("Evaluation Date", new LastRiskScoreEvaluationDateCalculation()), "", new CalculationResultConverter());
-                dsd.addColumn("Enrollment Date", new CalculationDataDefinition("Enrollment Date", new DateOfEnrollmentArtCalculation()), "", new DateArtStartDateConverter());
-                dsd.addColumn("Art Start Date", new ETLArtStartDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
-                dsd.addColumn("First Regimen", new ETLFirstRegimenDataDefinition(), "");
-                dsd.addColumn("Current Regimen", new ETLCurrentRegimenDataDefinition(), "");
-                dsd.addColumn("Current Regimen Line", new ETLCurrentRegLineDataDefinition(), "");
-                dsd.addColumn("Stability", new ETLStabilityDataDefinition(), "");
-                dsd.addColumn("Last Visit Date", new ETLLastVisitDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
-                dsd.addColumn("Next Appointment Date", new ETLNextAppointmentDateDataDefinition(), "",
-                        new DateConverter(DATE_FORMAT));
-                dsd.addSortCriteria("Last risk score", SortCriteria.SortDirection.DESC);
-                
+                dsd.addColumn("ML Prediction Score", new ETLPredictionScoreDataDefinition(), "");
+                dsd.addColumn("ML Prediction Category", new ETLPredictionCategoryDataDefinition(), "");
+                ETLLastVLDateForMLDataDefinition lastVlDateDataDefinition = new ETLLastVLDateForMLDataDefinition();
+                ETLLastVLResultForMLDataDefinition lastVlResultDataDefinition = new ETLLastVLResultForMLDataDefinition();
+                dsd.addColumn("Date Of Test", lastVlDateDataDefinition, "", new DateConverter(DATE_FORMAT));
+                dsd.addColumn("Actual Test Results", lastVlResultDataDefinition, "");
         }
 }
