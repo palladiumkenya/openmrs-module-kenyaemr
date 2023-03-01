@@ -13,114 +13,149 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
+import org.openmrs.api.ObsService;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.*;
+import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.SARIMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.ui.framework.SimpleObject;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Calculates the eligibility for SARI/ILI patients
  */
 
 
-        public class EnrolForSariCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
-        protected static final Log log = LogFactory.getLog(EnrolForSariCalculation.class);
-     public static final EncounterType sariEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.SARI_SCREENING);
-      public static final Form sariScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.SARI_SCREENING);
+public class EnrolForSariCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+    protected static final Log log = LogFactory.getLog(EnrolForSariCalculation.class);
 
     @Override
-        public String getFlagMessage() {
+    public String getFlagMessage() {
         return "Enroll to SARI";
-        }
+    }
+    public static final EncounterType sariEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.SARI_SCREENING);
+    public static final Form sariScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.SARI_SCREENING);
+    public static final EncounterType sariEnrollType = MetadataUtils.existing(EncounterType.class, SARIMetadata._EncounterType.SARI_ENROLLMENT);
+    public static final Form sariEnrolForm = MetadataUtils.existing(Form.class, SARIMetadata._Form.SARI_ENROLLMENT_FORM);
 
-        /**
-         * Evaluates the calculation
-         */
+    /**
+     * Evaluates the calculation
+     */
 
-        @Override
-        public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
+    @Override
+    public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
 
-            Set<Integer> alive = Filters.alive(cohort, context);
-            PatientService patientService = Context.getPatientService();
-            CalculationResultMap ret = new CalculationResultMap();
+        Set<Integer> alive = Filters.alive(cohort, context);
+        ObsService obsService = Context.getObsService();
+        Concept symptomsQ = Context.getConceptService().getConcept(1729);
+        List<Form> formCollectingSymptoms = Arrays.asList(
+                Context.getFormService().getFormByUuid("c56140ca-7ad5-4069-9236-ef3495bbd43d")
+        );
 
-
-        for (Integer ptId :alive) {
+        PatientService patientService = Context.getPatientService();
+        CalculationResultMap ret = new CalculationResultMap();
+        for (Integer ptId : alive) {
             boolean result = false;
             Patient patient = patientService.getPatient(ptId);
-            Encounter lastSariEnc = EmrUtils.lastEncounter(patient, sariEncType, sariScreeningForm);
-            Obs abnormalBreath= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(113316), cohort, context), ptId);
-            Obs wheezing= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(122496), cohort, context), ptId);
-            Obs soreThroat= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(158843), cohort, context), ptId);
-            Obs difficultyBreathing= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(122496), cohort, context), ptId);
-            Obs chestPain= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(120749), cohort, context), ptId);
-            Obs rhinorrhea= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(165501), cohort, context), ptId);
-            Obs soreMuscles= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(133632), cohort, context), ptId);
-            Obs haemoptysis= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(138905), cohort, context), ptId);
-            Obs chills= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(871), cohort, context), ptId);
-            Obs diarrhea= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(142412), cohort, context), ptId);
-            Obs vomiting= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(122983), cohort, context), ptId);
-            Obs earPain= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(131602), cohort, context), ptId);
-            Obs skinRash= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(512), cohort, context), ptId);
-            Obs lackOfAppetite= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(163484), cohort, context), ptId);
-            Obs conjunctivitis= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(119905), cohort, context), ptId);
-            Obs convulsions= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(113054), cohort, context), ptId);
-            Obs rigors= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(127361), cohort, context), ptId);
-            Obs pneumoniaClinicalDiagnosis= EmrCalculationUtils.obsResultForPatient(Calculations.lastObs(Context.getConceptService().getConcept(114100), cohort, context), ptId);
+            List<Person> patients = new ArrayList<Person>();
+            Encounter lastSariInc = EmrUtils.lastEncounter(patient, sariEncType, sariScreeningForm);
+            Encounter lastSariEnrolInc = EmrUtils.lastEncounter(patient, sariEnrollType, sariEnrolForm);
+            patients.add(patient);
+            List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, formCollectingSymptoms, null, null, null, null,false);
+            List<Concept> question = new ArrayList<Concept>();
+            question.add(symptomsQ);
 
-                if ( (abnormalBreath != null && abnormalBreath.getValueCoded() != null && (abnormalBreath.getValueCoded().getConceptId().equals(1065) || abnormalBreath.getValueCoded().getConceptId().equals(1066))) ||
-                        (wheezing != null && wheezing.getValueCoded() != null && (wheezing.getValueCoded().getConceptId().equals(1065) || wheezing.getValueCoded().getConceptId().equals(1066))) ||
-                        (soreThroat != null && soreThroat.getValueCoded() != null && (soreThroat.getValueCoded().getConceptId().equals(1065) || soreThroat.getValueCoded().getConceptId().equals(1066))) ||
-                        (difficultyBreathing != null && difficultyBreathing.getValueCoded() != null && (difficultyBreathing.getValueCoded().getConceptId().equals(1065) || difficultyBreathing.getValueCoded().getConceptId().equals(1066))) ||
-                        (chestPain != null && chestPain.getValueCoded() != null && (chestPain.getValueCoded().getConceptId().equals(1065) || chestPain.getValueCoded().getConceptId().equals(1066))) ||
-                        (rhinorrhea != null && rhinorrhea.getValueCoded() != null && (rhinorrhea.getValueCoded().getConceptId().equals(1065) || rhinorrhea.getValueCoded().getConceptId().equals(1066))) ||
-                        (soreMuscles != null && soreMuscles.getValueCoded() != null && (soreMuscles.getValueCoded().getConceptId().equals(1065) || soreMuscles.getValueCoded().getConceptId().equals(1066))) ||
-                        (haemoptysis != null && haemoptysis.getValueCoded() != null && (haemoptysis.getValueCoded().getConceptId().equals(1065) || haemoptysis.getValueCoded().getConceptId().equals(1066))) ||
-                        (chills != null && chills.getValueCoded() != null && (chills.getValueCoded().getConceptId().equals(1065) || chills.getValueCoded().getConceptId().equals(1066))) ||
-                        (diarrhea != null && diarrhea.getValueCoded() != null && (diarrhea.getValueCoded().getConceptId().equals(1065) || diarrhea.getValueCoded().getConceptId().equals(1066))) ||
-                        (vomiting != null && vomiting.getValueCoded() != null && (vomiting.getValueCoded().getConceptId().equals(1065) || vomiting.getValueCoded().getConceptId().equals(1066))) ||
-                        (earPain != null && earPain.getValueCoded() != null && (earPain.getValueCoded().getConceptId().equals(1065) || earPain.getValueCoded().getConceptId().equals(1066))) ||
-                        (skinRash != null && skinRash.getValueCoded() != null && (skinRash.getValueCoded().getConceptId().equals(1065) || skinRash.getValueCoded().getConceptId().equals(1066))) ||
-                        (lackOfAppetite != null && lackOfAppetite.getValueCoded() != null && (lackOfAppetite.getValueCoded().getConceptId().equals(1065) || lackOfAppetite.getValueCoded().getConceptId().equals(1066))) ||
-                        (conjunctivitis != null && conjunctivitis.getValueCoded() != null && (conjunctivitis.getValueCoded().getConceptId().equals(1065) || conjunctivitis.getValueCoded().getConceptId().equals(1066))) ||
-                        (convulsions != null && convulsions.getValueCoded() != null && (convulsions.getValueCoded().getConceptId().equals(1065) || convulsions.getValueCoded().getConceptId().equals(1066))) ||
-                        (rigors != null && rigors.getValueCoded() != null && (rigors.getValueCoded().getConceptId().equals(1065) || rigors.getValueCoded().getConceptId().equals(1066))) ||
-                        (pneumoniaClinicalDiagnosis != null && pneumoniaClinicalDiagnosis.getValueCoded() != null && (pneumoniaClinicalDiagnosis.getValueCoded().getConceptId().equals(1065) || pneumoniaClinicalDiagnosis.getValueCoded().getConceptId().equals(1066)))) {
+            List<Obs> symptoms = obsService.getObservations(
+                    patients,
+                    encounters,
+                    question,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null, null, false);
+            List<SimpleObject> symptomsList = new ArrayList<SimpleObject>();
+            Concept abnormalBreath= Context.getConceptService().getConcept(113316);
+            Concept wheezing= Context.getConceptService().getConcept(122496);
+            Concept soreThroat= Context.getConceptService().getConcept(158843);
+            Concept difficultyBreathing= Context.getConceptService().getConcept(122496);
+            Concept chestPain= Context.getConceptService().getConcept(120749);
+            Concept rhinorrhea= Context.getConceptService().getConcept(165501);
+            Concept soreMuscles= Context.getConceptService().getConcept(133632);
+            Concept haemoptysis= Context.getConceptService().getConcept(138905);
+            Concept chills= Context.getConceptService().getConcept(871);
+            Concept diarrhea= Context.getConceptService().getConcept(142412);
+            Concept vomiting= Context.getConceptService().getConcept(122983);
+            Concept earPain= Context.getConceptService().getConcept(131602);
+            Concept skinRash= Context.getConceptService().getConcept(512);
+            Concept lackOfAppetite= Context.getConceptService().getConcept(163484);
+            Concept conjunctivitis= Context.getConceptService().getConcept(119905);
+            Concept convulsions= Context.getConceptService().getConcept(113054);
+            Concept rigors= Context.getConceptService().getConcept(127361);
 
-                    Obs[] symptomsRecorded = {abnormalBreath,wheezing , convulsions,soreThroat,difficultyBreathing,chestPain,rhinorrhea,soreMuscles,haemoptysis,chills,diarrhea,vomiting,earPain,skinRash,lackOfAppetite,conjunctivitis,convulsions,rigors,pneumoniaClinicalDiagnosis};
-                    int count = 0;
-                    for (Obs s : symptomsRecorded) {
-                        if (s != null) {
-                            count++;
-                        }
-                    }
-                    if(lastSariEnc != null && !DateUtils.isSameDay(new Date(), lastSariEnc.getEncounterDatetime())) {
-                        result = false;
-                    }else{
-                        if (count >= 5) {
-                            result = true;
-                        }else {
-                            result = false;
-                        }
-                    }
+            int symptomsCounter = 0;
+            for(Obs obs: symptoms){
+                symptomsCounter++;
+                String abnormalBreaths = obs.getValueCoded().equals(abnormalBreath)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", abnormalBreaths));
+                String wheezings = obs.getValueCoded().equals(wheezing)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", wheezings));
+                String soreThroats = obs.getValueCoded().equals(soreThroat)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", soreThroats));
+                String difficultyBreathings = obs.getValueCoded().equals(difficultyBreathing)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", difficultyBreathings));
+                String chestPains = obs.getValueCoded().equals(chestPain)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", chestPains));
+                String rhinorrheas = obs.getValueCoded().equals(rhinorrhea)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", rhinorrheas));
+                String soreMuscless = obs.getValueCoded().equals(soreMuscles)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", soreMuscless));
+                String haemoptysiss = obs.getValueCoded().equals(haemoptysis)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", haemoptysiss));
+                String chillss = obs.getValueCoded().equals(chills)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", chillss));
+                String diarrheas = obs.getValueCoded().equals(diarrhea)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", diarrheas));
+                String vomitings = obs.getValueCoded().equals(vomiting)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", vomitings));
+                String earPains = obs.getValueCoded().equals(earPain)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", earPains));
+                String skinRashs = obs.getValueCoded().equals(skinRash)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", skinRashs));
+                String lackOfAppetites = obs.getValueCoded().equals(lackOfAppetite)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", lackOfAppetites));
+                String conjunctivitiss = obs.getValueCoded().equals(conjunctivitis)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", conjunctivitiss));
+                String convulsionss = obs.getValueCoded().equals(convulsions)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", convulsionss));
+                String rigorss = obs.getValueCoded().equals(rigors)? "": symptomsCounter + "." + obs.getValueCoded().getName().getName();
+                symptomsList.add(SimpleObject.create("", rigorss));
 
-
+              }
+            if(lastSariInc == null || lastSariInc.getEncounterDatetime() == null || !DateUtils.isSameDay(new Date(), lastSariInc.getEncounterDatetime())) {
+                result = false;
+            }else if(lastSariInc != null  && lastSariEnrolInc !=null){
+                result = false;
+            } else {
+                if (symptomsCounter >= 5) {
+                    result = true;
                 }
+            }
 
-            ret.put(ptId, new BooleanResult(result, this));
+                ret.put(ptId, new BooleanResult(result, this));
             }
 
             return ret;
         }
-}
+    }

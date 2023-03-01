@@ -41,15 +41,18 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate
 
        public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
        public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
+
+    public static final EncounterType sariScreenType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.SARI_SCREENING);
+    public static final Form sariScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.SARI_SCREENING);
        //sari screening
 
 // ili screening form
         public static final EncounterType iliEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.ILI_SCREENING);
         public static final Form iliScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.ILI_SCREENING);
 
-        public static final EncounterType sariEnrollType = MetadataUtils.existing(EncounterType.class, SARIMetadata._EncounterType.SARI_ENROLLMENT);
-        public static final Form sariEnrolForm = MetadataUtils.existing(Form.class, SARIMetadata._Form.SARI_ENROLLMENT_FORM);
 
+    public static final EncounterType sariEnrollType = MetadataUtils.existing(EncounterType.class, SARIMetadata._EncounterType.SARI_ENROLLMENT);
+    public static final Form sariEnrolForm = MetadataUtils.existing(Form.class, SARIMetadata._Form.SARI_ENROLLMENT_FORM);
 
 
     @Override
@@ -78,7 +81,7 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate
             Patient patient = patientService.getPatient(ptId);
 
             Encounter lastTriageEnc = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
-            Encounter lastiLiEnc = EmrUtils.lastEncounter(patient, iliEncType, iliScreeningForm);
+            Encounter lastSariInc = EmrUtils.lastEncounter(patient, sariScreenType, sariScreeningForm);
             Encounter lastEnrollEnc = EmrUtils.lastEncounter(patient, sariEnrollType, sariEnrolForm);
                 ConceptService cs = Context.getConceptService();
                 Concept measureFeverResult = cs.getConcept(MEASURE_FEVER);
@@ -90,13 +93,15 @@ import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.todaysDate
                 boolean patientFamilyPlanningResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, symptomsResult, positive) : false;
 //||
 
-               if(lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime()) && lastiLiEnc !=null) {
-                     result = false;
-                 }else{
-                     if ((patientSexualAbstainedResult && pantientLmpResult && patientFamilyPlanningResult && lastEnrollEnc ==null) ) {
-                         result = true;
-                     }
-                 }
+            if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime())) {
+                result = false; // lastSariInc is not empty, return false
+            }else if(lastSariInc != null  && lastEnrollEnc !=null){
+                result = false;
+            } else {
+                if (patientSexualAbstainedResult && pantientLmpResult && patientFamilyPlanningResult) {
+                    result = true;
+                }
+            }
             ret.put(ptId, new BooleanResult(result, this));
             }
 
