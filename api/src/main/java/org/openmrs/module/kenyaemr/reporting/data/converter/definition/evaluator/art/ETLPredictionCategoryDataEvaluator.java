@@ -39,8 +39,13 @@ public class ETLPredictionCategoryDataEvaluator implements PersonDataEvaluator {
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date endDate = new Date();
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
+        System.err.println("Category Start Date is: " + startDate);
+        System.err.println("Category End Date is: " + endDate);
         queryBuilder.addParameter("endDate", endDate);
+        queryBuilder.addParameter("startDate", startDate);
+        System.err.println("Category SQL is: " + queryBuilder.getSqlQuery());
 
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
