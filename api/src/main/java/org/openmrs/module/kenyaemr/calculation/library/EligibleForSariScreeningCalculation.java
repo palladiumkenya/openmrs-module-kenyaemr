@@ -78,7 +78,7 @@ import java.util.*;
             Encounter lastTriageEnc = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
             Encounter lastSariInc = EmrUtils.lastEncounter(patient, sariScreenType, sariScreeningForm);
             Encounter lastEnrollEnc = EmrUtils.lastEncounter(patient, sariEnrollType, sariEnrolForm);
-                ConceptService cs = Context.getConceptService();
+            ConceptService cs = Context.getConceptService();
                 Concept measureFeverResult = cs.getConcept(MEASURE_FEVER);
                 Concept coughPresenceResult = cs.getConcept(COUGH_PRESENCE);
                 Concept symptomsResult = cs.getConcept(SYMPTOMS);

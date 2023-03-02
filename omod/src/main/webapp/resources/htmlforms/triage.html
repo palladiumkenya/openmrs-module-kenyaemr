@@ -80,16 +80,11 @@
                 jq('#triage-notes').show();
              }
 
-            if(IS_SARI_SITE==false){
-                jq('#client-inpatient').hide();
-            }else{
-                jq('#client-inpatient').show();
-            }
           function onTemperatureChange() {
             var display = '';
             var temp = parseFloat(getValue('tempInputeValue.value'));
             if (!isNaN(temp) &amp;&amp; !isNaN(temp)) {
-                if ( temp &gt; 37) {
+                if ( temp &gt; 37 &amp;&amp; IS_SARI_SITE==true) {
                      jq('#sari-screening').show();
                 }
                 else {
