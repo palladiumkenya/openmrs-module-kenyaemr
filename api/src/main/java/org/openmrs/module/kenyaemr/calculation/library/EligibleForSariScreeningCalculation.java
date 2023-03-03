@@ -19,7 +19,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.*;
+import org.openmrs.module.kenyaemr.Dictionary;
+import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.metadata.SARIMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -41,17 +44,15 @@ import java.util.*;
        //sari screening
 
 // ili screening form
-        public static final EncounterType iliEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.ILI_SCREENING);
-        public static final Form iliScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.ILI_SCREENING);
-
-
+        public static final EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class,  HivMetadata._EncounterType.HIV_CONSULTATION);
+        public static final Form greenCardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
     public static final EncounterType sariEnrollType = MetadataUtils.existing(EncounterType.class, SARIMetadata._EncounterType.SARI_ENROLLMENT);
     public static final Form sariEnrolForm = MetadataUtils.existing(Form.class, SARIMetadata._Form.SARI_ENROLLMENT_FORM);
 
 
     @Override
         public String getFlagMessage() {
-        return "Screen for SARI Screening";
+        return "Screen for SARI";
         }
         Integer MEASURE_FEVER = 140238;
         Integer COUGH_PRESENCE = 143264;
@@ -73,11 +74,19 @@ import java.util.*;
 
         for (Integer ptId :alive) {
             boolean result = false;
-            Patient patient = patientService.getPatient(ptId);
 
+            Patient patient = patientService.getPatient(ptId);
             Encounter lastTriageEnc = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
             Encounter lastSariInc = EmrUtils.lastEncounter(patient, sariScreenType, sariScreeningForm);
-            Encounter lastEnrollEnc = EmrUtils.lastEncounter(patient, sariEnrollType, sariEnrolForm);
+            Encounter lastGreenCardEnc = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);
+            //With Greencard Encounter
+            EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
+            Form pocHivFollowup = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
+            Encounter lastFollowUpEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), greenCardEncType, Arrays.asList(pocHivFollowup));  //last hiv followup encounter
+
+
+
+
             ConceptService cs = Context.getConceptService();
                 Concept measureFeverResult = cs.getConcept(MEASURE_FEVER);
                 Concept coughPresenceResult = cs.getConcept(COUGH_PRESENCE);
@@ -88,14 +97,23 @@ import java.util.*;
                 boolean pantientCoughResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, coughPresenceResult, positive) : false;
                 boolean patientSymptomsResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, symptomsResult, positive) : false;
                 boolean patientTypeResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, PatientTypeResult, positive) : false;
+
+                boolean greenFever = lastGreenCardEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastGreenCardEnc, measureFeverResult, positive) : false;
+                boolean greenCough = lastGreenCardEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastGreenCardEnc, coughPresenceResult, positive) : false;
+                boolean greenSymptoms = lastGreenCardEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastGreenCardEnc, symptomsResult, positive) : false;
+                boolean greenPatientType = lastGreenCardEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastGreenCardEnc, PatientTypeResult, positive) : false;
+
 //||
 
-            if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime())) {
-                result = false; // lastSariInc is not empty, return false
+            if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime())|| (lastGreenCardEnc != null && !DateUtils.isSameDay(new Date(), lastGreenCardEnc.getEncounterDatetime())) ) {
+                result = false;
             }else if(lastSariInc != null){
                 result = false;
             } else {
                 if (patientFeverResult && pantientCoughResult && patientSymptomsResult && patientTypeResult) {
+                    result = true;
+                }
+                if (greenFever && greenCough && greenSymptoms && greenPatientType) {
                     result = true;
                 }
             }

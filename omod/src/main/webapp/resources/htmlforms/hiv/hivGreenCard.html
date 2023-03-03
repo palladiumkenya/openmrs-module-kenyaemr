@@ -99,7 +99,7 @@ Green Card follow-up visit form
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
         var PATIENT_BREASTFEEDING = GREENCARD_VELOCITY.split(",")[11].split(":")[1];
         var PATIENT_ELIGIBLE_FOR_CACX = GREENCARD_VELOCITY.split(",")[16].split(":")[1];
-
+        var IS_SARI_SITE = <lookup expression="kenyaemr.getSariSite()" />;
         var pAge = parseInt('<lookup expression="patient.age"/>');
         var pgender = "<lookup expression="patient.gender" />";
         var ctxPath = typeof openmrsContextPath === 'string' ? openmrsContextPath : OPENMRS_CONTEXT_PATH;
@@ -141,7 +141,9 @@ Green Card follow-up visit form
             recordedStabilityAssessmentIndicators();
             jq('#showNumberBooked').hide();
             jq("#returnVisitDate input[type=hidden]").change(getPatientsBookedOnDate);
-
+            jq('#sari-screening').hide();
+            getField('temp.value').change(onTemperatureChange);
+            onTemperatureChange();
             everOnIPTSelected = null;
             patientCurrentlyOnIPT = null;
 //Defaults on ready
@@ -706,7 +708,20 @@ Green Card follow-up visit form
                 });
             }
         }
+<!--             Sari Temparature change-->
+          function onTemperatureChange() {
+            var display = '';
+            var tempValue = parseFloat(getValue('temp.value'));
+            if (!isNaN(tempValue) &amp;&amp; !isNaN(tempValue)) {
+                if ( tempValue &gt; 37 &amp;&amp; IS_SARI_SITE==true) {
+                     jq('#sari-screening').show();
+                }
+                else {
+                    jq('#sari-screening').hide();
+                }
+            }
 
+        }
         function recordIptFollowupInformation() {
             var iptDueDate = jq("#txtIptDueDate").val();
             var iptCollectionDate = jq("#txtIptCollectionDate").val();
@@ -2810,6 +2825,34 @@ Management<br />
                         </tr>
                     </table>
                 </fieldset>
+
+                <!--                Sari/Ili Questions-->
+                <fieldset id="sari-screening">
+                    <legend>SARI/ILI Screening</legend>
+                    <table>
+                        <tr>
+                            <td>Did the patient report a history or has a measured fever >=38C?  &#160;&#160; </td>
+                            <td><obs conceptId="140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabels="Yes,No,Don't Know"
+                                     style="radio" id="sari-fever-measured" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Is the patient presenting with a cough? &#160;&#160;</td>
+                            <td><obs conceptId="143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="sari-presenting-cough" labelText=" " answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No,Don't Know" /></td>
+
+                        </tr>
+                        <tr>
+                            <td>Was the onset of symptoms within the last 10 days ? &#160; </td>
+                            <td><obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  id="sari-onset-symptoms" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No, Don.t Know" /></td>
+                        </tr>
+                        <tr id="client-inpatient">
+                            <td>Is the client an inpatient ? &#160; </td>
+                            <td><obs conceptId="1896AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  id="client-inpatient-answers" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="radio" answerLabels="Yes,No, Don.t Know" /></td>
+                        </tr>
+
+                    </table>
+                </fieldset>
                 <!-- Population Type  -->
                 <fieldset class="patient-details">
                     <legend>Population Type</legend>
@@ -2841,26 +2884,26 @@ Management<br />
                         </tr>
                     </table>
                     <table id="priority-population">
-                     <tr>
-                      <td>
-                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="159674AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Fisher folk" style="checkbox" /><br/>
-                            <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabel="Truck driver" style="checkbox" /><br/>
-                        <includeIf velocityTest="$patient.gender == 'F'">
-                            <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160549AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabel="Adolescent and young girls" style="checkbox" id="adyg" /><br/>
-                        </includeIf>
-                            <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Prisoner" style="checkbox" /><br/>
-                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Not applicable" style="checkbox" id="other" /><br/>
-                        <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165192"
-                             answerLabel="Military and other uniformed services" style="checkbox" id="dodOnly" /><br/>
+                        <tr>
+                            <td>
+                                <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="159674AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Fisher folk" style="checkbox" /><br/>
+                                <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Truck driver" style="checkbox" /><br/>
+                                <includeIf velocityTest="$patient.gender == 'F'">
+                                    <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160549AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerLabel="Adolescent and young girls" style="checkbox" id="adyg" /><br/>
+                                </includeIf>
+                                <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Prisoner" style="checkbox" /><br/>
+                                <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Not applicable" style="checkbox" id="other" /><br/>
+                                <obs conceptId="160581AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165192"
+                                     answerLabel="Military and other uniformed services" style="checkbox" id="dodOnly" /><br/>
 
-                    </td>
-                   </tr>
-                   </table>
+                            </td>
+                        </tr>
+                    </table>
                 </fieldset>
                 <!-- WHO staging -->
                 <fieldset class="patient-details">
@@ -4172,14 +4215,14 @@ Management<br />
                             </tr>
                             <!--Adult Questions-->
                             <includeIf velocityTest="$patient.age &gt; 14">
-                            <tr>
-                                <td>Has the Client disclosed HIV status to their sexually active partner?</td>
-                                <td><obs conceptId="159423AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabels="Yes,No,Unkown,N/A"
-                                         style="radio"
-                                /></td>
-                            </tr>
+                                <tr>
+                                    <td>Has the Client disclosed HIV status to their sexually active partner?</td>
+                                    <td><obs conceptId="159423AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No,Unkown,N/A"
+                                             style="radio"
+                                    /></td>
+                                </tr>
                             </includeIf>
                             <!--Paed Questions-->
                             <includeIf velocityTest="$patient.age &lt; 15">
@@ -4368,6 +4411,5 @@ Management<br />
         </div>
     </div>
 </htmlform>
-
 
 
