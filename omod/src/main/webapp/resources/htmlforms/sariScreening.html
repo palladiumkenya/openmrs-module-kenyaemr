@@ -313,7 +313,7 @@
                 </obsgroup>
             </fieldset>
         </includeIf>
-        <includeIf velocityTest="$patient.gender == 'F' ">
+        <includeIf velocityTest="$patient.gender == 'F' &amp;&amp; ($patient.age &gt; 9)">
             <fieldset id="risk-factors">
                 <legend>Risk Factors</legend>
                 <table>

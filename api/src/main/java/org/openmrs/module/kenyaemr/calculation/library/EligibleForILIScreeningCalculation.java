@@ -107,7 +107,7 @@ import java.util.Set;
                 boolean greenPatientType = lastGreenCardEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastGreenCardEnc, PatientTypeResult, negative) : false;
 //||
 
-            if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime())|| (lastGreenCardEnc != null && !DateUtils.isSameDay(new Date(), lastGreenCardEnc.getEncounterDatetime())) ) {
+            if (lastTriageEnc != null && !DateUtils.isSameDay(new Date(), lastTriageEnc.getEncounterDatetime()) ) {
                 result = false;
             }else if(lastIliInc != null){
                 result = false;
