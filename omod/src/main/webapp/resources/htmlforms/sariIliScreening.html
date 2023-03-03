@@ -41,6 +41,7 @@
     <script type="text/javascript">
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
+<<<<<<< HEAD
 <!--        var RespiratoryAnswered  = function () {-->
 <!--            var repiratoryValue = parseFloat(getValue('respiratory.value'));-->
 <!--            if(repiratoryValue=="1065"){-->
@@ -54,6 +55,8 @@
 <!--        }-->
 
 
+=======
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
    jQuery(function () {
             var pAge = parseInt('<lookup expression="patient.age"/>');
             jq('#malaria-patient-treated').hide();
@@ -104,7 +107,10 @@
             jq('#baseline-frailty :input[type=radio]').change(onBaselineFrailty);
             jq('#covid-vaccine-dose-received :input[type=radio]').change(onCovid19QuestionsChange);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
             heightChange();
             respiratoryChange();
             weightChange();
@@ -213,7 +219,11 @@
           var respiratoryM = "<lookup expression="fn.latestObs(5242).valueNumeric"/>"
             if (isNaN(respiratoryM) || respiratoryM == '') {
                      jq('#respiratory-rate').show();
+<<<<<<< HEAD
                      jq('#respiratory-rate-display').hide();
+=======
+                      jq('#respiratory-rate-display').hide();
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
 
                 }
                 else {
@@ -222,7 +232,10 @@
                 }
 
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
         function onAbnormalLungXrayChange() {
 			var val = jq(this).val();
 			if(val == 1065){
@@ -543,6 +556,7 @@
                 </td>
             </tr>
               <table class="simple-table" id="gbv-screening-questions">
+<<<<<<< HEAD
                   <obsgroup groupingConceptId="141814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
                       <tr>
                           <td>Respiratory Rate (bmp)</td>
@@ -648,6 +662,120 @@
                       <tr></tr>
                   </obsgroup>
               </table>
+=======
+                            <obsgroup groupingConceptId="141814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                    <tr>
+                                        <td>Respiratory Rate (bmp)</td>
+
+                                        <td id="respiratory-display">
+                                            <obs conceptId="5242" id="respiratory"/>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td id="respiratory-rate" colspan="4">why was respiratory rate not taken<br/>
+                                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                        </td>
+                                    </tr>
+                                <tr>
+                                    <td>Mid upper arm circumference:</td>
+                                    <td id="muac-display">
+                                        <obs conceptId="1343" id="muac"/>
+                                    </td>
+                                    <td>
+                                    <td></td>
+                                    </td>
+                                    <td id="muac-not-taken" colspan="4">Why was mid-upper arm circumference not taken<br/>
+                                        <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Oxygen saturation</td>
+
+                                    <td id="oxygen-saturation-display">
+                                        <obs conceptId="5092" id="oxygen-saturation"/>
+                                    </td>
+
+                                         <td id="oxygen-saturated-taken"> How was Oxygen saturation<br/>
+                                             <obs conceptId="167262" id="pregnancy-status" labelText=" " answerConceptIds="162735,162738"
+                                             answerLabels="Room Air,On supplemental oxygen"
+                                            style="radio"/>
+                                         </td>
+
+                                    <td id="oxygen-saturation-not-taken" colspan="4">why was respiratory rate not taken<br/>
+                                        <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                    </td>
+                                </tr>
+
+                                <tr></tr>
+                                <tr>
+                                    <td>Height Measurement (cm)</td>
+
+                                    <td id="height-display">
+                                        <obs conceptId="5090" id="height"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td id="height-not-taken" colspan="4">Why was height measurements not taken:<br/>
+                                        <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                                <tr>
+                                    <td>Weight Measurement (kg)</td>
+
+                                    <td id="weight-display">
+                                        <obs conceptId="5089" id="weight"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td id="weight-not-taken" colspan="4">Why was weight measurements not taken<br/>
+                                        <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                                <tr>
+                                    <td>Temperature Measurement (C)</td>
+
+                                    <td id="temperature-display">
+                                        <obs conceptId="5088" id="temperature"/>
+                                    </td>
+                                <td id="temperature-taken-using">How was the Temperature taken:<obs conceptId="167262" id="pregnancy-status" labelText=" " answerConceptIds="160240,5112,166242"
+                                         answerLabels="Oral,Auxiliary,Forehead thermometer gun"
+                                         style="radio"/>
+                                </td>
+
+                                    <td id="temperature-not-taken" colspan="4">
+                                        <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                                        <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                            </obsgroup>
+                        </table>
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
         </fieldset>
         <fieldset id="specimen-details">
             <legend>Specimen Details</legend>
@@ -910,15 +1038,22 @@
                                             style="radio"/><br/>
                                         </td>
                                </tr>
+<<<<<<< HEAD
                             <includeIf velocityTest="$patient.age &gt; 5">
+=======
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
                             <tr>
                                 <td>Leukemia (greater than 5 yrs)&#160;&#160;</td>
                                         <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                                  answerLabels="Yes,No"
                                                  style="radio"/><br/>
                                      </td>
+<<<<<<< HEAD
                             </tr>
                             </includeIf>
+=======
+                                </tr>
+>>>>>>> c7609f6227e27348910a9bf00c980bc57c23e99a
                             <tr>
                                 <td> Hemoglobinopathies&#160;&#160;</td>
                                    <td>    <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
