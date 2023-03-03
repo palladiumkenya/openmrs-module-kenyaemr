@@ -20,11 +20,11 @@ import org.openmrs.module.kenyacore.report.builder.AbstractHybridReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.ActivePatientsSnapshotCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.HTSPredictionCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.IdentifierConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.MFLCodeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstHIVTestDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstHIVTestResultDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionCategoryDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionScoreDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -75,17 +75,17 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
 
 
         protected Mapped<CohortDefinition> allPatientsCohort() {
-                CohortDefinition cd = new ActivePatientsSnapshotCohortDefinition();
+                CohortDefinition cd = new HTSPredictionCohortDefinition();
                 cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
                 cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-                cd.setName("Active Patients");
+                cd.setName("Screened Patients");
                 return ReportUtils.map(cd, "startDate=${startDate},endDate=${endDate}");
         }
 
         @Override
         protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
 
-                PatientDataSetDefinition allVisits = activePatientsDataSetDefinition("activePatients");
+                PatientDataSetDefinition allVisits = screenedPatientsDataSetDefinition("screenedPatients");
                 allVisits.addRowFilter(allPatientsCohort());
                 DataSetDefinition allPatientsDSD = allVisits;
 
@@ -94,7 +94,7 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
                 );
         }
 
-        protected PatientDataSetDefinition activePatientsDataSetDefinition(String datasetName) {
+        protected PatientDataSetDefinition screenedPatientsDataSetDefinition(String datasetName) {
 
                 PatientDataSetDefinition dsd = new PatientDataSetDefinition(datasetName);
                 dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -108,13 +108,17 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
                 DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
                 ETLPredictionScoreDataDefinition predictionScoreDataDefinition = new ETLPredictionScoreDataDefinition();
+                predictionScoreDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
                 predictionScoreDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
                 ETLPredictionCategoryDataDefinition predictionCategoryDataDefinition = new ETLPredictionCategoryDataDefinition();
+                predictionCategoryDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
                 predictionCategoryDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-                ETLLastVLResultDataDefinition lastVLResultDataDefinition = new ETLLastVLResultDataDefinition();
-                lastVLResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-                ETLLastVLDateDataDefinition lastVLDateDataDefinition = new ETLLastVLDateDataDefinition();
-                lastVLDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+                ETLFirstHIVTestResultDataDefinition firstHIVTestResultDataDefinition = new ETLFirstHIVTestResultDataDefinition();
+                firstHIVTestResultDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+                firstHIVTestResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+                ETLFirstHIVTestDateDataDefinition firstHIVTestDateDataDefinition = new ETLFirstHIVTestDateDataDefinition();
+                firstHIVTestDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+                firstHIVTestDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
                 DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
                 DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), formatter);
@@ -125,10 +129,10 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
                 dsd.addColumn("NUPI", nupiDef, "");
                 dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
                 dsd.addColumn("UPN", identifierDef, "");
-                dsd.addColumn("ML Prediction Score", predictionScoreDataDefinition, "endDate=${endDate}");
-                dsd.addColumn("ML Prediction Category", predictionCategoryDataDefinition, "endDate=${endDate}");
-                dsd.addColumn("Date Of Test", lastVLDateDataDefinition, "endDate=${endDate}", new DateConverter(DATE_FORMAT));
-                dsd.addColumn("Actual Test Results", lastVLResultDataDefinition, "endDate=${endDate}");
+                dsd.addColumn("ML Prediction Score", predictionScoreDataDefinition, "startDate=${startDate},endDate=${endDate}");
+                dsd.addColumn("ML Prediction Category", predictionCategoryDataDefinition, "startDate=${startDate},endDate=${endDate}");
+                dsd.addColumn("Date Of Test", firstHIVTestDateDataDefinition, "startDate=${startDate},endDate=${endDate}", new DateConverter(DATE_FORMAT));
+                dsd.addColumn("Actual Test Results", firstHIVTestResultDataDefinition, "startDate=${startDate},endDate=${endDate}");
                 return dsd;
         }
 }

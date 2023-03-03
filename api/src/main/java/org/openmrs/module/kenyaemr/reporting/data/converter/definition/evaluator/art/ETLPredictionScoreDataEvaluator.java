@@ -35,17 +35,14 @@ public class ETLPredictionScoreDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT patient_id, hts_risk_score FROM kenyaemr_datatools.hts_eligibility_screening where date(visit_date) <= date(:endDate) GROUP BY patient_id;";
+        String qry = "SELECT patient_id, hts_risk_score FROM kenyaemr_datatools.hts_eligibility_screening where date(visit_date) >= date(:startDate) and date(visit_date) <= date(:endDate) GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
         Date endDate = (Date)context.getParameterValue("endDate");
-        System.err.println("Category Start Date is: " + startDate);
-        System.err.println("Category End Date is: " + endDate);
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        System.err.println("Category SQL is: " + queryBuilder.getSqlQuery());
 
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);

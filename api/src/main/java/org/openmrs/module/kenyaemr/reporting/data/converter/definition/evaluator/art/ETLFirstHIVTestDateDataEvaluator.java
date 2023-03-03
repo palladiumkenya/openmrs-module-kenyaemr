@@ -9,11 +9,8 @@
  */
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.art;
 
-import java.util.Date;
-import java.util.Map;
-
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionCategoryDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstHIVTestDateDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -23,11 +20,14 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+import java.util.Map;
+
 /**
  * Evaluates Last VL result Data Definition
  */
-@Handler(supports= ETLPredictionCategoryDataDefinition.class, order=50)
-public class ETLPredictionCategoryDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= ETLFirstHIVTestDateDataDefinition.class, order=50)
+public class ETLFirstHIVTestDateDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,7 +35,7 @@ public class ETLPredictionCategoryDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT patient_id, hts_risk_category FROM kenyaemr_datatools.hts_eligibility_screening where date(visit_date) >= date(:startDate) and date(visit_date) <= date(:endDate) GROUP BY patient_id;";
+        String qry = "select t.patient_id, max(t.visit_date) as latest_hiv_test_date from kenyaemr_etl.etl_hts_test t where t.test_type = 1 and t.visit_date between date(:startDate) and date(:endDate) group by t.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
