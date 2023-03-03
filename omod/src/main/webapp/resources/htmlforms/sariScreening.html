@@ -67,6 +67,8 @@
             jq('#history-question   :input[type=radio]').change(onHistoryChange);
             jq('#respiratory-problem').hide();
             jq('#hospitalized-text').hide();
+             jq('#sample-other-checkbox :input[type=checkbox]').change(sampleOtherChecked);
+            jq('#sample-other-textField').hide();
 
 			jq('#pregnancy-status input:radio').change(function () {
 				if ((getValue('pregnancy-status.value')) == 1066) {
@@ -121,6 +123,15 @@
                      clearHiddenSections(jq('#lmpDate'));
                      clearHiddenSections(jq('#dueDate'));
 
+			}
+		}
+		function sampleOtherChecked() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#sample-other-textField').show();
+			} else{
+                jq('#sample-other-textField').hide();
+                clearHiddenSections(jq('#sample-other-textField'));
 			}
 		}
        function onHospitalizedTwelveMonths() {
@@ -245,22 +256,19 @@
                                                  answerLabel="Difficulty in breathing " style="checkbox" /><br/>
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="120749"
                                                  answerLabel="Chest Pain" style="checkbox" /><br/>
-                                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
-                                                 answerLabel="Difficulty in breathing" style="checkbox" /><br/>
-                                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="120749"
-                                                 answerLabel="Chest Pain" style="checkbox" /><br/>
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165501"
                                                  answerLabel="Rhinorrhea " style="checkbox" /><br/>
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="133632"
                                                  answerLabel="Sore Muscles" style="checkbox" /><br/>
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="138905"
                                                  answerLabel="Haemoptysis(coughing out blood) " style="checkbox" /><br/>
+                                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="871"
+                                                 answerLabel="Chills" style="checkbox" /><br/>
                                         </div>
                                     </td>
                                     <td>
                                         <div style="float: left; padding-right: 50px">
-                                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="871"
-                                                 answerLabel="Chills" style="checkbox" /><br/>
+
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="142412"
                                                  answerLabel="Diarrhea " style="checkbox" /><br/>
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122983"
@@ -377,50 +385,52 @@
                 <td colspan="2">
                     <div>
                         <table class="right-aligned-first" style="width: 100%;" border="0">
-            <obsgroup groupingConceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                <tr id="bb">
-                    <td style="text-align: left">
-                        <div style="float: left; padding-right: 50px">
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="166093"
-                                 answerLabel="Chronic respiratory disease(not including asthma and TB)" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165646"
-                                 answerLabel="Chronic Neurological or neuromuscular" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1687"
-                                 answerLabel="Newly Diagnosed TB" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="112141"
-                                 answerLabel="Prior TB" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1169"
-                                 answerLabel="HIV/AIDS" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="139071"
-                                 answerLabel="Chronic cardiac/heart disease" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="115122"
-                                 answerLabel="Malnutrition" style="checkbox" /><br/>
-                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="6032"
-                                 answerLabel="Chronic liver disease" style="checkbox" /><br/>
-                        </div>
-                    </td>
-                    <td>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="6033"
-                             answerLabel="Chronic renal disease" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="119481"
-                             answerLabel="Diabetes" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="121375"
-                             answerLabel="Asthma" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="116030"
-                             answerLabel="Cancer (currently or in the past 12 months)" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160225"
-                             answerLabel="Sickle cell disease" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="127394"
-                             answerLabel="Rickets" style="checkbox" /><br/>
-                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165866"
-                             answerLabel="COVID-19" style="checkbox" /><br/>
-                        Other, Specify  <obs conceptId="165230"/><br/>
+                            <obsgroup groupingConceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                <tr id="bb">
+                                    <td style="text-align: left">
+                                        <div style="float: left; padding-right: 50px">
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="166093"
+                                                 answerLabel="Chronic respiratory disease(not including asthma and TB)" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165646"
+                                                 answerLabel="Chronic Neurological or neuromuscular" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1687"
+                                                 answerLabel="Newly Diagnosed TB" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="112141"
+                                                 answerLabel="Prior TB" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1169"
+                                                 answerLabel="HIV/AIDS" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="139071"
+                                                 answerLabel="Chronic cardiac/heart disease" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="115122"
+                                                 answerLabel="Malnutrition" style="checkbox" /><br/>
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="6032"
+                                                 answerLabel="Chronic liver disease" style="checkbox" /><br/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="6033"
+                                             answerLabel="Chronic renal disease" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="119481"
+                                             answerLabel="Diabetes" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="121375"
+                                             answerLabel="Asthma" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="116030"
+                                             answerLabel="Cancer (currently or in the past 12 months)" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="160225"
+                                             answerLabel="Sickle cell disease" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="127394"
+                                             answerLabel="Rickets" style="checkbox" /><br/>
+                                        <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165866"
+                                             answerLabel="COVID-19" style="checkbox" /><br/>
+                                        <obs conceptId="167262" id="sample-other-checkbox" answerConceptId="165230"
+                                             answerLabel="Other" style="checkbox" />
+                                        <obs id="sample-other-textField" conceptId="165230"/>
 
 
-                </td>
-                </tr>
+                                    </td>
+                                </tr>
 
-            </obsgroup>
+                            </obsgroup>
                         </table>
                     </div>
                 </td>
@@ -430,117 +440,121 @@
             <legend>Clinical History</legend>
             <tr id="cc">
                 <td colspan="1">
-                <div>
-            <table class="right-aligned-first" style="width: 100%;" border="0">
-                <obsgroup groupingConceptId="160108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" >
-                  <tr >
-                    <tr id="visit-clinician-past-three-months">
-                        <td>Have you visited a clinician for any existing chronic condition in the past 3 months?&#160;&#160; </td>
-                        <td><obs conceptId="1797" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" />
-                        </td>
-                    </tr>
-                    <tr id="how-many-times">
-                        <td>How many times? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                            <obs conceptId="165416"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Have you been hospitalised in the past 12 months?&#160;&#160; </td>
-                        <td><obs conceptId="163403" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" id="hospitalized-twelve-months" />
-                        </td>
-                    </tr>
-                    <tr id="respiratory-problem" >
-                        <td>If yes, were you hospitalised for a respiratory problem?&#160;&#160; </td>
-                        <td><obs conceptId="159518" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No"
-                                 style="radio" />
-                        </td>
-                    </tr>
+                    <div>
+                        <table class="right-aligned-first" style="width: 100%;" border="0">
+                            <obsgroup groupingConceptId="160108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" >
+                                <tr >
+                                <tr id="visit-clinician-past-three-months">
+                                    <td>Have you visited a clinician for any existing chronic condition in the past 3 months?&#160;&#160; </td>
+                                    <td><obs conceptId="1797" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No, Don't Know"
+                                             style="radio" />
+                                    </td>
+                                </tr>
+                                <tr id="how-many-times">
+                                    <td>How many times? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        <obs conceptId="165416"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Have you been hospitalised in the past 12 months?&#160;&#160; </td>
+                                    <td><obs conceptId="163403" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No, Don't Know"
+                                             style="radio" id="hospitalized-twelve-months" />
+                                    </td>
+                                </tr>
+                                <tr id="respiratory-problem" >
+                                    <td>If yes, were you hospitalised for a respiratory problem?&#160;&#160; </td>
+                                    <td><obs conceptId="159518" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No"
+                                             style="radio" />
+                                    </td>
+                                </tr>
 
-                    <tr id="hospitalized-text">
-                        <td>How many times were you hospitalized for a chronic condition in the past 12 months?&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                            <obs conceptId="5704"/>
-                        </td>
-                    </tr>
-                    <includeIf velocityTest="$patient.age &gt; 13">
-                        <tr>
-                            <td>Do you currently smoke or use any other type of tobacco?&#160;&#160; </td>
-                            <td><obs conceptId="152722AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabels="Yes,No, Don't Know"
-                                     style="radio" id="currently-smoke" />
-                            </td>
-                        </tr>
-                    </includeIf>
-                    <tr>
-                        <td>Does anyone smoke tobacco product in the patients home?&#160;&#160; </td>
-                        <td><obs conceptId="163201" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" id="tobacco-product" />
-                        </td>
-                    </tr>
+                                <tr id="hospitalized-text">
+                                    <td>How many times were you hospitalized for a chronic condition in the past 12 months?&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        <obs conceptId="5704"/>
+                                    </td>
+                                </tr>
+                                <includeIf velocityTest="$patient.age &gt; 13">
+                                    <tr>
+                                        <td>Do you currently smoke or use any other type of tobacco?&#160;&#160; </td>
+                                        <td><obs conceptId="152722AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabels="Yes,No, Don't Know"
+                                                 style="radio" id="currently-smoke" />
+                                        </td>
+                                    </tr>
+                                </includeIf>
+                                <tr>
+                                    <td>Does anyone smoke tobacco product in the patients home?&#160;&#160; </td>
+                                    <td><obs conceptId="163201" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No, Don't Know"
+                                             style="radio" id="tobacco-product" />
+                                    </td>
+                                </tr>
 
-                    <legend>Has the patient received any of the following vaccinations</legend>
-                    <tr>
-                        <td>Influenza vaccine in the past 12 months?&#160;&#160; </td>
-                        <td><obs conceptId="164134" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" id="influenza vaccine" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pneumococcal conjugate vaccine?&#160;&#160; </td>
-                        <td><obs conceptId="160109AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" id="pneumococal-vaccine" />
-                        </td>
-                    </tr>
-                    <includeIf velocityTest="$patient.age &lt; 6">
-                        <tr>
-                            <td>How many doses of pneumococcal vaccine&#160;&#160; </td>
-                            <td><obs conceptId="160855" labelText=" "  answerConceptIds="1107,1182AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1183AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabels="Zero,1,2,3, Don't Know"
-                                     style="radio" id="pnemococcal-doses" />
-                            </td>
-                        </tr>
-                    </includeIf>
-                    <tr>
-                        <td>Was this verified using child verification card?&#160;&#160; </td>
-                        <td><obs conceptId="165911" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No"
-                                 style="radio" id="child-verification-card" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Haemophobilus influenza type B (HiB vaccine) &#160;&#160; </td>
-                        <td><obs conceptId="160855" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No, Don't Know"
-                                 style="radio" id="sexual-abstained" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>How many doses of HiB vaccine&#160;&#160; </td>
-                        <td><obs conceptId="163331" labelText=" "  answerConceptIds="1107,1182AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1183AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Zero,1,2,3, Don't Know"
-                                 style="radio" id="hib-vaccine" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Was this verified using the child-vaccination card?&#160;&#160; </td>
-                        <td><obs conceptId="165911" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Yes,No"
-                                 style="radio" id="verified-child-verification-card" />
-                        </td>
-                    </tr>
-                    </tr>
+                                <legend>Has the patient received any of the following vaccinations</legend>
+                                <tr>
+                                    <td>Influenza vaccine in the past 12 months?&#160;&#160; </td>
+                                    <td><obs conceptId="164134" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No, Don't Know"
+                                             style="radio" id="influenza vaccine" />
+                                    </td>
+                                </tr>
+                                <includeIf velocityTest="$patient.age &lt; 6">
+                                    <tr>
+                                        <td>Pneumococcal conjugate vaccine?&#160;&#160; </td>
+                                        <td><obs conceptId="160109AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabels="Yes,No, Don't Know"
+                                                 style="radio" id="pneumococal-vaccine" />
+                                        </td>
+                                    </tr>
+                                </includeIf>
 
-                </obsgroup>
-            </table>
+                                <tr>
+                                    <td>How many doses of pneumococcal vaccine&#160;&#160; </td>
+                                    <td><obs conceptId="160855" labelText=" "  answerConceptIds="1107,1182AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1183AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Zero,1,2,3, Don't Know"
+                                             style="radio" id="pnemococcal-doses" />
+                                    </td>
+                                </tr>
 
-                </div>
+                                <tr>
+                                    <td>Was this verified using child verification card?&#160;&#160; </td>
+                                    <td><obs conceptId="165911" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No"
+                                             style="radio" id="child-verification-card" />
+                                    </td>
+                                </tr>
+                                <includeIf velocityTest="$patient.age &lt; 6">
+                                    <tr>
+                                        <td>Haemophobilus influenza type B (HiB vaccine) &#160;&#160; </td>
+                                        <td><obs conceptId="160855" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabels="Yes,No, Don't Know"
+                                                 style="radio" id="sexual-abstained" />
+                                        </td>
+                                    </tr>
+                                </includeIf>
+                                <tr>
+                                    <td>How many doses of HiB vaccine&#160;&#160; </td>
+                                    <td><obs conceptId="163331" labelText=" "  answerConceptIds="1107,1182AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1183AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1184AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Zero,1,2,3, Don't Know"
+                                             style="radio" id="hib-vaccine" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Was this verified using the child-vaccination card?&#160;&#160; </td>
+                                    <td><obs conceptId="165911" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabels="Yes,No"
+                                             style="radio" id="verified-child-verification-card" />
+                                    </td>
+                                </tr>
+                                </tr>
+
+                            </obsgroup>
+                        </table>
+
+                    </div>
                 </td>
             </tr>
         </fieldset>

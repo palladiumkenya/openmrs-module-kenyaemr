@@ -39,6 +39,7 @@
 
     </style>
     <script type="text/javascript">
+
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
    jQuery(function () {
@@ -73,6 +74,13 @@
             jq('#last-covid-vaccine-dose').hide();
             jq('#least-one-dose-received').hide();
             jq('#specimen-collected :input[type=radio]').change(onSpecimenCollectedChange);
+            jq('#sample-other-checkbox :input[type=checkbox]').change(sampleOtherChecked);
+            jq('#race-sample-other-checkbox :input[type=checkbox]').change(raceSampleOtherChecked);
+            jq('#patient-visit-other :input[type=checkbox]').change(patientVisitOther);
+            jq('#patient-visit-other-other-textField').hide();
+            jq('#sample-other-textField').hide();
+            jq('#sample-other-race').hide();
+
             jq('#abnormal-lung-xray-findings-answer').hide();
             jq('#patient-traveled-in-14-days :input[type=radio]').change(onPatientTravelledChange);
             jq('#patient-visit-facility-in-14-days :input[type=radio]').change(onPatientFacilityChange);
@@ -95,25 +103,53 @@
             weightChange();
             temperatureChange();
             muacChange();
-            bloodPressureOnchange();
+
+            muacValuedChange();
+
             oxygenSaturationChange();
+            bloodPressureOnchange();
             var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
             var pgender = "<lookup expression="patient.gender" />";
             var pAge = parseInt('<lookup expression="patient.age"/>');
 
 
 
-<!--                            last-covid-vaccine-dose-->
-<!--                least-one-dose-received-->
-<!--                covid-dose-one-->
-<!--                covid-vaccine-dose-three-date-->
-<!--                covid-dose-three-->
-<!--                covid-vaccine-dose-two-date-->
-<!--                covid-dose-two-->
-<!--                covid-vaccine-dose-one-date-->
-<!--                last-covid-vaccine-dose-date-->
-
         });
+
+
+
+   function muacValuedChange() {
+            var display = '';
+            var temp = parseFloat(getValue('muac.value'));
+            if (!isNaN(temp) &amp;&amp; !isNaN(temp)) {
+                if ( temp &gt; 3) {
+                     jq('#muac-not-taken').hide();
+                }
+                else {
+                    jq('#muac-not-taken').show();
+                }
+            }
+
+        }
+
+<!--function muacValuedChange() {-->
+<!--  if (getValue('muac.value') == "") {-->
+<!--    jq('#muac-not-taken :input').prop('disabled', false);-->
+
+<!--  } else {-->
+<!--    jq('#muac-not-taken :input').prop('disabled', true);-->
+
+<!--  }-->
+
+<!--	if (getValue('muac.value') == "") {-->
+<!--					jq('#muac-not-taken :input').prop('disabled', true);-->
+<!--				}-->
+<!--				else {-->
+<!--					jq('#muac-not-takene :input').prop('disabled', false);}-->
+
+
+
+
         function weightChange(){
               var weightKg = "<lookup expression="fn.latestObs(5089).valueNumeric"/>"
               if (isNaN(weightKg) || weightKg == '') {
@@ -125,35 +161,22 @@
                   jq('#weight-not-taken').hide();
                 }
           }
+
+
           function temperatureChange(){
-               var temperatureM = "<lookup expression="fn.latestObs(5088).valueNumeric"/>"
-              if (isNaN(temperatureM) || temperatureM == '') {
+              var temperatureC = "<lookup expression="fn.latestObs(5088).valueNumeric"/>"
+              if (isNaN(temperatureC) || temperatureC == '') {
                   jq('#temperature-not-taken').show();
                   jq('#temperature-display').hide();
                   jq('#temperature-taken-using').hide();
                 }
                else {
-                 getField('temperature.value').val(temperatureM);
-                   jq('#temperature-display').show();
-                   jq('#temperature-taken-using').show();
-                   jq('#temperature-not-taken').hide();
+                 getField('temperature.value').val(temperatureC);
+                  jq('#temperature-not-taken').hide();
+                  jq('#temperature-display').show();
                 }
           }
 
-
-          function muacChange(){
-             var muacM = "<lookup expression="fn.latestObs(1343).valueNumeric"/>"
-              if (isNaN(muacM) || muacM == '') {
-                  jq('#muac-not-taken').show();
-                  jq('#muac-display').hide();
-
-                }
-               else {
-                   getField('muac.value').val(muacM);
-                   jq('#muac-display').show();
-                   jq('#muac-not-taken').hide();
-                }
-          }
 
           function bloodPressureOnchange(){
              var bloodSaturationM = "<lookup expression="fn.latestObs(5086).valueNumeric"/>"
@@ -166,22 +189,18 @@
 
                 }
           }
-        function oxygenSaturationChange(){
-              var oxygenSaturationM = "<lookup expression="fn.latestObs(5092).valueNumeric"/>"
-
-              if (isNaN(oxygenSaturationM) || oxygenSaturationM == '') {
-                  jq('#oxygen-saturation-not-taken').show();
-                  jq('#oxygen-saturation-display').hide();
-                  jq('#oxygen-saturated-taken').hide();
+      function oxygenSaturationChange(){
+          var oxygenSaturationM = "<lookup expression="fn.latestObs(5092).valueNumeric"/>"
+            if (!isNaN(oxygenSaturationM)) {
+                  getField('oxygen.value').val(oxygenSaturationM);
+                 jq('#oxygen-not-taken').show();
+                 jq('#oxygen-taken').hide();
                 }
-               else {
-               console.log("==== ", oxygenSaturationM);
-                   getField('oxygen-saturation.value').val(oxygenSaturationM);
-                   jq('#oxygen-saturation-display').show();
-                   jq('#oxygen-saturated-taken').show();
-                   jq('#oxygen-saturation-not-taken').hide();
+                else {
+                jq('#oxygen-not-taken').hide();
+                jq('#oxygen-taken').show();
                 }
-          }
+        }
        function heightChange(){
           var heightM = "<lookup expression="fn.latestObs(5090).valueNumeric"/>"
             if (!isNaN(heightM)) {
@@ -207,6 +226,24 @@
                 }
 
         }
+      function muacChange(){
+          var respiratoryM = "<lookup expression="fn.latestObs(1343).valueNumeric"/>"
+            if (isNaN(respiratoryM) || respiratoryM == '') {
+                     jq('#muac-display').show();
+                     jq('#muac-not-taken').show();
+
+                }
+                else {
+                  getField('muac.value').val(respiratoryM);
+                  jq('#muac-not-taken').hide();
+                }
+
+        }
+
+
+
+
+
         function onAbnormalLungXrayChange() {
 			var val = jq(this).val();
 			if(val == 1065){
@@ -248,11 +285,12 @@
                     jq('#covid-vaccine-dose-three-date').hide();
                     jq('#covid-dose-three').hide();
             } else if(val == 1183){
-                    jq('#covid-dose-one').hide();
+                    jq('#covid-dose-one').show();
                      jq('#least-one-dose-received').show();
-                    jq('#covid-vaccine-dose-one-date').hide();
+                    jq('#covid-vaccine-dose-one-date').show();
                     jq('#covid-vaccine-dose-two-date').show();
                     jq('#covid-dose-two').show();
+
                     jq('#covid-vaccine-dose-three-date').hide();
                     jq('#covid-dose-three').hide();
             } else if(val == 1184){
@@ -277,6 +315,37 @@
 
 			}
 		}
+
+		function patientVisitOther() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#patient-visit-other-other-textField').show();
+			} else{
+                jq('#patient-visit-other-other-textField').hide();
+                clearHiddenSections(jq('#patient-visit-other-other-textField'));
+			}
+		}
+		function sampleOtherChecked() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#sample-other-textField').show();
+			} else{
+                jq('#sample-other-textField').hide();
+                clearHiddenSections(jq('#sample-other-textField'));
+			}
+		}
+
+		function raceSampleOtherChecked() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#sample-other-race').show();
+			} else{
+                jq('#sample-other-race').hide();
+                clearHiddenSections(jq('#sample-other-race'));
+			}
+		}
+
+
 		function onInfluenzaAntiviralsBeforeAdmission() {
 			var val = jq(this).val();
 			if(val == 1065){
@@ -381,7 +450,7 @@
 
 		function onTestedCovidOnChange() {
 			var val = jq(this).val();
-			if(val == 1066){
+			if(val == 1065){
                 jq('.covid-rtd').show();
 			} else{
                 jq('.covid-rtd').hide();
@@ -526,112 +595,112 @@
                          style="radio"/>
                 </td>
             </tr>
-              <table class="simple-table" id="gbv-screening-questions">
-                  <obsgroup groupingConceptId="141814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                      <tr>
-                          <td>Respiratory Rate (bmp)</td>
-                          <td id="respiratory-display">
-                              <obs conceptId="5242" id="respiratory"/>
-                          </td>
-                          <td>
-                          </td>
-                          <td id="respiratory-rate" colspan="4">Why was respiratory rate not taken<br/>
-                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Mid upper arm circumference:</td>
-                          <td id="muac-display">
-                              <obs conceptId="1343" id="muac-data"/>
-                          </td>
-                          <td>
-                          </td>
-                          <td id="muac-not-taken" colspan="4">Why was mid-upper arm circumference not taken<br/>
-                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
-                          </td>
-                      </tr>
-<!--                      <tr>-->
-<!--                          <td>Oxygen saturation</td>-->
-<!--                          <td id="oxygen-saturation-display">-->
-<!--                              <obs conceptId="5092" id="oxygen-data"/>-->
-<!--                          </td>-->
-<!--                          <td>-->
-<!--                          </td>-->
-<!--                          <td id="oxygen-saturated-taken">How was Oxygen saturation taken<br/>-->
-<!--                              <obs conceptId="167262" id="oxygen-saturated-taken-data" labelText=" " answerConceptIds="162735,162738"-->
-<!--                                   answerLabels="Room Air,On supplemental oxygen"-->
-<!--                                   style="radio"/>-->
-<!--                          </td>-->
-<!--                          <td id="oxygen-saturation-not-taken" colspan="4">Why was Oxygen Saturation not taken<br/>-->
-<!--                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />-->
-<!--                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />-->
-<!--                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />-->
-<!--                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />-->
-<!--                          </td>-->
-<!--                      </tr>-->
-                      <tr></tr>
-                      <tr>
-                          <td>Height Measurement (cm)</td>
+            <table class="simple-table" id="gbv-screening-questions">
+                <obsgroup groupingConceptId="141814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                    <tr>
+                        <td>Respiratory Rate (bmp)</td>
+                        <td id="respiratory-display">
+                            <obs conceptId="5242" id="respiratory"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td id="respiratory-rate" colspan="4">Why was respiratory rate not taken<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mid upper arm circumference:</td>
+                        <td id="muac-display">
+                            <obs conceptId="1343" id="muac"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td id="muac-not-taken" colspan="4">Why was mid-upper arm circumference not taken<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Oxygen saturation</td>
+                        <td id="oxygen-display">
+                            <obs conceptId="5092" id="oxygen"/>
+                        </td>
 
-                          <td id="height-display">
-                              <obs conceptId="5090" id="height"/>
-                          </td>
-                          <td>
-                          </td>
-                          <td id="height-not-taken" colspan="4">Why was height measurements not taken:<br/>
-                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        <td id="oxygen-taken">How was Oxygen saturation taken<br/>
+                            <obs conceptId="167262" id="oxygen" labelText=" " answerConceptIds="162735,162738"
+                                 answerLabels="Room Air,On supplemental oxygen"
+                                 style="radio"/>
+                        </td>
 
-                          </td>
-                      </tr>
-                      <tr></tr>
-                      <tr>
-                          <td>Weight Measurement (kg)</td>
+                        <td id="oxygen-not-taken" colspan="4">Why was mid-upper arm circumference not taken<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
 
-                          <td id="weight-display">
-                              <obs conceptId="5089" id="weight"/>
-                          </td>
-                          <td>
-                          </td>
-                          <td id="weight-not-taken" colspan="4">Why was weight measurements not taken<br/>
-                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                    <tr>
+                        <td>Height Measurement (cm)</td>
+                        <td id="height-display">
+                            <obs conceptId="5090" id="height"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td><br/>
+                        </td>
+                        <td id="height-not-taken" colspan="4">Why was height measurements not taken:<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Weight Measurement (kg)</td>
+                        <td id="weight-display">
+                            <obs conceptId="5089" id="weight"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td><br/>
+                        </td>
+                        <td id="weight-not-taken" colspan="4">Why was weight measurements not taken:<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Temperature Measurement (C)</td>
+                        <td id="temperature-display">
+                            <obs conceptId="5088" id="temperature"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td id="temperature-taken-using">How was the Temperature taken:<br/>
+                            <obs conceptId="167262" id="temperature-taken-data" labelText=" " answerConceptIds="160240,5112,166242"
+                                 answerLabels="Oral,Auxiliary,Forehead thermometer gun"
+                                 style="radio"/>
+                        </td>
+                        <td id="temperature-not-taken" colspan="4">Why was Oxygen Saturation not taken<br/>
+                            <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
+                            <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
+                        </td>
+                    </tr>
 
-                          </td>
-                      </tr>
-                      <tr></tr>
-                      <tr>
-                          <td>Temperature Measurement (C)</td>
 
-                          <td id="temperature-display">
-                              <obs conceptId="5088" id="temperature"/>
-                          </td>
-                          <td id="temperature-taken-using">How was the Temperature taken:<obs conceptId="167262" id="pregnancy-status" labelText=" " answerConceptIds="160240,5112,166242"
-                                                                                              answerLabels="Oral,Auxiliary,Forehead thermometer gun"
-                                                                                              style="radio"/>
-                          </td>
 
-                          <td id="temperature-not-taken" colspan="4">
-                              <obs conceptId="167262" answerConceptId="163293" answerLabel="Patient too sick" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="167156" answerLabel="Refused" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160352"  answerLabel="No Equipment" style="radio" /><br />
-                              <obs conceptId="167262" answerConceptId="160036"  answerLabel="Patient not available/ transferred" style="radio" /><br />
-
-                          </td>
-                      </tr>
-                      <tr></tr>
-                  </obsgroup>
-              </table>
+                </obsgroup>
+            </table>
         </fieldset>
         <fieldset id="specimen-details">
             <legend>Specimen Details</legend>
@@ -665,29 +734,28 @@
                     </td>
                 </tr>
                 <tr>
-
-                <table class="covid-rtd" style="width: 100%;" border="0">
-                    <td>Why was it not collected?&#160;&#160; </td>
-                    <obsgroup groupingConceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                        <tr>
-                            <td style="text-align: left;">
-                                <obs conceptId="167262" answerConceptId="163293"
-                                     answerLabel="Patient too ill to collect specimen" style="checkbox" /><br/>
-                                <obs conceptId="167262" answerConceptId="167156"
-                                     answerLabel="Patient/ Guardian declined" style="checkbox" /><br/>
-                                <obs conceptId="167262" answerConceptId="160036"
-                                     answerLabel="Patient unavailable for  sample collection" style="checkbox" /><br/>
-                                <obs conceptId="167262" answerConceptId="161878"
-                                     answerLabel="Specimen to be collected later" style="checkbox" /><br/>
-                                <obs conceptId="167262" answerConceptId="160101"
-                                     answerLabel="Not a sample collection  day" style="checkbox" /><br/>
-                                <obs conceptId="167262" answerConceptId="165230"
-                                     answerLabel="Other" style="checkbox" /><br/>
-                                <obs conceptId="165230"/>
-                            </td>
-                        </tr>
-                    </obsgroup>
-                </table>
+                    <table class="covid-rtd" style="width: 100%;" border="0">
+                        <td>Why was it not collected?&#160;&#160; </td>
+                        <obsgroup groupingConceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                            <tr>
+                                <td style="text-align: left;">
+                                    <obs conceptId="167262"  answerConceptId="163293"
+                                         answerLabel="Patient too ill to collect specimen" style="checkbox" /><br/>
+                                    <obs conceptId="167262" answerConceptId="167156"
+                                         answerLabel="Patient/ Guardian declined" style="checkbox" /><br/>
+                                    <obs conceptId="167262" answerConceptId="160036"
+                                         answerLabel="Patient unavailable for  sample collection" style="checkbox" /><br/>
+                                    <obs conceptId="167262" answerConceptId="161878"
+                                         answerLabel="Specimen to be collected later" style="checkbox" /><br/>
+                                    <obs conceptId="167262" answerConceptId="160101"
+                                         answerLabel="Not a sample collection  day" style="checkbox" /><br/>
+                                    <obs conceptId="167262" id="sample-other-checkbox" answerConceptId="165230"
+                                         answerLabel="Other" style="checkbox" /><br/>
+                                    <obs id="sample-other-textField" conceptId="165230"/>
+                                </td>
+                            </tr>
+                        </obsgroup>
+                    </table>
                 </tr>
             </table>
         </fieldset>
@@ -701,17 +769,22 @@
                              style="radio"/>
                     </td>
                 </tr>
+
                 <tr>
-                    <td>Other, Specify &#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                        <obs conceptId="165230"/>
+                    <td>
+                        <obs conceptId="167262" id="race-sample-other-checkbox" answerConceptId="165230"
+                             answerLabel="Other Specify" style="checkbox" />
+                        <obs id="sample-other-race" conceptId="165230"/>
+
                     </td>
                 </tr>
                 <tr >
                     <td>Marital Status:&#160;&#160; </td>
-                    <td><obs conceptId="160109AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1523,5615,5555,163007,1059"
-                             answerLabels="Child,Single,Married,Divorced/separated, Widow(er)"
-                             style="radio" id="not-pregnant" />
+                    <td><obs conceptId="1054" id="marital-status" labelText=" "  answerConceptIds="1523,1056,1057,1058,1059,1060,5555,135704,5622"
+                             answerLabels="Child,Separated, Never married,Divorced,Widowed, Living with partner,Married,Lives alone,Other"
+                             style="radio" />
                     </td>
+
                 </tr>
 
                 <tr>
@@ -793,13 +866,13 @@
                     </td>
                 </tr>
                 <includeIf velocityTest="$patient.age &lt; 5">
-                <tr>
-                    <td>Apnea&#160;&#160; </td>
-                    <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Yes,No,Don't Know"
-                             style="radio"/>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>Apnea&#160;&#160; </td>
+                        <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                 answerLabels="Yes,No,Don't Know"
+                                 style="radio"/>
+                        </td>
+                    </tr>
                 </includeIf>
             </table>
         </fieldset>
@@ -814,105 +887,104 @@
             </tr>
             <tr>
 
-                    <div>
-                        <table class="medical-condition-display">
+                <div>
+                    <table class="medical-condition-display">
 
-                            <tr>
-                                 <td>Chronic lung disease(such as chronic obstructive pulmonary disease [COPD] and cystic fibrosis)&#160;&#160;</td>
-                                      <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                            answerLabels="Yes,No"
-                                           style="radio"/>
-                                       </td>
-                            </tr>
-
-                            <tr>
-                                <td> Rheumatologic disease/Autoimmune disease&#160;&#160;</td>
-                                      <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                            answerLabels="Yes,No"
-                                            style="radio"/><br/>
-                                        </td>
-                            </tr>
-                            <tr>
-                                <td> Nasal congestion&#160;&#160;</td>
-                                     <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                            answerLabels="Yes,No,Don't Know"
-                                            style="radio"/><br/>
-                                        </td>
-                            </tr>
-                            <tr>
-                                 <td>Malnutrition (Only for children less than 5 years)&#160;&#160;</td>
-                                        <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                             answerLabels="Yes,No"
-                                                 style="radio"/><br/>
-                                  </td>
-                              </tr>
-                            <tr>
-                                <td>Immunodeficiency (except HIV) / Organ transplant&#160;&#160;</td>
-                                   <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <tr>
+                            <td>Chronic lung disease(such as chronic obstructive pulmonary disease [COPD] and cystic fibrosis)&#160;&#160;</td>
+                            <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                       answerLabels="Yes,No"
-                                       style="radio"/><br/>
-                                 </td>
-                            </tr>
-                            <tr>
-                                <td>Down syndrome or any other development handicap (less than 5 yrs)&#160;&#160;</td>
-                                  <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                        answerLabels="Yes,No"
-                                        style="radio"/><br/>
-                                   </td>
-                                 </tr>
-                            <tr>
-                                <td>Congenital heart disease (less than 5 yrs)&#160;&#160;</td>
-                                      <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                        answerLabels="Yes,No"
-                                        style="radio"/><br/>
-                                    </td>
-                                 </tr>
-                            <tr>
-                                <td>Active neoplasm&#160;&#160;</td>
-                                     <td>  <obs conceptId="116030" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                      answerLabels="Yes,No" style="radio"/><br/>
-                                    </td>
-                               </tr>
-                            <tr>
-                                <td>Obesity&#160;&#160;</td>
-                                    <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                        answerLabels="Yes,No"
-                                         style="radio"/><br/>
-                                    </td>
-                                  </tr>
-                            <tr>
-                                <td>  HIV exposure (if children less than 5 year)&#160;&#160;</td>
-                                    <td>    <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                            answerLabels="Yes,No"
-                                            style="radio"/><br/>
-                                  </td>
-                               </tr>
-                            <tr>
-                                <td>Hypertension&#160;&#160;</td>
-                                     <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                            answerLabels="Yes,No"
-                                            style="radio"/><br/>
-                                        </td>
-                               </tr>
-                            <includeIf velocityTest="$patient.age &gt; 5">
+                                      style="radio"/>
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td> Rheumatologic disease/Autoimmune disease&#160;&#160;</td>
+                            <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                       answerLabels="Yes,No"
+                                       style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Nasal congestion&#160;&#160;</td>
+                            <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                       answerLabels="Yes,No,Don't Know"
+                                       style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Malnutrition (Only for children less than 5 years)&#160;&#160;</td>
+                            <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                      answerLabels="Yes,No"
+                                      style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Immunodeficiency (except HIV) / Organ transplant&#160;&#160;</td>
+                            <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                      answerLabels="Yes,No"
+                                      style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Down syndrome or any other development handicap (less than 5 yrs)&#160;&#160;</td>
+                            <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                      answerLabels="Yes,No"
+                                      style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Congenital heart disease (less than 5 yrs)&#160;&#160;</td>
+                            <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                       answerLabels="Yes,No"
+                                       style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Active neoplasm&#160;&#160;</td>
+                            <td>  <obs conceptId="116030" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                       answerLabels="Yes,No" style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Obesity&#160;&#160;</td>
+                            <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                      answerLabels="Yes,No"
+                                      style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>  HIV exposure (if children less than 5 year)&#160;&#160;</td>
+                            <td>    <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerLabels="Yes,No"
+                                         style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Hypertension&#160;&#160;</td>
+                            <td>  <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                       answerLabels="Yes,No"
+                                       style="radio"/><br/>
+                            </td>
+                        </tr>
+                        <includeIf velocityTest="$patient.age &gt; 5">
                             <tr>
                                 <td>Leukemia (greater than 5 yrs)&#160;&#160;</td>
-                                        <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                 answerLabels="Yes,No"
-                                                 style="radio"/><br/>
-                                     </td>
+                                <td> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                          answerLabels="Yes,No"
+                                          style="radio"/><br/>
+                                </td>
                             </tr>
-                            </includeIf>
-                            <tr>
-                                <td> Hemoglobinopathies&#160;&#160;</td>
-                                   <td>    <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                           answerLabels="Yes,No"
-                                            style="radio"/><br/>
-                                    </td>
-                            </tr>
-                        </table>
-                    </div>
+                        </includeIf>
+                        <tr>
+                            <td> Hemoglobinopathies&#160;&#160;</td>
+                            <td>    <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerLabels="Yes,No"
+                                         style="radio"/><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </tr>
         </fieldset>
@@ -1154,12 +1226,14 @@
                 <tr>
                     <td>Blood pressure ( systolic / diastolic ) &#160;&#160;&#160;&#160;&#160;&#160;&#160;
                         <obs conceptId="5086" id="blood-pressure"/>
-                        <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="blood-pressure-dont-know" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Don't Know"
                              style="radio"/>
 
                     </td>
                 </tr>
+
+
                 <tr>
                     <td>Supplemental oxygen without mechanical ventilation&#160;&#160; </td>
                     <td><obs conceptId="165864" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -1269,18 +1343,22 @@
                 <tr id="abnormal-lung-xray-findings-answer">
                     <td>mark below all that apply:&#160;&#160; </td>
 
-                    <td style=" display: flex;">
+                    <td>
                         <obs conceptId="160575AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerConceptId="160572AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabel="Health care setting"
                              style="checkbox"/>
-                        <br/>
+                    </td>
+                    <td>
                         <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Consolidation( dense,fluffy opacity)" style="checkbox" /><br/>
-                        <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Other infiltrate " style="checkbox" /><br/>
+                             answerLabel="Consolidation( dense,fluffy opacity)" style="checkbox" />
+                    </td>   <td>
+                    <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                         answerLabel="Other infiltrate " style="checkbox" />   </td>
+                    <td>
                         <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Pleural fluid" style="checkbox" /><br/>
+                             answerLabel="Pleural fluid" style="checkbox" /></td>
+                    <td>
                         <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
                              answerLabel="Other,Specify" style="checkbox" /><br/>
                         <obs conceptId="165230"/>
@@ -1319,26 +1397,14 @@
                     </td>
                 </tr>
                 <tr id="patient-visit-facility-in-14-days-answer">
-                    <td>Contact setting(check all that apply):&#160;&#160; </td>
-
-                    <td style=" display: flex;">
-                        <obs conceptId="160575AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerConceptId="160572AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabel="Health care setting"
-                             style="checkbox"/>
-                        <br/>
-                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="113316"
-                                 answerLabel="Health care setting" style="checkbox" /><br/>
-                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
-                                 answerLabel="Family setting " style="checkbox" /><br/>
-                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="158843"
-                                 answerLabel="Work place" style="checkbox" /><br/>
-                            <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
-                                 answerLabel="Work place" style="checkbox" /><br/>
-                        <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
-                             answerLabel="Other,Specify" style="checkbox" /><br/>
-                        <obs conceptId="165230"/>
-                    </td>
+                    <td>Contact setting(check all that apply) &#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+                    <td>
+                        <obs id="health-care-setting" conceptId="161010" answerLabel="Health care setting" answerConceptId="117163" style="checkbox" />
+                        <obs id="family-setting" conceptId="161010" answerLabel="Family setting" answerConceptId="163575" style="checkbox" />
+                        <obs id="work-place" conceptId="161010" answerLabel="Work place" answerConceptId="164406" style="checkbox" />
+                        <obs id="patient-visit-unknown" conceptId="161010" answerLabel="Unknown" answerConceptId="1067" style="checkbox" />
+                        <obs id="patient-visit-other" conceptId="161010" answerLabel="Other Specify" answerConceptId="5622" style="checkbox" />
+                        <obs id="patient-visit-other-other-textField" conceptId="165230"/></td>
                 </tr>
                 <tr id="patient-visit-facility-in-14-days-location">
                     <td>Location / city / country for exposure: &#160;&#160;&#160;&#160;&#160;&#160;&#160;
