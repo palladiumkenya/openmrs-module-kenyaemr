@@ -96,15 +96,59 @@
             jq('#influenza-antivirals-during-admission :input[type=radio]').change(onInfluenzaAntiviralsDuringAdmission);
             jq('#antibiotics-preceding-admission :input[type=radio]').change(onAntibioticsPrecedingAdmission);
             jq('#antibiotics-during-admission :input[type=radio]').change(onAntibioticsDuringAdmission);
+            jq('#blood-pressure-dont-know :input[type=radio]').change(onBloodPressureDontKnowChange);
             jq('#baseline-frailty :input[type=radio]').change(onBaselineFrailty);
             jq('#covid-vaccine-dose-received :input[type=radio]').change(onCovid19QuestionsChange);
+            getField('oxygen.value').change(oxygenValuedChange);
+            getField('respiratory.value').val(respiratoryValuedChange);
+            getField('muac.value').change(muacValuedChange);
+
+             // get the latest observation value for concept Marital status
+            var maritalStatus= "<lookup expression='fn.latestObs(1054).getValueCoded()' />";
+            var maritalStatusReg = maritalStatus.replace(/[^\d]/g, '');
+            jq("#marital-status input").prop("checked", false); // set all statuses to unchecked
+            if (maritalStatusReg == 1523) {
+              jq("#marital-status input[value='1523']").prop("checked", true);
+            } else if (maritalStatusReg == 1056) {
+              jq("#marital-status input[value='1056']").prop("checked", true);
+            } else if (maritalStatusReg == 1057) {
+              jq("#marital-status input[value='1057']").prop("checked", true);
+            } else if (maritalStatusReg == 1058) {
+              jq("#marital-status input[value='1058']").prop("checked", true);
+            } else if (maritalStatusReg == 1060) {
+              jq("#marital-status input[value='1060']").prop("checked", true);
+            } else if (maritalStatusReg == 5555) {
+              jq("#marital-status input[value='5555']").prop("checked", true);
+            } else if (maritalStatusReg == 135704) {
+              jq("#marital-status input[value='135704']").prop("checked", true);
+            } else if (maritalStatusReg == 5622) {
+              jq("#marital-status input[value='5622']").prop("checked", true);
+            }
+            // get the latest observation value for concept Education level
+            var educationLevel= "<lookup expression='fn.latestObs(1712).getValueCoded()' />";
+            var educationLevelRegex = educationLevel.replace(/[^\d]/g, '');
+            jq("#education-level input").prop("checked", false); // set all statuses to unchecked
+            if (educationLevelRegex == 1523) {
+              jq("#education-level input[value='1523']").prop("checked", true);
+            } else if (educationLevelRegex == 160294) {
+              jq("#education-level input[value='160294']").prop("checked", true);
+            } else if (educationLevelRegex == 1713) {
+              jq("#education-level input[value='1713']").prop("checked", true);
+            } else if (educationLevelRegex == 1714) {
+              jq("#education-level input[value='1714']").prop("checked", true);
+            } else if (educationLevelRegex == 160292) {
+              jq("#education-level input[value='160292']").prop("checked", true);
+            }
             heightChange();
             respiratoryChange();
             weightChange();
             temperatureChange();
             muacChange();
-
+            oxygenValuedChange();
+            respiratoryValuedChange();
             muacValuedChange();
+
+
 
             oxygenSaturationChange();
             bloodPressureOnchange();
@@ -116,39 +160,37 @@
 
         });
 
+        function oxygenValuedChange() {
+          if (getValue('oxygen.value') == "") {
+            jq('#oxygen-not-taken :input').prop('disabled', false);
+            jq('#oxygen-not-taken :input').parent().css('color', '');
 
-
-   function muacValuedChange() {
-            var display = '';
-            var temp = parseFloat(getValue('muac.value'));
-            if (!isNaN(temp) &amp;&amp; !isNaN(temp)) {
-                if ( temp &gt; 3) {
-                     jq('#muac-not-taken').hide();
-                }
-                else {
-                    jq('#muac-not-taken').show();
-                }
-            }
-
+          } else {
+            jq('#oxygen-not-taken :input').prop('disabled', true);
+            jq('#oxygen-not-taken :input').parent().css('color', '#ccc');
+          }
         }
 
-<!--function muacValuedChange() {-->
-<!--  if (getValue('muac.value') == "") {-->
-<!--    jq('#muac-not-taken :input').prop('disabled', false);-->
+        function respiratoryValuedChange() {
+          if (getValue('respiratory.value') == "") {
+            jq('#respiratory-rate :input').prop('disabled', false);
+            jq('#respiratory-rate :input').parent().css('color', '');
 
-<!--  } else {-->
-<!--    jq('#muac-not-taken :input').prop('disabled', true);-->
+          } else {
+            jq('#respiratory-rate :input').prop('disabled', true);
+            jq('#respiratory-rate :input').parent().css('color', '#ccc');
+          }
+        }
+       function muacValuedChange() {
+          if (getValue('muac.value') == "" ) {
+            jq('#muac-not-taken :input').prop('disabled', false);
+            jq('#muac-not-taken :input').parent().css('color', '');
 
-<!--  }-->
-
-<!--	if (getValue('muac.value') == "") {-->
-<!--					jq('#muac-not-taken :input').prop('disabled', true);-->
-<!--				}-->
-<!--				else {-->
-<!--					jq('#muac-not-takene :input').prop('disabled', false);}-->
-
-
-
+          } else {
+            jq('#muac-not-taken :input').prop('disabled', true);
+            jq('#muac-not-taken :input').parent().css('color', '#ccc');
+          }
+        }
 
         function weightChange(){
               var weightKg = "<lookup expression="fn.latestObs(5089).valueNumeric"/>"
@@ -161,6 +203,7 @@
                   jq('#weight-not-taken').hide();
                 }
           }
+
 
 
           function temperatureChange(){
@@ -182,10 +225,12 @@
              var bloodSaturationM = "<lookup expression="fn.latestObs(5086).valueNumeric"/>"
 
               if (isNaN(bloodSaturationM) || bloodSaturationM == '') {
-
+                  jq('#blood-pressure-dont-know').show();
                 }
                else {
                    getField('blood-pressure.value').val(bloodSaturationM);
+                   jq('#blood-pressure-dont-know').hide();
+
 
                 }
           }
@@ -241,9 +286,6 @@
         }
 
 
-
-
-
         function onAbnormalLungXrayChange() {
 			var val = jq(this).val();
 			if(val == 1065){
@@ -251,6 +293,18 @@
 			} else{
                 jq('#abnormal-lung-xray-findings-answer').hide();
                 clearHiddenSections(jq('#abnormal-lung-xray-findings-answer'));
+			}
+		}
+        function onBloodPressureDontKnowChange() {
+			var val = jq(this).val();
+			if(val == 1067){
+			   jq('#blood-pressure :input').prop('disabled', true);
+               jq('#blood-pressure :input').parent().css('color', '#ccc');
+               clearHiddenSections(jq('#blood-pressure'));
+			} else{
+            jq('#blood-pressure :input').prop('disabled', false);
+            jq('#blood-pressure :input').parent().css('color', '');
+
 			}
 		}
 
@@ -789,7 +843,7 @@
 
                 <tr>
                     <td>Education level:&#160;&#160; </td>
-                    <td><obs conceptId="1712" id="pregnancy-status" labelText=" "  answerConceptIds="1523,160294,1713,1714,160292"
+                    <td><obs conceptId="1712" id="education-level" labelText=" "  answerConceptIds="1523,160294,1713,1714,160292"
                              answerLabels="Child,No formal education,Primary,Secondary,Tertiary"
                              style="radio"/>
                     </td>
@@ -1224,11 +1278,11 @@
             <legend>Vitals Questions</legend>
             <table>
                 <tr>
-                    <td>Blood pressure ( systolic / diastolic ) &#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                    <td>Blood pressure ( systolic / diastolic ) &#160;&#160;
                         <obs conceptId="5086" id="blood-pressure"/>
-                        <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="blood-pressure-dont-know" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <td id="blood-pressure-dont-know-question"> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="blood-pressure-dont-know" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Don't Know"
-                             style="radio"/>
+                             style="radio"/> </td>
 
                     </td>
                 </tr>
