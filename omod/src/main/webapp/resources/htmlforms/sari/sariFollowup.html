@@ -1,0 +1,168 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+-->
+<htmlform>
+
+    <script type="text/javascript">
+        var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
+        var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
+
+
+         jQuery(function () {
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+            var miscariageVal = getValue('miscariage.value');
+
+            var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
+            var pgender = "<lookup expression="patient.gender" />";
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+             jq('#patient-recover :input[type=radio]').change(onPatientRecoveryChange);
+             jq('#patient-visit-facility').hide();
+             jq('#patient-visit-facility').hide();
+             jq('#was-patient-hospitalized').hide();
+             jq('#admission-date').hide();
+             jq('#hospitalized-patient').hide();
+
+             jq('#patient-visit-facility :input[type=radio]').change(onPatientVisitFacilityChange);
+
+
+        });
+
+       function onPatientRecoveryChange() {
+			var val = jq(this).val();
+			if(val == 1066){
+				 jq('#patient-visit-facility').show();
+			} else{
+			 jq('#patient-visit-facility').hide();
+             clearHiddenSections(jq('#patient-visit-facility'));
+			}
+		}
+		function onPatientVisitFacilityChange() {
+			var val = jq(this).val();
+			if(val == 1065){
+                jq('#was-patient-hospitalized').show();
+                 jq('#admission-date').show();
+                 jq('#hospitalized-patient').show();
+			} else{
+                 jq('#was-patient-hospitalized').hide();
+                 jq('#admission-date').hide();
+                 jq('#hospitalized-patient').hide();
+             clearHiddenSections(jq('#was-patient-hospitalized'));
+             clearHiddenSections(jq('#admission-date'));
+             clearHiddenSections(jq('#hospitalized-patient'));
+			}
+		}
+         //Clear hidden sections
+    clearHiddenSections = function(parentObj) {
+        parentObj.find('input[type=radio]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=checkbox]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=text]').each(function() {
+            jq(this).val("");
+        });
+        parentObj.find('select').each(function() {
+            this.selectedIndex =0;
+        });
+    }
+
+    </script>
+
+    <div class="ke-form-header">
+        <table style="width: 100%">
+            <tr>
+                <td align="left">Date:
+                    <encounterDate id="encounter-date" showTime="true"/>
+                </td>
+                <td align="right">Location:
+                    <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="ke-form-content">
+
+
+        <fieldset id="sari-followUp">
+            <legend>For Outpatients</legend>
+            <table>
+                <tr>
+                    <td>Did the patient fully recover after the hospital visit&#160;&#160; </td>
+                    <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="patient-recover" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabels="Yes,No"
+                             style="radio"/>
+                    </td>
+                </tr>
+                <tr id="patient-visit-facility">
+                    <td>If no, did the patient visit any health facility?&#160;&#160; </td>
+                    <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="patient-visit" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabels="Yes,No"
+                             style="radio"/>
+                    </td>
+                </tr>
+                <tr id="hospitalized-patient">
+                    <td>If yes, was the patient hospitalised?&#160;&#160; </td>
+                    <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="patient-hospitalized" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabels="Yes,No"
+                             style="radio"/>
+                    </td>
+                </tr>
+                <tr id="admission-date">
+                    <td>If yes, Date of admission:</td>
+                    <td>
+                        <obs conceptId="1640" id="date-of-admission" allowFutureDates="false" />
+                    </td>
+                </tr>
+                <tr id="was-patient-hospitalized">
+                    <td>If yes, Where was the patient hospitalised? &#160;&#160;
+                        <obs conceptId="160632"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>County &#160;&#160;
+                        <obs conceptId="165230"/>
+                    </td>
+                    <td>Subcounty&#160;&#160;
+                        <obs conceptId="165230"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date of discharge</td>
+                    <td>
+                        <obs conceptId="1641" id="date-of-discharge" allowFutureDates="false" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>How many days hospitalized &#160;&#160;
+                        <obs conceptId="1647"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>What was the outcome?&#160;&#160; </td>
+                    <td><obs conceptId="160433" id="pregnancy-status" labelText=" "  answerConceptIds="160433,159,127750,160431"
+                             answerLabels="Discharge from hospital(alive),Death,Refused hospital treatment,Absconded"
+                             style="radio"/>
+                    </td>
+                </tr>
+
+            </table>
+        </fieldset>
+
+    </div>
+    <div class="ke-form-footer">
+        <submit/>
+    </div>
+
+</htmlform>

@@ -1,0 +1,113 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+-->
+<htmlform>
+
+    <script type="text/javascript">
+        var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
+        var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
+
+        jQuery(function () {
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+            var miscariageVal = getValue('miscariage.value');
+
+            var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
+            var pgender = "<lookup expression="patient.gender" />";
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+             jq('#onset-dont-know :input[type=radio]').change(onOnsetDontKnowChange);
+             jq('#number-of-days').hide();
+
+
+
+        });
+
+       function onOnsetDontKnowChange() {
+			var val = jq(this).val();
+			if(val == 1067){
+				 jq('#number-of-days').show();
+			} else{
+			 jq('#number-of-days').hide();
+             clearHiddenSections(jq('#number-of-days'));
+			}
+		}
+         //Clear hidden sections
+    clearHiddenSections = function(parentObj) {
+        parentObj.find('input[type=radio]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=checkbox]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=text]').each(function() {
+            jq(this).val("");
+        });
+        parentObj.find('select').each(function() {
+            this.selectedIndex =0;
+        });
+    }
+
+    </script>
+
+    <div class="ke-form-header">
+        <table style="width: 100%">
+            <tr>
+                <td align="left">Date:
+                    <encounterDate id="encounter-date" showTime="true"/>
+                </td>
+                <td align="right">Location:
+                    <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="ke-form-content">
+        <fieldset id="enrollment">
+            <legend>SARI Enrolment</legend>
+            <table>
+                <tr>
+                    <td>Date of first contact with health care system for this illness (prior to this hospitalisation)</td>
+                    <td>
+                        <obs conceptId="163260" id="first-contact-date" allowFutureDates="false" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date of hospital admission:</td>
+                    <td>
+                        <obs conceptId="1640" id="hospital-admission" allowFutureDates="false" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date of onset of current illness</td>
+                    <td>
+                        <obs conceptId="164428" id="lmp" allowFutureDates="false" />
+                        <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="onset-dont-know" labelText=" "  answerConceptIds="1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabels="Don't Know"
+                             style="radio"/>
+                    </td>
+
+                </tr>
+                <tr id = "number-of-days">
+                    <td>How many days ago (before hospital admission) did you start feeling sick(cough or fever)?&#160;&#160;&#160;&#160;
+                        <obs  conceptId="1731"/>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <enrollInProgram programId="a764eaae-5220-44d7-9149-359c30cbd05e"/>
+    </div>
+    <div class="ke-form-footer">
+        <submit/>
+    </div>
+
+</htmlform>
