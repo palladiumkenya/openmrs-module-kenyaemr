@@ -32,7 +32,8 @@ import java.util.Map;
 /**
  * Created by codehub on 06/07/15.
  */
-public class ViralLoadCalculation extends AbstractPatientCalculation {
+public class
+ViralLoadCalculation extends AbstractPatientCalculation {
 
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues,PatientCalculationContext context) {

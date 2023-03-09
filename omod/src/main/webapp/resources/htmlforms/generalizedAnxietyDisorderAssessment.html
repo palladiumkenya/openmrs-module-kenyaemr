@@ -1,0 +1,232 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+  -->
+<htmlform>
+    <script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
+    <script type="text/javascript">
+         jQuery(function($) {
+            //Defaults
+            var phq_answers=jq('#phq-table');
+//            clearHiddenSections([phq_answers]);
+             jq('#assessment-outcome input[type=radio]').attr("style", "pointer-events:none;");
+            jq("#phq-table").change(depressionAssessment);
+
+            beforeSubmit.push(function() {
+            });
+        });
+        //Morisky assessment
+        var depressionAssessment  = function () {
+            var val = jq(this).val();
+            const NOT_AT_ALL_CONCEPT_ID = 163733;
+            const SEVERAL_DAYS_CONCEPT_ID = 163734;
+            const MORE_THAN_HALF_CONCEPT_ID = 163735;
+            const NEARLY_EVERYDAY_CONCEPT_ID = 163736;
+
+            var assessmentRadios = jq('#phq-table').find('input[type=radio]');
+            var assessmentResponses = [];
+            //Fetch responses for the assessment questions
+            jq.each(assessmentRadios, function(){
+                //Push any responses to the respective assessmentResponses array
+                if (this.value == NOT_AT_ALL_CONCEPT_ID &amp;&amp; this.checked == true) {
+                    assessmentResponses.push(0);
+                }
+                if (this.value == SEVERAL_DAYS_CONCEPT_ID &amp;&amp; this.checked == true) {
+                    assessmentResponses.push(1);
+                }
+                if (this.value == MORE_THAN_HALF_CONCEPT_ID &amp;&amp; this.checked == true) {
+                    assessmentResponses.push(2);
+                }
+                if (this.value == NEARLY_EVERYDAY_CONCEPT_ID &amp;&amp; this.checked == true) {
+                    assessmentResponses.push(3);
+                }
+            });
+            //Compute total score
+            var totalScore = 0;
+            for(var i = 0; i &lt; assessmentResponses.length; i++){
+                totalScore += assessmentResponses[i]
+            }
+
+            //If no responses have been recorded then prompt since this assessment is mandatory
+            if(totalScore &lt; 5) {
+                    jq("#assessment-outcome input[value=1115]").prop("checked", true);
+
+                }
+                if(totalScore &gt; 4 &amp;&amp; totalScore &lt; 10) {
+                    jq("#assessment-outcome input[value=157790]").prop("checked", true);
+
+                }
+                if(totalScore &gt; 9 &amp;&amp; totalScore &lt; 15) {
+                    jq("#assessment-outcome input[value=134011]").prop("checked", true);
+
+                }
+                if(totalScore &gt; 14) {
+                    jq("#assessment-outcome input[value=134017]").prop("checked", true);
+
+                }
+
+
+        }
+
+        clearHiddenSections = function(parentObj) {
+            for(var i=0; i &lt; parentObj.length; i++){
+                parentObj[i].find('input[type=radio]').each(function() {
+                    this.checked = false;
+                });
+                parentObj[i].find('input[type=radio]').each(function() {
+                    this.checked = false;
+                });
+                parentObj[i].find('input[type=text]').each(function() {
+                    this.val("");
+                });
+                parentObj[i].find('select').each(function() {
+                    this.selectedIndex =0;
+                });
+            }
+        }
+    </script>
+    <style>
+        .simple-table {
+            border: solid 1px #DDEEEE;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font: normal 13px Arial, sans-serif;
+        }
+
+        .simple-table thead th {
+            background-color: #DDEFEF;
+            border: solid 1px #DDEEEE;
+            color: #336B6B;
+            padding: 10px;
+            text-align: left;
+            text-shadow: 1px 1px 1px #fff;
+        }
+
+        .simple-table td {
+            border: solid 1px #DDEEEE;
+            color: #333;
+            padding: 10px;
+            text-shadow: 1px 1px 1px #fff;
+        }
+    </style>
+
+    <div class="ke-form-header">
+        <table width="100%">
+            <tr>
+                <td>Date: <encounterDate id="encounter-date" showTime="true" /></td>
+                <td>Location: <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete" /></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="ke-form-content">
+        <fieldset class="phq-screening">
+
+            <fieldset id="phq-assessment-tab">
+                <legend>
+                    <strong> Generalized Anxiety Disorder Assessment
+                    </strong>
+                </legend>
+                <table class="simple-table" id="phq-table">
+                    <tr>
+                        <td></td>
+                        <td> Over the last 2 weeks, how often have you been bothered by any of the following problems?</td>
+                        <td> Not at all </td>
+                        <td> Several days </td>
+                        <td> More than half the day </td>
+                        <td> Nearly every day </td>
+
+                    </tr>
+                    <tr>
+                        <td>1.</td>
+                        <td>Feeling nervous, anxious or <br/> on edge</td>
+                        <td><input type="radio" name="question-1" class="question-1" value="163733"/></td>
+                        <td><input type="radio" name="question-1" class="question-1" value="163734"/></td>
+                        <td><input type="radio" name="question-1" class="question-1" value="163735"/></td>
+                        <td><input type="radio" name="question-1" class="question-1" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>2.</td>
+                        <td>Not being able to stop or <br/> control worrying</td>
+                        <td><input type="radio" name="question-2" class="question-2" value="163733"/></td>
+                        <td><input type="radio" name="question-2" class="question-2" value="163734"/></td>
+                        <td><input type="radio" name="question-2" class="question-2" value="163735"/></td>
+                        <td><input type="radio" name="question-2" class="question-2" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>3.</td>
+                        <td>Worrying too much about <br/> different things</td>
+                        <td><input type="radio" name="question-3" class="question-3" value="163733"/></td>
+                        <td><input type="radio" name="question-3" class="question-3" value="163734"/></td>
+                        <td><input type="radio" name="question-3" class="question-3" value="163735"/></td>
+                        <td><input type="radio" name="question-3" class="question-3" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>4.</td>
+                        <td>Trouble Relaxing</td>
+                        <td><input type="radio" name="question-4" class="question-4" value="163733"/></td>
+                        <td><input type="radio" name="question-4" class="question-4" value="163734"/></td>
+                        <td><input type="radio" name="question-4" class="question-4" value="163735"/></td>
+                        <td><input type="radio" name="question-4" class="question-4" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>5.</td>
+                        <td>Being so restless that it is <br/> hard to sit still</td>
+                        <td><input type="radio" name="question-5" class="question-5" value="163733"/></td>
+                        <td><input type="radio" name="question-5" class="question-5" value="163734"/></td>
+                        <td><input type="radio" name="question-5" class="question-5" value="163735"/></td>
+                        <td><input type="radio" name="question-5" class="question-5" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>6.</td>
+                        <td>Feeling bad about yourself, or that you are a failure, <br/> or that you have let yourself or your family down </td>
+                        <td><input type="radio" name="question-6" class="question-6" value="163733"/></td>
+                        <td><input type="radio" name="question-6" class="question-6" value="163734"/></td>
+                        <td><input type="radio" name="question-6" class="question-6" value="163735"/></td>
+                        <td><input type="radio" name="question-6" class="question-6" value="163736"/></td>
+                    </tr>
+                    <tr>
+                        <td>7.</td>
+                        <td>Feeling afraid as if <br/> something awful might <br/> happen</td>
+                        <td><input type="radio" name="question-7" class="question-7" value="163733"/></td>
+                        <td><input type="radio" name="question-7" class="question-7" value="163734"/></td>
+                        <td><input type="radio" name="question-7" class="question-7" value="163735"/></td>
+                        <td><input type="radio" name="question-7" class="question-7" value="163736"/></td>
+                    </tr>
+                </table>
+                <br /><hr/><br />
+            </fieldset>
+            <fieldset id="phq-assessment-outcome">
+                <legend>
+                    <strong> Anxiety Assessment Score </strong>
+                </legend>
+                <table class="simple-table">
+                    <tr>
+                        <td>GAD 7 Rating:</td>
+                        <td>
+                            <obs
+                                    conceptId="165110"
+                                    answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,157790AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,134011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,134017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                    answerLabels="Minimal Anxiety,Mild Anxiety,Moderate Anxiety,Severe Anxiety"
+                                    style="radio" id="assessment-outcome"
+                            />
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </fieldset>
+    </div>
+    <div class="ke-form-footer">
+        <submit />
+    </div>
+
+</htmlform>
