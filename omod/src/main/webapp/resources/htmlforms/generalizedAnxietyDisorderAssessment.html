@@ -16,65 +16,68 @@
     <script type="text/javascript">
          jQuery(function($) {
             //Defaults
-            var phq_answers=jq('#phq-table');
+            var phq_answers=jq('#anxiety-group');
 //            clearHiddenSections([phq_answers]);
              jq('#assessment-outcome input[type=radio]').attr("style", "pointer-events:none;");
-            jq("#phq-table").change(depressionAssessment);
-
+            jq("#anxiety-group").change(anxietyAssessment);
             beforeSubmit.push(function() {
             });
         });
-        //Morisky assessment
-        var depressionAssessment  = function () {
-            var val = jq(this).val();
-            const NOT_AT_ALL_CONCEPT_ID = 163733;
-            const SEVERAL_DAYS_CONCEPT_ID = 163734;
-            const MORE_THAN_HALF_CONCEPT_ID = 163735;
-            const NEARLY_EVERYDAY_CONCEPT_ID = 163736;
 
-            var assessmentRadios = jq('#phq-table').find('input[type=radio]');
+
+        var anxietyAssessment  = function () {
+            var val = jq(this).val();
+            const NOT_AT_ALL = 160215;
+            const SEVERAL_DAYS = 167000;
+            const MORE_THAN_HALF = 167001;
+            const NEARLY_EVERYDAY = 167002;
+            $('tr').each(function() {
+              $(this).find('input[type="radio"]').click(function() {
+                $(this).parents('tr').find('input[type="radio"]').not(this).prop('checked', false);
+              });
+            });
+
+            var assessmentRadios = jq('#anxiety-group').find('input[type=radio]');
             var assessmentResponses = [];
             //Fetch responses for the assessment questions
             jq.each(assessmentRadios, function(){
                 //Push any responses to the respective assessmentResponses array
-                if (this.value == NOT_AT_ALL_CONCEPT_ID &amp;&amp; this.checked == true) {
+                if (this.value == NOT_AT_ALL &amp;&amp; this.checked == true) {
                     assessmentResponses.push(0);
                 }
-                if (this.value == SEVERAL_DAYS_CONCEPT_ID &amp;&amp; this.checked == true) {
+                if (this.value == SEVERAL_DAYS &amp;&amp; this.checked == true) {
                     assessmentResponses.push(1);
                 }
-                if (this.value == MORE_THAN_HALF_CONCEPT_ID &amp;&amp; this.checked == true) {
+                if (this.value == MORE_THAN_HALF &amp;&amp; this.checked == true) {
                     assessmentResponses.push(2);
                 }
-                if (this.value == NEARLY_EVERYDAY_CONCEPT_ID &amp;&amp; this.checked == true) {
+                if (this.value == NEARLY_EVERYDAY &amp;&amp; this.checked == true) {
                     assessmentResponses.push(3);
                 }
             });
             //Compute total score
+
             var totalScore = 0;
             for(var i = 0; i &lt; assessmentResponses.length; i++){
                 totalScore += assessmentResponses[i]
             }
-
             //If no responses have been recorded then prompt since this assessment is mandatory
             if(totalScore &lt; 5) {
-                    jq("#assessment-outcome input[value=1115]").prop("checked", true);
+                    jq("#assessment-outcome input[value=159410]").prop("checked", true);
 
                 }
                 if(totalScore &gt; 4 &amp;&amp; totalScore &lt; 10) {
-                    jq("#assessment-outcome input[value=157790]").prop("checked", true);
+                    jq("#assessment-outcome input[value=1498]").prop("checked", true);
 
                 }
                 if(totalScore &gt; 9 &amp;&amp; totalScore &lt; 15) {
-                    jq("#assessment-outcome input[value=134011]").prop("checked", true);
+                    jq("#assessment-outcome input[value=1499]").prop("checked", true);
 
                 }
                 if(totalScore &gt; 14) {
-                    jq("#assessment-outcome input[value=134017]").prop("checked", true);
+                    jq("#assessment-outcome input[value=1500]").prop("checked", true);
 
                 }
-
-
         }
 
         clearHiddenSections = function(parentObj) {
@@ -129,78 +132,80 @@
     </div>
 
     <div class="ke-form-content">
-        <fieldset class="phq-screening">
+        <fieldset>
 
-            <fieldset id="phq-assessment-tab">
+            <fieldset>
                 <legend>
                     <strong> Generalized Anxiety Disorder Assessment
                     </strong>
                 </legend>
-                <table class="simple-table" id="phq-table">
+                <table class="simple-table" id="anxiety-group">
                     <tr>
                         <td></td>
                         <td> Over the last 2 weeks, how often have you been bothered by any of the following problems?</td>
                         <td> Not at all </td>
                         <td> Several days </td>
-                        <td> More than half the day </td>
+                        <td> More than half the days </td>
                         <td> Nearly every day </td>
 
                     </tr>
                     <tr>
                         <td>1.</td>
-                        <td>Feeling nervous, anxious or <br/> on edge</td>
-                        <td><input type="radio" name="question-1" class="question-1" value="163733"/></td>
-                        <td><input type="radio" name="question-1" class="question-1" value="163734"/></td>
-                        <td><input type="radio" name="question-1" class="question-1" value="163735"/></td>
-                        <td><input type="radio" name="question-1" class="question-1" value="163736"/></td>
+                        <td>Feeling nervous, anxious or<br/> on edge</td>
+                        <td><obs conceptId="167003"  answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                        <td><obs conceptId="167003" answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                        <td><obs conceptId="167003"  answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                        <td><obs conceptId="167003"  answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
+
                     <tr>
                         <td>2.</td>
                         <td>Not being able to stop or <br/> control worrying</td>
-                        <td><input type="radio" name="question-2" class="question-2" value="163733"/></td>
-                        <td><input type="radio" name="question-2" class="question-2" value="163734"/></td>
-                        <td><input type="radio" name="question-2" class="question-2" value="163735"/></td>
-                        <td><input type="radio" name="question-2" class="question-2" value="163736"/></td>
+                            <td><obs conceptId="167005" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167005" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="167005" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167005" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
                     <tr>
                         <td>3.</td>
                         <td>Worrying too much about <br/> different things</td>
-                        <td><input type="radio" name="question-3" class="question-3" value="163733"/></td>
-                        <td><input type="radio" name="question-3" class="question-3" value="163734"/></td>
-                        <td><input type="radio" name="question-3" class="question-3" value="163735"/></td>
-                        <td><input type="radio" name="question-3" class="question-3" value="163736"/></td>
+                            <td><obs conceptId="166482" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="166482" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="166482" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="166482" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
                     <tr>
                         <td>4.</td>
                         <td>Trouble Relaxing</td>
-                        <td><input type="radio" name="question-4" class="question-4" value="163733"/></td>
-                        <td><input type="radio" name="question-4" class="question-4" value="163734"/></td>
-                        <td><input type="radio" name="question-4" class="question-4" value="163735"/></td>
-                        <td><input type="radio" name="question-4" class="question-4" value="163736"/></td>
+                            <td><obs conceptId="167064" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167064" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="167064" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167064" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
                     <tr>
                         <td>5.</td>
                         <td>Being so restless that it is <br/> hard to sit still</td>
-                        <td><input type="radio" name="question-5" class="question-5" value="163733"/></td>
-                        <td><input type="radio" name="question-5" class="question-5" value="163734"/></td>
-                        <td><input type="radio" name="question-5" class="question-5" value="163735"/></td>
-                        <td><input type="radio" name="question-5" class="question-5" value="163736"/></td>
+                            <td><obs conceptId="167065" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167065" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="167065" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167065" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
                     <tr>
                         <td>6.</td>
                         <td>Feeling bad about yourself, or that you are a failure, <br/> or that you have let yourself or your family down </td>
-                        <td><input type="radio" name="question-6" class="question-6" value="163733"/></td>
-                        <td><input type="radio" name="question-6" class="question-6" value="163734"/></td>
-                        <td><input type="radio" name="question-6" class="question-6" value="163735"/></td>
-                        <td><input type="radio" name="question-6" class="question-6" value="163736"/></td>
+                            <td><obs conceptId="167066" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167066" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="167066" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167066" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
+
                     </tr>
                     <tr>
                         <td>7.</td>
                         <td>Feeling afraid as if <br/> something awful might <br/> happen</td>
-                        <td><input type="radio" name="question-7" class="question-7" value="163733"/></td>
-                        <td><input type="radio" name="question-7" class="question-7" value="163734"/></td>
-                        <td><input type="radio" name="question-7" class="question-7" value="163735"/></td>
-                        <td><input type="radio" name="question-7" class="question-7" value="163736"/></td>
+                            <td><obs conceptId="167067" labelText=" " answerConceptIds="160215" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167067" labelText=" " answerConceptIds="167000" style="radio"  showLabel="false"/></td>
+                            <td><obs conceptId="167067" labelText=" " answerConceptIds="167001" style="radio" showLabel="false"/></td>
+                            <td><obs conceptId="167067" labelText=" " answerConceptIds="167002" style="radio" showLabel="false"/></td>
                     </tr>
                 </table>
                 <br /><hr/><br />
@@ -210,17 +215,17 @@
                     <strong> Anxiety Assessment Score </strong>
                 </legend>
                 <table class="simple-table">
-                    <tr>
+<!--                    <tr>-->
                         <td>GAD 7 Rating:</td>
                         <td>
                             <obs
-                                    conceptId="165110"
-                                    answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,157790AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,134011AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,134017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                    conceptId="167267"
+                                    answerConceptIds="159410,1498,1499,1500"
                                     answerLabels="Minimal Anxiety,Mild Anxiety,Moderate Anxiety,Severe Anxiety"
                                     style="radio" id="assessment-outcome"
                             />
                         </td>
-                    </tr>
+<!--                    </tr>-->
                 </table>
             </fieldset>
         </fieldset>
