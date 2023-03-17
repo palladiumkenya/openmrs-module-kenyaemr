@@ -711,10 +711,13 @@ Green Card follow-up visit form
 <!--             Sari Temparature change-->
           function onTemperatureChange() {
             var display = '';
-            var tempValue = parseFloat(getValue('temp.value'));
-            if (!isNaN(tempValue) &amp;&amp; !isNaN(tempValue)) {
-                if ( tempValue &gt; 37 &amp;&amp; IS_SARI_SITE==true) {
-                     jq('#sari-screening').show();
+            var temp = parseFloat(getValue('tempInputeValue.value'));
+            if (!isNaN(temp) &amp;&amp; !isNaN(temp)) {
+                if ( temp &gt; 37 &amp;&amp; IS_SARI_SITE==true) {
+                    jq('#sari-screening').show();
+                    jq("#sari-fever-measured input[value=1065]").prop("checked", true);
+                    jq("#sari-presenting-cough input[value=1065]").prop("checked", true);
+                    jq("#sari-onset-symptoms input[value=1065]").prop("checked", true);
                 }
                 else {
                     jq('#sari-screening').hide();

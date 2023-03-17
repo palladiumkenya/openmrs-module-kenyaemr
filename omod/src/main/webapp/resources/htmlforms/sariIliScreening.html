@@ -38,6 +38,7 @@
         }
 
     </style>
+    <ifMode mode="EDIT">
     <script type="text/javascript">
 
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
@@ -72,17 +73,24 @@
             jq('#covid-vaccine-dose-one-date').hide();
             jq('#last-covid-vaccine-dose-date').hide();
             jq('#last-covid-vaccine-dose').hide();
+            jq('#passport-id-group').hide();
+            jq('#id-passport-number').hide();
+            jq('#vaccination-status-card').hide();
             jq('#least-one-dose-received').hide();
+            jq('#occupation-other').hide();
             jq('#specimen-collected :input[type=radio]').change(onSpecimenCollectedChange);
             jq('#sample-other-checkbox :input[type=checkbox]').change(sampleOtherChecked);
-            jq('#race-sample-other-checkbox :input[type=checkbox]').change(raceSampleOtherChecked);
             jq('#patient-visit-other :input[type=checkbox]').change(patientVisitOther);
             jq('#patient-visit-other-other-textField').hide();
             jq('#sample-other-textField').hide();
             jq('#sample-other-race').hide();
-
+            jq('#abnormal-lung-xray-specify').hide();
+            jq('#malaria-patient').hide();
             jq('#abnormal-lung-xray-findings-answer').hide();
             jq('#patient-traveled-in-14-days :input[type=radio]').change(onPatientTravelledChange);
+            jq('#race-sample :input[type=radio]').change(raceSample);
+            jq('#occupation :input[type=radio]').change(occupation);
+            jq('#abnormal-lung-xray-other :input[type=checkbox]').change(abnormalLungXrayOther);
             jq('#patient-visit-facility-in-14-days :input[type=radio]').change(onPatientFacilityChange);
             jq('#live-animal-market :input[type=radio]').change(onLiveAnimalMarketChange);
             jq('#abnormal-lung-xray-findings :input[type=radio]').change(onAbnormalLungXrayChange);
@@ -97,13 +105,16 @@
             jq('#antibiotics-preceding-admission :input[type=radio]').change(onAntibioticsPrecedingAdmission);
             jq('#antibiotics-during-admission :input[type=radio]').change(onAntibioticsDuringAdmission);
             jq('#blood-pressure-dont-know :input[type=radio]').change(onBloodPressureDontKnowChange);
+
+
             jq('#baseline-frailty :input[type=radio]').change(onBaselineFrailty);
             jq('#covid-vaccine-dose-received :input[type=radio]').change(onCovid19QuestionsChange);
+            jq('#malaria-test-result-answers :input[type=radio]').change(malariaTestResultAnswers);
             getField('oxygen.value').change(oxygenValuedChange);
-            getField('respiratory.value').val(respiratoryValuedChange);
             getField('muac.value').change(muacValuedChange);
+            getField('respiratory.value').change(respiratoryValuedChange);
 
-             // get the latest observation value for concept Marital status
+
             var maritalStatus= "<lookup expression='fn.latestObs(1054).getValueCoded()' />";
             var maritalStatusReg = maritalStatus.replace(/[^\d]/g, '');
             jq("#marital-status input").prop("checked", false); // set all statuses to unchecked
@@ -124,7 +135,7 @@
             } else if (maritalStatusReg == 5622) {
               jq("#marital-status input[value='5622']").prop("checked", true);
             }
-            // get the latest observation value for concept Education level
+
             var educationLevel= "<lookup expression='fn.latestObs(1712).getValueCoded()' />";
             var educationLevelRegex = educationLevel.replace(/[^\d]/g, '');
             jq("#education-level input").prop("checked", false); // set all statuses to unchecked
@@ -155,7 +166,6 @@
             var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
             var pgender = "<lookup expression="patient.gender" />";
             var pAge = parseInt('<lookup expression="patient.age"/>');
-
 
 
         });
@@ -262,7 +272,7 @@
           var respiratoryM = "<lookup expression="fn.latestObs(5242).valueNumeric"/>"
             if (isNaN(respiratoryM) || respiratoryM == '') {
                      jq('#respiratory-rate').show();
-                     jq('#respiratory-rate-display').hide();
+                     jq('#respiratory-display').show();
 
                 }
                 else {
@@ -307,6 +317,18 @@
 
 			}
 		}
+		function vitalQuestionFrailtyScore() {
+			var val = jq(this).val();
+			if(val == 1067){
+			   jq('#vital-question-frailty-score :input').prop('disabled', true);
+               jq('#vital-question-frailty-score :input').parent().css('color', '#ccc');
+               clearHiddenSections(jq('#vital-question-frailty-score'));
+			} else if(val != 1067) {
+            jq('#vital-question-frailty-score :input').prop('disabled', false);
+            jq('#vital-question-frailty-score :input').parent().css('color', '');
+
+			}
+		}
 
 		function onCovid19QuestionsChange() {
 			var val = jq(this).val();
@@ -320,31 +342,42 @@
                     jq('#last-covid-vaccine-dose-date').hide();
                     jq('#last-covid-vaccine-dose').hide();
                     jq('#least-one-dose-received').hide();
+                    jq('#passport-id-group').hide();
+                    jq('#id-passport-number').hide();
+                    jq('#vaccination-status-card').hide();
                     clearHiddenSections(jq('#least-one-dose-received'));
             } else if(val == 1067){
-                    jq('#last-covid-vaccine-dose').show();
+                    jq('#last-covid-vaccine-dose').hide();
                     jq('#covid-dose-one').hide();
                     jq('#covid-vaccine-dose-one-date').hide();
                     jq('#covid-vaccine-dose-two-date').hide();
                     jq('#covid-dose-two').hide();
+                     jq('#passport-id-group').show();
                     jq('#covid-vaccine-dose-three-date').hide();
                     jq('#covid-dose-three').hide();
-                       clearHiddenSections(jq('#least-one-dose-received'));
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+                    clearHiddenSections(jq('#least-one-dose-received'));
             } else if(val == 1182){
                     jq('#covid-dose-one').show();
                     jq('#covid-vaccine-dose-one-date').show();
                      jq('#least-one-dose-received').show();
                     jq('#covid-vaccine-dose-two-date').hide();
                     jq('#covid-dose-two').hide();
+                     jq('#passport-id-group').show();
                     jq('#covid-vaccine-dose-three-date').hide();
                     jq('#covid-dose-three').hide();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
             } else if(val == 1183){
                     jq('#covid-dose-one').show();
                      jq('#least-one-dose-received').show();
                     jq('#covid-vaccine-dose-one-date').show();
                     jq('#covid-vaccine-dose-two-date').show();
+                     jq('#passport-id-group').show();
                     jq('#covid-dose-two').show();
-
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
                     jq('#covid-vaccine-dose-three-date').hide();
                     jq('#covid-dose-three').hide();
             } else if(val == 1184){
@@ -353,19 +386,25 @@
                     jq('#covid-vaccine-dose-one-date').show();
                     jq('#covid-vaccine-dose-two-date').show();
                     jq('#covid-dose-two').show();
+                    jq('#passport-id-group').show();
                     jq('#covid-vaccine-dose-three-date').show();
                     jq('#covid-dose-three').show();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
 			} else{
                     jq('#covid-dose-one').hide();
                     jq('#covid-vaccine-dose-three-date').show();
                     jq('#covid-dose-three').show();
                     jq('#covid-vaccine-dose-two-date').show();
                     jq('#covid-dose-two').show();
+                     jq('#passport-id-group').show();
                     jq('#covid-vaccine-dose-one-date').show();
                     jq('#last-covid-vaccine-dose-date').show();
                     jq('#last-covid-vaccine-dose').show();
                     jq('#least-one-dose-received').show();
                     jq('#abnormal-lung-xray-findings-answer').hide();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
 
 			}
 		}
@@ -389,15 +428,7 @@
 			}
 		}
 
-		function raceSampleOtherChecked() {
-			var val = jq(this).val();
-		 if (this.checked == true) {
-                jq('#sample-other-race').show();
-			} else{
-                jq('#sample-other-race').hide();
-                clearHiddenSections(jq('#sample-other-race'));
-			}
-		}
+
 
 
 		function onInfluenzaAntiviralsBeforeAdmission() {
@@ -407,6 +438,16 @@
 			} else{
                 jq('#influenza-antivirals-date-before-admission').hide();
                 clearHiddenSections(jq('#influenza-antivirals-date-before-admission'));
+			}
+		}
+
+		function malariaTestResultAnswers() {
+			var val = jq(this).val();
+			if(val == 703){
+                jq('#malaria-patient').show();
+			} else{
+                jq('#malaria-patient').hide();
+                clearHiddenSections(jq('#malaria-patient'));
 			}
 		}
 		function onInfluenzaAntiviralsDuringAdmission() {
@@ -452,10 +493,13 @@
 			if(val == 1065){
                 jq('#covid-rtd-ag-date').show();
                 jq('#covid-rtd-ag-not-done').hide();
+                  jq('#final-rtd-result').show();
                  clearHiddenSections(jq('#covid-rtd-ag-not-done'));
 			} else{
                 jq('#covid-rtd-ag-date').hide();
                 jq('#covid-rtd-ag-not-done').show();
+                jq('#final-rtd-result').hide();
+                clearHiddenSections(jq('#final-rtd-result'));
                 clearHiddenSections(jq('#covid-rtd-ag-date'));
 
 			}
@@ -550,6 +594,35 @@
                 clearHiddenSections(jq('#patient-traveled-in-14-days-answer'));
 			}
 		}
+		function raceSample() {
+			var val = jq(this).val();
+			if(val == 5622){
+                jq('#sample-other-race').show();
+			} else{
+                jq('#sample-other-race').hide();
+                clearHiddenSections(jq('#sample-other-race'));
+			}
+		}
+		function occupation() {
+			var val = jq(this).val();
+			if(val == 5622){
+                jq('#occupation-other').show();
+			} else{
+                jq('#occupation-other').hide();
+                clearHiddenSections(jq('#occupation-other'));
+			}
+		}
+
+		function abnormalLungXrayOther() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+               jq('#abnormal-lung-xray-specify').show();
+			} else{
+                 jq('#abnormal-lung-xray-specify').hide();
+                clearHiddenSections(jq('#abnormal-lung-xray-specify'));
+			}
+		}
+
        function onMalariaTestedOnChange() {
 			var val = jq(this).val();
 			if(val == 1065){
@@ -588,7 +661,7 @@
     }
 
     </script>
-
+    </ifMode>
     <div class="ke-form-header">
         <table style="width: 100%">
             <tr>
@@ -624,15 +697,15 @@
 
                 <tr id="malaria-test-result">
                     <td>What was the test result?&#160;&#160; </td>
-                    <td><obs conceptId="166664" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Yes,No"
+                    <td><obs conceptId="166664" id="malaria-test-result-answers" answerConceptIds="703,664"
+                             answerLabels="Positive,Negative"
                              style="radio"/>
                     </td>
                 </tr>
 
-                <tr id="malaria-patient-treated" >
-                    <td>If test was positive, was the patient treated for Malaria?&#160;&#160; </td>
-                    <td><obs conceptId="165052" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                <tr id="malaria-patient" >
+                    <td>Was the patient treated for Malaria?&#160;&#160; </td>
+                    <td><obs conceptId="165052" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Yes,No"
                              style="radio"/>
                     </td>
@@ -818,18 +891,9 @@
             <table>
                 <tr>
                     <td>Race:&#160;&#160; </td>
-                    <td><obs conceptId="163153" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622"
+                    <td><obs conceptId="163153" id="race-sample" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622"
                              answerLabels="African,Asian,Caucasian,Other"
-                             style="radio"/>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <obs conceptId="167262" id="race-sample-other-checkbox" answerConceptId="165230"
-                             answerLabel="Other Specify" style="checkbox" />
-                        <obs id="sample-other-race" conceptId="165230"/>
-
+                             style="radio"/>  <obs id="sample-other-race" conceptId="165230"/>
                     </td>
                 </tr>
                 <tr >
@@ -866,9 +930,9 @@
                         <obs conceptId="162078" id="lmp" allowFutureDates="false" />
                     </td>
                 </tr>
-                <tr >
+                <tr id="final-rtd-result" >
                     <td>Final RDT results&#160;&#160; </td>
-                    <td><obs conceptId="166638" id="pregnancy-status" labelText=" "  answerConceptIds="703,664,163611,1138"
+                    <td><obs conceptId="166638" id="final-rtd-result-answers" labelText=" "  answerConceptIds="703,664,163611,1138"
                              answerLabels="Positive,Negative,Invalid,Indeterminate"
                              style="radio"/>
                     </td>
@@ -1099,20 +1163,22 @@
                         <obs conceptId="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="antibiotics-date-during-admission" allowFutureDates="false" />
                     </td>
                 </tr>
+               <includeIf velocityTest="$patient.age &gt; 49">
                 <tr>
-                    <td>What is the baseline frailty score of the patient(only for all patients 50 years and older), prior to onset of the current illness?  Category:&#160;&#160; </td>
+                    <td>What is the baseline frailty score of the patient, prior to onset of the current illness?  Category:&#160;&#160; </td>
                     <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="baseline-frailty" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Yes,No, Don't Know"
                              style="radio"/>
                     </td>
                 </tr>
+
                 <tr id="date-baseline-frailty" >
                     <td>Starting Date</td>
                     <td>
                         <obs conceptId="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="baseline-date-frailty" allowFutureDates="false" />
                     </td>
                 </tr>
-
+               </includeIf>
             </table>
         </fieldset>
         <fieldset id="vaccination-of-influenza">
@@ -1247,78 +1313,77 @@
                              style="radio"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>Vaccination status confirmed through vaccination card / SMS&#160;&#160; </td>
-                    <td><obs conceptId="163340" id="pregnancy-status" labelText=" "  answerConceptIds="1850,162969,1066"
+                <tr id="vaccination-status-card">
+                    <td>Vaccination status confirmed through vaccination card / SMS </td>
+                    <td><obs conceptId="163340" id="vaccination-status-card-questions" labelText=" "  answerConceptIds="1850,162969,1066"
                              answerLabels="Card,SMS,No"
                              style="radio"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>ID/ Passport number used to register for vaccination&#160;&#160; </td>
-                    <td>
-                        <obs conceptId="1646" id="pregnancy-status" labelText=" "  answerConceptIds="163084,166101,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="ID,PASSPORT,No"
+                <tr id="id-passport-number">
+                    <td>ID/ Passport number used to register for vaccination </td>
+                    <td><obs conceptId="163340" id="id-passport-number-questions" labelText=" "  answerConceptIds="163084,166101,1066"
+                             answerLabels="ID,Passport,No"
                              style="radio"/>
                     </td>
                 </tr>
-                <tr>
+                <tr id="passport-id-group">
                     <td>ID Number: &#160;&#160;&#160;&#160;&#160;&#160;&#160;
                         <obs conceptId="163084"/>
                     </td>
-                </tr>
-                <tr>
                     <td>Passport Number: &#160;&#160;&#160;&#160;&#160;&#160;&#160;
                         <obs conceptId="165230"/>
                     </td>
                 </tr>
+
             </table>
         </fieldset>
         <fieldset id="vitals-questions">
             <legend>Vitals Questions</legend>
             <table>
                 <tr>
-                    <td>Blood pressure ( systolic / diastolic ) &#160;&#160;
-                        <obs conceptId="5086" id="blood-pressure"/>
-                        <td id="blood-pressure-dont-know-question"> <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="blood-pressure-dont-know" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                    <td>Blood pressure ( systolic / diastolic ) &#160;&#160;&#160;&#160;</td>
+                     <td>   <obs conceptId="5086" id="blood-pressure"/>
+                        <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="blood-pressure-dont-know" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Don't Know"
-                             style="radio"/> </td>
+                             style="radio"/>
 
                     </td>
                 </tr>
-
-
                 <tr>
                     <td>Supplemental oxygen without mechanical ventilation&#160;&#160; </td>
-                    <td><obs conceptId="165864" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Yes,No,Don't Know"
-                             style="radio"/>
+                    <td>
+                       <obs conceptId="165864" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                            answerLabels="Yes,No,Don't Know" style="radio"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Vasopressor support&#160;&#160; </td>
-                    <td><obs conceptId="165926" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Yes,No,Don't Know"
-                             style="radio"/>
+                    <td>
+                       <obs conceptId="165926" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                            answerLabels="Yes,No,Don't Know" style="radio"/>
                     </td>
                 </tr>
                 <tr>
                     <td>High dependence unit (at any time during hospitalisation)&#160;&#160; </td>
-                    <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="pregnancy-status" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Yes,No,Don't Know"
-                             style="radio"/>
+                    <td>
+                       <obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                            answerLabels="Yes,No,Don't Know" style="radio"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>What is the frailty score of the patient at discharge (only for all patients 50 years and older)? Category &#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                        <obs conceptId="165230"/>
-                        <obs conceptId="161140" id="pregnancy-status" labelText=" "  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerLabels="Don't Know"
-                             style="radio"/>
+                <includeIf velocityTest="$patient.age &gt; 49">
 
-                    </td>
+               <tr>
+                   <td>What is the frailty score of the patient at discharge? Category &#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+                    <td>  <obs id="vital-question-frailty-score" conceptId="165230"/>
+                       <obs conceptId="161140" id="vital-question-frailty-score-no"  answerConceptIds="1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                       answerLabels="Don't Know"
+                        style="radio"/>
+                  </td>
                 </tr>
+                </includeIf>
             </table>
+
         </fieldset>
         <fieldset id="additional-corona-questions">
             <legend>Additional Novel Corona Questions</legend>
@@ -1412,10 +1477,11 @@
                     <td>
                         <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabel="Pleural fluid" style="checkbox" /></td>
+
                     <td>
-                        <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
-                             answerLabel="Other,Specify" style="checkbox" /><br/>
-                        <obs conceptId="165230"/>
+                        <obs id="abnormal-lung-xray-other" conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="122496"
+                             answerLabel="Other" style="checkbox" />
+                        <obs id="abnormal-lung-xray-specify"  conceptId="165230"/>
                     </td>
                 </tr>
 
@@ -1426,9 +1492,9 @@
             <table>
                 <tr>
                     <td>Occupation&#160;&#160; </td>
-                    <td><obs conceptId="1542" id="pregnancy-status" labelText=" "  answerConceptIds="159465,1555,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,165796,5622"
+                    <td><obs conceptId="1542" id="occupation" labelText=" "  answerConceptIds="159465,1555,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,165796,5622"
                              answerLabels="Student,Health care worker,Working with animals,Health laboratory worker,Other(specify)"
-                             style="radio"/>
+                             style="radio"/> <obs id="occupation-other" conceptId="165230"/>
                     </td>
                 </tr>
                 <tr>

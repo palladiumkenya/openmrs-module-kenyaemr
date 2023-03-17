@@ -12,7 +12,7 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
 -->
 <htmlform>
-
+    <ifMode mode="EDIT">
     <script type="text/javascript">
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
@@ -33,6 +33,19 @@
             var malnutritionStatus = "<lookup expression="fn.latestObs(115122).getValueCoded()"/>";
             var dehydrationStatus = "<lookup expression="fn.latestObs(1497).getValueCoded()"/>";
             var meningitisEncephalitisStatus = "<lookup expression="fn.latestObs(118656).getValueCoded()"/>";
+            var recentLMP = "<lookup expression="fn.latestObs(1427).getValueDatetime()"/>";
+            console.log("=======================");
+            console.log(anaemiaStatus);
+            console.log(pneumoniaBronchopneumoniaStatus);
+            console.log(malariaStatus);
+            console.log(covidStatus);
+            console.log(hypertensionStatus);
+            console.log(gastroenteritisStatus);
+            console.log(asthmaExacerbationStatus);
+            console.log(malnutritionStatus);
+            console.log(PATIENT_IS_ENROLLED_HIV);
+<!--             var educationLevel= "<lookup expression='fn.latestObs(1712).getValueCoded()' />";-->
+<!--            var educationLevelRegex = educationLevel.replace(/[^\d]/g, '');-->
 
              jq('#final_outcome_facility_name').hide();
              jq('#pregnancy_status_discharge').hide();
@@ -53,7 +66,6 @@
             jq('#malaria-testing :input[type=radio]').change(onMalariaTestingChange);
             jq('#malaria-results-done :input[type=radio]').change(onMalariaResultsDoneChange);
             jq('#icu-acute-unit :input[type=radio]').change(onIcuAcuteUnitChange);
-
             if(anaemiaStatus == 1065 || anaemiaStatus == 1066){
                 jq("#anaemia input").prop("checked", true);
             }else{
@@ -108,14 +120,24 @@
 
            if(PATIENT_PREGNANT == 'true' ) {
                   jq('#pregnancy_status_discharge').show();
-                    jq('#pregnancy_status_outcome').show();
+                  jq('#pregnancy_status_outcome').show();
              }else{
                   jq('#pregnancy_status_discharge').hide();
                  jq('#pregnancy_status_outcome').hide();
              }
 
-
-
+            var pregnancyLevel= "<lookup expression='fn.latestObs(5272).getValueCoded()' />";
+            var pregnancyLevelRegex = pregnancyLevel.replace(/[^\d]/g, '');
+            jq("#pregnancy-status-discharge input").prop("checked", false); // set all statuses to unchecked
+            if (pregnancyLevelRegex == 1434) {
+              jq("#pregnancy-status-discharge input[value='1434']").prop("checked", true);
+            }else if(pregnancyLevelRegex == 166634){
+                jq("#pregnancy-status-discharge input[value='166634']").prop("checked", true);
+            }else if(pregnancyLevelRegex == 1607){
+                jq("#pregnancy-status-discharge input[value='1607']").prop("checked", true);
+            }else if(pregnancyLevelRegex == 5622){
+                jq("#pregnancy-status-discharge input[value='5622']").prop("checked", true);
+             }
 
         });
 
@@ -241,7 +263,7 @@
     }
 
     </script>
-
+    </ifMode>
     <div class="ke-form-header">
         <table style="width: 100%">
             <tr>
@@ -321,7 +343,7 @@
             </tr>
             <tr id="hiv_test_results">
                 <td>What was the HIV test result?&#160;&#160; </td>
-                <td><obs conceptId="159427" id="hiv--test-result" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                <td><obs conceptId="159427" id="hiv-test-result" labelText=" "  answerConceptIds="703,664,1067"
                          answerLabels="Positive,Negative,Unknown"
                          style="radio"/>
                 </td>

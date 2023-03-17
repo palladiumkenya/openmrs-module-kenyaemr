@@ -13,6 +13,7 @@
 -->
 <htmlform>
     <script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
+
     <style>
 		.simple-table {
 			border: solid 1px #DDEEEE;
@@ -37,7 +38,10 @@
 			text-shadow: 1px 1px 1px #fff;
 		}
 	</style>
+    <ifMode mode="EDIT">
     <script type="text/javascript">
+         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
+         var PATIENT_ON_ART = GREENCARD_VELOCITY.split(",")[2].split(":")[1];
 		 var DATE_OF_LAST_VISIT = "<lookup expression="fn.latestObs(5096).getValueDatetime()"/>";
 		 var deliveryDateFormatted = moment(DATE_OF_LAST_VISIT, 'DD-MMM-YYYY').format('YYYY-MM-DD');
          var finalResultDateFormatted = moment(new Date(), 'DD-MMM-YYYY').format('YYYY-MM-DD');
@@ -53,12 +57,9 @@
             jq('#delivered-in-six-weeks').hide();
             jq('#visit-clinician-past-three-months :input[type=radio]').change(onChangeVisitClinician);
             jq('#how-many-times').hide();
-            jq('#dueDateData').hide();
             jq('#aa').hide();
             jq('#bb').hide();
             jq('#cc').hide();
-
-
             jq('#term-gestation-week').hide();
             jq('#term-child :input[type=radio]').change(onTermChildChange);
             jq('#hospitalized-twelve-months   :input[type=radio]').change(onHospitalizedTwelveMonths);
@@ -69,22 +70,33 @@
             jq('#hospitalized-text').hide();
              jq('#sample-other-checkbox :input[type=checkbox]').change(sampleOtherChecked);
             jq('#sample-other-textField').hide();
+            if(PATIENT_ON_ART == "true"){
+                jq("#onHivAids input[value='1169']").prop("checked", true);
+            }else{
+                jq("#onHivAids input[value='1169']").prop("checked", false);
+            }
+            var patientOnCovid= "<lookup expression='fn.latestObs(165609).getValueCoded()' />";
+            console.log(patientOnCovid)
+             $("#lmp input").on("change", function() {
+                var selectedDate = $(this).val();
+                 var formattedLmp = moment(moment(selectedDate, 'YYYY-MM-DD').toDate()).format('DD/MM/YYYY');
+                 var expectedDeliveryDate = moment(formattedLmp, "DD/MM/YYYY").add(280, 'days').format('YYYY-MM-DD');
+                   $("#edd input").val(expectedDeliveryDate);
+              });
+
 
 			jq('#pregnancy-status input:radio').change(function () {
 				if ((getValue('pregnancy-status.value')) == 1066) {
 				}
 				if((getValue('pregnancy-status.value')) == 1065){
 					jq('#pregnancyOptionValues :input').prop('disabled', false);
-					//Automate EDC Computation
 					var lmpDate = getValue('lmp.value');
 					var formattedlmp=moment(moment(lmpDate, 'YYYY-MM-DD').toDate()).format('DD-MMM-YYYY');
 					var expectedDeliveryDate = moment(formattedlmp, "DD-MMM-YYYY").add(280, 'days').format('DD-MMM-YYYY');
-					//Find recent EDD if it exists Using LMP
 					var recentEDD = "<lookup expression="fn.latestObs(5596).getValueDatetime()"/>";
 					var recentLMP = "<lookup expression="fn.latestObs(1427).getValueDatetime()"/>";
 					var formattedRecentlmp=moment(moment(recentLMP, 'DD-MMM-YYYY').toDate()).format('DD-MMM-YYYY');
 					var expectedDeliveryDateByRecentLMP = moment(formattedRecentlmp, "DD-MMM-YYYY").add(280, 'days').format('DD-MMM-YYYY');
-					//Calculation
 					if(recentEDD !=""){
 						getField('edd.value').val(recentEDD);
 					}else if(recentLMP !="") {
@@ -94,21 +106,16 @@
 					}else{
 						getField('edd.value').val("");
 					}
-
 				}
-
         });
 
         });
-
-
      	function onPregancyStatusSelected() {
 			var val = jq(this).val();
 			var edd = jq('#edd');
 			if(val == 1065){
                  jq('#lmpDateData').show();
                  jq('#delivered-in-six-weeks').hide();
-                 jq('#dueDateData').show();
                  clearHiddenSections(jq('#delivered-in-six-weeks'));
 				 jq("#edd input[type=text]").prop("disabled",false);
 			} else if(val == 1067){
@@ -118,11 +125,9 @@
 				jq("#edd input[type=text]").prop("disabled",true);
 				     jq('#lmpDateData').hide();
                      jq('#delivered-in-six-weeks').show();
-                     jq('#dueDateData').hide();
                      clearHiddenSections(jq('#edd'));
                      clearHiddenSections(jq('#lmpDate'));
                      clearHiddenSections(jq('#dueDate'));
-
 			}
 		}
 		function sampleOtherChecked() {
@@ -184,9 +189,6 @@
              clearHiddenSections(jq('#cc'));
 			}
 		}
-
-
-
        function onChangeVisitClinician() {
 			var val = jq(this).val();
 			if(val == 1065 &amp;&amp; lastDateDiff &lt;  3){
@@ -214,7 +216,7 @@
     }
 
     </script>
-
+    </ifMode>
     <div class="ke-form-header">
         <table style="width: 100%">
             <tr>
@@ -338,17 +340,13 @@
                             <td>
                                 <obs id="lmp" labelText="  &#160;" conceptId="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="false" />
                             </td>
-                        </tr>
-                        <tr id="dueDateData">
                             <td>What is the due date:</td>
                             <td>
                                 <obs conceptId="5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="edd" allowFutureDates="true" />
                             </td>
-
                         </tr>
-
                         <tr id="delivered-in-six-weeks">
-                            <td>If not pregnant, have you had a child(delivered) within the last 6 weeks?&#160;&#160; </td>
+                            <td>Have you had a child(delivered) within the last 6 weeks?&#160;&#160; </td>
                             <td><obs conceptId="160109AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabels="Yes,No, Don't Know"
                                      style="radio" id="not-pregnant" />
@@ -393,11 +391,11 @@
                                                  answerLabel="Chronic respiratory disease(not including asthma and TB)" style="checkbox" /><br/>
                                             <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="165646"
                                                  answerLabel="Chronic Neurological or neuromuscular" style="checkbox" /><br/>
-                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1687"
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="onTb" answerConceptId="1687"
                                                  answerLabel="Newly Diagnosed TB" style="checkbox" /><br/>
                                             <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="112141"
                                                  answerLabel="Prior TB" style="checkbox" /><br/>
-                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1169"
+                                            <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="onHivAids" answerConceptId="1169"
                                                  answerLabel="HIV/AIDS" style="checkbox" /><br/>
                                             <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="139071"
                                                  answerLabel="Chronic cardiac/heart disease" style="checkbox" /><br/>
@@ -441,7 +439,7 @@
             <tr id="cc">
                 <td colspan="1">
                     <div>
-                        <table class="right-aligned-first" style="width: 100%;" border="0">
+                        <table>
                             <obsgroup groupingConceptId="160108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" >
                                 <tr >
                                 <tr id="visit-clinician-past-three-months">
