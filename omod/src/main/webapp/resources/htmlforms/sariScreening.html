@@ -38,7 +38,6 @@
 			text-shadow: 1px 1px 1px #fff;
 		}
 	</style>
-    <ifMode mode="EDIT">
     <script type="text/javascript">
          var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
          var PATIENT_ON_ART = GREENCARD_VELOCITY.split(",")[2].split(":")[1];
@@ -56,14 +55,14 @@
 			jq('#lmpDateData').hide();
             jq('#delivered-in-six-weeks').hide();
             jq('#visit-clinician-past-three-months :input[type=radio]').change(onChangeVisitClinician);
+            jq('#signs-illness-question   :input[type=radio]').change(onSymptomsChange);
             jq('#how-many-times').hide();
-            jq('#aa').hide();
-            jq('#bb').hide();
-            jq('#cc').hide();
+            jq('#illnessSymptoms').hide();
+            jq('#medicalConditionGroup').hide();
+            jq('#clinicalHistoryGroup').hide();
             jq('#term-gestation-week').hide();
             jq('#term-child :input[type=radio]').change(onTermChildChange);
             jq('#hospitalized-twelve-months   :input[type=radio]').change(onHospitalizedTwelveMonths);
-            jq('#signs-illness-question   :input[type=radio]').change(onSymptomsChange);
             jq('#med-question   :input[type=radio]').change(onMedChange);
             jq('#history-question   :input[type=radio]').change(onHistoryChange);
             jq('#respiratory-problem').hide();
@@ -75,8 +74,6 @@
             }else{
                 jq("#onHivAids input[value='1169']").prop("checked", false);
             }
-            var patientOnCovid= "<lookup expression='fn.latestObs(165609).getValueCoded()' />";
-            console.log(patientOnCovid)
              $("#lmp input").on("change", function() {
                 var selectedDate = $(this).val();
                  var formattedLmp = moment(moment(selectedDate, 'YYYY-MM-DD').toDate()).format('DD/MM/YYYY');
@@ -120,6 +117,7 @@
 				 jq("#edd input[type=text]").prop("disabled",false);
 			} else if(val == 1067){
 			    jq('#delivered-in-six-weeks').hide();
+			       jq('#lmpDateData').hide();
 			    clearHiddenSections(jq('#delivered-in-six-weeks'));
 			} else{
 				jq("#edd input[type=text]").prop("disabled",true);
@@ -165,28 +163,28 @@
 		function onSymptomsChange() {
 			var val = jq(this).val();
 			if(val == 1065){
-				 jq('#aa').show();
+				 jq('#illnessSymptoms').show();
 			} else{
-			 jq('#aa').hide();
-             clearHiddenSections(jq('#aa'));
+			 jq('#illnessSymptoms').hide();
+             clearHiddenSections(jq('#illnessSymptoms'));
 			}
 		}
 		function onMedChange() {
 			var val = jq(this).val();
 			if(val == 1065){
-				 jq('#bb').show();
+				 jq('#medicalConditionGroup').show();
 			} else{
-			 jq('#bb').hide();
-             clearHiddenSections(jq('#bb'));
+			 jq('#medicalConditionGroup').hide();
+             clearHiddenSections(jq('#medicalConditionGroup'));
 			}
 		}
 		function onHistoryChange() {
 			var val = jq(this).val();
 			if(val == 1065){
-				 jq('#cc').show();
+				 jq('#clinicalHistoryGroup').show();
 			} else{
-			 jq('#cc').hide();
-             clearHiddenSections(jq('#cc'));
+			 jq('#clinicalHistoryGroup').hide();
+             clearHiddenSections(jq('#clinicalHistoryGroup'));
 			}
 		}
        function onChangeVisitClinician() {
@@ -216,7 +214,44 @@
     }
 
     </script>
+    <ifMode mode="EDIT">
+        <script type="text/javascript">
+        jq(function(){
+          var pregnantStatus = getValue('pregnancy-status.value');
+          var signsIllnessQuestion = getValue('signs-illness-question.value');
+          var onMedChange = getValue('med-question.value');
+           if(pregnantStatus == 1065){
+                 jq('#lmpDateData').show();
+                 jq('#delivered-in-six-weeks').hide();
+				 jq("#edd input[type=text]").prop("disabled",false);
+			} else if(pregnantStatus == 1067){
+			    jq('#delivered-in-six-weeks').hide();
+			       jq('#lmpDateData').hide();
+
+			} else{
+				jq("#edd input[type=text]").prop("disabled",true);
+				     jq('#lmpDateData').hide();
+                     jq('#delivered-in-six-weeks').show();
+
+			}
+
+			if(signsIllnessQuestion == 1065){
+				 jq('#illnessSymptoms').show();
+			} else{
+			 jq('#illnessSymptoms').hide();
+			}
+
+			if(onMedChange == 1065){
+				 jq('#medicalConditionGroup').show();
+			} else{
+			    jq('#medicalConditionGroup').hide();
+			}
+
+         });
+
+        </script>
     </ifMode>
+
     <div class="ke-form-header">
         <table style="width: 100%">
             <tr>
@@ -245,7 +280,7 @@
                     <div>
                         <table class="right-aligned-first" style="width: 100%;" border="0">
                             <obsgroup groupingConceptId="160108AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                                <tr id="aa">
+                                <tr id="illnessSymptoms">
                                     <td style="text-align: left">
                                         <div style="float: left; padding-right: 50px">
                                             <obs conceptId="1729AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="113316"
@@ -384,7 +419,7 @@
                     <div>
                         <table class="right-aligned-first" style="width: 100%;" border="0">
                             <obsgroup groupingConceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                                <tr id="bb">
+                                <tr id="medicalConditionGroup">
                                     <td style="text-align: left">
                                         <div style="float: left; padding-right: 50px">
                                             <obs conceptId="1794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="166093"
@@ -436,7 +471,7 @@
         </fieldset>
         <fieldset id="clinical-history">
             <legend>Clinical History</legend>
-            <tr id="cc">
+            <tr id="clinicalHistoryGroup">
                 <td colspan="1">
                     <div>
                         <table>

@@ -20,13 +20,13 @@
         jQuery(function () {
             var pAge = parseInt('<lookup expression="patient.age"/>');
             var miscariageVal = getValue('miscariage.value');
-
             var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
             var pgender = "<lookup expression="patient.gender" />";
             var pAge = parseInt('<lookup expression="patient.age"/>');
              jq('#onset-dont-know :input[type=radio]').change(onOnsetDontKnowChange);
              jq('#number-of-days').hide();
-
+             var firstContactDate = getValue('first-contact-date.value');
+             var hospitalAdmissionDate = getValue('hospital-admission.value');
 
 
         });
@@ -55,6 +55,15 @@
             this.selectedIndex =0;
         });
     }
+     beforeSubmit.push(function() {
+     	 var firstContactDate = getValue('first-contact-date.value');
+         var hospitalAdmissionDate = getValue('hospital-admission.value');
+		 if (firstContactDate &gt; hospitalAdmissionDate) {
+            getField('first-contact-date.error').html('First contact date cannot be later than hospital admission date.').show();
+            return false;
+          }
+			return true;
+     });
 
     </script>
 

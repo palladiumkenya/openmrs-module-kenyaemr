@@ -38,7 +38,6 @@
         }
 
     </style>
-    <ifMode mode="EDIT">
     <script type="text/javascript">
 
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
@@ -51,7 +50,7 @@
             jq('.simple-table').hide();
             jq('.covid-rtd').hide();
             jq('#patient-traveled-in-14-days-answer').hide();
-            jq('.medical-condition-display').hide();
+            jq('#medical-condition-display').hide();
             jq('#covid-rtd-ag-date').hide();
             jq('#covid-rtd-ag-not-done').hide();
             jq('#patient-visit-facility-in-14-days-answer').hide();
@@ -530,10 +529,10 @@
 		 function onMedConditionChange() {
 			var val = jq(this).val();
 			if(val == 1065){
-                jq('.medical-condition-display').show();
+                jq('#medical-condition-display').show();
 			} else{
-                jq('.medical-condition-display').hide();
-                clearHiddenSections(jq('.medical-condition-display'));
+                jq('#medical-condition-display').hide();
+                clearHiddenSections(jq('#medical-condition-display'));
 			}
 		}
 		 function onInfluenzaCurrentSeason() {
@@ -661,6 +660,140 @@
     }
 
     </script>
+    <ifMode mode="EDIT">
+        <script type="text/javascript">
+         jq(function(){
+            var malariaTestedDuringVisit = getValue('malaria-tested-during-visit.value');
+            var physicalExamination = getValue('physical-examination.value');
+            var specimenCollected = getValue('specimen-collected.value');
+            var testedCovidRdt = getValue('tested-covid-rdt.value');
+            var occupation = getValue('occupation.value');
+            var patientTraveled = getValue('patient-traveled-in-14-days.value');
+            var onCovid19QuestionsChange = getValue('covid-vaccine-dose-received.value');
+            var medConditionQuestion = getValue('med-condition-question.value');
+
+
+			if(medConditionQuestion == 1065){
+                jq('#medical-condition-display').show();
+			} else{
+                jq('#medical-condition-display').hide();
+                clearHiddenSections(jq('#medical-condition-display'));
+			}
+            if(onCovid19QuestionsChange == 1107){
+                    jq('#covid-dose-one').hide();
+                    jq('#covid-vaccine-dose-one-date').hide();
+                    jq('#covid-vaccine-dose-two-date').hide();
+                    jq('#covid-dose-two').hide();
+                    jq('#covid-vaccine-dose-three-date').hide();
+                    jq('#covid-dose-three').hide();
+                    jq('#last-covid-vaccine-dose-date').hide();
+                    jq('#last-covid-vaccine-dose').hide();
+                    jq('#least-one-dose-received').hide();
+                    jq('#passport-id-group').hide();
+                    jq('#id-passport-number').hide();
+                    jq('#vaccination-status-card').hide();
+            } else if(onCovid19QuestionsChange == 1067){
+                    jq('#last-covid-vaccine-dose').hide();
+                    jq('#covid-dose-one').hide();
+                    jq('#covid-vaccine-dose-one-date').hide();
+                    jq('#covid-vaccine-dose-two-date').hide();
+                    jq('#covid-dose-two').hide();
+                     jq('#passport-id-group').show();
+                    jq('#covid-vaccine-dose-three-date').hide();
+                    jq('#covid-dose-three').hide();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+            } else if(onCovid19QuestionsChange == 1182){
+                    jq('#covid-dose-one').show();
+                    jq('#covid-vaccine-dose-one-date').show();
+                     jq('#least-one-dose-received').show();
+                    jq('#covid-vaccine-dose-two-date').hide();
+                    jq('#covid-dose-two').hide();
+                     jq('#passport-id-group').show();
+                    jq('#covid-vaccine-dose-three-date').hide();
+                    jq('#covid-dose-three').hide();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+            } else if(onCovid19QuestionsChange == 1183){
+                    jq('#covid-dose-one').show();
+                     jq('#least-one-dose-received').show();
+                    jq('#covid-vaccine-dose-one-date').show();
+                    jq('#covid-vaccine-dose-two-date').show();
+                     jq('#passport-id-group').show();
+                    jq('#covid-dose-two').show();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+                    jq('#covid-vaccine-dose-three-date').hide();
+                    jq('#covid-dose-three').hide();
+            } else if(onCovid19QuestionsChange == 1184){
+                    jq('#covid-dose-one').show();
+                     jq('#least-one-dose-received').show();
+                    jq('#covid-vaccine-dose-one-date').show();
+                    jq('#covid-vaccine-dose-two-date').show();
+                    jq('#covid-dose-two').show();
+                    jq('#passport-id-group').show();
+                    jq('#covid-vaccine-dose-three-date').show();
+                    jq('#covid-dose-three').show();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+			} else{
+                    jq('#covid-dose-one').hide();
+                    jq('#covid-vaccine-dose-three-date').show();
+                    jq('#covid-dose-three').show();
+                    jq('#covid-vaccine-dose-two-date').show();
+                    jq('#covid-dose-two').show();
+                     jq('#passport-id-group').show();
+                    jq('#covid-vaccine-dose-one-date').show();
+                    jq('#last-covid-vaccine-dose-date').show();
+                    jq('#last-covid-vaccine-dose').show();
+                    jq('#least-one-dose-received').show();
+                    jq('#abnormal-lung-xray-findings-answer').hide();
+                    jq('#id-passport-number').show();
+                    jq('#vaccination-status-card').show();
+			}
+
+			if(patientTraveled == 1065){
+                jq('#patient-traveled-in-14-days-answer').show();
+			} else{
+                jq('#patient-traveled-in-14-days-answer').hide();
+			}
+            if(malariaTestedDuringVisit == 1065){
+				jq('#malaria-patient-treated').show();
+                jq('#malaria-method-used').show();
+                jq('#malaria-test-result').show();
+			} else{
+                jq('#malaria-patient-treated').hide();
+                jq('#malaria-method-used').hide();
+                jq('#malaria-test-result').hide();
+			}
+
+			if(physicalExamination == 1065){
+                jq('.simple-table').show();
+			} else{
+                jq('.simple-table').hide();
+			}
+
+			if(specimenCollected == 1065){
+                jq('#swab-specimen').show();
+                jq('#specimen-date').show();
+			} else{
+                jq('#swab-specimen').hide();
+                jq('#specimen-date').hide();
+			}
+
+			if(testedCovidRdt == 1065){
+                jq('.covid-rtd').show();
+			} else{
+                jq('.covid-rtd').hide();
+			}
+			if(occupation == 5622){
+                jq('#occupation-other').show();
+			} else{
+                jq('#occupation-other').hide();
+			}
+
+         });
+        </script>
     </ifMode>
     <div class="ke-form-header">
         <table style="width: 100%">
@@ -1004,9 +1137,8 @@
                 </td>
             </tr>
             <tr>
-
                 <div>
-                    <table class="medical-condition-display">
+                    <table id="medical-condition-display">
 
                         <tr>
                             <td>Chronic lung disease(such as chronic obstructive pulmonary disease [COPD] and cystic fibrosis)&#160;&#160;</td>

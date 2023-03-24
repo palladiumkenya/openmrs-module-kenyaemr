@@ -34,19 +34,6 @@
             var dehydrationStatus = "<lookup expression="fn.latestObs(1497).getValueCoded()"/>";
             var meningitisEncephalitisStatus = "<lookup expression="fn.latestObs(118656).getValueCoded()"/>";
             var recentLMP = "<lookup expression="fn.latestObs(1427).getValueDatetime()"/>";
-            console.log("=======================");
-            console.log(anaemiaStatus);
-            console.log(pneumoniaBronchopneumoniaStatus);
-            console.log(malariaStatus);
-            console.log(covidStatus);
-            console.log(hypertensionStatus);
-            console.log(gastroenteritisStatus);
-            console.log(asthmaExacerbationStatus);
-            console.log(malnutritionStatus);
-            console.log(PATIENT_IS_ENROLLED_HIV);
-<!--             var educationLevel= "<lookup expression='fn.latestObs(1712).getValueCoded()' />";-->
-<!--            var educationLevelRegex = educationLevel.replace(/[^\d]/g, '');-->
-
              jq('#final_outcome_facility_name').hide();
              jq('#pregnancy_status_discharge').hide();
              jq('#pregnancy_status_outcome').hide();

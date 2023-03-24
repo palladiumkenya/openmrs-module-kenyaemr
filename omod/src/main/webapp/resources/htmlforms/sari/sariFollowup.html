@@ -12,7 +12,6 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
 -->
 <htmlform>
-    <ifMode mode="EDIT">
     <script type="text/javascript">
         var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
         var PATIENT_PREGNANT = GREENCARD_VELOCITY.split(",")[10].split(":")[1];
@@ -30,11 +29,36 @@
              jq('#patient-visit-facility').hide();
              jq('#was-patient-hospitalized').hide();
              jq('#admission-date').hide();
+             jq('#how-many-days-hospilized').hide();
+             jq('#discharge-date').hide();
              jq('#hospitalized-patient').hide();
 
              jq('#patient-visit-facility :input[type=radio]').change(onPatientVisitFacilityChange);
+              $('#date-of-discharge, #date-of-admission').change(function() {
+                var admissionDate = new Date($('#date-of-admission input').val());
+                var dischargeDate = new Date($('#date-of-discharge input').val());
 
+                if (!admissionDate || !dischargeDate) {
+                  $('#days-hospitalized input').val(0);
+                  return;
+                }
 
+                if (dischargeDate &lt; admissionDate) {
+                  alert("Discharge date cannot be before admission date.");
+                  $('#date-of-discharge input').val('');
+                  return;
+                }
+
+                if (admissionDate &gt; dischargeDate) {
+                  alert("Admission date cannot be after discharge date.");
+                  $('#date-of-admission input').val('');
+                  return;
+                }
+
+                var timeDiff = Math.abs(dischargeDate.getTime() - admissionDate.getTime());
+                var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                $('#days-hospitalized input').val(diffDays);
+              });
         });
 
        function onPatientRecoveryChange() {
@@ -51,13 +75,19 @@
 			if(val == 1065){
                 jq('#was-patient-hospitalized').show();
                  jq('#admission-date').show();
+                 jq('#how-many-days-hospilized').show();
+                 jq('#discharge-date').show();
                  jq('#hospitalized-patient').show();
 			} else{
                  jq('#was-patient-hospitalized').hide();
                  jq('#admission-date').hide();
+                 jq('#how-many-days-hospilized').hide();
+                 jq('#discharge-date').hide();
                  jq('#hospitalized-patient').hide();
              clearHiddenSections(jq('#was-patient-hospitalized'));
              clearHiddenSections(jq('#admission-date'));
+             clearHiddenSections(jq('#how-many-days-hospilized'));
+             clearHiddenSections(jq('#discharge-date'));
              clearHiddenSections(jq('#hospitalized-patient'));
 			}
 		}
@@ -77,7 +107,39 @@
         });
     }
 
+
     </script>
+    <ifMode mode="EDIT">
+        <script type="text/javascript">
+        jq(function(){
+          var patientVisitFacility = getValue('patient-visit-facility.value');
+          var patientRecover = getValue('patient-recover.value');
+
+			if(patientVisitFacility == 1065){
+                jq('#was-patient-hospitalized').show();
+                 jq('#admission-date').show();
+                 jq('#how-many-days-hospilized').show();
+                 jq('#discharge-date').show();
+                 jq('#hospitalized-patient').show();
+			} else{
+                 jq('#was-patient-hospitalized').hide();
+                 jq('#admission-date').hide();
+                 jq('#how-many-days-hospilized').hide();
+                 jq('#discharge-date').hide();
+                 jq('#hospitalized-patient').hide();
+
+			}
+			if(patientRecover == 1066){
+				 jq('#patient-visit-facility').show();
+			} else{
+			     jq('#patient-visit-facility').hide();
+
+			}
+
+
+         });
+
+        </script>
     </ifMode>
     <div class="ke-form-header">
         <table style="width: 100%">
@@ -106,27 +168,40 @@
                     </td>
                 </tr>
                 <tr id="patient-visit-facility">
-                    <td>If no, did the patient visit any health facility?&#160;&#160; </td>
+                    <td>Did the patient visit any health facility?&#160;&#160; </td>
                     <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="patient-visit" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Yes,No"
                              style="radio"/>
                     </td>
                 </tr>
                 <tr id="hospitalized-patient">
-                    <td>If yes, was the patient hospitalised?&#160;&#160; </td>
+                    <td>Was the patient hospitalised?&#160;&#160; </td>
                     <td><obs conceptId="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="patient-hospitalized" labelText=" "  answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                              answerLabels="Yes,No"
                              style="radio"/>
                     </td>
                 </tr>
+                <td>
                 <tr id="admission-date">
-                    <td>If yes, Date of admission:</td>
+                    <td>Date of admission:</td>
                     <td>
                         <obs conceptId="1640" id="date-of-admission" allowFutureDates="false" />
                     </td>
                 </tr>
+                <tr id="discharge-date">
+                    <td>Date of discharge</td>
+                    <td>
+                        <obs conceptId="1641" id="date-of-discharge" allowFutureDates="false" />
+                    </td>
+                </tr>
+                    <tr id="how-many-days-hospilized">
+                        <td>How many days hospitalized &#160;&#160;
+                            <obs id="days-hospitalized" conceptId="1647"/>
+                        </td>
+                    </tr>
+                </td>
                 <tr id="was-patient-hospitalized">
-                    <td>If yes, Where was the patient hospitalised? &#160;&#160;
+                    <td> Where was the patient hospitalised? &#160;&#160;
                         <obs conceptId="160632"/>
                     </td>
                 </tr>
@@ -138,17 +213,7 @@
                         <obs conceptId="165230"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>Date of discharge</td>
-                    <td>
-                        <obs conceptId="1641" id="date-of-discharge" allowFutureDates="false" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>How many days hospitalized &#160;&#160;
-                        <obs conceptId="1647"/>
-                    </td>
-                </tr>
+
                 <tr>
                     <td>What was the outcome?&#160;&#160; </td>
                     <td><obs conceptId="160433" id="pregnancy-status" labelText=" "  answerConceptIds="160433,159,127750,160431"
