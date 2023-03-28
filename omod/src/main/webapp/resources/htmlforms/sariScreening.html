@@ -76,6 +76,7 @@
             }
              $("#lmp input").on("change", function() {
                 var selectedDate = $(this).val();
+
                  var formattedLmp = moment(moment(selectedDate, 'YYYY-MM-DD').toDate()).format('DD/MM/YYYY');
                  var expectedDeliveryDate = moment(formattedLmp, "DD/MM/YYYY").add(280, 'days').format('YYYY-MM-DD');
                    $("#edd input").val(expectedDeliveryDate);
@@ -98,11 +99,13 @@
 						getField('edd.value').val(recentEDD);
 					}else if(recentLMP !="") {
 						getField('edd.value').val(expectedDeliveryDateByRecentLMP);
+						getField('lmp.value').val(recentLMP);
 					}else if (lmpDate!=""){
 						getField('edd.value').val(expectedDeliveryDate);
 					}else{
 						getField('edd.value').val("");
 					}
+
 				}
         });
 
