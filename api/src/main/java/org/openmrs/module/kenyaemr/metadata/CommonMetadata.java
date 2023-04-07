@@ -54,6 +54,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LAB_RESULTS = "17a381d1-7e29-406a-b782-aa903b963c28";
 		public static final String REGISTRATION = "de1f9d67-b73e-4e1b-90d0-036166fc6995";
 		public static final String TRIAGE = "d1059fb9-a079-4feb-a749-eedd709ae542";
+		public static final String MORTALITY_AUDIT_FORM = "8d750878-6fa0-4e57-8ceb-bd20a72b8f8a";
 		public static final String HTS = "9c0a7a57-62ff-4f75-babe-5835b0e921b7";
 		public static final String DRUG_REGIMEN_EDITOR = "7dffc392-13e7-11e9-ab14-d663bd873d93";
 		public static final String CACX_SCREENING = "3fefa230-ea10-45c7-b62b-b3b8eb7274bb";
@@ -69,6 +70,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PROGRESS_NOTE = Metadata.Form.PROGRESS_NOTE;
 		public static final String SURGICAL_AND_MEDICAL_HISTORY = Metadata.Form.SURGICAL_AND_MEDICAL_HISTORY;
 		public static final String TRIAGE = Metadata.Form.TRIAGE;
+		public static final String MORTALITY_AUDIT_FORM = Metadata.Form.MORTALITY_AUDIT_FORM;
 		public static final String HTS_INITIAL_TEST = "402dc5d7-46da-42d4-b2be-f43ea4ad87b0";
 		public static final String HTS_CONFIRMATORY_TEST = "b08471f6-0892-4bf7-ab2b-bf79797b8ea4";
 		public static final String HTS_LINKAGE = "050a7f12-5c52-4cad-8834-863695af335d";
@@ -163,6 +165,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Lab Results", "Collection of laboratory results", _EncounterType.LAB_RESULTS));
 		install(encounterType("Registration", "Initial data collection for a patient, not specific to any program", _EncounterType.REGISTRATION));
 		install(encounterType("Triage", "Collection of limited data prior to a more thorough examination", _EncounterType.TRIAGE));
+		install(encounterType("Mortality Audit", "Mortality audit form", _EncounterType.MORTALITY_AUDIT_FORM));
 		install(encounterType("HTS", "HTS Services", _EncounterType.HTS));
 		install(encounterType("Drug Regimen Editor", "Handles patient regimen events", _EncounterType.DRUG_REGIMEN_EDITOR));
 		install(encounterType("Cervical cancer screening", "Cervical cancer screening", _EncounterType.CACX_SCREENING));
@@ -175,6 +178,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Progress Note", "For additional information - mostly complaints and examination findings.", _EncounterType.CONSULTATION, "1", _Form.PROGRESS_NOTE));
 		install(form("Surgical and Medical History", null, _EncounterType.REGISTRATION, "1", _Form.SURGICAL_AND_MEDICAL_HISTORY));
 		install(form("Triage", null, _EncounterType.TRIAGE, "1", _Form.TRIAGE));
+		install(form("Mortality Audit Form", null, _EncounterType.MORTALITY_AUDIT_FORM, "1", _Form.MORTALITY_AUDIT_FORM));
 		install(form("HTS Initial Form", "Form for HTS testing services ", _EncounterType.HTS, "1", _Form.HTS_INITIAL_TEST));
 		install(form("HTS Retest Form", "Form for HTS retest Services", _EncounterType.HTS, "1", _Form.HTS_CONFIRMATORY_TEST));
 		install(form("HTS Linkage Form", "Form for HTS linkage", _EncounterType.HTS, "1", _Form.HTS_LINKAGE));

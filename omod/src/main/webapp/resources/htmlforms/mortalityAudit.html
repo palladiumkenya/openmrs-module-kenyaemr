@@ -1,0 +1,1123 @@
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 1.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+-->
+<htmlform>
+    <script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
+    <script type="text/javascript">
+        var GREENCARD_VELOCITY = "<lookup expression="kenyaemr.GreenCardVelocityCalculation()" />";
+        var PATIENT_ON_TB = GREENCARD_VELOCITY.split(",")[1].split(":")[1];
+        var PATIENT_ON_ART = GREENCARD_VELOCITY.split(",")[2].split(":")[1];
+    jQuery(function () {
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+             jq("#maternal-treatment-information").hide();
+             jq("#baseline-screening").hide();
+             jq("#treatment-monitoring").hide();
+             jq("#tb-diagnosis").hide();
+             jq("#tb-treatment").hide();
+             jq("#adherence-tb-treatment").hide();
+             jq("#cause-of-death").hide();
+             jq("#tibu_id").hide();
+             jq("#oi-perinatal-specify").hide();
+             jq("#oi-perinatal-specify-date").hide();
+             jq("#oi-perinatal-treatment-specify").hide();
+             jq("#oi-perinatal-treatment-specify-complete").hide();
+             jq("#crag-results").hide();
+             jq("#lumbar-puncture-results").hide();
+             jq("#lumbar-positive").hide();
+             jq("#lp-positive").hide();
+             jq("#tb_lam_diagnosis").hide();
+             jq("#type_of_tb").hide();
+             jq("#tb-treatment-done").hide();
+             jq("#ncd-controlled").hide();
+             jq("#diseaseOtherReasonSpecify").hide();
+             jq("#confirmedDrugResistanceSpecify").hide();
+             jq("#drug-interactions-specify").hide();
+             jq("#specifySuspectedDrug").hide();
+             jq("#primary-tb-diagnosis-specify").hide();
+             jq("#specifySuspectedDrugSpecifyOther").hide();
+             jq("#antifungal-regimen-other-specify").hide();
+             jq("#suspectedDrugOtherSpecify").hide();
+             jq("#otherCoMorbiditiesSpecify").hide();
+             jq("#adr-specify").hide();
+             jq("#recommendations").hide();
+             jq("#adr-and-grade").hide();
+             jq("#patientDiagnosedOpportunisticSpecify").hide();
+             jq('#patient-details  :input[type=radio]').change(patientDetails);
+             jq('#oi-perinatal  :input[type=radio]').change(oiPerinatal);
+             jq('#oi-perinatal-treatment  :input[type=radio]').change(oiPerinatalTreatment);
+             jq('#crad-cd4  :input[type=radio]').change(cradCd4);
+             jq('#lumbar-puncture  :input[type=radio]').change(lumbarPuncture);
+             jq('#lumbar-puncture-results-done  :input[type=radio]').change(lumbarPunctureResultsDone);
+             jq('#lumbarPositiveTreated :input[type=radio]').change(lumbarPositive);
+             jq('#tb_lam_done :input[type=radio]').change(tbLamDone);
+             jq('#tb_lam_diagnosis_done :input[type=radio]').change(typeOfTb);
+             jq('#typeOfTbDone :input[type=radio]').change(typeOfTbDoneChange);
+             jq('#patientDiagnosedOpportunistic :input[type=radio]').change(patientDiagnosedChange);
+             jq('#primary-tb-diagnosis :input[type=radio]').change(primaryTbDiagnosis);
+             jq('#disease-other-specify :input[type=checkbox]').change(diseaseOtherReasonChange);
+             jq('#antifungal-regimen-other :input[type=checkbox]').change(antifungalRegimenOther);
+             jq('#specifySuspectedDrugSpecify :input[type=checkbox]').change(specifySuspectedDrugSpecify);
+             jq('#confirmedDrugResistance :input[type=radio]').change(confirmedDrugResistance);
+             jq('#suspectedDrugOther :input[type=checkbox]').change(suspectedDrugOther);
+             jq('#otherCoMorbidities :input[type=checkbox]').change(otherCoMorbidities);
+             jq('#treatment-adr :input[type=radio]').change(treatmentAdrChange);
+             jq('#adverse-reactions').change(adverseReactionSelected);     //boolean
+
+
+
+
+              $('#ncd-comorbidity input[type="checkbox"]').click(function() {
+                if ($('#ncd-comorbidity input[type="checkbox"]:checked').length > 0) {
+                  $('#ncd-controlled').show();
+                } else {
+                  $('#ncd-controlled').hide();
+                 clearHiddenSections(jq('#ncd-controlled'));
+                }
+              });
+
+
+     });
+
+     function oiPerinatalTreatment(){
+          var val = jq(this).val();
+		  if(val == 1065){
+             jq("#oi-perinatal-treatment-specify").show();
+             jq("#oi-perinatal-treatment-specify-complete").show();
+		  } else {
+             jq("#oi-perinatal-treatment-specify").hide();
+             jq("#oi-perinatal-treatment-specify-complete").hide();
+            clearHiddenSections(jq('#oi-perinatal-treatment-specify'));
+		    clearHiddenSections(jq('#oi-perinatal-treatment-specify-complete'));
+		  }
+     }
+
+        var adverseReactionSelected = function() {
+            var val = getValue('adverse-reactions.value');
+            var reaction = jq('.reaction select').val('');
+            var severity = jq('.severity select').val('');
+            if (val == "false" || val == 1066){
+               jq("#adr-and-grade").hide();
+                clearHiddenSections(jq('#adr-and-grade'));
+                clearHiddenSections([ reaction, severity]);
+                getField('adverse-reactions.error').html('Please specify the adverse drug reactions.').hide();
+            }else {
+               jq("#adr-and-grade").show();
+            }
+        }
+
+
+		function specifySuspectedDrugSpecify() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#specifySuspectedDrugSpecifyOther').show();
+			} else{
+                jq('#specifySuspectedDrugSpecifyOther').hide();
+                clearHiddenSections(jq('#specifySuspectedDrugSpecifyOther'));
+			}
+		}
+
+
+
+		function otherCoMorbidities() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#otherCoMorbiditiesSpecify').show();
+			} else{
+                jq('#otherCoMorbiditiesSpecify').hide();
+                clearHiddenSections(jq('#otherCoMorbiditiesSpecify'));
+			}
+		}
+
+
+		function suspectedDrugOther() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq("#suspectedDrugOtherSpecify").show();
+			} else{
+               jq("#suspectedDrugOtherSpecify").hide();
+                clearHiddenSections(jq('#suspectedDrugOtherSpecify'));
+			}
+		}
+		function antifungalRegimenOther() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq("#antifungal-regimen-other-specify").show();
+			} else{
+               jq("#antifungal-regimen-other-specify").hide();
+                clearHiddenSections(jq('#antifungal-regimen-other-specify'));
+			}
+		}
+		function diseaseOtherReasonChange() {
+			var val = jq(this).val();
+		 if (this.checked == true) {
+                jq('#diseaseOtherReasonSpecify').show();
+			} else{
+                jq('#diseaseOtherReasonSpecify').hide();
+                clearHiddenSections(jq('#diseaseOtherReasonSpecify'));
+			}
+		}
+
+
+
+
+
+    function treatmentAdrChange(){
+           var val = getValue('treatment-adr.value');
+            var reaction = jq('.reaction select').val('');
+            var severity = jq('.severity select').val('');
+           if(val == 1065){
+			    jq("#adr-specify").show();
+		    }else{
+		         jq("#adr-specify").hide();
+		          clearHiddenSections([ reaction, severity]);
+                getField('treatment-adr.error').html('Please specify the adverse drug reactions.').hide();
+		      clearHiddenSections(jq('#adr-specify'));
+		   }
+
+     }
+    function confirmedDrugResistance(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#confirmedDrugResistanceSpecify").show();
+		}else{
+		     jq("#confirmedDrugResistanceSpecify").hide();
+		    clearHiddenSections(jq('#confirmedDrugResistanceSpecify'));
+		}
+     }
+
+     function primaryTbDiagnosis(){
+        var val = jq(this).val();
+		if(val == 5622){
+			 jq("#primary-tb-diagnosis-specify").show();
+		}else{
+		     jq("#primary-tb-diagnosis-specify").hide();
+		    clearHiddenSections(jq('#primary-tb-diagnosis-specify'));
+		}
+     }
+     function patientDiagnosedChange(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#patientDiagnosedOpportunisticSpecify").show();
+		}else{
+		     jq("#patientDiagnosedOpportunisticSpecify").hide();
+		    clearHiddenSections(jq('#patientDiagnosedOpportunisticSpecify'));
+		}
+     }
+
+     function drugInteractions(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#drug-interactions-specify").show();
+			 jq("#specifySuspectedDrug").show();
+		}else{
+		     jq("#drug-interactions-specify").hide();
+		     jq("#specifySuspectedDrug").hide();
+		    clearHiddenSections(jq('#specifySuspectedDrug'));
+		    clearHiddenSections(jq('#drug-interactions-specify'));
+		}
+     }
+     function lumbarPositive(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#lp-positive").show();
+		}else{
+		     jq("#lp-positive").hide();
+		    clearHiddenSections(jq('#lp-positive'));
+		}
+     }
+
+
+     function tbLamDone(){
+        var val = jq(this).val();
+		if(val == 1065){
+			jq("#tb_lam_diagnosis").show();
+		}else{
+		    jq("#tb_lam_diagnosis").hide();
+		    jq("#type_of_tb").hide();
+		     jq("#tb-treatment-done").hide();
+		    clearHiddenSections(jq('#tb-treatment-done'));
+		    clearHiddenSections(jq('#type_of_tb'));
+		    clearHiddenSections(jq('#tb_lam_diagnosis'));
+		}
+     }
+      function typeOfTb(){
+        var val = jq(this).val();
+		if(val == 1065){
+			jq("#type_of_tb").show();
+		}else{
+		  jq("#type_of_tb").hide();
+		    jq("#type_of_tb").hide(); jq("#tb-treatment-done").hide();
+		    clearHiddenSections(jq('#tb-treatment-done'));
+		    clearHiddenSections(jq('#type_of_tb'));
+		}
+     }
+    function typeOfTbDoneChange(){
+        var val = jq(this).val();
+		if(val == 164397 || val == 164398 ){
+			jq("#tb-treatment-done").show();
+		}else{
+		    jq("#tb-treatment-done").hide();
+		    clearHiddenSections(jq('#tb-treatment-done'));
+		}
+     }
+
+
+
+    function lumbarPunctureResultsDone(){
+        var val = jq(this).val();
+		if(val == 703){
+			 jq("#lumbar-positive").show();
+		}else{
+		     jq("#lumbar-positive").hide();
+		    clearHiddenSections(jq('#lumbar-positive'));
+		    jq("#lp-positive").hide();
+		    clearHiddenSections(jq('#lp-positive'));
+		}
+     }
+    function lumbarPuncture(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#lumbar-puncture-results").show();
+		}else{
+		    jq("#lp-positive").hide();
+		    clearHiddenSections(jq('#lp-positive'));
+		    jq("#lumbar-puncture-results").hide();
+		    jq("#lumbar-positive").hide();
+		    clearHiddenSections(jq('#lumbar-positive'));
+		    clearHiddenSections(jq('#lumbar-puncture-results'));
+		}
+     }
+    function cradCd4(){
+        var val = jq(this).val();
+		if(val == 1065){
+			 jq("#crag-results").show();
+		}else{
+		     jq("#crag-results").hide();
+		    clearHiddenSections(jq('#crag-results'));
+		}
+     }
+     function oiPerinatal(){
+        var val = jq(this).val();
+		if(val == 1065){
+			jq("#oi-perinatal-specify").show();
+			jq("#oi-perinatal-specify-date").show();
+		}else{
+		    jq("#oi-perinatal-specify").hide();
+		    jq("#oi-perinatal-specify-date").hide();
+		    clearHiddenSections(jq('#oi-perinatal-specify'));
+		    clearHiddenSections(jq('#oi-perinatal-specify-date'));
+		}
+     }
+
+
+     function patientDetails() {
+			var val = jq(this).val();
+			if(val == 1405){
+				jq("#maternal-treatment-information").show();
+                 jq("#baseline-screening").hide();
+                 jq("#treatment-monitoring").hide();
+                 jq("#tb-diagnosis").hide();
+                 jq("#tb-treatment").hide();
+                 jq("#adherence-tb-treatment").hide();
+                 jq("#cause-of-death").show();
+                 jq("#recommendations").show();
+                 jq("#tibu_id").hide();
+            }else if(val == 1169){
+                 jq("#maternal-treatment-information").hide();
+                 jq("#baseline-screening").show();
+                 jq("#treatment-monitoring").show();
+                 jq("#tb-diagnosis").hide();
+                 jq("#tb-treatment").hide();
+                 jq("#adherence-tb-treatment").hide();
+                 jq("#cause-of-death").show();
+                 jq("#recommendations").show();
+                 jq("#tibu_id").hide();
+            }else if(val == 164500){
+                 jq("#tibu_id").show();
+                 jq("#maternal-treatment-information").hide();
+                 jq("#baseline-screening").hide();
+                 jq("#treatment-monitoring").hide();
+                 jq("#tb-diagnosis").show();
+                 jq("#tb-treatment").show();
+                 jq("#adherence-tb-treatment").show();
+                 jq("#cause-of-death").show();
+                 jq("#recommendations").show();
+			} else{
+			     jq("#maternal-treatment-information").hide();
+                 jq("#baseline-screening").show();
+                 jq("#treatment-monitoring").show();
+                 jq("#tb-diagnosis").show();
+                 jq("#tb-treatment").show();
+                 jq("#adherence-tb-treatment").show();
+                 jq("#cause-of-death").show();
+                 jq("#recommendations").show();
+                 jq("#tibu_id").hide();
+
+			}
+		}
+
+
+         //Clear hidden sections
+    clearHiddenSections = function(parentObj) {
+        parentObj.find('input[type=radio]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=checkbox]').each(function() {
+            this.checked = false;
+        });
+        parentObj.find('input[type=text]').each(function() {
+            jq(this).val("");
+        });
+        parentObj.find('select').each(function() {
+            this.selectedIndex =0;
+        });
+    }
+
+    </script>
+    <style>
+        .simple-table {
+            border: solid 1px #DDEEEE;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font: normal 13px Arial, sans-serif;
+        }
+
+        .simple-table thead th {
+            background-color: #DDEFEF;
+            border: solid 1px #DDEEEE;
+            color: #336B6B;
+            padding: 10px;
+            text-align: left;
+            text-shadow: 1px 1px 1px #fff;
+        }
+
+        .simple-table td {
+            border: solid 1px #DDEEEE;
+            color: #333;
+            padding: 10px;
+            text-shadow: 1px 1px 1px #fff;
+        }
+    </style>
+    <ifMode mode="EDIT">
+        <script type="text/javascript">
+            jq(function(){
+
+            });
+        </script>
+    </ifMode>
+    <div class="ke-form-header">
+        <table style="width: 100%">
+            <tr>
+                <td align="left">Date:
+                    <encounterDate id="encounter-date" showTime="true"/>
+                </td>
+                <td align="center">Abstractor's Name: <encounterProvider default="currentUser"> </encounterProvider></td>
+                <td align="right">Location:
+                    <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="ke-form-content">
+        <fieldset id="patient-details">
+            <legend>
+                <strong>Patient Details </strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>
+                        Patient Type: </td>
+                    <td><obs
+                            id="patient-details"
+                            conceptId="162728"
+                            answerConceptIds="1405,1169,163324,164500"
+                            answerLabels="HEI,HIV Client,HIV Co-Infected Client,TB Client"
+                            style="radio"
+                            answerSeparator="&lt;br /&gt;"
+                    /> <br/>
+                    <td id="tibu_id"> Tibu ID: <obs conceptId="164415" id="tibu-id"/></td>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="maternal-treatment-information">
+            <legend>
+                <strong>  Maternal Treatment Information </strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>
+                        Maternal HAART Details: </td>
+                    <td><obs
+                            conceptId="163783"
+                            answerConceptIds="162321,165240,162322"
+                            answerLabels="Already on HAART,Newly Initiated,Declined ART"
+                            style="radio"/> <br /><br /></td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Any OIs in the perinatal period: </td>
+                    <td><obs
+                            conceptId="167394"
+                            answerConceptIds="1065,1066"
+                            id="oi-perinatal"
+                            answerLabels="Yes,No"
+                            style="radio" /> <br /><br /></td>
+                    <td id="oi-perinatal-specify">Specify:  <obs conceptId="165399"/> <br /><br /></td>
+                    <td id="oi-perinatal-specify-date">Date: <obs  conceptId="159948"/> <br /><br /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Was treatment done?</td>
+                    <td><obs
+                            conceptId="166665"
+                            answerConceptIds="1065,1066"
+                            id="oi-perinatal-treatment"
+                            answerLabels="Yes,No"
+                            style="radio" /> <br /><br /></td>
+                    <td id="oi-perinatal-treatment-specify" >Specify:  <obs conceptId="161011"/> <br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+                <tr id="oi-perinatal-treatment-specify-complete">
+                    <td>Treatment status?</td>
+                    <td><obs
+                            conceptId="163105"
+                            answerConceptIds="160035,163339"
+                            answerLabels="Complete,Incomplete"
+                            style="radio" /> <br /><br /></td>
+                    <td><br /><br /></td>
+                    <td > <br /><br /></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="baseline-screening">
+            <legend>
+                <strong> Baseline Screening and Interventions for Advanced HIV Disease</strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>For adolescents and adults with CD4  greater than  200, CRAG test done </td>
+                    <td><obs
+                            conceptId="166555"
+                            answerConceptIds="1065,1066,1067"
+                            id="crad-cd4"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr id="crag-results">
+                    <td>CRAG result? </td>
+                    <td><obs
+                            conceptId="167452"
+                            answerConceptIds="703,664,1067"
+                            answerLabels="Positive,Negative,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr>
+                    <td>Was a Lumbar Puncture done? </td>
+                    <td><obs
+                            conceptId="1651"
+                            answerConceptIds="1065,1066,1067"
+                            id="lumbar-puncture"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr id="lumbar-puncture-results">
+                    <td>For those Lumbar Puncture done, the result? </td>
+                    <td><obs
+                            conceptId="166664"
+                            id="lumbar-puncture-results-done"
+                            answerConceptIds="703,664,1067"
+                            answerLabels="Positive,Negative,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr id="lumbar-positive">
+                    <td>For those positive, were they treated? </td>
+                    <td><obs
+                            conceptId="1792"
+                            answerConceptIds="1065,1066,1067"
+                            id="lumbarPositiveTreated"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr>
+                    <td>Please specify the antifungal regimen given </td>
+                    <td> <obs conceptId="1282" answerConceptId="71187" answerLabel="Liposomal Amphoterin + Flucytosine" style="checkbox" />
+                        <obs conceptId="1282" answerConceptId="76489" answerLabel="Amphoterin B deoxycholate + Flucytosine" style="checkbox" /><br />
+                        <obs conceptId="1282" answerConceptId="76488" answerLabel="Amphoterin B deoxycholate + Fluconazole" style="checkbox" />
+                        <obs id="antifungal-regimen-other" conceptId="1282" answerConceptId="5622" answerLabel="Other specify" style="checkbox" />
+                        <obs conceptId="165145" id="antifungal-regimen-other-specify"/> <br /><br /></td>
+                </tr>
+                <tr id="lp-positive">
+                    <td>For those Pos LP, treatment completed including secondary <br></br>
+                        prophylaxis until CD4 recovery?</td>
+                    <td> <obs
+                            conceptId="163105"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr>
+                    <td>was, pre-emptive treatment with fluconazole given</td>
+                    <td><obs
+                            conceptId="166665"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+
+                <tr>
+                    <td>TB LAM done for those with CD4 less than 200 </td>
+                    <td><obs
+                            conceptId="167459"
+                            answerConceptIds="1065,1066,1067"
+                            id="tb_lam_done"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr id="tb_lam_diagnosis">
+                    <td>TB Diagnosis </td>
+                    <td><obs
+                            conceptId="164500"
+                            answerConceptIds="1065,1066"
+                            id="tb_lam_diagnosis_done"
+                            answerLabels="Yes,No"
+                            style="radio"/> <br /><br /></td>
+                </tr>
+                <tr  id="type_of_tb">
+                    <td>Type of TB</td>
+                    <td><obs
+                            conceptId="160051"
+                            answerConceptIds="164397,164398"
+                            id="typeOfTbDone"
+                            answerLabels="Bacteriologically confirmed,Clinically Diagnosed"
+                            style="radio"/> <br /><br /></td>
+                <tr id="tb-treatment-done">
+                    <td>TB Treatment given?</td>
+                    <td><obs
+                            conceptId="162309"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/><br /><br /></td>
+                </tr>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="treatment-monitoring">
+            <legend>
+                <strong>Treatment  Monitoring and Follow up </strong>
+            </legend>
+
+            <table class="simple-table">
+                <tr>
+                    <td>Did the patient have any adverse drug reaction to ARV?<br></br>(Check the last 12 months prior to death) </td>
+                    <td><obs
+                            conceptId="160646"
+                            answerConceptIds="1065,1066"
+                            id="treatment-adr"
+                            answerLabels="Yes,No"
+                            style="radio"/> </td>
+                </tr>
+                <tr id="adr-specify">
+                    <td>Specify the type of ADR and grade </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <th>Type of ADR</th>
+                                <th>Grading</th>
+                            </tr>
+                            <repeat>
+                                <template>
+                                    <obsgroup groupingConceptId="121689AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                    <tr>
+                                        <td><obs class ="adr-reaction"
+                                                 conceptId="162760"
+                                                 answerConceptIds="512,165040,118983,165139"
+                                                 answerLabels="Rash,Hepatitis,Peripheral Neuropathy,Other Specify"
+                                                 style="dropdown"
+                                        /></td>
+                                        <td><obs  class="adr-severity"
+                                                  conceptId="160759"
+                                                  answerConceptIds="160754,160755,160756,160757,1107"
+                                                  answerLabels="Grade I,Grade II,Grade III,Grade IV,Not graded" /></td>
+                                    </tr>
+                                    </obsgroup>
+                                </template>
+                                <render n="1" concept=" " />
+                                <render n="2" concept=" " />
+                                <render n="3" concept=" " />
+                                <render n="4" concept=" " />
+
+                            </repeat>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Were there any drug-drug interactions between<br></br> anti- TB and
+                        other medications during TB treatment? </td>
+                    <td><obs
+                            conceptId="159935"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/> </td>
+
+                </tr>
+
+                <tr>
+                    <td>Specify the suspected Drug </td>
+                    <td>
+                        <obs conceptId="1193" answerConceptId="767"
+                             answerLabel="Rifampicin withDTG" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1193" answerConceptId="79651"
+                             answerLabel="Metformin with DTG" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1193" answerConceptId="82312"
+                             answerLabel="Polyvalent cations with DTG (e.g., calcium supplements, iron supplements, Magnesium/Aluminum containing antiacids)" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1193" answerConceptId="167427"
+                             answerLabel="Anticonvulsants with DTG (Carbamazine,phenobarbital, phenytoin)" style="checkbox"/>
+                        <br/>
+                        <obs id="suspectedDrugOther" conceptId="1193" answerConceptId="5622"
+                             answerLabel="Other Specify: " style="checkbox"/>
+                        <obs conceptId="160632" id="suspectedDrugOtherSpecify"/>
+                        <br/>
+                    </td>
+
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="tb-diagnosis">
+            <legend>
+                <strong> TB Diagnosis </strong>
+            </legend>
+
+            <table class="simple-table">
+                <tr>
+                    <td>Primary method of TB diagnosis </td>
+                    <td>
+                        <obs
+                                id="primary-tb-diagnosis"
+                                conceptId="163752"
+                                answerConceptIds="1465,162202,307,167459,12,5622"
+                                answerLabels="Culture,Gene X pert,Gene X pert,LAM,X ray,Other Specify"
+                                style="radio"
+                                answerSeparator="&lt;br /&gt;"
+                        />
+                        <obs conceptId="161011" id="primary-tb-diagnosis-specify"/>
+                        <br /><br /></td>
+
+                </tr>
+                <tr>
+                    <td>Type of TB </td>
+                    <td>
+                        <obs
+                                id="type-of-tb"
+                                conceptId="164368"
+                                answerConceptIds="164397,164398,5042"
+                                answerLabels="Bacteriologically Clinically Diagnosed,EPTB (Specify location)"
+                                style="radio"
+                                answerSeparator="&lt;br /&gt;"
+                        />
+
+                        <br /><br /></td>
+
+                </tr>
+                <tr>
+                    <td>Confirmed drug resistance</td>
+                    <td>
+                        <obs
+                                conceptId="159957"
+                                answerConceptIds="1065,1066"
+                                answerLabels="Yes,No"
+                                id="confirmedDrugResistance"
+                                style="radio"/>
+                        <br /><br /></td>
+
+                </tr>
+                <tr id="confirmedDrugResistanceSpecify">
+                    <td>Specify the type of drug resistant</td>
+                    <td>
+                        <obs conceptId="1417" answerConceptId="164366"
+                             answerLabel="Rifampicin Resistance" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="78280"
+                             answerLabel="INH Monoresistance" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="166383"
+                             answerLabel="Other Monoresistance" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="164367"
+                             answerLabel="Polyresistance" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="159909"
+                             answerLabel="MDR " style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="159957"
+                             answerLabel="Pre XDR " style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="159346"
+                             answerLabel="XDR " style="checkbox"/>
+                    </td>
+
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="tb-treatment">
+            <legend>
+                <strong>TB Treatment </strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>Was the patient intiated on anti TB treatment?</td>
+                    <td><obs
+                            conceptId="162309"
+                            answerConceptIds="1065,1066"
+                            answerLabels="Yes,No"
+                            style="radio"/></td>
+
+                </tr>
+
+                <tr>
+                    <td>what were the anthropometric  findings?</td>
+                    <td>
+                        <includeIf velocityTest="$patient.age &gt; 6">
+                            BMI:  <obs conceptId="1342" id="bmi"/>
+
+                            <br/>  <br/>
+                        </includeIf>
+                        MUAC: <obs conceptId="1343" id="muac"/>
+                        <br/>  <br/>
+                        <includeIf velocityTest="$patient.age &lt; 6">
+                            Z-Score: <obs conceptId="162584" id="z-score"/>
+                            <br/>
+                        </includeIf>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>what were the anthropometric  findings?</td>
+                    <td>
+                        <obs conceptId="163304" answerConceptId="161650"
+                             answerLabel="Therapeutic feeds" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="163304" answerConceptId="1380"
+                             answerLabel="Nutritional Counselling" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="163304" answerConceptId="86339"
+                             answerLabel="Vitamin A" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="163304" answerConceptId="82912"
+                             answerLabel="Pyridoxine" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="163304" answerConceptId="159854"
+                             answerLabel="Supplementary" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="163304" answerConceptId="1107"
+                             answerLabel="None" style="checkbox"/>
+                        <br/>
+                    </td>
+
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="adherence-tb-treatment">
+            <legend>
+                <strong>Adherence to TB treatment</strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>Check if the patient attended scheduled visits during TB treatment</td>
+                    <td>
+                        <table class="simple-table" >
+                            <tr>
+                                <td> Intensive Phase</td>
+                                <td>
+
+                                    <obs
+                                            conceptId="166484"
+                                            answerConceptIds="1246,162191,166541"
+                                            answerLabels="Attended all scheduled visits,Missed a visit(s) and traced back,Missed a visit(s) and not traced back"
+                                            style="radio"
+                                            answerSeparator="&lt;br /&gt;"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Continuation Phase</td>
+                                <td>
+
+                                    <obs
+                                            conceptId="159792"
+                                            answerConceptIds="1246,162191,166541"
+                                            answerLabels="Attended all scheduled visits,Missed a visit(s) and traced back,Missed a visit(s) and not traced back"
+                                            style="radio"
+                                            answerSeparator="&lt;br /&gt;"
+                                    />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>Did the client have an adverse drug  reaction to anti-TB medication?</td>
+                    <td>
+                        <obs id="adverse-reactions" conceptId="121764AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  style="yes_no"/>
+                    </td>
+
+                </tr>
+                <tr id="adr-and-grade">
+                    <td>Specify the type of ADR and grade </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    <table>
+                                        <tr>
+                                            <th>Type of ADR</th>
+                                            <th>Grading</th>
+                                        </tr>
+                                        <repeat>
+                                            <template>
+                                                <obsgroup groupingConceptId="121760AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                                <tr>
+                                                    <td><obs class ="reaction"
+                                                             conceptId="159935"
+                                                             id="adverse"
+                                                             answerConceptIds="512,165040,118983,165139"
+                                                             answerLabels="Rash,Hepatitis,Peripheral Neuropathy,Other Specify"
+                                                             style="dropdown"
+                                                    /></td>
+                                                    <td><obs  class="severity"
+                                                              id="grading"
+                                                              conceptId="162820"
+                                                              answerConceptIds="160754,160755,160756,160757,1107"
+                                                              answerLabels="Grade I,Grade II,Grade III,Grade IV,Not graded" /></td>
+                                                </tr>
+                                                </obsgroup>
+                                            </template>
+                                            <render n="1" concept=" " />
+                                            <render n="2" concept=" " />
+                                            <render n="3" concept=" " />
+                                            <render n="4" concept=" " />
+
+                                        </repeat>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Were there any drug-drug interactions between anti-TB <br></br>and
+                        other medications during TB treatment?</td>
+                    <td><obs
+                            conceptId="162760"
+                            id="drug-interactions"
+                            answerConceptIds="1065,1066"
+                            answerLabels="Yes,No"
+                            style="radio"/>
+                        <obs conceptId="164879" id="drug-interactions-specify"/>
+                    </td>
+
+                </tr>
+                <tr id="specifySuspectedDrug" >
+                    <td>Specify the suspected Drug</td>
+                    <td><obs conceptId="1417" answerConceptId="767"
+                             answerLabel="Rifampicin withDTG" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="79651"
+                             answerLabel="Metformin with DTG" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="82312"
+                             answerLabel="Polyvalent cations with DTG (e.g., calcium supplements, iron supplements, Magnesium/Aluminum containing antiacids)" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="82312"
+                             answerLabel="Polyvalent cations with DTG (e.g., calcium supplements, iron supplements, Magnesium/Aluminum containing antiacids)" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1417" answerConceptId="167427"
+                             answerLabel="Anticonvulsants with DTG (Carbamazine,phenobarbital, phenytoin)" style="checkbox"/>
+                        <br/>
+                        <obs id="specifySuspectedDrugSpecify" conceptId="1417" answerConceptId="5622"
+                             answerLabel="Other Specify: " style="checkbox"/>
+                        <obs conceptId="160632" id="specifySuspectedDrugSpecifyOther"/>
+                    </td>
+
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="cause-of-death">
+            <legend>
+                <strong>Cause of Death </strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>Was the patient diagnosed with any other opportunistic<br></br> infection in the 12 months prior to death? </td>
+                    <td><obs
+                            conceptId="159394"
+                            id="patientDiagnosedOpportunistic"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/></td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+                <tr id="patientDiagnosedOpportunisticSpecify">
+                    <td>Specify Infections diagnosed </td>
+                    <td><obs conceptId="161602" id="reason_specify"/> </td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+
+                <tr>
+                    <td>Specify the suspected Drug </td>
+                    <td id="ncd-comorbidity">
+                        <obs id="diabetic" conceptId="1687" answerConceptId="119481"
+                             answerLabel="Diabetic" style="checkbox"/>
+                        <br/>
+                        <obs id="hypertension" conceptId="1687" answerConceptId="117399"
+                             answerLabel="Hypertension" style="checkbox"/>
+                        <br/>
+                        <obs id="chronic-kidney" conceptId="1687" answerConceptId="145438"
+                             answerLabel="Chronic Kidney disease" style="checkbox"/>
+                        <br/>
+                        <obs id="liver-disease" conceptId="1687" answerConceptId="139201"
+                             answerLabel="Liver disease" style="checkbox"/>
+                        <br/>
+                        <obs id="cardiovascular" conceptId="1687" answerConceptId="119270"
+                             answerLabel="Cardiovascular Disease" style="checkbox"/>
+                        <br/>
+                        <obs id="lung-disease" conceptId="1687" answerConceptId="155569"
+                             answerLabel="Lung disease eg Asthma" style="checkbox"/>
+                        <br/>
+
+                        <obs id="cancer-disease" conceptId="1687" answerConceptId="116030"
+                             answerLabel="Cancer" style="checkbox"/>
+                        <br/>
+                        <obs id="disease-none" conceptId="1687" answerConceptId="1107"
+                             answerLabel="none" style="checkbox"/>
+                        <br/>
+                        <obs id="disease-other-specify" conceptId="1417" answerConceptId="5622"
+                             answerLabel="Other Specify: " style="checkbox"/>
+                        <obs id="diseaseOtherReasonSpecify" conceptId="165399"/>
+                        <br/></td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+                <tr id="ncd-controlled">
+                    <td>If Yes to above, was/were the NCD well controlled?<br></br>(specify the NCD)</td>
+                    <td><obs
+                            conceptId="166937"
+                            answerConceptIds="1065,1066,1067"
+                            answerLabels="Yes,No,Unknown"
+                            style="radio"/></td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+                <tr>
+                    <td>Risk factors for NCDs present?</td>
+                    <td>
+                        <obs conceptId="165430" answerConceptId="115115"
+                             answerLabel="Obese(BMI greater than 30)" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="165430" answerConceptId="1455"
+                             answerLabel="Smoking" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="165430" answerConceptId="121725"
+                             answerLabel="Alcoholism" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="165430" answerConceptId="135797"
+                             answerLabel="Sedentary Lifestyle" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="165430" answerConceptId="117441"
+                             answerLabel="Hyperlipidemia" style="checkbox"/>
+                    </td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+
+                </tr>
+                <tr>
+                    <td>Possible contributors to cause of death from the<br></br> variables
+                        above?</td>
+                    <td>
+                        <obs conceptId="1814" answerConceptId="118855" answerLabel="Drug/Substance abuse" style="checkbox" /><br />
+                        <obs conceptId="1814" answerConceptId="1169" answerLabel="Advanced HIV Disease" style="checkbox" /><br />
+                        <obs conceptId="1814" answerConceptId="134725" answerLabel="Malnutrition" style="checkbox"/><br />
+                        <obs conceptId="1814" answerConceptId="167387" answerLabel="HIV Treatment failure" style="checkbox"/><br />
+                        <obs conceptId="1814" answerConceptId="121760" answerLabel="Adverse drug reactions" style="checkbox"/><br />
+                    </td>
+                    <td>
+                        <obs conceptId="1814" answerConceptId="150452" answerLabel="Injury or accident" style="checkbox"/><br/>
+                        <obs conceptId="1814" answerConceptId="116128" answerLabel="Malaria" style="checkbox"/><br/>
+                        <obs conceptId="1814" answerConceptId="163323" answerLabel="TB treatment failure" style="checkbox"/><br/>
+                        <obs conceptId="1814" answerConceptId="141747" answerLabel="Drug interactions" style="checkbox"/><br/>
+                    </td>
+                    <td>
+                        <obs id="otherCoMorbidities" conceptId="1814" answerConceptId="131768" answerLabel="Other Co morbidities specify" style="checkbox"/>
+                        <obs conceptId="161011" id="otherCoMorbiditiesSpecify"/>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>What is the probable cause of death? </td>
+                    <td><obs conceptId="1599" answerConceptId="1748"
+                             answerLabel="Immediate cause" style="radio"/>
+                        <br/>
+                        <obs conceptId="1599" answerConceptId="123809"
+                             answerLabel="Antecedent cause" style="checkbox"/>
+                        <br/>
+                        <obs conceptId="1599" answerConceptId="166659"
+                             answerLabel="Underlying Condition" style="radio"/>
+                        <br/>
+                        <obs conceptId="1599" answerConceptId="162580"
+                             answerLabel="Other significant" style="radio"/>
+
+                    </td>
+                    <td><br /><br /></td>
+                    <td><br /><br /></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="recommendations">
+            <legend>
+                <strong>Recommendations for Improvement </strong>
+            </legend>
+            <table class="simple-table">
+                <tr>
+                    <td>
+                        GAPS NOTED: </td>
+                    <td>
+                        KEY ACTION:
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <obs conceptId="162169" rows="10" style="textarea" /></td>
+                    <td>
+                        <obs conceptId="164378" rows="10" style="textarea" />
+                    </td>
+
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <div class="ke-form-footer">
+        <submit/>
+    </div>
+
+</htmlform>

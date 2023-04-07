@@ -21,4 +21,5 @@
 	<ref key="SURGICAL_AND_MEDICAL_HISTORY" uuid="4f3c9bd8-c117-4a5e-a7eb-12a627c29de6" />
 	<ref key="TB_SCREENING" uuid="59ed8e62-7f1f-40ae-a2e3-eabe350277ce" />
 	<ref key="TRIAGE" uuid="37f6bd8d-586a-4169-95fa-5781f987fe62" />
+	<ref key="MORTALITY_AUDIT_FORM" uuid="11b088ab-1bdb-4f99-9cf3-445f19342130" />
 </refs>

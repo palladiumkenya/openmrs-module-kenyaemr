@@ -27,6 +27,7 @@
 		<property name="commonVisitForms">
 			<set>
 				<ref bean="kenyaemr.common.form.triage" />
+				<ref bean="kenyaemr.common.form.mortalityAudit" />
 				<ref bean="kenyaemr.common.form.clinicalEncounter" />
 				<ref bean="kenyaemr.common.form.labResults" />
 				<ref bean="kenyaemr.common.form.tbScreening" />
@@ -189,6 +190,26 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:triage.html" />
 		<property name="order" value="200010" />
+	</bean>
+	<!-- MORTALITY AUDIT FORM -->
+	<bean id="kenyaemr.common.form.mortalityAudit" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="${metadata.form.MORTALITY_AUDIT_FORM}" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+				<ref bean="kenyakeypop.app.keypopulation.provider" />
+			</set>
+		</property>
+<!--		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.DeceasedPatientsCalculation" />-->
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mortalityAudit.html" />
+		<property name="order" value="200016" />
 	</bean>
 
 	<!-- Clinical Encounter -->
