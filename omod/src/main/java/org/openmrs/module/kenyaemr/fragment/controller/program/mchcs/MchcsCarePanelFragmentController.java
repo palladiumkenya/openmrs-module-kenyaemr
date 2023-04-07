@@ -13,6 +13,7 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.metadata.MchMetadata;
 import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
@@ -37,7 +38,10 @@ public class MchcsCarePanelFragmentController {
 
 		Map<String, Object> calculations = new HashMap<String, Object>();
 		List<Obs> milestones = new ArrayList<Obs>();
+		List<Obs> prophylaxis = new ArrayList<Obs>();
 		List<Obs> remarks = new ArrayList<Obs>();
+		List<Obs> feeding = new ArrayList<Obs>();
+		List<Obs> pcr = new ArrayList<Obs>();
 		Obs heiOutcomes = null;
 		Obs hivExposed = null;
 		Obs hivStatus = null;
@@ -50,6 +54,8 @@ public class MchcsCarePanelFragmentController {
 		Encounter lastMchcsEnrollment = patientWrapper.lastEncounter(mchcs_enrollment_encounterType);
 		EncounterType mchcs_consultation_encounterType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION);
 		Encounter lastMchcsConsultation = patientWrapper.lastEncounter(mchcs_consultation_encounterType);
+		Encounter heiProphylaxis = patientWrapper.lastEncounter(mchcs_consultation_encounterType);
+
 
 		if (lastMchcsHeiCompletion != null && lastMchcsEnrollment != null) {
 			EncounterWrapper heiCompletionWrapper = new EncounterWrapper(lastMchcsHeiCompletion);
@@ -58,6 +64,7 @@ public class MchcsCarePanelFragmentController {
 			heiOutcomes = heiCompletionWrapper.firstObs(Dictionary.getConcept(Dictionary.REASON_FOR_PROGRAM_DISCONTINUATION));
 			hivExposed =  mchcsEnrollmentWrapper.firstObs(Dictionary.getConcept(Dictionary.CHILDS_CURRENT_HIV_STATUS));
 			hivStatus =  heiCompletionWrapper.firstObs(Dictionary.getConcept(Dictionary.HIV_STATUS));
+
 		}
 
 		if (hivExposed != null && hivExposed.getValueCoded().equals(Dictionary.getConcept(Dictionary.EXPOSURE_TO_HIV)) && heiOutcomes == null) {
@@ -80,6 +87,18 @@ public class MchcsCarePanelFragmentController {
 		if(hivStatus == null){
 			calculations.put("hivStatus", "Not Specified");
 		}
+		if(heiProphylaxis !=null) {
+			EncounterWrapper heiProphylaxisWrapper = new EncounterWrapper(heiProphylaxis);
+			prophylaxis.addAll(heiProphylaxisWrapper.allObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS)));
+			if (prophylaxis.size() > 0) {
+				calculations.put("prophylaxis", prophylaxis);
+			}
+			else {
+				calculations.put("prophylaxis", "Not Specified");
+			}
+
+		}
+
 
 		if (lastMchcsConsultation != null) {
 			EncounterWrapper mchcsConsultationWrapper = new EncounterWrapper(lastMchcsConsultation);
@@ -101,10 +120,28 @@ public class MchcsCarePanelFragmentController {
 			else {
 				calculations.put("remarks", "Not Specified");
 			}
+			feeding.addAll(mchcsConsultationWrapper.allObs(Dictionary.getConcept(Dictionary.INFANT_FEEDING_METHOD)));
+
+			if (remarks.size() > 0) {
+				calculations.put("feeding", feeding);
+			}
+			else {
+				calculations.put("feeding", "Not Specified");
+			}
+			pcr.addAll(mchcsConsultationWrapper.allObs(Context.getConceptService().getConcept(1030)));
+
+			if (remarks.size() > 0) {
+				calculations.put("pcr", pcr);
+			}
+			else {
+				calculations.put("pcr", "Not Specified");
+			}
 		}
 		else {
 			calculations.put("milestones", "Not Specified");
 			calculations.put("remarks", "Not Specified");
+			calculations.put("feeding", "Not Specified");
+			calculations.put("pcr", "Not Specified");
 		}
 
 		model.addAttribute("calculations", calculations);
