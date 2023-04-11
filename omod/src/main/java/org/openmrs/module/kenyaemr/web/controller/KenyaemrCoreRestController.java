@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -102,8 +104,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 for (FormDescriptor descriptor : uncompletedFormDescriptors) {
                     if(!descriptor.getTarget().getRetired()) {
                         ObjectNode formObj = generateFormDescriptorPayload(descriptor);
-                        formObj.put("formCategory", "available");
-                        formList.add(formObj);
+                        Form frm = descriptor.getTarget();
+                        // Only display Triage, Drug Refill and Defaulter Tracing forms
+                        List<String> frontEndForms = Arrays.asList("d1059fb9-a079-4feb-a749-eedd709ae542",
+                                "1495edf8-2df2-11e9-b210-d663bd873d93", "e87aa2ad-6886-422e-9dfd-064e3bfe3aad");
+                        if (frontEndForms.contains(frm.getEncounterType().getUuid())) {
+                            formObj.put("formCategory", "available");
+                            formList.add(formObj);
+                        }
                     }
                 }
             }
