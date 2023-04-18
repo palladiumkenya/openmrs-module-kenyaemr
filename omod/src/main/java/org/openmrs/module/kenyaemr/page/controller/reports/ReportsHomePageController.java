@@ -71,6 +71,11 @@ public class ReportsHomePageController {
 				reportsByProgram.put(program.getName(), forProgram);
 			}
 		}
+		List<SimpleObject> otherReports = new ArrayList<SimpleObject>();
+		for (ReportDescriptor report : reportManager.getOtherReports(currentApp)) {
+			otherReports.add(ui.simplifyObject(report));
+		}
+		reportsByProgram.put("Others", otherReports);
 
 		model.addAttribute("reportsByProgram", reportsByProgram);
 	}
