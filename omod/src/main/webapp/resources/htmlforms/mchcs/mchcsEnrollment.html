@@ -361,9 +361,13 @@
                 .done(function(data) {
                     var msg = data.birthType;
                     if(msg == 'Spontaneous vaginal delivery'){
-                        jq("#birth-type input[value=1070]").prop("checked", true);
+                        jq("#birth-type input[value=1170]").prop("checked", true);
+                    }else if(msg == 'Spontaneous vaginal deliver'){
+                    	jq("#birth-type input[value=1171]").prop("checked", true);
+                    }else if(msg == 'Breech delivery'){
+                    	jq("#birth-type input[value=1172]").prop("checked", true);
                     }else{
-                        jq("#birth-type input[value=1071]").prop("checked", true);
+                       jq("#birth-type input[value=118159]").prop("checked", true);
                     }
                 });
         }
@@ -563,7 +567,7 @@
 						</tr>
 						<tr>
 							<td>Mode of Delivery  </td>
-							<td><obs conceptId="5630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptIds="1170AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1171AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabels="SVD,C-Section" id="birth-type" style="radio"/></td>
+							<td><obs conceptId="5630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptIds="1170AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1171AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1172AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118159AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabels="SVD,C-Section,Breech delivery,Assisted vaginal delivery" id="birth-type" style="radio"/></td>
 							<td colspan="4"></td>
 						</tr>
 					</table>					</td>
