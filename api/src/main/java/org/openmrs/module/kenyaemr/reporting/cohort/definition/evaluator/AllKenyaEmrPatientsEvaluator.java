@@ -11,6 +11,7 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.AllKenyaEmrPatientsCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.library.shared.queries.SharedQueries;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -44,18 +45,11 @@ public class AllKenyaEmrPatientsEvaluator implements CohortDefinitionEvaluator {
         if (context.getBaseCohort() != null && context.getBaseCohort().isEmpty()) {
             return cohort;
         }
-        SqlQueryBuilder query = new SqlQueryBuilder(getQuery(def.getDefaultLocation()));
+        SqlQueryBuilder query = new SqlQueryBuilder(SharedQueries.getBaseCohortQuery(def.getDefaultLocation()));
 
         List<Integer> ptIds = evaluationService.evaluateToList(query, Integer.class, context);
         cohort.setMemberIds(new HashSet<Integer>(ptIds));
 
         return cohort;
-    }
-
-
-    private String getQuery(Integer loc){
-        String query = "SELECT patient_id FROM kenyaemr_etl.etl_last_month_newly_enrolled_in_care where location_id ="+loc;
-
-        return query;
     }
 }

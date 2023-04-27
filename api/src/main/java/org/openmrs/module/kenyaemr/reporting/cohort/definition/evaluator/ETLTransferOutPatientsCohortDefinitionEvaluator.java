@@ -45,16 +45,18 @@ public class ETLTransferOutPatientsCohortDefinitionEvaluator implements CohortDe
 			return null;
 
 		Cohort newCohort = new Cohort();
+		String locationId = (String)context.getParameterValue("defaultLocation");
 		String qry=" select patient_id\n" +
 				"from kenyaemr_etl.etl_patient_program_discontinuation\n" +
 				"where program_name='HIV' and discontinuation_reason = 159492\n" +
-				"and (date(transfer_date) between date(:startDate) and date(:endDate) or date(visit_date) between date(:startDate) and date(:endDate));";
+				"and (date(transfer_date) between date(:startDate) and date(:endDate) or date(visit_date) between date(:startDate) and date(:endDate)) AND location_id="+locationId;
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		Date startDate = (Date)context.getParameterValue("startDate");
 		Date endDate = (Date)context.getParameterValue("endDate");
 		builder.addParameter("endDate", endDate);
 		builder.addParameter("startDate", startDate);
+		builder.addParameter("defaultLocation", locationId);
 		builder.append(qry);
 		List<Integer> ptIds = evaluationService.evaluateToList(builder, Integer.class, context);
 		newCohort.setMemberIds(new HashSet<Integer>(ptIds));

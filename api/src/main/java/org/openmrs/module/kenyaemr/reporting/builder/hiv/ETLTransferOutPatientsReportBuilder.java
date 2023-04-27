@@ -57,13 +57,14 @@ import java.util.List;
 @Builds({"kenyaemr.common.report.clients.transferred.out"})
 public class ETLTransferOutPatientsReportBuilder extends AbstractHybridReportBuilder {
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
-	String paramMapping = "startDate=${startDate},endDate=${endDate}";
+	String paramMapping = "startDate=${startDate},endDate=${endDate},defaultLocation=${defaultLocation}";
 
 	@Override
 	protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
 		return Arrays.asList(
 				new Parameter("startDate", "Start Date", Date.class),
 				new Parameter("endDate", "End Date", Date.class),
+				new Parameter("defaultLocation", "Selected Facility", String.class),
 				new Parameter("dateBasedReporting", "", String.class)
 		);
 	}
@@ -112,6 +113,7 @@ public class ETLTransferOutPatientsReportBuilder extends AbstractHybridReportBui
         cd.setName("Transfer out patients");
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.addParameter(new Parameter("defaultLocation", "Selected Facility", String.class));
 		return ReportUtils.map(cd, paramMapping);
 	}
 }
