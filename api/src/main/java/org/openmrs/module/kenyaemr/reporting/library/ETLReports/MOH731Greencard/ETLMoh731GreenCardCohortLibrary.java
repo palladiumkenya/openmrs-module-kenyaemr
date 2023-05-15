@@ -1232,7 +1232,7 @@ public class ETLMoh731GreenCardCohortLibrary {
      * excluding pmtct tests        *
      * @return
      */
-    public CohortDefinition htsNumberTestedPositiveInLastThreeMonths() {
+    public CohortDefinition htsNumberTestedPositiveThreeMonthsAgo() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));

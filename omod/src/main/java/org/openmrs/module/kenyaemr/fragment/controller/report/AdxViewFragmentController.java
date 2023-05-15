@@ -83,6 +83,7 @@ public class AdxViewFragmentController {
     DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static final String KPIF_MONTHLY_REPORT = "Monthly report";
     public static final String MOH_731 = "MOH 731";
+    public static final String THREEPM_REPORT = "3PM REPORT";
 
     public void get(@RequestParam("request") ReportRequest reportRequest,
                     @RequestParam("returnUrl") String returnUrl,

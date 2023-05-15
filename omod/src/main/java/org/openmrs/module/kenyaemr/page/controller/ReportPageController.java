@@ -60,6 +60,7 @@ public class ReportPageController {
 	private AdministrationService admService;
 	public static final String KPIF_MONTHLY_REPORT = "Monthly report";
 	public static final String MOH_731 = "MOH 731";
+	public static final String THREEPM_REPORT = "3PM REPORT";
 
 	public void get(@RequestParam("reportUuid") String reportUuid,
 					@RequestParam(required = false, value = "startDate") Date startDate,
@@ -98,6 +99,8 @@ public class ReportPageController {
 		else if(report.getName().equals(MOH_731)){
 			mappingDetails = EmrUtils.getDatasetMappingForReport(definition.getName(), admService.getGlobalProperty("kenyaemr.adxDatasetMapping"));
 		}
+		else if(report.getName().equalsIgnoreCase(THREEPM_REPORT)){
+			mappingDetails = EmrUtils.getDatasetMappingForReport(definition.getName(), admService.getGlobalProperty("kenyaemr.3pmDatasetMapping"));
 
 		model.addAttribute("report", report);
 		model.addAttribute("definition", definition);
