@@ -41,9 +41,9 @@ import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.openmrs.module.kenyaemr.reporting.ThreePMMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import javax.validation.constraints.Null;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,7 +83,7 @@ public class AdxViewFragmentController {
     DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static final String KPIF_MONTHLY_REPORT = "Monthly report";
     public static final String MOH_731 = "MOH 731";
-    public static final String THREEPM_REPORT = "3PM REPORT";
+    public static final String THREEPM_REPORT = "3PM Report";
 
     public void get(@RequestParam("request") ReportRequest reportRequest,
                     @RequestParam("returnUrl") String returnUrl,
@@ -114,9 +114,12 @@ public class AdxViewFragmentController {
         model.addAttribute("reportName", definition.getName());
         model.addAttribute("returnUrl", returnUrl);
         if (definition.getName() != null) {
-            if (definition.getName().equals(KPIF_MONTHLY_REPORT)) {
+            if (definition.getName().equalsIgnoreCase(KPIF_MONTHLY_REPORT)) {
                 model.addAttribute("serverAddress", KPIF_SERVER_ADDRESS);
-            } else if (definition.getName().equals(MOH_731)) {
+            } else if (definition.getName().equalsIgnoreCase(MOH_731)) {
+                model.addAttribute("serverAddress", serverAddress != null ? serverAddress : SERVER_ADDRESS);
+            }
+            else if (definition.getName().equalsIgnoreCase(THREEPM_REPORT)) {
                 model.addAttribute("serverAddress", serverAddress != null ? serverAddress : SERVER_ADDRESS);
             }
         }
@@ -137,10 +140,13 @@ public class AdxViewFragmentController {
         Location location = locationService.getLocation(locationId);
         ObjectNode mappingDetails = null;
 
-        if (reportName.equals(MOH_731)) {
+        if (reportName.equalsIgnoreCase(MOH_731)) {
             mappingDetails = EmrUtils.getDatasetMappingForReport(reportName, administrationService.getGlobalProperty("kenyaemr.adxDatasetMapping"));
-        } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
+        } else if (reportName.equalsIgnoreCase(KPIF_MONTHLY_REPORT)) {
             mappingDetails = EmrUtils.getDatasetMappingForReport(reportName, administrationService.getGlobalProperty("kenyakeypop.adx3pmDatasetMapping"));
+        }
+        else if (reportName.equalsIgnoreCase(THREEPM_REPORT)) {
+            mappingDetails = EmrUtils.getDatasetMappingForReport(reportName, administrationService.getGlobalProperty("kenyaemr.3pmDatasetMapping"));
         }
 
         String mfl = "Unknown";
@@ -163,7 +169,7 @@ public class AdxViewFragmentController {
 
             // String datasetName = null;
 
-            if (mappingDetails.get("datasets").getElements() != null && reportName.equals(MOH_731)) {
+            if (mappingDetails.get("datasets").getElements() != null && reportName.equalsIgnoreCase(MOH_731)) {
 
                 for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
                     ObjectNode node = (ObjectNode) it.next();
@@ -172,7 +178,18 @@ public class AdxViewFragmentController {
                         break;
                     }
                 }
-            } else if (mappingDetails.get("datasets").getElements() != null && reportName.equals(KPIF_MONTHLY_REPORT)) {
+            } else if (mappingDetails.get("datasets").getElements() != null && reportName.equalsIgnoreCase(KPIF_MONTHLY_REPORT)) {
+
+                for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
+                    ObjectNode node = (ObjectNode) it.next();
+                    if (node.get("name").asText().equals(dsKey)) {
+                        datasetName = node.get("3pmName").getTextValue();
+                        break;
+                    }
+                }
+            }
+
+            else if (mappingDetails.get("datasets").getElements() != null && reportName.equalsIgnoreCase(THREEPM_REPORT)) {
 
                 for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
                     ObjectNode node = (ObjectNode) it.next();
@@ -198,12 +215,20 @@ public class AdxViewFragmentController {
                     indicatorName = column.getName();
                     Object value = row.getColumnValue(column);
 
-                    if (reportName.equals(MOH_731)) {
+                    if (reportName.equalsIgnoreCase(MOH_731)) {
                         w.append("\t\t").append("<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" value=\"" + value.toString() + "\"/>\n");
-                    } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
+                    } else if (reportName.equalsIgnoreCase(KPIF_MONTHLY_REPORT)) {
 
                         if (indicatorName.contains("PWUD"))
                             continue;
+
+                        mappedIndicatorId = get3PIndicatorId(indicatorName);
+
+                        String[] combos = mappedIndicatorId.split("-");
+
+                        w.append("\t\t").append("<dataValue dataElement=\"" + combos[0] + "\" categoryOptionCombo=\"" + combos[1] + "\" value=\"" + value.toString() + "\"/>\n");
+                    }
+                    else if (reportName.equalsIgnoreCase(THREEPM_REPORT)){
 
                         mappedIndicatorId = get3PIndicatorId(indicatorName);
 
@@ -215,7 +240,7 @@ public class AdxViewFragmentController {
             }
             w.append("</group>\n");
         }
-        if (reportName.equals(MOH_731)) {
+        if (reportName.equalsIgnoreCase(MOH_731)) {
             for (ReportDatasetValueEntryMapper e : getFaclityReportData(MOH_731_ID, isoDateFormat.format(reportDate), isoDateFormat.format(endDate))) {
 
                 Integer datasetId = Integer.parseInt(e.getDatasetID());
@@ -265,6 +290,9 @@ public class AdxViewFragmentController {
         } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
             mappingDetails = EmrUtils.getDatasetMappingForReport(reportName, administrationService.getGlobalProperty("kenyakeypop.adx3pmDatasetMapping"));
         }
+        else if (reportName.equals(THREEPM_REPORT)) {
+            mappingDetails = EmrUtils.getDatasetMappingForReport(reportName, administrationService.getGlobalProperty("kenyaemr.3pmDatasetMapping"));
+        }
 
         String serverAddress = administrationService.getGlobalProperty("ilServer.address");
 
@@ -312,7 +340,17 @@ public class AdxViewFragmentController {
                     }
                 }
             }
-
+            else if (reportName.equals(THREEPM_REPORT)) {
+                if (mappingDetails.get("datasets").getElements() != null) {
+                    for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
+                        ObjectNode node = (ObjectNode) it.next();
+                        if (node.get("name").asText().equals(dsKey)) {
+                            datasetName = node.get("3pmName").getTextValue();
+                            break;
+                        }
+                    }
+                }
+            }
             if (datasetName == null)
                 continue;
 
@@ -339,6 +377,14 @@ public class AdxViewFragmentController {
                         if (name.contains("PWUD"))
                             continue;
                         mappedIndicatorId = get3PIndicatorId(name);
+                        String[] combos = mappedIndicatorId.split("-");
+                        dataValue.setAttribute("dataElement", columnPrefix.concat(combos[0]));
+                        dataValue.setAttribute("categoryOptionCombo", columnPrefix.concat(combos[1]));
+                        dataValue.setAttribute("value", value.toString());
+                    }
+                    else if(reportName.equals(THREEPM_REPORT)){
+
+                        mappedIndicatorId = ThreePMMapping.get3PMIndicatorId(name);
                         String[] combos = mappedIndicatorId.split("-");
                         dataValue.setAttribute("dataElement", columnPrefix.concat(combos[0]));
                         dataValue.setAttribute("categoryOptionCombo", columnPrefix.concat(combos[1]));
@@ -405,7 +451,7 @@ public class AdxViewFragmentController {
 
         }
 
-        return postAdxToIL(out, reportName.equals(MOH_731)? SERVER_ADDRESS : KPIF_SERVER_ADDRESS);
+        return postAdxToIL(out, reportName.equalsIgnoreCase(MOH_731) ? SERVER_ADDRESS : KPIF_SERVER_ADDRESS);
     }
 
     private SimpleObject postAdxToIL(ByteArrayOutputStream outStream, String serverAddress) throws IOException {
@@ -460,9 +506,7 @@ public class AdxViewFragmentController {
 
         DataOutputStream out = new DataOutputStream(con.getOutputStream());
 
-
         out.writeBytes(outStream.toString());
-
 
         out.flush();
         out.close();
@@ -3276,7 +3320,7 @@ public class AdxViewFragmentController {
         map.put("TX_PVLS_ELIGIBLE_VERIFY_PEPFAR_SITE_FSW-02", "tcKlzWxQG6w-LkV9MIzKs8R");
         map.put("TX_PVLS_ELIGIBLE_VERIFY_PEPFAR_SITE_unknown", "tcKlzWxQG6w-nJevmP4V2K0");
         map.put("TX_PVLS_ELIGIBLE_VERIFY_PEPFAR_SITE_MSW-01", "tcKlzWxQG6w-SsB5mmWsigU");
-
+        map.put("TX_PVLS_ELIGIBLE_VERIFY_PEPFAR_SITE_MSW-01", "tcKlzWxQG6w-SsB5mmWsigU");
 
         return map.get(indicatorDisaggr);
     }

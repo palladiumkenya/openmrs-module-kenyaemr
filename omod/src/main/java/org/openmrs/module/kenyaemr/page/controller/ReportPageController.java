@@ -93,15 +93,15 @@ public class ReportPageController {
 		}
 
 		ObjectNode mappingDetails = null;
-		if (report.getName().equals(KPIF_MONTHLY_REPORT)){
+		if (report.getName().equalsIgnoreCase(KPIF_MONTHLY_REPORT)){
 			mappingDetails = EmrUtils.getDatasetMappingForReport(definition.getName(), admService.getGlobalProperty("kenyakeypop.adx3pmDatasetMapping"));
 		}
-		else if(report.getName().equals(MOH_731)){
+		else if(report.getName().equalsIgnoreCase(MOH_731)){
 			mappingDetails = EmrUtils.getDatasetMappingForReport(definition.getName(), admService.getGlobalProperty("kenyaemr.adxDatasetMapping"));
 		}
-		else if(report.getName().equalsIgnoreCase(THREEPM_REPORT)){
+		else if(report.getName().equalsIgnoreCase(THREEPM_REPORT)) {
 			mappingDetails = EmrUtils.getDatasetMappingForReport(definition.getName(), admService.getGlobalProperty("kenyaemr.3pmDatasetMapping"));
-
+		}
 		model.addAttribute("report", report);
 		model.addAttribute("definition", definition);
 		model.addAttribute("isIndicator", isIndicator);
@@ -109,9 +109,6 @@ public class ReportPageController {
 		model.addAttribute("excelRenderable", excelRenderable);
 		model.addAttribute("returnUrl", returnUrl);
 		model.addAttribute("period", definition.getName().replaceAll("[^0-9]", ""));
-
-
-
 
 		if (isIndicator) {
 			Map<String, String> startDateOptions = new LinkedHashMap<String, String>();
