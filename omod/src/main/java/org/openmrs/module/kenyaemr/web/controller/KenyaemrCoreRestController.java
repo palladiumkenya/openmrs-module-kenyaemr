@@ -199,6 +199,90 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		return patientObj.toString();
         
     }
+	
+        /**
+	 * Fetches Patient's hiv care panel data 
+	 *
+	 * @return custom hiv data
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/hiv-care-panel")
+	@ResponseBody
+	public Object getPatientHivCarePanel(@RequestParam("patientUuid") String patientUuid, @RequestParam("isComplete" string isComplete)) {
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        boolean complete = Boolean.parseBoolean(isComplete);
+        
+        Map<String, CalculationResult> calculationResults = new HashMap<String, CalculationResult>();
+
+		SimpleObject firstEncDetails = null;
+        
+		ObjectNode carePanelObj = JsonNodeFactory.instance.objectNode();
+
+		if (complete != null) {
+			Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "ARV");
+
+			if (firstEnc != null) {
+				firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(), firstEnc);
+
+			}
+		}
+
+		carePanelObj.put("firstEncDetails", firstEncDetails);
+
+		calculationResults.put("lastWHOStage", EmrCalculationUtils.evaluateForPatient(LastWhoStageCalculation.class, null, patient));
+		calculationResults.put("lastCD4Count", EmrCalculationUtils.evaluateForPatient(LastCd4CountCalculation.class, null, patient));
+		calculationResults.put("lastCD4Percent", EmrCalculationUtils.evaluateForPatient(LastCd4PercentageCalculation.class, null, patient));
+		CalculationResult lastViralLoad = EmrCalculationUtils.evaluateForPatient(ViralLoadAndLdlCalculation.class, null, patient);
+		String valuesRequired = "None";
+		Date datesRequired = null;
+		if(!lastViralLoad.isEmpty()) {
+			calculationResults.put("lastViralLoad", lastViralLoad);
+		}
+
+		carePanelObj.put("calculations", calculationResults);
+
+
+		if(!lastViralLoad.isEmpty()){
+			String values = lastViralLoad.getValue().toString();
+			//split by brace
+			String value = values.replaceAll("\\{", "").replaceAll("\\}","");
+			//split by equal sign
+			if(!value.isEmpty()) {
+				String[] splitByEqualSign = value.split("=");
+				valuesRequired = splitByEqualSign[0];
+				//for a date from a string
+				String dateSplitedBySpace = splitByEqualSign[1].split(" ")[0].trim();
+				String yearPart = dateSplitedBySpace.split("-")[0].trim();
+				String monthPart = dateSplitedBySpace.split("-")[1].trim();
+				String dayPart = dateSplitedBySpace.split("-")[2].trim();
+
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(Calendar.YEAR, Integer.parseInt(yearPart));
+				calendar.set(Calendar.MONTH, Integer.parseInt(monthPart) - 1);
+				calendar.set(Calendar.DATE, Integer.parseInt(dayPart));
+
+				datesRequired = calendar.getTime();
+			}
+		}
+
+
+		// get default LDL value
+		AdministrationService as = Context.getAdministrationService();
+		Double ldl_default_value = Double.parseDouble(as.getGlobalProperty("kenyaemr.LDL_default_value"));
+		carePanelObj.put("ldl_default_value", ldl_default_value);
+		carePanelObj.put("value", valuesRequired);
+		carePanelObj.put("date", datesRequired);
+
+		Encounter lastEnc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");
+		SimpleObject lastEncDetails = null;
+		if (lastEnc != null) {
+			lastEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(lastEnc.getObs(), lastEnc);
+		}
+        	carePanelObj.put("lastEnc", lastEncDetails);
+
+		return carePanelObj.toString();
+
+	}
+
 
 	/**
 	 * Fetches default facility
