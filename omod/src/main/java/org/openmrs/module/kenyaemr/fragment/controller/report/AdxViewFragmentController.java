@@ -194,7 +194,7 @@ public class AdxViewFragmentController {
                 for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
                     ObjectNode node = (ObjectNode) it.next();
                     if (node.get("name").asText().equals(dsKey)) {
-                        datasetName = node.get("3pmName").getTextValue();
+                        datasetName = node.get("3PMReportName").getTextValue();
                         break;
                     }
                 }

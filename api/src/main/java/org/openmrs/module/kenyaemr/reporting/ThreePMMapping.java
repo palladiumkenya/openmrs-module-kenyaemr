@@ -10,57 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ThreePMMapping {
-
-    private final String indicatorName;
-
-    private final List<String> emrDisaggregations;
-
-    private final String duid;
-
-    private final String dName;
-
-    private final List<String> cuids;
-
-    private final List<String> cuidDisaggregations;
-
-    public ThreePMMapping(String indicatorName, List<String> emrDisaggregations, String duid, String dName, List<String> cuids, List<String> cuidDisaggregations) {
-        this.indicatorName = indicatorName;
-        this.emrDisaggregations = emrDisaggregations;
-        this.duid = duid;
-        this.dName = dName;
-        this.cuids = cuids;
-        this.cuidDisaggregations = cuidDisaggregations;
-
-    }
-
-    public String getIndicatorName() {
-        return indicatorName;
-    }
-
-    public List<String> getEmrDisaggregations() {
-        return emrDisaggregations;
-    }
-
-    public String getDuid() {
-        return duid;
-    }
-
-    public String getdName() {
-        return dName;
-    }
-
-    public List<String> getCuids() {
-        return cuids;
-    }
-
-    public List<String> getCuidDisaggregations() {
-        return cuidDisaggregations;
-    }
-
     public static String get3PMIndicatorId(String indicatorDisaggr) {
 
         HashMap<String, String> map = new HashMap<String, String>();
