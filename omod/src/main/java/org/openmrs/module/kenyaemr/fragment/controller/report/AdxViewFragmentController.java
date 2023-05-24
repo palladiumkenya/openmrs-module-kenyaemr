@@ -230,11 +230,12 @@ public class AdxViewFragmentController {
                     }
                     else if (reportName.equalsIgnoreCase(THREEPM_REPORT)){
 
-                        mappedIndicatorId = get3PIndicatorId(indicatorName);
+                        mappedIndicatorId = ThreePMMapping.get3PMIndicatorId(indicatorName);
 
-                        String[] combos = mappedIndicatorId.split("-");
-
-                        w.append("\t\t").append("<dataValue dataElement=\"" + combos[0] + "\" categoryOptionCombo=\"" + combos[1] + "\" value=\"" + value.toString() + "\"/>\n");
+                       if(mappedIndicatorId != null) {
+                           String[] combos = mappedIndicatorId.split("-");
+                           w.append("\t\t").append("<dataValue duid=\"" + combos[0] + "\" cuid=\"" + combos[1] + "\" value=\"" + value.toString() + "\"/>\n");
+                       }
                     }
                 }
             }
@@ -345,7 +346,7 @@ public class AdxViewFragmentController {
                     for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
                         ObjectNode node = (ObjectNode) it.next();
                         if (node.get("name").asText().equals(dsKey)) {
-                            datasetName = node.get("3pmName").getTextValue();
+                            datasetName = node.get("3PMReportName").getTextValue();
                             break;
                         }
                     }
@@ -383,7 +384,6 @@ public class AdxViewFragmentController {
                         dataValue.setAttribute("value", value.toString());
                     }
                     else if(reportName.equals(THREEPM_REPORT)){
-
                         mappedIndicatorId = ThreePMMapping.get3PMIndicatorId(name);
                         String[] combos = mappedIndicatorId.split("-");
                         dataValue.setAttribute("dataElement", columnPrefix.concat(combos[0]));
