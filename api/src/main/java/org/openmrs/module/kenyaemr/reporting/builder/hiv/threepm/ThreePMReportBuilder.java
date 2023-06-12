@@ -150,7 +150,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
             f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50);
 
     List<ColumnParameters> sparseAgeAndSexDisaggregation = Arrays.asList(
-            f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to49, m40_to49, fAbove50, mAbove50);
+            f0_to14, m0_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25AndAbove, m25AndAbove);
     List<ColumnParameters> mnchMotherAgeADisaggregation = Arrays.asList(
             fUnder1,f1To9,f10_to14,f15_to19,f20_to24,f25_to29,f30_to34,f35_to39,f40_to49,fAbove50);
 
@@ -301,6 +301,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
         //Care and Treatment indicators
 
+/*
         EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment", "", ReportUtils.map(moh731GreenCardIndicators.currentlyOnArt(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
         EmrReportingUtils.addRow(dsd, "CTV3: On DTG-based regimen", "", ReportUtils.map(threePMIndicators.currentlyOnDTGRegimen(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
         EmrReportingUtils.addRow(dsd, "CTV3: Stopped treatment", "", ReportUtils.map(threePMIndicators.stoppedTreatment(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
@@ -324,29 +325,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd, "CTV3: Died", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
         EmrReportingUtils.addRow(dsd, "CTV3: With viral load results < 200cp/ml (includes LDL)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
         EmrReportingUtils.addRow(dsd, "CTV3: With vl results 400 - 999cp/ml", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
         //Check this for and kp types
