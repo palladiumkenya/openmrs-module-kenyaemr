@@ -419,92 +419,92 @@ public class CommonCohortLibrary {
 	}
 
 	//Key populations
-	public CohortDefinition fsw() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("FSW");
-		cd.setFswIncluded(true);
-		return cd;
-	}
-	public CohortDefinition pwid() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("PWID");
-		cd.setPwidIncluded(true);
-		return cd;
-	}
-	public CohortDefinition msm() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("MSM");
-		cd.setMsmIncluded(true);
-		return cd;
-	}
-	public CohortDefinition transgender() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("Transgender");
-		cd.setTransgenderIncluded(true);
-		return cd;
-	}
-	public CohortDefinition peopleInPrisonsClosedAndSettings() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("People in prison and other closed settings");
-		cd.setPrisonersIncluded(true);
-		return cd;
-	}
-	public CohortDefinition pwud() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("PWUD");
-		cd.setPrisonersIncluded(true);
-		return cd;
-	}
-	public CohortDefinition otherKeyPopulation() {
-		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
-		cd.setName("Other");
-		cd.setOtherIncluded(true);
-		return cd;
-	}
-
-	//Priority Populations
-	public CohortDefinition clientsOfSexWorkers() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Clients of sex workers");
-		cd.setClientOfSexWorkerIncluded(true);
-		return cd;
-	}
-
-	public CohortDefinition displacedPersons() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Displaced persons");
-		cd.setDisplacedPersonsIncluded(true);
-		return cd;
-	}
-
-	public CohortDefinition fishingCommunities() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Fishing communities");
-		cd.setFishingCommunitiesIncluded(true);
-		return cd;
-	}
-	public CohortDefinition militaryUniformedServices() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Military and other uniformed services");
-		cd.setMilitaryIncluded(true);
-		return cd;
-	}
-	public CohortDefinition mobilePopulations() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Mobile populations");
-		cd.setMobilePopsIncluded(true);
-		return cd;
-	}
-	public CohortDefinition nonInjectingDrugUser() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Non-injecting drug user");
-		cd.setNonInjectingDrugUsersIncluded(true);
-		return cd;
-	}
-	public CohortDefinition otherPriorityPopulation() {
-		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
-		cd.setName("Other");
-		cd.setOtherPriorityPopsIncluded(true);
-		return cd;
-	}
+//	public CohortDefinition fsw() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("FSW");
+//		cd.setFswIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition pwid() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("PWID");
+//		cd.setPwidIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition msm() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("MSM");
+//		cd.setMsmIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition transgender() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("Transgender");
+//		cd.setTransgenderIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition peopleInPrisonsClosedAndSettings() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("People in prison and other closed settings");
+//		cd.setPrisonersIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition pwud() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("PWUD");
+//		cd.setPrisonersIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition otherKeyPopulation() {
+//		KPTypeCohortDefinition cd = new KPTypeCohortDefinition();
+//		cd.setName("Other");
+//		cd.setOtherIncluded(true);
+//		return cd;
+//	}
+//
+//	//Priority Populations
+//	public CohortDefinition clientsOfSexWorkers() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Clients of sex workers");
+//		cd.setClientOfSexWorkerIncluded(true);
+//		return cd;
+//	}
+//
+//	public CohortDefinition displacedPersons() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Displaced persons");
+//		cd.setDisplacedPersonsIncluded(true);
+//		return cd;
+//	}
+//
+//	public CohortDefinition fishingCommunities() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Fishing communities");
+//		cd.setFishingCommunitiesIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition militaryUniformedServices() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Military and other uniformed services");
+//		cd.setMilitaryIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition mobilePopulations() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Mobile populations");
+//		cd.setMobilePopsIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition nonInjectingDrugUser() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Non-injecting drug user");
+//		cd.setNonInjectingDrugUsersIncluded(true);
+//		return cd;
+//	}
+//	public CohortDefinition otherPriorityPopulation() {
+//		PriorityPopulationTypeCohortDefinition cd = new PriorityPopulationTypeCohortDefinition();
+//		cd.setName("Other");
+//		cd.setOtherPriorityPopsIncluded(true);
+//		return cd;
+//	}
 }

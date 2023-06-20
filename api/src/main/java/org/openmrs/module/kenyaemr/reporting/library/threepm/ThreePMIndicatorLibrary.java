@@ -42,10 +42,35 @@ public class ThreePMIndicatorLibrary {
                 map(threePMCohorts.htsScreenedMobile(department), "startDate=${startDate},endDate=${endDate}")
         );
     }
+    public CohortIndicator htsTbNewKnownPositive(Integer department) {
+        return cohortIndicator("Newly identified positive",
+                map(threePMCohorts.htsTbNewKnownPositive(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator htsTbScreenedForTb(Integer department) {
+        return cohortIndicator("TB screened",
+                map(threePMCohorts.htsTbScreenedForTb(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator htsTBTested(Integer department) {
+        return cohortIndicator("TB tested",
+                map(threePMCohorts.htsTBTested(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
 
     public CohortIndicator htsEligibleMobile(Integer department) {
         return cohortIndicator("Eligible for HIV Test",
                 map(threePMCohorts.htsEligibleMobile(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator htsEligibleForTbTest(Integer department) {
+        return cohortIndicator("Eligible for TB Test",
+                map(threePMCohorts.htsEligibleForTbTest(department), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator knownTbPositive(Integer department) {
+        return cohortIndicator("TB Known Positive",
+                map(threePMCohorts.knownTbPositive(department), "startDate=${startDate},endDate=${endDate}")
         );
     }
 

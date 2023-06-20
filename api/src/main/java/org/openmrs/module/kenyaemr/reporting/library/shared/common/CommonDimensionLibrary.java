@@ -267,26 +267,26 @@ public class CommonDimensionLibrary {
     public CohortDefinitionDimension kpType() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
         dim.setName("kpType");
-        dim.addCohortDefinition("FSW", map(commonCohortLibrary.fsw()));
-        dim.addCohortDefinition("MSM", map(commonCohortLibrary.msm()));
-        dim.addCohortDefinition("PWID", map(commonCohortLibrary.pwid()));
-        dim.addCohortDefinition("Transgender", map(commonCohortLibrary.transgender()));
-        dim.addCohortDefinition("People in prison and other closed settings", map(commonCohortLibrary.peopleInPrisonsClosedAndSettings()));
-        dim.addCohortDefinition("PWUD", map(commonCohortLibrary.pwud()));
-        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherKeyPopulation()));
+//        dim.addCohortDefinition("FSW", map(commonCohortLibrary.fsw()));
+//        dim.addCohortDefinition("MSM", map(commonCohortLibrary.msm()));
+//        dim.addCohortDefinition("PWID", map(commonCohortLibrary.pwid()));
+//        dim.addCohortDefinition("Transgender", map(commonCohortLibrary.transgender()));
+//        dim.addCohortDefinition("People in prison and other closed settings", map(commonCohortLibrary.peopleInPrisonsClosedAndSettings()));
+//        dim.addCohortDefinition("PWUD", map(commonCohortLibrary.pwud()));
+//        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherKeyPopulation()));
         return dim;
     }
     //Priority population types
     public CohortDefinitionDimension priorityPopulationType() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
         dim.setName("ppType");
-        dim.addCohortDefinition("Clients of sex workers", map(commonCohortLibrary.clientsOfSexWorkers()));
-        dim.addCohortDefinition("Displaced persons", map(commonCohortLibrary.displacedPersons()));
-        dim.addCohortDefinition("Fishing communities", map(commonCohortLibrary.fishingCommunities()));
-        dim.addCohortDefinition("Military and other uniformed services", map(commonCohortLibrary.militaryUniformedServices()));
-        dim.addCohortDefinition("Mobile populations", map(commonCohortLibrary.mobilePopulations()));
-        dim.addCohortDefinition("Non-injecting drug user", map(commonCohortLibrary.nonInjectingDrugUser()));
-        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherPriorityPopulation()));
+//        dim.addCohortDefinition("Clients of sex workers", map(commonCohortLibrary.clientsOfSexWorkers()));
+//        dim.addCohortDefinition("Displaced persons", map(commonCohortLibrary.displacedPersons()));
+//        dim.addCohortDefinition("Fishing communities", map(commonCohortLibrary.fishingCommunities()));
+//        dim.addCohortDefinition("Military and other uniformed services", map(commonCohortLibrary.militaryUniformedServices()));
+//        dim.addCohortDefinition("Mobile populations", map(commonCohortLibrary.mobilePopulations()));
+//        dim.addCohortDefinition("Non-injecting drug user", map(commonCohortLibrary.nonInjectingDrugUser()));
+//        dim.addCohortDefinition("Other", map(commonCohortLibrary.otherPriorityPopulation()));
         return dim;
     }
 /**

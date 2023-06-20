@@ -52,6 +52,8 @@ public class ThreePMCohortLibrary {
     private KPMonthlyReportCohortLibrary kpifCohorts;
     @Autowired
     private ETLMoh731GreenCardCohortLibrary moh731Cohorts;
+
+
     /**
      * Screened for HIV test
      * @return
@@ -126,6 +128,34 @@ public class ThreePMCohortLibrary {
 
         return cd;
     }
+    public CohortDefinition htsTBTested() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t where date(t.visit_date) between date(:startDate) and date(:endDate) and t.tb_screening in (1660,142177,1662,160737,1111);";
+        cd.setName("HTS tested Positive");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HTS tested Positive");
+
+        return cd;
+    }
+    public CohortDefinition knownTbPositive() {
+        String sqlQuery = "select v.patient_id from kenyaemr_etl.etl_tb_enrollment v\n" +
+                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=v.patient_id \n" +
+                "left join (select t.patient_id,t.visit_date from kenyaemr_etl.etl_hts_test t where t.test_type = 1 and t.final_test_result='Positive' and t.hts_entry_point = 160538)t on v.patient_id = t.patient_id and v.visit_date = t.visit_date\n" +
+                "    where v.anc_visit_number = 1 and v.visit_date between date(:startDate) and date(:endDate) and (v.final_test_result = 'Positive' or t.patient_id is not null);";
+
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("knownTbPositive");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Clients with Known HIV Positive TB");
+        return cd;
+
+    }
+
+
     public CohortDefinition htsScreenedMobile(Integer department) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -137,6 +167,55 @@ public class ThreePMCohortLibrary {
         cd.setCompositionString("htsScreened AND screenedFromMobileDepartment");
         return cd;
     }
+
+
+    public CohortDefinition htsTbNewKnownPositive (Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("tbNewKnownPositive",
+                ReportUtils.map(moh731Cohorts.tbNewKnownPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND tbNewKnownPositive");
+        return cd;
+    }
+    public CohortDefinition knownTbPositive (Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("knownTbPositive",
+                ReportUtils.map(knownTbPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND tbNewKnownPositive");
+        return cd;
+    }
+
+    public CohortDefinition htsTbScreenedForTb (Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("screenedForTb",
+                ReportUtils.map(moh731Cohorts.screenedForTbWithinPeriod(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND screenedForTb");
+        return cd;
+    }
+    public CohortDefinition htsTBTested (Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("htsScreened",
+                ReportUtils.map(htsScreened(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsTBTested",
+                ReportUtils.map(htsTBTested(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("htsScreened AND htsTBTested");
+        return cd;
+    }
+
+
     public CohortDefinition htsEligibleMobile(Integer department) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -146,6 +225,17 @@ public class ThreePMCohortLibrary {
         cd.addSearch("screenedFromMobileDepartment",
                 ReportUtils.map(screenedFromMobileDepartment(department), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("eligibleForHIVTest AND screenedFromMobileDepartment");
+        return cd;
+    }
+    public CohortDefinition htsEligibleForTbTest(Integer department) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("eligibleForTbTest",
+                ReportUtils.map(eligibleForTbTest(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("screenedFromMobileDepartment",
+                ReportUtils.map(screenedFromMobileDepartment(department), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("eligibleForTbTest AND screenedFromMobileDepartment");
         return cd;
     }
     public CohortDefinition htsScreenedANC1(Integer department) {
@@ -202,6 +292,28 @@ public class ThreePMCohortLibrary {
         return cd;
     }
     public CohortDefinition eligibleForHIVTest() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.eligible_for_test = 1065 and date(s.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("Eligible for HIV test");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Eligible for HIV test");
+
+        return cd;
+    }
+    public CohortDefinition eligibleForTbTest() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.eligible_for_test = 1065 and date(s.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("Eligible for TB test");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Eligible for TB test");
+
+        return cd;
+    }
+    public CohortDefinition htsTbTest() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select s.patient_id from kenyaemr_etl.etl_hts_eligibility_screening s where s.eligible_for_test = 1065 and date(s.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("Eligible for HIV test");

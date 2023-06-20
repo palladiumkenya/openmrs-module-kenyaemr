@@ -70,6 +70,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     ColumnParameters male_pwid = new ColumnParameters(null, "Male,PWID", "gender=M|kpType=PWID");
     ColumnParameters infant = new ColumnParameters(null, "<1, Male and Female", "age=<1");
     ColumnParameters fUnder1 = new ColumnParameters(null, "<1", "gender=F|age=<1");
+
     ColumnParameters f1To9 = new ColumnParameters(null, "1-9", "gender=F|age=1-9");
     ColumnParameters all1_to9 = new ColumnParameters(null, "1-9, Male and female", "age=1-9");
     ColumnParameters f0_to14 = new ColumnParameters(null, "0-14, Female", "gender=F|age=0-14");
@@ -96,6 +97,152 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
     ColumnParameters m25AndAbove = new ColumnParameters(null, "25+, Male", "gender=M|age=25+");
     ColumnParameters fAbove50 = new ColumnParameters(null, "50+, Female", "gender=F|age=50+");
     ColumnParameters mAbove50 = new ColumnParameters(null, "50+, Male", "gender=M|age=50+");
+    ColumnParameters all10_to14 = new ColumnParameters(null, "10-14, Male and female", "age=10-14");
+    ColumnParameters all15_to19 = new ColumnParameters(null, "15-19, Male and female", "age=15-19");
+    ColumnParameters all120_to24 = new ColumnParameters(null, "20-24, Male and female", "age=20-24");
+    ColumnParameters all25_to29 = new ColumnParameters(null, "25-29, Male and female", "age=25-29");
+    ColumnParameters all30_to34 = new ColumnParameters(null, "30-34, Male and female", "age=30-34");
+    ColumnParameters all35_to39 = new ColumnParameters(null, "35-39, Male and female", "age=35-39");
+    ColumnParameters all40_to44 = new ColumnParameters(null, "40-44, Male and female", "age=40-44");
+    ColumnParameters all45_to49 = new ColumnParameters(null, "45-49, Male and female", "age=45-49");
+    ColumnParameters allAbove50 = new ColumnParameters(null, "50+, Male and female", "age=50+");
+
+//HTS -SNS
+    ColumnParameters f10_to14_fsw = new ColumnParameters(null, "10-14,Female FSW", "gender=F|age=10-14");
+    ColumnParameters m10_to14_fsw = new ColumnParameters(null, "10-14,Male FSW ", "gender=M|age=10-14");
+    ColumnParameters f1To4_fsw = new ColumnParameters(null, "1-4, Female FSW ", "gender=F|age=1-4");
+    ColumnParameters m1To4_fsw = new ColumnParameters(null, "1-4, Male FSW", "gender=M|age=1-4");
+    ColumnParameters f15To19_fsw = new ColumnParameters(null, "15-19, Female FSW ", "gender=F|age=15-19");
+    ColumnParameters m15To19_fsw = new ColumnParameters(null, "15-19, Male FSW", "gender=M|age=15-19");
+    ColumnParameters fUnder1_fsw = new ColumnParameters(null, "<1, Female FSW", "gender=F|age=<1");
+    ColumnParameters mUnder1_fsw = new ColumnParameters(null, "<1, Male FSW", "gender=M|age=<1");
+    ColumnParameters f20To24_fsw = new ColumnParameters(null, "20-24, Female FSW ", "gender=F|age=20-24");
+    ColumnParameters m20To24_fsw = new ColumnParameters(null, "20-24, Male FSW", "gender=M|age=20-24");
+    ColumnParameters f25To29_fsw = new ColumnParameters(null, "25-29, Female FSW ", "gender=F|age=25-29");
+    ColumnParameters m25To29_fsw = new ColumnParameters(null, "25-29, Male FSW", "gender=M|age=25-29");
+    ColumnParameters f30To34_fsw = new ColumnParameters(null, "30-34, Female FSW ", "gender=F|age=30-34");
+    ColumnParameters m30To34_fsw = new ColumnParameters(null, "30-34, Male FSW", "gender=M|age=30-34");
+    ColumnParameters f35To39_fsw = new ColumnParameters(null, "35-39, Female FSW ", "gender=F|age=35-39");
+    ColumnParameters m35To39_fsw = new ColumnParameters(null, "35-39, Male FSW", "gender=M|age=35-39");
+    ColumnParameters f40To44_fsw = new ColumnParameters(null, "40-44, Female FSW ", "gender=F|age=40-44");
+    ColumnParameters m40To44_fsw = new ColumnParameters(null, "40-44, Male FSW", "gender=M|age=40-44");
+    ColumnParameters f45To49_fsw = new ColumnParameters(null, "45-49, Female FSW ", "gender=F|age=45-49");
+    ColumnParameters m45To49_fsw = new ColumnParameters(null, "45-49, Male FSW", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_fsw = new ColumnParameters(null, "50+, Female FSW", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_fsw = new ColumnParameters(null, "50+, Male FSW", "gender=M|age=50+");
+    ColumnParameters f5To9_fsw = new ColumnParameters(null, "5-9, Female FSW ", "gender=F|age=5-9");
+    ColumnParameters m5To9_fsw = new ColumnParameters(null, "5-9, Male FSW", "gender=M|age=5-9");
+
+
+    ColumnParameters f10_to14_general_population = new ColumnParameters(null, "10-14,Female General Population", "gender=F|age=10-14");
+    ColumnParameters m10_to14_general_population = new ColumnParameters(null, "10-14,Male General Population ", "gender=M|age=10-14");
+    ColumnParameters f1To4_general_population = new ColumnParameters(null, "1-4, Female General Population ", "gender=F|age=1-4");
+    ColumnParameters m1To4_general_population = new ColumnParameters(null, "1-4, Male General Population", "gender=M|age=1-4");
+    ColumnParameters f15To19_general_population = new ColumnParameters(null, "15-19, Female General Population ", "gender=F|age=15-19");
+    ColumnParameters m15To19_general_population = new ColumnParameters(null, "15-19, Male General Population", "gender=M|age=15-19");
+    ColumnParameters fUnder1_general_population = new ColumnParameters(null, "<1, Female General Population", "gender=F|age=<1");
+    ColumnParameters mUnder1_general_population = new ColumnParameters(null, "<1, Male General Population", "gender=M|age=<1");
+    ColumnParameters f20To24_general_population = new ColumnParameters(null, "20-24, Female General Population ", "gender=F|age=20-24");
+    ColumnParameters m20To24_general_population = new ColumnParameters(null, "20-24, Male General Population", "gender=M|age=20-24");
+    ColumnParameters f25To29_general_population = new ColumnParameters(null, "25-29, Female General Population ", "gender=F|age=25-29");
+    ColumnParameters m25To29_general_population = new ColumnParameters(null, "25-29, Male General Population", "gender=M|age=25-29");
+    ColumnParameters f30To34_general_population = new ColumnParameters(null, "30-34, Female General Population ", "gender=F|age=30-34");
+    ColumnParameters m30To34_general_population = new ColumnParameters(null, "30-34, Male General Population", "gender=M|age=30-34");
+    ColumnParameters f35To39_general_population = new ColumnParameters(null, "35-39, Female General Population ", "gender=F|age=35-39");
+    ColumnParameters m35To39_general_population = new ColumnParameters(null, "35-39, Male General Population", "gender=M|age=35-39");
+    ColumnParameters f40To44_general_population = new ColumnParameters(null, "40-44, Female General Population ", "gender=F|age=40-44");
+    ColumnParameters m40To44_general_population = new ColumnParameters(null, "40-44, Male General Population", "gender=M|age=40-44");
+    ColumnParameters f45To49_general_population = new ColumnParameters(null, "45-49, Female General Population ", "gender=F|age=45-49");
+    ColumnParameters m45To49_general_population = new ColumnParameters(null, "45-49, Male General Population", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_general_population = new ColumnParameters(null, "50+, Female General Population", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_general_population = new ColumnParameters(null, "50+, Male General Population", "gender=M|age=50+");
+    ColumnParameters f5To9_general_population = new ColumnParameters(null, "5-9, Female General Population ", "gender=F|age=5-9");
+    ColumnParameters m5To9_general_population = new ColumnParameters(null, "5-9, Male General Population", "gender=M|age=5-9");
+
+    ColumnParameters f10_to14_msm = new ColumnParameters(null, "10-14,Female MSM", "gender=F|age=10-14");
+    ColumnParameters m10_to14_msm = new ColumnParameters(null, "10-14,Male MSM ", "gender=M|age=10-14");
+    ColumnParameters f1To4_msm = new ColumnParameters(null, "1-4, Female MSM ", "gender=F|age=1-4");
+    ColumnParameters m1To4_msm = new ColumnParameters(null, "1-4, Male MSM", "gender=M|age=1-4");
+    ColumnParameters f15To19_msm = new ColumnParameters(null, "15-19, Female MSM ", "gender=F|age=15-19");
+    ColumnParameters m15To19_msm = new ColumnParameters(null, "15-19, Male MSM", "gender=M|age=15-19");
+    ColumnParameters fUnder1_msm = new ColumnParameters(null, "<1, Female MSM", "gender=F|age=<1");
+    ColumnParameters mUnder1_msm = new ColumnParameters(null, "<1, Male MSM", "gender=M|age=<1");
+    ColumnParameters f20To24_msm = new ColumnParameters(null, "20-24, Female MSM ", "gender=F|age=20-24");
+    ColumnParameters m20To24_msm = new ColumnParameters(null, "20-24, Male MSM", "gender=M|age=20-24");
+    ColumnParameters f25To29_msm = new ColumnParameters(null, "25-29, Female MSM ", "gender=F|age=25-29");
+    ColumnParameters m25To29_msm = new ColumnParameters(null, "25-29, Male MSM", "gender=M|age=25-29");
+    ColumnParameters f30To34_msm = new ColumnParameters(null, "30-34, Female MSM ", "gender=F|age=30-34");
+    ColumnParameters m30To34_msm = new ColumnParameters(null, "30-34, Male MSM", "gender=M|age=30-34");
+    ColumnParameters f35To39_msm = new ColumnParameters(null, "35-39, Female MSM ", "gender=F|age=35-39");
+    ColumnParameters m35To39_msm = new ColumnParameters(null, "35-39, Male MSM", "gender=M|age=35-39");
+    ColumnParameters f40To44_msm = new ColumnParameters(null, "40-44, Female MSM ", "gender=F|age=40-44");
+    ColumnParameters m40To44_msm = new ColumnParameters(null, "40-44, Male MSM", "gender=M|age=40-44");
+    ColumnParameters f45To49_msm = new ColumnParameters(null, "45-49, Female MSM ", "gender=F|age=45-49");
+    ColumnParameters m45To49_msm = new ColumnParameters(null, "45-49, Male MSM", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_msm = new ColumnParameters(null, "50+, Female MSM", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_msm = new ColumnParameters(null, "50+, Male MSM", "gender=M|age=50+");
+    ColumnParameters f5To9_msm = new ColumnParameters(null, "5-9, Female MSM ", "gender=F|age=5-9");
+    ColumnParameters m5To9_msm = new ColumnParameters(null, "5-9, Male MSM", "gender=M|age=5-9");
+
+    ColumnParameters f15To19_people_in_prison = new ColumnParameters(null, "15-19, Female People in prison ", "gender=F|age=15-19");
+    ColumnParameters m15To19_people_in_prison = new ColumnParameters(null, "15-19, Male People in prison", "gender=M|age=15-19");
+    ColumnParameters f20To24_people_in_prison = new ColumnParameters(null, "20-24, Female People in prison ", "gender=F|age=20-24");
+    ColumnParameters m20To24_people_in_prison = new ColumnParameters(null, "20-24, Male People in prison", "gender=M|age=20-24");
+    ColumnParameters f25To29_people_in_prison = new ColumnParameters(null, "25-29, Female People in prison ", "gender=F|age=25-29");
+    ColumnParameters m25To29_people_in_prison = new ColumnParameters(null, "25-29, Male People in prison", "gender=M|age=25-29");
+    ColumnParameters f30To34_people_in_prison = new ColumnParameters(null, "30-34, Female People in prison ", "gender=F|age=30-34");
+    ColumnParameters m30To34_people_in_prison = new ColumnParameters(null, "30-34, Male People in prison", "gender=M|age=30-34");
+    ColumnParameters f35To39_people_in_prison = new ColumnParameters(null, "35-39, Female People in prison ", "gender=F|age=35-39");
+    ColumnParameters m35To39_people_in_prison = new ColumnParameters(null, "35-39, Male People in prison", "gender=M|age=35-39");
+    ColumnParameters f40To44_people_in_prison = new ColumnParameters(null, "40-44, Female People in prison ", "gender=F|age=40-44");
+    ColumnParameters m40To44_people_in_prison = new ColumnParameters(null, "40-44, Male People in prison", "gender=M|age=40-44");
+    ColumnParameters f45To49_people_in_prison = new ColumnParameters(null, "45-49, Female People in prison ", "gender=F|age=45-49");
+    ColumnParameters m45To49_people_in_prison = new ColumnParameters(null, "45-49, Male People in prison", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_people_in_prison = new ColumnParameters(null, "50+, Female People in prison", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_people_in_prison = new ColumnParameters(null, "50+, Male People in prison", "gender=M|age=50+");
+
+
+    ColumnParameters f10_to14_pwid = new ColumnParameters(null, "10-14,Female PWID", "gender=F|age=10-14");
+    ColumnParameters m10_to14_pwid = new ColumnParameters(null, "10-14,Male PWID ", "gender=M|age=10-14");
+    ColumnParameters f1To4_pwid = new ColumnParameters(null, "1-4, Female PWID ", "gender=F|age=1-4");
+    ColumnParameters m1To4_pwid = new ColumnParameters(null, "1-4, Male PWID", "gender=M|age=1-4");
+    ColumnParameters f15To19_pwid = new ColumnParameters(null, "15-19, Female PWID ", "gender=F|age=15-19");
+    ColumnParameters m15To19_pwid = new ColumnParameters(null, "15-19, Male PWID", "gender=M|age=15-19");
+    ColumnParameters fUnder1_pwid = new ColumnParameters(null, "<1, Female PWID", "gender=F|age=<1");
+    ColumnParameters mUnder1_pwid = new ColumnParameters(null, "<1, Male PWID", "gender=M|age=<1");
+    ColumnParameters f20To24_pwid = new ColumnParameters(null, "20-24, Female PWID ", "gender=F|age=20-24");
+    ColumnParameters m20To24_pwid = new ColumnParameters(null, "20-24, Male PWID", "gender=M|age=20-24");
+    ColumnParameters f25To29_pwid = new ColumnParameters(null, "25-29, Female PWID ", "gender=F|age=25-29");
+    ColumnParameters m25To29_pwid = new ColumnParameters(null, "25-29, Male PWID", "gender=M|age=25-29");
+    ColumnParameters f30To34_pwid = new ColumnParameters(null, "30-34, Female PWID ", "gender=F|age=30-34");
+    ColumnParameters m30To34_pwid = new ColumnParameters(null, "30-34, Male PWID", "gender=M|age=30-34");
+    ColumnParameters f35To39_pwid = new ColumnParameters(null, "35-39, Female PWID ", "gender=F|age=35-39");
+    ColumnParameters m35To39_pwid = new ColumnParameters(null, "35-39, Male PWID", "gender=M|age=35-39");
+    ColumnParameters f40To44_pwid = new ColumnParameters(null, "40-44, Female PWID ", "gender=F|age=40-44");
+    ColumnParameters m40To44_pwid = new ColumnParameters(null, "40-44, Male PWID", "gender=M|age=40-44");
+    ColumnParameters f45To49_pwid = new ColumnParameters(null, "45-49, Female PWID ", "gender=F|age=45-49");
+    ColumnParameters m45To49_pwid = new ColumnParameters(null, "45-49, Male PWID", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_pwid = new ColumnParameters(null, "50+, Female PWID", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_pwid = new ColumnParameters(null, "50+, Male PWID", "gender=M|age=50+");
+    ColumnParameters f5To9_pwid = new ColumnParameters(null, "5-9, Female PWID ", "gender=F|age=5-9");
+    ColumnParameters m5To9_pwid = new ColumnParameters(null, "5-9, Male PWID", "gender=M|age=5-9");
+
+    ColumnParameters f15To19_tg = new ColumnParameters(null, "15-19, Female TG ", "gender=F|age=15-19");
+    ColumnParameters m15To19_tg = new ColumnParameters(null, "15-19, Male TG", "gender=M|age=15-19");
+    ColumnParameters f20To24_tg = new ColumnParameters(null, "20-24, Female TG ", "gender=F|age=20-24");
+    ColumnParameters m20To24_tg = new ColumnParameters(null, "20-24, Male TG", "gender=M|age=20-24");
+    ColumnParameters f25To29_tg = new ColumnParameters(null, "25-29, Female TG ", "gender=F|age=25-29");
+    ColumnParameters m25To29_tg = new ColumnParameters(null, "25-29, Male TG", "gender=M|age=25-29");
+    ColumnParameters f30To34_tg = new ColumnParameters(null, "30-34, Female TG ", "gender=F|age=30-34");
+    ColumnParameters m30To34_tg = new ColumnParameters(null, "30-34, Male TG", "gender=M|age=30-34");
+    ColumnParameters f35To39_tg = new ColumnParameters(null, "35-39, Female TG ", "gender=F|age=35-39");
+    ColumnParameters m35To39_tg = new ColumnParameters(null, "35-39, Male TG", "gender=M|age=35-39");
+    ColumnParameters f40To44_tg = new ColumnParameters(null, "40-44, Female TG ", "gender=F|age=40-44");
+    ColumnParameters m40To44_tg = new ColumnParameters(null, "40-44, Male TG", "gender=M|age=40-44");
+    ColumnParameters f45To49_tg = new ColumnParameters(null, "45-49, Female TG ", "gender=F|age=45-49");
+    ColumnParameters m45To49_tg = new ColumnParameters(null, "45-49, Male TG", "gender=M|age=45-49");
+    ColumnParameters f50AndAbove_tg = new ColumnParameters(null, "50+, Female TG", "gender=F|age=50+");
+    ColumnParameters m50AndAbove_tg = new ColumnParameters(null, "50+, Male TG", "gender=M|age=50+");
 
 
     // PP
@@ -161,6 +308,24 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
     List<ColumnParameters> ctAgeAndSexDisaggregation = Arrays.asList(
             f0_to14, m0_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25AndAbove, m25AndAbove);
+    List<ColumnParameters> standardAgeDisaggregation = Arrays.asList(
+            all10_to14, all15_to19,all120_to24,all25_to29,all30_to34,all35_to39,all40_to44,all45_to49,allAbove50);
+
+//
+List<ColumnParameters> standardHTSDisaggregation = Arrays.asList(
+        f10_to14_fsw,m10_to14_fsw,f1To4_fsw,m1To4_fsw,f15To19_fsw,m15To19_fsw,fUnder1_fsw,mUnder1_fsw,f20To24_fsw,m20To24_fsw,
+        f25To29_fsw,m25To29_fsw,f30To34_fsw,m30To34_fsw,f35To39_fsw,m35To39_fsw,f40To44_fsw,m40To44_fsw,f45To49_fsw,m45To49_fsw,
+        f50AndAbove_fsw,m50AndAbove_fsw,f5To9_fsw,m5To9_fsw,f10_to14_general_population,m10_to14_general_population,f1To4_general_population,m1To4_general_population,f15To19_general_population,m15To19_general_population,
+        fUnder1_general_population,mUnder1_general_population,f20To24_general_population,m20To24_general_population,f25To29_general_population,m25To29_general_population,f30To34_general_population,m30To34_general_population,f35To39_general_population,m35To39_general_population,
+        f40To44_general_population,m40To44_general_population,f45To49_general_population,m45To49_general_population,f50AndAbove_general_population,m50AndAbove_general_population,f5To9_general_population,m5To9_general_population,f10_to14_msm,m10_to14_msm,
+        f1To4_msm,m1To4_msm,f15To19_msm,m15To19_msm,fUnder1_msm,mUnder1_msm,f20To24_msm,m20To24_msm,f25To29_msm,m25To29_msm,
+        f30To34_msm,m30To34_msm,f35To39_msm,m35To39_msm,f40To44_msm,m40To44_msm,f45To49_msm,m45To49_msm,f50AndAbove_msm,m50AndAbove_msm,
+        f5To9_msm,m5To9_msm,f15To19_people_in_prison,m15To19_people_in_prison,f20To24_people_in_prison,m20To24_people_in_prison,f25To29_people_in_prison,m25To29_people_in_prison,f30To34_people_in_prison,m30To34_people_in_prison,
+        f35To39_people_in_prison,m35To39_people_in_prison,f40To44_people_in_prison,m40To44_people_in_prison,f45To49_people_in_prison,m45To49_people_in_prison,f50AndAbove_people_in_prison,m50AndAbove_people_in_prison,f10_to14_pwid,m10_to14_pwid,
+        f1To4_pwid,m1To4_pwid,f15To19_pwid,m15To19_pwid,fUnder1_pwid,mUnder1_pwid,f20To24_pwid,m20To24_pwid,f25To29_pwid,m25To29_pwid,
+        f30To34_pwid,m30To34_pwid,f35To39_pwid,m35To39_pwid,f40To44_pwid,m40To44_pwid,f45To49_pwid,m45To49_pwid,f50AndAbove_pwid,m50AndAbove_pwid,
+        f5To9_pwid,m5To9_pwid,f15To19_tg,m15To19_tg,f20To24_tg,m20To24_tg,f25To29_tg,m25To29_tg,f30To34_tg,m30To34_tg,
+        f35To39_tg,m35To39_tg,f40To44_tg, m40To44_tg,f45To49_tg,m45To49_tg,f50AndAbove_tg,m50AndAbove_tg);
     List<ColumnParameters> sexKPTypeDisaggregation = Arrays.asList(female_pwid, male_pwid);
 
     @Override
@@ -222,19 +387,104 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD NP - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-/*
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+//HTS PNS
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts identified", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients accepting pns", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients offered pns", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+        //HTS MNCH
+
+
+
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - recent known negative", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - started on HAART", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - unknown HIV status at ANC", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - unknown HIV status in ANC and/or maternity", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number issued with self-test kits", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number with positive self-test results", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested HIV Positive - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested(Initial testing)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested HIV Positive (Initial testing)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested HIV Positive (Retesting)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested( Retesting)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 client: started on HAART", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 visit: started on HAART (missed opportunities)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+
+        //HTS -STI
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+        //HTS -TB
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - eligible", "", ReportUtils.map(threePMIndicators.htsEligibleForTbTest(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - known positive", "", ReportUtils.map(threePMIndicators.knownTbPositive(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+      //WIP
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - newly identified positive", "", ReportUtils.map(threePMIndicators.htsTbNewKnownPositive(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - screened", "", ReportUtils.map(threePMIndicators.htsTbScreenedForTb(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - tested", "", ReportUtils.map(threePMIndicators.htsTBTested(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+       //HTS VCT
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
+                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
+                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
+                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
+                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
+                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
+                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
+                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
+                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
+
+
+        /*
         HTSV3: OPD HP - eligible
         HTSV3: OPD HP - known positive
         HTSV3: OPD HP - linked
