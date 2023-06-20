@@ -407,8 +407,6 @@ List<ColumnParameters> standardHTSDisaggregation = Arrays.asList(
 
         //HTS MNCH
 
-
-
         EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
