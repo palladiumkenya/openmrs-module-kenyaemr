@@ -37,7 +37,31 @@ public class HtsConstants {
     public static final Integer EMERGENCY_DEPARTMENT_CONCEPT_ID = 160522;
     public static final Integer COMMUNITY_TESTING_CONCEPT_ID = 163096;
     public static final Integer HOME_BASED_TESTING_CONCEPT_ID = 159938;
+    public static final Integer SNS = 166606;
+    public static final Integer INDEX_CONTACT = 161557;
     public static final Integer MOBILE_OUTREACH_TESTING_CONCEPT_ID = 159939;
+    public static final Integer VL_200 = 200;
+    public static final Integer VL_400 = 400;
+    public static final Integer VL_999 = 999;
+    public static final Integer VL_1000 = 1000;
+
+    public static final Integer HYPERTENSION = 117399;
+    public static final Integer DIABETES = 119481;
+
+
+
+
+    public static final String FSW = "FSW";
+    public static final String MSM = "MSM";
+    public static final String PWUD = "PWUD";
+    public static final String PWID = "PWID";
+    public static final String SELF_TEST_KIT = "SELF_TEST_KIT";
+    public static final String TRANSGENDER = "Transgender";
+    public static final String PEOPLE_IN_PRISON = "People in prison and other closed settings";
+    public static final Integer GENERAL_POPULATION = 164928;
+
+
+
     public static final Integer OTHER_TESTING_CONCEPT_ID = 5622;
     public static final Form htsInitialForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.HTS_INITIAL_TEST);
     public static final Form htsRetestForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.HTS_CONFIRMATORY_TEST);

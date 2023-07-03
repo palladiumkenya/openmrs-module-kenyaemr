@@ -16,13 +16,20 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardIndicatorLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimIndicatorLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.ETLReports.otz.ETLOtzCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.ETLReports.otz.ETLOtzIndicatorLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.pmtct.PMTCTIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.shared.hiv.art.ArtIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.threepm.ThreePMIndicatorLibrary;
 import org.openmrs.module.kenyaemr.util.HtsConstants;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +54,18 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
 
     @Autowired
     private ETLMoh731GreenCardIndicatorLibrary moh731GreenCardIndicators;
+    @Autowired
+    private ArtIndicatorLibrary artIndicators;
+    @Autowired
+    private DatimCohortLibrary datimCohortLibrary;
+    @Autowired
+    private ETLOtzCohortLibrary otzCohorts;
+    @Autowired
+    ETLOtzIndicatorLibrary etlOtzIndicatorLibrary;
+    @Autowired
+    private DatimIndicatorLibrary datimIndicators;
+    @Autowired
+    private PMTCTIndicatorLibrary pnc;
 
     //Key Populations
     public static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -302,7 +321,7 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
             fUnder1,f1To9,f10_to14,f15_to19,f20_to24,f25_to29,f30_to34,f35_to39,f40_to49,fAbove50);
 
     List<ColumnParameters> kpAgeAndSexDisaggregation = Arrays.asList(
-            f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to49, m40_to49, fAbove50, mAbove50);
+            f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50);
     List<ColumnParameters> priorityPopulationAgeAndSexDisaggregation = Arrays.asList(
             f10_to14, m10_to14, f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to49, m40_to49, fAbove50, mAbove50);
 
@@ -312,20 +331,8 @@ public class ThreePMReportBuilder extends AbstractReportBuilder {
             all10_to14, all15_to19,all120_to24,all25_to29,all30_to34,all35_to39,all40_to44,all45_to49,allAbove50);
 
 //
-List<ColumnParameters> standardHTSDisaggregation = Arrays.asList(
-        f10_to14_fsw,m10_to14_fsw,f1To4_fsw,m1To4_fsw,f15To19_fsw,m15To19_fsw,fUnder1_fsw,mUnder1_fsw,f20To24_fsw,m20To24_fsw,
-        f25To29_fsw,m25To29_fsw,f30To34_fsw,m30To34_fsw,f35To39_fsw,m35To39_fsw,f40To44_fsw,m40To44_fsw,f45To49_fsw,m45To49_fsw,
-        f50AndAbove_fsw,m50AndAbove_fsw,f5To9_fsw,m5To9_fsw,f10_to14_general_population,m10_to14_general_population,f1To4_general_population,m1To4_general_population,f15To19_general_population,m15To19_general_population,
-        fUnder1_general_population,mUnder1_general_population,f20To24_general_population,m20To24_general_population,f25To29_general_population,m25To29_general_population,f30To34_general_population,m30To34_general_population,f35To39_general_population,m35To39_general_population,
-        f40To44_general_population,m40To44_general_population,f45To49_general_population,m45To49_general_population,f50AndAbove_general_population,m50AndAbove_general_population,f5To9_general_population,m5To9_general_population,f10_to14_msm,m10_to14_msm,
-        f1To4_msm,m1To4_msm,f15To19_msm,m15To19_msm,fUnder1_msm,mUnder1_msm,f20To24_msm,m20To24_msm,f25To29_msm,m25To29_msm,
-        f30To34_msm,m30To34_msm,f35To39_msm,m35To39_msm,f40To44_msm,m40To44_msm,f45To49_msm,m45To49_msm,f50AndAbove_msm,m50AndAbove_msm,
-        f5To9_msm,m5To9_msm,f15To19_people_in_prison,m15To19_people_in_prison,f20To24_people_in_prison,m20To24_people_in_prison,f25To29_people_in_prison,m25To29_people_in_prison,f30To34_people_in_prison,m30To34_people_in_prison,
-        f35To39_people_in_prison,m35To39_people_in_prison,f40To44_people_in_prison,m40To44_people_in_prison,f45To49_people_in_prison,m45To49_people_in_prison,f50AndAbove_people_in_prison,m50AndAbove_people_in_prison,f10_to14_pwid,m10_to14_pwid,
-        f1To4_pwid,m1To4_pwid,f15To19_pwid,m15To19_pwid,fUnder1_pwid,mUnder1_pwid,f20To24_pwid,m20To24_pwid,f25To29_pwid,m25To29_pwid,
-        f30To34_pwid,m30To34_pwid,f35To39_pwid,m35To39_pwid,f40To44_pwid,m40To44_pwid,f45To49_pwid,m45To49_pwid,f50AndAbove_pwid,m50AndAbove_pwid,
-        f5To9_pwid,m5To9_pwid,f15To19_tg,m15To19_tg,f20To24_tg,m20To24_tg,f25To29_tg,m25To29_tg,f30To34_tg,m30To34_tg,
-        f35To39_tg,m35To39_tg,f40To44_tg, m40To44_tg,f45To49_tg,m45To49_tg,f50AndAbove_tg,m50AndAbove_tg);
+List<ColumnParameters> generalAgeAndSexDisaggregation = Arrays.asList(
+                f15_to19, m15_to19, f20_to24, m20_to24, f25_to29, m25_to29, f30_to34, m30_to34, f35_to39, m35_to39, f40_to44, m40_to44, f45_to49, m45_to49, fAbove50, mAbove50);
     List<ColumnParameters> sexKPTypeDisaggregation = Arrays.asList(female_pwid, male_pwid);
 
     @Override
@@ -387,139 +394,161 @@ List<ColumnParameters> standardHTSDisaggregation = Arrays.asList(
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - eligible", "", ReportUtils.map(threePMIndicators.htsIPDEligibleForTest(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - known positive", "", ReportUtils.map(threePMIndicators.IPDknownPositiveTest(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - linked", "", ReportUtils.map(threePMIndicators.htsIpdHPLinked(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsIpdHPNewPositive(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - screened", "", ReportUtils.map(threePMIndicators.htsIPDHPScreenedTest(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: IPD HP - tested", "", ReportUtils.map(threePMIndicators.htsIPDHPTestedDone(HtsConstants.IN_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - eligible", "", ReportUtils.map(threePMIndicators.htsIPDEligibleForTest(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - known positive", "", ReportUtils.map(threePMIndicators.IPDknownPositiveTest(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - linked", "", ReportUtils.map(threePMIndicators.htsIpdHPLinked(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - newly identified positive", "", ReportUtils.map(threePMIndicators.htsIpdHPNewPositive(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - screened", "", ReportUtils.map(threePMIndicators.htsIPDHPScreenedTest(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: OPD HP - tested", "", ReportUtils.map(threePMIndicators.htsIPDHPTestedDone(HtsConstants.OUT_PATIENT_DEPARTMENT_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
+
 
 //HTS PNS
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts identified", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients accepting pns", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients offered pns", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.PEDIATRIC_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts eligible", "", ReportUtils.map(threePMIndicators.fnsEligibleForTest(HtsConstants.INDEX_CONTACT), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts identified", "", ReportUtils.<CohortIndicator>map((CohortIndicator) datimCohortLibrary.htsIndexContactsElicited(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts known positive", "", ReportUtils.map(datimIndicators.contactKnownPositive(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts linked", "", ReportUtils.map(threePMIndicators.indexLinked(HtsConstants.INDEX_CONTACT), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts newly identified positive", "", ReportUtils.map(datimIndicators.indexTestedPositive(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - contacts tested", "", ReportUtils.map(threePMIndicators.fnsTestestedfnsTestested(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients", "", ReportUtils.map(datimIndicators.offeredIndexServices(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients accepting pns", "", ReportUtils.map(datimIndicators.acceptedIndexServices(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: Index Testing - FPNS - index clients offered pns", "", ReportUtils.map(datimIndicators.htsIndexContactsElicited(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
 
         //HTS MNCH
 
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - recent known negative", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - started on HAART", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - unknown HIV status at ANC", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - seen", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - unknown HIV status in ANC and/or maternity", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number issued with self-test kits", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number with positive self-test results", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+
+
+
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - eligible", "", ReportUtils.map(threePMIndicators.htsFirstANCVisitMchmsAntenatal(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - known positive", "", ReportUtils.map(moh731GreenCardIndicators.testedForHivInMchms(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - newly identified positive", "", ReportUtils.map(threePMIndicators.htsNewlyTestedPositivePmtctANC(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - recent known negative", "", ReportUtils.map(threePMIndicators.htsNegativeTestANCCohortDefinition(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - seen", "", ReportUtils.map(threePMIndicators.seenANCVisitMchmsAntenatal(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - started on HAART", "", ReportUtils.map(threePMIndicators.htsHAARTInANC(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: 1st ANC visit clients - tested", "", ReportUtils.map(threePMIndicators.htsInitialTestingANC(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(moh731GreenCardIndicators.initialHIVTestInMchmsAntenatal(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested - Retesting (Post ANC1)", "", ReportUtils.map(moh731GreenCardIndicators.pncRetestUpto6Weeks(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInMchmsAntenatal(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Client Tested HIV Positive - Retesting (Post ANC1)", "", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInMchmsAntenatal(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - known positive", "", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInMchmsDelivery(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - seen", "", ReportUtils.map(threePMIndicators.seenANCVisitMchmsAntenatal(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsHAARTInANC(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in maternity - unknown HIV status at ANC", "", ReportUtils.map(threePMIndicators.unKnownStatusAtANC(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - known positive", "", ReportUtils.map(pnc.hivPositiveResultAtPNC(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - seen", "", ReportUtils.map(threePMIndicators.seenANCVisitMchmsAntenatal(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - started on HAART (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsHAARTInANC(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Clients in PNC - unknown HIV status in ANC and/or maternity", "", ReportUtils.map(threePMIndicators.unKnownStatusAtANC(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number issued with self-test kits", "", ReportUtils.map(threePMIndicators.receivingSelfTestKits(HtsConstants.SELF_TEST_KIT), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: MNCH clients - number with positive self-test results", "", ReportUtils.map(threePMIndicators.receivingSelfTestKitsPositive(HtsConstants.SELF_TEST_KIT), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.pmtcTested(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+
         EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested HIV Positive - Initial testing (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsNewlyTestedPositivePmtctANC(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: PNC - Client Tested HIV Positive - Retesting (Post ANC1)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_PNC_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+
         EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested(Initial testing)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested HIV Positive (Initial testing)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested HIV Positive (Retesting)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
         EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 Client Tested( Retesting)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 client: started on HAART", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
-        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 visit: started on HAART (missed opportunities)", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MNCH_MAT_CLINIC_CONCEPT_ID), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 client: started on HAART", "", ReportUtils.map(moh731GreenCardIndicators.startedHAARTLabourAndDelivery(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
+        EmrReportingUtils.addRow(dsd, "HTSV4: Post ANC1 visit: started on HAART (missed opportunities)", "", ReportUtils.map(moh731GreenCardIndicators.startedHAARTPNCUpto6Weeks(), indParams), standardAgeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08","09"));
 
         //HTS -STI
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: STI - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - eligible", "", ReportUtils.map(threePMIndicators.htsEligibleForTest(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - known positive", "", ReportUtils.map(threePMIndicators.knownPositiveTest(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - linked", "", ReportUtils.map(threePMIndicators.htsLinked(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - newly identified positive", "", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - screened", "", ReportUtils.map(threePMIndicators.htsScreenedTest(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: STI - tested", "", ReportUtils.map(threePMIndicators.htsTestedDone(HtsConstants.STI_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
 
         //HTS -TB
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - eligible", "", ReportUtils.map(threePMIndicators.htsEligibleForTbTest(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - known positive", "", ReportUtils.map(threePMIndicators.knownTbPositive(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-      //WIP
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - newly identified positive", "", ReportUtils.map(threePMIndicators.htsTbNewKnownPositive(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - screened", "", ReportUtils.map(threePMIndicators.htsTbScreenedForTb(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: TB - tested", "", ReportUtils.map(threePMIndicators.htsTBTested(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - eligible", "", ReportUtils.map(threePMIndicators.htsEligibleForTest(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - known positive", "", ReportUtils.map(threePMIndicators.knownPositiveTest(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - linked", "", ReportUtils.map(threePMIndicators.htsLinked(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - newly identified positive", "", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - screened", "", ReportUtils.map(threePMIndicators.htsScreenedTest(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: TB - tested", "", ReportUtils.map(threePMIndicators.htsTestedDone(HtsConstants.TB_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
        //HTS VCT
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - eligible", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - known positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - linked", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - newly identified positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - screened", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - tested", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - eligible", "", ReportUtils.map(threePMIndicators.htsEligibleForTest(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - known positive", "", ReportUtils.map(threePMIndicators.knownPositiveTest(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - linked", "", ReportUtils.map(threePMIndicators.htsLinked(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - newly identified positive", "", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - screened", "", ReportUtils.map(threePMIndicators.htsScreenedTest(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "HTSV3: VCT - tested", "", ReportUtils.map(threePMIndicators.htsTestedDone(HtsConstants.VCT_CLINIC_CONCEPT_ID), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
 
 
-        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
-                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
-                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
-        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
-                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
-                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
-        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
-                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
-                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
-        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE", "", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), standardHTSDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36","37", "38", "39", "40","41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56","57", "58", "59", "60",
-                "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76","77", "78", "79", "80","81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96","97", "98", "99", "100",
-                "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116","117", "118", "119", "120","121", "122", "123", "124", "125", "126", "127", "128"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive FWS", "", ReportUtils.map(threePMIndicators.snsHivPositive(HtsConstants.FSW), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive General Population", "", ReportUtils.map(threePMIndicators.snsPopulationTypeHivPositive(HtsConstants.GENERAL_POPULATION), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive MSM", "", ReportUtils.map(threePMIndicators.snsHivPositive(HtsConstants.MSM), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive People in prison", "", ReportUtils.map(threePMIndicators.snsHivPositive(HtsConstants.PEOPLE_IN_PRISON), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive PWID", "", ReportUtils.map(threePMIndicators.snsHivPositive(HtsConstants.PWID), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number HIV Positive Transgender", "", ReportUtils.map(threePMIndicators.snsHivPositive(HtsConstants.TRANSGENDER), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
 
 
-        /*
-        HTSV3: OPD HP - eligible
-        HTSV3: OPD HP - known positive
-        HTSV3: OPD HP - linked
-        HTSV3: OPD HP - newly identified positive
-        HTSV3: OPD HP - screened
-        HTSV3: OPD HP - tested
-        HTSV3: OPD NP - eligible
-        HTSV3: OPD NP - known positive
-        HTSV3: OPD NP - linked
-        HTSV3: OPD NP - newly identified positive
-        HTSV3: OPD NP - screened
-        HTSV3: OPD NP - tested*/
-   /*     //Mobile
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment FWS", "", ReportUtils.map(threePMIndicators.snsLinked(HtsConstants.FSW), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment General Population", "", ReportUtils.map(threePMIndicators.htsPopulationTypeLinked(HtsConstants.GENERAL_POPULATION), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment MSM", "", ReportUtils.map(threePMIndicators.snsLinked(HtsConstants.MSM), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment People in prison", "", ReportUtils.map(threePMIndicators.snsLinked(HtsConstants.PEOPLE_IN_PRISON), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment PWID", "", ReportUtils.map(threePMIndicators.snsLinked(HtsConstants.PWID), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number linked to ART treatment Transgender", "", ReportUtils.map(threePMIndicators.snsLinked(HtsConstants.TRANSGENDER), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+
+
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV FWS", "", ReportUtils.map(threePMIndicators.snsTested(HtsConstants.FSW), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV General Population", "", ReportUtils.map(threePMIndicators.htsPopulationTypeTested(HtsConstants.GENERAL_POPULATION), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV MSM", "", ReportUtils.map(threePMIndicators.snsTested(HtsConstants.MSM), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV People in prison", "", ReportUtils.map(threePMIndicators.snsTested(HtsConstants.PEOPLE_IN_PRISON), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV PWID", "", ReportUtils.map(threePMIndicators.snsTested(HtsConstants.PWID), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: Number Tested for HIV Transgender", "", ReportUtils.map(threePMIndicators.snsTested(HtsConstants.TRANSGENDER), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE FWS", "", ReportUtils.map(threePMIndicators.snsHivNegative(HtsConstants.FSW), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE General Population", "", ReportUtils.map(threePMIndicators.htsPopulationTypeNegativeClient(HtsConstants.GENERAL_POPULATION), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE HIV MSM", "", ReportUtils.map(threePMIndicators.snsHivNegative(HtsConstants.MSM), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE People in prison", "", ReportUtils.map(threePMIndicators.snsHivNegative(HtsConstants.PEOPLE_IN_PRISON), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE PWID", "", ReportUtils.map(threePMIndicators.snsHivNegative(HtsConstants.PWID), indParams), kpAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16","17", "18"));
+        EmrReportingUtils.addRow(dsd, "SNS: SNS_SEED_NEGATIVE Transgender", "", ReportUtils.map(threePMIndicators.snsHivNegative(HtsConstants.TRANSGENDER), indParams), generalAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+
+
+//        HTSV3: OPD HP - eligible
+//        HTSV3: OPD HP - known positive
+//        HTSV3: OPD HP - linked
+//        HTSV3: OPD HP - newly identified positive
+//        HTSV3: OPD HP - screened
+//        HTSV3: OPD HP - tested
+
+       //Mobile
         EmrReportingUtils.addRow(dsd, "QnSletgoPla", "CHTSV2_Result: Mobile Testing - Screened", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
-        EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsEligibleMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsScreenedMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         EmrReportingUtils.addRow(dsd, "N42RUbWfr6F", "CHTSV2_Result: Mobile Testing - Tested", ReportUtils.map(threePMIndicators.htsTested(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         EmrReportingUtils.addRow(dsd, "Ct0CcuOl9Wb", "CHTSV2_Result: Mobile Testing - Known HIV Positive", ReportUtils.map(threePMIndicators.htsKnownPositive(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
-       //EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+        //EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         EmrReportingUtils.addRow(dsd, "YHyt08aRsoD", "CHTSV2_Result: Mobile Testing - Newly Identified Positive", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         // Review the linked query in moh731
         EmrReportingUtils.addRow(dsd, "jn8Boh188o6", "CHTSV2_Result: Mobile Testing - Linked to HAART", ReportUtils.map(threePMIndicators.htsLinkedToHAARTMobile(HtsConstants.MOBILE_OUTREACH_TESTING_CONCEPT_ID), indParams), sparseAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
 
         //MNCH -ANC
-        EmrReportingUtils.addRow(dsd, "yHHWaNDFzES", "HTSV2_Result:MNCH - ANC Department - Number of 1st ANC visit clients Screened", ReportUtils.map(threePMIndicators.htsScreenedANC1(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+       // EmrReportingUtils.addRow(dsd, "yHHWaNDFzES", "HTSV2_Result:MNCH - ANC Department - Number of 1st ANC visit clients Screened", ReportUtils.map(threePMIndicators.htsScreenedANC1(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
         EmrReportingUtils.addRow(dsd, "R6BJK9kAjtA", "HTSV2_Result:MNCH - ANC Department - Number of clients on 1st ANC visit", ReportUtils.map(moh731GreenCardIndicators.firstANCVisitMchmsAntenatal(), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
-        //EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsEligibleMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
+      //  EmrReportingUtils.addRow(dsd, "XGm5lTnVaOu", "CHTSV2_Result: Mobile Testing - Eligible", ReportUtils.map(threePMIndicators.htsEligibleMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
         EmrReportingUtils.addRow(dsd, "COn6aObrQm8", "HTSV2_Result:MNCH - ANC Department - Tested", ReportUtils.map(threePMIndicators.htsTested(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
         EmrReportingUtils.addRow(dsd, "Gwk0JOcf33J", "HTSV2_Result:MNCH - ANC Department - Known Positive", ReportUtils.map(threePMIndicators.htsKnownPositive(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
-        //EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
+       // EmrReportingUtils.addRow(dsd, "yF5DNgyb3PC", "CHTSV2_Result: Mobile Testing - Seen", ReportUtils.map(threePMIndicators.htsKnownPositiveMobile(), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16"));
         EmrReportingUtils.addRow(dsd, "YHyt08aRsoD", "CHTSV2_Result: Mobile Testing - Newly Identified Positive", ReportUtils.map(threePMIndicators.htsNewPositiveMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10"));
         // Review the linked query in moh731
         EmrReportingUtils.addRow(dsd, "jn8Boh188o6", "CHTSV2_Result: Mobile Testing - Linked to HAART", ReportUtils.map(threePMIndicators.htsLinkedToHAARTMobile(HtsConstants.MNCH_ANC_CLINIC_CONCEPT_ID), indParams), mnchMotherAgeADisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
 
         //MNCH-ANC
         dsd.addColumn("1st ANC visit clients", "1st ANC visit clients", ReportUtils.map(threePMIndicators.firstANCVisitMchmsAntenatal(), indParams), "");
-        //dsd.addColumn("1st ANC clients - recent known negative", "1st ANC visit clients - recent known negative", ReportUtils.map(threePMIndicators.knownPositiveAtFirstANC(), indParams), "");
-        dsd.addColumn("1st ANC clients - known Positive", "1st ANC visit clients - recent known positive", ReportUtils.map(threePMIndicators.knownPositiveAtFirstANC(), indParams), "");*/
+        dsd.addColumn("1st ANC clients - recent known negative", "1st ANC visit clients - recent known negative", ReportUtils.map(threePMIndicators.knownPositiveAtFirstANC(), indParams), "");
+        dsd.addColumn("1st ANC clients - known Positive", "1st ANC visit clients - recent known positive", ReportUtils.map(threePMIndicators.knownPositiveAtFirstANC(), indParams), "");
 
         return (dsd);
     }
@@ -549,69 +578,70 @@ List<ColumnParameters> standardHTSDisaggregation = Arrays.asList(
 
         //Care and Treatment indicators
 
-/*
+
         EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment", "", ReportUtils.map(moh731GreenCardIndicators.currentlyOnArt(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: On DTG-based regimen", "", ReportUtils.map(threePMIndicators.currentlyOnDTGRegimen(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Stopped treatment", "", ReportUtils.map(threePMIndicators.stoppedTreatment(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Lost (LTFU) (> 30 days)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Hypertension)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Hypertension, well controlled)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Eligible for routine vl", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Transfer outs", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Diabetes, well controlled)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: With viral load results 200 - 999cp/ml", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: On MMS/MMD/DSD", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: New on treatment", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Previously lost but returned to treatment (Tx_RTT)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: With vl results < 400cp/ml (includes LDL)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Number switched to 3rd line", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: With vl results >= 1000cp/ml", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with NCD well controlled)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Number switched to 2nd line", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Transfer ins", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Diabetes)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: Died", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: With viral load results < 200cp/ml (includes LDL)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-        EmrReportingUtils.addRow(dsd, "CTV3: With vl results 400 - 999cp/ml", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
-*/
+        EmrReportingUtils.addRow(dsd, "CTV3: On DTG-based regimen", "", ReportUtils.map(threePMIndicators.OnDTGRegimen(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Stopped treatment", "", ReportUtils.map(threePMIndicators.patientStoppedTreatment(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Stopped treatment", "", ReportUtils.map(threePMIndicators.patientStoppedTreatment(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Lost (LTFU) (> 30 days)", "", ReportUtils.map(threePMIndicators.patientsLTFU(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Hypertension)", "", ReportUtils.map(threePMIndicators.patientWithChronicillness(HtsConstants.HYPERTENSION), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+   //     EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Hypertension, well controlled)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Eligible for routine vl", "", ReportUtils.map(threePMIndicators.patientEligibleForVl(6), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Transfer outs", "", ReportUtils.map(threePMIndicators.transferOut(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+       // EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Diabetes, well controlled)", "", ReportUtils.map(threePMIndicators.ltfu(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: With viral load results 200 - 999cp/ml", "", ReportUtils.map(threePMIndicators.viralSuppressionBetween400To900(HtsConstants.VL_200,HtsConstants.VL_999,12), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: On MMS/MMD/DSD", "", ReportUtils.<CohortIndicator>map((CohortIndicator) datimCohortLibrary.currentlyOnARTUnder3MonthsMMD(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: New on treatment", "", ReportUtils.map(threePMIndicators.newOnTreatment(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Previously lost but returned to treatment (Tx_RTT)", "", ReportUtils.<CohortIndicator>map((CohortIndicator) datimCohortLibrary.txRTTIITBelow3Months(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: With vl results < 400cp/ml (includes LDL)", "", ReportUtils.map(threePMIndicators.patientWithValidVLLess200WithLDL(HtsConstants.VL_400), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Number switched to 3rd line", "", ReportUtils.map(etlOtzIndicatorLibrary.patientsSwithedToThirdlineArt(12), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: With vl results >= 1000cp/ml", "", ReportUtils.map(etlOtzIndicatorLibrary.patientWithRepeatVLMoreThan1000(12), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with NCD well controlled)", "", ReportUtils.map(threePMIndicators.ncdPatient(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Number switched to 2nd line", "", ReportUtils.map(etlOtzIndicatorLibrary.patientsSwithedToSecondlineArt(12), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Transfer ins", "", ReportUtils.map(threePMIndicators.transferIn(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Current on treatment - (Number with Diabetes)", "", ReportUtils.map(threePMIndicators.patientWithChronicillness(HtsConstants.DIABETES), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: Died", "", ReportUtils.map(threePMIndicators.patientDied(), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: With viral load results < 200cp/ml (includes LDL)", "", ReportUtils.map(threePMIndicators.patientWithValidVLLess200WithLDL(HtsConstants.VL_200), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+        EmrReportingUtils.addRow(dsd, "CTV3: With vl results 400 - 999cp/ml", "", ReportUtils.map(threePMIndicators.viralSuppressionBetween400To900(HtsConstants.VL_400,HtsConstants.VL_999,12), indParams), ctAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08"));
+
 
 
         //Check this for and kp types
-       // EmrReportingUtils.addRow(dsd, /*"foX53QuynMF",*/ "KPV2_Result: Number of KPs currently active in the DICE/Program","", ReportUtils.map(threePMIndicators.kpCurr(), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
-        /*dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-FSW", ReportUtils.map(threePMIndicators.kpCurr(FSW), indParams), "");
-        dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-MSM", ReportUtils.map(threePMIndicators.kpCurr(MSM), indParams), "");*/
-        //--EmrReportingUtils.addRow(dsd, "mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-PWID", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
-       /* dsd.addColumn("mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-FSW", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(FSW), indParams), "");
+        EmrReportingUtils.addRow(dsd, /*"foX53QuynMF",*/ "KPV2_Result: Number of KPs currently active in the DICE/Program","", ReportUtils.map(threePMIndicators.kpCurr(), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
+        dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-FSW", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(FSW), indParams), "");
+        dsd.addColumn("foX53QuynMF", "KPV2_Result: Number of KPs currently active in the DICE/Program-MSM", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(MSM), indParams), "");
+        EmrReportingUtils.addRow(dsd, "mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-PWID", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(PWID), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
+        dsd.addColumn("mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-FSW", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(FSW), indParams), "");
         dsd.addColumn("mFqL1MztVdm", "KPV2_Result: Number of KPs currently active on ART at the DICE-MSM", ReportUtils.map(threePMIndicators.currentlyOnARTOnSite(MSM), indParams), "");
 
-        //--EmrReportingUtils.addRow(dsd, "AMVV35LIVS7", "KPV2_Result: Number of KPs currently on PrEP-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEP(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd, "AMVV35LIVS7", "KPV2_Result: Number of KPs currently on PrEP-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEP(PWID), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
         dsd.addColumn("AMVV35LIVS7", "KPV2_Result: Number of KPs currently on PrEP-FSW", ReportUtils.map(threePMIndicators.kpCurrOnPrEP(FSW), indParams), "");
         dsd.addColumn("AMVV35LIVS7", "KPV2_Result: Number of KPs currently on PrEP-MSM", ReportUtils.map(threePMIndicators.kpCurrOnPrEP(MSM), indParams), "");
 
-        //--EmrReportingUtils.addRow(dsd, "QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd, "QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-PWID", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(PWID), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
         dsd.addColumn("QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-FSW", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(FSW), indParams), "");
         dsd.addColumn("QITtH6Wk9fc", "KPV2_Result: Number of KPs currently on PrEP who were diagnosed with STI-MSM", ReportUtils.map(threePMIndicators.kpCurrOnPrEPWithSTI(MSM), indParams), "");
 
-        //--EmrReportingUtils.addRow(dsd, "Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-PWID", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(PWID), indParams), sexDisaggregation, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd, "Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-PWID", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(PWID), indParams), sexKPTypeDisaggregation, Arrays.asList("01", "02"));
         dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-FSW", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(FSW), indParams), "");
         dsd.addColumn("Eh9TBtkpGgP", "KPV2_Result: Number of KPs currently active on ART at other CCC-MSM", ReportUtils.map(threePMIndicators.kpCurrentOnARTOffsite(MSM), indParams), "");
-*/
-        //EmrReportingUtils.addRow(dsd, /*"jw59Ex21zJ3", */"PP: Number of PP current on ART - Other Facilities", "",ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexCSWPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        //EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexDisplacedPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-       /* EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Fishing communities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Mobile populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Other Priority populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(OTHER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
 
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Clients of Sex Workers", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(SEX_WORKERS_CLIENTS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Displaced persons", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(Displaced persons), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Fishing communities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Mobile populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, /*"jw59Ex21zJ3", */"PP: Number of PP current on ART - Other Facilities", "",ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexCSWPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities", ReportUtils.map(threePMIndicators.ppCurrentOnARTOffsite(), indParams), standardAgeSexDisplacedPPTypeDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Fishing communities", ReportUtils.map(threePMIndicators.ppPrevByType(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppPrevByType(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Mobile populations", ReportUtils.map(threePMIndicators.ppPrevByType(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppPrevByType(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "jw59Ex21zJ3", "PP: Number of PP current on ART - Other Facilities-Other Priority populations", ReportUtils.map(threePMIndicators.ppPrevByType(OTHER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Clients of Sex Workers", ReportUtils.map(threePMIndicators.ppPrevByType(SEX_WORKERS_CLIENTS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Displaced persons", ReportUtils.map(threePMIndicators.ppPrevByType(DISPLACED_PERSONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Fishing communities", ReportUtils.map(threePMIndicators.ppPrevByType(FISHING_COMMUNITIES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Military and other uniformed services", ReportUtils.map(threePMIndicators.ppPrevByType(MILITARY_UNIFORMED_SERVICES), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Mobile populations", ReportUtils.map(threePMIndicators.ppPrevByType(MOBILE_POPULATIONS), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
+        EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Non-injecting drug users", ReportUtils.map(threePMIndicators.ppPrevByType(NON_INJECTING_DRUG_USER), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
         EmrReportingUtils.addRow(dsd, "c1umVKipZDf", "PP: Number of PP current on ART - This PP DICE-Other Priority populations", ReportUtils.map(threePMIndicators.ppCurrentOnARTOnSite(), indParams), standardAgeAndSexDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"));
-*/
+
         return (dsd);
     }
 

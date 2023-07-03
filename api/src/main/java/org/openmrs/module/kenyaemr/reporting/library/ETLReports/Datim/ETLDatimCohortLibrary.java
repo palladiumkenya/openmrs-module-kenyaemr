@@ -384,8 +384,7 @@ public class ETLDatimCohortLibrary {
         String sqlQuery = "select distinct e.patient_id\n" +
                 "from kenyaemr_etl.etl_mch_enrollment e\n" +
                 "       left join kenyaemr_etl.etl_mch_antenatal_visit v on e.patient_id = v.patient_id\n" +
-                "where (e.hiv_status = 703 or e.hiv_status =664)\n" +
-                "   or (v.anc_visit_number = 1 and v.final_test_result in (\"Negative\",\"Positive\"));";
+                "where (v.anc_visit_number = 1 and v.final_test_result in (\"Negative\",\"Positive\"));";
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("PMTCT_STA_Numerator");
