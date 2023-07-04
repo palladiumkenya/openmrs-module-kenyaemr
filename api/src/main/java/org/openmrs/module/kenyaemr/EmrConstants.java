@@ -47,6 +47,7 @@ public class EmrConstants {
 	public static final String APP_O3_SHORTCUT = MODULE_ID + ".openmrs3Shortcut";
 	public static final String APP_O3_QUEUES_SHORTCUT = MODULE_ID + ".openmrs3ServiceQueueShortcut";
 	public static final String APP_O3_APPOINTMENTS_SHORTCUT = MODULE_ID + ".openmrs3AppointmentsShortcut";
+	public static final String APP_CANCER_SCREENING = MODULE_ID + ".oncologyapp";
 
 	/**
 	 * Global property names
