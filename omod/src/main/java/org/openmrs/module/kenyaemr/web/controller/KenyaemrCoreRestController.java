@@ -234,7 +234,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         ObjectNode formObj = generateFormDescriptorPayload(descriptor);
                         Form frm = descriptor.getTarget();
                         List<String> frontEndForms = Arrays.asList("d1059fb9-a079-4feb-a749-eedd709ae542",
-                                "1495edf8-2df2-11e9-b210-d663bd873d93", "e87aa2ad-6886-422e-9dfd-064e3bfe3aad");
+                                "1495edf8-2df2-11e9-b210-d663bd873d93", "e87aa2ad-6886-422e-9dfd-064e3bfe3aad",
+                                "9c0a7a57-62ff-4f75-babe-5835b0e921b7");
                         if (frontEndForms.contains(frm.getEncounterType().getUuid())) {
                             formObj.put("formCategory", "available");
                             formList.add(formObj);
