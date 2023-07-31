@@ -170,7 +170,8 @@ Green Card follow-up visit form
             jq('input[type=radio].priority-population').prop("checked", false);
             jq("#priority-population").hide();
             jq('#nutritional-status input[type=radio]').attr("style", "pointer-events:none;");
-            jq('#tbl-other-complaint').hide();
+            jq('#tr-other-complaint').hide();
+            jq('#tr-other-complaint-specify').hide();
 //default on patient presence
             jq('.patient-details :input').prop('disabled', true);
             jq('#person-present input').click(onPersonPresentChange);
@@ -275,7 +276,7 @@ Green Card follow-up visit form
             jq('#systems-review :input[type=radio]').change(systemsReviewSelected);   //non-bool
             jq('#chronic-illness :input[type=radio]').change(chronicIllnessesSelected);
             jq('#population-type :input[type=radio]').change(populationTypeSelected);
-            jq("#complaint-field select").change(otherComplaintSelected);
+            jq('#other-complaint :input[type=checkbox]').change(otherComplaintSelected);
 
 //Stability assessment
             jq("#stability").change(stabilitySelected);       //boolean
@@ -1311,20 +1312,29 @@ Green Card follow-up visit form
             var complaint = jq('.complaint select').val('');
             var complaintDuration = jq('.complaint-time input').val('');
             var complaintDate = jq('.complaint-date input').val('');
-            if (val == "false" || val == 1066){
+            if (val == "false"){
                 jq("#tbl-complaints-today").hide();
-                clearHiddenSections([complaint, complaintDuration, complaintDate]);
+                jq('#tr-other-complaint').hide();
+                jq('#tr-other-complaint-specify').hide();
+                jq("#other-complain input").prop("checked", false);
+                clearHiddenSections ([complaint, complaintDuration, complaintDate, otherComplaint]);
                 getField('complaint-field.error').html('Please specify the complaints.').hide();
             }else {
                 jq("#tbl-complaints-today").show();
+                jq('#tr-other-complaint').show();
+            }
+            if(pAge &gt; 4){
+                jq("#complaint-field option[value='6017']").hide();  //Refusal to feed
             }
         }
         var otherComplaintSelected = function () {
-            var selectedComplaint = getField('complaint-field.value').val();
-            if (selectedComplaint == 5622){
-                jq('#tbl-other-complaint').show();
+            var val = jq(this).val();
+            var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
+            if (val == 5622 &amp;&amp; otherMethodChecked.length == 1) {
+                jq('#tr-other-complaint-specify').show();
             }else{
-                jq('#tbl-other-complaint').hide();
+                getField('obs-other-complaint.value').val("");
+                jq('#tr-other-complaint-specify').hide();
             }
         }
         var complaintDurationInput = function() {
@@ -2767,14 +2777,17 @@ Management<br />
 //If any checked  complaints allergies chronic illness and adverse events
                             if (complaintsToday == 'true'){
                                 jq("#tbl-complaints-today").show();
+                                jq('#tr-other-complaint').show();
                             }else{
                                 jq("#tbl-complaints-today").hide();
+                                jq("#tbl-complaints-today").hide();
                             }
-                            if (selectedComplaint == 5622){
-                                jq("#tbl-other-complaint").show();
-                            }else{
-                                jq("#tbl-other-complaint").hide();
+
+                            var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
+                            if (otherMethodChecked.length == 1) {
+                                jq('#tr-other-complaint-specify').show();
                             }
+
                             if (knownAllergies == 'true'){
                                 jq("#tbl-known-allergies").show();
                             }else{
@@ -3157,9 +3170,9 @@ Management<br />
                                                  answerConceptIds="151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,840AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120749AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120345AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119574AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,206AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143129AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                             141585AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131040AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162626AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140070AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,123396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142247AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135462AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116214AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112989AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135595AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                              121657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131015AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133028AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5978AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133469AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133027AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125225AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5953AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113224AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,126535AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
-                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,6017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                                  answerLabels="Abdominal pain,Abnormal Uterine Bleeding,Anxiety,Depression,Back pain,Bloody Urine,Breast Pain,Chest Pain,Cold and Chills,Confusion,Delirium,Convulsions,Seizure,Cough,Crying Infant,Diarrhea,Difficult in breathing,Difficulty in swallowing,Dizziness,Ear Pain,Epigastric Pain,Eye apin,Facial Pain,Fatigue/weakness,Fever,Flank Pain,Vaginal Discharge,Discharge from Penis,Genital Ulcer,Headache,Hearing Loss,Hypotension,Shock,Itchiness/Pruritus,Joint Pain,Leg Pain,Loss of Appetite,Lymphadenopathy,Memory Loss,Coma,Lethargy,Mouth Pain,Mouth Ulceration,Muscle cramps,Muscle Pain,Nausea,Neck Pain,Night sweats,Numbness,Pain when Swallowing,Pelvic Pain,Poor Vision,Rash,Red Eye,Running/Blocked nose,Scrotal Pain,Shoulder Pain,
-                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Other"
+                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Myalgia,Refusal to feed"
                                                  style="dropdown" id="complaint-field"
                                             />
                                         </td>
@@ -3175,14 +3188,22 @@ Management<br />
                             <render n="3" concept="complaint"/>
                             <render n="4" concept="complaint"/>
                             <render n="5" concept="complaint"/>
+                            <render n="6" concept="complaint"/>
+                            <render n="7" concept="complaint"/>
+                            <render n="8" concept="complaint"/>
+                            <render n="9" concept="complaint"/>
+                            <render n="10" concept="complaint"/>
                         </repeat>
                     </table>
-                    <table id="tbl-other-complaint">
-                        <tr>
-                            <th  style="color: #888" >Specify other complaints</th>
-                        </tr>
-                        <tr>
+                    <table>
+                        <tr id="tr-other-complaint">
                             <td>
+                                <obs conceptId="165241" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Other" style="checkbox"  id="other-complaint" /><br/>
+                            </td>
+                        </tr>
+                        <tr id="tr-other-complaint-specify">
+                            <td> Specify
                                 <obs conceptId="165250" rows="3" cols="80" id="obs-other-complaint"/>
                             </td>
                         </tr>
@@ -3668,8 +3689,8 @@ Management<br />
                                         <td>
                                             <obs
                                                     conceptId="1284AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="illness-chronic"
-                                                    answerConceptIds="149019AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148432AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,153754AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159351AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119270AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120637AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,145438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1295AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119692AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120291AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117855AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,115728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117321AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,151342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133687AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,115115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114662AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118976AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141623AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                    answerLabels="Alzheimer's Disease and other Dementias,Arthritis,Asthma,Cancer,Cardiovascular diseases,Chronic Hepatitis,Chronic Kidney Disease,Chronic Obstructive Pulmonary Disease(COPD),Chronic Renal Failure,Cystic Fibrosis,Deafness and Hearing impairment,Diabetes,Endometriosis,Epilepsy,Glaucoma,Heart Disease,Hyperlipidaemia,Hypertension,Hypothyroidism,Mental illness,Multiple Sclerosis,Obesity,Osteoporosis,Sickle Cell Anaemia,Thyroid disease,Dyslipidemia"
+                                                    answerConceptIds="149019AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148432AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,153754AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159351AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119270AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120637AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,145438AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1295AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119692AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120291AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117855AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139071AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,115728AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117321AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,151342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133687AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,115115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114662AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118976AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141623AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,134725AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119956AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116331AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                    answerLabels="Alzheimer's Disease and other Dementias,Arthritis,Asthma,Cancer,Cardiovascular diseases,Chronic Hepatitis,Chronic Kidney Disease,Chronic Obstructive Pulmonary Disease(COPD),Chronic Renal Failure,Cystic Fibrosis,Deafness and Hearing impairment,Diabetes,Endometriosis,Epilepsy,Glaucoma,Heart Disease,Hyperlipidaemia,Hypertension,Hypothyroidism,Mental illness,Multiple Sclerosis,Obesity,Osteoporosis,Sickle Cell Anaemia,Thyroid disease,Dyslipidemia,Malnutrition,Down syndrome,Congenital heart disease,Leukemia"
                                                     style="dropdown" id="chronic"
                                             />
                                         </td>
@@ -3773,6 +3794,15 @@ Management<br />
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="36AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Measles" style="checkbox" /></td>
                             </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="78032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Influenza" style="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="82216AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Pneumococcal Conjugate" style="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="77308AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Haemophobilus Influenza type B" style="checkbox" /></td>
+                            </tr>
                         </table>
                     </includeIf>
                     <includeIf velocityTest="$patient.age &gt; 15">
@@ -3785,6 +3815,15 @@ Management<br />
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5261AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Flu" style="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="78032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Influenza" style="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="82216AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Pneumococcal Conjugate" style="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="77308AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Haemophobilus Influenza type B" style="checkbox" /></td>
                             </tr>
                         </table>
                         <table >
