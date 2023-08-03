@@ -277,6 +277,24 @@ Green Card follow-up visit form
             jq('#chronic-illness :input[type=radio]').change(chronicIllnessesSelected);
             jq('#population-type :input[type=radio]').change(populationTypeSelected);
             jq('#other-complaint :input[type=checkbox]').change(otherComplaintSelected);
+  //Systems validations
+            jq('.skin-findings').hide();
+            jq('.eye-findings').hide();
+            jq('.ent-findings').hide();
+            jq('.chest-findings').hide();
+            jq('.cvs-findings').hide();
+            jq('.abdomen-findings').hide();
+            jq('.cns-findings').hide();
+            jq('.gus-findings').hide();
+
+            jq('#skinType :input[type=checkbox]').change(onSkinTypeSelected);
+            jq('#eyesType :input[type=checkbox]').change(onEyesTypeSelected);
+            jq('#entType :input[type=checkbox]').change(onEntTypeSelected);
+            jq('#chestType :input[type=checkbox]').change(onChestTypeSelected);
+            jq('#cvsType :input[type=checkbox]').change(onCvsTypeSelected);
+            jq('#abdomenType :input[type=checkbox]').change(onAbdomenTypeSelected);
+            jq('#cnsType :input[type=checkbox]').change(onCnsTypeSelected);
+            jq('#gusType :input[type=checkbox]').change(onGusTypeSelected);
 
 //Stability assessment
             jq("#stability").change(stabilitySelected);       //boolean
@@ -762,14 +780,16 @@ Green Card follow-up visit form
                     modal: true });
             });
 
-            // Prepopulate weight and height if added through other forms on the same encounter date
+            // Prepopulate weight, height and chronic illness if added through other forms on the same encounter date
             //Form such as Triage form
             var encounterDate = getValue('encounter-date.value');
-
+            5219
             var recentWeightDate = "<lookup expression="fn.latestObs(5089).getObsDatetime()"/>"
             var recentWeightValue = "<lookup expression="fn.latestObs(5089).getValueNumeric()"/>"
             var recentHeightDate = "<lookup expression="fn.latestObs(5090).getObsDatetime()"/>"
             var recentHeightValue = "<lookup expression="fn.latestObs(5090).getValueNumeric()"/>"
+            var recentComplaintsDate = "<lookup expression="fn.latestObs(5219).getObsDatetime()"/>"
+            var recentComplaintsValue = "<lookup expression="fn.latestObs(5219).getValueCoded()"/>"
             var isRecentWeightDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentWeightDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
             if (isRecentWeightDateSameAsEncounterDate) {
                 setValue('weight.value', recentWeightValue);
@@ -777,6 +797,14 @@ Green Card follow-up visit form
             var isRecentHeightDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentHeightDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
             if (isRecentHeightDateSameAsEncounterDate) {
                 setValue('height.value', recentHeightValue);
+            }
+            var isRecentComplaintsDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentComplaintsDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
+            if (isRecentComplaintsDateSameAsEncounterDate) {
+                //To DO: Prepopulate complaints here
+                jq("#tbl-complaints-today").show();
+                jq('#tr-other-complaint').show();
+                getField('complaint-field.value').prop("selectedIndex", 1);
+
             }
 
             // Previously filled chronic illness
@@ -1402,6 +1430,104 @@ Green Card follow-up visit form
                 jq("#tbl-systems-review").show();
             }
         }
+
+        var onSkinTypeSelected = function () {
+            var val = jq(this).val();
+            var skinFindings = jq('.skin-findings');
+            var skinNotes = jq('.skin-notes textarea').val('');
+            var skinChecked = jq("#skinType input:checkbox:checked");
+            if (val == 1120 &amp;&amp; skinChecked.length == 1) {
+                jq('.skin-findings').show();
+            } else {
+                jq('.skin-findings').hide();
+                clearHiddenSections([skinFindings, skinNotes]);
+            }
+        }
+        var onEyesTypeSelected = function () {
+            var eyeFindings = jq('.eye-findings');
+            var eyeNotes = jq('.eye-notes textarea').val('');
+            var val = jq(this).val();
+            var eyesChecked = jq("#eyesType input:checkbox:checked");
+            if (val == 163309 &amp;&amp; eyesChecked.length == 1) {
+                jq('.eye-findings').show();
+            } else {
+                jq('.eye-findings').hide();
+                clearHiddenSections([eyeFindings, eyeNotes]);
+            }
+        }
+        var onEntTypeSelected = function () {
+            var val = jq(this).val();
+            var entFindings = jq('.ent-findings');
+            var entNotes = jq('.ent-notes textarea').val('');
+            var entChecked = jq("#entType input:checkbox:checked");
+            if (val == 164936 &amp;&amp; entChecked.length == 1) {
+                jq('.ent-findings').show();
+            } else {
+                jq('.ent-findings').hide();
+                clearHiddenSections([entFindings, entNotes]);
+            }
+        }
+        var onChestTypeSelected = function () {
+            var val = jq(this).val();
+            var chestFindings = jq('.chest-findings');
+            var chestNotes = jq('.chest-notes textarea').val('');
+            var chestChecked = jq("#chestType input:checkbox:checked");
+            if (val == 1123 &amp;&amp; chestChecked.length == 1) {
+                jq('.chest-findings').show();
+            } else {
+                jq('.chest-findings').hide();
+                clearHiddenSections([chestFindings, chestNotes]);
+            }
+        }
+        var onCvsTypeSelected = function () {
+            var val = jq(this).val();
+            var cvsFindings = jq('.cvs-findings');
+            var cvsNotes = jq('.cvs-notes textarea').val('');
+            var cvsChecked = jq("#cvsType input:checkbox:checked");
+            if (val == 1124 &amp;&amp; cvsChecked.length == 1) {
+                jq('.cvs-findings').show();
+            } else {
+                jq('.cvs-findings').hide();
+                clearHiddenSections([cvsFindings, cvsNotes]);
+            }
+        }
+        var onAbdomenTypeSelected = function () {
+            var val = jq(this).val();
+            var abdomenFindings = jq('.abdomen-findings');
+            var abdomenNotes = jq('.abdomen-notes textarea').val('');
+            var abdomenChecked = jq("#abdomenType input:checkbox:checked");
+            if (val == 1125 &amp;&amp; abdomenChecked.length == 1) {
+                jq('.abdomen-findings').show();
+            } else {
+                jq('.abdomen-findings').hide();
+                clearHiddenSections([abdomenFindings, abdomenNotes]);
+            }
+        }
+        var onCnsTypeSelected = function () {
+            var val = jq(this).val();
+            var cnsFindings = jq('.cns-findings');
+            var cnsNotes = jq('.cns-notes textarea').val('');
+            var cnsChecked = jq("#cnsType input:checkbox:checked");
+            if (val == 164937 &amp;&amp; cnsChecked.length == 1) {
+                jq('.cns-findings').show();
+            } else {
+                jq('.cns-findings').hide();
+                clearHiddenSections([cnsFindings, cnsNotes]);
+            }
+        }
+        var onGusTypeSelected = function () {
+            var val = jq(this).val();
+            var gusFindings = jq('.gus-findings');
+            var gusNotes = jq('.gus-notes textarea').val('');
+            var gusChecked = jq("#gusType input:checkbox:checked");
+            if (val == 1126 &amp;&amp; gusChecked.length == 1) {
+                jq('.gus-findings').show();
+            } else {
+                jq('.gus-findings').hide();
+                clearHiddenSections([gusFindings, gusNotes]);
+            }
+        }
+
         var chronicIllnessesSelected = function() {
             var val = getValue('chronic-illness.value');
             var illness = jq('.illness-chronic select').val('');
@@ -2809,6 +2935,55 @@ Management<br />
                             }else{
                                 jq("#tbl-systems-review").hide();
                             }
+                            var skinTypeChecked = jq("#skinType input:checkbox:checked");
+                            if (skinTypeChecked.length == 1) {
+                                    jq('.skin-findings').show();
+                                } else {
+                                    jq('.skin-findings').hide();
+                                }
+                            var eyesTypeChecked = jq("#eyesType input:checkbox:checked");
+                                if (eyesTypeChecked.length == 1) {
+                                    jq('.eye-findings').show();
+                                } else {
+                                    jq('.eye-findings').hide();
+                                }
+                             var entTypeChecked = jq("#entType input:checkbox:checked");
+                                 if (entTypeChecked.length == 1) {
+                                     jq('.ent-findings').show();
+                                    } else {
+                                     jq('.ent-findings').hide();
+                                 }
+                            var chestTypeChecked = jq("#chestType input:checkbox:checked");
+                                if (chestTypeChecked.length == 1) {
+                                    jq('.chest-findings').show();
+                                } else {
+                                    jq('.chest-findings').hide();
+                                }
+                            var cvsTypeChecked = jq("#cvsType input:checkbox:checked");
+                                if (cvsTypeChecked.length == 1) {
+                                    jq('.cvs-findings').show();
+                                } else {
+                                    jq('.cvs-findings').hide();
+                                }
+                            var abdomenTypeChecked = jq("#abdomenType input:checkbox:checked");
+                                if (abdomenTypeChecked.length == 1) {
+                                    jq('.abdomen-findings').show();
+                                } else {
+                                    jq('.abdomen-findings').hide();
+                                }
+                            var cnsTypeChecked = jq("#cnsType input:checkbox:checked");
+                                if (cnsTypeChecked.length == 1) {
+                                    jq('.cns-findings').show();
+                                } else {
+                                    jq('.cns-findings').hide();
+                                }
+                            var gusTypeChecked = jq("#gusType input:checkbox:checked");
+                                if (gusTypeChecked.length == 1) {
+                                    jq('.gus-findings').show();
+                                } else {
+                                    jq('.gus-findings').hide();
+                                }
+
 //If has LMP activate date and if pg
                             if (hasLMP == 1065) {     //yes_no pregnancy
                                 jq('#lmp-date :input').prop('disabled', false);
@@ -3188,11 +3363,6 @@ Management<br />
                             <render n="3" concept="complaint"/>
                             <render n="4" concept="complaint"/>
                             <render n="5" concept="complaint"/>
-                            <render n="6" concept="complaint"/>
-                            <render n="7" concept="complaint"/>
-                            <render n="8" concept="complaint"/>
-                            <render n="9" concept="complaint"/>
-                            <render n="10" concept="complaint"/>
                         </repeat>
                     </table>
                     <table>
@@ -3773,19 +3943,20 @@ Management<br />
                     </table>
                 </fieldset>
                 <fieldset class="patient-details">
-                    <legend>Vaccination(s) today</legend>
+                    <legend>Vaccination(s)</legend>
                     <includeIf velocityTest="$patient.age &lt; 16">
                         <table width="30%" id="child-vacc">
                             <tr>
                                 <th style="color: #888" align="left">Vaccination</th>
                                 <th style="color: #888" align="left">Dose Type</th>
                                 <th style="color: #888" align="left">Date Given</th>
+                                <th style="color: #888" align="left">Recent</th>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="886AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="BCG" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2,3" answerLabels="First,Second,Third" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
-
+                                <span class="value"><recentObs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="82215AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="PV" style="checkbox" /></td>
@@ -3837,34 +4008,37 @@ Management<br />
                                 <th style="color: #888" align="left">Vaccination</th>
                                 <th style="color: #888" align="left">Dose Type</th>
                                 <th style="color: #888" align="left">Date Given</th>
+                                <th style="color: #888" align="left">Recent</th>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="782AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="HBV" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2" answerLabels="First,Second" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
-
+                                <td> <span class="value"><recentObs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span> </td>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5261AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Flu" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2,3" answerLabels="First,Second,Third" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
+                                <td>  </td>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="78032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Influenza" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2" answerLabels="IIV3,IIV3" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
+                                <td>  </td>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="82216AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Pneumococcal Conjugate" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2,3" answerLabels="First,Second,Third" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
-
+                                <td>  </td>
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="77308AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Haemophobilus Influenza type B" style="checkbox" /></td>
                                 <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2,3" answerLabels="First,Second,Third" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
-
+                                <td> </td>
                             </tr>
                         </table>
                         <table >
@@ -4155,18 +4329,22 @@ Management<br />
                                     <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="460AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Oedema" style="checkbox" /><br />
                                     <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Oral thrush" style="checkbox" /><br />
                                     <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5245AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Pallor" style="checkbox" /><br />
+                                    <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="140125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Finger Clubbing" style="checkbox" /><br />
                                 </div>
                             </td><td>
                             <div style="float: left;padding-right: 50px">
-                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="140125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Finger Clubbing" style="checkbox" /><br />
                                 <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="126952AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Lymph Node Axillary" style="checkbox" /><br />
                                 <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="143050AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Cyanosis" style="checkbox" /><br />
                                 <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="126939AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Lymph Nodes Inguinal" style="checkbox" /><br />
                                 <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="823AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Wasting" style="checkbox" />
+                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="142630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Dehydration" style="checkbox" /><br />
+                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="1861AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Nasal flaring" style="checkbox" /><br />
                             </div>
                         </td><td>
                             <div style="float: left;padding-right: 40px">
-                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="142630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Dehydration" style="checkbox" /><br />
+                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="156534AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Grunting" style="checkbox" /><br />
+                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="136790AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Stridor" style="checkbox" /><br />
+                                <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="136768AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Chest in-drawing" style="checkbox" /><br />
                                 <obs conceptId="162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Lethargic" style="checkbox" id="genExams-error" /><br />
                             </div>
                         </td>
@@ -4194,9 +4372,7 @@ Management<br />
                             <tr id="systemType">
                                 <td colspan="2">
                                     System type:
-                                    &nbsp;
-
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                          answerConceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                          answerLabel="Skin" style="checkbox" id="skinType"/>
 
@@ -4210,7 +4386,7 @@ Management<br />
 
                                     <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                          answerConceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Respiratory" style="checkbox" id="respiratoryType"/>
+                                         answerLabel="Respiratory" style="checkbox" id="chestType"/>
 
                                     <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                          answerConceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4234,13 +4410,11 @@ Management<br />
                             <br/>
                             <th align="left">System Review</th>
                             <th align="left">Findings</th>
-                            <th align="left"></th>
-                            <th align="left"></th>
                             <th align="left">Findings Notes</th>
                         </tr>
                         <tr class="skin-findings" border="1">
                             <td>Skin</td>
-                            <td colspan="2">
+                            <td>
 
                                 <obs conceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="150555AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Abscess" style="checkbox" /><br/>
@@ -4256,14 +4430,13 @@ Management<br />
                                      answerLabel="Skin eruptions/Rashes" style="checkbox"  /><br/>
                                 <obs conceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5244AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Oral sores" style="checkbox"  /><br/>
-                            </td><td>
                             </td>
-                            <td><obs class="skin-notes" conceptId="160981AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
+                               <td><obs class="skin-notes" conceptId="160981AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
                             </td>
                         </tr>
                         <tr class="eye-findings">
                             <td>Eyes</td>
-                             <td colspan="2">
+                             <td>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="123074AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Visual Disturbance" style="checkbox" /><br/>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="140940AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4276,13 +4449,15 @@ Management<br />
                                      answerLabel="Light sensitive" style="checkbox" /><br/>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="139100AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Itchy eyes" style="checkbox" /><br/>
-                             </td><td>
                               </td>
                             <td><obs class="eye-notes" conceptId="164938" rows="1" cols="50"/>   </td>
                         </tr>
                         <tr class="ent-findings">
                             <td>ENT</td>
-                            <td colspan="2">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
                                 <obs conceptId="164936" answerConceptId="148517AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Apnea" style="checkbox" /><br/>
                                 <obs conceptId="164936" answerConceptId="139075AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4332,13 +4507,16 @@ Management<br />
                                      answerLabel="Ulcers" style="checkbox" /><br/>
                                 <obs conceptId="164936" answerConceptId="111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Vertigo" style="checkbox" /><br/>
+                                    </td>
+                                    </tr>
+                                </table>
                             </td>
                             <td><obs class="ent-notes" conceptId="164939" rows="1" cols="50"/>
                             </td>
                         </tr>
                         <tr class="chest-findings">
                             <td>Respiratory</td>
-                            <td colspan="2">
+                            <td>
                                 <obs conceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="146893AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Bronchial breathing" style="checkbox" /><br/>
                                 <obs conceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="127640AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4351,14 +4529,13 @@ Management<br />
                                      answerLabel="Respiratory distress" style="checkbox" /><br/>
                                 <obs conceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5209AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Wheezing" style="checkbox" /><br/>
-                            </td><td>
                             </td>
                             <td><obs class="chest-notes" conceptId="163042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
                             </td>
                         </tr>
                         <tr class="cvs-findings">
                             <td>CVS</td>
-                            <td colspan="2">
+                            <td>
                                 <obs conceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="140147AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Elevated blood pressure" style="checkbox" /><br/>
                                 <obs conceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="136522AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4367,14 +4544,13 @@ Management<br />
                                      answerLabel="Cardiac murmur" style="checkbox" /><br/>
                                 <obs conceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="130560AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Cardiac rub" style="checkbox"  /><br/>
-                            </td><td>
                             </td>
                             <td><obs class="cvs-notes" conceptId="163046AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
                             </td>
                         </tr>
                         <tr class="abdomen-findings">
                             <td>Abdomen</td>
-                            <td colspan="2">
+                            <td>
                                 <obs conceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="150915AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Abdominal distension" style="checkbox" /><br/>
                                 <obs conceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5008AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4385,14 +4561,13 @@ Management<br />
                                      answerLabel="Splenomegaly" style="checkbox"  /><br/>
                                 <obs conceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5105AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Abdominal tenderness" style="checkbox"  /><br/>
-                            </td><td>
                             </td>
                            <td><obs class="abdomen-notes" conceptId="160948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50" />
                             </td>
                         </tr>
                         <tr  class="cns-findings">
                             <td>CNS</td>
-                            <td colspan="2">
+                            <td>
                                 <obs conceptId="164937" answerConceptId="118872AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Altered sensations" style="checkbox" /><br/>
                                 <obs conceptId="164937" answerConceptId="1836AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4407,14 +4582,13 @@ Management<br />
                                      answerLabel="Stiff neck" style="checkbox"  /><br/>
                                 <obs conceptId="164937" answerConceptId="136282AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Kernicterus" style="checkbox"  /><br/>
-                            </td><td>
                             </td>
                             <td><obs class="cns-notes" conceptId="160994AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50" />
                             </td>
                         </tr>
                         <tr class="gus-findings">
                             <td>Genitourinary </td>
-                            <td colspan="2">
+                            <td>
                                 <obs conceptId="1126AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="147241AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Bleeding" style="checkbox" /><br/>
                                 <obs conceptId="1126AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="154311AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4425,7 +4599,6 @@ Management<br />
                                      answerLabel="Vaginal discharge" style="checkbox"  /><br/>
                                 <obs conceptId="1126AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="124087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Ulceration" style="checkbox"  /><br/>
-                            </td><td>
                             </td>
                             <td><obs class="gus-notes" conceptId="163047AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50" />
                             </td>
