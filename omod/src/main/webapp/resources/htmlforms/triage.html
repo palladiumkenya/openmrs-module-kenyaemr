@@ -31,7 +31,7 @@
                 else {
                     display = bmi.toFixed(2);
                 }
-             if (age &lt; 5) {
+                if (age &lt; 5) {
                     jq.getJSON('/' + ctxPath + '/kenyaemr/ZScoreUtils/calculateZScore.action', {
                         height: heightM * 100,
                         weight: weightKg,
@@ -99,7 +99,7 @@
             var latestZscore = "<lookup expression="fn.latestObs(163515).getValueCoded()"/>"
             var latestZscoreDate = "<lookup expression="fn.latestObs(163515).getObsDatetime()"/>";
             var pAge = parseInt('<lookup expression="patient.age"/>');
-           var lastZscore = latestZscore.replace(/[^\d]/g, '');
+            var lastZscore = latestZscore.replace(/[^\d]/g, '');
             var formattedZscoreDate = moment(moment(latestZscoreDate, 'DD/MMM/YYYY').toDate()).format("DD-MMM-YYYY");
 
             if (pAge &lt; 5 &amp;&amp; lastZscore !="" ) {
@@ -113,10 +113,53 @@
                     jq('#recent-calculated-zscore').html('Severe (' + formattedZscoreDate + ')');
                 }else{
                     jq('#recent-calculated-zscore').html("");
-                 }
+                }
             }
         }
-
+        var complaintSelected = function() {
+            var pAge = parseInt('<lookup expression="patient.age"/>');
+            var val = getValue('complaints-today.value');
+            var complaint = jq('.complaint select').val('');
+            var complaintDuration = jq('.complaint-time input').val('');
+            var complaintDate = jq('.complaint-date input').val('');
+            var otherComplaint = jq('#obs-other-complaint input').val('');
+            if (val == "true"){
+                jq("#tbl-complaints-today").show();
+                jq('#tr-other-complaint').show();
+            }
+            else{
+                jq("#tbl-complaints-today").hide();
+                jq('#tr-other-complaint').hide();
+                jq('#tr-other-complaint-specify').hide();
+                jq("#other-complain input").prop("checked", false);
+                clearHiddenSections ([complaint, complaintDuration, complaintDate, otherComplaint]);
+                getField('complaint-field.error').html('Please specify the complaints.').hide();
+            }
+            if(pAge &gt; 4){
+                jq("#complaint-field option[value='6017']").hide();  //Refusal to feed
+            }
+        }
+        var otherComplaintSelected = function () {
+            var val = jq(this).val();
+            var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
+            if (val == 5622 &amp;&amp; otherMethodChecked.length == 1) {
+                jq('#tr-other-complaint-specify').show();
+            }else{
+                getField('obs-other-complaint.value').val("");
+                jq('#tr-other-complaint-specify').hide();
+            }
+        }
+        var complaintDurationInput = function() {
+            var table = document.getElementById("tbl-complaints-today");
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var val = jq(this).closest('tr').find(".complaint-time input").val();
+                var encounterDate = new Date(getValue('encounter-date.value'));
+                var formattedComplaintDate = moment(moment(encounterDate, 'YYYY-MM-DD').subtract(val, 'days').toDate()).format('YYYY-MM-DD');
+                if(val >0 ) {
+                    jq(this).closest('tr').find(".complaint-date input").val(formattedComplaintDate);
+                }
+            }
+        }
         jQuery(function () {
             var pAge = parseInt('<lookup expression="patient.age"/>');
             var miscariageVal = getValue('miscariage.value');
@@ -135,16 +178,22 @@
             if(pAge &lt; 10 || PATIENT_PREGNANT == 'true' ) {
                 jq('#pregnancy-screening').hide();
                 jq('#triage-notes').hide();
-             }else{
+            }else{
                 jq('#pregnancy-screening').show();
                 jq('#triage-notes').show();
-             }
-            jQuery('#rsn').keypress(function(event) {
-                var code = (event.keyCode ? event.keyCode : event.which);
-                //alert(code)
-                if (code &gt;= 48  &amp;&amp; code &lt;= 57) //numbers
-                    event.preventDefault();
-            });
+            }
+            jq("#tbl-complaints-today").hide();
+            jq('#tr-other-complaint').hide();
+            jq('#tr-other-complaint-specify').hide();
+            jq("#complaints-today").change(complaintSelected);       //boolean
+            jq(".complaint-time input").change(complaintDurationInput);
+            jq('#other-complaint :input[type=checkbox]').change(otherComplaintSelected);
+//            jQuery('#rsn').keypress(function(event) {
+//                var code = (event.keyCode ? event.keyCode : event.which);
+//                alert(code)
+//                if (code &gt;= 48  &amp;&amp; code &lt;= 57) //numbers
+//                    event.preventDefault();
+//            });
 
             function onMiscariageChange() {
                 if (getValue('miscariage.value') == 1066) {
@@ -157,36 +206,36 @@
             var pbirthdate = new Date("<lookup expression="patient.birthdate" />").getTime();
             var pgender = "<lookup expression="patient.gender" />";
             var pAge = parseInt('<lookup expression="patient.age"/>');
-           beforeSubmit.push(function () {
-               var lmpdate = new Date(getValue('lmp-date.value')).getTime();
+            beforeSubmit.push(function () {
+                var lmpdate = new Date(getValue('lmp-date.value')).getTime();
 
-                   if(pgender === 'F') {
-                        if (lmpdate &lt; pbirthdate) {
-                               getField('lmp-date.error').html('Should not be earlier than birth date').show();
-                               return false;
-                           }else{
-                               getField('lmp-date.error').html('Should not be earlier than birth date').hide();
-                           }
-                       }
-                    return true;
-                });
+                if(pgender === 'F') {
+                    if (lmpdate &lt; pbirthdate) {
+                        getField('lmp-date.error').html('Should not be earlier than birth date').show();
+                        return false;
+                    }else{
+                        getField('lmp-date.error').html('Should not be earlier than birth date').hide();
+                    }
+                }
+                return true;
+            });
 
         });
-         //Clear hidden sections
-    clearHiddenSections = function(parentObj) {
-        parentObj.find('input[type=radio]').each(function() {
-            this.checked = false;
-        });
-        parentObj.find('input[type=checkbox]').each(function() {
-            this.checked = false;
-        });
-        parentObj.find('input[type=text]').each(function() {
-            jq(this).val("");
-        });
-        parentObj.find('select').each(function() {
-            this.selectedIndex =0;
-        });
-    }
+        //Clear hidden sections
+        clearHiddenSections = function(parentObj) {
+            parentObj.find('input[type=radio]').each(function() {
+                this.checked = false;
+            });
+            parentObj.find('input[type=checkbox]').each(function() {
+                this.checked = false;
+            });
+            parentObj.find('input[type=text]').each(function() {
+                jq(this).val("");
+            });
+            parentObj.find('select').each(function() {
+                this.selectedIndex =0;
+            });
+        }
 
     </script>
     <ifMode mode="EDIT">
@@ -196,7 +245,21 @@
                     jq('#baby-last-week').show();
                 }else{
                     jq('#baby-last-week').hide();
+                    var complaintsToday = getValue('complaints-today.value');
+                    var selectedComplaint = getField('complaint-field.value').val();
                     clearHiddenSections(jq('#baby-last-week'));
+
+                    if (complaintsToday == 'true'){
+                        jq("#tbl-complaints-today").show();
+                        jq('#tr-other-complaint').show();
+                    }else{
+                        jq("#tbl-complaints-today").hide();
+                    }
+
+                    var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
+                    if (otherMethodChecked.length == 1) {
+                        jq('#tr-other-complaint-specify').show();
+                    }
                 }
             });
         </script>
@@ -207,6 +270,7 @@
                 <td align="left">Date:
                     <encounterDate id="encounter-date" showTime="true"/>
                 </td>
+                <td>Provider : <encounterProvider default="currentUser" /></td>
                 <td align="right">Location:
                     <encounterLocation default="GlobalProperty:kenyaemr.defaultLocation" type="autocomplete"/>
                 </td>
@@ -215,19 +279,63 @@
     </div>
 
     <div class="ke-form-content">
-        <fieldset>
-            <legend>Reason</legend>
-
-            <table>
+        <!-- Presenting complaints -->
+        <fieldset class="patient-details">
+            <legend>Complaints and History of complaints</legend>
+            <div>
+                Patient having complaint(s) today?
+                <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
+                <span style="color:red;"><strong>*</strong></span>
+            </div>
+            <table cellspacing="5" id="tbl-complaints-today">
                 <tr>
-                    <td>Reason for visit</td>
+                    <th style="color: #888">Complaint</th>
+                    <th style="color: #888; text-align: center">Duration (Days)</th>
+                    <th style="color: #888; text-align: center">Onset Date</th>
+                </tr>
+                <repeat>
+                    <template>
+                        <obsgroup groupingConceptId="160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                            <tr>
+                                <td>
+                                    <obs class="complaint" conceptId="5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerConceptIds="151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,840AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120749AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120345AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119574AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,206AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143129AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                            141585AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131040AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162626AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140070AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,123396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142247AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135462AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116214AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112989AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135595AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                             121657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131015AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133028AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5978AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133469AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133027AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125225AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5953AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113224AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,126535AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,6017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerLabels="Abdominal pain,Abnormal Uterine Bleeding,Anxiety,Depression,Back pain,Bloody Urine,Breast Pain,Chest Pain,Cold and Chills,Confusion,Delirium,Convulsions,Seizure,Cough,Crying Infant,Diarrhea,Difficult in breathing,Difficulty in swallowing,Dizziness,Ear Pain,Epigastric Pain,Eye apin,Facial Pain,Fatigue/weakness,Fever,Flank Pain,Vaginal Discharge,Discharge from Penis,Genital Ulcer,Headache,Hearing Loss,Hypotension,Shock,Itchiness/Pruritus,Joint Pain,Leg Pain,Loss of Appetite,Lymphadenopathy,Memory Loss,Coma,Lethargy,Mouth Pain,Mouth Ulceration,Muscle cramps,Muscle Pain,Nausea,Neck Pain,Night sweats,Numbness,Pain when Swallowing,Pelvic Pain,Poor Vision,Rash,Red Eye,Running/Blocked nose,Scrotal Pain,Shoulder Pain,
+                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Myalgia,Refusal to feed"
+                                         style="dropdown" id="complaint-field"
+                                    />
+                                </td>
+                                <td><obs class="complaint-time" conceptId="159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id ="complaint-duration" size="10" /></td>
+                                <td>
+                                    <obs class="complaint-date" conceptId="159948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="false"/>
+                                </td>
+                            </tr>
+                        </obsgroup>
+                    </template>
+                    <render n="1" concept="complaint"/>
+                    <render n="2" concept="complaint"/>
+                    <render n="3" concept="complaint"/>
+                    <render n="4" concept="complaint"/>
+                    <render n="5" concept="complaint"/>
+                </repeat>
+            </table>
+            <table>
+                <tr id="tr-other-complaint">
                     <td>
-                        <obs id="rsn" conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="2" cols="80"/>
+                        <obs conceptId="165241" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                             answerLabel="Other" style="checkbox"  id="other-complaint" /><br/>
+                    </td>
+                </tr>
+                <tr id="tr-other-complaint-specify">
+                    <td> Specify
+                        <obs conceptId="165250" rows="3" cols="80" id="obs-other-complaint"/>
                     </td>
                 </tr>
             </table>
         </fieldset>
-
         <fieldset>
             <legend>Vital Signs</legend>
 
@@ -314,23 +422,23 @@
                         </td>
                     </tr>
                     <includeIf velocityTest="$patient.age &lt; 5">
-                    <tr>
-                        <td>
-                            Nutritional status:</td>
-                        <td>
-                            <obs conceptId="163515AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                        <tr>
+                            <td>
+                                Nutritional status:</td>
+                            <td>
+                                <obs conceptId="163515AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptIds="1115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                    123814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                    123815AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
                                                    164131AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                 answerLabels="Normal (Median),Mild (-1 SD),Moderate (-2 SD),Severe (-3 SD and -4 SD)"
-                                 style="dropdown"
-                                 id="z-score"/>
-                        </td>
-                        <td><span id="recent-calculated-zscore"></span></td>
-                        <td>&#160;&#160;&#160;  Z-Score : &#160;</td>
-                        <td><span id="calculated-zscore" class="value"></span></td>
-                       </tr>
+                                     answerLabels="Normal (Median),Mild (-1 SD),Moderate (-2 SD),Severe (-3 SD and -4 SD)"
+                                     style="dropdown"
+                                     id="z-score"/>
+                            </td>
+                            <td><span id="recent-calculated-zscore"></span></td>
+                            <td>&#160;&#160;&#160;  Z-Score : &#160;</td>
+                            <td><span id="calculated-zscore" class="value"></span></td>
+                        </tr>
                         <tr style="display: none">
                             <td>
                                 <obs id="z-score-value" conceptId="162584AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
