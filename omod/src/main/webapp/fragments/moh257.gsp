@@ -8,6 +8,7 @@
 		"""kenyaemr.openEncounterDialog('${ currentApp.id }', ${ encounter.id });"""
 	}
 %>
+<% if (!patient.dead && !patient.voided) { %>
 <div class="ke-panel-frame">
 	<div class="ke-panel-heading">Page 1 (Care Summary)</div>
 	<div class="ke-panel-content" style="background-color: #F3F9FF">
@@ -24,7 +25,8 @@
 		</fieldset>
 	</div>
 </div>
-
+<%}%>
+<% if (!patient.dead && !patient.voided) { %>
 <div class="ke-panel-frame">
 	<div class="ke-panel-heading">Page 2 (Initial and Followup Visits)</div>
 	<div class="ke-panel-content" style="background-color: #F3F9FF">
@@ -48,12 +50,13 @@
 		<%}%>
 	</div>
 </div>
-
+<%}%>
 <div class="ke-panel-frame">
 	<div class="ke-panel-heading">ARV Regimen History</div>
 	<div class="ke-panel-content" style="background-color: #F3F9FF">
 		${ ui.includeFragment("kenyaemr", "regimenHistory", [ history: arvHistory ]) }
 		<br />
+        <% if (!patient.dead && !patient.voided) { %>
 		<% if (inHivProgram) { %>
 			<div align="center">
 				${ ui.includeFragment("kenyaui", "widget/button", [
@@ -65,6 +68,7 @@
 						href: ui.pageLink("kenyaemr", "regimenEditor", [ appId: currentApp.id, patientId: currentPatient, category: "ARV", returnUrl: ui.thisUrl() ])
 				]) }
 			</div>
+		<%}%>
 		<%}%>
 	</div>
 
