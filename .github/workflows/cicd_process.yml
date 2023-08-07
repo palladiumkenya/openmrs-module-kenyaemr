@@ -1,7 +1,7 @@
-name: deploy to prod 8600
+name: deploy to data:8400
 on:
   push:
-    branches: [ master ]
+    branches: [ oncology-screening-branch ]
 jobs:
 
   build:
@@ -12,19 +12,19 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
+        username: ${{ secrets.CICD_USERNAME }}
         key: ${{ secrets.CICD_SECRET }}
         port: ${{ secrets.PORT }}
         command_timeout: 200m
         script: |
-          cd /apps/github-workflows/kenyaemr-modules
+          cd /apps/kenyaemr
           sudo rm -rf openmrs-module-kenyaemr
           sudo mkdir openmrs-module-kenyaemr
-          sudo chown -R cicd2:cicd2 openmrs-module-kenyaemr
-          git config --global --add safe.directory /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
-          cd /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
-          git clone https://github.com/palladiumkenya/openmrs-module-kenyaemr.git /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
-          sudo chown -R cicd2:cicd2 /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
+          sudo chown -R cicd:cicd openmrs-module-kenyaemr
+          git config --global --add safe.directory /apps/kenyaemr/openmrs-module-kenyaemr
+          cd /apps/kenyaemr/openmrs-module-kenyaemr
+          git clone -b oncology-screening-branch https://github.com/palladiumkenya/openmrs-module-kenyaemr.git .
+          sudo chown -R cicd:cicd /apps/kenyaemr/openmrs-module-kenyaemr
           git status
           mvn license:format
           sudo mvn clean install -DskipTests
@@ -35,3 +35,4 @@ jobs:
           sudo chmod 755 /var/lib/OpenMRS/modules/*.omod
           sudo systemctl stop tomcat
           sudo systemctl start tomcat
+
