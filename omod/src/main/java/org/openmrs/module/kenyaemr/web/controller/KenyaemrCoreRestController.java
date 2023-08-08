@@ -241,7 +241,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                                 "d7aaaf20-31ca-4d22-9dd9-0796eb47a341", "cf805d0a-a470-4194-b375-7e04f56d4dee", "90e54c41-da23-4ace-b472-0c8521c97594", "e360f35f-e496-4f01-843b-e2894e278b5b", "85019fbe-9339-49f7-8341-e9a04311bb99",
                                 "4f02dfed-a2ec-40c2-b546-85dab5831871", "35c6fcc2-960b-11ec-b909-0242ac120002", "a2010bf5-2db0-4bf4-819f-8a3cffbcb21b", "2504e865-638e-4a63-bf08-7e8f03a376f3", "6632e66c-9ae5-11ec-b909-0242ac120002",
                                 "1495edf8-2df2-11e9-b210-d663bd873d93", "e87aa2ad-6886-422e-9dfd-064e3bfe3aad", "9c0a7a57-62ff-4f75-babe-5835b0e921b7", "899d64ad-be13-4071-a879-2153847206b7", "f091b067-bea5-4657-8445-cfec05dc46a2",
-                                "46f29210-ed18-11ea-adc1-0242ac120002", "465a92f2-baf8-42e9-9612-53064be868e8");
+                                "46f29210-ed18-11ea-adc1-0242ac120002", "465a92f2-baf8-42e9-9612-53064be868e8", "0038a296-62f8-4099-80e5-c9ea7590c157");
                         if (!frontEndForms.contains(frm.getEncounterType().getUuid())) {
                             formObj.put("formCategory", "available");
                             formList.add(formObj);
