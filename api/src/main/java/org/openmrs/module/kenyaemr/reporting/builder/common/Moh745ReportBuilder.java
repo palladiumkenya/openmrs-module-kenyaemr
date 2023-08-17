@@ -121,22 +121,22 @@ public class Moh745ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", ReportUtils.map(commonDimensions.moh745AgeGroups(), "onDate=${endDate}"));
 
         //initial routing
-        EmrReportingUtils.addRow(dsd,"VIA/VILI-01", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedScreening(VILI_VIA_SCREENING, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"PAP SMEAR-01", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedScreening(PAP_SMEAR_SCREENING, INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HPV Test-01", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedScreening(HPV_TEST_SCREENING, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"VIA/VILI-01", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedViaScreening(INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"PAP SMEAR-01", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedPapSmearScreening( INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"HPV Test-01", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedHPVTestScreening( INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-01", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(VILI_VIA_SCREENING, INITIAL_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive Cytology-01", "Positive Cytology Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(COLPOSCOPY_SCREENING, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive HPV-01", "Positive HPV Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(HPV_TEST_SCREENING, INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-01", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(PRESUMED, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-01", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.positiveVIAResult( INITIAL_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive Cytology-01", "Positive Cytology Result", ReportUtils.map(moh745Indicators.positivePAPSmearResult( INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive HPV-01", "Positive HPV Result", ReportUtils.map(moh745Indicators.positiveHPVResult( INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-01", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-01", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-01", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"LEEP Treatment-01", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Other Treatment-01", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-01", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-01", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"LEEP Treatment-01", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Other Treatment-01", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, INITIAL_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         EmrReportingUtils.addRow(dsd,"HIV Positive Clients Screened-01", "HIV Positive Clients Screened", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreened(INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-01", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-01", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(INITIAL_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         return dsd;
     }
@@ -156,22 +156,22 @@ public class Moh745ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", ReportUtils.map(commonDimensions.moh745AgeGroups(), "onDate=${endDate}"));
 
         //Routine
-        EmrReportingUtils.addRow(dsd,"VIA/VILI-02", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedScreening(VILI_VIA_SCREENING, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"PAP SMEAR-02", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedScreening(PAP_SMEAR_SCREENING, ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HPV Test-02", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedScreening(HPV_TEST_SCREENING, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"VIA/VILI-02", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedViaScreening(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"PAP SMEAR-02", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedPapSmearScreening(ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"HPV Test-02", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedHPVTestScreening(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-02", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(VILI_VIA_SCREENING, ROUTINE_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive Cytology-02", "Positive Cytology Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(COLPOSCOPY_SCREENING, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive HPV-02", "Positive HPV Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(HPV_TEST_SCREENING, ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-02", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(PRESUMED, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-02", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.positiveVIAResult(ROUTINE_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive Cytology-02", "Positive Cytology Result", ReportUtils.map(moh745Indicators.positivePAPSmearResult(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive HPV-02", "Positive HPV Result", ReportUtils.map(moh745Indicators.positiveHPVResult(ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-02", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-02", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-02", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"LEEP Treatment-02", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Other Treatment-02", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-02", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-02", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"LEEP Treatment-02", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Other Treatment-02", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, ROUTINE_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         EmrReportingUtils.addRow(dsd,"HIV Positive Clients Screened-02", "HIV Positive Clients Screened", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreened(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-02", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-02", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(ROUTINE_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         return dsd;
     }
@@ -191,22 +191,22 @@ public class Moh745ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", ReportUtils.map(commonDimensions.moh745AgeGroups(), "onDate=${endDate}"));
 
         //Post-treatment
-        EmrReportingUtils.addRow(dsd,"VIA/VILI-03", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedScreening(VILI_VIA_SCREENING, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"PAP SMEAR-03", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedScreening(PAP_SMEAR_SCREENING, POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HPV Test-03", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedScreening(HPV_TEST_SCREENING, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"VIA/VILI-03", "Received VIA or VIA/ VILI Screening", ReportUtils.map(moh745Indicators.receivedViaScreening( POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"PAP SMEAR-03", "Received Pap Smear Screening", ReportUtils.map(moh745Indicators.receivedPapSmearScreening( POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"HPV Test-03", "Received HPV Test", ReportUtils.map(moh745Indicators.receivedHPVTestScreening( POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-03", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(VILI_VIA_SCREENING, POST_TREATMENT_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive Cytology-03", "Positive Cytology Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(COLPOSCOPY_SCREENING, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Positive HPV-03", "Positive HPV Result", ReportUtils.map(moh745Indicators.receivedPositiveScreening(HPV_TEST_SCREENING, POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-03", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(PRESUMED, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive VIA or VIA/VILI-03", "Positive VIA or VIA/VILI Result", ReportUtils.map(moh745Indicators.positiveVIAResult( POST_TREATMENT_VISIT ), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive Cytology-03", "Positive Cytology Result", ReportUtils.map(moh745Indicators.positivePAPSmearResult(POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Positive HPV-03", "Positive HPV Result", ReportUtils.map(moh745Indicators.positiveHPVResult( POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Suspicious Cancer Lesions-03", "Have Suspicious Cancer Lesions", ReportUtils.map(moh745Indicators.receivedSuspiciousScreening(POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-03", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-03", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"LEEP Treatment-03", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Other Treatment-03", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Cryotherapy Treatment-03", "Treated Using Cryotherapy", ReportUtils.map(moh745Indicators.treatedMethod(CRYOTHERAPY, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Thermocoagulation Treatment-03", "Treated Using Thermocoagulation", ReportUtils.map(moh745Indicators.treatedMethod(THERMOCOAGUlation, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"LEEP Treatment-03", "Treated using LEEP", ReportUtils.map(moh745Indicators.treatedMethod(LEEP, POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"Other Treatment-03", "Other Treatment Given", ReportUtils.map(moh745Indicators.treatedMethod(OTHER, POST_TREATMENT_VISIT), indParams),moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         EmrReportingUtils.addRow(dsd,"HIV Positive Clients Screened-03", "HIV Positive Clients Screened", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreened(POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-03", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
+        // EmrReportingUtils.addRow(dsd,"HIV Positive With Positive Screening Results-03", "HIV Positive With Positive Screening Results", ReportUtils.map(moh745Indicators.HIVPositiveClientsScreenedWithPositiveResults(POST_TREATMENT_VISIT), indParams), moh745Disaggregations, Arrays.asList("01", "02", "03"));
 
         return dsd;
     }

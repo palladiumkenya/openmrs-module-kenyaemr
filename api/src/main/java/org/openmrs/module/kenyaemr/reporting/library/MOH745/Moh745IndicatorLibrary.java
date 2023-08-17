@@ -24,23 +24,48 @@ public class Moh745IndicatorLibrary {
     private Moh745CohortLibrary Moh745CohortLibrary;
 
     /*Received Screening*/
-    public CohortIndicator receivedScreening(String[] indicatorVal, String visitType) {
+    public CohortIndicator receivedViaScreening(String  visitType) {
 
-        return cohortIndicator("Received Screening", ReportUtils.map(Moh745CohortLibrary.receivedScreeningCl(indicatorVal , visitType), "startDate=${startDate},endDate=${endDate}")
+        return cohortIndicator("Received VIA Screening", ReportUtils.map(Moh745CohortLibrary.receivedViaScreeningCl(visitType), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator receivedHPVTestScreening( String visitType) {
+
+        return cohortIndicator("Received Screening", ReportUtils.map(Moh745CohortLibrary.receivedHpvTestScreeningCl( visitType), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator receivedPapSmearScreening( String visitType) {
+
+        return cohortIndicator("Received Screening", ReportUtils.map(Moh745CohortLibrary.receivedPapSmearScreeningCl( visitType), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
     /*Received Positive Screening Result*/
-    public CohortIndicator receivedPositiveScreening(String[] indicatorVal, String visitType) {
 
-        return cohortIndicator("Received Positive Screening", ReportUtils.map(Moh745CohortLibrary.receivedPositiveScreeningCl(indicatorVal, visitType), "startDate=${startDate},endDate=${endDate}")
+    public CohortIndicator positiveVIAResult(String visitType) {
+
+        return cohortIndicator("Received Positive VIA result", ReportUtils.map(Moh745CohortLibrary.positiveViaResult( visitType), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator positiveHPVResult(String visitType) {
+
+        return cohortIndicator("Received Positive HPV Test result", ReportUtils.map(Moh745CohortLibrary.positiveHpvResult( visitType), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator positivePAPSmearResult(String visitType) {
+
+        return cohortIndicator("Received Positive Pap Smear result", ReportUtils.map(Moh745CohortLibrary.positivePapSmearResult( visitType), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
     /*Suspicious Screening Result*/
-    public CohortIndicator receivedSuspiciousScreening(String result, String visitType) {
+    public CohortIndicator receivedSuspiciousScreening(String visitType) {
 
-        return cohortIndicator("Received Suspicious Screening", ReportUtils.map(Moh745CohortLibrary.suspiciousScreeningCl( result, visitType), "startDate=${startDate},endDate=${endDate}")
+        return cohortIndicator("Received Suspicious Screening", ReportUtils.map(Moh745CohortLibrary.suspiciousScreeningCl( visitType), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
