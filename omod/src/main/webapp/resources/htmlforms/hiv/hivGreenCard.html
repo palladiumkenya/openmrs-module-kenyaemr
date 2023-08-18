@@ -109,6 +109,12 @@ Green Card follow-up visit form
         var SECOND_CHRONIC_ILLNESS = GREENCARD_VELOCITY.split(",")[21].split(":")[1];
         var SECOND_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[22].split(":")[1];
         var SECOND_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[23].split(":")[1];
+        var FIRST_COMPLAINT = GREENCARD_VELOCITY.split(",")[18].split(":")[1];
+        var FIRST_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[19].split(":")[1];
+        var FIRST_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[20].split(":")[1];
+        var SECOND_CHRONIC_ILLNESS = GREENCARD_VELOCITY.split(",")[21].split(":")[1];
+        var SECOND_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[22].split(":")[1];
+        var SECOND_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[23].split(":")[1];
 
         var pAge = parseInt('<lookup expression="patient.age"/>');
         var pgender = "<lookup expression="patient.gender" />";
@@ -801,6 +807,9 @@ Green Card follow-up visit form
             var isRecentComplaintsDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentComplaintsDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
             if (isRecentComplaintsDateSameAsEncounterDate) {
                 //To DO: Prepopulate complaints here
+                console.log("Recent complaint ==>"+recentComplaintsValue.replace(/[^\d]/g, ''));
+                console.log("Recent complaint date ==>"+recentComplaintsDate);
+
                 jq("#tbl-complaints-today").show();
                 jq('#tr-other-complaint').show();
                 getField('complaint-field.value').prop("selectedIndex", 1);
@@ -816,6 +825,35 @@ Green Card follow-up visit form
                 jq('#first-recorded-chronic-illness:text').val(FIRST_CHRONIC_ILLNESS);
                 if (FIRST_CHRONIC_ONSET != '') {
                    var recordedOnsetDate =  moment(FIRST_CHRONIC_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
+                    jq('#first-recorded-onset-date:text').val(recordedOnsetDate);
+                }
+                if (FIRST_CHRONIC_CONTROLLED != '') {
+                    jq('#first-recorded-control-status:text').val(FIRST_CHRONIC_CONTROLLED);
+                }
+            }
+            if(SECOND_CHRONIC_ILLNESS !='') {
+                jq('#tbl-recorded-chronic').show();
+                jq('#second-chronic-illness').show();
+                jq('#chronic-mandatory-star').hide();
+                jq('#second-recorded-chronic-illness:text').val(SECOND_CHRONIC_ILLNESS);
+                if (SECOND_CHRONIC_ONSET != '') {
+                    var secondrecordedOnsetDate =  moment(SECOND_CHRONIC_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
+                    jq('#second-recorded-onset-date:text').val(secondrecordedOnsetDate);
+                }
+                if (SECOND_CHRONIC_CONTROLLED != '') {
+                    jq('#second-recorded-control-status:text').val(SECOND_CHRONIC_CONTROLLED);
+                }
+            }
+
+            // Previously filled chronic illness
+            jq('#tbl-recorded-complaint').hide();
+            jq('#second-complaint').hide();
+            if(FIRST_CHRONIC_ILLNESS !='') {
+                jq('#tbl-recorded-chronic').show();
+                jq('#chronic-mandatory-star').hide();
+                jq('#first-recorded-chronic-illness:text').val(FIRST_CHRONIC_ILLNESS);
+                if (FIRST_CHRONIC_ONSET != '') {
+                    var recordedOnsetDate =  moment(FIRST_CHRONIC_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
                     jq('#first-recorded-onset-date:text').val(recordedOnsetDate);
                 }
                 if (FIRST_CHRONIC_CONTROLLED != '') {
@@ -3330,6 +3368,41 @@ Management<br />
                         <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
                         <span style="color:red;"><strong>*</strong></span>
                     </div>
+
+                    <td> &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;</td>
+                    <td>
+                        <table id="tbl-recorded-complaint" border="1">
+                            <tr><td>  <strong>Complaint Recorded Today</strong></td></tr>
+                            <tr>
+                                <th align="left">Complaint</th>
+                                <th align="left">Duration</th>
+                                <th align="left">Onset Date</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" name="first-recorded-complaint" id="first-recorded-complaint" readonly="True" />
+                                </td>
+                                <td>
+                                    <input type="text" name="first-recorded-duration" id="first-recorded-duration" readonly="True" />
+                                </td>
+                                <td>
+                                    <input type="text" name="first-recorded-onsetDate" id="first-recorded-onsetDate" readonly="True" />
+                                </td>
+                            </tr>
+                            <tr id="second-complaint">
+                                <td>
+                                    <input type="text" name="second-recorded-complaint" id="second-recorded-complaint" readonly="True" />
+                                </td>
+                                <td>
+                                    <input type="text" name="second-recorded-duration" id="second-recorded-duration" readonly="True" />
+                                </td>
+                                <td>
+                                    <input type="text" name="second-recorded-onsetDate" id="second-recorded-onsetDate" readonly="True" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
                     <table cellspacing="5" id="tbl-complaints-today">
                         <tr>
                             <th style="color: #888">Complaint</th>
@@ -4024,7 +4097,7 @@ Management<br />
                             </tr>
                             <tr>
                                 <td><obs conceptId="1198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="78032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerLabel="Influenza" style="checkbox" /></td>
-                                <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2" answerLabels="IIV3,IIV3" style="dropdown" id="dose-sequence" /> </td>
+                                <td><obs class="dose"  conceptId="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText="" answers="1,2" answerLabels="IIV3,IIV4" style="dropdown" id="dose-sequence" /> </td>
                                 <td><obs class="vaccine-date" conceptId="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  allowFutureDates="false" labelText=" " id="vaccination-date"/></td>
                                 <td>  </td>
                             </tr>
