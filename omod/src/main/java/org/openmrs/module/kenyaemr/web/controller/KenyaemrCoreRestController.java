@@ -232,20 +232,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 for (FormDescriptor descriptor : uncompletedFormDescriptors) {
                     if(!descriptor.getTarget().getRetired()) {
                         ObjectNode formObj = generateFormDescriptorPayload(descriptor);
-                        Form frm = descriptor.getTarget();
-                        List<String> frontEndForms = Arrays.asList("17a381d1-7e29-406a-b782-aa903b963c28", "de1f9d67-b73e-4e1b-90d0-036166fc6995", "d7142400-2495-11e9-ab14-d663bd873d93", "ce841b19-0acd-46fd-b223-2ca9b5356237",
-                                "999792ec-8854-11e9-bc42-526af7764f64", "999792ec-8854-11e9-bc42-526af7764f64", "a3ce2705-d72d-458a-a76c-dae0f93398e7", "928ea6b2-3425-4ee9-854d-daa5ceaade03", "c3fb7831-f8fc-4b71-bd54-f23cdd77e305",
-                                "383974fe-58ef-488f-bdff-8962f4dd7518", "2cc8c535-bbfa-4668-98c7-b12e3550ee7b", "7b69daf5-b567-4384-9d29-f020c408d613", "84220f19-9071-4745-9045-3b2f8d3dc128", "bd64b3b0-7bc9-4541-a813-8a917f623e2e",
-                                "ea68aad6-4655-4dc5-80f2-780e33055a9e", "596f878f-5adf-4f8e-8829-6a87aaeda9a3", "92e03f22-9686-11e9-bc42-526af7764f64", "c4f9db39-2c18-49a6-bf9b-b243d673c64d", "119217a4-06d6-11ea-8d71-362b9e155667",
-                                "a70a1056-75b3-11ea-bc55-0242ac130003", "5c64e368-7fdc-11ea-bc55-0242ac130003", "94eebf1a-83a1-11ea-bc55-0242ac130003", "b046eb36-7bd0-40cf-bdcb-c662bc0f00c3", "d7aaaf20-31ca-4d22-9dd9-0796eb47a341",
-                                "d7aaaf20-31ca-4d22-9dd9-0796eb47a341", "cf805d0a-a470-4194-b375-7e04f56d4dee", "90e54c41-da23-4ace-b472-0c8521c97594", "e360f35f-e496-4f01-843b-e2894e278b5b", "85019fbe-9339-49f7-8341-e9a04311bb99",
-                                "4f02dfed-a2ec-40c2-b546-85dab5831871", "35c6fcc2-960b-11ec-b909-0242ac120002", "a2010bf5-2db0-4bf4-819f-8a3cffbcb21b", "2504e865-638e-4a63-bf08-7e8f03a376f3", "6632e66c-9ae5-11ec-b909-0242ac120002",
-                                "1495edf8-2df2-11e9-b210-d663bd873d93", "e87aa2ad-6886-422e-9dfd-064e3bfe3aad", "9c0a7a57-62ff-4f75-babe-5835b0e921b7", "899d64ad-be13-4071-a879-2153847206b7", "f091b067-bea5-4657-8445-cfec05dc46a2",
-                                "46f29210-ed18-11ea-adc1-0242ac120002", "465a92f2-baf8-42e9-9612-53064be868e8");
-                        if (!frontEndForms.contains(frm.getEncounterType().getUuid())) {
-                            formObj.put("formCategory", "available");
-                            formList.add(formObj);
-                        }
+                        formObj.put("formCategory", "available");
+                        formList.add(formObj);
                     }
                 }
             }
