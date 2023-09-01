@@ -1,4 +1,5 @@
 <script type="text/javascript">
+
     function openPatientChart() {
         kenyaui.openPanelDialog({ templateId: 'patient-chart', width: 85, height: 70, scrolling: true });
     }
@@ -11,6 +12,9 @@
         kenyaui.openPanelDialog({ templateId: 'visit-summary', width: 85, height: 70, scrolling: true });
     }
 
+	function openSHRDialog() {
+		kenyaui.openPanelDialog({ templateId: 'patient-shr', width: 85, height: 70, scrolling: true });
+	}
 	function getO3URL() {
         var patientID = "${ currentPatient.id }";
         var patientUUID = "${ currentPatient.uuid }";
@@ -35,6 +39,8 @@
 <div class="ke-panelbar" style="text-align: right">
 	<% if (visit) { %>
 	<button type="button" onclick="openVisitSummary();"><img src="${ ui.resourceLink("kenyaui", "images/buttons/summary.png") }" /> Visit Summary</button>
+	<button type="button" id="showShr" onclick="openSHRDialog();"><img src="${ ui.resourceLink("kenyaui", "images/buttons/summary.png") }" /> Patient SHR</button>
+
 	<%= ui.includeFragment("kenyaui", "widget/dialogForm", [
 			buttonConfig: [ label: "Check out of visit", iconProvider: "kenyaui", icon: "buttons/visit_end.png" ],
 			dialogConfig: [ heading: "Check Out", width: 50, height: 30 ],
@@ -99,4 +105,11 @@
 	<div align="center">
 		<button type="button" onclick="kenyaui.closeDialog();"><img src="${ ui.resourceLink("kenyaui", "images/glyphs/cancel.png") }" /> Close</button>
 	</div>
+</div>
+
+<div id="patient-shr" title="Patient SHR" style="display: none">
+	${ ui.includeFragment("kenyaemrIL", "shr/summaries") }
+	<div align="center">
+		<button type="button" onclick="kenyaui.closeDialog();"><img src="${ ui.resourceLink("kenyaui", "images/glyphs/cancel.png") }" /> Close</button>
 	</div>
+</div>
