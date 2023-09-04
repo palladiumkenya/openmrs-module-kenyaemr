@@ -109,12 +109,11 @@ Green Card follow-up visit form
         var SECOND_CHRONIC_ILLNESS = GREENCARD_VELOCITY.split(",")[21].split(":")[1];
         var SECOND_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[22].split(":")[1];
         var SECOND_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[23].split(":")[1];
-        var FIRST_COMPLAINT = GREENCARD_VELOCITY.split(",")[18].split(":")[1];
-        var FIRST_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[19].split(":")[1];
-        var FIRST_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[20].split(":")[1];
-        var SECOND_CHRONIC_ILLNESS = GREENCARD_VELOCITY.split(",")[21].split(":")[1];
-        var SECOND_CHRONIC_ONSET = GREENCARD_VELOCITY.split(",")[22].split(":")[1];
-        var SECOND_CHRONIC_CONTROLLED = GREENCARD_VELOCITY.split(",")[23].split(":")[1];
+        var FIRST_COMPLAINT = GREENCARD_VELOCITY.split(",")[24].split(":")[1];
+        var FIRST_COMPLAINT_ONSET = GREENCARD_VELOCITY.split(",")[25].split(":")[1];
+        var SECOND_COMPLAINT = GREENCARD_VELOCITY.split(",")[26].split(":")[1];
+        var SECOND_COMPLAINT_ONSET = GREENCARD_VELOCITY.split(",")[26].split(":")[1];
+
 
         var pAge = parseInt('<lookup expression="patient.age"/>');
         var pgender = "<lookup expression="patient.gender" />";
@@ -283,7 +282,7 @@ Green Card follow-up visit form
             jq('#chronic-illness :input[type=radio]').change(chronicIllnessesSelected);
             jq('#population-type :input[type=radio]').change(populationTypeSelected);
             jq('#other-complaint :input[type=checkbox]').change(otherComplaintSelected);
-  //Systems validations
+            //Systems validations
             jq('.skin-findings').hide();
             jq('.eye-findings').hide();
             jq('.ent-findings').hide();
@@ -804,50 +803,10 @@ Green Card follow-up visit form
             if (isRecentHeightDateSameAsEncounterDate) {
                 setValue('height.value', recentHeightValue);
             }
-            var isRecentComplaintsDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentComplaintsDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
-            if (isRecentComplaintsDateSameAsEncounterDate) {
-                //To DO: Prepopulate complaints here
-                console.log("Recent complaint ==>"+recentComplaintsValue.replace(/[^\d]/g, ''));
-                console.log("Recent complaint date ==>"+recentComplaintsDate);
-
-                jq("#tbl-complaints-today").show();
-                jq('#tr-other-complaint').show();
-                getField('complaint-field.value').prop("selectedIndex", 1);
-
-            }
 
             // Previously filled chronic illness
             jq('#tbl-recorded-chronic').hide();
             jq('#second-chronic-illness').hide();
-            if(FIRST_CHRONIC_ILLNESS !='') {
-                jq('#tbl-recorded-chronic').show();
-                jq('#chronic-mandatory-star').hide();
-                jq('#first-recorded-chronic-illness:text').val(FIRST_CHRONIC_ILLNESS);
-                if (FIRST_CHRONIC_ONSET != '') {
-                   var recordedOnsetDate =  moment(FIRST_CHRONIC_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
-                    jq('#first-recorded-onset-date:text').val(recordedOnsetDate);
-                }
-                if (FIRST_CHRONIC_CONTROLLED != '') {
-                    jq('#first-recorded-control-status:text').val(FIRST_CHRONIC_CONTROLLED);
-                }
-            }
-            if(SECOND_CHRONIC_ILLNESS !='') {
-                jq('#tbl-recorded-chronic').show();
-                jq('#second-chronic-illness').show();
-                jq('#chronic-mandatory-star').hide();
-                jq('#second-recorded-chronic-illness:text').val(SECOND_CHRONIC_ILLNESS);
-                if (SECOND_CHRONIC_ONSET != '') {
-                    var secondrecordedOnsetDate =  moment(SECOND_CHRONIC_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
-                    jq('#second-recorded-onset-date:text').val(secondrecordedOnsetDate);
-                }
-                if (SECOND_CHRONIC_CONTROLLED != '') {
-                    jq('#second-recorded-control-status:text').val(SECOND_CHRONIC_CONTROLLED);
-                }
-            }
-
-            // Previously filled chronic illness
-            jq('#tbl-recorded-complaint').hide();
-            jq('#second-complaint').hide();
             if(FIRST_CHRONIC_ILLNESS !='') {
                 jq('#tbl-recorded-chronic').show();
                 jq('#chronic-mandatory-star').hide();
@@ -872,6 +831,42 @@ Green Card follow-up visit form
                 if (SECOND_CHRONIC_CONTROLLED != '') {
                     jq('#second-recorded-control-status:text').val(SECOND_CHRONIC_CONTROLLED);
                 }
+            }
+
+            // Previously filled chronic illness
+//            var isRecentComplaintsDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentComplaintsDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
+//            if (isRecentComplaintsDateSameAsEncounterDate) {
+//                //To DO: Prepopulate complaints here
+//                console.log("Recent complaint ==>"+recentComplaintsValue.replace(/[^\d]/g, ''));
+//                console.log("Recent complaint date ==>"+recentComplaintsDate);
+//
+//                jq("#tbl-complaints-today").show();
+//                jq('#tr-other-complaint').show();
+//                getField('complaint-field.value').prop("selectedIndex", 1);
+//
+//            }
+            jq('#tbl-recorded-complaint').hide();
+            jq('#second-complaint').hide();
+            if(FIRST_COMPLAINT !='') {
+                jq('#tbl-recorded-complaint').show();
+                jq('#complaint-mandatory-star').hide();
+                jq('#first-recorded-complaint:text').val(FIRST_COMPLAINT);
+                if (FIRST_COMPLAINT_ONSET != '') {
+                    var recordedOnsetDate =  moment(FIRST_COMPLAINT_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
+                    jq('#first-recorded-onsetDate:text').val(recordedOnsetDate);
+                }
+
+            }
+            if(SECOND_COMPLAINT !='') {
+                jq('#tbl-recorded-complaint').show();
+                jq('#second-complaint').show();
+                jq('#complaint-mandatory-star').hide();
+                jq('#second-recorded-complaint:text').val(SECOND_COMPLAINT);
+                if (SECOND_COMPLAINT_ONSET != '') {
+                    var secondrecordedOnsetDate =  moment(SECOND_COMPLAINT_ONSET, 'DD-MMM-YYYY').format('YYYY-MM-DD');
+                    jq('#second-recorded-onsetDate:text').val(secondrecordedOnsetDate);
+                }
+
             }
 
         });   //End of JQuery onReady function
@@ -1040,8 +1035,8 @@ Green Card follow-up visit form
                 encDate = new Date();
             }
             if(updatedPhoneNumber == null || updatedPhoneNumber == "" || (/^(?:\+254|0|254)(\d{9})$/.test(updatedPhoneNumber) === false)) {
-               jq('#lblupdatedPhoneNumber').text('Phone number should contain only 10 digits').addClass("ke-error-label");
-             }else {
+                jq('#lblupdatedPhoneNumber').text('Phone number should contain only 10 digits').addClass("ke-error-label");
+            }else {
                 jq.getJSON('/' + ctxPath + '/kenyaemr/emrUtils/updateTelephoneNumber.action', {
                     patientId: patientId,
                     updatedPhoneNumber: updatedPhoneNumber
@@ -1368,7 +1363,7 @@ Green Card follow-up visit form
             var val = jq(this).val();
             var oiObservedChecked = jq("#tbl-who-stage input:checkbox:checked");
             if(val == 5006 &amp;&amp; oiObservedChecked.length ==1){
-              //Do nothing as this is assymptomatic
+                //Do nothing as this is assymptomatic
             }else {
                 jq('#active-oi:text').val("YES");
             }
@@ -2975,52 +2970,52 @@ Management<br />
                             }
                             var skinTypeChecked = jq("#skinType input:checkbox:checked");
                             if (skinTypeChecked.length == 1) {
-                                    jq('.skin-findings').show();
-                                } else {
-                                    jq('.skin-findings').hide();
-                                }
+                                jq('.skin-findings').show();
+                            } else {
+                                jq('.skin-findings').hide();
+                            }
                             var eyesTypeChecked = jq("#eyesType input:checkbox:checked");
-                                if (eyesTypeChecked.length == 1) {
-                                    jq('.eye-findings').show();
-                                } else {
-                                    jq('.eye-findings').hide();
-                                }
-                             var entTypeChecked = jq("#entType input:checkbox:checked");
-                                 if (entTypeChecked.length == 1) {
-                                     jq('.ent-findings').show();
-                                    } else {
-                                     jq('.ent-findings').hide();
-                                 }
+                            if (eyesTypeChecked.length == 1) {
+                                jq('.eye-findings').show();
+                            } else {
+                                jq('.eye-findings').hide();
+                            }
+                            var entTypeChecked = jq("#entType input:checkbox:checked");
+                            if (entTypeChecked.length == 1) {
+                                jq('.ent-findings').show();
+                            } else {
+                                jq('.ent-findings').hide();
+                            }
                             var chestTypeChecked = jq("#chestType input:checkbox:checked");
-                                if (chestTypeChecked.length == 1) {
-                                    jq('.chest-findings').show();
-                                } else {
-                                    jq('.chest-findings').hide();
-                                }
+                            if (chestTypeChecked.length == 1) {
+                                jq('.chest-findings').show();
+                            } else {
+                                jq('.chest-findings').hide();
+                            }
                             var cvsTypeChecked = jq("#cvsType input:checkbox:checked");
-                                if (cvsTypeChecked.length == 1) {
-                                    jq('.cvs-findings').show();
-                                } else {
-                                    jq('.cvs-findings').hide();
-                                }
+                            if (cvsTypeChecked.length == 1) {
+                                jq('.cvs-findings').show();
+                            } else {
+                                jq('.cvs-findings').hide();
+                            }
                             var abdomenTypeChecked = jq("#abdomenType input:checkbox:checked");
-                                if (abdomenTypeChecked.length == 1) {
-                                    jq('.abdomen-findings').show();
-                                } else {
-                                    jq('.abdomen-findings').hide();
-                                }
+                            if (abdomenTypeChecked.length == 1) {
+                                jq('.abdomen-findings').show();
+                            } else {
+                                jq('.abdomen-findings').hide();
+                            }
                             var cnsTypeChecked = jq("#cnsType input:checkbox:checked");
-                                if (cnsTypeChecked.length == 1) {
-                                    jq('.cns-findings').show();
-                                } else {
-                                    jq('.cns-findings').hide();
-                                }
+                            if (cnsTypeChecked.length == 1) {
+                                jq('.cns-findings').show();
+                            } else {
+                                jq('.cns-findings').hide();
+                            }
                             var gusTypeChecked = jq("#gusType input:checkbox:checked");
-                                if (gusTypeChecked.length == 1) {
-                                    jq('.gus-findings').show();
-                                } else {
-                                    jq('.gus-findings').hide();
-                                }
+                            if (gusTypeChecked.length == 1) {
+                                jq('.gus-findings').show();
+                            } else {
+                                jq('.gus-findings').hide();
+                            }
 
 //If has LMP activate date and if pg
                             if (hasLMP == 1065) {     //yes_no pregnancy
@@ -3363,27 +3358,24 @@ Management<br />
                 <!-- Additional History  -->
                 <fieldset class="patient-details">
                     <legend>Complaints and History of complaints</legend>
-                    <div>
+                    <table>
+                        <tr>
+                            <td>
                         Patient having complaint(s) today?
                         <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
-                        <span style="color:red;"><strong>*</strong></span>
-                    </div>
+                        <span id="complaint-mandatory-star" style="color:red;"><strong>*</strong></span>
+                            </td>
 
-                    <td> &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;</td>
                     <td>
                         <table id="tbl-recorded-complaint" border="1">
                             <tr><td>  <strong>Complaint Recorded Today</strong></td></tr>
                             <tr>
                                 <th align="left">Complaint</th>
-                                <th align="left">Duration</th>
                                 <th align="left">Onset Date</th>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" name="first-recorded-complaint" id="first-recorded-complaint" readonly="True" />
-                                </td>
-                                <td>
-                                    <input type="text" name="first-recorded-duration" id="first-recorded-duration" readonly="True" />
                                 </td>
                                 <td>
                                     <input type="text" name="first-recorded-onsetDate" id="first-recorded-onsetDate" readonly="True" />
@@ -3393,10 +3385,7 @@ Management<br />
                                 <td>
                                     <input type="text" name="second-recorded-complaint" id="second-recorded-complaint" readonly="True" />
                                 </td>
-                                <td>
-                                    <input type="text" name="second-recorded-duration" id="second-recorded-duration" readonly="True" />
-                                </td>
-                                <td>
+                                  <td>
                                     <input type="text" name="second-recorded-onsetDate" id="second-recorded-onsetDate" readonly="True" />
                                 </td>
                             </tr>
@@ -3464,6 +3453,8 @@ Management<br />
                             <td>
                                 <span class="value"><recentObs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
                             </td>
+                        </tr>
+                    </table>
                         </tr>
                     </table>
                 </fieldset>
@@ -3875,50 +3866,50 @@ Management<br />
                 <!--Chronic Illnesses-->
                 <fieldset class="patient-details">
                     <legend>Chronic Illnesses and Cormobidities</legend>
-                   <table>
-                       <tr>
-                           <td>
-                        Patient has any chronic illnesse(s)? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                        <obs id="chronic-illness" conceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                             style="radio" answerLabels="Yes,No"
-                        />
-                        <span id="chronic-mandatory-star" style="color:red;"><strong>*</strong></span>
-                           </td><td> &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;</td>
-                        <td>
-                            <table id="tbl-recorded-chronic" border="1">
-                                <tr><td>  <strong>Chronic Illnesses Recorded Recently</strong></td></tr>
-                                <tr>
+                    <table>
+                        <tr>
+                            <td>
+                                Patient has any chronic illnesse(s)? &#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                <obs id="chronic-illness" conceptId="162747AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     style="radio" answerLabels="Yes,No"
+                                />
+                                <span id="chronic-mandatory-star" style="color:red;"><strong>*</strong></span>
+                            </td><td> &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;</td>
+                            <td>
+                                <table id="tbl-recorded-chronic" border="1">
+                                    <tr><td>  <strong>Chronic Illnesses Recorded Recently</strong></td></tr>
+                                    <tr>
                                         <th align="left">Chronic Illness</th>
                                         <th align="left">Onset Date</th>
                                         <th align="left">Controlled</th>
-                                </tr>
-                                <tr>
-                                     <td>
-                                        <input type="text" name="first-recorded-chronic-illness" id="first-recorded-chronic-illness" readonly="True" />
-                                     </td>
-                                       <td>
-                                        <input type="text" name="first-recorded-onset-date" id="first-recorded-onset-date" readonly="True" />
-                                       </td>
-                                       <td>
-                                        <input type="text" name="first-recorded-control-status" id="first-recorded-control-status" readonly="True" />
-                                       </td>
-                                </tr>
-                                <tr id="second-chronic-illness">
-                                    <td>
-                                        <input type="text" name="second-recorded-chronic-illness" id="second-recorded-chronic-illness" readonly="True" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="second-recorded-onset-date" id="second-recorded-onset-date" readonly="True" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="second-recorded-control-status" id="second-recorded-control-status" readonly="True" />
-                                    </td>
-                                </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="first-recorded-chronic-illness" id="first-recorded-chronic-illness" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="first-recorded-onset-date" id="first-recorded-onset-date" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="first-recorded-control-status" id="first-recorded-control-status" readonly="True" />
+                                        </td>
+                                    </tr>
+                                    <tr id="second-chronic-illness">
+                                        <td>
+                                            <input type="text" name="second-recorded-chronic-illness" id="second-recorded-chronic-illness" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="second-recorded-onset-date" id="second-recorded-onset-date" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="second-recorded-control-status" id="second-recorded-control-status" readonly="True" />
+                                        </td>
+                                    </tr>
                                 </table>
-                              </td>
-                                </tr>
-                            </table>
+                            </td>
+                        </tr>
+                    </table>
                     <table id="tbl-chronic-illness">
                         <tr>
                             <th style="color: #888">Illness</th>
@@ -4442,43 +4433,43 @@ Management<br />
                     </table>
                     <br />
                     <table id="tbl-systems-review" style="width: 100%" border="1">
-                            <tr id="systemType">
-                                <td colspan="2">
-                                    System type:
-                                     <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Skin" style="checkbox" id="skinType"/>
+                        <tr id="systemType">
+                            <td colspan="2">
+                                System type:
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Skin" style="checkbox" id="skinType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Eye" style="checkbox" id="eyesType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Eye" style="checkbox" id="eyesType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="164936"
-                                         answerLabel="ENT" style="checkbox" id="entType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="164936"
+                                     answerLabel="ENT" style="checkbox" id="entType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Respiratory" style="checkbox" id="chestType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="1123AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Respiratory" style="checkbox" id="chestType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="CVS" style="checkbox" id="cvsType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="1124AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="CVS" style="checkbox" id="cvsType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Abdomen" style="checkbox" id="abdomenType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Abdomen" style="checkbox" id="abdomenType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="164937"
-                                         answerLabel="CNS" style="checkbox" id="cnsType"/>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="164937"
+                                     answerLabel="CNS" style="checkbox" id="cnsType"/>
 
-                                    <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerConceptId="1126AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                         answerLabel="Genitourinary" style="checkbox" id="gusType"/>
-                                        <span style="color:red;"><strong>*</strong></span>
-                                </td>
-                         </tr>
+                                <obs conceptId="1069AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerConceptId="1126AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                     answerLabel="Genitourinary" style="checkbox" id="gusType"/>
+                                <span style="color:red;"><strong>*</strong></span>
+                            </td>
+                        </tr>
                         <tr>
                             <br/>
                             <th align="left">System Review</th>
@@ -4504,12 +4495,12 @@ Management<br />
                                 <obs conceptId="1120AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5244AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Oral sores" style="checkbox"  /><br/>
                             </td>
-                               <td><obs class="skin-notes" conceptId="160981AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
+                            <td><obs class="skin-notes" conceptId="160981AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50"/>
                             </td>
                         </tr>
                         <tr class="eye-findings">
                             <td>Eyes</td>
-                             <td>
+                            <td>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="123074AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Visual Disturbance" style="checkbox" /><br/>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="140940AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -4522,7 +4513,7 @@ Management<br />
                                      answerLabel="Light sensitive" style="checkbox" /><br/>
                                 <obs conceptId="163309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="139100AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Itchy eyes" style="checkbox" /><br/>
-                              </td>
+                            </td>
                             <td><obs class="eye-notes" conceptId="164938" rows="1" cols="50"/>   </td>
                         </tr>
                         <tr class="ent-findings">
@@ -4531,55 +4522,55 @@ Management<br />
                                 <table>
                                     <tr>
                                         <td>
-                                <obs conceptId="164936" answerConceptId="148517AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Apnea" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="139075AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Hearing disorder" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="119558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Dental caries" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="118536AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Erythema" style="checkbox"  /><br/>
-                                <obs conceptId="164936" answerConceptId="106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Frequent colds" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="147230AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Gingival bleeding eyes" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="135841AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Hairy cell leukoplakia" style="checkbox"  /><br/>
-                                <obs conceptId="164936" answerConceptId="117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Hearing loss" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="138554AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Hoarseness" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="507AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Kaposi Sarcoma" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="152228AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Masses" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="128055AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Nasal discharge" style="checkbox"  /><br/>
-                            </td><td>
-                                <obs conceptId="164936" answerConceptId="133499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Nosebleed" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="160285AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Pain" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="110099AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Post nasal discharge" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="126423AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Sinus problems" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="126318AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Snoring" style="checkbox"  /><br/>
-                                <obs conceptId="164936" answerConceptId="158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Sore throat" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="5244AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Oral sores" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="5334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Thrush" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="123588AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Tinnitus" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="124601AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Toothache" style="checkbox"  /><br/>
-                                <obs conceptId="164936" answerConceptId="123919AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Ulcers" style="checkbox" /><br/>
-                                <obs conceptId="164936" answerConceptId="111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Vertigo" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="148517AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Apnea" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="139075AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Hearing disorder" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="119558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Dental caries" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="118536AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Erythema" style="checkbox"  /><br/>
+                                            <obs conceptId="164936" answerConceptId="106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Frequent colds" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="147230AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Gingival bleeding eyes" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="135841AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Hairy cell leukoplakia" style="checkbox"  /><br/>
+                                            <obs conceptId="164936" answerConceptId="117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Hearing loss" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="138554AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Hoarseness" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="507AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Kaposi Sarcoma" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="152228AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Masses" style="checkbox" /><br/>
+                                            <obs conceptId="164936" answerConceptId="128055AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                 answerLabel="Nasal discharge" style="checkbox"  /><br/>
+                                        </td><td>
+                                        <obs conceptId="164936" answerConceptId="133499AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Nosebleed" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="160285AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Pain" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="110099AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Post nasal discharge" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="126423AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Sinus problems" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="126318AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Snoring" style="checkbox"  /><br/>
+                                        <obs conceptId="164936" answerConceptId="158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Sore throat" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="5244AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Oral sores" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="5334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Thrush" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="123588AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Tinnitus" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="124601AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Toothache" style="checkbox"  /><br/>
+                                        <obs conceptId="164936" answerConceptId="123919AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Ulcers" style="checkbox" /><br/>
+                                        <obs conceptId="164936" answerConceptId="111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Vertigo" style="checkbox" /><br/>
                                     </td>
                                     </tr>
                                 </table>
@@ -4635,7 +4626,7 @@ Management<br />
                                 <obs conceptId="1125AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5105AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                                      answerLabel="Abdominal tenderness" style="checkbox"  /><br/>
                             </td>
-                           <td><obs class="abdomen-notes" conceptId="160948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50" />
+                            <td><obs class="abdomen-notes" conceptId="160948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="50" />
                             </td>
                         </tr>
                         <tr  class="cns-findings">
@@ -5220,7 +5211,7 @@ Management<br />
                             <td>&#160;&#160;&#160;&#160;</td>
                             <td>Current Telephone Number:&#160;&#160;<lookup class="value" expression="personAttributes.get('Telephone contact')"/></td>
                             <td>&#160;&#160;&#160;&#160;</td>
-                           <td><button type="button"  style="height:35px;width:200px;font-size:12px" id="btnUpdateTelephoneDialog" class="ke-program-outcome-button">Update phone number</button></td>
+                            <td><button type="button"  style="height:35px;width:200px;font-size:12px" id="btnUpdateTelephoneDialog" class="ke-program-outcome-button">Update phone number</button></td>
                             <td>
                                 <div id="dlgUpdateTelephone" style="display: none">
                                     <span class="ui-helper-hidden-accessible"><input type="text"/></span>

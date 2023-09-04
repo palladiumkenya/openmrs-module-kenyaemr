@@ -275,16 +275,22 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
 
             //Collections.reverse(encounters);
             List<SimpleObject> chronicIllnessesObservationsList = new ArrayList<SimpleObject>();
+            List<SimpleObject> complaintsObservationsList = new ArrayList<SimpleObject>();
             String firstChronicIllnessName = "";
             String firstChronicIllnessOnset = null;
             String firstChronicIllnessControl = "";
             String secondChronicIllnessName = "";
             String secondChronicIllnessOnset = null;
             String secondChronicIllnessControl = "";
+            String firstComplaintName = "";
+            String firstComplaintOnset = null;
+            String secondComplaintName = "";
+            String secondComplaintOnset = null;
             for (Encounter e : encounters) {
                 SimpleObject so = extractEncounterData(e);
                 if (so != null) {
                     List<SimpleObject> chronicIllnessesListData = (List<SimpleObject>) so.get("chronicIllnessData");
+                    List<SimpleObject> complaintListData = (List<SimpleObject>) so.get("complaintsObservationsData");
                     if (chronicIllnessesListData.size() > 0) {
                         chronicIllnessesObservationsList.addAll(chronicIllnessesListData);
                         firstChronicIllnessName = chronicIllnessesObservationsList.get(0).get("chronicIllnessType") != null ? chronicIllnessesObservationsList
@@ -309,6 +315,25 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
                                 .get(chronicIllnessesListData.size() - 1).get("controlStatus").toString() : "";
 
                     }
+
+                    if (complaintListData.size() > 0) {
+                        complaintsObservationsList.addAll(complaintListData);
+                        firstComplaintName = complaintsObservationsList.get(0).get("complaintsType") != null ? complaintsObservationsList
+                                .get(0).get("complaintsType").toString()
+                                : "";
+                        firstComplaintOnset = complaintsObservationsList.get(0).get("complaintsOnsetDate") != null ? complaintsObservationsList
+                                .get(0).get("complaintsOnsetDate").toString()
+                                : "";
+                      }
+
+                    if (complaintListData.size() > 1) {
+                        secondComplaintName = complaintsObservationsList.get(complaintListData.size() - 1)
+                                .get("complaintsType") != null ? complaintsObservationsList
+                                .get(complaintListData.size() - 1).get("complaintsType").toString() : "";
+                        secondComplaintOnset = complaintsObservationsList.get(complaintListData.size() - 1)
+                                .get("complaintsOnsetDate") != null ? complaintsObservationsList
+                                .get(complaintListData.size() - 1).get("complaintsOnsetDate").toString() : "";
+                     }
                 }
             }
             // End chronic illnesses computations
@@ -376,7 +401,11 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
             sb.append("firstChronicIllnessControl:").append(firstChronicIllnessControl).append(",");
             sb.append("secondChronicIllnessName:").append(secondChronicIllnessName).append(",");
             sb.append("secondChronicIllnessOnset:").append(secondChronicIllnessOnset).append(",");
-            sb.append("secondChronicIllnessControl:").append(secondChronicIllnessControl);
+            sb.append("secondChronicIllnessControl:").append(secondChronicIllnessControl).append(",");
+            sb.append("firstComplaintName:").append(firstComplaintName).append(",");
+            sb.append("firstComplaintOnset:").append(firstComplaintOnset).append(",");
+            sb.append("secondComplaintName:").append(secondChronicIllnessControl).append(",");
+            sb.append("secondComplaintOnset:").append(secondChronicIllnessControl);
 
             ret.put(ptId, new SimpleResult(sb.toString(), this, context));
         }
@@ -416,7 +445,7 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
         return CalculationUtils.ensureEmptyListResults(results, cohort);
     }
 
-     /* Extracts Chronic Illness data from an encounter
+     /* Extracts Chronic Illness and complaints data from an encounter
 	 *
      * @param encounter e
 	 * @return
@@ -424,7 +453,8 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
     private SimpleObject extractEncounterData(Encounter e) {
 
         List<SimpleObject> chronicIllnessObservationsData = new ArrayList<SimpleObject>();
-        // get observations for chronic illnesses
+        List<SimpleObject> complaintsObservationsData = new ArrayList<SimpleObject>();
+            // get observations for chronic illnesses
         String CHRONIC_ILLNESSES_GROUPING_CONCEPT = "159392AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         ObsService obsService = Context.getObsService();
         ConceptService conceptService = Context.getConceptService();
@@ -438,7 +468,20 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
             chronicIllnessObservationsData.add(data);
         }
 
-        return SimpleObject.create("chronicIllnessData", chronicIllnessObservationsData);
+        // get observations for complaints
+        String COMPLAINTS_GROUPING_CONCEPT = "160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+        List<Obs>complaintsObs = obsService.getObservations(
+                Arrays.asList(Context.getPersonService().getPerson(e.getPatient().getPersonId())), Arrays.asList(e),
+                Arrays.asList(conceptService.getConceptByUuid(COMPLAINTS_GROUPING_CONCEPT)), null, null, null,
+                Arrays.asList("obsId"), null, null, null, null, false);
+
+        for (Obs o : complaintsObs) {
+            SimpleObject complaintsData = extractComplaintsData(o.getGroupMembers());
+            complaintsObservationsData.add(complaintsData);
+        }
+
+        return SimpleObject.create("chronicIllnessData", chronicIllnessObservationsData,"complaintsObservationsData",complaintsObservationsData);
     }
 
     /**
@@ -470,5 +513,31 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
 
         return SimpleObject.create("chronicIllnessType", chronicIllnessType, "onsetDate", onsetDate, "controlStatus",
                 controlStatus);
+    }
+
+    /**
+     * Extracts and organizes complaints grouped observations
+     *
+     * @param groupMembers
+     * @return
+     */
+    private SimpleObject extractComplaintsData(Set<Obs> groupMembers) {
+
+        int complaintsConcept = 5219;
+        int complaintsOnsetDateConcept = 159948;
+
+        String complaintsType = null;
+        String complaintsOnsetDate = null;
+
+        for (Obs obs : groupMembers) {
+
+            if (obs.getConcept().getConceptId().equals(complaintsConcept)) {
+                complaintsType = obs.getValueCoded().getName().getName();
+            } else if (obs.getConcept().getConceptId().equals(complaintsOnsetDateConcept)) {
+                complaintsOnsetDate = DATE_FORMAT.format(obs.getValueDatetime());
+            }
+        }
+
+        return SimpleObject.create("complaintsType", complaintsType, "complaintsOnsetDate", complaintsOnsetDate);
     }
 }
