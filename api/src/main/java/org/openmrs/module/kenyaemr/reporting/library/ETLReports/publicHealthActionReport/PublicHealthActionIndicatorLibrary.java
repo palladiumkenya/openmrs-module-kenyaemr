@@ -95,6 +95,11 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator heiMissedHIVTests() {
         return cohortIndicator("HEIs Missed HIV tests", ReportUtils.map(cohortLibrary.heiMissedHIVTests(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator cacxScreening() {
+        return cohortIndicator("CACX SCREENING", ReportUtils.map(cohortLibrary.cacxScreening(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+
     /**
      * Number of adolescents not in OTZ
      * @return the indicator

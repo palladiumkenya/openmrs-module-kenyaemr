@@ -10,6 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.library.ETLReports.publicHealthActionReport;
 
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyacore.report.cohort.definition.CalculationCohortDefinition;
+import org.openmrs.module.kenyaemr.calculation.library.CaCxScreeningCalculation;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -936,6 +938,13 @@ public class PublicHealthActionCohortLibrary {
                 ReportUtils.map(covid19AssessedPatients(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("covidVaccineAgeCohort", ReportUtils.map(covidVaccineAgeCohort(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("txcurr AND covidVaccineAgeCohort AND NOT covid19AssessedPatients");
+        return cd;
+    }
+    public CohortDefinition cacxScreening() {
+        CalculationCohortDefinition cd = new CalculationCohortDefinition(new CaCxScreeningCalculation());
+        cd.setName("eligible for cacx screening");
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         return cd;
     }
 }
