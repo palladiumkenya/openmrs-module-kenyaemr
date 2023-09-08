@@ -26,6 +26,7 @@ import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.calculation.library.ScheduledVisitOnDayCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.VisitsOnDayCalculation;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.metadata.SecurityMetadata;
 import org.openmrs.module.kenyaemr.regimen.RegimenChange;
 import org.openmrs.module.kenyaemr.regimen.RegimenChangeHistory;
 import org.openmrs.module.kenyaemr.regimen.RegimenManager;
@@ -65,18 +66,18 @@ public class PatientUtilsFragmentController {
 	public List<SimpleObject> getFlags(@RequestParam("patientId") Integer patientId, @SpringBean CalculationManager calculationManager) {
 
 		List<SimpleObject> flags = new ArrayList<SimpleObject>();
-
-		// Gather all flag calculations that evaluate to true
-		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
-			try {
-				CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patientId, calc);
-				if (result != null && (Boolean) result.getValue()) {
-					flags.add(SimpleObject.create("message", calc.getFlagMessage()));
+		if(Context.getAuthenticatedUser().containsRole(SecurityMetadata._Role.CLINICIAN)) {
+			// Gather all flag calculations that evaluate to true
+			for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
+				try {
+					CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patientId, calc);
+					if (result != null && (Boolean) result.getValue()) {
+						flags.add(SimpleObject.create("message", calc.getFlagMessage()));
+					}
+				} catch (Exception ex) {
+					log.error("Error evaluating " + calc.getClass(), ex);
+					return Collections.singletonList(SimpleObject.create("message", "ERROR EVALUATING '" + calc.getFlagMessage() + "'"));
 				}
-			}
-			catch (Exception ex) {
-				log.error("Error evaluating " + calc.getClass(), ex);
-				return Collections.singletonList(SimpleObject.create("message", "ERROR EVALUATING '" +  calc.getFlagMessage() + "'"));
 			}
 		}
 		return flags;
