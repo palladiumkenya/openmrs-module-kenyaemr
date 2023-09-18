@@ -10,6 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.library.ETLReports.publicHealthActionReport;
 
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyacore.report.cohort.definition.CalculationCohortDefinition;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.CervicalCancerScreeningCalculation;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -937,5 +939,19 @@ public class PublicHealthActionCohortLibrary {
         cd.addSearch("covidVaccineAgeCohort", ReportUtils.map(covidVaccineAgeCohort(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("txcurr AND covidVaccineAgeCohort AND NOT covid19AssessedPatients");
         return cd;
+    }
+    public CohortDefinition cervicalCancerScreening() {
+        CalculationCohortDefinition cacx = new CalculationCohortDefinition(new CervicalCancerScreeningCalculation());
+        cacx.setName("eligible for cacx screening");
+        cacx.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cacx.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        CompositionCohortDefinition cohortCd2 = new CompositionCohortDefinition();
+        cohortCd2.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cohortCd2.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cohortCd2.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cohortCd2.addSearch("cacx", ReportUtils.map((CohortDefinition) cacx, "startDate=${startDate},endDate=${endDate}"));
+        cohortCd2.setCompositionString("txcurr AND cacx");
+        return cohortCd2;
     }
 }

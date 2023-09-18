@@ -172,5 +172,8 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator notAssessedForCovid19() {
         return cohortIndicator("Number of patients not assessed for Covid-19", ReportUtils.map(cohortLibrary.notAssessedForCovid19(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator cervicalCancerScreening() {
+        return cohortIndicator("CACX SCREENING", ReportUtils.map(cohortLibrary.cervicalCancerScreening(), "startDate=${startDate},endDate=${endDate}"));
+    }
 
 }
