@@ -11,41 +11,32 @@ package org.openmrs.module.kenyaemr.calculation.library;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.joda.time.Months;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
-import org.openmrs.Program;
+import org.openmrs.Form;
 import org.openmrs.Patient;
+import org.openmrs.Program;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
-import org.openmrs.calculation.result.CalculationResult;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.Calculations;
 import org.openmrs.module.kenyacore.calculation.Filters;
-import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
-import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
-import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.reporting.common.DateUtil;
-import org.openmrs.module.reporting.common.DurationUnit;
-import org.openmrs.ui.framework.SimpleObject;
-import org.openmrs.module.kenyaemr.util.EmrUtils;
-import org.openmrs.Form;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.api.EncounterService;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
+import org.openmrs.module.metadatadeploy.MetadataUtils;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.List;
-import java.util.Date;
-import java.util.Set;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSince;
 
@@ -57,7 +48,11 @@ public class EligibleForCaCxScreeningCalculation extends AbstractPatientCalculat
 	protected static final Log log = LogFactory.getLog(EligibleForCaCxScreeningCalculation.class);
 
 	public static final EncounterType cacxEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.CACX_SCREENING);
+	public static final EncounterType oncologyScreeningEncounterType = Context.getEncounterService().getEncounterTypeByUuid("e24209cc-0a1d-11eb-8f2a-bb245320c623");   //  Oncology screening encounter with Cacx screening section
+
+	public static final String ONCOLOGY_SCREENING_FORM = "be5c5602-0a1d-11eb-9e20-37d2e56925ee";
 	public static final Form cacxScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.CACX_SCREENING_FORM);
+	public static final Form oncologyScreeningForm = MetadataUtils.existing(Form.class, ONCOLOGY_SCREENING_FORM);
 	public static final Integer CACX_TEST_RESULT_QUESTION_CONCEPT_ID = 164934;
 	public static final Integer CACX_SCREEENING_METHOD_QUESTION_CONCEPT_ID = 163589;
 
@@ -109,7 +104,22 @@ public class EligibleForCaCxScreeningCalculation extends AbstractPatientCalculat
 					false
 			);
 
-			Encounter lastCacxScreeningEnc = EmrUtils.lastEncounter(patient, cacxEncType, cacxScreeningForm);
+			Encounter lastCacxScreening = EmrUtils.lastEncounter(patient, cacxEncType, cacxScreeningForm);
+			Encounter lastOncologyScreening = EmrUtils.lastEncounter(patient, oncologyScreeningEncounterType, oncologyScreeningForm);
+
+			Encounter lastCacxScreeningEnc = null;
+
+			if (lastCacxScreening != null && lastOncologyScreening == null) {
+				lastCacxScreeningEnc = lastCacxScreening;
+			} else if (lastCacxScreening == null && lastOncologyScreening != null) {
+				lastCacxScreeningEnc = lastOncologyScreening;
+			} else if (lastCacxScreening != null && lastOncologyScreening != null) {
+				if (lastCacxScreening.getEncounterDatetime().after(lastOncologyScreening.getEncounterDatetime())) {
+					lastCacxScreeningEnc = lastCacxScreening;
+				} else {
+					lastCacxScreeningEnc = lastOncologyScreening;
+				}
+			}
 
 			ConceptService cs = Context.getConceptService();
 			Concept cacxTestResultQuestion = cs.getConcept(CACX_TEST_RESULT_QUESTION_CONCEPT_ID);
@@ -137,8 +147,7 @@ public class EligibleForCaCxScreeningCalculation extends AbstractPatientCalculat
 			boolean patientHasInvasiveCancerTestResult = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxTestResultQuestion, cacxInvasiveCancerResult) : false;
 			boolean patientHasPresumedCancerTestResult = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxTestResultQuestion, cacxPresumedCancerResult) : false;
 			boolean patientScreenedUsingHPV = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxScreeningMethodQuestion, cacxHpvScreeningMethod) : false;
-
-			// Newly initiated and without cervical cancer test
+				// Newly initiated and without cervical cancer test
 			if(patient.getAge() >= 15){
 
 				// no cervical cancer screening done
@@ -167,7 +176,7 @@ public class EligibleForCaCxScreeningCalculation extends AbstractPatientCalculat
 				}
 				// cacx flag should remain if there are no results added
 				if(lastCacxScreeningEnc != null && (!patientHasPositiveTestResult && !patientHasNegativeTestResult && !patientHasNormalTestResult && !patientHasSuspiciousTestResult && !patientHasOtherTestResult && !patientHasLowGradeLesionTestResult && !patientHasHighGradeLesionTestResult && !patientHasInvasiveCancerTestResult && !patientHasPresumedCancerTestResult && !patientHasAbnormalTestResult)) {
-					needsCacxTest = true;
+				   needsCacxTest = true;
 				}
 
 			}
