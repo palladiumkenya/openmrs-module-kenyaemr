@@ -20,6 +20,7 @@ import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.Filters;
+import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
@@ -39,44 +40,39 @@ import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSi
 *
 * */
 public class CervicalCancerScreeningCalculation extends AbstractPatientCalculation {
+    Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
     protected static final Log log = LogFactory.getLog(CervicalCancerScreeningCalculation.class);
+    CalculationResultMap ret = new CalculationResultMap();
+    PatientService patientService = Context.getPatientService();
     public static final EncounterType cacxEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.CACX_SCREENING);
     public static final Form cacxScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.CACX_SCREENING_FORM);
     public static final Integer CACX_TEST_RESULT_QUESTION_CONCEPT_ID = 164934;
     public static final Integer CACX_SCREEENING_METHOD_QUESTION_CONCEPT_ID = 163589;
-    Integer NEGATIVE = 664;
     Integer HPV_TEST_CONCEPT_ID = 159859;
     Integer NORMAL = 1115;
+    ConceptService cs = Context.getConceptService();
+    Concept cacxTestResultQuestion = cs.getConcept(CACX_TEST_RESULT_QUESTION_CONCEPT_ID);
+    Concept cacxNegativeResult = Dictionary.getConcept(Dictionary.NEGATIVE);
+    Concept cacxHpvScreeningMethod = cs.getConcept(HPV_TEST_CONCEPT_ID);
+    Concept cacxScreeningMethodQuestion = cs.getConcept(CACX_SCREEENING_METHOD_QUESTION_CONCEPT_ID);
+    Concept cacxNormalResult = cs.getConcept(NORMAL);
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> params, PatientCalculationContext context) {
         Set<Integer> aliveAndFemale = Filters.female(Filters.alive(cohort, context), context);
-        Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         Set<Integer> alive = Filters.alive(cohort, context);
         Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
-        CalculationResultMap ret = new CalculationResultMap();
-        PatientService patientService = Context.getPatientService();
         for(Integer ptId:aliveAndFemale) {
-            Patient patient = patientService.getPatient(ptId);
             boolean needsCacxTest = false;
-            ConceptService cs = Context.getConceptService();
-            Concept cacxTestResultQuestion = cs.getConcept(CACX_TEST_RESULT_QUESTION_CONCEPT_ID);
-            Concept cacxNegativeResult = cs.getConcept(NEGATIVE);
-            Concept cacxHpvScreeningMethod = cs.getConcept(HPV_TEST_CONCEPT_ID);
-            Concept cacxScreeningMethodQuestion = cs.getConcept(CACX_SCREEENING_METHOD_QUESTION_CONCEPT_ID);
-            Concept cacxNormalResult = cs.getConcept(NORMAL);
-
-
+            Patient patient = patientService.getPatient(ptId);
             Encounter lastCacxScreeningEnc = EmrUtils.lastEncounter(patient, cacxEncType, cacxScreeningForm);
             boolean patientHasNegativeTestResult = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxTestResultQuestion, cacxNegativeResult) : false;
             boolean patientScreenedUsingHPV = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxScreeningMethodQuestion, cacxHpvScreeningMethod) : false;
             boolean patientHasNormalTestResult = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxTestResultQuestion, cacxNormalResult) : false;
-
             if(patient.getAge() >= 25 && patient.getAge() <= 49) {
                 if (inHivProgram.contains(ptId)) {
                     if (lastCacxScreeningEnc == null) {
                         needsCacxTest = true;
                     }
-
                     if (lastCacxScreeningEnc != null && patientScreenedUsingHPV && patientHasNegativeTestResult && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 730)) {
                         needsCacxTest = true;
                     }
