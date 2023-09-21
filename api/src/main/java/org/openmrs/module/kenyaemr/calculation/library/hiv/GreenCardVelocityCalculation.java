@@ -270,8 +270,9 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
             }
 
             Form hivGreencardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
+            Form triageForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
             List<Encounter> encounters = Context.getEncounterService().getEncounters(patientService.getPatient(ptId), null,
-                    null, null, Arrays.asList(hivGreencardForm), null, null, null, null, false);
+                    null, null, Arrays.asList(hivGreencardForm,triageForm), null, null, null, null, false);
 
             //Collections.reverse(encounters);
             List<SimpleObject> chronicIllnessesObservationsList = new ArrayList<SimpleObject>();
@@ -290,7 +291,7 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
                 SimpleObject so = extractEncounterData(e);
                 if (so != null) {
                     List<SimpleObject> chronicIllnessesListData = (List<SimpleObject>) so.get("chronicIllnessData");
-                    List<SimpleObject> complaintListData = (List<SimpleObject>) so.get("complaintsObservationsData");
+                    List<SimpleObject> complaintListData = (List<SimpleObject>) so.get("complaintsData");
                     if (chronicIllnessesListData.size() > 0) {
                         chronicIllnessesObservationsList.addAll(chronicIllnessesListData);
                         firstChronicIllnessName = chronicIllnessesObservationsList.get(0).get("chronicIllnessType") != null ? chronicIllnessesObservationsList
@@ -324,6 +325,7 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
                         firstComplaintOnset = complaintsObservationsList.get(0).get("complaintsOnsetDate") != null ? complaintsObservationsList
                                 .get(0).get("complaintsOnsetDate").toString()
                                 : "";
+
                       }
 
                     if (complaintListData.size() > 1) {
@@ -404,8 +406,8 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
             sb.append("secondChronicIllnessControl:").append(secondChronicIllnessControl).append(",");
             sb.append("firstComplaintName:").append(firstComplaintName).append(",");
             sb.append("firstComplaintOnset:").append(firstComplaintOnset).append(",");
-            sb.append("secondComplaintName:").append(secondChronicIllnessControl).append(",");
-            sb.append("secondComplaintOnset:").append(secondChronicIllnessControl);
+            sb.append("secondComplaintName:").append(secondComplaintName).append(",");
+            sb.append("secondComplaintOnset:").append(secondComplaintOnset);
 
             ret.put(ptId, new SimpleResult(sb.toString(), this, context));
         }
@@ -470,7 +472,6 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
 
         // get observations for complaints
         String COMPLAINTS_GROUPING_CONCEPT = "160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
         List<Obs>complaintsObs = obsService.getObservations(
                 Arrays.asList(Context.getPersonService().getPerson(e.getPatient().getPersonId())), Arrays.asList(e),
                 Arrays.asList(conceptService.getConceptByUuid(COMPLAINTS_GROUPING_CONCEPT)), null, null, null,
@@ -481,7 +482,7 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
             complaintsObservationsData.add(complaintsData);
         }
 
-        return SimpleObject.create("chronicIllnessData", chronicIllnessObservationsData,"complaintsObservationsData",complaintsObservationsData);
+        return SimpleObject.create("chronicIllnessData", chronicIllnessObservationsData,"complaintsData",complaintsObservationsData);
     }
 
     /**
@@ -537,7 +538,6 @@ public class GreenCardVelocityCalculation extends BaseEmrCalculation {
                 complaintsOnsetDate = DATE_FORMAT.format(obs.getValueDatetime());
             }
         }
-
         return SimpleObject.create("complaintsType", complaintsType, "complaintsOnsetDate", complaintsOnsetDate);
     }
 }

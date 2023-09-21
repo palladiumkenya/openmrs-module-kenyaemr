@@ -114,7 +114,6 @@ Green Card follow-up visit form
         var SECOND_COMPLAINT = GREENCARD_VELOCITY.split(",")[26].split(":")[1];
         var SECOND_COMPLAINT_ONSET = GREENCARD_VELOCITY.split(",")[27].split(":")[1];
 
-
         var pAge = parseInt('<lookup expression="patient.age"/>');
         var pgender = "<lookup expression="patient.gender" />";
         var ctxPath = typeof openmrsContextPath === 'string' ? openmrsContextPath : OPENMRS_CONTEXT_PATH;
@@ -833,18 +832,6 @@ Green Card follow-up visit form
                 }
             }
 
-            // Previously filled chronic illness
-//            var isRecentComplaintsDateSameAsEncounterDate = moment(moment(moment(encounterDate, 'YYYY-MM-DD').toDate()).format('YYYY-MM-DD')).isSame(moment(moment(recentComplaintsDate, 'DD-MMM-YYYY').toDate()).format('YYYY-MM-DD'),'day');
-//            if (isRecentComplaintsDateSameAsEncounterDate) {
-//                //To DO: Prepopulate complaints here
-//                console.log("Recent complaint ==>"+recentComplaintsValue.replace(/[^\d]/g, ''));
-//                console.log("Recent complaint date ==>"+recentComplaintsDate);
-//
-//                jq("#tbl-complaints-today").show();
-//                jq('#tr-other-complaint').show();
-//                getField('complaint-field.value').prop("selectedIndex", 1);
-//
-//            }
             jq('#tbl-recorded-complaint').hide();
             jq('#second-complaint').hide();
             if(FIRST_COMPLAINT !='') {
@@ -2934,7 +2921,7 @@ Management<br />
                                 jq("#key-population").hide();
                             }
 //If any checked  complaints allergies chronic illness and adverse events
-                            if (complaintsToday == 'true'){
+                            if (complaintsToday == 'true' || FIRST_COMPLAINT !=""){
                                 jq("#tbl-complaints-today").show();
                                 jq('#tr-other-complaint').show();
                             }else{
@@ -3368,7 +3355,7 @@ Management<br />
 
                     <td>
                         <table id="tbl-recorded-complaint" border="1">
-                            <tr><td>  <strong>Complaint Recorded Today</strong></td></tr>
+                            <tr><td>  <strong>Complaint Recorded Recently</strong></td></tr>
                             <tr>
                                 <th align="left">Complaint</th>
                                 <th align="left">Onset Date</th>

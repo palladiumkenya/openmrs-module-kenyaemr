@@ -245,22 +245,23 @@
                     jq('#baby-last-week').show();
                 }else{
                     jq('#baby-last-week').hide();
-                    var complaintsToday = getValue('complaints-today.value');
-                    var selectedComplaint = getField('complaint-field.value').val();
                     clearHiddenSections(jq('#baby-last-week'));
-
-                    if (complaintsToday == 'true'){
-                        jq("#tbl-complaints-today").show();
-                        jq('#tr-other-complaint').show();
-                    }else{
-                        jq("#tbl-complaints-today").hide();
-                    }
-
-                    var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
-                    if (otherMethodChecked.length == 1) {
-                        jq('#tr-other-complaint-specify').show();
-                    }
                 }
+
+                var complaintsToday = getValue('complaints-today.value');
+                var selectedComplaint = getField('complaint-field.value').val();
+                if (complaintsToday == 'true'){
+                    jq("#tbl-complaints-today").show();
+                    jq('#tr-other-complaint').show();
+                }else{
+                    jq("#tbl-complaints-today").hide();
+                }
+
+                var otherMethodChecked = jq("#other-complaint input:checkbox:checked");
+                if (otherMethodChecked.length == 1) {
+                    jq('#tr-other-complaint-specify').show();
+                }
+
             });
         </script>
     </ifMode>
