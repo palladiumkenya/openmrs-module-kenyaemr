@@ -1,7 +1,7 @@
 name: deploy to data:8400
 on:
   push:
-    branches: [ oncology-screening-branch ]
+    branches: [ oncology-screening-branch dmi-oncology]
 jobs:
 
   build:
