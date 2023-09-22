@@ -1,4 +1,4 @@
-name: deploy to data:8400
+name: deploy to data:8400.
 on:
   push:
     branches: [ dmi-oncology ]
@@ -26,13 +26,8 @@ jobs:
           git clone -b oncology-screening-branch https://github.com/palladiumkenya/openmrs-module-kenyaemr.git .
           sudo chown -R cicd:cicd /apps/kenyaemr/openmrs-module-kenyaemr
           git status
-          mvn license:format
+          sudo mvn license:format
           sudo mvn clean install -DskipTests
-          sudo rm -rf /var/lib/OpenMRS/modules/kenyaemr-*.omod
-          sudo cp -r /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr/omod/target/kenyaemr-*.omod /var/lib/OpenMRS/modules/
-          sudo chown -R tomcat:tomcat /var/lib/OpenMRS/modules/
-          sudo chmod +r /var/lib/OpenMRS/modules/*.omod
-          sudo chmod 755 /var/lib/OpenMRS/modules/*.omod
-          sudo systemctl stop tomcat
-          sudo systemctl start tomcat
-
+          ${{ secrets.DOCKER8400 }}
+          echo ${{ secrets.DOCKER8400 }}
+          echo "Done!"        
