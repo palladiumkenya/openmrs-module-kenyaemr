@@ -1,4 +1,4 @@
-name: deploy to data:8400.
+  name: deploy to data:8400.
 on:
   push:
     branches: [ dmi-oncology ]
@@ -23,7 +23,7 @@ jobs:
           sudo chown -R cicd:cicd openmrs-module-kenyaemr
           git config --global --add safe.directory /apps/kenyaemr/openmrs-module-kenyaemr
           cd /apps/kenyaemr/openmrs-module-kenyaemr
-          git clone -b oncology-screening-branch https://github.com/palladiumkenya/openmrs-module-kenyaemr.git .
+          git clone -b dmi-oncology https://github.com/palladiumkenya/openmrs-module-kenyaemr.git .
           sudo chown -R cicd:cicd /apps/kenyaemr/openmrs-module-kenyaemr
           git status
           sudo mvn license:format
