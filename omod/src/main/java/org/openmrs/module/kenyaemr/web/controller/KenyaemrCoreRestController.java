@@ -227,7 +227,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/forms") // gets all visit forms for a patient
     @ResponseBody
-    public Object getAllAvailableFormsForVisit(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid) {
+    public Object getAllAvailableFormsForVisit(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid, @RequestParam(value = "visitUuid", required = false) String visitUuid) {
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
                     new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -259,6 +259,23 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             FormManager formManager = CoreContext.getInstance().getManager(FormManager.class);
             List<FormDescriptor> uncompletedFormDescriptors = formManager.getAllUncompletedFormsForVisit(patientVisit);
+
+            if (!uncompletedFormDescriptors.isEmpty()) {
+
+                for (FormDescriptor descriptor : uncompletedFormDescriptors) {
+                    if(!descriptor.getTarget().getRetired()) {
+                        ObjectNode formObj = generateFormDescriptorPayload(descriptor);
+                        formObj.put("formCategory", "available");
+                        formList.add(formObj);
+                    }
+                }
+            }
+        }
+
+        if(visitUuid != null && !visitUuid.isEmpty()) {
+            Visit currentVisit = Context.getVisitService().getVisitByUuid(visitUuid);
+               FormManager formManager = CoreContext.getInstance().getManager(FormManager.class);
+            List<FormDescriptor> uncompletedFormDescriptors = formManager.getAllUncompletedFormsForVisit(currentVisit);
 
             if (!uncompletedFormDescriptors.isEmpty()) {
 
