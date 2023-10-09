@@ -31,7 +31,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Editable Provider details
@@ -43,7 +45,7 @@ public class ProviderDetailsFragmentController {
 		Location primaryFacility = null;
 		
 		List<ProviderAttribute> attributes = new ArrayList<ProviderAttribute>(provider.getActiveAttributes());
-		if (attributes.size() > 0) {
+		if (!attributes.isEmpty()) {
 			for (ProviderAttribute attribute : attributes) {
 				if (attribute.getAttributeType().getUuid().equals(CommonMetadata._ProviderAttributeType.PRIMARY_FACILITY)) {
 					primaryFacility = (Location) attribute.getValue();
@@ -108,14 +110,26 @@ public class ProviderDetailsFragmentController {
 				ret = new Provider();
 				ret.setPerson(person);
 			}
-			User thisUser = Context.getUserService().getUsersByPerson(person, false).get(0);
-			String userSystemId = thisUser.getSystemId();
-			ret.setIdentifier(userSystemId);
-			
-			ProviderAttribute attribute = getFacilityAttribute(providerFacility);
-			if (attribute != null) {
-				ret.setAttribute(attribute);
+			List<User> thisUser = Context.getUserService().getUsersByPerson(person, false);
+			if (!thisUser.isEmpty()) {
+				if (!StringUtils.isEmpty(providerFacility)) {
+					User user = thisUser.get(0);
+					Map<String, String> defaultLocation = new HashMap<String, String>();
+					defaultLocation.put("kenyaemr.defaultLocation", providerFacility);
+					user.setUserProperties(defaultLocation);
+					Context.getUserService().saveUser(user);
+
+					String userSystemId = user.getSystemId();
+					ret.setIdentifier(userSystemId);
+				}
+
+
+				ProviderAttribute attribute = getFacilityAttribute(providerFacility);
+				if (attribute != null) {
+					ret.setAttribute(attribute);
+				}
 			}
+
 			return ret;
 		}
 		

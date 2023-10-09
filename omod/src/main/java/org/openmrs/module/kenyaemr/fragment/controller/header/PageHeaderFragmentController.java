@@ -9,14 +9,17 @@
  */
 package org.openmrs.module.kenyaemr.fragment.controller.header;
 
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.kenyaemr.util.ServerInformation;
 import org.openmrs.module.kenyaui.KenyaUiUtils;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,9 +40,15 @@ public class PageHeaderFragmentController {
 			moduleVersion += " (" + kenyaui.formatDateTime(moduleBuildDate) + ")";
 		}
 
+		List<Location> facility = EmrUtils.getFacilityByLoggedInUser();
+		Location defaultFacility = null;
+		if (!facility.isEmpty()) {
+			defaultFacility = facility.get(0);
+		}
+
 		model.addAttribute("moduleVersion", moduleVersion);
 
-		model.addAttribute("systemLocation", Context.getService(KenyaEmrService.class).getDefaultLocation());
+		model.addAttribute("systemLocation", defaultFacility);
 		model.addAttribute("systemLocationCode", Context.getService(KenyaEmrService.class).getDefaultLocationMflCode());
 	}
 }
