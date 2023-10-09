@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.form.element;
 
+import com.google.common.base.Strings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -59,7 +60,10 @@ public class EncounterLocationSubmissionElement implements HtmlGeneratorElement,
 		} else {
 			String defaultLocId = parameters.get("default");
 			if (StringUtils.hasText(defaultLocId)) {
-				defaultLocation = HtmlFormEntryUtil.getLocation(defaultLocId, context);
+				String defaultFacility = Context.getAuthenticatedUser().getUserProperty("kenyaemr.defaultLocation");
+				if (!Strings.isNullOrEmpty(defaultFacility)) {
+					defaultLocation = Context.getLocationService().getLocation(Integer.parseInt(defaultFacility));
+				}
 			}
 		}
 

@@ -44,7 +44,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -261,6 +263,11 @@ public class NewAccountFragmentController {
 			ret.setPerson(person);
 			ret.setUsername(username);
 			ret.setRoles(roles);
+			if (!StringUtils.isEmpty(providerFacility)) {
+				Map<String, String> defaultLocation = new HashMap<String, String>();
+				defaultLocation.put("kenyaemr.defaultLocation", providerFacility);
+				ret.setUserProperties(defaultLocation);
+			}
 			return ret;
 		}
 		
