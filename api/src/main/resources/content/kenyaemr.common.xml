@@ -82,6 +82,7 @@
 				<ref bean="kenyaemr.common.report.moh711"/>
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
+				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList" />
 			</set>
 		</property>
 	</bean>
@@ -635,6 +636,18 @@
 		</property>
 		<property name="template" value="kenyaemr:rdqa/rdqaTemplate.xls" />
 		<property name="repeatingSection" value="sheet:1,row:11,dataset:allPatients | sheet:2,row:11,dataset:activePatients " />
+	</bean>
+
+	<!-- =========================== IDSR Suspected case list Reports =============================-->
+	<bean id="kenyaemr.common.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="a90d0a13-f122-43b7-92c5-ad43a0abd2ca" />
+		<property name="name" value="IDSR Suspected case list" />
+		<property name="description" value="IDSR Suspected case list" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
 	</bean>
 
 	<bean id="kenyaemr.common.report.currentInCareNotStartedOnART" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">

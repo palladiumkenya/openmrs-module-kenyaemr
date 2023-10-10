@@ -223,6 +223,22 @@ Green Card follow-up visit form
             {
                 jq('#dodOnly').show();
             }
+//Patient details
+            jq('#date-admitted-tb').hide();
+            jq('#date-admitted-label').hide();
+            jq('#patient-admitted input').change(patientAdmittedChange);
+
+            function patientAdmittedChange() {
+                if (getValue('patient-admitted.value') == 1065) {
+                    jq('#date-admitted-tb').show();
+                    jq('#date-admitted-label').show();
+                }else{
+                    jq('#date-admitted-tb').hide();
+                    jq('#date-admitted-label').hide();
+                    clearHiddenSections(jq('#date-admitted-tb'));
+                    clearHiddenSections(jq('#date-admitted-label'));
+                }
+            }
 //TPT OUTCOME
 
 
@@ -2763,6 +2779,30 @@ Green Card follow-up visit form
             return true;
         });
     </script>
+    <style>
+        .simple-table {
+            border: solid 1px #DDEEEE;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font: normal 13px Arial, sans-serif;
+        }
+
+        .simple-table thead th {
+            background-color: #DDEFEF;
+            border: solid 1px #DDEEEE;
+            color: #336B6B;
+            padding: 10px;
+            text-align: left;
+            text-shadow: 1px 1px 1px #fff;
+        }
+
+        .simple-table td {
+            border: solid 1px #DDEEEE;
+            color: #333;
+            padding: 10px;
+            text-shadow: 1px 1px 1px #fff;
+        }
+    </style>
     <div id="greencard" class="swMain">
         <ifMode mode="ENTER">
             <ul>
@@ -3348,100 +3388,100 @@ Management<br />
                     <table>
                         <tr>
                             <td>
-                        Patient having complaint(s) today?
-                        <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
-                        <span id="complaint-mandatory-star" style="color:red;"><strong>*</strong></span>
+                                Patient having complaint(s) today?
+                                <obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
+                                <span id="complaint-mandatory-star" style="color:red;"><strong>*</strong></span>
                             </td>
 
-                    <td>
-                        <table id="tbl-recorded-complaint" border="1">
-                            <tr><td>  <strong>Complaint Recorded Recently</strong></td></tr>
-                            <tr>
-                                <th align="left">Complaint</th>
-                                <th align="left">Onset Date</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" name="first-recorded-complaint" id="first-recorded-complaint" readonly="True" />
-                                </td>
-                                <td>
-                                    <input type="text" name="first-recorded-onsetDate" id="first-recorded-onsetDate" readonly="True" />
-                                </td>
-                            </tr>
-                            <tr id="second-complaint">
-                                <td>
-                                    <input type="text" name="second-recorded-complaint" id="second-recorded-complaint" readonly="True" />
-                                </td>
-                                  <td>
-                                    <input type="text" name="second-recorded-onsetDate" id="second-recorded-onsetDate" readonly="True" />
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-
-                    <table cellspacing="5" id="tbl-complaints-today">
-                        <tr>
-                            <th style="color: #888">Complaint</th>
-                            <th style="color: #888; text-align: center">Duration (Days)</th>
-                            <th style="color: #888; text-align: center">Onset Date</th>
-                        </tr>
-                        <repeat>
-                            <template>
-                                <obsgroup groupingConceptId="160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                            <td>
+                                <table id="tbl-recorded-complaint" border="1">
+                                    <tr><td>  <strong>Complaint Recorded Recently</strong></td></tr>
+                                    <tr>
+                                        <th align="left">Complaint</th>
+                                        <th align="left">Onset Date</th>
+                                    </tr>
                                     <tr>
                                         <td>
-                                            <obs class="complaint" conceptId="5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                 answerConceptIds="151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,840AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120749AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120345AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119574AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,206AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143129AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
-                                                            141585AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131040AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162626AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140070AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,123396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142247AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135462AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116214AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112989AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135595AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
-                                                             121657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131015AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133028AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5978AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133469AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133027AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125225AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5953AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113224AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,126535AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
-                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,6017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                                 answerLabels="Abdominal pain,Abnormal Uterine Bleeding,Anxiety,Depression,Back pain,Bloody Urine,Breast Pain,Chest Pain,Cold and Chills,Confusion,Delirium,Convulsions,Seizure,Cough,Crying Infant,Diarrhea,Difficult in breathing,Difficulty in swallowing,Dizziness,Ear Pain,Epigastric Pain,Eye apin,Facial Pain,Fatigue/weakness,Fever,Flank Pain,Vaginal Discharge,Discharge from Penis,Genital Ulcer,Headache,Hearing Loss,Hypotension,Shock,Itchiness/Pruritus,Joint Pain,Leg Pain,Loss of Appetite,Lymphadenopathy,Memory Loss,Coma,Lethargy,Mouth Pain,Mouth Ulceration,Muscle cramps,Muscle Pain,Nausea,Neck Pain,Night sweats,Numbness,Pain when Swallowing,Pelvic Pain,Poor Vision,Rash,Red Eye,Running/Blocked nose,Scrotal Pain,Shoulder Pain,
-                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Myalgia,Refusal to feed"
-                                                 style="dropdown" id="complaint-field"
-                                            />
+                                            <input type="text" name="first-recorded-complaint" id="first-recorded-complaint" readonly="True" />
                                         </td>
-                                        <td><obs class="complaint-time" conceptId="159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id ="complaint-duration" size="10" /></td>
                                         <td>
-                                            <obs class="complaint-date" conceptId="159948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="false"/>
+                                            <input type="text" name="first-recorded-onsetDate" id="first-recorded-onsetDate" readonly="True" />
                                         </td>
                                     </tr>
-                                </obsgroup>
-                            </template>
-                            <render n="1" concept="complaint"/>
-                            <render n="2" concept="complaint"/>
-                            <render n="3" concept="complaint"/>
-                            <render n="4" concept="complaint"/>
-                            <render n="5" concept="complaint"/>
-                        </repeat>
-                    </table>
-                    <table>
-                        <tr id="tr-other-complaint">
-                            <td>
-                                <obs conceptId="165241" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-                                     answerLabel="Other" style="checkbox"  id="other-complaint" /><br/>
+                                    <tr id="second-complaint">
+                                        <td>
+                                            <input type="text" name="second-recorded-complaint" id="second-recorded-complaint" readonly="True" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="second-recorded-onsetDate" id="second-recorded-onsetDate" readonly="True" />
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
-                        </tr>
-                        <tr id="tr-other-complaint-specify">
-                            <td> Specify
-                                <obs conceptId="165250" rows="3" cols="80" id="obs-other-complaint"/>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <th  style="color: #888" >Clinical Notes</th>
-                            <th  style="color: #888" >Previous visit's notes</th>
-                        </tr>
-                        <tr>
 
-                            <td>
-                                <obs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="80" id="clinical-notes"/>
-                            </td>
-                            <td>
-                                <span class="value"><recentObs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
-                            </td>
-                        </tr>
-                    </table>
+                            <table cellspacing="5" id="tbl-complaints-today">
+                                <tr>
+                                    <th style="color: #888">Complaint</th>
+                                    <th style="color: #888; text-align: center">Duration (Days)</th>
+                                    <th style="color: #888; text-align: center">Onset Date</th>
+                                </tr>
+                                <repeat>
+                                    <template>
+                                        <obsgroup groupingConceptId="160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                            <tr>
+                                                <td>
+                                                    <obs class="complaint" conceptId="5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                         answerConceptIds="151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,840AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120749AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120345AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119574AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,206AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143129AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                            141585AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131040AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162626AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140070AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,123396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142247AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135462AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116214AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112989AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135595AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                             121657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131015AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133028AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5978AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133469AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133027AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125225AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5953AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113224AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,126535AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,6017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                         answerLabels="Abdominal pain,Abnormal Uterine Bleeding,Anxiety,Depression,Back pain,Bloody Urine,Breast Pain,Chest Pain,Cold and Chills,Confusion,Delirium,Convulsions,Seizure,Cough,Crying Infant,Diarrhea,Difficult in breathing,Difficulty in swallowing,Dizziness,Ear Pain,Epigastric Pain,Eye apin,Facial Pain,Fatigue/weakness,Fever,Flank Pain,Vaginal Discharge,Discharge from Penis,Genital Ulcer,Headache,Hearing Loss,Hypotension,Shock,Itchiness/Pruritus,Joint Pain,Leg Pain,Loss of Appetite,Lymphadenopathy,Memory Loss,Coma,Lethargy,Mouth Pain,Mouth Ulceration,Muscle cramps,Muscle Pain,Nausea,Neck Pain,Night sweats,Numbness,Pain when Swallowing,Pelvic Pain,Poor Vision,Rash,Red Eye,Running/Blocked nose,Scrotal Pain,Shoulder Pain,
+                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Myalgia,Refusal to feed,blood in stool"
+                                                         style="dropdown" id="complaint-field"
+                                                    />
+                                                </td>
+                                                <td><obs class="complaint-time" conceptId="159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id ="complaint-duration" size="10" /></td>
+                                                <td>
+                                                    <obs class="complaint-date" conceptId="159948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="false"/>
+                                                </td>
+                                            </tr>
+                                        </obsgroup>
+                                    </template>
+                                    <render n="1" concept="complaint"/>
+                                    <render n="2" concept="complaint"/>
+                                    <render n="3" concept="complaint"/>
+                                    <render n="4" concept="complaint"/>
+                                    <render n="5" concept="complaint"/>
+                                </repeat>
+                            </table>
+                            <table>
+                                <tr id="tr-other-complaint">
+                                    <td>
+                                        <obs conceptId="165241" answerConceptId="5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                             answerLabel="Other" style="checkbox"  id="other-complaint" /><br/>
+                                    </td>
+                                </tr>
+                                <tr id="tr-other-complaint-specify">
+                                    <td> Specify
+                                        <obs conceptId="165250" rows="3" cols="80" id="obs-other-complaint"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <th  style="color: #888" >Clinical Notes</th>
+                                    <th  style="color: #888" >Previous visit's notes</th>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <obs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="80" id="clinical-notes"/>
+                                    </td>
+                                    <td>
+                                        <span class="value"><recentObs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+                                    </td>
+                                </tr>
+                            </table>
                         </tr>
                     </table>
                 </fieldset>
@@ -4814,38 +4854,62 @@ Management<br />
                     </table>
                 </fieldset>
 
-                <fieldset class="patient-details">
-                    <legend>Treatment/Management Plan</legend>
-                    <table style="width: 70%;" border="0">
-                        <tr>
-                            <th align="left">Diagnosis</th>
-                            <th align="left">Treatment Plan</th>
-                        </tr>
-                        <repeat>
-                            <template>
-                                <obsgroup groupingConceptId="159947AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-                                    <tr>
-                                        <td>
-                                            <obs conceptId="6042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerClasses="Diagnosis" id="diagnosis-type" style="autocomplete"/>
-                                        </td>
-                                        <td>
-                                            <obs conceptId="163104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="80" id="treatment-plan"/>
-                                        </td>
-                                    </tr>
-                                </obsgroup>
-                            </template>
-                            <render n="11" concept="Diagnosis"/>
-                            <render n="12" concept="Diagnosis"/>
-                            <render n="13" concept="Diagnosis"/>
-                            <render n="14" concept="Diagnosis"/>
-                            <render n="15" concept="Diagnosis"/>
-                        </repeat>
-                    </table>
-                </fieldset>
+
                 <!--.step 3 Patient Management step 4 -->
             </div>
             <div id="step-4">
                 <h2 class="StepTitle">Patient management</h2>
+                <fieldset class="patient-details" style="100%">
+                    <legend>Treatment/Management Plan</legend>
+                    <table class="simple-table">
+                        <tr>
+                            <td>
+                                <table style="width: 70%;" border="0">
+                                    <tr>
+                                        <th align="left">Diagnosis</th>
+                                        <th align="left">Treatment Plan</th>
+                                    </tr>
+                                    <repeat>
+                                        <template>
+                                            <obsgroup groupingConceptId="159947AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                                                <tr>
+                                                    <td>
+                                                        <obs conceptId="6042AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerClasses="Diagnosis" id="diagnosis-type" style="autocomplete"/>
+                                                    </td>
+                                                    <td>
+                                                        <obs conceptId="163104AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="1" cols="80" id="treatment-plan"/>
+                                                    </td>
+                                                </tr>
+                                            </obsgroup>
+                                        </template>
+                                        <render n="11" concept="Diagnosis"/>
+                                        <render n="12" concept="Diagnosis"/>
+                                        <render n="13" concept="Diagnosis"/>
+                                        <render n="14" concept="Diagnosis"/>
+                                        <render n="15" concept="Diagnosis"/>
+                                    </repeat>
+                                </table></td>
+                            <td>
+                            <td >
+                                <div>
+                                    Patient Admitted
+                                    <obs conceptId="166970"
+                                         answerConceptIds="1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                         answerLabel="Yes,No"
+                                         style="radio"
+                                         id="patient-admitted" />
+                                </div>
+                            </td>
+                            <td id="date-admitted-tb">
+                                <div>
+                                    Date Admitted
+                                    <obs id="date-admitted" conceptId="159948"/>
+                                </div>
+                            </td>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
                 <fieldset class="prophylaxis"  >
                     <legend>Prophylaxis</legend>
                     <table>

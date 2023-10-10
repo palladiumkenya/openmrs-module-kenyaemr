@@ -513,7 +513,7 @@ public class EditPatientFragmentController {
 				require(errors, "deathDate");
 
 				if (deathDate != null) {
-					if (birthdate != null && deathDate.before(birthdate)) {
+		  			if (birthdate != null && deathDate.before(birthdate)) {
 						errors.rejectValue("deathDate", "Cannot be before birth date");
 					}
 					if (deathDate.after(new Date())) {
