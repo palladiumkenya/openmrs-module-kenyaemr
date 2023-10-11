@@ -105,7 +105,7 @@ public class CancerScreeningRegisterReportBuilder extends AbstractReportBuilder 
         dsd.addColumn("HIV Status", new CACXHivStatusDataDefinition(), null);
         dsd.addColumn("Population Type", new LatestPopulationTypeDataDefinition(), null);
         dsd.addColumn("County of Residence", new CalculationDataDefinition("County", new CountyAddressCalculation()), "", null);
-        dsd.addColumn("Type of cancer", new CancerTypeDataDefinition(), null);
+       // dsd.addColumn("Type of cancer", new CancerTypeDataDefinition(), null);
        // dsd.addColumn("Screening Results", new CACXScreeningResultsDataDefinition(), null);
         dsd.addColumn("Follow Up Date", new CACXFollowUpDateDataDefinition(), null);
         dsd.addColumn("Refferal To/From", new CACXReferralDataDefinition(), null);
