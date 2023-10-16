@@ -30,7 +30,39 @@ import org.openmrs.module.kenyaemr.reporting.data.converter.ActiveInProgramConve
 import org.openmrs.module.kenyaemr.reporting.data.converter.BooleanResultsConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ActivePatientsPopulationTypeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.MFLCodeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.*;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ActiveInMchDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ActiveInOtzDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ActiveInOvcDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ActiveInTbDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.AgeAtReportingDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.BaselineCD4CountDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.BaselineCD4DateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.BloodPressureDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLArtStartDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCaseManagerDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegLineDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegimenDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLDifferentiatedCareModelDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstRegimenDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLHivSelfVisitDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLJustificationDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultValidityDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVisitDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastWHOStageDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLMonthsOfPrescriptionDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLRefillDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLStabilityDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.HeightAtArtDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.MedicalCoverDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.MedicalCoverStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.NCDDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.NCDStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.NCDsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.WHOStageArtDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.WeightAtArtDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.data.DataDefinition;
@@ -153,6 +185,12 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         BloodPressureDataDefinition bloodPressureDataDefinition = new BloodPressureDataDefinition();
         bloodPressureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         bloodPressureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        MedicalCoverDataDefinition medicalCoverDataDefinition = new MedicalCoverDataDefinition();
+        medicalCoverDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        medicalCoverDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        MedicalCoverStatusDataDefinition medicalCoverStatusDataDefinition = new MedicalCoverStatusDataDefinition();
+        medicalCoverStatusDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        medicalCoverStatusDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
@@ -206,6 +244,8 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("NCDs Onset Date", ncdDateDataDefinition, "endDate=${endDate}");
         dsd.addColumn("NCDs status", ncdStatusDataDefinition, "endDate=${endDate}");
         dsd.addColumn("AHD Client", new CalculationDataDefinition("AHD Client", new PatientsWithAdvancedHivDiseaseCalculation()), "", new BooleanResultsConverter());
+        dsd.addColumn("Medical cover", medicalCoverDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Medical cover status", medicalCoverStatusDataDefinition, "endDate=${endDate}");
 
 
         return dsd;

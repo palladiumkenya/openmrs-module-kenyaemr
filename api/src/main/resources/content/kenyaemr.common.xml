@@ -36,8 +36,9 @@
 				<ref bean="kenyaemr.common.form.htsinitialtest"/>
 				<ref bean="kenyaemr.common.form.htsconfirmatorytest"/>
 				<ref bean="kenyaemr.common.form.htsLinkage"/>
-				<ref bean="kenyaemr.common.form.cervicalCancerScreening"/>
-				<ref bean="kenyaemr.common.form.cervicalCancerAssessment"/>
+				<!--<ref bean="kenyaemr.common.form.cervicalCancerScreening"/>-->
+				<!--<ref bean="kenyaemr.common.form.cervicalCancerAssessment"/>-->
+				<ref bean="kenyaemr.common.form.oncologyScreening"/>
 				<ref bean="kenyaemr.hiv.form.genderBasedViolenceScreening"/>
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
 
@@ -71,12 +72,13 @@
 				<ref bean="kenyaemr.hiv.report.htsPositiveCLientsNotLinkedToCare"/>
 				<ref bean="kenyaemr.common.report.currentInCareNotStartedOnART" />
 				<ref bean="kenyaemr.etl.common.report.viralSuppression" />
-				<ref bean="kenyaemr.hiv.report.tx_curr_linelist_monthly" />
-				<ref bean="kenyaemr.hiv.report.tx_curr_linelist_quarterly" />
+				<ref bean="kenyaemr.hiv.report.monthly_tx_curr_gain_loss_analysis_linelist" />
+				<ref bean="kenyaemr.hiv.report.quarterly_tx_curr_gain_loss_analysis_linelist" />
 				<ref bean="kenyaemr.hiv.report.pendingVLAndCD4Report"/>
 				<ref bean="kenyaemr.hiv.report.cccDefaulterTracingRegister"/>
 				<ref bean="kenyaemr.common.report.patientRegimenHistory"/>
 				<ref bean="kenyaemr.cacx.report.cacxRegister"/>
+				<ref bean="kenyaemr.cancer.report.cancerRegister"/>
 				<ref bean="kenyaemr.etl.common.report.publicHealthAction"/>
 				<ref bean="kenyaemr.common.report.mortalityLineList"/>
 				<ref bean="kenyaemr.common.report.moh711"/>
@@ -419,6 +421,24 @@
 		<property name="order" value="201080" />
 	</bean>
 
+	<!-- Oncology screening form -->
+	<bean id="kenyaemr.common.form.oncologyScreening" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="be5c5602-0a1d-11eb-9e20-37d2e56925ee" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:oncologyScreening.html" />
+		<property name="order" value="201085" />
+	</bean>
+
 	<!-- Cervical cancer assessment form -->
 	<bean id="kenyaemr.common.form.cervicalCancerAssessment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="48f2235ca-cc77-49cb-83e6-f526d5a5f174" />
@@ -688,17 +708,17 @@
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 	</bean>
 
-	<bean id="kenyaemr.hiv.report.tx_curr_linelist_monthly" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.hiv.report.monthly_tx_curr_gain_loss_analysis_linelist" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="f0305a84-30ee-11e9-b210-d663bd873d93" />
-		<property name="name" value="TX CURR Line lists (Monthly)" />
-		<property name="description" value="TX CURR Linelists showing differences in TX CURR numbers at different reporting dates" />
+		<property name="name" value="Tx_Curr Net Gain and Loss Analysis Linelists (Monthly)" />
+		<property name="description" value="Linelists showing Gains and Losses in TX CURR numbers at different reporting dates" />
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 	</bean>
 
-	<bean id="kenyaemr.hiv.report.tx_curr_linelist_quarterly" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.hiv.report.quarterly_tx_curr_gain_loss_analysis_linelist" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="cbd36f94-30f0-11e9-b210-d663bd873d93" />
-		<property name="name" value="TX CURR Line lists (Quarterly)" />
-		<property name="description" value="TX CURR Linelists showing differences in TX CURR numbers at different reporting dates" />
+		<property name="name" value="Tx_Curr Net Gain and Loss Analysis Linelists (Qarterly)" />
+		<property name="description" value="Linelists showing Gains and Losses in TX CURR numbers at different reporting dates" />
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 	</bean>
 
@@ -765,7 +785,16 @@
 		<property name="template" value="kenyaemr:cacx_register_template.xls" />
 		<property name="repeatingSection" value="sheet:1,row:7,dataset:CACXInformation" />
 	</bean>
-
+	<!--	Cancer Register-->
+	<bean id="kenyaemr.cancer.report.cancerRegister" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="a83afcac-b01b-42e3-af3e-70c17ea5535d" />
+		<property name="name" value="Cancer Register" />
+		<property name="description" value="Cancer Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+	</bean>
 	<bean id="kenyaemr.etl.common.report.publicHealthAction" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="e473f83f-b172-4e49-97ba-5817acf5e097" />
 		<property name="name" value="Clinical Action Report (CAR)" />
