@@ -37,7 +37,7 @@ public class ETLLastCD4DateDataEvaluator implements PersonDataEvaluator {
             String qry = " select patient_id,\n" +
                     "coalesce(max(date(date_test_requested)),max(date(visit_date)))\n" +
                     "as cd4_count_date from kenyaemr_etl.etl_laboratory_extract\n" +
-                    "where lab_test in (167718,5497,730) GROUP BY patient_id;";
+                    "where date(visit_date) <= date(:endDate) and lab_test in (167718,5497,730) GROUP BY patient_id;";
 
             SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
             Date startDate = (Date) context.getParameterValue("startDate");
