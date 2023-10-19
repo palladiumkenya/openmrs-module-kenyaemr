@@ -191,15 +191,43 @@
                 jq(".lot-number2 input").prop("disabled", false);
                 jq("#expiry-date2 input").prop("disabled", false);
             }
+
+
             function validateAndConvertInput() {
               const inputValue = $("#blood-loss-input").val();
+              var deliveryMode = jq('#delivery-mode select').val();
               if (!isNaN(inputValue)) {
                 const result = inputValue / 1000;
-                    if (inputValue  &gt; 20000 || result  &gt; 20000) {
-                      alert("Cannot be greater than 20000 ml");
-                    } else {
-                      setValue('blood-loss.value', result);
-                    }
+                    if(deliveryMode == 1170){
+                      if (inputValue  &lt; 500 || result  &gt; 500) {
+                        setValue('blood-loss.value', result);
+                      } else {
+                        alert("SVD cannot be greater than 500 ml");
+                        $("#blood-loss-input").val(500);
+                      }
+                    }else if (deliveryMode == 1171) {
+                       if (inputValue  &lt; 1000 || result  &gt; 1000) {
+                        setValue('blood-loss.value', result);
+                      } else {
+                        alert("Cesarean cannot be greater than 1000 ml");
+                         $("#blood-loss-input").val(1000);
+                      }
+                  }else if (deliveryMode == 1172) {
+                       if (inputValue  &lt; 20000 || result  &gt; 20000) {
+                        setValue('blood-loss.value', result);
+                      } else {
+                        alert("Breech delivery cannot be greater than 20000 ml");
+                         $("#blood-loss-input").val(20000);
+                      }
+                  }else if (deliveryMode == 118159) {
+                       if (inputValue  &lt; 20000 || result  &gt; 20000) {
+                        setValue('blood-loss.value', result);
+                      } else {
+                        alert("AVD Cannot be greater than 20000 ml");
+                         $("#blood-loss-input").val(20000);
+                      }
+                 }
+
               } else {
                  alert("Invalid input. Please enter a valid number.!");
               }
