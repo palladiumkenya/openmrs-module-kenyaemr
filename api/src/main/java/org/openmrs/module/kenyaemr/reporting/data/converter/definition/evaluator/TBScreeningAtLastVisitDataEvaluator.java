@@ -34,19 +34,15 @@ public class TBScreeningAtLastVisitDataEvaluator implements PersonDataEvaluator 
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT patient_id, mid(max(concat(visit_date, lastTBStatus)), 11) as lastTBStatus\n" +
-                "    from\n" +
-                "(\n" +
-                "    SELECT\n" +
-                "        f.patient_id,\n" +
-                "        f.visit_date,\n" +
-                "        coalesce(f.tb_status, s.resulting_tb_status) AS lastTBStatus\n" +
+        String qry = "SELECT patient_id, MAX(lastTBStatus) AS lastTBStatus\n" +
+                "FROM\n" +
+                "  (SELECT f.patient_id,f.visit_date,\n" +
+                "      COALESCE(f.tb_status, s.resulting_tb_status) AS lastTBStatus\n" +
                 "    FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
-                "        LEFT OUTER JOIN kenyaemr_etl.etl_tb_screening s\n" +
-                "            ON s.patient_id = f.patient_id AND date(s.visit_date) = date(f.visit_date)\n" +
-                "    GROUP BY f.patient_id\n" +
-                ") v\n" +
-                "GROUP BY patient_id;";
+                "    LEFT OUTER JOIN kenyaemr_etl.etl_tb_screening s\n" +
+                "      ON s.patient_id = f.patient_id AND date(s.visit_date) = date(f.visit_date)) v\n" +
+                "GROUP BY\n" +
+                "  patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
