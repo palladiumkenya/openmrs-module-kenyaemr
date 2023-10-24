@@ -29,6 +29,14 @@
             border: 0;
             padding: 10px;
         }
+
+        .blood-loss-invalid-flag {
+          border: 0;
+          background-color: red;
+          color: white;
+          padding: 10px;
+          font-size: 14px;
+       }
     </style>
     <script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
     <script type="text/javascript">
@@ -85,8 +93,7 @@
                 setValue('patient-edd.value',moment(formattedRecentlmp, "DD-MMM-YYYY").add(280, 'days').format('YYYY-MM-DD'));
 
             }
-
-            jq('#referredTo select').change(referredToChange);
+           jq('#referredTo select').change(referredToChange);
             var referredReasonToTransfer = jq('#referredTo select').val();
             if (referredReasonToTransfer == 1175) {
                 jq("#reasonsForReferral").hide();
@@ -198,36 +205,41 @@
               var deliveryMode = jq('#delivery-mode select').val();
               if (!isNaN(inputValue)) {
                 const result = inputValue / 1000;
-                    if(deliveryMode == 1170){
+                if (inputValue  &gt; 20000 || result  &gt; 20000) {
+                   $("#blood-loss-invalid-flag").show();
+                   $("#blood-loss-input").val(0);
+                }else{
+                     $("#blood-loss-invalid-flag").hide()
+                     $("#svd-invalid-flag").hide();
+                     $("#cs-invalid-flag").hide();
+                     $("#breech-invalid-flag").hide();
+                     $("#avd-invalid-flag").hide();
+                     if(deliveryMode == 1170){
                       if (inputValue  &lt; 500 || result  &gt; 500) {
                         setValue('blood-loss.value', result);
                       } else {
-                        alert("SVD cannot be greater than 500 ml");
-                        $("#blood-loss-input").val(500);
+                         $("#svd-invalid-flag").show();
                       }
                     }else if (deliveryMode == 1171) {
                        if (inputValue  &lt; 1000 || result  &gt; 1000) {
                         setValue('blood-loss.value', result);
                       } else {
-                        alert("Cesarean cannot be greater than 1000 ml");
-                         $("#blood-loss-input").val(1000);
+                         $("#cs-invalid-flag").show();
                       }
                   }else if (deliveryMode == 1172) {
-                       if (inputValue  &lt; 20000 || result  &gt; 20000) {
+                       if (inputValue  &lt; 500 || result  &gt; 500) {
                         setValue('blood-loss.value', result);
                       } else {
-                        alert("Breech delivery cannot be greater than 20000 ml");
-                         $("#blood-loss-input").val(20000);
+                        $("#breech-invalid-flag").show();
                       }
                   }else if (deliveryMode == 118159) {
-                       if (inputValue  &lt; 20000 || result  &gt; 20000) {
+                       if (inputValue  &lt; 500 || result  &gt; 500) {
                         setValue('blood-loss.value', result);
                       } else {
-                        alert("AVD Cannot be greater than 20000 ml");
-                         $("#blood-loss-input").val(20000);
+                         $("#avd-invalid-flag").hide();
                       }
                  }
-
+                }
               } else {
                  alert("Invalid input. Please enter a valid number.!");
               }
@@ -933,7 +945,14 @@
                                 <input type="text" id="blood-loss-input"  />
                                 <obs id="blood-loss" conceptId="161928AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"> </obs>
                                 <lookup expression="fn.latestObs(161928).valueNumeric"/> Initial Value (L):
+
+                                <div id="blood-loss-invalid-flag" class="blood-loss-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span >Blood loss cannot be greater than 20000ml.</span> </div>
+                                <div id="svd-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">SVD cannot be greater than 500 ml..</span> </div>
+                                <div id="cs-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">Cesarean cannot be greater than 1000 ml.</span> </div>
+                                <div id="breech-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">Breech delivery cannot be greater than 500 ml</span> </div>
+                                <div id="avd-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">AVD Cannot be greater than 500 ml</span> </div>
                             </td>
+
                             <td>Condition of Mother after delivery:</td>
                             <td>
                                 <obs conceptId="1856AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="maternal-outcome"
