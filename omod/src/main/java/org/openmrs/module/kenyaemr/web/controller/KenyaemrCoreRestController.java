@@ -164,6 +164,7 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
@@ -180,6 +181,7 @@ import org.joda.time.Weeks;
 import org.joda.time.Years;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Comparator;
@@ -541,12 +543,39 @@ public class KenyaemrCoreRestController extends BaseRestController {
              * }
              */
             for (ProgramDescriptor descriptor : eligiblePrograms) {
+                Program program = descriptor.getTarget();
+                Collection<PatientProgram> patientPrograms = programManager.getPatientEnrollments(patient, program);
                     ObjectNode programObj = JsonNodeFactory.instance.objectNode();
                     programObj.put("uuid", descriptor.getTargetUuid());
                     programObj.put("display", descriptor.getTarget().getName());
                     programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
                     programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
                     programObj.put("enrollmentStatus", activePrograms.contains(descriptor) ? "active" : "eligible");
+                    Optional<PatientProgram> optionalPatientProgram = patientPrograms.stream()
+                        .filter(new Predicate<PatientProgram>() {
+                            @Override
+                            public boolean test(PatientProgram patientProgram) {
+                                return patientProgram.getDateCompleted() == null;
+                            }
+                        })
+                        .findFirst();
+
+                ObjectNode patientProgramObj = JsonNodeFactory.instance.objectNode();
+                if (optionalPatientProgram.isPresent()) {
+                    PatientProgram patientProgram = optionalPatientProgram.get();
+                    patientProgramObj.put("uuid", patientProgram.getUuid());
+                    String dateEnrolled = (patientProgram.getDateEnrolled() != null)
+                            ? patientProgram.getDateEnrolled().toString()
+                            : "";
+                    patientProgramObj.put("dateEnrolled", dateEnrolled);
+                    patientProgramObj.put("dateCompleted", "");
+                    String locationName = (patientProgram.getLocation() != null)
+                            ? patientProgram.getLocation().getName()
+                            : "";
+                    patientProgramObj.put("location", locationName);
+                }
+
+                programObj.put("enrollmentDetails", patientProgramObj);
                     programList.add(programObj);
             }
         }
