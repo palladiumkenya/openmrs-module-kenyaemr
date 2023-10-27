@@ -209,6 +209,8 @@
                 const result = inputValue / 1000;
                 if (inputValue  &gt; 20000 || result  &gt; 20000) {
                    $("#blood-loss-invalid-flag").show();
+                     $("#svd-invalid-flag").hide();
+                     $("#cs-invalid-flag").hide();
                    $("#blood-loss-input").val("");
                 }else{
                      $("#blood-loss-invalid-flag").hide()
@@ -950,7 +952,7 @@
                                 <lookup expression="fn.latestObs(161928).valueNumeric"/> Initial Value (L):
                                 <div id="svd-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">Value entered is higher than the expected threshold of 500 ml..</span> </div>
                                 <div id="cs-invalid-flag" style="display: none; width: 100%; float: left; overflow: auto; text-align: left; padding: 5px"><span class="ke-flagtag">Value entered is higher than the expected threshold of 1000 ml.</span> </div>
-                                <div id="blood-loss-invalid-flag" class="blood-loss-invalid-flag" style="display: none; width: 40%; float: left; overflow: auto; text-align: left; padding: 0px"><span >Blood loss cannot be greater than 20000ml.</span> </div>
+                                <div id="blood-loss-invalid-flag" class="blood-loss-invalid-flag" style="display: none; width: 60%; float: left; overflow: auto; text-align: left; padding: 0px"><span >Blood loss cannot be greater than 20000ml.</span> </div>
                             </td>
                             <td>Condition of Mother after delivery:</td>
                             <td>
