@@ -34,7 +34,7 @@ public class TBScreeningAtLastVisitDataEvaluator implements PersonDataEvaluator 
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT patient_id, MAX(lastTBStatus) AS lastTBStatus\n" +
+        String qry = " SELECT patient_id,mid(max(concat(visit_date, lastTBStatus)), 11) AS lastTBStatus\n" +
                 "FROM\n" +
                 "  (SELECT f.patient_id,f.visit_date,\n" +
                 "      COALESCE(f.tb_status, s.resulting_tb_status) AS lastTBStatus\n" +
