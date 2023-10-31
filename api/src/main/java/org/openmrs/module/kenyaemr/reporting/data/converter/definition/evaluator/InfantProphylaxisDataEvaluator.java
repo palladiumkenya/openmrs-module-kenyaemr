@@ -36,7 +36,7 @@ public class InfantProphylaxisDataEvaluator implements PersonDataEvaluator {
 
         String qry = "select hv.patient_id,coalesce(case hv.nvp_given when 86663 then 'Yes' else NULL end,\n" +
                 "                 case hv.ctx_given when 80586 then 'Yes' else null end,\n" +
-                "                 case hv.azt_given when 1109 then 'Yes' else null end) as infant_prophylaxis\n" +
+                "                 case hv.azt_given when 1109 then 'Yes' else null end,'NA') as infant_prophylaxis\n" +
                 "      from kenyaemr_etl.etl_hei_follow_up_visit hv;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
