@@ -129,7 +129,14 @@
             var clinicianCadreVal = getValue('clinician_cadre.value');
             var removalDate = getValue('removal-date.value');
             var scheduledApp = getValue('next-visit-date.value');
-
+            encounterDate = new Date(getValue('encounter-date.value')).getTime();
+            removalDateEnc = new Date(getValue('removal-date.value')).getTime();
+            var formattedDiscDate =  moment(moment(removalDateEnc).toDate()).format("DD-MMM-YYYY");
+            var formattedEncDate =  moment(moment(encounterDate).toDate()).format("DD-MMM-YYYY");
+				if(moment(formattedDiscDate).isBefore(formattedEncDate,'day')){
+					getField('removal-date.error').html('Scheduled removal date, should not be earlier than encounter date').show();
+					return false;
+				}
             if(removalDate != "" &amp;&amp; removalDate > scheduledApp) {
                 getField('next-visit-date.error').html('The next appointment date should not be less than the removal date').show();
                 return false;
