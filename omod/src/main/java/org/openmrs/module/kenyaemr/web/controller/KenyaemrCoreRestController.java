@@ -505,53 +505,52 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Get a list of programs a patient is eligible for
-     * @param request
-     * @param patientUuid
-     * @return
+     * @param request The {@link HttpServletRequest} that contains the request information.
+     * @param patientUuid The UUID of the patient for whom eligible programs are being retrieved.
+     * @return A {@link ResponseEntity} object containing the eligible programs as a JSON array or an error message.
+     *         It will return a 200 OK response with the eligible programs, a 400 Bad Request if the patientUuid is missing,
+     *         a 404 Not Found if the patient does not exist, or a 422 Unprocessable Entity if the patient is voided.
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/eligiblePrograms") // gets all programs a patient is eligible for
-    @ResponseBody
-    public Object getEligiblePrograms(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid) {
+    @RequestMapping(value = "/getEligiblePrograms", method = RequestMethod.GET)
+    public ResponseEntity<?> getEligiblePrograms(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid) {
+        // Validate the patientUuid
         if (StringUtils.isBlank(patientUuid)) {
-            return new ResponseEntity<Object>("You must specify patientUuid in the request!",
-                    new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("You must specify patientUuid in the request!");
         }
-
+    
+        // Retrieve the patient by uuid
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-
+    
+        // Check if patient exists
         if (patient == null) {
-            return new ResponseEntity<Object>("The provided patient was not found in the system!",
-                    new HttpHeaders(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The provided patient was not found in the system!");
         }
-
-        ProgramManager programManager = CoreContext.getInstance().getManager(ProgramManager.class);
-        ArrayNode programList = JsonNodeFactory.instance.arrayNode();
-
-        if (!patient.isVoided()) {
+    
+        // Check if the patient is not voided
+        if (!patient.getVoided()) {
+            ProgramManager programManager = CoreContext.getInstance().getManager(ProgramManager.class);
+            ArrayNode programList = JsonNodeFactory.instance.arrayNode();
+    
             Collection<ProgramDescriptor> activePrograms = programManager.getPatientActivePrograms(patient);
             Collection<ProgramDescriptor> eligiblePrograms = programManager.getPatientEligiblePrograms(patient);
-
-            /**
-             * ProgramEndPoint {
-             *   uuid: string;
-             *   display: string;
-             *   enrollmentFormUuid: string;
-             *   discontinuationFormUuid: string;
-             *   enrollmentStatus: string;
-             * }
-             */
+    
+            // Remove active programs from the eligible programs collection
+            eligiblePrograms.removeAll(activePrograms);
+    
             for (ProgramDescriptor descriptor : eligiblePrograms) {
-                    ObjectNode programObj = JsonNodeFactory.instance.objectNode();
-                    programObj.put("uuid", descriptor.getTargetUuid());
-                    programObj.put("display", descriptor.getTarget().getName());
-                    programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
-                    programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
-                    programObj.put("enrollmentStatus", activePrograms.contains(descriptor) ? "active" : "eligible");
-                    programList.add(programObj);
+                ObjectNode programObj = JsonNodeFactory.instance.objectNode();
+                programObj.put("uuid", descriptor.getTargetUuid());
+                programObj.put("display", descriptor.getTarget().getName());
+                programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
+                programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
+                programObj.put("enrollmentStatus", "eligible");
+                programList.add(programObj);
             }
+            return ResponseEntity.ok(programList);
+        } else {
+            // If the patient is voided, return an error response
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("The patient is voided and is not eligible for programs.");
         }
-
-        return programList.toString();
     }
     /**
      * Gets the last regimen encounter uuid by category
