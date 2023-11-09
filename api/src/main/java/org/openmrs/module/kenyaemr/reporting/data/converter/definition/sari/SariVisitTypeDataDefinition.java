@@ -15,21 +15,21 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 @Caching(strategy= ConfigurationPropertyCachingStrategy.class)
-public class VisitTypeDataDefinition extends BaseDataDefinition implements PersonDataDefinition {
+public class SariVisitTypeDataDefinition extends BaseDataDefinition implements PersonDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public VisitTypeDataDefinition() {
+    public SariVisitTypeDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public VisitTypeDataDefinition(String name) {
+    public SariVisitTypeDataDefinition(String name) {
         super(name);
     }
 

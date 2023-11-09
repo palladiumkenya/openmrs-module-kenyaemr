@@ -10,8 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.sari;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.sari.TemperatureDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.sari.VisitTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.sari.SariVisitTypeDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -27,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates TemperatureDataDefinition
  */
-@Handler(supports= VisitTypeDataDefinition.class, order=50)
-public class VisitTypeDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= SariVisitTypeDataDefinition.class, order=50)
+public class SariVisitTypeDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;

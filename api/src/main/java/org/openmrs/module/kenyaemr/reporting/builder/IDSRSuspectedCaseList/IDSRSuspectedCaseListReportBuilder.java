@@ -80,7 +80,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         temperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         temperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
-        VisitTypeDataDefinition visitTypeDataDefinition = new VisitTypeDataDefinition();
+        SariVisitTypeDataDefinition visitTypeDataDefinition = new SariVisitTypeDataDefinition();
         visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
