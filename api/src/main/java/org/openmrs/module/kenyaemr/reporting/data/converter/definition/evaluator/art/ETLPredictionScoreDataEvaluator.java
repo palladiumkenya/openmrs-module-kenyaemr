@@ -35,7 +35,8 @@ public class ETLPredictionScoreDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT patient_id, hts_risk_score FROM kenyaemr_datatools.hts_eligibility_screening where date(visit_date) >= date(:startDate) and date(visit_date) <= date(:endDate) GROUP BY patient_id;";
+        String qry = "SELECT patient_id, hts_risk_score FROM kenyaemr_etl.etl_hts_eligibility_screening\n" +
+                "where date(visit_date) >= date(:startDate) and date(visit_date) <= date(:endDate) GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -57,6 +57,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String HTS = "9c0a7a57-62ff-4f75-babe-5835b0e921b7";
 		public static final String DRUG_REGIMEN_EDITOR = "7dffc392-13e7-11e9-ab14-d663bd873d93";
 		public static final String CACX_SCREENING = "3fefa230-ea10-45c7-b62b-b3b8eb7274bb";
+		public static final String ONCOLOGY_SCREENING = "e24209cc-0a1d-11eb-8f2a-bb245320c623";
 		public static final String HIV_SELF_TEST = "8b706d42-b4ae-4b3b-bd83-b14f15294362";
 		public static final String VMMC_PROCEDURE = "35c6fcc2-960b-11ec-b909-0242ac120002" ;
 		public static final String GAD_7 = "899d64ad-be13-4071-a879-2153847206b7";
@@ -81,6 +82,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String HTS_REFERRAL = "9284828e-ce55-11e9-a32f-2a2ae2dbcce4";
 		public static final String CACX_SCREENING_FORM = "0c93b93c-bfef-4d2a-9fbe-16b59ee366e7";
 		public static final String CACX_ASSESSMENT_FORM = "48f2235ca-cc77-49cb-83e6-f526d5a5f174";
+		public static final String ONCOLOGY_SCREENING_FORM = "be5c5602-0a1d-11eb-9e20-37d2e56925ee";
 		public static final String HIV_SELF_TESTING = "810fc592-f5f8-467a-846e-e177ba48a4e5";
 		public static final String VMMC_PROCEDURE_FORM = "5ee93f48-960b-11ec-b909-0242ac120002";
 	}
@@ -127,6 +129,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String CCC_SYNC_STATUS_WITH_NATIONAL_REGISTRY = "4dfa195f-8420-424d-8275-d60cf115303d";
 		public static final String CCC_SYNC_MESSAGE_WITH_NATIONAL_REGISTRY = "9bc43f7e-ff05-4afb-8dc4-710d245a927c";
 		public static final String VERIFICATION_DESCRIPTION_FOR_IPRS_ERROR = "a45d0a45-4e7a-4d3e-a550-2d482628d930";
+		public static final String DUPLICATE_NUPI_STATUS_WITH_NATIONAL_REGISTRY = "5897ac2d-de2f-4b58-aa92-c9adc9aedc66";
+		public static final String DUPLICATE_NUPI_FACILITY_WITH_NATIONAL_REGISTRY = "39673db2-c229-441c-bd84-f30edf1cc1a7";
+		public static final String DUPLICATE_NUPI_SITES_WITH_NATIONAL_REGISTRY = "876816a4-fa3e-4f93-b1f1-4443cebd9f30";
+		public static final String DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY = "2816180c-46a2-49d7-b15f-e44fd81b5057";
 	}
 
 	public static final class _Provider {
@@ -170,6 +176,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Drug Regimen Editor", "Handles patient regimen events", _EncounterType.DRUG_REGIMEN_EDITOR));
 		install(encounterType("Cervical cancer screening", "Cervical cancer screening", _EncounterType.CACX_SCREENING));
 		install(encounterType("HIV self testing", "Self testing screening", _EncounterType.HIV_SELF_TEST));
+		install(encounterType("Oncology screening", "Oncology screening encounter type", _EncounterType.ONCOLOGY_SCREENING));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -189,6 +196,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("HTS Client Referral Form", "Form for HTS linkage referral", _EncounterType.HTS, "1", _Form.HTS_REFERRAL));
 		install(form("Cervical Cancer Screening Form", "Form for Cervical Cancer Screening", _EncounterType.CACX_SCREENING, "1", _Form.CACX_SCREENING_FORM));
 		install(form("Cervical Cancer Assessment Form", "Form for Cervical Cancer Assessment", _EncounterType.CACX_SCREENING, "1", _Form.CACX_ASSESSMENT_FORM));
+		install(form("Cancer Screening and early diagnosis", "Form Cancer Screening and early diagnosis", _EncounterType.ONCOLOGY_SCREENING, "1", _Form.ONCOLOGY_SCREENING_FORM));
 		install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1", _Form.HIV_SELF_TESTING));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
@@ -308,6 +316,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(personAttributeType("KDoD unit", "KDoD passout unit",
 				String.class, null, false, 4.5, _PersonAttributeType.KDOD_UNIT));
 
+		// Client Registry Properties
 		install(personAttributeType("cr verification status", "Verification status with national registry",
 				String.class, null, false, 4.5, _PersonAttributeType.VERIFICATION_STATUS_WITH_NATIONAL_REGISTRY));
 
@@ -322,6 +331,18 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 		install(personAttributeType("cr verification iprs error description ", "CR Verification error description from IPRS",
 				String.class, null, false, 4.5, _PersonAttributeType.VERIFICATION_DESCRIPTION_FOR_IPRS_ERROR));
+
+		install(personAttributeType("nupi duplication status", "NUPI Duplication status with national registry",
+				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_STATUS_WITH_NATIONAL_REGISTRY));
+
+		install(personAttributeType("nupi duplication facility", "NUPI Duplication facility with national registry",
+				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_FACILITY_WITH_NATIONAL_REGISTRY));
+		
+		install(personAttributeType("nupi duplication sites", "NUPI Duplication site names with national registry",
+				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_SITES_WITH_NATIONAL_REGISTRY));
+
+		install(personAttributeType("nupi duplication total sites", "NUPI Duplication total number of sites with national registry",
+				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY));
 
 		// Provider attribute types.
 		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY ));

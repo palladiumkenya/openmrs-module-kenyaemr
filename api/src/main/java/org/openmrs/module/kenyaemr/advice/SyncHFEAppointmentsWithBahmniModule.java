@@ -36,7 +36,9 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Synchronizes appointments documented in HTML forms with Bahmni appointments module
@@ -55,6 +57,7 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
     public static final String HIV_FOLLOWUP_SERVICE = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
     public static final String DRUG_REFILL_SERVICE = "a96921a1-b89e-4dd2-b6b4-7310f13bbabe";
     public static final String HIV_LAB_TEST_SERVICE = "61488cf6-fad4-11ed-be56-0242ac120002";
+    public static final String COUNSELLING_SERVICE = "c6ce2119-c084-49c7-aa3f-be9fa1f3863e";
 
     // MCH appointments
     public static final String MCH_POSTNATAL_VISIT_SERVICE = "dcde8ca4-32a5-4c67-9982-33346e39813f";
@@ -88,72 +91,79 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
     Date nextApptDate = null;
     Date refillApptDate = null;
     Integer appointmentReason = null;
-   
-
 
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
         if (method.getName().equals("saveEncounter")) { // handles both create and edit
             Encounter enc = (Encounter) args[0];
-            Appointment editAppointment = appointmentsService.getAppointmentByUuid(enc.getUuid());
+            List<String> appointmentForms = Arrays.asList(HivMetadata._Form.MOH_257_VISIT_SUMMARY, HivMetadata._Form.HIV_GREEN_CARD, MchMetadata._Form.MCHMS_ANTENATAL_VISIT, MchMetadata._Form.MCHCS_FOLLOW_UP, MchMetadata._Form.MCHMS_POSTNATAL_VISIT,  PREP_FOLLOWUP_FORM, PREP_INITIAL_FORM, PREP_MONTHLY_REFILL_FORM, KP_CLINICAL_VISIT_FORM, TbMetadata._Form.TB_FOLLOW_UP, HivMetadata._Form.FAST_TRACK );
 
-            if(enc.getVoided() == true && editAppointment != null && enc.getForm() != null){
-                // Get appointment obs
-                Appointment hivFollowUpAppointment = appointmentsService.getAppointmentByUuid(enc.getUuid());
-                Appointment drugRefillAppointment = hivFollowUpAppointment.getRelatedAppointment();
+            if (enc != null && enc.getForm() != null && appointmentForms.contains(enc.getForm().getUuid())) {
+                Appointment editAppointment = appointmentsService.getAppointmentByUuid(enc.getUuid());
 
-                // delete HIV followup appointment
-                if(hivFollowUpAppointment != null ) {
-                    nxtAppointment = true;
-                    hivFollowUpAppointment.setVoided(true);
-                    hivFollowUpAppointment.setDateVoided(new Date());
-                    hivFollowUpAppointment.setVoidedBy(Context.getAuthenticatedUser());
+                if(enc.getVoided() == true && editAppointment != null && enc.getForm() != null){
+                    // Get appointment obs
+                    Appointment hivFollowUpAppointment = appointmentsService.getAppointmentByUuid(enc.getUuid());
+                    Appointment drugRefillAppointment = hivFollowUpAppointment.getRelatedAppointment();
+
+                    // delete HIV followup appointment
+                    if(hivFollowUpAppointment != null ) {
+                        nxtAppointment = true;
+                        hivFollowUpAppointment.setVoided(true);
+                        hivFollowUpAppointment.setDateVoided(new Date());
+                        hivFollowUpAppointment.setVoidedBy(Context.getAuthenticatedUser());
+                    }
+
+                    if(nxtAppointment && followUpAppointment) {
+                        Appointment app = appointmentsService.validateAndSave(hivFollowUpAppointment);
+                    }
+
+                    // delete existing appointment for drug refill
+                    if(drugRefillAppointment != null) {
+                        drugRefillAppointment.setVoided(true);
+                        drugRefillAppointment.setDateVoided(new Date());
+                        drugRefillAppointment.setVoidedBy(Context.getAuthenticatedUser());
+                        Appointment app = appointmentsService.validateAndSave(drugRefillAppointment);
+                    }
+
+                } else if (editAppointment != null && enc.getForm() != null &&
+                        (enc.getForm().getUuid().equals(HivMetadata._Form.HIV_GREEN_CARD) || enc.getForm().getUuid().equals(HivMetadata._Form.MOH_257_VISIT_SUMMARY))) {
+                    // pick HIV followup forms
+                    processEditHivFollowupEncounter(enc);
+
+                } else if (enc != null && enc.getForm() != null &&
+                        (enc.getForm().getUuid().equals(HivMetadata._Form.HIV_GREEN_CARD) || enc.getForm().getUuid().equals(HivMetadata._Form.MOH_257_VISIT_SUMMARY))) {
+                    // pick HIV followup forms
+                    processCreateHivFollowupEncounter(enc);
+
+                } else if(enc != null && enc.getForm() != null &&
+                        (enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_ANTENATAL_VISIT) ||
+                                enc.getForm().getUuid().equals(MchMetadata._Form.MCHCS_FOLLOW_UP) ||
+                                enc.getForm().getUuid().equals(PREP_FOLLOWUP_FORM) ||
+                                enc.getForm().getUuid().equals(PREP_INITIAL_FORM) ||
+                                enc.getForm().getUuid().equals(PREP_MONTHLY_REFILL_FORM) ||
+                                enc.getForm().getUuid().equals(KP_CLINICAL_VISIT_FORM) ||
+                                enc.getForm().getUuid().equals(TbMetadata._Form.TB_FOLLOW_UP) ||
+                                enc.getForm().getUuid().equals(HivMetadata._Form.FAST_TRACK) )) {
+
+                    processProgramAppointments(enc);
+                } else if(enc != null && (enc.getForm() != null && (enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_POSTNATAL_VISIT) || enc.getForm() != null && enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_DELIVERY)))) {
+
+                    processMCHEncounter(enc);
                 }
-
-                if(nxtAppointment && followUpAppointment) {
-                    Appointment app = appointmentsService.validateAndSave(hivFollowUpAppointment);
-                }
-
-                // delete existing appointment for drug refill
-                if(drugRefillAppointment != null) {
-                    drugRefillAppointment.setVoided(true);
-                    drugRefillAppointment.setDateVoided(new Date());
-                    drugRefillAppointment.setVoidedBy(Context.getAuthenticatedUser());
-                    Appointment app = appointmentsService.validateAndSave(drugRefillAppointment);
-                }
-
-            } else if (editAppointment != null && enc.getForm() != null &&
-                    (enc.getForm().getUuid().equals(HivMetadata._Form.HIV_GREEN_CARD) || enc.getForm().getUuid().equals(HivMetadata._Form.MOH_257_VISIT_SUMMARY))) {
-                // pick HIV followup forms
-                processEditHivFollowupEncounter(enc);
-
-            } else if (enc != null && enc.getForm() != null &&
-                    (enc.getForm().getUuid().equals(HivMetadata._Form.HIV_GREEN_CARD) || enc.getForm().getUuid().equals(HivMetadata._Form.MOH_257_VISIT_SUMMARY))) {
-                // pick HIV followup forms
-                processCreateHivFollowupEncounter(enc);
-
-            } else if(enc != null && enc.getForm() != null &&
-                    (enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_ANTENATAL_VISIT) ||
-                            enc.getForm().getUuid().equals(MchMetadata._Form.MCHCS_FOLLOW_UP) ||
-                            enc.getForm().getUuid().equals(PREP_FOLLOWUP_FORM) ||
-                            enc.getForm().getUuid().equals(PREP_INITIAL_FORM) ||
-                            enc.getForm().getUuid().equals(PREP_MONTHLY_REFILL_FORM) ||
-                            enc.getForm().getUuid().equals(KP_CLINICAL_VISIT_FORM) ||
-                            enc.getForm().getUuid().equals(TbMetadata._Form.TB_FOLLOW_UP) )) {
-
-                processProgramEncounter(enc);
-            } else if(enc != null && (enc.getForm() != null && (enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_POSTNATAL_VISIT) || enc.getForm() != null && enc.getForm().getUuid().equals(MchMetadata._Form.MCHMS_DELIVERY)))) {
-
-                processMCHEncounter(enc);
             }
         }
 
     }
 
+    /**
+     * Edit HIV appointments ie HIV consultation, Drug refill and lab
+     */
     private void processEditHivFollowupEncounter(Encounter enc) throws Throwable {
         // Get appointment obs
         Appointment hivFollowUpAppointment = appointmentsService.getAppointmentByUuid(enc.getUuid());
         Appointment drugRefillAppointment = hivFollowUpAppointment.getRelatedAppointment();
+        Integer appointmentReasonToEdit = null;
 
         List<Obs> obs = obsService.getObservations(
                 Arrays.asList(personService.getPerson(enc.getPatient().getPersonId())),
@@ -176,13 +186,23 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
 
         for (Obs o : obs) { // Loop through the obs and compose Appointment object for Bahmni
             if((o.getConcept().getUuid().equals(APPOINTMENT_REASON_CONCEPT_UUID)) && hivFollowUpAppointment != null ) {
+                appointmentReasonToEdit = o.getValueCoded().getConceptId();
+                 AppointmentServiceDefinition appointmentServiceDefinition = new AppointmentServiceDefinition();
+                if(appointmentReasonToEdit != null) {
+                    // Allow for editing of appointment service based on updated appointment reasons from green card
+                    String serviceUuid = getAppointmentServiceUuidFromConcept(appointmentReasonToEdit);
+                    if(serviceUuid != null) {
+                        appointmentServiceDefinition.setAppointmentServiceId(appointmentServiceDefinitionService.getAppointmentServiceByUuid(serviceUuid).getId());
+                        hivFollowUpAppointment.setService(appointmentServiceDefinition);
+                    }  
+                }
                 if(o.getValueCoded().getConceptId() == 160523 || o.getValueCoded().getConceptId() == 160521 ) {
                     followUpAppointment = true;
                 }
             }
 
             // edit HIV followup appointment
-            if((o.getConcept().getUuid().equals(NEXT_CLINICAL_APPOINTMENT_DATE_CONCEPT_UUID)) && hivFollowUpAppointment != null ) {
+            if((o.getConcept().getUuid().equals(NEXT_CLINICAL_APPOINTMENT_DATE_CONCEPT_UUID)) && hivFollowUpAppointment != null  ) {
                 nxtAppointment = true;
                 Date nextApptStartDateTime = DateUtil.convertToDate(dateFormat.format(o.getValueDatetime()).concat("T07:00:00.0Z"), DateUtil.DateFormatType.UTC);
                 Date nextApptEndDateTime = DateUtil.convertToDate(dateFormat.format(o.getValueDatetime()).concat("T20:00:00.0Z"), DateUtil.DateFormatType.UTC);
@@ -243,6 +263,9 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
         }
     }
 
+    /**
+     * Create HIV appointments ie HIV consultation, Drug refill and lab
+     */
     private void processCreateHivFollowupEncounter(Encounter enc) throws Throwable {
         Appointment nextAppointment = new Appointment();
 
@@ -346,7 +369,11 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
 
     }
 
-    private void processProgramEncounter(Encounter enc) throws Throwable {
+    /**
+     * Create and edit PREP or TB or KP appointments
+     * Create MCH appointments
+     */
+    private void processProgramAppointments(Encounter enc) throws Throwable {
         // MCH or PREP or TB or KP appointment
         List<Obs> obs = obsService.getObservations(
                 Arrays.asList(personService.getPerson(enc.getPatient().getPersonId())),
@@ -392,7 +419,9 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
                 } else if (enc.getForm() != null && enc.getForm().getUuid().equals(TbMetadata._Form.TB_FOLLOW_UP) && appointmentServiceDefinitionService.getAppointmentServiceByUuid(TB_SERVICE) != null) {
                     appointmentServiceDefinition.setAppointmentServiceId(appointmentServiceDefinitionService.getAppointmentServiceByUuid(TB_SERVICE).getId());
                 } else if (enc.getForm() != null && enc.getForm().getUuid().equals(KP_CLINICAL_VISIT_FORM) && appointmentServiceDefinitionService.getAppointmentServiceByUuid(KP_CLINICAL_SERVICE) != null) {
-                    appointmentServiceDefinition.setAppointmentServiceId(appointmentServiceDefinitionService.getAppointmentServiceByUuid(KP_CLINICAL_SERVICE).getId());
+                     appointmentServiceDefinition.setAppointmentServiceId(appointmentServiceDefinitionService.getAppointmentServiceByUuid(KP_CLINICAL_SERVICE).getId());
+                 } else if (enc.getForm() != null && enc.getForm().getUuid().equals(HivMetadata._Form.FAST_TRACK) && appointmentServiceDefinitionService.getAppointmentServiceByUuid(DRUG_REFILL_SERVICE) != null) {
+                    appointmentServiceDefinition.setAppointmentServiceId(appointmentServiceDefinitionService.getAppointmentServiceByUuid(DRUG_REFILL_SERVICE).getId());
                 } else {
                     return;
                 }
@@ -413,6 +442,9 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
         }
     }
 
+    /**
+     * Edit the mother and baby appointments which are related
+     */
     private void processMCHEncounter(Encounter enc) throws Throwable {
         //MCH appointments
         List<Obs> obs = obsService.getObservations(
@@ -533,5 +565,14 @@ public class SyncHFEAppointmentsWithBahmniModule implements AfterReturningAdvice
             }
 
         }
+    }
+    
+    private String getAppointmentServiceUuidFromConcept( int conceptId) {
+        Map<Integer, String> idToUuidMap = new HashMap<Integer, String>();
+        idToUuidMap.put(1283, "61488cf6-fad4-11ed-be56-0242ac120002"); // lab tests
+        idToUuidMap.put(160523, "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa"); // HIV consultation
+        idToUuidMap.put(159382, "c6ce2119-c084-49c7-aa3f-be9fa1f3863e"); // Counselling
+        return idToUuidMap.get(conceptId);
+       
     }
 }

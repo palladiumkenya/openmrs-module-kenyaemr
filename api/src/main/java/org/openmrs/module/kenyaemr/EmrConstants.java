@@ -43,11 +43,15 @@ public class EmrConstants {
 	public static final String APP_AIR = FACILITY_REPORTING_MODULE_ID + ".facilityReporting.air";
 	public static final String APP_LAB_MANIFEST = MODULE_ID + ".labmanifest";
 	public static final String APP_ADHERENCE_COUNSELOR = MODULE_ID + ".counselling";
-	public static final String APP_UPI_VERIFICATION = MODULE_ID + ".upiVerification";
+	public static final String APP_NUPI_VERIFICATION = MODULE_ID + ".nupiVerification";
 	public static final String APP_O3_SHORTCUT = MODULE_ID + ".openmrs3Shortcut";
 	public static final String APP_O3_QUEUES_SHORTCUT = MODULE_ID + ".openmrs3ServiceQueueShortcut";
 	public static final String APP_O3_APPOINTMENTS_SHORTCUT = MODULE_ID + ".openmrs3AppointmentsShortcut";
+<<<<<<< HEAD
 	public static final String APP_CANCER_SCREENING = MODULE_ID + ".oncologyapp";
+=======
+	public static final String APP_REFERRALS = MODULE_ID + ".referral.home";
+>>>>>>> cdb9c7b9354cdf8787541495130975f7a11b2b57
 
 	/**
 	 * Global property names

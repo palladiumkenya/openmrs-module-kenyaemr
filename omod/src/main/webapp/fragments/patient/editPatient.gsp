@@ -205,6 +205,11 @@
                     <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "nationalUniquePatientNumber"])}</td>
                     <td class="ke-field-instructions"> This will be populated from MOH Client Registry</td>
                 </tr>
+                <tr id="nhif-no">
+                    <td class="ke-field-label">NHIF Number</td>
+                    <td>${ui.includeFragment("kenyaui", "widget/field", [object: command, property: "nhifNumber"])}</td>
+                    <td class="ke-field-instructions"> (If registered with National Health Insurance Fund)</td>
+                </tr>
                 <tr></tr>
                 <tr>
                     <td> <input type="checkbox" name="other-identifiers" value="Y"
@@ -745,7 +750,7 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
         // fetch the token asynchronously
         function fetchTokenAsync() {
             let dfrd = jq.Deferred();
-            ui.getFragmentActionAsJson("kenyaemr", "upi/upiDataExchange", "getAuthToken", {  }, function (result) {
+            ui.getFragmentActionAsJson("kenyaemr", "nupi/nupiDataExchange", "getAuthToken", {  }, function (result) {
                 authToken = result;
                 dfrd.resolve();
             });
@@ -1579,7 +1584,7 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
 
 
         //Using fragment action to post
-        jQuery.getJSON('${ ui.actionLink("kenyaemr", "upi/upiDataExchange", "postUpiClientRegistrationInfoToCR")}',
+        jQuery.getJSON('${ ui.actionLink("kenyaemr", "nupi/nupiDataExchange", "postUpiClientRegistrationInfoToCR")}',
             {
                 'postParams': JSON.stringify(params)
             })
