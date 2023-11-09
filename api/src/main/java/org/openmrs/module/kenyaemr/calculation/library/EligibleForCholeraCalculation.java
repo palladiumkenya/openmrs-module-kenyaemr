@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EligibleForCholeraCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
-    protected static final Log log = LogFactory.getLog(EligibleForSariScreeningCalculation.class);
+    protected static final Log log = LogFactory.getLog(EligibleForSariIliScreeningCalculation.class);
 
     public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
     public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
