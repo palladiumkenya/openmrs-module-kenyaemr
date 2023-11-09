@@ -93,7 +93,8 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 				EmrConstants.APP_NUPI_VERIFICATION,
 				EmrConstants.APP_O3_QUEUES_SHORTCUT,
 				EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT,
-				EmrConstants.APP_O3_SHORTCUT
+				EmrConstants.APP_O3_SHORTCUT,
+				EmrConstants.APP_CANCER_SCREENING
 		};
 
 		// Ensure a privilege exists for each app. App framework does create these but not always before this
@@ -134,7 +135,8 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_AIR),
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
-						app(EmrConstants.APP_O3_SHORTCUT)
+						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING)
 				)
 		));
 
@@ -153,6 +155,7 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
 						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING),
 						_Privilege.VIEW_LEGACY_INTERFACE
 				)
 		));
@@ -180,6 +183,7 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
 						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING),
 						_Privilege.VIEW_LEGACY_INTERFACE
 				)
 		));
@@ -206,6 +210,7 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
 						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING),
 						_Privilege.MANAGE_DRUG_ORDERS,
 						_Privilege.VIEW_LEGACY_INTERFACE,
 						_Privilege.MANAGE_AIR
@@ -230,6 +235,7 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
 						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING),
 						_Privilege.VIEW_LEGACY_INTERFACE
 				)
 		));
@@ -261,6 +267,7 @@ public class SecurityMetadata extends AbstractMetadataBundle {
 						app(EmrConstants.APP_O3_APPOINTMENTS_SHORTCUT),
 						app(EmrConstants.APP_O3_QUEUES_SHORTCUT),
 						app(EmrConstants.APP_O3_SHORTCUT),
+						app(EmrConstants.APP_CANCER_SCREENING),
 						_Privilege.VIEW_LEGACY_INTERFACE
 				)
 		));
