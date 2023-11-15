@@ -81,12 +81,14 @@ public class EligibleForCholeraCalculation extends AbstractPatientCalculation im
                             triageDateDifference = daysBetween(currentDate, triageOnsetDate);
                         }
                     }
-                String createdDate = dateFormat.format(dateCreated);
-                    if(createdDate != null && createdDate.equals(todayDate)) {
-                        if (triageDateDifference < 2 && patientVomitResult && pantientDiarrheaResult) {
-                            result = true;
-                        }
-                    }
+              if(dateCreated != null ) {
+                  String createdDate = dateFormat.format(dateCreated);
+                  if (triageDateDifference < 2 && patientVomitResult && pantientDiarrheaResult) {
+                      if (createdDate != null && createdDate.equals(todayDate)) {
+                          result = true;
+                      }
+                  }
+              }
              }
                if (lastGreenCardEnc !=null){
 
@@ -98,13 +100,14 @@ public class EligibleForCholeraCalculation extends AbstractPatientCalculation im
 
                        }
                    }
-                   String createdDate = dateFormat.format(dateCreated);
-                   if(createdDate != null && createdDate.equals(todayDate)) {
-                       if (greenCardDateDifference < 2 && patientVomitResultGreenCard && pantientDiarrheaResultGreenCard) {
-                               result = true;
-                       }
-                   }
-
+                if(dateCreated != null ) {
+                    String createdDate = dateFormat.format(dateCreated);
+                    if (greenCardDateDifference < 2 && patientVomitResultGreenCard && pantientDiarrheaResultGreenCard) {
+                        if (createdDate != null && createdDate.equals(todayDate)) {
+                            result = true;
+                        }
+                    }
+                }
                }
            }
 

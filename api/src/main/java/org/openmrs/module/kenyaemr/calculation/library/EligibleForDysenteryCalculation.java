@@ -78,11 +78,13 @@ public class EligibleForDysenteryCalculation extends AbstractPatientCalculation 
 
                         }
                     }
-                String createdDate = dateFormat.format(dateCreated);
-                if(createdDate != null && createdDate.equals(todayDate)) {
-                      if (greenCardDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
-                          result = true;
-                      }
+                if(dateCreated != null ) {
+                    String createdDate = dateFormat.format(dateCreated);
+                    if (greenCardDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
+                        if (createdDate != null && createdDate.equals(todayDate)) {
+                            result = true;
+                        }
+                    }
                 }
             }
             if (lastTriageEnc !=null) {
@@ -94,12 +96,14 @@ public class EligibleForDysenteryCalculation extends AbstractPatientCalculation 
 
                         }
                     }
-                String createdDate = dateFormat.format(dateCreated);
-                if(createdDate != null && createdDate.equals(todayDate)) {
-                       if (triageDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
-                                result = true;
+                if(dateCreated != null ) {
+                    String createdDate = dateFormat.format(dateCreated);
+                    if (triageDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
+                        if (createdDate != null && createdDate.equals(todayDate)) {
+                            result = true;
                         }
                     }
+                }
             }
             ret.put(ptId, new BooleanResult(result, this));
         }

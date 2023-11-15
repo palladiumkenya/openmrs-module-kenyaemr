@@ -112,11 +112,10 @@ public class EligibleForSariIliScreeningCalculation extends AbstractPatientCalcu
                         }
                     }
                 }
-
+              if(dateCreated != null ) {
                 String createdDate = dateFormat.format(dateCreated);
-
-                if (createdDate != null && createdDate.equals(todayDate)) {
-                    if ((triageDateDifference <= 10 || greenCardDateDifference <= 10) && tempValue != null && tempValue >= 38.0) {
+                if ((triageDateDifference <= 10 || greenCardDateDifference <= 10) && tempValue != null && tempValue >= 38.0) {
+                    if (createdDate != null && createdDate.equals(todayDate)) {
                         if ((patientFeverResult && pantientCoughResult && patientAdmissionGreenCard) || (patientFeverResultGreenCard && patientCoughResultGreenCard && patientAdmissionGreenCard)) {
                             result = true;
                             flagMsg.append("Suspected SARI Case");
@@ -128,6 +127,7 @@ public class EligibleForSariIliScreeningCalculation extends AbstractPatientCalcu
                         }
                     }
                 }
+              }
             }
 
 
