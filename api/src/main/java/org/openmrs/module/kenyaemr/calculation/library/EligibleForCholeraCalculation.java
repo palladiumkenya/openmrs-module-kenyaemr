@@ -75,39 +75,49 @@ public class EligibleForCholeraCalculation extends AbstractPatientCalculation im
            if(patient.getAge() >= 2 ){
             if (lastTriageEnc !=null){
                     for (Obs obs : lastTriageEnc.getObs()) {
-                        dateCreated = obs.getDateCreated();
-                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                            triageOnsetDate = obs.getValueDatetime();
-                            triageDateDifference = daysBetween(currentDate, triageOnsetDate);
-                        }
-                    }
-              if(dateCreated != null ) {
-                  String createdDate = dateFormat.format(dateCreated);
-                  if (triageDateDifference < 2 && patientVomitResult && pantientDiarrheaResult) {
-                      if (createdDate != null && createdDate.equals(todayDate)) {
-                          result = true;
-                      }
-                  }
-              }
-             }
-               if (lastGreenCardEnc !=null){
+                        if (patientVomitResult && pantientDiarrheaResult) {
+                            dateCreated = obs.getDateCreated();
+                            if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
+                                triageOnsetDate = obs.getValueDatetime();
+                                triageDateDifference = daysBetween(currentDate, triageOnsetDate);
+                            }
+                            if (dateCreated != null) {
+                                String createdDate = dateFormat.format(dateCreated);
+                                if (triageDateDifference < 2) {
+                                    if (createdDate != null && createdDate.equals(todayDate)) {
+                                        result = true;
+                                        break;
+                                    }
+                                }
 
+                            }
+                        }
+
+                    }
+
+             }
+
+               if (lastGreenCardEnc !=null){
                    for (Obs obs : lastGreenCardEnc.getObs()) {
+                       if (patientVomitResultGreenCard && pantientDiarrheaResultGreenCard) {
                        dateCreated = obs.getDateCreated();
                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
                            greenCardOnsetDate = obs.getValueDatetime();
                            greenCardDateDifference = daysBetween(currentDate, greenCardOnsetDate);
 
                        }
+                       if(dateCreated != null ) {
+                               String createdDate = dateFormat.format(dateCreated);
+                               if (greenCardDateDifference < 2 ) {
+                                   if (createdDate != null && createdDate.equals(todayDate)) {
+                                       result = true;
+                                       break;
+                                   }
+                               }
+                       }
                    }
-                if(dateCreated != null ) {
-                    String createdDate = dateFormat.format(dateCreated);
-                    if (greenCardDateDifference < 2 && patientVomitResultGreenCard && pantientDiarrheaResultGreenCard) {
-                        if (createdDate != null && createdDate.equals(todayDate)) {
-                            result = true;
-                        }
-                    }
-                }
+                   }
+
                }
            }
 

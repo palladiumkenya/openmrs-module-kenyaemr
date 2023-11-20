@@ -92,42 +92,62 @@ public class EligibleForSariIliScreeningCalculation extends AbstractPatientCalcu
             boolean patientCoughResultGreenCard = lastFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
             boolean patientAdmissionGreenCard = lastFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastFollowUpEncounter, AdminQuestion, positive) : false;
             boolean pantientCoughResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, coughPresenceResult) : false;
+            Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
+            if (lastTempObs != null) {
+                tempValue = lastTempObs.getValueNumeric();
+            }
 
 
-            if (lastTriageEnc != null || lastFollowUpEncounter != null) {
-                Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
-                if (lastTempObs != null) {
-                    tempValue = lastTempObs.getValueNumeric();
-                }
-
-                for (Obs obs : (lastTriageEnc != null ? lastTriageEnc.getObs() : lastFollowUpEncounter.getObs())) {
-                    dateCreated = obs.getDateCreated();
-                    if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                        if (lastTriageEnc != null) {
+            if (lastTriageEnc !=null) {
+                if (patientFeverResult && pantientCoughResult) {
+                    for (Obs obs : lastTriageEnc.getObs()) {
+                        dateCreated = obs.getDateCreated();
+                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
                             triageOnsetDate = obs.getValueDatetime();
                             triageDateDifference = daysBetween(currentDate, triageOnsetDate);
-                        } else {
-                            greenCardOnsetDate = obs.getValueDatetime();
-                            greenCardDateDifference = daysBetween(currentDate, greenCardOnsetDate);
                         }
-                    }
-                }
-              if(dateCreated != null ) {
-                String createdDate = dateFormat.format(dateCreated);
-                if ((triageDateDifference <= 10 || greenCardDateDifference <= 10) && tempValue != null && tempValue >= 38.0) {
-                    if (createdDate != null && createdDate.equals(todayDate)) {
-                        if ((patientFeverResult && pantientCoughResult && patientAdmissionGreenCard) || (patientFeverResultGreenCard && patientCoughResultGreenCard && patientAdmissionGreenCard)) {
-                            result = true;
-                            flagMsg.append("Suspected SARI Case");
-                        } else {
-                            if ((patientFeverResult && pantientCoughResult) || (patientFeverResultGreenCard && patientCoughResultGreenCard)) {
-                                result = true;
-                                flagMsg.append("Suspected ILI Case");
+                        if (dateCreated != null) {
+                            String createdDate = dateFormat.format(dateCreated);
+                            if (triageDateDifference <= 10 && tempValue != null && tempValue >= 38.0) {
+                                if (createdDate != null && createdDate.equals(todayDate)) {
+                                    if (patientAdmissionGreenCard) {
+                                        flagMsg.append("Suspected SARI Case");
+                                    } else {
+                                        flagMsg.append("Suspected ILI Case");
+                                    }
+                                    result = true;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-              }
+            }
+
+            if (lastFollowUpEncounter !=null) {
+                if (patientFeverResultGreenCard && patientCoughResultGreenCard) {
+                    for (Obs obs : lastFollowUpEncounter.getObs()) {
+                        dateCreated = obs.getDateCreated();
+                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
+                            greenCardOnsetDate = obs.getValueDatetime();
+                            greenCardDateDifference = daysBetween(currentDate, greenCardOnsetDate);
+                        }
+                        if (dateCreated != null) {
+                            String createdDate = dateFormat.format(dateCreated);
+                            if (greenCardDateDifference <= 10 && tempValue != null && tempValue >= 38.0) {
+                                if (createdDate != null && createdDate.equals(todayDate)) {
+                                    if (patientAdmissionGreenCard) {
+                                        flagMsg.append("Suspected SARI Case");
+                                    } else {
+                                        flagMsg.append("Suspected ILI Case");
+                                    }
+                                    result = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
 

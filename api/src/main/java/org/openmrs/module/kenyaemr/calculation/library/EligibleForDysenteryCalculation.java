@@ -71,39 +71,46 @@ public class EligibleForDysenteryCalculation extends AbstractPatientCalculation 
             if (lastGreenCardEnc !=null) {
 
                     for (Obs obs : lastGreenCardEnc.getObs()) {
+                        if (patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
                         dateCreated = obs.getDateCreated();
                         if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
                             greenCardOnsetDate = obs.getValueDatetime();
                             greenCardDateDifference = daysBetween(currentDate, greenCardOnsetDate);
+                        }
+                            if(dateCreated != null ) {
+                                String createdDate = dateFormat.format(dateCreated);
+                                if (greenCardDateDifference < 2) {
+                                    if (createdDate != null && createdDate.equals(todayDate)) {
+                                        result = true;
+                                        break;
+                                    }
+                                }
+                            }
 
-                        }
                     }
-                if(dateCreated != null ) {
-                    String createdDate = dateFormat.format(dateCreated);
-                    if (greenCardDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
-                        if (createdDate != null && createdDate.equals(todayDate)) {
-                            result = true;
-                        }
                     }
-                }
+
             }
+
             if (lastTriageEnc !=null) {
                     for (Obs obs : lastTriageEnc.getObs()) {
-                        dateCreated = obs.getDateCreated();
-                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                            triageOnsetDate = obs.getValueDatetime();
-                            triageDateDifference = daysBetween(currentDate, triageOnsetDate);
-
+                        if (patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
+                            dateCreated = obs.getDateCreated();
+                            if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
+                                triageOnsetDate = obs.getValueDatetime();
+                                triageDateDifference = daysBetween(currentDate, triageOnsetDate);
+                            }
+                            if(dateCreated != null ) {
+                                String createdDate = dateFormat.format(dateCreated);
+                                if (triageDateDifference < 2 ) {
+                                    if (createdDate != null && createdDate.equals(todayDate)) {
+                                        result = true;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
-                if(dateCreated != null ) {
-                    String createdDate = dateFormat.format(dateCreated);
-                    if (triageDateDifference < 2 && patientBloodInStoolResult || patientBloodInStoolResultGreenCard) {
-                        if (createdDate != null && createdDate.equals(todayDate)) {
-                            result = true;
-                        }
-                    }
-                }
             }
             ret.put(ptId, new BooleanResult(result, this));
         }
