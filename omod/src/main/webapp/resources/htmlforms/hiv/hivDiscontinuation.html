@@ -321,6 +321,7 @@
                 var deathReason = getValue('death-reason.value');
                 var specificDeathReason = getValue('specific-cause-of-death.value');
                 var validateFacilityVal = getValue('selectedToFacility.value');
+				var validateConsentVal = getValue('clientConsent.value');
                 var trfVerificationDate = getValue('trf-verification-date.value');
 
 				var formattedEnrollmentDate =  moment(moment(Number(enrollmentDate)).toDate()).format("DD-MMM-YYYY");
@@ -403,6 +404,11 @@
                     getField('selectedToFacility.error').html('Facility required').show();
                     return false;
                 }
+
+				if (discReason == 159492 &amp;&amp; validateConsentVal == "") {
+					getField('clientConsent.error').html('Consent information is required').show();
+					return false;
+				}
                 return true;
             });
         });
@@ -607,6 +613,14 @@
 							<td>Date Transferred Out<br /></td>
 							<td><obs conceptId="160649AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" labelText=" " /></td>
 						</tr>
+					</table>
+				</div>
+				<div id="trf consent">
+					<table>
+						<td>Cient consent their data to be shared with facility of transfer?
+							<obs class="consent" conceptId="1710AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="clientConsent"
+								 style="yes_no" />
+						</td>
 					</table>
 				</div>
 				<div id="ptrfVerification">
