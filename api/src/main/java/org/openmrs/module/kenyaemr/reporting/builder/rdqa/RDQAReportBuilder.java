@@ -30,9 +30,7 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferOutDateCa
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadResultCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfDeathCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfLastCTXCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.LastCD4OrVLResultCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientCheckOutStatusCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientProgramEnrollmentCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.ValueAtDateOfOtherPatientCalculationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.VisitsForAPatientCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.WeightAtArtStartDateCalculation;
@@ -42,7 +40,6 @@ import org.openmrs.module.kenyaemr.reporting.calculation.converter.*;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.RDQAActiveCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.RDQACohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultDateYYMMDDConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.Cd4OrVLValueAndDateConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.TBScreeningConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.InfantProphylaxisDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PCREIDAt8MonthsDataDefinition;
@@ -50,7 +47,6 @@ import org.openmrs.module.kenyaemr.reporting.data.converter.definition.Pregnancy
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.TBScreeningAtLastVisitDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastWHOStageDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.WHOStageArtDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.hei.HEIInfantProphylaxisDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731.ETLMoh731IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731.ETLPmtctIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.rdqa.RDQAIndicatorLibrary;
@@ -232,16 +228,16 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
         dsd.addColumn("Date confirmed positive", new CalculationDataDefinition("Date confirmed positive", new DateConfirmedHivPositiveCalculation()), "", new DateArtStartDateConverter());
         dsd.addColumn("Enrollment Date", new CalculationDataDefinition("Enrollment Date", new DateOfEnrollmentArtCalculation()), "", new DateArtStartDateConverter());
         dsd.addColumn("Art Start Date", new CalculationDataDefinition("Art Start Date", new InitialArtStartDateCalculation()), "", new DateArtStartDateConverter());
-        dsd.addColumn("Initial ART Regimen", new CalculationDataDefinition("Initial ART Regimen", new InitialArtRegimenCalculation()), "", null);
-        dsd.addColumn("Current Regimen", new CalculationDataDefinition("Current Regimen", new CurrentArtRegimenCalculation()), "", null);
-        dsd.addColumn("BMI at last visit", new CalculationDataDefinition("BMI at last visit", new BMIAtLastVisitCalculation()), "", null);
+        dsd.addColumn("Initial ART Regimen", new CalculationDataDefinition("Initial ART Regimen", new InitialArtRegimenCalculation()), "", new UniversalConverter());
+        dsd.addColumn("Current Regimen", new CalculationDataDefinition("Current Regimen", new CurrentArtRegimenCalculation()), "", new UniversalConverter());
+        dsd.addColumn("BMI at last visit", new CalculationDataDefinition("BMI at last visit", new BMIAtLastVisitCalculation()), "", new UniversalConverter());
         dsd.addColumn("TB screening at last visit", new TBScreeningAtLastVisitDataDefinition(), "", new TBScreeningConverter("screeningDone"));
         dsd.addColumn("TB screening outcome", new TBScreeningAtLastVisitDataDefinition(), "", new TBScreeningConverter("outcome"));
         dsd.addColumn("Last WHO Stage", new WHOStageArtDataDefinition(), "");
         dsd.addColumn("Last WHO Stage Date", new ETLLastWHOStageDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
-        dsd.addColumn("IPT Start Date", new CalculationDataDefinition("IPT Start Date", new IPTStartDateCalculation()), "", new DateArtStartDateConverter());
-        dsd.addColumn("IPT Status", new CalculationDataDefinition("IPT Status", new IPTOutcomeCalculation()), "", new IPTOutcomeDataConverter("rdqa"));
-        dsd.addColumn("IPT Outcome Date", new CalculationDataDefinition("IPT Outcome Date", new IPTOutcomeDateCalculation()), "", new DateArtStartDateConverter());
+        dsd.addColumn("TPT Start Date", new CalculationDataDefinition("TPT Start Date", new IPTStartDateCalculation()), "", new DateArtStartDateConverter());
+        dsd.addColumn("TPT Status", new CalculationDataDefinition("TPT Status", new IPTOutcomeCalculation()), "", new IPTOutcomeDataConverter("rdqa"));
+        dsd.addColumn("TPT Outcome Date", new CalculationDataDefinition("TPT Outcome Date", new IPTOutcomeDateCalculation()), "", new DateArtStartDateConverter());
 
         dsd.addColumn("Second last Viral Load Result", new CalculationDataDefinition("Second last Viral Load Result", new SecondLastVLCalculation()), "", new RDQASimpleObjectRegimenConverter("data"));
         dsd.addColumn("Second last Viral Load Result Date", new CalculationDataDefinition("Second last Viral Load Result Date", new SecondLastVLCalculation()), "", new RDQASimpleObjectRegimenConverter("date"));
@@ -260,9 +256,9 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
         definition.setTypes(encounterTypes);
         dsd.addColumn("Last clinical encounter date", definition, "", new EncounterDatetimeConverter());
         dsd.addColumn("Next Appointment Date", new CalculationDataDefinition("Next Appointment Date", new LastReturnVisitDateCalculation()), "", new DataConverter[]{new CalculationResultDateYYMMDDConverter()});
-        dsd.addColumn("Pregnancy intention", new PregnancyIntentionDataDefinition(), "");
-        dsd.addColumn("PCR/EID at 8 months", new PCREIDAt8MonthsDataDefinition(), "");
-        dsd.addColumn("Infant Prophylaxis", new InfantProphylaxisDataDefinition(), "");
+        dsd.addColumn("Pregnancy intention", new PregnancyIntentionDataDefinition(), "",new UniversalConverter());
+        dsd.addColumn("PCR/EID at 8 months", new PCREIDAt8MonthsDataDefinition(), "",new UniversalConverter());
+        dsd.addColumn("Infant Prophylaxis", new InfantProphylaxisDataDefinition(), "",new UniversalConverter());
 
         return dsd;
     }
@@ -290,16 +286,16 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
         dsd.addColumn("Date confirmed positive", new CalculationDataDefinition("Date confirmed positive", new DateConfirmedHivPositiveCalculation()), "", new DateArtStartDateConverter());
         dsd.addColumn("Enrollment Date", new CalculationDataDefinition("Enrollment Date", new DateOfEnrollmentArtCalculation()), "", new DateArtStartDateConverter());
         dsd.addColumn("Art Start Date", new CalculationDataDefinition("Art Start Date", new InitialArtStartDateCalculation()), "", new DateArtStartDateConverter());
-        dsd.addColumn("Initial ART Regimen", new CalculationDataDefinition("Initial ART Regimen", new InitialArtRegimenCalculation()), "", null);
-        dsd.addColumn("Current Regimen", new CalculationDataDefinition("Current Regimen", new CurrentArtRegimenCalculation()), "", null);
-        dsd.addColumn("BMI at last visit", new CalculationDataDefinition("BMI at last visit", new BMIAtLastVisitCalculation()), "", null);
+        dsd.addColumn("Initial ART Regimen", new CalculationDataDefinition("Initial ART Regimen", new InitialArtRegimenCalculation()), "", new UniversalConverter());
+        dsd.addColumn("Current Regimen", new CalculationDataDefinition("Current Regimen", new CurrentArtRegimenCalculation()), "", new UniversalConverter());
+        dsd.addColumn("BMI at last visit", new CalculationDataDefinition("BMI at last visit", new BMIAtLastVisitCalculation()), "", new UniversalConverter());
         dsd.addColumn("TB screening at last visit", new TBScreeningAtLastVisitDataDefinition(), "", new TBScreeningConverter("screeningDone"));
         dsd.addColumn("TB screening outcome", new TBScreeningAtLastVisitDataDefinition(), "", new TBScreeningConverter("outcome"));
-        dsd.addColumn("Last WHO Stage", new WHOStageArtDataDefinition(), "");
+        dsd.addColumn("Last WHO Stage", new WHOStageArtDataDefinition(), "",new UniversalConverter());
         dsd.addColumn("Last WHO Stage Date", new ETLLastWHOStageDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
-        dsd.addColumn("IPT Start Date", new CalculationDataDefinition("IPT Start Date", new IPTStartDateCalculation()), "", new DateArtStartDateConverter());
-        dsd.addColumn("IPT Status", new CalculationDataDefinition("IPT Status", new IPTOutcomeCalculation()), "", new IPTOutcomeDataConverter("rdqa"));
-        dsd.addColumn("IPT Outcome Date", new CalculationDataDefinition("IPT Outcome Date", new IPTOutcomeDateCalculation()), "", new DateArtStartDateConverter());
+        dsd.addColumn("TPT Start Date", new CalculationDataDefinition("TPT Start Date", new IPTStartDateCalculation()), "", new DateArtStartDateConverter());
+        dsd.addColumn("TPT Status", new CalculationDataDefinition("TPT Status", new IPTOutcomeCalculation()), "", new IPTOutcomeDataConverter("rdqa"));
+        dsd.addColumn("TPT Outcome Date", new CalculationDataDefinition("TPT Outcome Date", new IPTOutcomeDateCalculation()), "", new DateArtStartDateConverter());
 
         dsd.addColumn("Second last Viral Load Result", new CalculationDataDefinition("Second last Viral Load Result", new SecondLastVLCalculation()), "", new RDQASimpleObjectRegimenConverter("data"));
         dsd.addColumn("Second last Viral Load Result Date", new CalculationDataDefinition("Second last Viral Load Result Date", new SecondLastVLCalculation()), "", new RDQASimpleObjectRegimenConverter("date"));
@@ -319,9 +315,9 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
         dsd.addColumn("Last clinical encounter date", definition, "", new EncounterDatetimeConverter());
         dsd.addColumn("Next Appointment Date", new CalculationDataDefinition("Next Appointment Date", new LastReturnVisitDateCalculation()), "", new DataConverter[]{new CalculationResultDateYYMMDDConverter()});
 
-        dsd.addColumn("Pregnancy intention", new PregnancyIntentionDataDefinition(), "");
-        dsd.addColumn("PCR/EID at 8 months", new PCREIDAt8MonthsDataDefinition(), "");
-        dsd.addColumn("Infant Prophylaxis", new InfantProphylaxisDataDefinition(), "");
+        dsd.addColumn("Pregnancy intention", new PregnancyIntentionDataDefinition(), "",new UniversalConverter());
+        dsd.addColumn("PCR/EID at 8 months", new PCREIDAt8MonthsDataDefinition(), "",new UniversalConverter());
+        dsd.addColumn("Infant Prophylaxis", new InfantProphylaxisDataDefinition(), "",new UniversalConverter());
 
         return dsd;
     }

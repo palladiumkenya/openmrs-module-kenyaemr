@@ -52,7 +52,7 @@ public class IPTOutcomeDataConverter implements DataConverter {
 		Concept o = (Concept) value;
 
 		if (o == null)
-			return "";
+			return "Missing";
 
 		Integer answer = o.getConceptId();
 

@@ -73,7 +73,7 @@ public class CalculationResultDateYYMMDDConverter implements DataConverter{
 	}
 
 	private String formatDate(Date date) {
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
+		DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 		return date == null?"":dateFormatter.format(date);
 	}
 }
