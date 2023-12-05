@@ -30,9 +30,7 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferOutDateCa
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadResultCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfDeathCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfLastCTXCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.LastCD4OrVLResultCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientCheckOutStatusCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientProgramEnrollmentCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.ValueAtDateOfOtherPatientCalculationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.VisitsForAPatientCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.rdqa.WeightAtArtStartDateCalculation;
@@ -42,15 +40,14 @@ import org.openmrs.module.kenyaemr.reporting.calculation.converter.*;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.RDQAActiveCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.RDQACohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultDateYYMMDDConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.Cd4OrVLValueAndDateConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.TBScreeningConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.InfantProphylaxisDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PCREIDAt8MonthsDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PregnancyIntentionDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.TBScreeningAtLastVisitDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastWHOStageDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.PatientStatusDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.WHOStageArtDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.hei.HEIInfantProphylaxisDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731.ETLMoh731IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731.ETLPmtctIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.rdqa.RDQAIndicatorLibrary;
@@ -248,7 +245,7 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
 
         dsd.addColumn("Recent Viral Load Result", new CalculationDataDefinition("Recent Viral Load Result", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("data"));
         dsd.addColumn("Recent Viral Load Result Date", new CalculationDataDefinition("Recent Viral Load Result Date", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("date"));
-
+        dsd.addColumn("Patient Status", new PatientStatusDataDefinition(), "", new PatientStatusConverter());
 
         EncountersForPatientDataDefinition definition = new EncountersForPatientDataDefinition();
         EncounterType hivConsultation = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
@@ -306,7 +303,7 @@ public class RDQAReportBuilder extends AbstractHybridReportBuilder {
 
         dsd.addColumn("Recent Viral Load Result", new CalculationDataDefinition("Recent Viral Load Result", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("data"));
         dsd.addColumn("Recent Viral Load Result Date", new CalculationDataDefinition("Recent Viral Load Result Date", new ViralLoadResultCalculation("last")), "", new RDQASimpleObjectRegimenConverter("date"));
-
+        dsd.addColumn("Patient Status", new PatientStatusDataDefinition(), "", new PatientStatusConverter());
 
         EncountersForPatientDataDefinition definition = new EncountersForPatientDataDefinition();
         EncounterType hivConsultation = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
