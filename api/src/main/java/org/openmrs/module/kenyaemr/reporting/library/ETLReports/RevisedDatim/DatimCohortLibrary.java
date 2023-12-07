@@ -6333,12 +6333,11 @@ public class DatimCohortLibrary {
         cd.setDescription("Priority populations type");
         return cd;
     }
-    // TODO: 02/03/2023 : Fix max_packet size overflow error in mysql caused by pp_prev queries. Once done uncomment PP_PREV Indicators 
     /**
      * PP_PREV
      * @return
      */
-  /*  public CohortDefinition ppPrev() {
+    public CohortDefinition ppPrev() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -6352,10 +6351,10 @@ public class DatimCohortLibrary {
         return cd;
 
     }
-    *//**
+    /**
      * PP_PREV for the current semi-annual reporting period
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevCurrentPeriod() {
         String sqlQuery = "select c.client_id from kenyaemr_etl.etl_contact c\n" +
                 "  left join (select v.client_id,v.visit_date from kenyaemr_etl.etl_clinical_visit v where v.visit_date <= date(:endDate))v on c.client_id = v.client_id\n" +
@@ -6378,10 +6377,10 @@ public class DatimCohortLibrary {
         return cd;
     }
 
-    *//**
+    /**
      * PP_PREV for the previous period (Half year). This is required for de-duplication when getting PP_PREV clients
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevPreviousPeriod() {
         String sqlQuery = "select c.client_id from kenyaemr_etl.etl_contact c\n" +
                 "                          left join (select v.client_id,v.visit_date from kenyaemr_etl.etl_clinical_visit v where v.visit_date <= date(:endDate))v on c.client_id = v.client_id\n" +
@@ -6405,10 +6404,10 @@ public class DatimCohortLibrary {
         cd.setDescription("PPs with visit during previous reporting period");
         return cd;
     }
-    *//**
+    /**
      * PP_PREV by PP type
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevByType(String ppType) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6423,7 +6422,6 @@ public class DatimCohortLibrary {
         return cd;
 
     }
-*/
 
     /**
      * Returns Priority populations by type
@@ -6458,7 +6456,7 @@ public class DatimCohortLibrary {
     /* *//**
      * PP_PREV known positives
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevKnownPositive() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6469,10 +6467,10 @@ public class DatimCohortLibrary {
         return cd;
     }
 
-    *//**
+    /**
      * PP_PREV newly tested or referred
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevNewlyTestedOrReferred() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6483,10 +6481,10 @@ public class DatimCohortLibrary {
         return cd;
     }
 
-    *//**
+    /**
      * PP_PREV declined testing
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevDeclinedTesting() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6495,7 +6493,7 @@ public class DatimCohortLibrary {
         cd.addSearch("kpPrevDeclinedTestingSql",ReportUtils.map(kpPrevDeclinedTestingSql(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("ppPrev AND kpPrevDeclinedTestingSql");
         return cd;
-    }*/
+    }
 
     /**
      * Screened ineligible for HIV testing
@@ -6516,7 +6514,7 @@ public class DatimCohortLibrary {
     /*  *//**
      * PP_PREV test not required based on HTS eligibility screening
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevTestNotRequired() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6527,10 +6525,10 @@ public class DatimCohortLibrary {
         return cd;
     }
 
-    *//**
+    /**
      * PP_prev_Other
      * @return
-     *//*
+     */
     public CohortDefinition ppPrevOther() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -6539,7 +6537,7 @@ public class DatimCohortLibrary {
         cd.addSearch("otherPriorityPopulation",ReportUtils.map(otherPriorityPopulation(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("ppPrev AND otherPriorityPopulation");
         return cd;
-    }*/
+    }
 }
 
 
