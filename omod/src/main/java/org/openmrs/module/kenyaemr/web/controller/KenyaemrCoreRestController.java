@@ -113,6 +113,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.openmrs.util.PrivilegeConstants;
+import org.openmrs.api.EncounterService;
+import org.openmrs.api.PersonService;
+import org.openmrs.api.ProgramWorkflowService;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -190,6 +194,24 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     public static String ISONIAZID_DRUG_UUID = "78280AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static String RIFAMPIN_ISONIAZID_DRUG_UUID = "1194AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    public static final String KP_IDENTIFIER_UUID = "b046eb36-7bd0-40cf-bdcb-c662bc0f00c3";
+
+    public static final String KP_UNIQUE_PATIENT_NUMBER_UUID = "b7bfefd0-239b-11e9-ab14-d663bd873d93";
+
+    public static final String FSW_UUID = "89828287-b96f-449c-b3ae-d518d55703e1";
+
+    public static final String MSM_UUID = "160578AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    public static final String PWID_UUID = "105AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    public static final String PWUD_UUID = "642945a8-045a-4010-b3f3-bc50aaaab386" ;
+
+    public static final String TRANSGENDER_UUID = "bd370cad-06fe-4950-a36f-ed991b280ce6";
+
+    public static final String MSW_UUID = "973e5b6c-ae5e-4d6a-a624-2d259763771f";
+
+    public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     /**
      * Gets a list of available/completed forms for a patient
@@ -2272,6 +2294,124 @@ else {
         return  personRelationshipName;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/generateKPNumber")
+    @ResponseBody
+    public String getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid, @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
+                                           @RequestParam("county") String county, @RequestParam("ward") String ward, @RequestParam("implementingPartnerCode") String implementingPartnerCodeVal,
+                                           @RequestParam("hotspotCode") String hotSpotCodeVal) {
+        EncounterService encounterService = Context.getEncounterService();
+        PersonService personService = Context.getPersonService();
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+        StringBuilder sb = new StringBuilder();
+        String sql = "SELECT count(*) FROM patient_program pp\n" + "join program p on p.program_id = pp.program_id\n"
+                + "where p.uuid ='7447305a-18a7-11e9-ab14-d663bd873d93' ;";
+        List<List<Object>> everEnrolled = Context.getAdministrationService().executeSQL(sql, true);
+        Long everEnrolledTotal = (Long) everEnrolled.get(0).get(0);
+        Integer kpSerialNumber = everEnrolledTotal.intValue() != 0 ? everEnrolledTotal.intValue() + 1 : 1;
+        Program kpProgram = MetadataUtils.existing(Program.class, KP_PROGRAM_UUID);
+        String hotSpotCode = null;
+        String kpTypeCode = null;
+        String wardCode = null;
+        String subCountyCode = null;
+        String countyCode = null;
+        String implementingPartnerCode = null;
+        StringBuilder identifier = new StringBuilder();
+
+        Encounter lastEnc = EmrUtils.lastEncounter(patient,
+                encounterService.getEncounterTypeByUuid(KP_IDENTIFIER_UUID));
+        if (lastEnc != null) {
+            for (Obs obs : lastEnc.getObs()) {
+                if (obs.getConcept().getConceptId() == 164829) {
+                    wardCode = obs.getValueText();
+                } else if (obs.getConcept().getConceptId() == 161564) {
+                    subCountyCode = obs.getValueText();
+                } else if (obs.getConcept().getConceptId() == 165006) {
+                    hotSpotCode = obs.getValueText();
+                } else if (obs.getConcept().getConceptId() == 165347) {
+                    implementingPartnerCode = obs.getValueText().toUpperCase();
+                } else if (obs.getConcept().getConceptId() == 162725) {
+                    countyCode = obs.getValueText();
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165083) {
+                    kpTypeCode = "01";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 160578) {
+                    kpTypeCode = "02";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 105) {
+                    kpTypeCode = "03";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165085) {
+                    kpTypeCode = "04";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165100) {
+                    kpTypeCode = "05";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165084) {
+                    kpTypeCode = "07";
+                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 162277) {
+                    kpTypeCode = "08";
+                }
+            }
+        } else {
+            wardCode = ward;
+            subCountyCode = subCounty;
+            countyCode = county;
+            hotSpotCode = hotSpotCodeVal;
+            implementingPartnerCode = implementingPartnerCodeVal;
+            if (kpTypeVal.equals(FSW_UUID)) {
+                kpTypeCode = "01";
+            } else if (kpTypeVal.equals(MSM_UUID)) {
+                kpTypeCode = "02";
+            } else if (kpTypeVal.equals(PWID_UUID)) {
+                kpTypeCode = "03";
+            } else if (kpTypeVal.equals(PWUD_UUID)) {
+                kpTypeCode = "04";
+            } else if (kpTypeVal.equals(TRANSGENDER_UUID)) {
+                kpTypeCode = "05";
+            } else if (kpTypeVal.equals(MSW_UUID)) {
+                kpTypeCode = "07";
+            } else if (kpTypeVal.equals(PEOPLE_IN_PRISON_UUID)) {
+                kpTypeCode = "08";
+            }
+        }
+
+        identifier.append(countyCode);
+        identifier.append(subCountyCode);
+        identifier.append(wardCode);
+        identifier.append(implementingPartnerCode.toUpperCase());
+        identifier.append(hotSpotCode);
+        identifier.append(kpTypeCode);
+
+        Date birthDate = personService.getPerson(patient.getId()).getBirthdate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(birthDate);
+        int month = cal.get(Calendar.MONTH) + 1;
+        String middleName = personService.getPerson(patient.getId()).getMiddleName() != null ? personService
+                .getPerson(patient.getId()).getMiddleName().substring(0, 2).toUpperCase() : "";
+        String lastName = personService.getPerson(patient.getId()).getFamilyName().substring(0, 2).toUpperCase();
+        String firstName = personService.getPerson(patient.getId()).getGivenName().substring(0, 2).toUpperCase();
+        identifier.append(firstName).append(middleName).append(lastName);
+        identifier.append(month);
+        String serialNumber = String.format("%04d", kpSerialNumber);
+        identifier.append(serialNumber);
+
+        ProgramWorkflowService service = Context.getProgramWorkflowService();
+        List<PatientProgram> programs = service.getPatientPrograms(Context.getPatientService().getPatient(patient.getId()),
+                kpProgram, null, null, null, null, true);
+
+        if (programs.size() > 0) {
+            PatientIdentifierType pit = MetadataUtils.existing(PatientIdentifierType.class, KP_UNIQUE_PATIENT_NUMBER_UUID);
+            PatientIdentifier pObject = patient.getPatientIdentifier(pit);
+            sb.append(pObject.getIdentifier());
+        }
+
+        if (lastEnc != null) {
+            sb.append(identifier);
+        }
+
+        if (lastEnc == null && programs.size() <= 0) {
+            sb.append(" ");
+        }
+
+        return sb.toString();
+
+    }
     String entryPointAbbriviations(Concept concept) {
         String value = "Other";
         if(concept != null) {
