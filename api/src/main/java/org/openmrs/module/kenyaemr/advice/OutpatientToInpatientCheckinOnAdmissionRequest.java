@@ -38,7 +38,7 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
         if (method.getName().equals("saveEncounter")) {
             Encounter enc = (Encounter) args[0];
             VisitService visitService = Context.getVisitService();
-            if (enc != null && enc.getVisit().getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) && enc.getForm() != null && CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid())) {
+            if (enc != null && enc.getVisit() != null && enc.getVisit().getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) && enc.getForm() != null && CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid())) {
                 for (Obs o : enc.getAllObs()) {
                     if (o.getConcept().getUuid().equals(INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT) && o.getValueCoded().getUuid().equals(INPATIENT_ADMISSION_ANSWER_CONCEPT)) {
                         // end the OPD visit
