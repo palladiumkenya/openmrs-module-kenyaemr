@@ -90,8 +90,8 @@ public class LastReturnVisitDateCalculation extends AbstractPatientCalculation {
                         // tcaDate is null, return refillDate
                         returnVisitDate = refillDate;
                     } else {
-                        // Both dates are not null, compare and return the earlier date
-                        returnVisitDate = refillDate.before(tcaDate) ? refillDate : tcaDate;
+                        // Both dates are not null, compare and return the latest date
+                        returnVisitDate = refillDate.before(tcaDate) ? tcaDate : refillDate;
                     }
 
                     ret.put(ptId, new SimpleResult(returnVisitDate, this));
