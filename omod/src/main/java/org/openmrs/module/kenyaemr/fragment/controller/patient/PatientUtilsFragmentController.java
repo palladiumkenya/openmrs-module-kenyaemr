@@ -81,7 +81,9 @@ public class PatientUtilsFragmentController {
 		List<String> openFlags = Arrays.asList(
 				"NeedsCACXTestCalculation",
 				"NotVaccinatedCalculation",
-				"IsPregnantCalculation"
+				"IsPregnantCalculation",
+				"EligibleForIliScreeningCalculation",
+				"EligibleForSariScreeningCalculation"
 		); // flags that don't require specific role
 		// Gather all flag calculations that evaluate to true
 		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {

@@ -63,6 +63,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String VMMC_PROCEDURE = "35c6fcc2-960b-11ec-b909-0242ac120002" ;
 		public static final String GAD_7 = "899d64ad-be13-4071-a879-2153847206b7";
 		public static final String MAT_CLINICAL_ENCOUNTER = "c3518485-ee22-4a47-b6d4-6d0e8f297b02";
+		public static final String ILI_SURVEILLANCE = "f60910c7-2edd-4d93-813c-0e57095f892f";
+		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
 	}
 
 	public static final class _Form {
@@ -87,6 +89,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ONCOLOGY_SCREENING_FORM = "be5c5602-0a1d-11eb-9e20-37d2e56925ee";
 		public static final String HIV_SELF_TESTING = "810fc592-f5f8-467a-846e-e177ba48a4e5";
 		public static final String VMMC_PROCEDURE_FORM = "5ee93f48-960b-11ec-b909-0242ac120002";
+
+		public static final String ILI_SURVEILLANCE_FORM = "05bcb369-5d50-4130-9a15-19c77a80314a";
+		public static final String SARI_SURVEILLANCE_FORM = "be0f79d3-9e9a-414b-a1ca-6a2974110bc4";
 	}
 
 	public static final class _OrderType {
@@ -186,6 +191,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("HIV self testing", "Self testing screening", _EncounterType.HIV_SELF_TEST));
 		install(encounterType("Oncology screening", "Oncology screening encounter type", _EncounterType.ONCOLOGY_SCREENING));
 		install(encounterType("MAT Clinical Encounter", "MAT Clinical Encounter", _EncounterType.MAT_CLINICAL_ENCOUNTER));
+		install(encounterType("ILI Surveillance", "ILI Surveillance encounter type", _EncounterType.ILI_SURVEILLANCE));
+		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -207,6 +214,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Cervical Cancer Assessment Form", "Form for Cervical Cancer Assessment", _EncounterType.CACX_SCREENING, "1", _Form.CACX_ASSESSMENT_FORM));
 		install(form("Cancer Screening and early diagnosis", "Form Cancer Screening and early diagnosis", _EncounterType.ONCOLOGY_SCREENING, "1", _Form.ONCOLOGY_SCREENING_FORM));
 		install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1", _Form.HIV_SELF_TESTING));
+		install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1", _Form.ILI_SURVEILLANCE_FORM));
+		install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1", _Form.SARI_SURVEILLANCE_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
@@ -369,11 +378,11 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				FormDatatype.class, null, 0, 1, _VisitAttributeType.SOURCE_FORM));
 
 		install(visitAttributeType("Visit queue number", "The visit queue number assigned to a visit when they are added to the queue", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.VISIT_QUEUE_NUMBER));
-		install(visitAttributeType("Patient Type", "To indicate whether the patient is paying for a service", ConceptDatatype.class, null, 0, 1, _VisitAttributeType.PATIENT_TYPE_UUID));
-		install(visitAttributeType("Payment Method", "The payment method used by the patient to settle payment", ConceptDatatype.class, null, 0, 1, _VisitAttributeType.PAYMENT_METHOD_UUID));
+		install(visitAttributeType("Patient Type", "To indicate whether the patient is paying for a service", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.PATIENT_TYPE_UUID));
+		install(visitAttributeType("Payment Method", "The payment method used by the patient to settle payment", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.PAYMENT_METHOD_UUID));
 		install(visitAttributeType("Policy Number", "The insurance policy number or member number", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.POLICY_NUMBER));
 		install(visitAttributeType("Insurance scheme", "The insurance scheme the patient is using to settle payment for services e.g. NHIF, Old mutual.", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.INSURANCE_SCHEME));
-		install(visitAttributeType("Non-Paying patient category", "If a patient isn't paying for service, The catergory the fall in.", ConceptDatatype.class, null, 0, 1, _VisitAttributeType.NON_PAYING_PATIENT_CATEGORY_UUID));
+		install(visitAttributeType("Is patient exempted", "If a patient isn't paying for service, The category the fall in.", Boolean.class, null, 0, 1, _VisitAttributeType.NON_PAYING_PATIENT_CATEGORY_UUID));
 		
 		install(visitType("Outpatient", "Visit where the patient is not admitted to the hospital", _VisitType.OUTPATIENT));
 		install(visitType("Inpatient", "Visit where the patient is admitted to the hospital", _VisitType.INPATIENT));

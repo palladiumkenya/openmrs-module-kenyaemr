@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.mat.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="4b898e20-9b2d-11ee-b9d1-0242ac120002" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.mat.EligibleForMATProgramCalculation" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.mat.form.initial.registration.form" />
+		<property name="defaultCompletionForm" ref="kenyaemr.mat.form.discontinuation" />
+		<property name="visitForms">
+			<set>
+				<ref bean="kenyaemr.mat.form.cessation" />
+				<ref bean="kenyaemr.mat.form.clinical.eligibility.assessment.and.referral" />
+				<ref bean="kenyaemr.mat.form.clinical.encounter" />
+				<ref bean="kenyaemr.mat.form.psychiatric.intake.and.followup" />
+				<ref bean="kenyaemr.mat.form.psychosocial.intake.and.followup" />
+				<ref bean="kenyaemr.mat.form.treatment" />
+				<ref bean="kenyaemr.mat.form.transit.and.referral" />
+			</set>
+		</property>
+		<property name="reports">
+			<set>
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				<entry key="enrollment-summary" value="" />
+				<entry key="care-panel" value="" />
+				<entry key="completion-summary" value="" />
+			</map>
+		</property>
+		<property name="order" value="200" />
+	</bean>
+
+	<!-- ===================== Identifiers ===================== -->
+
+
+	<!-- ===================== Forms ===================== -->
+
+	<!-- MAT initial registration form -->
+	<bean id="kenyaemr.mat.form.initial.registration.form" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="9a9cadd7-fba1-4a24-94aa-43edfbecf8d9" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT clinical encounter -->
+	<bean id="kenyaemr.mat.form.clinical.encounter" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="5ed937a0-0933-41c3-b638-63d8a4779845" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT discontinuation form -->
+	<bean id="kenyaemr.mat.form.discontinuation" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="38d6e116-b96c-4916-a821-b4dc83e2041d" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT clinical eligibility assessment and referral form -->
+	<bean id="kenyaemr.mat.form.clinical.eligibility.assessment.and.referral" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="7b470a63-4c20-453c-8d5d-d75a7bfb87d1" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT cessation form -->
+	<bean id="kenyaemr.mat.form.cessation" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="fa58cbc1-91c8-4920-813b-fde7fd69533b" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT treatment form -->
+	<bean id="kenyaemr.mat.form.treatment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="350d93cd-66da-4b7e-ae9a-fdfdc9195add" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT Psychiatric intake and followup form -->
+	<bean id="kenyaemr.mat.form.psychiatric.intake.and.followup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="fdea46a1-9423-4ef9-b780-93b32b48a528" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT psychosocial intake and followup form -->
+	<bean id="kenyaemr.mat.form.psychosocial.intake.and.followup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="cfd2109b-63b3-43de-8bb3-682e80c5a965" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- MAT transit/referral form -->
+	<bean id="kenyaemr.mat.form.transit.and.referral" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="b9495048-eceb-4dd2-bfba-330dc4900ee9" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- ===================== Reports ===================== -->
+
+
+</beans>
