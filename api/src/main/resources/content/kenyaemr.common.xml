@@ -89,6 +89,10 @@
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.moh705A"/>
 				<ref bean="kenyaemr.common.report.moh705B"/>
+<<<<<<< HEAD
+=======
+				<ref bean="kenyaemr.common.report.717" />
+>>>>>>> 34fc337ba (Add 717 report)
 				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList"/>
 				<ref bean="kenyaemr.common.report.moh204A"/>
 				<ref bean="kenyaemr.common.report.moh204B"/>
@@ -918,6 +922,16 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:MOH705B.xls" />
+	</bean>
+	<bean id="kenyaemr.common.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="b4b6feab-f8d5-4cdd-95f8-5dba6f959471" />
+		<property name="name" value="MOH 717" />
+		<property name="description" value="MOH 717 Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:MOH_717.xls" />
 	</bean>
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
 	<bean id="kenyaemr.common.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
