@@ -18,8 +18,9 @@
 			text-align: right;
 		}
 	</style>
-
+	<script type="text/javascript" src="../moduleResources/kenyaemr/scripts/moment.js"></script>
 	<script type="text/javascript">
+		var LATEST_TEMPERATURE = "<lookup expression="fn.latestObs(5088).valueNumeric()"/>"; 
 		function onWeightOrHeightChange() {
 			var display = '';
 			var weightKg = parseFloat(getValue('weight.value'));
@@ -50,6 +51,13 @@
 			getField('height.value').change(onWeightOrHeightChange);
 			onWeightOrHeightChange();
 			displayRecentBmi();
+			//Complaints
+			jq("#tbl-complaints-today").hide();
+			jq('input[type=radio].complaints-today').prop("checked", false);
+			jq("#complaints-today").change(complaintSelected);       //boolean
+			jq(".complaint-time input").change(complaintDurationInput);
+			jq("#complaint-field select").change(complaintSpecified);
+			jq('#tbl-other-complaint').hide();
 
 			var strtext = "";
 			var familyPlanningOption = getValue('fplanning.value');
@@ -127,8 +135,83 @@
 				});
 			}
 		});
-	</script>
+		var complaintSelected = function() {
+			var val = getValue('complaints-today.value');
+			var complaint = jq('.complaint select').val('');
+			var complaintDuration = jq('.complaint-time input').val('');
+			var complaintDate = jq('.complaint-date input').val('');
+			if (val == "false" || val == 1066){
+				jq("#tbl-complaints-today").hide();
+				clearHiddenSections([complaint, complaintDuration, complaintDate]);
+				getField('complaint-field.error').html('Please specify the complaints.').hide();
+			}else {
+				jq("#tbl-complaints-today").show();
+			}
+		}
 
+		//IDSR 
+		var complaintSpecified = function () {
+			var selectedComplaint = getField('complaint-field.value').val();
+			
+			console.log("SelectedComplaint==>"+selectedComplaint);
+			
+			if (selectedComplaint == 5622){
+				jq('#tbl-other-complaint').show();
+			}else{
+				jq('#tbl-other-complaint').hide();
+			}
+		}
+		var complaintDurationInput = function() {
+			var table = document.getElementById("tbl-complaints-today");
+			for (var i = 0, row; row = table.rows[i]; i++) {
+				var val = jq(this).closest('tr').find(".complaint-time input").val();
+				var encounterDate = new Date(getValue('encounter-date.value'));
+				var formattedComplaintDate = moment(moment(encounterDate, 'YYYY-MM-DD').subtract(val, 'days').toDate()).format('YYYY-MM-DD');
+				if(val >0 ) {
+					jq(this).closest('tr').find(".complaint-date input").val(formattedComplaintDate);
+				}
+			}
+		}	
+
+		clearHiddenSections = function(parentObj) {
+			for(var i=0; i &lt; parentObj.length; i++){
+				parentObj[i].find('input[type=radio]').each(function() {
+					this.checked = false;
+				});
+				parentObj[i].find('input[type=checkbox]').each(function() {
+					this.checked = false;
+				});
+				parentObj[i].find('input[type=text]').each(function() {
+					this.val("");
+				});
+				parentObj[i].find('select').each(function() {
+					this.selectedIndex =0;
+				});
+
+			}
+		}
+	</script>
+	<ifMode mode="EDIT">
+		<script type="text/javascript">
+			jq(function(){			
+				var complaintsToday = getValue('complaints-today.value');
+				var selectedComplaint = getField('complaint-field.value').val();		
+
+//If any checked  complaints allergies chronic illness and adverse events
+				if (complaintsToday == 'true'){
+					jq("#tbl-complaints-today").show();
+				}else{
+					jq("#tbl-complaints-today").hide();
+				}
+				if (selectedComplaint == 5622){
+					jq("#tbl-other-complaint").show();
+				}else{
+					jq("#tbl-other-complaint").hide();				}
+			
+
+			});
+		</script>
+	</ifMode>
 	<div class="ke-form-header">
 		<table width="100%">
 			<tr>
@@ -198,7 +281,80 @@
 				</tr>
 			</table>
 		</fieldset>
+		<!-- Complaints History  -->
+		<fieldset class="patient-details">
+			<legend>Complaints and History of complaints</legend>
+			<div>
+				Patient having complaint(s) today?
+				<obs id="complaints-today" conceptId="1154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="yes_no"/>
+				<span style="color:red;"><strong>*</strong></span>
+			</div>
+			<table cellspacing="5" id="tbl-complaints-today">
+				<tr>
+					<th style="color: #888">Complaint</th>
+					<th style="color: #888; text-align: center">Duration (Days)</th>
+					<th style="color: #888; text-align: center">Onset Date</th>
+					<th style="color: #888; text-align: center">Indication</th>
+				</tr>
+				<repeat>
+					<template>
+						<obsgroup groupingConceptId="160531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+							<tr>
+								<td>
+									<obs class="complaint" conceptId="5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+										 answerConceptIds="151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141631AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,121543AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119537AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,840AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131021AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120749AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120345AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,119574AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,206AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,143129AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122496AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,118789AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                            141585AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,141128AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131040AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114399AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,162626AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140070AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,123396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,142247AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135462AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,117698AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116214AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112989AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,879AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,114395AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135595AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                             121657AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,144576AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,116334AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131015AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133028AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5978AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133469AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,133027AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,132653AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125225AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131034AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5953AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,113224AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,131032AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,126535AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+                                                               141597AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,158843AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,140941AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,125198AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,112200AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,160208AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,111525AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,832AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+										 answerLabels="Abdominal pain,Abnormal Uterine Bleeding,Anxiety,Depression,Back pain,Bloody Urine,Breast Pain,Chest Pain,Cold and Chills,Confusion,Delirium,Convulsions,Seizure,Cough,Crying Infant,Diarrhea,Difficult in breathing,Difficulty in swallowing,Dizziness,Ear Pain,Epigastric Pain,Eye apin,Facial Pain,Fatigue/weakness,Fever,Flank Pain,Vaginal Discharge,Discharge from Penis,Genital Ulcer,Headache,Hearing Loss,Hypotension,Shock,Itchiness/Pruritus,Joint Pain,Leg Pain,Loss of Appetite,Lymphadenopathy,Memory Loss,Coma,Lethargy,Mouth Pain,Mouth Ulceration,Muscle cramps,Muscle Pain,Nausea,Neck Pain,Night sweats,Numbness,Pain when Swallowing,Pelvic Pain,Poor Vision,Rash,Red Eye,Running/Blocked nose,Scrotal Pain,Shoulder Pain,
+                                                       Sleep Disturbance,Sore Throat,Excessive Sweating,Swollen Legs,Tremors,Urinary Symptoms,Vertigo,Vomiting,Weight Loss,Other"
+										 style="dropdown" id="complaint-field"
+									/>
+								</td>
+								<td><obs class="complaint-time" conceptId="159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id ="complaint-duration" size="10" /></td>
+								<td>
+									<obs class="complaint-date" conceptId="159948AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" allowFutureDates="false"/>
+								</td>
+								<td>
+									<input type="text" name="indication" id="indication" readonly="True" />
+								</td>
+							</tr>
+						</obsgroup>
+					</template>
+					<render n="1" concept="complaint"/>
+					<render n="2" concept="complaint"/>
+					<render n="3" concept="complaint"/>
+					<render n="4" concept="complaint"/>
+					<render n="5" concept="complaint"/>
+				</repeat>
+			</table>
+			<table id="tbl-other-complaint">
+				<tr>
+					<th  style="color: #888" >Specify other complaints</th>
+				</tr>
+				<tr>
+					<td>
+						<obs conceptId="165250" rows="3" cols="80" id="obs-other-complaint"/>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<th  style="color: #888" >Clinical Notes</th>
+					<th  style="color: #888" >Previous visit's notes</th>
+				</tr>
+				<tr>
 
+					<td>
+						<obs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rows="3" cols="80" id="clinical-notes"/>
+					</td>
+					<td>
+						<span class="value"><recentObs conceptId="160430AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/></span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		
 		<fieldset>
 			<legend>Other Recordings</legend>
 
