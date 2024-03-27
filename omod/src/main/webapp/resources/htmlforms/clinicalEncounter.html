@@ -191,6 +191,23 @@
 			var hasJointPains = false;
 			var BLOOD_IN_STOOL = 117671;
 			var hasBloodInStool = false;
+			var HEADACHE = 139084;
+			var hasHEADACHE = false;
+			var CHILLS = 871;
+			var hasCHILLS = false;
+			var JAUNDICE = 136443;
+			var hasJAUNDICE = false;
+			var DIZZINESS = 141830;
+			var hasDIZZINESS = false;
+			var MALAISE = 135367;
+			var hasMALAISE = false;		
+			var RASH = 512;
+			var hasRASH = false;
+			var CORYZA = 106;
+			var hasCORYZA = false;
+			var CONJUCTIVITIS = 127777;
+			var hasCONJUCTIVITIS = false;
+			
 			var alertList = [];
 			var currentTemp = parseFloat(getValue("currentTemperature.value"));
 			var pAge = parseInt('<lookup expression="patient.age"/>');
@@ -221,28 +238,58 @@
 				if (key == BLOOD_IN_STOOL) {
 					hasBloodInStool = true;
 				}
+				if (key == HEADACHE) {
+					hasHEADACHE = true;
+				}
+				if (key == CHILLS) {
+					hasCHILLS = true;
+				}
+				if (key == JAUNDICE) {
+					hasJAUNDICE = true;
+				}
+				if (key == DIZZINESS) {
+					hasDIZZINESS = true;
+				}
+				if (key == MALAISE) {
+					hasMALAISE = true;
+				}
+				if (key == RASH) {
+					hasRASH = true;
+				}
+				if (key == CORYZA) {
+					hasCORYZA = true;
+				}
+				if (key == CONJUCTIVITIS) {
+					hasCONJUCTIVITIS = true;
+				}
+				
 			})
 			if (hasDiarrhea &amp;&amp; hasVomiting) {
 				alertList.push("Suspected cholera")
 			}
-
 			if (hasDiarrhea &amp;&amp; hasBloodInStool) {
 				alertList.push("Suspected Dysentery");
 			}
-
 			if (hasFever &amp;&amp; hasUnexplainedBleeding) {
 				alertList.push("Suspected Viral haemorrhagic Fever");
 			}
-
 			if (hasFever &amp;&amp; hasJointPains &amp;&amp; (!isNaN(currentTemp) &amp;&amp; currentTemp &gt; 38.5)) {
 				alertList.push("Suspected Chikungunya");
 			}
-
 			if (pAge &lt;15 &amp;&amp; hasWeakLimbs) {
-				alertList.push("Suspected Polio");
+			alertList.push("Suspected Polio");
 			}
 			if (hasFever &amp;&amp; hasCough &amp;&amp; currentTemp &gt; 38) {
 				alertList.push("Suspected ILI");
+			}
+			if (hasHEADACHE &amp;&amp; hasCHILLS) {
+				alertList.push("Suspected Malaria");
+			}
+			if (hasDIZZINESS &amp;&amp; hasJAUNDICE &amp;&amp; hasMALAISE) {
+				alertList.push("Suspected Rift Valley Fever");
+			}
+			if (hasFever &amp;&amp; hasCough &amp;&amp; hasRASH  &amp;&amp;  hasCORYZA &amp;&amp; hasCONJUCTIVITIS) {
+				alertList.push("Suspected Measles");
 			}
 
 			return alertList.join("\n");
