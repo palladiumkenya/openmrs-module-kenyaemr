@@ -156,9 +156,6 @@
 		//IDSR 
 		var complaintSpecified = function () {
 			var selectedComplaint = getField('complaint-field.value').val();
-			
-			console.log("SelectedComplaint==>"+selectedComplaint);
-			
 			if (selectedComplaint == 5622){
 				jq('#tbl-other-complaint').show();
 			}else{
@@ -195,6 +192,10 @@
 			var BLOOD_IN_STOOL = 117671;
 			var hasBloodInStool = false;
 			var alertList = [];
+			var currentTemp = parseFloat(getValue("currentTemperature.value"));
+			var pAge = parseInt('<lookup expression="patient.age"/>');
+
+
 			Object.keys(complaintAndDurationMap).forEach(function(key,index){ // we have to do this because map.has() doesn't work
 				if (key == DIARRHEA) {
 					hasDiarrhea = true;
@@ -233,14 +234,14 @@
 				alertList.push("Suspected Viral haemorrhagic Fever");
 			}
 
-			if (hasFever &amp;&amp; hasJointPains) {
+			if (hasFever &amp;&amp; hasJointPains &amp;&amp; (!isNaN(currentTemp) &amp;&amp; currentTemp &gt; 38.5)) {
 				alertList.push("Suspected Chikungunya");
 			}
 
-			if (hasWeakLimbs) {
+			if (pAge &lt;15 &amp;&amp; hasWeakLimbs) {
 				alertList.push("Suspected Polio");
 			}
-			if (hasFever &amp;&amp; hasCough) {
+			if (hasFever &amp;&amp; hasCough &amp;&amp; currentTemp &gt; 38) {
 				alertList.push("Suspected ILI");
 			}
 
@@ -331,7 +332,7 @@
 				</tr>
 				<tr>
 					<td>Temp</td>
-					<td><obs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /> &#176;C</td>
+					<td><obs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="currentTemperature" /> &#176;C</td>
 					<td>
 						<span class="value"><recentObs conceptId="5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /></span>
 					</td>
