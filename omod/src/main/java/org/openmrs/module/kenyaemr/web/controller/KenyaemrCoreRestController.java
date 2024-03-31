@@ -2972,4 +2972,113 @@ else {
 
         return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
     }
+
+    /**
+     * Modify NUPI patient data e.g CCC Number (EndPoint)
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.PUT, value = "/modifynupi/{nupinumber}/{searchtype}")
+    @ResponseBody
+    public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber, @PathVariable String searchtype) {
+        String ret = "{\"status\": \"Error\"}";
+
+        // InputStream errorStream = null;
+        HttpsURLConnection con = null;
+        try {
+            System.out.println("Modify NUPI: Received NUPI details: " + request.getQueryString());
+            System.out.println("Modify NUPI: nupi number: " + nupinumber + " SearchType: " + searchtype);
+
+            // Create URL
+            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            GlobalProperty globalPostUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_UPDATE_END_POINT);
+            String baseURL = globalPostUrl.getPropertyValue();
+            if(baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            }
+            String completeURL = baseURL + "/" + nupinumber + "/" + searchtype;
+            System.out.println("Modify NUPI: Using NUPI POST URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            String authToken = upiUtilsDataExchange.getToken();
+
+            // Make the Connection 
+            con =(HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setDoOutput(true);
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            // Reput the request
+            String requestBody = "";
+            BufferedReader requestReader = request.getReader();
+            
+            for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
+            System.out.println("Modify NUPI: Sending to remote: " + requestBody);
+            PrintStream os = new PrintStream(con.getOutputStream());
+			os.print(requestBody);
+			os.close();
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+
+                // Read the response
+                BufferedReader in = null;
+                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                
+                String input;
+                StringBuffer response = new StringBuffer();
+
+                while ((input = in.readLine()) != null) {
+                    response.append(input);
+                }
+                in.close();
+
+                String returnResponse = response.toString();
+                System.out.println("Modify NUPI: Got the Response as: " + returnResponse);
+
+            
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                return ResponseEntity.ok().headers(headers).body(returnResponse);
+            } else {
+                System.out.println("Modify NUPI: Error posting new NUPI for client: " + responseCode);
+
+                InputStream errorStream = con.getErrorStream();                   
+                // Read the error response body
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                
+                // Close the reader and the error stream
+                errorReader.close();
+                errorStream.close();
+                
+                // Handle or log the error response
+                String errorBody = errorResponse.toString();
+                System.err.println("Modify NUPI: Error response body: " + errorBody);
+
+                HttpHeaders headers = new HttpHeaders();
+                String contentType = con.getHeaderField("Content-Type");
+                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                } else {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                }
+                return new ResponseEntity<>(errorBody, headers, responseCode);
+            }
+        } catch(Exception ex) {
+            System.err.println("Modify NUPI: ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
+    }
 }
