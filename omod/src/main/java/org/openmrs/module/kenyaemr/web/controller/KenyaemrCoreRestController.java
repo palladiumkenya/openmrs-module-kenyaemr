@@ -64,6 +64,7 @@ import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.metadata.MchMetadata;
 import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
+import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
 import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
 import org.openmrs.module.kenyaemr.Dictionary;
@@ -96,14 +97,19 @@ import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestControlle
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+// import org.springframework.web.bind.annotation;
 import org.xml.sax.SAXException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -125,8 +131,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.Calendar;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -2676,7 +2687,9 @@ else {
      * Verify NUPI exists (EndPoint)
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/verifynupi/{country}/{identifierType}/{identifier}")
+    // @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
+    @EnableCors(origins = "*", methods = "*", headers = "Origin, Content-Type, Accept, Authorization, *")
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.OPTIONS}, value = "/verifynupi/{country}/{identifierType}/{identifier}")
     @ResponseBody
     public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
         String ret = "{\"status\": \"Error\"}";
@@ -2753,8 +2766,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
-                // return ResponseEntity.badRequest().body("{\"status\": \"Error\"}");
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("NUPI verification: ERROR: " + ex.getMessage());
@@ -2768,6 +2781,8 @@ else {
      * Search for NUPI (EndPoint)
      * @return
      */
+    // @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
+    @EnableCors(origins = "*", methods = "*", headers = "Origin, Content-Type, Accept, Authorization, *")
     @RequestMapping(method = RequestMethod.GET, value = "/searchnupi/{searchkey}/{searchvalue}")
     @ResponseBody
     public Object searchNUPI(@PathVariable String searchkey, @PathVariable String searchvalue) {
@@ -2844,7 +2859,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("NUPI search: ERROR: " + ex.getMessage());
@@ -2859,6 +2875,8 @@ else {
      * @param request
      * @return
      */
+    // @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
+    @EnableCors(origins = "*", methods = "*", headers = "Origin, Content-Type, Accept, Authorization, *")
     @RequestMapping(method = RequestMethod.POST, value = "/newnupi")
     @ResponseBody
     public Object newNUPI(HttpServletRequest request) {
@@ -2952,7 +2970,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("New NUPI: ERROR: " + ex.getMessage());
@@ -2967,6 +2986,8 @@ else {
      * @param request
      * @return
      */
+    // @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
+    @EnableCors(origins = "*", methods = "*", headers = "Origin, Content-Type, Accept, Authorization, *")
     @RequestMapping(method = RequestMethod.PUT, value = "/modifynupi/{nupinumber}/{searchtype}")
     @ResponseBody
     public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber, @PathVariable String searchtype) {
@@ -3061,7 +3082,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("Modify NUPI: ERROR: " + ex.getMessage());

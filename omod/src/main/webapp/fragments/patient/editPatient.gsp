@@ -837,8 +837,9 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
             if(!validateCountry()) {
                 return;
             }
-            // connect to dhp server
-            //var authToken = '${clientVerificationApiToken}';
+            // connect to the server
+
+            var nupiUseEMRProxy = '${nupiUseEMRProxy}';
             var idType = jQuery('#idType').val();
             var idValue = jQuery('input[name=idValue]').val();
             var idTypeParam = '';
@@ -864,157 +865,185 @@ ${ui.includeFragment("kenyaui", "widget/dialogForm", [
 
             var countryCode = countryObject[jQuery('select[id=nupi-verification-country]').val()].countryCode;
 
-            var baseVerificationUrl = '${clientVerificationApi}';
+            var baseVerificationUrl = "";
+
+            if(nupiUseEMRProxy == "false") {
+                baseVerificationUrl = '${clientVerificationApi}';
+            } else if(nupiUseEMRProxy == "true") {
+                baseVerificationUrl = '${localClientVerificationURL}';
+            }
+
             var getUrl = baseVerificationUrl + '/' + countryCode + '/' + idTypeParam + '/' +  idValue;
 
             console.log("NUPI get URL: " + getUrl);
+            console.log("NUPI use EMR Proxy: " + nupiUseEMRProxy);
 
             // show spinner
             display_loading_validate_identifier(true);
 
-            // get the auth token
-            fetchTokenAsync().done(function() {
+            if(nupiUseEMRProxy == "false") {
+                // get the Oauth 2.0 auth token
+                fetchTokenAsync().done(function() {
 
-                // Verify that we have a token
-                if (authToken == '') {
-                    console.log("Error getting token");
-                    display_loading_validate_identifier(false);
-                    jQuery('#show-cr-info-dialog').hide();
-                    var className = jQuery('#msgBox').attr("class");
-                    jQuery('#msgBox').removeClass(className);
-                    //jQuery('#msgBox').addClass('ke-cr-client-not-found');
-                    jQuery('#msgBox').text('Please notify the system admin to enable verification process');
-                    return;
-                }
-
-                // verify the identifier
-                jq.ajax({
-                    url: getUrl,
-                    type: "GET",
-                    async: true, // asynchronous
-                    timeout: 10000, // 10 sec timeout
-                    headers: { Authorization: 'Bearer ' + authToken},
-                    error: function(err) {
-                        // hide spinner
+                    // Verify that we have a token
+                    if (authToken == '') {
+                        console.log("Error getting token");
                         display_loading_validate_identifier(false);
-
+                        jQuery('#show-cr-info-dialog').hide();
                         var className = jQuery('#msgBox').attr("class");
                         jQuery('#msgBox').removeClass(className);
-                        jQuery('#msgBox').addClass('ke-cr-network-error');
-                        switch (err.status) {
-                            case "400":
-                                // bad request
-                                jQuery('#msgBox').text('A network error occured: 400 - Bad Request');
-                                break;
-                            case "401":
-                                // expired or invalid token
-                                jQuery('#msgBox').text('A network error occured: 401 - Invalid Token');
-                                break;
-                            case "403":
-                                // forbidden
-                                jQuery('#msgBox').text('A network error occured: 403 - Forbidden');
-                                break;
-                            default:
-                                //Something bad happened
-                                jQuery('#msgBox').text('A network error occured: ' + err.status);
-                                break;
+                        //jQuery('#msgBox').addClass('ke-cr-client-not-found');
+                        jQuery('#msgBox').text('Please notify the system admin to enable verification process');
+                        return;
+                    }
+
+                    verifyIdentifier(getUrl, nupiUseEMRProxy, authToken, "", "");
+                });
+            } else if(nupiUseEMRProxy == "true") {
+                // get the basic auth details
+                var nupiEMRUsername = '${nupiEMRUsername}';
+                var nupiEMRPassword = '${nupiEMRPassword}';
+                console.log("NUPI EMR username: " + nupiEMRUsername);
+                console.log("NUPI EMR password: " + nupiEMRPassword);
+
+                verifyIdentifier(getUrl, nupiUseEMRProxy, "", nupiEMRUsername, nupiEMRPassword);
+            }
+        });
+
+        function verifyIdentifier(getUrl, nupiUseEMRProxy, authToken, username, password) {
+            // verify the identifier
+            var authHeader = "";
+            if(nupiUseEMRProxy == "false") {
+                authHeader = { Authorization: 'Bearer ' + authToken};
+            } else if(nupiUseEMRProxy == "true") { 
+                authHeader = { 'Authorization': 'Basic ' + btoa(username + ':' + password) };
+            }
+            jq.ajax({
+                url: getUrl,
+                type: "GET",
+                async: true, // asynchronous
+                timeout: 10000, // 10 sec timeout                
+                headers: authHeader,
+                error: function(err) {
+                    // hide spinner
+                    display_loading_validate_identifier(false);
+
+                    var className = jQuery('#msgBox').attr("class");
+                    jQuery('#msgBox').removeClass(className);
+                    jQuery('#msgBox').addClass('ke-cr-network-error');
+                    switch (err.status) {
+                        case "400":
+                            // bad request
+                            jQuery('#msgBox').text('A network error occured: 400 - Bad Request');
+                            break;
+                        case "401":
+                            // expired or invalid token
+                            jQuery('#msgBox').text('A network error occured: 401 - Invalid Token');
+                            break;
+                        case "403":
+                            // forbidden
+                            jQuery('#msgBox').text('A network error occured: 403 - Forbidden');
+                            break;
+                        default:
+                            //Something bad happened
+                            jQuery('#msgBox').text('A network error occured: ' + err.status);
+                            break;
+                    }
+                },
+                success: function(data) {
+                    // hide spinner
+                    display_loading_validate_identifier(false);
+
+                    crResponseData = data;
+                    if(data.clientExists) {
+                        var className = jQuery('#msgBox').attr("class");
+                        jQuery('#msgBox').removeClass(className);
+                        jQuery('#msgBox').addClass('ke-cr-client-exists');
+                        jQuery('#msgBox').text('Client exists in the registry. UPI number:  ' + data.client.clientNumber);
+
+                        // unset vars
+                        jQuery('#cr-full-name').text("");
+                        jQuery('#cr-sex').text("");
+                        jQuery('#cr-primary-contact').text("");
+                        jQuery('#cr-secondary-contact').text("");
+                        jQuery('#cr-email').text("");
+
+                        jQuery('#cr-county').text("");
+                        jQuery('#cr-sub-county').text("");
+                        jQuery('#cr-ward').text("");
+
+                        jQuery('#cr-kin-name').text("");
+                        jQuery('#cr-kin-relation').text("");
+                        jQuery('#cr-kin-contact').text("");
+                        jQuery('#cr-national-id').text("");
+                        jQuery('#cr-upi').text("");
+
+                        jQuery('#cr-facility-code').text("");
+                        jQuery('#cr-facility-name').text("");
+
+                        //
+                        jQuery('#cr-full-name').text(data.client.firstName + ' ' + data.client.middleName + ' ' + data.client.lastName);
+                        jQuery('#cr-sex').text(data.client.gender);
+                        jQuery('#cr-primary-contact').text(data.client.contact.primaryPhone);
+                        jQuery('#cr-secondary-contact').text(data.client.contact.secondaryPhone);
+                        jQuery('#cr-email').text(data.client.contact.emailAddress);
+
+                        // residence
+                        jQuery('#cr-county').text(data.client.residence.county);
+                        jQuery('#cr-sub-county').text(data.client.residence.subCounty);
+                        jQuery('#cr-ward').text(data.client.residence.ward);
+
+                        // next of kin
+
+                        if(data.client.nextOfKins.length > 0) {
+                            var nextOfKin = data.client.nextOfKins[0];
+                            jQuery('#cr-kin-name').text(nextOfKin.name);
+                            jQuery('#cr-kin-relation').text(nextOfKin.relationship);
+                            jQuery('#cr-kin-contact').text(nextOfKin.contact.primaryPhone);
+
                         }
-                    },
-                    success: function(data) {
-                        // hide spinner
-                        display_loading_validate_identifier(false);
 
-                        crResponseData = data;
-                        if(data.clientExists) {
-                            var className = jQuery('#msgBox').attr("class");
-                            jQuery('#msgBox').removeClass(className);
-                            jQuery('#msgBox').addClass('ke-cr-client-exists');
-                            jQuery('#msgBox').text('Client exists in the registry. UPI number:  ' + data.client.clientNumber);
-
-                            // unset vars
-                            jQuery('#cr-full-name').text("");
-                            jQuery('#cr-sex').text("");
-                            jQuery('#cr-primary-contact').text("");
-                            jQuery('#cr-secondary-contact').text("");
-                            jQuery('#cr-email').text("");
-
-                            jQuery('#cr-county').text("");
-                            jQuery('#cr-sub-county').text("");
-                            jQuery('#cr-ward').text("");
-
-                            jQuery('#cr-kin-name').text("");
-                            jQuery('#cr-kin-relation').text("");
-                            jQuery('#cr-kin-contact').text("");
-                            jQuery('#cr-national-id').text("");
-                            jQuery('#cr-upi').text("");
-
-                            jQuery('#cr-facility-code').text("");
-                            jQuery('#cr-facility-name').text("");
-
-                            //
-                            jQuery('#cr-full-name').text(data.client.firstName + ' ' + data.client.middleName + ' ' + data.client.lastName);
-                            jQuery('#cr-sex').text(data.client.gender);
-                            jQuery('#cr-primary-contact').text(data.client.contact.primaryPhone);
-                            jQuery('#cr-secondary-contact').text(data.client.contact.secondaryPhone);
-                            jQuery('#cr-email').text(data.client.contact.emailAddress);
-
-                            // residence
-                            jQuery('#cr-county').text(data.client.residence.county);
-                            jQuery('#cr-sub-county').text(data.client.residence.subCounty);
-                            jQuery('#cr-ward').text(data.client.residence.ward);
-
-                            // next of kin
-
-                            if(data.client.nextOfKins.length > 0) {
-                                var nextOfKin = data.client.nextOfKins[0];
-                                jQuery('#cr-kin-name').text(nextOfKin.name);
-                                jQuery('#cr-kin-relation').text(nextOfKin.relationship);
-                                jQuery('#cr-kin-contact').text(nextOfKin.contact.primaryPhone);
-
-                            }
-
-                            // identifiers
-                            jQuery('#cr-upi').text(data.client.clientNumber); // update UPI field
-                            if (data.client.identifications.length > 0) {
-                                for (i = 0; i < data.client.identifications.length; i++) {
-                                    var identifierObj = data.client.identifications[i];
-                                    if (identifierObj.identificationType == 'Identification Number') {
-                                        jQuery('#cr-national-id').text(identifierObj.identificationNumber);
-                                    }
+                        // identifiers
+                        jQuery('#cr-upi').text(data.client.clientNumber); // update UPI field
+                        if (data.client.identifications.length > 0) {
+                            for (i = 0; i < data.client.identifications.length; i++) {
+                                var identifierObj = data.client.identifications[i];
+                                if (identifierObj.identificationType == 'Identification Number') {
+                                    jQuery('#cr-national-id').text(identifierObj.identificationNumber);
                                 }
                             }
-
-                            var facilityCode = data.client.originFacilityKmflCode;
-                            jQuery('#cr-facility-code').text(facilityCode);
-
-                            try {
-                                ui.getFragmentActionAsJson('kenyaemr', 'patient/editPatient', 'getFacilityName', { facilityCode : facilityCode }, function (result) {
-                                    if(result)
-                                    {
-                                        console.log("We got the facility name: " + result);
-
-                                        jQuery('#cr-facility-name').text(result);
-                                    } else {
-                                        console.log("Error Getting Facility Name");
-                                    }
-                                });
-                            } catch (ex) {
-                                console.log("Facility Name JSON Error: " + ex);
-                            }
-
-                            jQuery('#show-cr-info-dialog').show();
-
-                        } else {
-                            jQuery('#show-cr-info-dialog').hide();
-                            var className = jQuery('#msgBox').attr("class");
-                            jQuery('#msgBox').removeClass(className);
-                            jQuery('#msgBox').addClass('ke-cr-client-not-found');
-                            jQuery('#msgBox').text('Client not found in the registry. Please enter registration data and post to CR ');
                         }
+
+                        var facilityCode = data.client.originFacilityKmflCode;
+                        jQuery('#cr-facility-code').text(facilityCode);
+
+                        try {
+                            ui.getFragmentActionAsJson('kenyaemr', 'patient/editPatient', 'getFacilityName', { facilityCode : facilityCode }, function (result) {
+                                if(result)
+                                {
+                                    console.log("We got the facility name: " + result);
+
+                                    jQuery('#cr-facility-name').text(result);
+                                } else {
+                                    console.log("Error Getting Facility Name");
+                                }
+                            });
+                        } catch (ex) {
+                            console.log("Facility Name JSON Error: " + ex);
+                        }
+
+                        jQuery('#show-cr-info-dialog').show();
+
+                    } else {
+                        jQuery('#show-cr-info-dialog').hide();
+                        var className = jQuery('#msgBox').attr("class");
+                        jQuery('#msgBox').removeClass(className);
+                        jQuery('#msgBox').addClass('ke-cr-client-not-found');
+                        jQuery('#msgBox').text('Client not found in the registry. Please enter registration data and post to CR ');
                     }
-                });
+                }
             });
-        });
+        }
 
         //Prepare UPI payload
 

@@ -11,6 +11,7 @@ package org.openmrs.module.kenyaemr.fragment.controller.patient;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -72,8 +73,12 @@ public class EditPatientFragmentController {
 	final String isKDoD = (administrationService.getGlobalProperty("kenyaemr.isKDoD"));
 	final String clientNumberFieldEnabled = (administrationService.getGlobalProperty("clientNumber.enabled"));
 	final String clientNumberPreferredLabel = (administrationService.getGlobalProperty("client_number_label"));
+	final String nupiUseEMRProxy = (administrationService.getGlobalProperty(CommonMetadata.GP_CLIENT_VERIFICATION_USE_EMR_PROXY));
 	final String clientRegistryClientVerificationApi = (administrationService.getGlobalProperty(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT));
+	final String localClientVerificationURL = (administrationService.getGlobalProperty(CommonMetadata.GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL));
 	final String clientRegistryApiToken = (administrationService.getGlobalProperty(CommonMetadata.GP_CLIENT_VERIFICATION_API_TOKEN));
+	final String gpUsername = administrationService.getGlobalProperty(CommonMetadata.GP_EMR_ADMIN_USERNAME);
+    final String gpPwd = administrationService.getGlobalProperty(CommonMetadata.GP_EMR_ADMIN_PASSWORD);           
 
 	/**
 	 * Gets the facility name given the facility code
@@ -105,6 +110,11 @@ public class EditPatientFragmentController {
 		}
 
 		Person existing = patient != null ? patient : person;
+
+		model.addAttribute("nupiUseEMRProxy", nupiUseEMRProxy != null ? nupiUseEMRProxy.trim().toLowerCase() : "false");
+		model.addAttribute("nupiEMRUsername", gpUsername != null ? gpUsername.trim() : "");
+		model.addAttribute("nupiEMRPassword", gpPwd != null ? gpPwd.trim() : "");
+		model.addAttribute("localClientVerificationURL", localClientVerificationURL != null ? localClientVerificationURL.trim() : "http://127.0.0.1:8080/openmrs/ws/rest/v1/kenyaemr/verifynupi");
 
 		model.addAttribute("clientVerificationApi", clientRegistryClientVerificationApi);
 
