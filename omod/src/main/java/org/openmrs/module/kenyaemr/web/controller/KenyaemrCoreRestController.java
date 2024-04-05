@@ -104,6 +104,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.xml.sax.SAXException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -2687,6 +2688,7 @@ else {
      * Verify NUPI exists (EndPoint)
      * @return
      */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
     @RequestMapping(method = RequestMethod.GET, value = "/verifynupi/{country}/{identifierType}/{identifier}")
     @ResponseBody
     public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
@@ -2764,8 +2766,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
-                // return ResponseEntity.badRequest().body("{\"status\": \"Error\"}");
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
             }
         } catch(Exception ex) {
             System.err.println("NUPI verification: ERROR: " + ex.getMessage());
@@ -2779,6 +2781,7 @@ else {
      * Search for NUPI (EndPoint)
      * @return
      */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
     @RequestMapping(method = RequestMethod.GET, value = "/searchnupi/{searchkey}/{searchvalue}")
     @ResponseBody
     public Object searchNUPI(@PathVariable String searchkey, @PathVariable String searchvalue) {
@@ -2855,7 +2858,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
             }
         } catch(Exception ex) {
             System.err.println("NUPI search: ERROR: " + ex.getMessage());
@@ -2870,6 +2874,7 @@ else {
      * @param request
      * @return
      */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.OPTIONS})
     @RequestMapping(method = RequestMethod.POST, value = "/newnupi")
     @ResponseBody
     public Object newNUPI(HttpServletRequest request) {
@@ -2963,7 +2968,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
             }
         } catch(Exception ex) {
             System.err.println("New NUPI: ERROR: " + ex.getMessage());
@@ -2978,6 +2984,7 @@ else {
      * @param request
      * @return
      */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT, RequestMethod.OPTIONS})
     @RequestMapping(method = RequestMethod.PUT, value = "/modifynupi/{nupinumber}/{searchtype}")
     @ResponseBody
     public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber, @PathVariable String searchtype) {
@@ -3072,7 +3079,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                return new ResponseEntity<>(errorBody, headers, responseCode);
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
             }
         } catch(Exception ex) {
             System.err.println("Modify NUPI: ERROR: " + ex.getMessage());
