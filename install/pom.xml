@@ -19,7 +19,7 @@
 	</parent>
 
 	<artifactId>kenyaemr-install</artifactId>
-  <version>18..0</version>
+  <version>18.8.0</version>
 	<packaging>pom</packaging>
 	<name>KenyaEMR Installation (optional)</name>
 	<description>Installation tools for KenyaEMR</description>
