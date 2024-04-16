@@ -89,10 +89,7 @@
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.moh705A"/>
 				<ref bean="kenyaemr.common.report.moh705B"/>
-<<<<<<< HEAD
-=======
 				<ref bean="kenyaemr.common.report.717" />
->>>>>>> 34fc337ba (Add 717 report)
 				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList"/>
 				<ref bean="kenyaemr.common.report.moh204A"/>
 				<ref bean="kenyaemr.common.report.moh204B"/>
