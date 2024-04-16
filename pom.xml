@@ -73,7 +73,7 @@
         <webservicesRestVersion>2.26.0</webservicesRestVersion>
         <reportingcompatibilityVersion>2.0.9</reportingcompatibilityVersion>
         <legacyUiVersion>1.15.0</legacyUiVersion>
-        <bahmniAppointmentsVersion>2.0.0-SNAPSHOT</bahmniAppointmentsVersion>
+        <bahmniAppointmentsVersion>1.5.0-SNAPSHOT</bahmniAppointmentsVersion>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
@@ -449,8 +449,10 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>format-headers</id>
+                        <phase>process-sources</phase>
                         <goals>
-                            <goal>check</goal>
+                            <goal>format</goal>
                         </goals>
                     </execution>
                 </executions>

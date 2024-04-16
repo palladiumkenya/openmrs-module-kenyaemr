@@ -188,7 +188,7 @@ public class AdxViewFragmentController {
             mappingDetails.get("datasets").getElements();
 
             w.append("\t").append("<group orgUnit=\"" + mfl + "\" period=\"" + isoDateFormat.format(reportDate)
-                    + "/P1M\" dataSet=\"" + datasetName + "\">\n");
+                    + "/P1M\" dataSetId=\"" + datasetName + "\">\n");
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
 
@@ -221,7 +221,7 @@ public class AdxViewFragmentController {
                 FacilityReportDataset ds = facilityreportingService.getDatasetById(datasetId);
 
                 w.append("\t").append("<group orgUnit=\"" + mfl + "\" period=\"" + isoDateFormat.format(reportDate)
-                        + "/P1M\" dataSet=\"" + ds.getMapping() + "\">\n");
+                        + "/P1M\" dataSetId=\"" + ds.getMapping() + "\">\n");
                 for (DatasetIndicatorDetails row : e.getIndicators()) {
                     if (row.getValue() != null && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
                         String name = row.getName();
@@ -362,7 +362,7 @@ public class AdxViewFragmentController {
                     // add group attributes
                     eDataset.setAttribute("orgUnit", mfl);
                     eDataset.setAttribute("period", isoDateFormat.format(reportDate).concat("/P1M"));
-                    eDataset.setAttribute("dataSet", datasetName);
+                    eDataset.setAttribute("dataSetId", datasetName);
 
                     for (DatasetIndicatorDetails row : e.getIndicators()) {
                         if (row.getValue() != null && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
