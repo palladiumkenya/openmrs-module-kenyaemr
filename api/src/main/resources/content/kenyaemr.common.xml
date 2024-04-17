@@ -53,6 +53,7 @@
 		<property name="commonReports">
 			<set>
 				<ref bean="kenyaemr.etl.common.report.fmap"/>
+				<ref bean="kenyaemr.etl.common.report.fcdrr"/>
 				<ref bean="kenyaemr.common.report.artDrug" />
 				<ref bean="kenyaemr.common.report.etlMissedAppointments" />
 				<ref bean="kenyaemr.etl.common.report.moh731"/>
@@ -609,6 +610,18 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:fmaps_template.xls" />
+	</bean>
+
+	<!--- Pharmacy FCDRR -->
+	<bean id="kenyaemr.etl.common.report.fcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="124e0878-4f8f-4ad4-b792-790fefb66d10" />
+		<property name="name" value="FCDRR MOH-734Ba Report" />
+		<property name="description" value="FCDRR MOH-734Ba Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:fcdrr_template.xls" />
 	</bean>
 
 	<bean id="kenyaemr.hiv.report.htsRegister" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
