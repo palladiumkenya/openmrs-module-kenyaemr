@@ -1185,8 +1185,8 @@ public class ETLMoh731GreenCardCohortLibrary {
                 "from kenyaemr_etl.etl_hts_referral_and_linkage r\n" +
                 "where (r.ccc_number != '' or r.ccc_number IS NOT NULL)\n" +
                 "  and (r.facility_linked_to != '' or r.facility_linked_to IS NOT NULL)\n" +
-                "  and (r.art_start_date is not null or r.art_start_date != '')\n" +
-                "  and (r.enrollment_date is not null or r.enrollment_date != '')\n" +
+                "  and r.art_start_date is not null \n" +
+                "  and r.enrollment_date is not null \n" +
                 "  and r.visit_date between date_sub(date(DATE_SUB(date(:endDate), INTERVAL DAYOFMONTH(date(:endDate)) - 1 DAY)),\n" +
                 "                                    interval 3 MONTH) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();

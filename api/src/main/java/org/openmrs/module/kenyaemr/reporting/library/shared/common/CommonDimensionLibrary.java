@@ -24,8 +24,12 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 @Component
 public class CommonDimensionLibrary {
 
+
+    private final CommonCohortLibrary commonCohortLibrary;
     @Autowired
-    private CommonCohortLibrary commonCohortLibrary;
+    public CommonDimensionLibrary(CommonCohortLibrary commonCohortLibrary) {
+        this.commonCohortLibrary = commonCohortLibrary;
+    }
 
     /**
      * Gender dimension
@@ -45,11 +49,14 @@ public class CommonDimensionLibrary {
      */
     public CohortDefinitionDimension standardAgeGroups() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
-        dim.setName("age groups (<1, <15, 15+)");
+        dim.setName("age groups (<1, <15, 15+, <5, 5+, 60+)");
         dim.addParameter(new Parameter("onDate", "Date", Date.class));
         dim.addCohortDefinition("<1", map(commonCohortLibrary.agedAtMost(0), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("<15", map(commonCohortLibrary.agedAtMost(14), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("15+", map(commonCohortLibrary.agedAtLeast(15), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("<5", map(commonCohortLibrary.agedAtMost(4), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("5+", map(commonCohortLibrary.agedAtLeast(5), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("60+", map(commonCohortLibrary.agedAtLeast(60), "effectiveDate=${onDate}"));
         return dim;
     }
 
@@ -285,6 +292,46 @@ public CohortDefinitionDimension childAgeGroups() {
         dim.addCohortDefinition(">=1", map(commonCohortLibrary.agedAtLeast(1), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("18-24", map(commonCohortLibrary.agedAtLeastAgedAtMostInMonths(18, 24), "effectiveDate=${onDate}"));
         dim.addCohortDefinition(">2", map(commonCohortLibrary.agedAtLeast(2), "effectiveDate=${onDate}"));
+        return dim;
+    }
+
+    public CohortDefinitionDimension encountersOfMonthPerDay() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("Patient with encounters on date of day");
+        dim.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dim.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dim.addCohortDefinition("1", map(commonCohortLibrary.getPatientsSeenOnDay(0), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("2", map(commonCohortLibrary.getPatientsSeenOnDay(1), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("3", map(commonCohortLibrary.getPatientsSeenOnDay(2), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("4", map(commonCohortLibrary.getPatientsSeenOnDay(3), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("5", map(commonCohortLibrary.getPatientsSeenOnDay(4), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("6", map(commonCohortLibrary.getPatientsSeenOnDay(5), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("7", map(commonCohortLibrary.getPatientsSeenOnDay(6), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("8", map(commonCohortLibrary.getPatientsSeenOnDay(7), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("9", map(commonCohortLibrary.getPatientsSeenOnDay(8), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("10", map(commonCohortLibrary.getPatientsSeenOnDay(9), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("11", map(commonCohortLibrary.getPatientsSeenOnDay(10), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("12", map(commonCohortLibrary.getPatientsSeenOnDay(11), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("13", map(commonCohortLibrary.getPatientsSeenOnDay(12), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("14", map(commonCohortLibrary.getPatientsSeenOnDay(13), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("15", map(commonCohortLibrary.getPatientsSeenOnDay(14), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("16", map(commonCohortLibrary.getPatientsSeenOnDay(15), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("17", map(commonCohortLibrary.getPatientsSeenOnDay(16), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("18", map(commonCohortLibrary.getPatientsSeenOnDay(17), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("19", map(commonCohortLibrary.getPatientsSeenOnDay(18), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("20", map(commonCohortLibrary.getPatientsSeenOnDay(19), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("21", map(commonCohortLibrary.getPatientsSeenOnDay(20), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("22", map(commonCohortLibrary.getPatientsSeenOnDay(21), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("23", map(commonCohortLibrary.getPatientsSeenOnDay(22), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("24", map(commonCohortLibrary.getPatientsSeenOnDay(23), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("25", map(commonCohortLibrary.getPatientsSeenOnDay(24), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("26", map(commonCohortLibrary.getPatientsSeenOnDay(25), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("27", map(commonCohortLibrary.getPatientsSeenOnDay(26), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("28", map(commonCohortLibrary.getPatientsSeenOnDay(27), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("29", map(commonCohortLibrary.getPatientsSeenOnDay(28), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("30", map(commonCohortLibrary.getPatientsSeenOnDay(29), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("31", map(commonCohortLibrary.getPatientsSeenOnDay(30), "startDate=${startDate},endDate=${endDate}"));
+
         return dim;
     }
 }

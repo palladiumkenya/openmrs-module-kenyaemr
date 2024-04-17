@@ -47,7 +47,7 @@ public class EligibleForDysenteryCalculation extends AbstractPatientCalculation 
     public String getFlagMessage() {
         return "Suspected Dysentery case";
     }
-    Integer BLOOD_IN_STOOL = 132494;
+    Integer BLOOD_IN_STOOL = 117671;
     Integer DIARRHEA = 142412;
     Integer SCREENING_QUESTION = 5219;
 

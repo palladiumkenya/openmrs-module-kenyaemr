@@ -21,8 +21,8 @@ public class EmrOpenmrsUrlOverrideController {
 
 	private static final String OPENMRS_HOME_URL = "index.htm";
 	private static final String OPENMRS_LOGIN_URL = "login.htm";
-	private static final String KENYAEMR_HOME_URL = EmrConstants.MODULE_ID + "/home.page";
-	private static final String KENYAEMR_LOGIN_URL = EmrConstants.MODULE_ID + "/login.page";
+	private static final String KENYAEMR_HOME_URL =  "spa/home";
+	private static final String KENYAEMR_LOGIN_URL = "spa/login";
 	private static final String KENYAEMR_FORGOTPASSWORD_URL = EmrConstants.MODULE_ID + "/forgotPassword.page";
 	private static final String KENYAEMR_HELPDIALOG_URL = EmrConstants.MODULE_ID + "/helpDialog.page";
 
@@ -32,7 +32,7 @@ public class EmrOpenmrsUrlOverrideController {
 	 */
 	@RequestMapping("/index.htm")
 	public String showOurHomePage() {
-		return Context.isAuthenticated() ? ("forward:/" + KENYAEMR_HOME_URL) : ("redirect:/" + OPENMRS_LOGIN_URL);
+		return Context.isAuthenticated() ? ("redirect:" + KENYAEMR_HOME_URL) : ("redirect:" + OPENMRS_LOGIN_URL);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class EmrOpenmrsUrlOverrideController {
 	 */
 	@RequestMapping("/login.htm")
 	public String showOurLoginPage() {
-		return Context.isAuthenticated() ? ("redirect:/" + OPENMRS_HOME_URL) : ("forward:/" + KENYAEMR_LOGIN_URL);
+		return Context.isAuthenticated() ? ("redirect:" + OPENMRS_HOME_URL) : ("redirect:" + KENYAEMR_LOGIN_URL);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class EmrOpenmrsUrlOverrideController {
 	 */
 	@RequestMapping("/forgotPassword.form")
 	public String showOurForgotPasswordPage() {
-		return Context.isAuthenticated() ? ("redirect:/" + OPENMRS_HOME_URL) : ("forward:/" + KENYAEMR_FORGOTPASSWORD_URL);
+		return Context.isAuthenticated() ? ("redirect:/" + OPENMRS_HOME_URL) : ("redirect:/" + KENYAEMR_FORGOTPASSWORD_URL);
 	}
 	/**
 	 * Handles requests to helpDialog.form. If user is authenticated they will be redirected to this modules's home

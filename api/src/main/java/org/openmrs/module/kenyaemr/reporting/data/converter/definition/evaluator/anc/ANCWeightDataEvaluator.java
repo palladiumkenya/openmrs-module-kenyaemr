@@ -37,7 +37,7 @@ public class ANCWeightDataEvaluator implements EncounterDataEvaluator {
 
         String qry = "select\n" +
                 "    v.encounter_id,\n" +
-                "    coalesce(v.weight,t.weight) as height\n" +
+                "    coalesce(v.weight,t.weight) as weight\n" +
                 "  from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
                 "    LEFT JOIN kenyaemr_etl.etl_patient_triage t ON v.patient_id = t.patient_id AND date(v.visit_date) = date(t.visit_date)\n" +
                 "  where date(v.visit_date) between date(:startDate) and date(:endDate);";

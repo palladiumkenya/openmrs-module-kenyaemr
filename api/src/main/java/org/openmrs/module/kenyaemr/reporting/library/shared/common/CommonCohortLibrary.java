@@ -34,6 +34,7 @@ import org.openmrs.module.reporting.cohort.definition.EncounterCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.GenderCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.AgeCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.ProgramEnrollmentCohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.common.DurationUnit;
 import org.openmrs.module.reporting.common.SetComparator;
 import org.openmrs.module.reporting.common.TimeQualifier;
@@ -424,6 +425,18 @@ public class CommonCohortLibrary {
 		ContactGenderCohortDefinition cd = new ContactGenderCohortDefinition();
 		cd.setName("males");
 		cd.setMaleIncluded(true);
+		return cd;
+	}
+
+	public CohortDefinition getPatientsSeenOnDay(int day) {
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("Get patients seen on a given day");
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id=e.patient_id"
+				+ " WHERE p.voided= 0 AND e.voided = 0 AND e.encounter_datetime BETWEEN DATE_ADD(:startDate, INTERVAL "
+				+ day + " DAY) AND DATE_ADD(DATE_ADD(DATE_ADD(:startDate, INTERVAL " + day
+				+ " DAY), INTERVAL 23 HOUR), INTERVAL 59 MINUTE) AND e.encounter_datetime <= :endDate");
 		return cd;
 	}
 

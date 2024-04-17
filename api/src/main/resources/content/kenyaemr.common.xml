@@ -90,7 +90,10 @@
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.moh705A"/>
 				<ref bean="kenyaemr.common.report.moh705B"/>
+				<ref bean="kenyaemr.common.report.717" />
 				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList"/>
+				<ref bean="kenyaemr.common.report.moh204A"/>
+				<ref bean="kenyaemr.common.report.moh204B"/>
 			</set>
 		</property>
 	</bean>
@@ -917,7 +920,7 @@
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:moh705A.xls" />
+		<property name="template" value="kenyaemr:MOH705A.xls" />
 	</bean>
 	<bean id="kenyaemr.common.report.moh705B" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="12091a6a-69dc-437c-be88-90dfd31c3b70" />
@@ -927,7 +930,17 @@
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:moh705B.xls" />
+		<property name="template" value="kenyaemr:MOH_705B.xls" />
+	</bean>
+	<bean id="kenyaemr.common.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="b4b6feab-f8d5-4cdd-95f8-5dba6f959471" />
+		<property name="name" value="MOH 717" />
+		<property name="description" value="MOH 717 Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:MOH_717.xls" />
 	</bean>
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
 	<bean id="kenyaemr.common.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
@@ -941,5 +954,27 @@
 		</property>
 		<property name="template" value="kenyaemr:dmi/idsr.xls" />
 		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:dysentery | sheet:4,row:6,dataset:cholera  | sheet:5,row:6,dataset:ili | sheet:6,row:6,dataset:sari  | sheet:7,row:6,dataset:riftvalleyFever | sheet:8,row:6,dataset:malaria | sheet:9,row:6,dataset:chikungunya | sheet:10,row:6,dataset:poliomyelitis | sheet:11,row:6,dataset:viralHaemorrhagicFever | sheet:12,row:6,dataset:measles" />
+	</bean>
+	<bean id="kenyaemr.common.report.moh204A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="9902f845-8079-484f-8060-e3cf4f5d0f6f" />
+		<property name="name" value="MOH 204A Outpatient Register" />
+		<property name="description" value="MOH 204A Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh204A.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204A" />
+	</bean>
+	<bean id="kenyaemr.common.report.moh204B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="c4f2b41d-8ead-4776-8cd1-bd559b990608" />
+		<property name="name" value="MOH 204B Outpatient Register" />
+		<property name="description" value="MOH 204B Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh204B.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
 	</bean>
 </beans>

@@ -62,7 +62,7 @@ public class EligibleForHaemorrhagicCalculation extends AbstractPatientCalculati
         return "Suspected Haemorrhagic Fever";
     }
     Integer FEVER = 140238;
-    Integer BLEEDING_TENDENCIES = 159339;  
+    Integer BLEEDING_TENDENCIES = 162628;  
     Integer SCREENING_QUESTION = 5219;
 
     @Override

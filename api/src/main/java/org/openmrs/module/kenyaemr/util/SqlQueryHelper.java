@@ -63,7 +63,7 @@ public class SqlQueryHelper {
         List<String> paramNamesFromPlaceHolders = getParamNamesFromPlaceHolders(finalQueryString);
         String statement = transformIntoPreparedStatementFormat(finalQueryString);
         PreparedStatement preparedStatement = conn.prepareStatement(statement);
-        if(params != null && params.size() > 0 ){
+        if(params != null  ){
             int i=1;
             for (String paramName : paramNamesFromPlaceHolders) {
                 String paramValue = params.get(paramName)[0];

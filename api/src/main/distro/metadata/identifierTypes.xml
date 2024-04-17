@@ -29,4 +29,5 @@
 	<ref key="ALIEN_ID_NUMBER" uuid="1c7d0e5b-2068-4816-a643-8de83ab65fbf" />
 	<ref key="DRIVING_LICENSE" uuid="ca125004-e8af-445d-9436-a43684150f8b" />
 	<ref key="RECENCY_TESTING_ID" uuid="fd52829a-75d2-4732-8e43-4bff8e5b4f1a" />
+	<ref key="SOCIAL_HEALTH_INSURANCE_NUMBER" uuid="52c3c0c3-05b8-4b26-930e-2a6a54e14c90" />
 </refs>

@@ -9,10 +9,14 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH705;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils.DiagnosisLists;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
 
@@ -28,20 +32,21 @@ public class MOH705IndicatorLibrary {
 	/**
 	 * Diagnosis
 	 */
-	public CohortIndicator diagnosis(Integer diagnosis, String age) {
-		return cohortIndicator("Diagnosis", ReportUtils.map(moh705CohortLibrary.diagnosis(diagnosis,age), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator diagnosis(List<Integer> diagnosislist, String age) {
+		return cohortIndicator("Diagnosis", ReportUtils.map(moh705CohortLibrary.diagnosis(diagnosislist,age), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * Other Diagnosis under five
 	 */
 	public CohortIndicator allOtherDiseasesUnderFive(String age) {
-		return cohortIndicator("Other Under Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("Other Under Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age, StringUtils.join(DiagnosisLists.getAllOtherDiseasesListForChildren(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * Other Diagnosis Over five
 	 */
 	public CohortIndicator allOtherDiseasesAboveFive(String age) {
-		return cohortIndicator("Other Above Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age), "startDate=${startDate},endDate=${endDate}"));
+
+		return cohortIndicator("Other Above Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age, StringUtils.join(DiagnosisLists.getAllOtherDiseasesListForChildren(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	public CohortIndicator newAttendances(String age) {
@@ -49,6 +54,12 @@ public class MOH705IndicatorLibrary {
 	}
 	public CohortIndicator reAttendances(String age) {
 		return cohortIndicator("Re attendances", ReportUtils.map(moh705CohortLibrary.reAttendances(age), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator referralsFromOtherFacilities(String age) {
+		return cohortIndicator("referralsFromOtherFacilities", ReportUtils.map(moh705CohortLibrary.referralsFromOtherFacilities(age), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator referralsToOtherFacilities(String age) {
+		return cohortIndicator("referralsToOtherFacilities", ReportUtils.map(moh705CohortLibrary.referralsToOtherFacilities(age), "startDate=${startDate},endDate=${endDate}"));
 	}
 }
 

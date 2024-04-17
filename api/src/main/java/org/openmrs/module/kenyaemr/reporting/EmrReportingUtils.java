@@ -25,7 +25,8 @@ import java.util.Map;
 /**
  * Utility methods for reporting
  */
-public class EmrReportingUtils {
+public class 
+EmrReportingUtils {
 
 	/**
 	 * Creates a new cohort indicator

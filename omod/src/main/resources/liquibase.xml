@@ -251,29 +251,17 @@
 		</delete>
 	</changeSet>
 
-	<!--Adding scheduled get NUPI for all patients task-->
-	<!-- <changeSet id="${project.parent.artifactId}-20221025-085300" author="pwaweru">
+	<changeSet id="${project.parent.artifactId}-20240315-1044" author="aojwang">
 		<preConditions onFail="MARK_RAN">
 			<sqlCheck expectedResult="0">
-				SELECT COUNT(*) FROM scheduler_task_config
-				WHERE schedulable_class = 'org.openmrs.module.kenyaemr.task.GetNUPIforAllTask'
-				And name = 'Get NUPI for all Patients Task'
+				SELECT COUNT(*) FROM global_property
+				WHERE property = 'bedManagement.sqlGet.patientListForAdmission'
 			</sqlCheck>
 		</preConditions>
-		<comment>Inserting Get NUPI for all Patients Task into 'schedule_task_config' table</comment>
-		<insert tableName="scheduler_task_config">
-			<column name="name" value="Get NUPI for all Patients Task" />
-			<column name="description" value="Gets NUPI for all Patients" />
-			<column name="schedulable_class" value="org.openmrs.module.kenyaemr.task.GetNUPIforAllTask" />
-			<column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
-			<column name="start_time" valueDate="2022-10-25T09:59:59" />
-			<column name="repeat_interval" value="7200" />
-			<column name="date_created" valueDate="CURRENT_TIMESTAMP" />
-			<column name="created_by" value="1" />
-			<column name="start_on_startup" value="1" />
-			<column name="started" value="0" />
-			<column name="uuid" value="00faad52-02cb-4df5-b9e4-ab3ee07abe4b" />
-		</insert>
-	</changeSet> -->
+		<comment>
+			Query for getting list of patients waiting for ward admission
+		</comment>
+		<sqlFile splitStatements="false" path="PatientListForWardAdmission.sql"/>
+	</changeSet>
 
 </databaseChangeLog>

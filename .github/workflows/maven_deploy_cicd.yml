@@ -4,7 +4,7 @@ on:
   # Manually triggered workflow using the "Run workflow" button
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master,openmrs-2.6.x-upgrade ]
 
 jobs:
   publish:

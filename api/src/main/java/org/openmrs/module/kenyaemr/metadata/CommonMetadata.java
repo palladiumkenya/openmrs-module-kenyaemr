@@ -62,6 +62,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String HIV_SELF_TEST = "8b706d42-b4ae-4b3b-bd83-b14f15294362";
 		public static final String VMMC_PROCEDURE = "35c6fcc2-960b-11ec-b909-0242ac120002" ;
 		public static final String GAD_7 = "899d64ad-be13-4071-a879-2153847206b7";
+		public static final String MAT_CLINICAL_ENCOUNTER = "c3518485-ee22-4a47-b6d4-6d0e8f297b02";
 		public static final String ILI_SURVEILLANCE = "f60910c7-2edd-4d93-813c-0e57095f892f";
 		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
 	}
@@ -112,6 +113,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ALIEN_ID_NUMBER = Metadata.IdentifierType.ALIEN_ID_NUMBER;
 		public static final String DRIVING_LICENSE = Metadata.IdentifierType.DRIVING_LICENSE;
 		public static final String RECENCY_TESTING_ID = Metadata.IdentifierType.RECENCY_TESTING_ID;
+		public static final String SOCIAL_HEALTH_INSURANCE_NUMBER = Metadata.IdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER;
 	}
 
 	public static final class _PersonAttributeType {
@@ -188,6 +190,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Cervical cancer screening", "Cervical cancer screening", _EncounterType.CACX_SCREENING));
 		install(encounterType("HIV self testing", "Self testing screening", _EncounterType.HIV_SELF_TEST));
 		install(encounterType("Oncology screening", "Oncology screening encounter type", _EncounterType.ONCOLOGY_SCREENING));
+		install(encounterType("MAT Clinical Encounter", "MAT Clinical Encounter", _EncounterType.MAT_CLINICAL_ENCOUNTER));
 		install(encounterType("ILI Surveillance", "ILI Surveillance encounter type", _EncounterType.ILI_SURVEILLANCE));
 		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
 
@@ -294,6 +297,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.DRIVING_LICENSE));
 		install(patientIdentifierType("Recency Testing ID", "Recency Testing ID", "", "Allows for alphanumeric format",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.RECENCY_TESTING_ID));
+		install(patientIdentifierType("Social Health Insurance Number", "Social Health Insurance Number", "", "Allows for alphanumeric format",
+				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER));
 
 
 		install(personAttributeType("Telephone contact", "Telephone contact number",

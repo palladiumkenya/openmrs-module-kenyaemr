@@ -1,11 +1,11 @@
 name: deploy to prod 8600
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 2.x ]
 jobs:
-
   build:
-    name: Deploy
+    name: deploying to 2.x instance
+    if: github.ref == 'refs/heads/2.x'
     runs-on: ubuntu-latest
     steps:
     - name: executing remote connection
@@ -23,7 +23,7 @@ jobs:
           sudo chown -R cicd2:cicd2 openmrs-module-kenyaemr
           git config --global --add safe.directory /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
           cd /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
-          git clone https://github.com/palladiumkenya/openmrs-module-kenyaemr.git /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
+          git clone -b 2.x https://github.com/palladiumkenya/openmrs-module-kenyaemr.git /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
           sudo chown -R cicd2:cicd2 /apps/github-workflows/kenyaemr-modules/openmrs-module-kenyaemr
           git status
           mvn license:format
@@ -35,3 +35,35 @@ jobs:
           sudo chmod 755 /var/lib/OpenMRS/modules/*.omod
           sudo systemctl stop tomcat
           sudo systemctl start tomcat
+
+  dev_server_deployment:
+    name: deploying to 3.x dev instance
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote connection
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CICD_HOST }}
+        username: ${{ secrets.CICD_USERNAME }}
+        key: ${{ secrets.CICD_SECRET }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 200m
+        script: |
+          cd /apps/githubworkflows/kenyaemr-modules
+          sudo rm -rf openmrs-module-kenyaemr
+          sudo mkdir openmrs-module-kenyaemr
+          sudo chown -R cicd:cicd openmrs-module-kenyaemr
+          git config --global --add safe.directory /apps/githubworkflows/kenyaemr-modules/openmrs-module-kenyaemr
+          cd /apps/githubworkflows/kenyaemr-modules/openmrs-module-kenyaemr
+          git clone -b master https://github.com/palladiumkenya/openmrs-module-kenyaemr.git .
+          git status
+          mvn license:format
+          sudo mvn clean install -DskipTests
+          sudo rm -rf /var/lib/OpenMRS/modules/kenyaemr-*.omod
+          sudo cp -r /apps/githubworkflows/kenyaemr-modules/openmrs-module-kenyaemr/omod/target/kenyaemr-*.omod /var/lib/OpenMRS/modules/
+          sudo chown -R tomcat:tomcat /var/lib/OpenMRS/modules/
+          sudo chmod +r /var/lib/OpenMRS/modules/*.omod
+          sudo chmod 755 /var/lib/OpenMRS/modules/*.omod
+          sudo service tomcat9 restart 
+
