@@ -25,7 +25,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "SELECT patient_id FROM patient p "
+                "SELECT p.patient_id FROM patient p "
                 + " INNER JOIN encounter e ON p.patient_id=e.patient_id "
                 + " WHERE e.encounter_datetime <= :endDate "
                 + " AND p.voided = 0 AND e.voided = 0"
