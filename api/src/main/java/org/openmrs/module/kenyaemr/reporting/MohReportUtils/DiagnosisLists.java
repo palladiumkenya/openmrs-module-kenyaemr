@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils;
+package org.openmrs.module.kenyaemr.reporting.MohReportUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.openmrs.Concept;
 
-import static org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils.DiagnosisConcepts.getConcept;
+import static org.openmrs.module.kenyaemr.reporting.MohReportUtils.DiagnosisConcepts.getConcept;
 
 public class DiagnosisLists {
 

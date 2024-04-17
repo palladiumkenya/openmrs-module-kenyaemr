@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.shared.common;
 
+import org.openmrs.module.kenyaemr.reporting.MohReportUtils.ReportingUtils;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.indicator.dimension.CohortDefinitionDimension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,6 +333,17 @@ public CohortDefinitionDimension childAgeGroups() {
         dim.addCohortDefinition("30", map(commonCohortLibrary.getPatientsSeenOnDay(29), "startDate=${startDate},endDate=${endDate}"));
         dim.addCohortDefinition("31", map(commonCohortLibrary.getPatientsSeenOnDay(30), "startDate=${startDate},endDate=${endDate}"));
 
+        return dim;
+    }
+    public CohortDefinitionDimension newOrRevisits() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("New or revisits patients");
+        dim.addParameter(new Parameter("startDate", "After date", Date.class));
+        dim.addParameter(new Parameter("endDate", "Before date", Date.class));
+        dim.addCohortDefinition("RVT",
+                map(ReportingUtils.reAttendances(">=0"), "startDate=${startDate},endDate=${endDate}"));
+        dim.addCohortDefinition("NEW",
+                map(ReportingUtils.newAttendances(">=0"), "startDate=${startDate},endDate=${endDate}"));
         return dim;
     }
 }

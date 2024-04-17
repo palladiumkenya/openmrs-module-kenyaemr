@@ -26,7 +26,7 @@ public class Moh717IndicatorLibrary {
         this.moh717CohortLibrary = moh717CohortLibrary;
     }
 
-    public CohortIndicator getAllPatients() {
-        return cohortIndicator("All Patients", ReportUtils.map(moh717CohortLibrary.getAllPatients(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator getAllPatientsWithEncountersWithinReportingPeriod() {
+        return cohortIndicator("All Patients with encounters with period", ReportUtils.map(moh717CohortLibrary.getAllPatientsWithEncountersWithinReportingPeriod(), "endDate=${endDate}"));
     }
 }

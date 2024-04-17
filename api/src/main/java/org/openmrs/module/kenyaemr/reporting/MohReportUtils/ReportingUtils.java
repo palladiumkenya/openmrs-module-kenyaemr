@@ -7,9 +7,10 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils;
+package org.openmrs.module.kenyaemr.reporting.MohReportUtils;
 
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -59,6 +60,41 @@ public class ReportingUtils {
 		query.addParameter(new Parameter("endDate", "End Date", Date.class));
 		query.setQuery("SELECT encounter_id FROM encounter WHERE encounter_datetime BETWEEN :startDate AND :endDate");
 		return query;
+	}
+
+	/**
+	 * MOH705
+	 * New Attendances
+	 * @return
+	 */
+	public static CohortDefinition newAttendances(String age) {
+		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
+				"WHERE v.visit_type = 'New visit' and date(v.visit_date) between date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("newAttendances");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("Patients who are new attendances");
+		return cd;
+	}
+	/**
+	 * MOH705
+	 * Re-Attendances
+	 * @return
+	 */
+	public static CohortDefinition reAttendances(String age) {
+		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
+				"WHERE v.visit_type = 'Revisit' and date(v.visit_date) between date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("reAttendances");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("Patients who are revisit attendances");
+		return cd;
 	}
 	
 }

@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils;
+package org.openmrs.module.kenyaemr.reporting.MohReportUtils;
 
 public class OtherBitesDiagnosisConstants {
 	

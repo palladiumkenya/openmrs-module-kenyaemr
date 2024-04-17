@@ -11,7 +11,7 @@ package org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH705;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.kenyacore.report.ReportUtils;
-import org.openmrs.module.kenyaemr.reporting.Moh705ReportUtils.DiagnosisLists;
+import org.openmrs.module.kenyaemr.reporting.MohReportUtils.DiagnosisLists;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

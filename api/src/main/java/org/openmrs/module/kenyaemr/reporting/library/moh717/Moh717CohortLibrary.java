@@ -19,12 +19,17 @@ import java.util.Date;
 @Component
 public class Moh717CohortLibrary {
 
-    public CohortDefinition getAllPatients() {
+    public CohortDefinition getAllPatientsWithEncountersWithinReportingPeriod() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("All patients");
+        sql.setName("Patients with encounters within date period");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT patient_id FROM patient");
+        sql.setQuery(
+                "SELECT patient_id FROM patient p "
+                + " INNER JOIN encounter e ON p.patient_id=e.patient_id "
+                + " WHERE e.encounter_datetime <= :endDate "
+                + " AND p.voided = 0 AND e.voided = 0"
+        );
 
         return sql;
     }
