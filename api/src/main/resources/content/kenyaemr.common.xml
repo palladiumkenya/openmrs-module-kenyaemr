@@ -87,13 +87,17 @@
 				<ref bean="kenyaemr.common.report.moh711"/>
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
-				<ref bean="kenyaemr.common.report.moh705A"/>
-				<ref bean="kenyaemr.common.report.moh705B"/>
-				<ref bean="kenyaemr.common.report.717" />				
-				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList"/>
-				<ref bean="kenyaemr.common.report.moh204A"/>
-				<ref bean="kenyaemr.common.report.moh204B"/>
-				<ref bean="kenyaemr.common.report.facility.monthly.collection" />
+			</set>
+		</property>
+		<property name="ehrReports">
+			<set>
+				<ref bean="kenyaemr.ehrReports.report.moh705A" />
+				<ref bean="kenyaemr.ehrReports.report.moh705B" />
+				<ref bean="kenyaemr.ehrReports.report.717" />
+				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
+				<ref bean="kenyaemr.ehrReports.report.moh204A" />
+				<ref bean="kenyaemr.ehrReports.report.moh204B" />
+				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
 			</set>
 		</property>
 	</bean>
@@ -900,7 +904,7 @@
 		<property name="template" value="kenyaemr:sgbv/sgbv_register.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:SGBVRegister" />
 	</bean>
-	<bean id="kenyaemr.common.report.moh705A" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh705A" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="71ec2615-404c-4306-b456-506c1ad9df51" />
 		<property name="name" value="MOH 705A Outpatient summary" />
 		<property name="description" value="MOH 705A Register" />
@@ -910,7 +914,7 @@
 			</set></property>
 		<property name="template" value="kenyaemr:MOH705A.xls" />
 	</bean>
-	<bean id="kenyaemr.common.report.moh705B" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh705B" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="12091a6a-69dc-437c-be88-90dfd31c3b70" />
 		<property name="name" value="MOH 705B Outpatient summary" />
 		<property name="description" value="MOH 705B Register" />
@@ -921,7 +925,7 @@
 		<property name="template" value="kenyaemr:MOH705B.xls" />
 	</bean>
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
-	<bean id="kenyaemr.common.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="a90d0a13-f122-43b7-92c5-ad43a0abd2ca" />
 		<property name="name" value="IDSR Suspected case list" />
 		<property name="description" value="IDSR Suspected case list" />
@@ -933,7 +937,7 @@
 		<property name="template" value="kenyaemr:dmi/idsr.xls" />
 		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:dysentery | sheet:4,row:6,dataset:cholera  | sheet:5,row:6,dataset:ili | sheet:6,row:6,dataset:sari  | sheet:7,row:6,dataset:riftvalleyFever | sheet:8,row:6,dataset:malaria | sheet:9,row:6,dataset:chikungunya | sheet:10,row:6,dataset:poliomyelitis | sheet:11,row:6,dataset:viralHaemorrhagicFever | sheet:12,row:6,dataset:measles" />
 	</bean>
-	<bean id="kenyaemr.common.report.moh204A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh204A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="9902f845-8079-484f-8060-e3cf4f5d0f6f" />
 		<property name="name" value="MOH 204A Outpatient Register" />
 		<property name="description" value="MOH 204A Register" />
@@ -944,7 +948,7 @@
 		<property name="template" value="kenyaemr:moh204A.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204A" />
 	</bean>
-	<bean id="kenyaemr.common.report.moh204B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh204B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="c4f2b41d-8ead-4776-8cd1-bd559b990608" />
 		<property name="name" value="MOH 204B Outpatient Register" />
 		<property name="description" value="MOH 204B Register" />
@@ -955,7 +959,7 @@
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
 	</bean>
-	<bean id="kenyaemr.common.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
 		<property name="name" value="Monthly Collection by Facility" />
 		<property name="description" value="Monthly Collection Summary by Facility" />
@@ -967,7 +971,7 @@
 		<property name="template" value="kenyaemr:financials/monthly_revenue_summary.xls" />
 		<property name="repeatingSection" value="sheet:1,row:12,dataset:M1" />
 	</bean>
-	<bean id="kenyaemr.common.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="b4b6feab-f8d5-4cdd-95f8-5dba6f959471" />
 		<property name="name" value="MOH 717" />
 		<property name="description" value="MOH 717 Report" />

@@ -53,8 +53,13 @@ public class ReportsHomePageController {
 		for (ReportDescriptor report : reportManager.getCohortAnalysisReports(currentApp)) {
 			cohortAnalysis.add(ui.simplifyObject(report));
 		}
+		List<SimpleObject> ehrReports = new ArrayList<SimpleObject>();
+		for (ReportDescriptor report : reportManager.getEhrReports(currentApp)) {
+			ehrReports.add(ui.simplifyObject(report));
+		}
 		reportsByProgram.put("Common", common);
 		reportsByProgram.put("Cohort Analysis", cohortAnalysis);
+		reportsByProgram.put("EHR Reports", ehrReports);
 
 		for (ProgramDescriptor programDescriptor : programManager.getAllProgramDescriptors()) {
 			Program program = programDescriptor.getTarget();
