@@ -89,10 +89,11 @@
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.moh705A"/>
 				<ref bean="kenyaemr.common.report.moh705B"/>
-				<ref bean="kenyaemr.common.report.717" />
+				<ref bean="kenyaemr.common.report.717" />				
 				<ref bean="kenyaemr.common.report.IDSRSuspectedCaseList"/>
 				<ref bean="kenyaemr.common.report.moh204A"/>
 				<ref bean="kenyaemr.common.report.moh204B"/>
+				<ref bean="kenyaemr.common.report.facility.monthly.collection" />
 			</set>
 		</property>
 	</bean>
@@ -917,17 +918,7 @@
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:MOH_705B.xls" />
-	</bean>
-	<bean id="kenyaemr.common.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
-		<property name="targetUuid" value="b4b6feab-f8d5-4cdd-95f8-5dba6f959471" />
-		<property name="name" value="MOH 717" />
-		<property name="description" value="MOH 717 Report" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.reports" />
-			</set></property>
-		<property name="template" value="kenyaemr:MOH_717.xls" />
+		<property name="template" value="kenyaemr:MOH705B.xls" />
 	</bean>
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
 	<bean id="kenyaemr.common.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
@@ -964,4 +955,27 @@
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
 	</bean>
+	<bean id="kenyaemr.common.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
+		<property name="name" value="Monthly Collection by Facility" />
+		<property name="description" value="Monthly Collection Summary by Facility" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
+		<property name="template" value="kenyaemr:financials/monthly_revenue_summary.xls" />
+		<property name="repeatingSection" value="sheet:1,row:12,dataset:M1" />
+	</bean>
+	<bean id="kenyaemr.common.report.717" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="b4b6feab-f8d5-4cdd-95f8-5dba6f959471" />
+		<property name="name" value="MOH 717" />
+		<property name="description" value="MOH 717 Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:MOH_717.xls" />
+	</bean>
+	
 </beans>
