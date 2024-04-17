@@ -65,6 +65,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MAT_CLINICAL_ENCOUNTER = "c3518485-ee22-4a47-b6d4-6d0e8f297b02";
 		public static final String ILI_SURVEILLANCE = "f60910c7-2edd-4d93-813c-0e57095f892f";
 		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
+		public static final String PROCEDURE_RESULTS = "99a7a6ba-59f4-484e-880d-01cbeaead62f";
 	}
 
 	public static final class _Form {
@@ -193,6 +194,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("MAT Clinical Encounter", "MAT Clinical Encounter", _EncounterType.MAT_CLINICAL_ENCOUNTER));
 		install(encounterType("ILI Surveillance", "ILI Surveillance encounter type", _EncounterType.ILI_SURVEILLANCE));
 		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
+		install(encounterType("Procedure Results", "Procedure outcome encounter type", _EncounterType.PROCEDURE_RESULTS));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
