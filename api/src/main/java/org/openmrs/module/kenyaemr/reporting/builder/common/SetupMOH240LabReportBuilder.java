@@ -22,17 +22,17 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
 import org.openmrs.module.kenyaemr.Metadata;
 import org.openmrs.module.kenyaemr.calculation.library.TelephoneNumberCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.EncounterDatetimeConverter;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.common.TimeQualifier;
 import org.openmrs.module.reporting.data.DataDefinition;
-import org.openmrs.module.reporting.data.converter.BirthdateConverter;
-import org.openmrs.module.reporting.data.converter.DataConverter;
-import org.openmrs.module.reporting.data.converter.ObjectFormatter;
-import org.openmrs.module.reporting.data.converter.ObsValueConverter;
+import org.openmrs.module.reporting.data.converter.*;
+import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.EncountersForPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
@@ -60,6 +60,8 @@ import java.util.List;
 @Component
 @Builds({ "kenyaemr.ehrReports.report.240" })
 public class SetupMOH240LabReportBuilder extends AbstractHybridReportBuilder {
+
+	public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
 
     @Override
     protected Mapped<CohortDefinition> buildCohort(HybridReportDescriptor hybridReportDescriptor,
@@ -102,50 +104,28 @@ public class SetupMOH240LabReportBuilder extends AbstractHybridReportBuilder {
 
         dsd.addColumn("id", new PersonIdDataDefinition(), "");
         dsd.addColumn("identifier", identifierDef, "");
-        dsd.addColumn("Date", getEncounterDate(), "onOrAfter=${startDate},onOrBefore=${endDate+23h}",
-                new EncounterDatetimeConverter());
+        //dsd.addColumn("Date",  new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));		
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("DOB", new BirthdateDataDefinition(), "", new BirthdateConverter("yyyy-MM-dd"));
         dsd.addColumn("age", new AgeDataDefinition(), "");
-        dsd.addColumn("village", getAddress(), "", null);
+		dsd.addColumn("village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
         dsd.addColumn("telephone", new PersonAttributeDataDefinition(personAttributeType), "",
                 null);
         return dsd;
 
     }
 
-
-    private DataDefinition getEncounterDate() {
-        EncounterType labEncounter = Context.getEncounterService().getEncounterTypeByUuid(
-                "17a381d1-7e29-406a-b782-aa903b963c28");
-        EncountersForPatientDataDefinition dsd = new EncountersForPatientDataDefinition();
-        dsd.addParameter(new Parameter("onOrAfter", "After Date", Date.class));
-        dsd.addParameter(new Parameter("onOrBefore", "Before Date", Date.class));
-        dsd.setTypes(Arrays.asList(labEncounter));
-        dsd.setWhich(TimeQualifier.LAST);
-        return dsd;
-    }
-
-    private CohortDefinition getLabOrderEncounter() {
-        EncounterType labEncounter = Context.getEncounterService().getEncounterTypeByUuid(
-                "17a381d1-7e29-406a-b782-aa903b963c28");
+    private CohortDefinition getLabOrderEncounter() {    
         SqlCohortDefinition sqlEncounterQuery = new SqlCohortDefinition();
         sqlEncounterQuery.setName("Get unique lab encounter types");
         sqlEncounterQuery.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sqlEncounterQuery.addParameter(new Parameter("endDate", "End Date", Date.class));
         sqlEncounterQuery
-                .setQuery("SELECT p.patient_id FROM patient p INNER JOIN  encounter e ON p.patient_id=e.patient_id "
-                        + " WHERE e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0 AND p.voided = 0 "
-                        + " AND e.encounter_type IN(" + labEncounter.getEncounterTypeId() + ")");
+                .setQuery("SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
+					"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
+					"                             AND date(x.visit_date) BETWEEN :startDate AND :endDate;");
         return sqlEncounterQuery;
     }
 
-    public static DataDefinition getAddress() {
-        SqlPatientDataDefinition sqlPdfn = new SqlPatientDataDefinition();
-        sqlPdfn.setName("Address");
-        sqlPdfn.setQuery("SELECT p.person_id, REPLACE(CONCAT_WS(' ',pa.address1,pa.address2,pa.city_village,pa.address3,pa.address5,pa.address6), ',','') AS address FROM person p "
-                + " INNER JOIN person_address pa ON p.person_id=pa.person_id ");
-        return sqlPdfn;
-    }
 }

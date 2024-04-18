@@ -24,13 +24,13 @@ public class Moh706LabCohortLibrary {
         sql.setName("Get urine analysis patients - glucose");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id in (159734) AND o.value_coded IN (703,1874,1362,1363,1364,1365) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
-                + " UNION "
-                + " SELECT p.patient_id FROM patient p INNER JOIN encounter e on p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id in (159733) AND o.value_numeric IS NOT NULL "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+        sql.setQuery("SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
+			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
+			"                             WHERE x.lab_test = 1305 AND x.test_result = 1302 AND date(x.visit_date) BETWEEN :startDate AND :endDate\n" +
+			"                            UNION\n" +
+			"                            SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
+			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
+			"                             WHERE x.lab_test = 856 AND x.test_result IS NOT NULL AND date(x.visit_date) BETWEEN :startDate AND :endDate;"
 
         );
         return sql;
