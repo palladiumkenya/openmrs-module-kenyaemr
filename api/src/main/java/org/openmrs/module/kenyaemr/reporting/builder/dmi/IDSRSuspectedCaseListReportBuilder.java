@@ -51,7 +51,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@Builds({"kenyaemr.common.report.IDSRSuspectedCaseList"})
+@Builds({"kenyaemr.ehrReports.report.IDSRSuspectedCaseList"})
 public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";

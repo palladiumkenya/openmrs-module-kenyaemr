@@ -38,7 +38,7 @@ import static org.openmrs.module.kenyaemr.reporting.MohReportUtils.ReportAddonUt
  */
 
 @Component
-@Builds({ "kenyaemr.common.report.717" })
+@Builds({ "kenyaemr.ehrReports.report.717" })
 public class MOH717ReportBuilder extends AbstractReportBuilder {
     private final Moh717CohortLibrary moh717CohortLibrary;
 
