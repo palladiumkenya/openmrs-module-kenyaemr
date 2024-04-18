@@ -36,7 +36,7 @@ import java.util.List;
  * Diagnosis
  */
 @Component
-@Builds({ "kenyaemr.common.report.moh705A" })
+@Builds({ "kenyaemr.ehrReports.report.moh705A" })
 public class MOH705AReportBuilder extends AbstractReportBuilder {
 	static final String AGE_BELOW_FIVE = "<5";
 	static final int DIARRHOEA_WITHOUT_DEHYDRATION = 168737;

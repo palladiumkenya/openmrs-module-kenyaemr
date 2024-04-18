@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@Builds({ "kenyaemr.common.report.facility.monthly.collection" })
+@Builds({ "kenyaemr.ehrReports.report.facility.monthly.collection" })
 public class SetupFacilityMonthlyRevenueCollectionBuilder extends AbstractHybridReportBuilder {
 
     @Override
