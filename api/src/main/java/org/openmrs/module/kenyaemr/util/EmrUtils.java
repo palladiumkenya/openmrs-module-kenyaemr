@@ -21,6 +21,7 @@ import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
@@ -54,6 +55,7 @@ import java.util.List;
  */
 public class EmrUtils {
 	protected static final Log log = LogFactory.getLog(EmrUtils.class);
+	public static String GP_2X_FORMS_WHITELIST = "kenyaemr.2.x.forms.whitelist";
 
 	/**
 	 * Checks whether a date has any time value
@@ -316,5 +318,24 @@ public class EmrUtils {
 		return people;
 	}
 
+	/**
+	 * A temporary solution for whitelisting forms to show in 2.x
+	 * TODO: retire this once all forms are fully moved to o3
+	 * @return
+	 */
+	public static List<String> getFormsToShowInLegacyUI() {
+		GlobalProperty gpFormsWhitelist = Context.getAdministrationService().getGlobalPropertyObject(GP_2X_FORMS_WHITELIST);
+
+		String formsWhiteList = "";
+		List<String> formsList = new ArrayList<String>();
+		if (gpFormsWhitelist != null) {
+			formsWhiteList = gpFormsWhitelist.getPropertyValue();
+			if (StringUtils.isNotBlank(formsWhiteList)) {
+				formsList = Arrays.asList(formsWhiteList.split(","));
+			}
+		}
+		return formsList;
+
+	}
 
 }

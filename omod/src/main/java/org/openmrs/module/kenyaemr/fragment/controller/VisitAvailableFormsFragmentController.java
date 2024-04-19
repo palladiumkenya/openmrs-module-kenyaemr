@@ -16,6 +16,7 @@ import org.openmrs.Visit;
 import org.openmrs.module.appframework.domain.AppDescriptor;
 import org.openmrs.module.kenyacore.form.FormDescriptor;
 import org.openmrs.module.kenyacore.form.FormManager;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.kenyaui.KenyaUiUtils;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -45,9 +46,16 @@ public class VisitAvailableFormsFragmentController {
 
 		List<SimpleObject> availableForms = new ArrayList<SimpleObject>();
 
+		List<String> formsList = EmrUtils.getFormsToShowInLegacyUI();
+
 		for (FormDescriptor descriptor : formManager.getAllUncompletedFormsForVisit(currentApp, visit)) {
-			//Display only active forms
-			if(!descriptor.getTarget().isRetired()) {
+			/**
+			 * Display only active forms
+			 * we filter forms based on the configured whitelist. The idea is to temporarily take care of any partner forms in the add-on modules
+			 * We block everything if no configuration exists i.e. default to an empty whitelist
+			 */
+
+			if(!descriptor.getTarget().isRetired() && formsList.contains(descriptor.getTarget().getUuid())) {
 				availableForms.add(ui.simplifyObject(descriptor.getTarget()));
 			}
 			continue;

@@ -182,4 +182,12 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>kenyaemr.2.x.forms.whitelist</property>
+		<defaultValue></defaultValue>
+		<description>
+			Configures a comma separated list of forms to avail in 2.x KenyaEMR user interface
+		</description>
+	</globalProperty>
+
 </module>
