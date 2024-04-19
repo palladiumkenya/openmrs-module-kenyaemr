@@ -63,16 +63,16 @@ public class ReportAddonUtils {
 		        "state=NEW|age=<5|gender=F", "03");
 		ColumnParameters under5FemaleRevisit = new ColumnParameters("over5FemaleRevisit", "below 5 and revisit",
 		        "state=RVT|age=<5|gender=F", "04");
-		ColumnParameters over5MaleNew = new ColumnParameters("over5MaleNew", "above 5 and new", "state=NEW|age=>5|gender=M",
+		ColumnParameters over5MaleNew = new ColumnParameters("over5MaleNew", "above 5 and new", "state=NEW|age=5+|gender=M",
 		        "05");
 		ColumnParameters over5MaleRevisit = new ColumnParameters("over5MaleRevisit", "above 5 and revisit",
-		        "state=RVT|age=>5|gender=M", "06");
+		        "state=RVT|age=5+|gender=M", "06");
 		ColumnParameters over5FemaleNew = new ColumnParameters("over5MaleNew", "above 5 and new",
-		        "state=NEW|age=>5|gender=F", "07");
+		        "state=NEW|age=5+|gender=F", "07");
 		ColumnParameters over5FemaleRevisit = new ColumnParameters("over5MaleRevisit", "above 5 and revisit",
-		        "state=RVT|age=>5|gender=F", "08");
-		ColumnParameters over60New = new ColumnParameters("over60New", "above 60 and new", "state=NEW|age=>60", "09");
-		ColumnParameters over60Revisit = new ColumnParameters("over60Revisit", "above 60 and revisit", "state=RVT|age=>60",
+		        "state=RVT|age=5+|gender=F", "08");
+		ColumnParameters over60New = new ColumnParameters("over60New", "above 60 and new", "state=NEW|age=60+", "09");
+		ColumnParameters over60Revisit = new ColumnParameters("over60Revisit", "above 60 and revisit", "state=RVT|age=60+",
 		        "10");
 		
 		return Arrays.asList(under5MaleNew, under5MaleRevisit, under5FemaleNew, under5FemaleRevisit, over5MaleNew,
