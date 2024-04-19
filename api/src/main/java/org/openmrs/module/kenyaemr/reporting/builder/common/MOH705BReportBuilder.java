@@ -36,7 +36,7 @@ import java.util.List;
  * Diagnosis
  */
 @Component
-@Builds({"kenyaemr.common.report.moh705B"})
+@Builds({"kenyaemr.ehrReports.report.moh705B"})
 public class MOH705BReportBuilder extends AbstractReportBuilder {
     static final String EQUAL_AND_OVER_FIVE = ">=5";
 	static final int TESTED_MALARIA = 168740;

@@ -49,8 +49,8 @@ public class EligibleForCholeraCalculation extends AbstractPatientCalculation im
         return "Suspected Cholera case";
     }
 
-    Integer VOMITING = 122983;
-    Integer DIARRHEA = 142412;
+    Integer VOMITING = 122983;   
+	Integer WATERY_DIARRHEA = 161887;
     Integer SCREENING_QUESTION = 5219;
 
     @Override
@@ -71,7 +71,7 @@ public class EligibleForCholeraCalculation extends AbstractPatientCalculation im
                 Encounter lastGreenCardEnc = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);   //last greencard followup form
                 ConceptService cs = Context.getConceptService();
                 Concept vomitingResult = cs.getConcept(VOMITING);
-                Concept diarrheaResult = cs.getConcept(DIARRHEA);
+                Concept diarrheaResult = cs.getConcept(WATERY_DIARRHEA);
                 Concept screeningQuestion = cs.getConcept(SCREENING_QUESTION);
                 boolean patientVomitClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, vomitingResult) : false;
                 boolean patientDiarrheaClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;

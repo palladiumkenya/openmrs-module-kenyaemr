@@ -98,7 +98,9 @@
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
 				<ref bean="kenyaemr.ehrReports.report.moh204B" />
 				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
-				<ref bean="kenyaemr.ehrReports.report.fcdrr" />
+				<ref bean="kenyaemr.ehrReports.706.report" />
+				<ref bean="kenyaemr.ehrReports.report.240" />
+        <ref bean="kenyaemr.ehrReports.report.fcdrr" />
 			</set>
 		</property>
 	</bean>
@@ -982,8 +984,29 @@
 			</set></property>
 		<property name="template" value="kenyaemr:MOH_717.xls" />
 	</bean>
-
-	<bean id="kenyaemr.ehrReports.report.fcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.706.report" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="cf9f6e96-bfd4-41c0-8dfe-9807707bbf9d" />
+		<property name="name" value="MOH 706" />
+		<property name="description" value="MOH 706 Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:MOH706.xls" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.240" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="30ca99ad-97a8-47f8-92fd-da2997a64bfb" />
+		<property name="name" value="Laboratory Register - MOH 240" />
+		<property name="description" value="Laboratory Register - MOH 240 Report" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
+		<property name="template" value="kenyaemr:MOH240.xls" />
+		<property name="repeatingSection" value="sheet:3,row:3,dataset:lrr" />
+	</bean>
+  <bean id="kenyaemr.ehrReports.report.fcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="5b59902c-f565-4f9a-8dbb-5624d817e515" />
 		<property name="name" value="FCDRR MOH-734Ba Report" />
 		<property name="description" value="FCDRR MOH-734Ba Report" />

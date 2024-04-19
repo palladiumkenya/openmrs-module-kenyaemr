@@ -51,12 +51,12 @@ public class CholeraCohortDefinitionEvaluator implements CohortDefinitionEvaluat
 		String qry = "select a.patient_id\n" +
 				"from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint, c.complaint_date as complaint_date\n" +
 				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-				"      where c.complaint in (142412,122983)\n" +
+				"      where c.complaint in (161887,122983)\n" +
 				"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
 				"      group by patient_id) a\n" +
 				"         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
 				"where timestampdiff(YEAR,date(d.DOB),coalesce(date(a.complaint_date),date(a.visit_date))) > 2 and FIND_IN_SET(122983, a.complaint) > 0\n" +
-				"  and FIND_IN_SET(142412, a.complaint) > 0;";
+				"  and FIND_IN_SET(161887, a.complaint) > 0;";
 		
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
