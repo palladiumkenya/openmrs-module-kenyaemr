@@ -70,7 +70,7 @@ public class IDSRSuspectedCasesCohortDefinitionEvaluator implements CohortDefini
 				"                            date(t.visit_date) between date(:startDate) and date(:endDate)\n" +
 				"      group by patient_id) a\n" +
 				"where ((FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0)\n" +
-				"   OR (FIND_IN_SET(142412, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
+				"   OR (FIND_IN_SET(161887, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
 				"       timestampdiff(YEAR, date(a.DOB), coalesce(date(a.complaint_date), date(a.visit_date))) > 2)\n" +
 				"   OR (FIND_IN_SET(143264, a.complaint) > 0 AND timestampdiff(DAY, date(a.complaint_date), date(a.visit_date)) < 10 AND\n" +
 				"       date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id IN (1, 3) AND\n" +
