@@ -172,6 +172,8 @@ public class ReportExportPageController {
 		context.addContextValue("facility.name", facility.getTarget().getName());
 		context.addContextValue("facility.code", facility.getMflCode());
 		context.addContextValue("report.name", reportData.getName());
+		context.addContextValue("facility.county", facility.getCounty());
+		context.addContextValue("facility.subCounty", facility.getDistrict());
 
 		Calendar period = new GregorianCalendar();
 		period.setTime(context.containsParameter("startDate") ? (Date) context.getParameterValue("startDate") : context.getEvaluationDate());
