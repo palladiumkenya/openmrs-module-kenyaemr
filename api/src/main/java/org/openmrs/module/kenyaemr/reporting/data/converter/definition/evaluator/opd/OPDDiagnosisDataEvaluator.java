@@ -37,28 +37,15 @@ public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
+		String qry = "select\n" +
 			"    v.encounter_id,\n" +
-			"    (case ed.diagnosis_coded\n" +
-			"         when 168737 then 'DIARRHOEA_WITH_DEHYDRATION'\n" +
-			"         when 166569 then 'DIARRHOEA_WITH_SOME_DEHYDRATION'\n" +
-			"         when 168736 then 'DIARRHOEA_WITH_SEVERE_DEHYDRATION'\n" +
-			"         when 145622 then 'CHOLERA'\n" +
-			"         when 152 then 'DYSENTRY'\n" +
-			"         when 117889 then 'GASTROENTERITIS'\n" +
-			"         when 114100 then 'PNEUMONIA'\n" +
-			"         when 168738 then 'SEVERE_PNEUMONIA'\n" +
-			"         when 123093 then 'UPPER_RESPIRATORY_TRACT_INFECTIONS'\n" +
-			"         when 135556 then 'LOWER_RESPIRATORY_TRACT_INFECTIONS'\n" +
-			"         when 121375 then 'ASTHMA'\n" +
-			"         when 168739 then 'PRESUMED_TUBERCULOSIS'\n" +
-			"         when 166623 then 'SUSPECTED_MALARIA'\n" +
-			"         when 168740 then 'TESTED_FOR_MALARIA'\n" +
-			"         when 160148 then 'CONFIRMED_MALARIA' end) as mnci_diagnosis\n" +
+			"    con.name as mnci_diagnosis\n" +
 			"from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"         LEFT JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id and date(ed.date_created)between date(:startDate) and date(:endDate)\n" +
-			"         LEFT JOIN kenyaemr_etl.etl_laboratory_extract x ON v.patient_id = x.patient_id AND date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"where date(v.visit_date) between date(:startDate) and date(:endDate);\n";
+			"              inner join (select\n" +
+			"                              cn.name, cn.date_created, ed.patient_id\n" +
+			"                          from encounter_diagnosis ed\n" +
+			"                                   inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
+			") con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
