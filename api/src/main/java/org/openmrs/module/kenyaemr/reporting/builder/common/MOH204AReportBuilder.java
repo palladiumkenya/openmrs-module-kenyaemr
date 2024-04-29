@@ -117,9 +117,9 @@ public class MOH204AReportBuilder extends AbstractReportBuilder {
 		OPDMalariaAssessmentDataDefinition opdMalariaAssessmentDataDefinition = new OPDMalariaAssessmentDataDefinition();
 		opdMalariaAssessmentDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdMalariaAssessmentDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDMNCIDiagnosisDataDefinition opdMNCIDiagnosisDataDefinition = new OPDMNCIDiagnosisDataDefinition();
-		opdMNCIDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdMNCIDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		OPDDiagnosisDataDefinition opdDiagnosisDataDefinition = new OPDDiagnosisDataDefinition();
+		opdDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		opdDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		OPDTracerDrugsPrescribedDataDefinition opdTracerDrugsPrescribedDataDefinition = new OPDTracerDrugsPrescribedDataDefinition();
 		opdTracerDrugsPrescribedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdTracerDrugsPrescribedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -170,7 +170,7 @@ public class MOH204AReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Danger signs",opdDangerSignsDataDefinition, paramMapping);
 		dsd.addColumn("Duration",opdComplaintDurationDataDefinition, paramMapping);
 		dsd.addColumn("Malaria",opdMalariaAssessmentDataDefinition, paramMapping);
-		dsd.addColumn("IMNCI Classification Diagnosis",opdMNCIDiagnosisDataDefinition, paramMapping);
+		dsd.addColumn("IMNCI Classification Diagnosis",opdDiagnosisDataDefinition, paramMapping);
 		dsd.addColumn("Tracer Drugs Prescribed",opdTracerDrugsPrescribedDataDefinition, paramMapping);
 		dsd.addColumn("Other Treatments Prescribed",opdNonTracerDrugsPrescribedDataDefinition, paramMapping);
 		dsd.addColumn("Immunization Status Up to Date",opdImmunizationStatusDataDefinition, paramMapping);
