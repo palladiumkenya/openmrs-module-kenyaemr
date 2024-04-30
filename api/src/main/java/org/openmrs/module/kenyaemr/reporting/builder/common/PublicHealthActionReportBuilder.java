@@ -76,7 +76,7 @@ public class PublicHealthActionReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("PNS Contacts with undocumented HIV status", " (Please run PNS contacts with undocumented HIV status for linelist)", ReportUtils.map(publicHealthActionIndicatorLibrary.contactsUndocumentedHIVStatus(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("SNS Contacts with undocumented HIV status", " (Please run SNS contacts with undocumented HIV status for linelist)", ReportUtils.map(publicHealthActionIndicatorLibrary.snsContactsUndocumentedHIVStatus(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("Number of deaths", " (Please run mortality linelist for details)", ReportUtils.map(publicHealthActionIndicatorLibrary.numberOfDeaths(), "startDate=${startDate},endDate=${endDate}"), "");
-
+        cohortDsd.addColumn("client eligible for Cervical cancer screening", " (client eligible for cervical cancer screening age 24-49 for linelist)", ReportUtils.map(publicHealthActionIndicatorLibrary.cervicalCancerScreening(), "startDate=${startDate},endDate=${endDate}"), "");
         return cohortDsd;
 
     }
