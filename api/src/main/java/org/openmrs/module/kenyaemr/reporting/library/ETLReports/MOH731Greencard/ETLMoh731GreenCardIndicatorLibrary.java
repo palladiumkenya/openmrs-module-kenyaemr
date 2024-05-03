@@ -43,7 +43,39 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator htsNumberTested() {
         return cohortIndicator("Individuals tested", map(moh731Cohorts.htsNumberTested(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator htsTestsMales() {
+        return cohortIndicator("HTS tests Males", map(moh731Cohorts.htsTestsMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator hivTestsFemales() {
+        return cohortIndicator("HIV tests Females", map(moh731Cohorts.hivTestsFemales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator htsNumberTestedAtFacilityMales() {
+        return cohortIndicator("Facility male HTS", map(moh731Cohorts.htsNumberTestedAtFacilityMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
 
+    public CohortIndicator htsNumberTestedAtCommunityMales() {
+        return cohortIndicator("Community male HTS", map(moh731Cohorts.htsNumberTestedAtCommunityMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsNumberTestedKVPMales() {
+        return cohortIndicator("HTS KVP males", map(moh731Cohorts.htsNumberTestedKVP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveMales() {
+        return cohortIndicator("HTS Positive males", map(moh731Cohorts.htsPositiveMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveFemales() {
+        return cohortIndicator("HTS Positive females", map(moh731Cohorts.htsPositiveFemales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveKVP() {
+        return cohortIndicator("HTS Positive KVP", map(moh731Cohorts.htsPositiveKVP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsDiscordant() {
+        return cohortIndicator("HTS Positive Discordant", map(moh731Cohorts.htsDiscordant(), "startDate=${startDate},endDate=${endDate}"));
+    }
     /**
      * HIV counseling and testing at health facility
      * covers indicators  HV01-11
