@@ -884,6 +884,7 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setCompositionString("htsAllNumberTested OR testedPositivePmtctANC1 OR testedNegativePmtctANC1 OR testedPositivePmtctPostANC1 OR testedNegativePmtctPostANC1");
         return cd;
     }
+
     // HIV testing cohort. includes all those who tested during the reporting period
     public CohortDefinition htsAllNumberTested() {
         String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id where test_type = 1 and\n" +
@@ -897,6 +898,187 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setDescription("Hiv Number Tested");
         return cd;
 
+    }
+    public CohortDefinition htsTestsMales() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result in ('Positive', 'Negative') and Gender = 'M'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsTestsMales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsTestsMales");
+        return cd;
+
+    }
+
+    public CohortDefinition hivTestsFemales() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics a\n" +
+                "         left join (select av.patient_id, count(av.patient_id) as anc_tests\n" +
+                "                    from kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+                "                    where av.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and av.final_test_result in ('Positive', 'Negative')) av\n" +
+                "                   on av.patient_id = a.patient_id\n" +
+                "         left join (select d.patient_id, count(d.patient_id) as ld_tests\n" +
+                "                    from kenyaemr_etl.etl_mchs_delivery d\n" +
+                "                    where d.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and d.final_test_result in ('Positive', 'Negative')) d\n" +
+                "                   on d.patient_id = a.patient_id\n" +
+                "         left join (select p.patient_id, count(p.patient_id) as pnc_tests\n" +
+                "                    from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+                "                    where p.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and p.final_test_result in ('Positive', 'Negative')) p\n" +
+                "                   on p.patient_id = a.patient_id\n" +
+                "         left join (select t.patient_id, count(t.patient_id) as hts\n" +
+                "                    from kenyaemr_etl.etl_hts_test t\n" +
+                "                             inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "                    where t.final_test_result in ('Positive', 'Negative')\n" +
+                "                      and t.voided = 0\n" +
+                "                      and t.visit_date between date(:startDate) and date(:endDate)) t on a.patient_id = t.patient_id and a.Gender = 'F'\n" +
+                "where (av.patient_id is not null or d.patient_id is not null or p.patient_id is not null or t.patient_id is not null);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("hivTestsFemales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("hivTestsFemales");
+        return cd;
+
+    }
+
+    public CohortDefinition htsNumberTestedAtFacilityMales() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result in ('Positive', 'Negative') and Gender = 'M'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.hts_entry_point in (5485,160542,162181,160552,160541,162050,159940,162223,160546,160522)\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsNumberTestedAtFacilityMales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsNumberTestedAtFacilityMales");
+        return cd;
+
+    }
+    public CohortDefinition htsNumberTestedAtCommunityMales() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result in ('Positive', 'Negative') and Gender = 'M'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.hts_entry_point in (159938,159939,163096,5622)\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsNumberTestedAtCommunityMales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsNumberTestedAtCommunityMales");
+        return cd;
+    }
+    public CohortDefinition htsNumberTestedKVP() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.population_type = 'Key Population'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsNumberTestedKVPMales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsNumberTestedKVPMales");
+        return cd;
+    }
+    public CohortDefinition htsPositiveMales() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result = 'Positive' and Gender = 'M'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsPositiveMales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsPositiveMales");
+        return cd;
+    }
+
+    public CohortDefinition htsPositiveFemales() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics a\n" +
+                "         left join (select av.patient_id, count(av.patient_id) as anc_tests\n" +
+                "                    from kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+                "                    where av.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and av.final_test_result = 'Positive') av\n" +
+                "                   on av.patient_id = a.patient_id\n" +
+                "         left join (select d.patient_id, count(d.patient_id) as ld_tests\n" +
+                "                    from kenyaemr_etl.etl_mchs_delivery d\n" +
+                "                    where d.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and d.final_test_result = 'Positive') d\n" +
+                "                   on d.patient_id = a.patient_id\n" +
+                "         left join (select p.patient_id, count(p.patient_id) as pnc_tests\n" +
+                "                    from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+                "                    where p.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and p.final_test_result = 'Positive') p\n" +
+                "                   on p.patient_id = a.patient_id\n" +
+                "         left join (select t.patient_id, count(t.patient_id) as hts\n" +
+                "                    from kenyaemr_etl.etl_hts_test t\n" +
+                "                             inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "                    where t.final_test_result = 'Positive'\n" +
+                "                      and t.voided = 0\n" +
+                "                      and t.visit_date between date(:startDate) and date(:endDate)) t on a.patient_id = t.patient_id and a.Gender = 'F'\n" +
+                "where (av.patient_id is not null or d.patient_id is not null or p.patient_id is not null or t.patient_id is not null);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsPositiveFemales");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsPositiveFemales");
+        return cd;
+    }
+    public CohortDefinition htsPositiveKVP() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result = 'Positive' and t.population_type = 'Key Population'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsPositiveKVP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsPositiveKVP");
+        return cd;
+    }
+    public CohortDefinition htsDiscordant
+            () {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.client_tested_as = 'Couple' and t.couple_discordant = 'Yes'\n" +
+                "  and t.voided = 0\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);" +
+                "";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("htsPositiveKVP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("htsPositiveKVP");
+        return cd;
     }
 /*
 * HIV testing cohort includes those who tested at facility during the reporting period excluding pmtct clients
@@ -1019,7 +1201,8 @@ public class ETLMoh731GreenCardCohortLibrary {
      */
     protected CohortDefinition htsAllNumberTestedKeyPopulation() {
         String sqlQuery = "select patient_id from kenyaemr_etl.etl_hts_test where test_type =1 AND final_test_result in ('Positive','Negative')\n" +
-                " and population_type ='Key Population' and visit_date between date(:startDate) and date(:endDate)";
+                " and population_type ='Key " +
+                "' and visit_date between date(:startDate) and date(:endDate)";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("htsNumberTestedKeyPopulation");
         cd.setQuery(sqlQuery);
