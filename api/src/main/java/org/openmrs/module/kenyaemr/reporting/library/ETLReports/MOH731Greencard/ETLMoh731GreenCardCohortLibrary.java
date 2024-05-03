@@ -1063,15 +1063,13 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setDescription("htsPositiveKVP");
         return cd;
     }
-    public CohortDefinition htsDiscordant
-            () {
+    public CohortDefinition htsDiscordant() {
         String sqlQuery = "select t.patient_id\n" +
                 "from kenyaemr_etl.etl_hts_test t\n" +
                 "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
                 "where t.client_tested_as = 'Couple' and t.couple_discordant = 'Yes'\n" +
                 "  and t.voided = 0\n" +
-                "  and t.visit_date between date(:startDate) and date(:endDate);" +
-                "";
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("htsPositiveKVP");
         cd.setQuery(sqlQuery);
@@ -1080,10 +1078,467 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setDescription("htsPositiveKVP");
         return cd;
     }
-/*
-* HIV testing cohort includes those who tested at facility during the reporting period excluding pmtct clients
-* Composed using htsAllNumberTestedAtFacility AND NOT testedPmtct
-* */
+
+    /**
+     * General Population initiated On PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPGP() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 164928\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPGP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPGP");
+        return cd;
+    }
+    /**
+     *  MSM or MSW initiated On PrEP
+     *  @return
+     */
+    public CohortDefinition initiatedOnPrEPMSMAndMSW() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 164929\n" +
+                "  and e.kp_type in (160578, 165084)\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPMSMAndMSW");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPMSMAndMSW");
+        return cd;
+    }
+
+    /**
+     * FSW initiated On PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPFSW() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 164929\n" +
+                "  and e.kp_type = 160579\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPFSW");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPFSW");
+        return cd;
+    }
+    /**
+     * PWID or PWUD initiated On PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPPWIDAndPWUD() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 164929\n" +
+                "  and e.kp_type = 105\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPPWIDAndPWUD");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPPWIDAndPWUD");
+        return cd;
+    }
+
+    /**
+     * Discordant couple Initiated on PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPDiscordantCouple() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 6096\n" +
+                "             and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPDiscordantCouple");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPDiscordantCouple");
+        return cd;
+    }
+
+    /**
+     * Adolescents Young People initiated On PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPAdolescentsYoungPeople() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = e.patient_id\n" +
+                "where timestampdiff(YEAR\n" +
+                "    , date(d.DOB)\n" +
+                "    , date(:endDate)) between 15\n" +
+                "    and 24\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPAdolescentsYoungPeople");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPAdolescentsYoungPeople");
+        return cd;
+    }
+    /**
+     * Pregnant or Breastfeeding initiated On PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPPregnantOrBreastfeeding() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "         inner join kenyaemr_etl.etl_prep_followup f on e.patient_id = f.patient_id\n" +
+                "where (f.breastfeeding = 'Yes' or f.pregnant = 'Yes')\n" +
+                "  and e.patient_type = 'New Patient'\n" +
+                "  and date(e.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "  and date(f.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPPregnantOrBreastfeeding");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPPregnantOrBreastfeeding");
+        return cd;
+    }
+    public CohortDefinition currentOnPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select a.patient_id\n"
+                + "    from (select e.patient_id,\n"
+                + "         max(e.visit_date) as latest_enrollment_date,\n"
+                + "         f.latest_fup_date,\n"
+                + "         greatest(ifnull(f.latest_fup_app_date,'0000-00-00'),ifnull(latest_refill_app_date,'0000-00-00')) as latest_appointment_date,\n"
+                + "         greatest(ifnull(latest_fup_date,'0000-00-00'),ifnull(latest_refill_visit_date,'0000-00-00')) as latest_visit_date,\n"
+                + "         r.latest_refill_visit_date,\n"
+                + "         f.latest_fup_app_date,\n"
+                + "         r.latest_refill_app_date,\n"
+                + "         d.latest_disc_date,\n"
+                + "         d.disc_patient\n"
+                + "  from kenyaemr_etl.etl_prep_enrolment e\n"
+                + "           left join\n"
+                + "       (select f.patient_id,\n"
+                + "               max(f.visit_date)                                      as latest_fup_date,\n"
+                + "               mid(max(concat(f.visit_date, f.appointment_date)), 11) as latest_fup_app_date\n"
+                + "        from kenyaemr_etl.etl_prep_followup f\n"
+                + "       where f.visit_date <= date(:endDate)\n"
+                + "        group by f.patient_id) f on e.patient_id = f.patient_id\n"
+                + "           left join (select r.patient_id,\n"
+                + "                             max(r.visit_date)                                      as latest_refill_visit_date,\n"
+                + "                             mid(max(concat(r.visit_date, r.next_appointment)), 11) as latest_refill_app_date\n"
+                + "                      from kenyaemr_etl.etl_prep_monthly_refill r\n"
+                + "           where r.visit_date <= date(:endDate)\n"
+                + "                      group by r.patient_id) r on e.patient_id = r.patient_id\n"
+                + "           left join (select patient_id as disc_patient,\n"
+                + "                             max(d.visit_date)                                        as latest_disc_date,\n"
+                + "                             mid(max(concat(d.visit_date, d.discontinue_reason)), 11) as latest_disc_reason\n"
+                + "                      from kenyaemr_etl.etl_prep_discontinuation d\n"
+                + "           where d.visit_date <= date(:endDate)\n" + "           group by patient_id\n"
+                + "                      having latest_disc_date <= date(:endDate)) d on e.patient_id = d.disc_patient\n"
+                + "  group by e.patient_id having\n"
+                + "             timestampdiff(DAY, date(latest_appointment_date), date(:endDate)) <= 7\n"
+                + "     and date(latest_appointment_date) >= date(latest_visit_date)\n"
+                + "     and ((latest_enrollment_date >= d.latest_disc_date\n"
+                + "     and latest_appointment_date > d.latest_disc_date)\n" + "              or d.disc_patient is null)\n"
+                + ") a;";
+        cd.setName("Current on PrEP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Current on PrEP");
+
+        return cd;
+    }
+    /**
+     * General population clients in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition generalPopulationPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164928;";
+        cd.setName("General Population");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("GP PrEP");
+        return cd;
+    }
+
+    /**
+     * MSM clients in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition msmPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) = 160578;\n";
+        cd.setName("MSM");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.setDescription("MSM");
+        return cd;
+    }
+    /**
+     * MSW clients in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition mswPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) = 165084;";
+        cd.setName("MSW");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.setDescription("MSW");
+        return cd;
+    }
+
+    /**
+     * FSW clients in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition fswPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) = 160579;";
+        cd.setName("FSW");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("FSW");
+
+        return cd;
+    }
+
+    /**
+     * People who inject drugs in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition pwidPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) = 105;";
+        cd.setName("PWID");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("PWID");
+
+        return cd;
+    }
+    /**
+     * People who Use drugs in their lastest PrEP enrollment
+     *
+     * @return
+     */
+    public CohortDefinition pwudPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) = 105;";
+        cd.setName("PWUD");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("PWUD");
+
+        return cd;
+    }
+
+    /**
+     * Discordant couple in their lastest PrEP enrollment
+     * @return
+     */
+    public CohortDefinition discordantCouplePrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 6096;";
+        cd.setName("Discordant couple");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Discordant Couple");
+
+        return cd;
+    }
+
+    /**
+     * Adolescent and young people in their lastest PrEP enrollment
+     * @return
+     */
+    public CohortDefinition adolescentAndYoungPeople() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select d.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics d\n" +
+                "where timestampdiff(YEAR\n" +
+                "          , date(d.DOB)\n" +
+                "          , date(:endDate)) between 15\n" +
+                "          and 24;";
+        cd.setName("Discordant couple");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Discordant Couple");
+        return cd;
+    }
+    /**
+     * Pregnant or breastfeeding women on PrEP
+     * @return
+     */
+    public CohortDefinition pregnantOrBreastFeedingPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "         inner join kenyaemr_etl.etl_prep_followup f on e.patient_id = f.patient_id\n" +
+                "where (f.breastfeeding = 'Yes' or f.pregnant = 'Yes')\n" +
+                "  and date(f.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("pregnantOrBreastFeedingPrEP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Pregnant Or BreastFeeding on PrEP");
+        return cd;
+    }
+    /**
+     * General Population Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPGP() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("generalPopulationPrEP", ReportUtils.map(generalPopulationPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("generalPopulationPrEP AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  MSM and MSW Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPMSMAndMSW() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("msmPrEP", ReportUtils.map(msmPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("mswPrEP", ReportUtils.map(mswPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(msmPrEP OR mswPrEP) AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  FSW Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPFSW() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("fswPrEP", ReportUtils.map(fswPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("fswPrEP AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  PWID/PWUD Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPPWIDAndPWUD() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pwudPrEP", ReportUtils.map(pwudPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pwidPrEP", ReportUtils.map(pwidPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(pwudPrEP OR pwidPrEP) AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  Discordant couple Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPDiscordantCouple() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("discordantCouplePrEP", ReportUtils.map(discordantCouplePrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("discordantCouplePrEP AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  Adolescents and Young People Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPAdolescentsYoungPeople() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("adolescentAndYoungPeople", ReportUtils.map(adolescentAndYoungPeople(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("adolescentAndYoungPeople AND currentOnPrEP");
+        return cd;
+    }
+    /**
+     *  Pregnant or Breastfeeding Current on PrEP
+     * @return
+     */
+    public CohortDefinition currentOnPrEPPregnantOrBreastfeeding() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pregnantOrBreastFeedingPrEP", ReportUtils.map(pregnantOrBreastFeedingPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("pregnantOrBreastFeedingPrEP AND currentOnPrEP");
+        return cd;
+    }
 
     public CohortDefinition htsNumberTestedAtFacility() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();

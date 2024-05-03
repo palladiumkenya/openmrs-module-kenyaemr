@@ -159,17 +159,51 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         cohortDsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
-        // 3.1 HIV testing and counseling
+       //1.1 HIV Tests
         cohortDsd.addColumn("HV01-01", "Tested (M)", ReportUtils.map(moh731GreenCardIndicators.htsTestsMales(), indParams),"");
         cohortDsd.addColumn("HV01-02", "Tested (F)", ReportUtils.map(moh731GreenCardIndicators.hivTestsFemales(), indParams),"");
       //  EmrReportingUtils.addRow(cohortDsd, "HV02", "Tested", ReportUtils.map(moh731GreenCardIndicators.htsNumberTested(), indParams), genderDisaggregation, Arrays.asList("01", "02"));
         cohortDsd.addColumn("HV01-03" , "Tested Facility (M)", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedAtFacilityMales(), indParams),"");
         cohortDsd.addColumn("HV01-04", "Tested Community (M)", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedAtCommunityMales(), indParams),"");
         cohortDsd.addColumn("HV01-05", "Tested KVP", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedKVPMales(), indParams),"");
+
+        // 1.2 HIV Positive Results
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Positive", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(), indParams), htsMaleDisaggregation, Arrays.asList("06", "08", "10", "12", "14"));
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Positive", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(), indParams), htsFemaleDisaggregation, Arrays.asList("07", "09", "11", "13", "15"));
         cohortDsd.addColumn("HV01-16", "Tested Positive (KVP)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveKVP(), indParams),"");
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Discordant", ReportUtils.map(moh731GreenCardIndicators.htsDiscordant(), indParams), genderDisaggregation, Arrays.asList("17", "18"));
+
+        //1.3. No. Initiated on PrEP (NEW)
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "GP Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPGP(), indParams), genderDisaggregation, Arrays.asList("19", "20"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "MSM/MSW Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPMSMAndMSW(), indParams), genderDisaggregation, Arrays.asList("21", "22"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "FSW Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPFSW(), indParams), genderDisaggregation, Arrays.asList("23", "24"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "PWID/PWUD Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("25", "26"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Discordant Couple Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("27", "28"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "AYP (15-24yrs) Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("29", "30"));
+
+        cohortDsd.addColumn("HV01-31", "Pregnant and breastfeeding Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPPregnantOrBreastfeeding(), indParams),"");
+
+        // 1.4. No. Current on PrEP
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP GP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPGP(), indParams), genderDisaggregation, Arrays.asList("32", "33"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP MSM and MSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPMSMAndMSW(), indParams), genderDisaggregation, Arrays.asList("34", "35"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP FSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPFSW(), indParams), genderDisaggregation, Arrays.asList("36", "37"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP PWID and PWUD", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("38", "39"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Discordant Couple", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("40", "41"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP AYP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("42", "43"));
+
+        cohortDsd.addColumn("HV01-44", "Current on PrEP Pregnant or Breastfeeding", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPregnantOrBreastfeeding(), indParams),"");
+
        // cohortDsd.addColumn("HV01-13", "Tested New", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedNew(), indParams),"");
         //cohortDsd.addColumn("HV01-14", "Tested Repeat", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedRepeat(), indParams),"");
         //cohortDsd.addColumn("HV01-15", "Tested Couples", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedAsCouple(), indParams),"");
