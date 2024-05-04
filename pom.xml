@@ -73,7 +73,6 @@
         <webservicesRestVersion>2.26.0</webservicesRestVersion>
         <reportingcompatibilityVersion>2.0.9</reportingcompatibilityVersion>
         <legacyUiVersion>1.15.0</legacyUiVersion>
-        <bahmniAppointmentsVersion>1.5.0-SNAPSHOT</bahmniAppointmentsVersion>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
@@ -236,12 +235,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.bahmni.module</groupId>
-            <artifactId>appointments-api</artifactId>
-            <version>${bahmniAppointmentsVersion}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
 
             <groupId>org.openmrs.module</groupId>
