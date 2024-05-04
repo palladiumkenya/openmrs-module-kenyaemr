@@ -104,8 +104,10 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
 		DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
 		DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
 		DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName}");
 		DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
@@ -279,6 +281,7 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("Sex", new GenderDataDefinition(), "");
 		// new columns
 		dsd.addColumn("Admission Number", maternityAdmissionNumberDataDefinition, paramMapping);
+		dsd.addColumn("National Unique Patient Identifier", nupiDef, "");
 		dsd.addColumn("Date of Admission", maternityAdmissionDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
 		dsd.addColumn("Number of ANC Visits", maternityNumberOfANCVisitsDataDefinition, paramMapping);
 		dsd.addColumn("Name", nameDef, "");

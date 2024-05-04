@@ -25,20 +25,26 @@ import java.util.Map;
  */
 public class SubCountyAddressCalculation extends AbstractPatientCalculation {
 
-	@Override
-	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
+    @Override
+    public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
 
-		CalculationResultMap ret = new CalculationResultMap();
+        CalculationResultMap ret = new CalculationResultMap();
 
-		PersonService personService = Context.getPersonService();
+        PersonService personService = Context.getPersonService();
 
-		for(Integer ptId : cohort) {
-			Person person = personService.getPerson(ptId);
-			if(person.getPersonAddress() != null) {
-				ret.put(ptId, new SimpleResult(person.getPersonAddress().getStateProvince(), this));
-			}
-		}
+        if (personService != null) {
+            for (Integer ptId : cohort) {
+                Person person = personService.getPerson(ptId);
+                if (person != null && person.getPersonAddress() != null) {
+                    ret.put(ptId, new SimpleResult(person.getPersonAddress().getStateProvince(), this));
+                }
+            }
+        } else {
+            for (Integer ptId : cohort) {
+                ret.put(ptId, new SimpleResult("No Person Service", this));
+            }
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 }
