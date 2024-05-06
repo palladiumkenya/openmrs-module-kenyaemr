@@ -324,7 +324,7 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("HIV Final Results", maternityHIVFinalResultsDataDefinition, paramMapping);
 		dsd.addColumn("ARV Prophylaxis Issued from ANC", maternityARVProphylaxisIssuedFromANCDataDefinition, paramMapping);
 		dsd.addColumn("ARV Prophylaxis Issued at Maternity", maternityARVProphylaxisIssuedAtMaternityDataDefinition, paramMapping);
-		dsd.addColumn("ARV Prophylaxis To Baby in Maternity", maternityARVProphylaxisToBabyAtMaternityDataDefinition, paramMapping);
+		dsd.addColumn("Infant Prophylaxis", maternityARVProphylaxisToBabyAtMaternityDataDefinition, paramMapping);
 		dsd.addColumn("CTX To Mother", maternityCTXToMotherDataDefinition, paramMapping);
 		dsd.addColumn("Vitamin A", maternityVitaminADataDefinition, paramMapping);
 		dsd.addColumn("Partner Tested For HIV", maternityPartnerTestedForHIVDataDefinition, paramMapping);

@@ -38,32 +38,36 @@ public class PersonAddressCalculation extends AbstractPatientCalculation {
 
 	@Override
 	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues,
-			PatientCalculationContext context) {
+										 PatientCalculationContext context) {
 		CalculationResultMap ret = new CalculationResultMap();
 
-		for (Integer ptId : cohort) {
-			String personAddressString = null;
+		if (Context.getPatientService() != null) {
+			for (Integer ptId : cohort) {
+				Patient patient = Context.getPatientService().getPatient(ptId);
+				if (patient != null) {
+					PersonAddress personAddress = patient.getPersonAddress();
+					if (personAddress != null) {
+						List<String> addresses = new ArrayList<String>();
 
-			Patient patient = Context.getPatientService().getPatient(ptId);
-			PersonAddress personAddress = patient.getPersonAddress();
-			List<String> addresses = new ArrayList<String>();
+						// get village
+						if (personAddress.getCityVillage() != null) {
+							addresses.add(personAddress.getCityVillage());
+						}
 
-			// get village
-			if (personAddress !=null && personAddress.getCityVillage() != null) {
-				addresses.add(patient.getPersonAddress().getCityVillage());
+						// get landmark
+						if (personAddress.getAddress2() != null) {
+							addresses.add(personAddress.getAddress2());
+						}
+
+						String personAddressString = addresses.size() > 0 ? StringUtils.join(addresses, "|") : null;
+						ret.put(ptId, new SimpleResult(personAddressString, this, context));
+					}
+				}
 			}
-
-			// get landmark
-			if (personAddress !=null && personAddress.getAddress2() != null) {
-				addresses.add(patient.getPersonAddress().getAddress2());
+		} else {
+			for (Integer ptId : cohort) {
+				ret.put(ptId, new SimpleResult("No Patient Service", this, context));
 			}
-
-			if (addresses.size() > 0) {
-				personAddressString = StringUtils.join(addresses, "|");
-
-			}
-
-			ret.put(ptId, new SimpleResult(personAddressString, this, context));
 		}
 
 		return ret;

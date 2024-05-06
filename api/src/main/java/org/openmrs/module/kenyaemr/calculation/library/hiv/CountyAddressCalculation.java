@@ -32,15 +32,20 @@ public class CountyAddressCalculation extends AbstractPatientCalculation {
 		CalculationResultMap ret = new CalculationResultMap();
 
 		PersonService personService = Context.getPersonService();
-
-		for(Integer ptId : cohort) {
-			Person person = personService.getPerson(ptId);
-			if(person.getPersonAddress() != null) {
-				if(person.getPersonAddress().getCountry() != null)
-				ret.put(ptId, new SimpleResult(person.getPersonAddress().getCountry(), this));
-				else if(person.getPersonAddress().getCountyDistrict() != null ){
-					ret.put(ptId, new SimpleResult(person.getPersonAddress().getCountyDistrict(), this));
+		if (personService != null) {
+			for (Integer ptId : cohort) {
+				Person person = personService.getPerson(ptId);
+				if (person != null && person.getPersonAddress() != null) {
+					if (person.getPersonAddress().getCountry() != null)
+						ret.put(ptId, new SimpleResult(person.getPersonAddress().getCountry(), this));
+					else if (person.getPersonAddress().getCountyDistrict() != null) {
+						ret.put(ptId, new SimpleResult(person.getPersonAddress().getCountyDistrict(), this));
+					}
 				}
+			}
+		} else {
+			for (Integer ptId : cohort) {
+				ret.put(ptId, new SimpleResult("No Person Service", this));
 			}
 		}
 
