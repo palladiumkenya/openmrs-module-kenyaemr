@@ -1655,9 +1655,11 @@ public class ETLMoh731GreenCardCohortLibrary {
      * @return
      */
     protected CohortDefinition htsAllNumberTestedKeyPopulation() {
-        String sqlQuery = "select patient_id from kenyaemr_etl.etl_hts_test where test_type =1 AND final_test_result in ('Positive','Negative')\n" +
-                " and population_type ='Key " +
-                "' and visit_date between date(:startDate) and date(:endDate)";
+        String sqlQuery = "select patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test\n" +
+                "where final_test_result in ('Positive', 'Negative')\n" +
+                "  and population_type = 'Key Population'\n" +
+                "  and visit_date between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("htsNumberTestedKeyPopulation");
         cd.setQuery(sqlQuery);
