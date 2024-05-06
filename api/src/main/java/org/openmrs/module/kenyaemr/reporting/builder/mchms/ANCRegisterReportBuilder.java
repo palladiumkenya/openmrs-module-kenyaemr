@@ -288,7 +288,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
        // dsd.addColumn("CaCx Screening", new ANCCaCxScreeningResultsDataDefinition(),""); d-ropped
         dsd.addColumn("Other Illnesses", ancOtherIllnessesDataDefinition, paramMapping);
         dsd.addColumn("Deworming", ancDewormingDataDefinition, paramMapping);
-        dsd.addColumn("IPT Dose 1-7", ancIPTmalariaDataDefinition, paramMapping);
+        dsd.addColumn("IPT Dose 1-3", ancIPTmalariaDataDefinition, paramMapping);
         dsd.addColumn("TTT Given", ancTTTDataDefinition, paramMapping);
         dsd.addColumn("Suppliment", ancSupplimentDataDefinition, paramMapping);
         dsd.addColumn("ITN", ancITNDataDefinition, paramMapping);
