@@ -43,6 +43,144 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator htsNumberTested() {
         return cohortIndicator("Individuals tested", map(moh731Cohorts.htsNumberTested(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator htsTestsMales() {
+        return cohortIndicator("HTS tests Males", map(moh731Cohorts.htsTestsMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator hivTestsFemales() {
+        return cohortIndicator("HIV tests Females", map(moh731Cohorts.hivTestsFemales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator htsNumberTestedAtFacilityMales() {
+        return cohortIndicator("Facility male HTS", map(moh731Cohorts.htsNumberTestedAtFacilityMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsNumberTestedAtCommunityMales() {
+        return cohortIndicator("Community male HTS", map(moh731Cohorts.htsNumberTestedAtCommunityMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsNumberTestedKVPMales() {
+        return cohortIndicator("HTS KVP males", map(moh731Cohorts.htsNumberTestedKVP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveMales() {
+        return cohortIndicator("HTS Positive males", map(moh731Cohorts.htsPositiveMales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveFemales() {
+        return cohortIndicator("HTS Positive females", map(moh731Cohorts.htsPositiveFemales(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsPositiveKVP() {
+        return cohortIndicator("HTS Positive KVP", map(moh731Cohorts.htsPositiveKVP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator htsDiscordant() {
+        return cohortIndicator("HTS Positive Discordant", map(moh731Cohorts.htsDiscordant(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Initiated On PrEP GP
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPGP() {
+        return cohortIndicator("Initiated On PrEP GP", map(moh731Cohorts.initiatedOnPrEPGP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP MSM And MSW
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPMSMAndMSW() {
+        return cohortIndicator("Initiated On PrEP MSM And MSW", map(moh731Cohorts.initiatedOnPrEPMSMAndMSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP FSW
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPFSW() {
+        return cohortIndicator("Initiated On PrEP FSW", map(moh731Cohorts.initiatedOnPrEPFSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP PWID And PWUD
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPPWIDAndPWUD() {
+        return cohortIndicator("Initiated On PrEP PWID And PWUD", map(moh731Cohorts.initiatedOnPrEPPWIDAndPWUD(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP Discordant couple
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPDiscordantCouple() {
+        return cohortIndicator("Initiated On PrEP Discordant couple", map(moh731Cohorts.initiatedOnPrEPDiscordantCouple(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP AYP
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPAdolescentsYoungPeople() {
+        return cohortIndicator("Initiated On PrEP AYP", map(moh731Cohorts.initiatedOnPrEPAdolescentsYoungPeople(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Initiated On PrEP Pregnant Or Breastfeeding
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPPregnantOrBreastfeeding() {
+        return cohortIndicator("Initiated On PrEP Pregnant or Breastfeeding", map(moh731Cohorts.initiatedOnPrEPPregnantOrBreastfeeding(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Current On PrEP GP
+     * @return
+     */
+    public CohortIndicator currentOnPrEPGP() {
+        return cohortIndicator("Current On PrEP GP", map(moh731Cohorts.currentOnPrEPGP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP MSM And MSW
+     * @return
+     */
+    public CohortIndicator currentOnPrEPMSMAndMSW() {
+        return cohortIndicator("Current On PrEP MSM And MSW", map(moh731Cohorts.currentOnPrEPMSMAndMSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP FSW
+     * @return
+     */
+    public CohortIndicator currentOnPrEPFSW() {
+        return cohortIndicator("Current On PrEP FSW", map(moh731Cohorts.currentOnPrEPFSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP PWID And PWUD
+     * @return
+     */
+    public CohortIndicator currentOnPrEPPWIDAndPWUD() {
+        return cohortIndicator("Current On PrEP PWID And PWUD", map(moh731Cohorts.currentOnPrEPPWIDAndPWUD(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP Discordant Couple
+     * @return
+     */
+    public CohortIndicator currentOnPrEPDiscordantCouple() {
+        return cohortIndicator("Current On PrEP Discordant Couple", map(moh731Cohorts.currentOnPrEPDiscordantCouple(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP AYP
+     * @return
+     */
+    public CohortIndicator currentOnPrEPAdolescentsYoungPeople() {
+        return cohortIndicator("Current On PrEP AYP", map(moh731Cohorts.currentOnPrEPAdolescentsYoungPeople(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Current On PrEP Pregnant Or Breastfeeding
+     * @return
+     */
+    public CohortIndicator currentOnPrEPPregnantOrBreastfeeding() {
+        return cohortIndicator("Current On PrEP Pregnant Or Breastfeeding", map(moh731Cohorts.currentOnPrEPPregnantOrBreastfeeding(), "startDate=${startDate},endDate=${endDate}"));
+    }
 
     /**
      * HIV counseling and testing at health facility
