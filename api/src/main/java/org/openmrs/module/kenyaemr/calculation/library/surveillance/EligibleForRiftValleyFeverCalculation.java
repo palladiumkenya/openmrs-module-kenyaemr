@@ -109,6 +109,10 @@ public class EligibleForRiftValleyFeverCalculation extends AbstractPatientCalcul
 
                 CalculationResultMap tempMap = Calculations.lastObs(cs.getConcept(TEMPERATURE), cohort, context);
 
+				boolean patientJaundiceResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestionExam, jaundiceResult) : false;
+				boolean patientDizzinessResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestionComp, dizzinessResult) : false;
+				boolean patientMalaiseResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestionComp, malaiseResult) : false;
+				boolean patientFeverResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestionComp, feverResult) : false;
                 boolean patientJaundiceResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionExam, jaundiceResult) : false;
                 boolean patientDizzinessResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionComp, dizzinessResult) : false;
                 boolean patientMalaiseResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionComp, malaiseResult) : false;
@@ -161,6 +165,25 @@ public class EligibleForRiftValleyFeverCalculation extends AbstractPatientCalcul
                         }
                     }
                 }
+				if (lastTriageEnc != null) {
+					if (patientJaundiceResultTriage && patientDizzinessResultTriage && patientMalaiseResultTriage && patientFeverResultTriage) {
+						for (Obs obs : lastTriageEnc.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getConceptId().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (duration > 2 && tempValue != null && tempValue > 37.5) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
                 ret.put(ptId, new BooleanResult(eligible, this));
             }
         }

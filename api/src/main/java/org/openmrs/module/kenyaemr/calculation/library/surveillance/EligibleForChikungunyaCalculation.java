@@ -53,6 +53,8 @@ import java.util.Set;
  */
 public class EligibleForChikungunyaCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
     protected static final Log log = LogFactory.getLog(EligibleForChikungunyaCalculation.class);
+	public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
+	public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
     public static final EncounterType consultationEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.CONSULTATION);
     public static final Form clinicalEncounterForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.CLINICAL_ENCOUNTER);
 
@@ -89,6 +91,7 @@ public class EligibleForChikungunyaCalculation extends AbstractPatientCalculatio
                 String todayDate = dateFormat.format(currentDate);
                 Patient patient = patientService.getPatient(ptId);
 
+                Encounter lastTriageEncounter = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);   //last triage form
                 Encounter lastHivFollowUpEncounter = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);   //last greencard followup form
                 Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
 
@@ -99,6 +102,8 @@ public class EligibleForChikungunyaCalculation extends AbstractPatientCalculatio
 
                 CalculationResultMap tempMap = Calculations.lastObs(cs.getConcept(TEMPERATURE), cohort, context);
 
+				boolean patientJointPainResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, jointPainResult) : false;
+				boolean patientFeverResultTriage= lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, feverResult) : false;
                 boolean patientJointPainResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, jointPainResult) : false;
                 boolean patientFeverResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, feverResult) : false;
                 boolean patientJointPainResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, jointPainResult) : false;
@@ -147,6 +152,25 @@ public class EligibleForChikungunyaCalculation extends AbstractPatientCalculatio
                         }
                     }
                 }
+				if (lastTriageEncounter != null) {
+					if (patientJointPainResultTriage && patientFeverResultTriage) {
+						for (Obs obs : lastTriageEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getConceptId().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (duration > 2 && tempValue != null && tempValue > 38.5) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
                 ret.put(ptId, new BooleanResult(eligible, this));
             }
         }
