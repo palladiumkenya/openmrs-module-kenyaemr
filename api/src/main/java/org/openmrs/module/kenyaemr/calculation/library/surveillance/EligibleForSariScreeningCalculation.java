@@ -91,9 +91,12 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                 boolean patientCoughResultGreenCard = lastFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
                 boolean patientFeverResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, measureFeverResult) : false;
                 boolean patientCoughResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coughPresenceResult) : false;
+               
                 //Check admission status : Only found in clinical encounter
                 boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
-
+                //Visit type is inpatient
+				Visit currentVisit = activeVisits.get(0) ;
+				
                 Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
                 if (lastTempObs != null) {
                     tempValue = lastTempObs.getValueNumeric();
@@ -110,7 +113,7 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                                 String createdDate = dateFormat.format(dateCreated);
                                 if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
                                     if (createdDate.equals(todayDate)) {
-                                        if (patientAdmissionStatus) {
+                                        if (patientAdmissionStatus || currentVisit.getVisitType().equals("Inpatient")) {
                                             eligible = true;
                                             break;
                                         }
@@ -132,7 +135,7 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                                 String createdDate = dateFormat.format(dateCreated);
                                 if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
                                     if (createdDate.equals(todayDate)) {
-                                        if (patientAdmissionStatus) {
+                                        if (patientAdmissionStatus || currentVisit.getVisitType().equals("Inpatient")) {
                                             eligible = true;
                                             break;
                                         }
@@ -153,7 +156,7 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                                 String createdDate = dateFormat.format(dateCreated);
                                 if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
                                     if (createdDate.equals(todayDate)) {
-                                        if (patientAdmissionStatus) {
+                                        if (patientAdmissionStatus || currentVisit.getVisitType().equals("Inpatient")) {
                                             eligible = true;
                                             break;
                                         }
