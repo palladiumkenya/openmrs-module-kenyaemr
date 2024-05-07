@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCBreastExamDoneDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCMaternalHAARTDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates a Visit Number Data Definition to produce a Visit Number
  */
-@Handler(supports=ANCBreastExamDoneDataDefinition.class, order=50)
-public class ANCBreastExamDoneDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= ANCMaternalHAARTDataDefinition.class, order=50)
+public class ANCMaternalHaartDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,11 +35,21 @@ public class ANCBreastExamDoneDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "  (case v.breast_exam_done when 1065 then 'Yes' when 1066 then 'No' when 1115 then 'Normal' when 1116 then 'Abnormal' else '' end) as breast_exam\n" +
-                "  from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
+
+       String qry = "select v.encounter_id,\n" +
+            "    (case\n" +
+            "        when d.date_started = v.visit_date then 'New on ART'\n" +
+            "        when d.date_started > v.visit_date then 'On ART'\n" +
+            "        else 'N/A'\n" +
+            "    end ) as maternal_on_hart\n" +
+            " from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+            "         inner join kenyaemr_etl.etl_mch_enrollment e on e.patient_id = v.patient_id\n" +
+            "         inner join (select d.patient_id, min(d.date_started) as date_started, d.program as program\n" +
+            "                     from kenyaemr_etl.etl_drug_event d\n" +
+            "                     group by d.patient_id) d\n" +
+            "                    on v.patient_id = d.patient_id and d.program = 'HIV'\n" +
+            "   where v.visit_date between date(:startDate) AND date(:endDate);";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
