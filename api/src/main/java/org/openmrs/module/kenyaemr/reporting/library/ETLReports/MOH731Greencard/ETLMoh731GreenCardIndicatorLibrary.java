@@ -112,6 +112,14 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator initiatedOnPrEPDiscordantCouple() {
         return cohortIndicator("Initiated On PrEP Discordant couple", map(moh731Cohorts.initiatedOnPrEPDiscordantCouple(), "startDate=${startDate},endDate=${endDate}"));
     }
+
+    /**
+     * Initiated On PrEP vulnerable population
+     * @return
+     */
+    public CohortIndicator initiatedOnPrEPVulnerablePop() {
+        return cohortIndicator("Initiated On PrEP vulnerable population", map(moh731Cohorts.initiatedOnPrEPVulnerablePop(), "startDate=${startDate},endDate=${endDate}"));
+    }
     /**
      * Initiated On PrEP AYP
      * @return
@@ -167,6 +175,13 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     }
 
     /**
+     * Current on PrEP vulnerable population
+     * @return
+     */
+    public CohortIndicator currentOnPrEPVulnerablePopulation() {
+        return cohortIndicator("Current On PrEP Vulnerable Population", map(moh731Cohorts.currentOnPrEPVulnerablePopulation(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
      * Current On PrEP AYP
      * @return
      */
@@ -182,6 +197,72 @@ public class ETLMoh731GreenCardIndicatorLibrary {
         return cohortIndicator("Current On PrEP Pregnant Or Breastfeeding", map(moh731Cohorts.currentOnPrEPPregnantOrBreastfeeding(), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    /**
+     * On PrEP Diagnosed with STI GP
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIGP() {
+        return cohortIndicator("On PrEP Diagnosed with STI GP", map(moh731Cohorts.onPrEPDiagnosedWithSTIGP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI MSM & MSW
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIMSMMSW() {
+        return cohortIndicator("On PrEP Diagnosed with STI MSM & MSW", map(moh731Cohorts.onPrEPDiagnosedWithSTIMSMMSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI FSW
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIFSW() {
+        return cohortIndicator("On PrEP Diagnosed with STI FSW", map(moh731Cohorts.onPrEPDiagnosedWithSTIFSW(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI PWUD & PWID
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIPWIDOrPWUD() {
+        return cohortIndicator("On PrEP Diagnosed with STI PWUD & PWID", map(moh731Cohorts.onPrEPDiagnosedWithSTIPWIDOrPWUD(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI Discordant
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIDiscordant() {
+        return cohortIndicator("On PrEP Diagnosed with STI Discordant", map(moh731Cohorts.onPrEPDiagnosedWithSTIDiscordant(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI VP
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIVP() {
+        return cohortIndicator("On PrEP Diagnosed with STI VP", map(moh731Cohorts.onPrEPDiagnosedWithSTIVP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI AYP
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIAYP() {
+        return cohortIndicator("On PrEP Diagnosed with STI AYP", map(moh731Cohorts.onPrEPDiagnosedWithSTIAYP(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * On PrEP Diagnosed with STI Preg or BF
+     * @return
+     */
+    public CohortIndicator onPrEPDiagnosedWithSTIPrEOrBF() {
+        return cohortIndicator("On PrEP Diagnosed with STI Preg or BF", map(moh731Cohorts.onPrEPDiagnosedWithSTIPrEOrBF(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator onPrEPSeroconverted() {
+        return cohortIndicator("On PrEP Diagnosed with STI Preg or BF", map(moh731Cohorts.onPrEPSeroconverted(), "startDate=${startDate},endDate=${endDate}"));
+    }
     /**
      * HIV counseling and testing at health facility
      * covers indicators  HV01-11
