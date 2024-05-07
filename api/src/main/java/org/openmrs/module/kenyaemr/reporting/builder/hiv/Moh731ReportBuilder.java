@@ -177,13 +177,15 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
 
         EmrReportingUtils.addRow(cohortDsd, "HV01", "GP Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPGP(), indParams), genderDisaggregation, Arrays.asList("19", "20"));
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "MSM/MSW Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPMSMAndMSW(), indParams), genderDisaggregation, Arrays.asList("21", "22"));
+        cohortDsd.addColumn("HV01-21", "MSM/MSW Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPMSMAndMSW(), indParams), "");
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "FSW Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPFSW(), indParams), genderDisaggregation, Arrays.asList("23", "24"));
+        cohortDsd.addColumn("HV01-22", "FSW Initiated on PrEP (NEW)",ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPFSW(), indParams),"");
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "PWID/PWUD Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("25", "26"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "PWID/PWUD Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("23", "24"));
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Discordant Couple Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("27", "28"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Discordant Couple Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("25", "26"));
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Vulnerable Population Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPVulnerablePop(), indParams), genderDisaggregation, Arrays.asList("27", "28"));
 
         EmrReportingUtils.addRow(cohortDsd, "HV01", "AYP (15-24yrs) Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("29", "30"));
 
@@ -192,32 +194,61 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         // 1.4. No. Current on PrEP
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP GP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPGP(), indParams), genderDisaggregation, Arrays.asList("32", "33"));
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP MSM and MSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPMSMAndMSW(), indParams), genderDisaggregation, Arrays.asList("34", "35"));
+        cohortDsd.addColumn("HV01-34", "Current on PrEP MSM and MSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPMSMAndMSW(), indParams),"");
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP FSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPFSW(), indParams), genderDisaggregation, Arrays.asList("36", "37"));
-
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP PWID and PWUD", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("38", "39"));
-
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Discordant Couple", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("40", "41"));
+        cohortDsd.addColumn("HV01-35","Current on PrEP FSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPFSW(), indParams), "");
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP PWID and PWUD", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("36", "37"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Discordant Couple", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("38", "39"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Vulnerable Population", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPVulnerablePopulation(), indParams), genderDisaggregation, Arrays.asList("40", "41"));
 
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP AYP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("42", "43"));
 
         cohortDsd.addColumn("HV01-44", "Current on PrEP Pregnant or Breastfeeding", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPregnantOrBreastfeeding(), indParams),"");
+
+        // 1.5. Number on PrEP Diagnosed with STI
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI GP",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIGP(), indParams), genderDisaggregation,
+                Arrays.asList("45", "46"));
+
+        cohortDsd.addColumn("HV01-47", "On PrEP Diagnosed with STI MSM & MSW",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIMSMMSW(), indParams),"");
+
+        cohortDsd.addColumn("HV01-48", "On PrEP Diagnosed with STI FSW",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIFSW(), indParams),"");
+
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI PWID & PWUD",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIPWIDOrPWUD(), indParams), genderDisaggregation,
+                Arrays.asList("49", "50"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI Discordant Couple",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIDiscordant(), indParams), genderDisaggregation,
+                Arrays.asList("51", "52"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI Vulnerable Population",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIVP(), indParams), genderDisaggregation, Arrays.asList("53", "54"));
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI AYP",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIAYP(), indParams), genderDisaggregation, Arrays.asList("55", "56"));
+
+        cohortDsd.addColumn("HV01-57", "Current on PrEP Pregnant or Breastfeeding", ReportUtils.map(moh731GreenCardIndicators.onPrEPDiagnosedWithSTIPrEOrBF(), indParams),"");
+
+        // 1.6. No. Seroconverted while on PrEP
+        EmrReportingUtils.addRow(cohortDsd, "HV01", "Sero-converted-General Population",
+                ReportUtils.map(moh731GreenCardIndicators.onPrEPSeroconverted
+                        (), indParams), genderDisaggregation,
+                Arrays.asList("58", "59"));
 
        // cohortDsd.addColumn("HV01-13", "Tested New", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedNew(), indParams),"");
         //cohortDsd.addColumn("HV01-14", "Tested Repeat", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedRepeat(), indParams),"");
         //cohortDsd.addColumn("HV01-15", "Tested Couples", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedAsCouple(), indParams),"");
         //cohortDsd.addColumn("HV01-16", "Tested Key Pop", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedKeyPopulation(), indParams),"");
 
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Positive", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositive(), indParams), disaggregationWithInfants, Arrays.asList("17", "18", "19", "20", "21", "22", "23", "24", "25", "26"));
-        cohortDsd.addColumn("HV01-27", "Negative Total", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedNegative(), indParams),"");
+        // EmrReportingUtils.addRow(cohortDsd, "HV01", "Positive", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositive(), indParams), disaggregationWithInfants, Arrays.asList("17", "18", "19", "20", "21", "22", "23", "24", "25", "26"));
+        // cohortDsd.addColumn("HV01-27", "Negative Total", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedNegative(), indParams),"");
         // cohortDsd.addColumn("HV01-28", "Discordant", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedDiscordant(), indParams),"");
-        cohortDsd.addColumn("HV01-29", "Positive Key Pop", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedKeypopPositive(), indParams),"");
+        // cohortDsd.addColumn("HV01-29", "Positive Key Pop", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedKeypopPositive(), indParams),"");
 
         // number linked
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Linked", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositiveAndLinked(), indParams), standardAgeOnlyDisaggregation, Arrays.asList("30", "31", "32", "33", "34", "35"));
-        cohortDsd.addColumn("HV01-36", "Total tested positive (3 months ago)", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositiveThreeMonthsAgo(), indParams),"");
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Number assessed for HIV risk", ReportUtils.map(moh731GreenCardIndicators.numberAssessedForHIVRisk(), indParams), hivAssessmentDisaggregations, Arrays.asList("37", "38", "39", "40", "41", "42", "43", "44","45"));
+       // EmrReportingUtils.addRow(cohortDsd, "HV01", "Linked", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositiveAndLinked(), indParams), standardAgeOnlyDisaggregation, Arrays.asList("30", "31", "32", "33", "34", "35"));
+        //cohortDsd.addColumn("HV01-36", "Total tested positive (3 months ago)", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedPositiveThreeMonthsAgo(), indParams),"");
+        //EmrReportingUtils.addRow(cohortDsd, "HV01", "Number assessed for HIV risk", ReportUtils.map(moh731GreenCardIndicators.numberAssessedForHIVRisk(), indParams), hivAssessmentDisaggregations, Arrays.asList("37", "38", "39", "40", "41", "42", "43", "44","45"));
         return cohortDsd;
 
     }
