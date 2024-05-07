@@ -1176,6 +1176,24 @@ public class ETLMoh731GreenCardCohortLibrary {
     }
 
     /**
+     * Vulnerable population initiated on PrEP
+     * @return
+     */
+    public CohortDefinition initiatedOnPrEPVulnerablePop() {
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where e.patient_type = 'New Patient'\n" +
+                "  and e.population_type = 164929 and e.kp_type in (162277, 162198)\n" +
+                "             and date(e.visit_date) between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("initiatedOnPrEPVulnerablePop");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initiatedOnPrEPVulnerablePop");
+        return cd;
+    }
+    /**
      * Adolescents Young People initiated On PrEP
      * @return
      */
@@ -1446,6 +1464,27 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setDescription("Pregnant Or BreastFeeding on PrEP");
         return cd;
     }
+
+    /**
+     *
+     * @return
+     */
+    public CohortDefinition vulnerablePopulationPrEP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "where date(e.visit_date) <= date(:endDate)\n" +
+                "group by e.patient_id\n" +
+                "having mid(max(concat(date(e.visit_date), e.population_type)), 11) = 164929\n" +
+                "   and mid(max(concat(date(e.visit_date), e.kp_type)), 11) in (162277, 162198);";
+        cd.setName("Vulnerable population PrEP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Vulnerable population PrEP");
+
+        return cd;
+    }
     /**
      * General Population Current on PrEP
      * @return
@@ -1513,6 +1552,20 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setCompositionString("discordantCouplePrEP AND currentOnPrEP");
         return cd;
     }
+
+    /**
+     * Vulnerable population Current on PrEP
+     * @return
+     */
+    public CohortDefinition vulnerablePopulationCurrentOnPrEP() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("vulnerablePopulationPrEP", ReportUtils.map(vulnerablePopulationPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("vulnerablePopulationPrEP AND currentOnPrEP");
+        return cd;
+    }
     /**
      *  Adolescents and Young People Current on PrEP
      * @return
@@ -1526,6 +1579,20 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setCompositionString("adolescentAndYoungPeople AND currentOnPrEP");
         return cd;
     }
+
+    /**
+     * Current on PrEP vulnerable population
+     * @return
+     */
+    public CohortDefinition currentOnPrEPVulnerablePopulation() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("vulnerablePopulationPrEP", ReportUtils.map(vulnerablePopulationPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("vulnerablePopulationPrEP AND currentOnPrEP");
+        return cd;
+    }
     /**
      *  Pregnant or Breastfeeding Current on PrEP
      * @return
@@ -1537,6 +1604,149 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("pregnantOrBreastFeedingPrEP", ReportUtils.map(pregnantOrBreastFeedingPrEP(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("pregnantOrBreastFeedingPrEP AND currentOnPrEP");
+        return cd;
+    }
+
+    /**
+     * Diagnosed with STI
+     * @return
+     */
+    public CohortDefinition diagnosedWithSTI() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select patient_id\n" +
+                "from kenyaemr_etl.etl_prep_followup f\n" +
+                "where f.genital_ulcer_disease = 'GUD'\n" +
+                "   or f.vaginal_discharge = 'VG'\n" +
+                "   or f.cervical_discharge = 'CD'\n" +
+                "   or f.pid = 'PID'\n" +
+                "   or f.urethral_discharge = 'UD'\n" +
+                "   or f.anal_discharge = 'AD'\n" +
+                "   or f.other_sti_symptoms is not null\n" +
+                "    and date(f.visit_date) between date(:startDate) and date(:endDate);";
+        cd.setName("diagnosedWithSTI");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Diagnosed with STI");
+        return cd;
+    }
+    /**
+     * On PrEP diagnosed with STI - GP
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIGP() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPGP", ReportUtils.map(currentOnPrEPGP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPGP");
+        return cd;
+    }
+
+    /**
+     * On PrEP diagnosed with STI - MSMS/MSW
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIMSMMSW() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPMSMAndMSW", ReportUtils.map(currentOnPrEPMSMAndMSW(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPMSMAndMSW");
+        return cd;
+    }
+
+    /**
+     * On PrEP diagnosed with STI - FSW
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIFSW() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPFSW", ReportUtils.map(currentOnPrEPFSW(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPFSW");
+        return cd;
+    }
+
+    /**
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIPWIDOrPWUD() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPPWIDAndPWUD", ReportUtils.map(currentOnPrEPPWIDAndPWUD(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPPWIDAndPWUD");
+        return cd;
+    }
+
+    /**
+     * Current on PrEP diagnosed with STI discordant couple
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIDiscordant() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPDiscordantCouple", ReportUtils.map(currentOnPrEPDiscordantCouple(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPDiscordantCouple");
+        return cd;
+    }
+
+    /**
+     * Current on PrEP diagnosed with STI VP
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIVP() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("vulnerablePopulationCurrentOnPrEP", ReportUtils.map(vulnerablePopulationCurrentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("vulnerablePopulationCurrentOnPrEP AND diagnosedWithSTI");
+        return cd;
+    }
+    /**
+     * Current on PrEP diagnosed with STI AYP
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIAYP() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPAdolescentsYoungPeople", ReportUtils.map(currentOnPrEPAdolescentsYoungPeople(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPAdolescentsYoungPeople");
+        return cd;
+    }
+
+    /**
+     * Current on PrEP diagnosed with STI Pregnant or Breastfeeding
+     * @return
+     */
+    public CohortDefinition onPrEPDiagnosedWithSTIPrEOrBF() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEPPregnantOrBreastfeeding", ReportUtils.map(currentOnPrEPPregnantOrBreastfeeding(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("diagnosedWithSTI", ReportUtils.map(diagnosedWithSTI(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("diagnosedWithSTI AND currentOnPrEPPregnantOrBreastfeeding");
+        return cd;
+    }
+    public CohortDefinition onPrEPSeroconverted() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentOnPrEP", ReportUtils.map(currentOnPrEP(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsPositiveMales", ReportUtils.map(htsPositiveMales(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("htsPositiveFemales", ReportUtils.map(htsPositiveFemales(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(htsPositiveMales OR htsPositiveFemales) AND currentOnPrEP");
         return cd;
     }
 
