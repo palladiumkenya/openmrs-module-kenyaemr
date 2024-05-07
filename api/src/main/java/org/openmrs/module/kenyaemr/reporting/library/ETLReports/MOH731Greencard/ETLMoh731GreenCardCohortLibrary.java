@@ -2634,7 +2634,7 @@ public class ETLMoh731GreenCardCohortLibrary {
 
         return cd;
     }
-    // Known Positive at 1st ANC HV02-03
+    // Known Positive at 1st ANC HV02-01
     public CohortDefinition knownPositiveAtFirstANC(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select v.patient_id from kenyaemr_etl.etl_mch_antenatal_visit v\n" +

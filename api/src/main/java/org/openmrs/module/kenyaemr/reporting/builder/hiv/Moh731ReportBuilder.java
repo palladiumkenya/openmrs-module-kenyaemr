@@ -268,10 +268,13 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
+
+        dsd.addColumn("HV02-01", "Known Positive at 1st ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), "");
+
 //Updates
         dsd.addColumn("HV02-01", "First ANC Visit", ReportUtils.map(moh731GreenCardIndicators.firstANCVisitMchmsAntenatal(), indParams), "");
         dsd.addColumn("HV02-02", "Delivery from HIV+ Mothers(Labor and Delivery)", ReportUtils.map(moh731GreenCardIndicators.deliveryFromHIVPositiveMothers(), indParams), "");
-        dsd.addColumn("HV02-03", "Known Positive at 1st ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), "");
+
         dsd.addColumn("HV02-04", "Initial test at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.initialHIVTestInMchmsAntenatal(), indParams), "");
         dsd.addColumn("HV02-05", "Initial Test at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.testedForHivInMchmsDelivery(), indParams), "");
         dsd.addColumn("HV02-06", "Initial Test at PNC <=6 Weeks)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCUpto6Weeks(), indParams), "");
