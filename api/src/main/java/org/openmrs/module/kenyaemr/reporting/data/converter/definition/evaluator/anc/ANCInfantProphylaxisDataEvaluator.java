@@ -36,13 +36,10 @@ public class ANCInfantProphylaxisDataEvaluator implements EncounterDataEvaluator
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "    (case\n" +
-                "        when v.azt_given = 86663 and v.nvp_given = 80586 then 'AZT&NVP'\n" +
-                "        when v.azt_given = 86663 then 'AZT'\n" +
-                "        when v.nvp_given = 80586 then 'NVP'\n" +
-                "        else ''\n" +
-                "    end) as infant_prophylaxis\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+                " (IF(v.azt_given = 86663 AND v.nvp_given = 80586, 'AZT&NVP',\n" +
+                "IF(v.azt_given = 86663, 'AZT',\n" +
+                "IF(v.nvp_given = 80586, 'NVP', '')))) AS infant_prophylaxis\n" +
+        "from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
