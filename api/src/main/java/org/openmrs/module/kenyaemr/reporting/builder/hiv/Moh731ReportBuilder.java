@@ -261,7 +261,7 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
     protected DataSetDefinition pmtctDataSet() {
         CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
         dsd.setName("2");
-        dsd.setDescription("Prevention of Mother-to-Child Transmission");
+        dsd.setDescription("Elimination of Mother-to-Child Transmission");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addDimension("age", ReportUtils.map(commonDimensions.moh731GreenCardAgeGroups(), "onDate=${endDate}"));
@@ -270,22 +270,28 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
         dsd.addColumn("HV02-01", "Known Positive at 1st ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), "");
+        dsd.addColumn("HV02-02", "Initial test at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtANC(), indParams), "");
+        dsd.addColumn("HV02-03", "Retest at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.retestAtANC(), indParams), "");
+        dsd.addColumn("HV02-04", "Initial Test at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.initialTestAtLabourAndDelivery(), indParams), "");
+        dsd.addColumn("HV02-05", "Retest at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.retestAtLabourAndDelivery(), indParams), "");
+        dsd.addColumn("HV02-06", "Initial Test at PNC <=6 Weeks)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCWithin6Weeks(), indParams), "");
+        dsd.addColumn("HV02-07", "PNC Retest within 6 weeks)", ReportUtils.map(moh731GreenCardIndicators.reestAtPNCWithin6Weeks(), indParams), "");
+        dsd.addColumn("HV02-08", "PNC Initial Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCBtwn6WeeksAnd6Months(), indParams), "");
+        dsd.addColumn("HV02-09", "PNC retest Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.retestAtPNCBtwn6WeeksAnd6Months(), indParams), "");
 
-//Updates
+        dsd.addColumn("HV02-10", "HIV positive ANC", ReportUtils.map(moh731GreenCardIndicators.hivPositiveAtANC(), indParams), "");
+        dsd.addColumn("HV02-11", "HIV positive results L&D (Labour & Delivery)", ReportUtils.map(moh731GreenCardIndicators.hivPositiveAtLabourAndDelivery(), indParams), "");
+        dsd.addColumn("HV02-12", "HIV positive results PNC <=6 weeks", ReportUtils.map(moh731GreenCardIndicators.hivPositiveAtPNCWithin6Weeks(), indParams), "");
+        dsd.addColumn("HV02-13", "HIV positive results PNC >6 weeks - 6 Months)", ReportUtils.map(moh731GreenCardIndicators.hivPositiveAtPNCBtwn6WeeksAnd6Months(), indParams), "");
+
+        //Updates
         dsd.addColumn("HV02-01", "First ANC Visit", ReportUtils.map(moh731GreenCardIndicators.firstANCVisitMchmsAntenatal(), indParams), "");
         dsd.addColumn("HV02-02", "Delivery from HIV+ Mothers(Labor and Delivery)", ReportUtils.map(moh731GreenCardIndicators.deliveryFromHIVPositiveMothers(), indParams), "");
 
-        dsd.addColumn("HV02-04", "Initial test at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.initialHIVTestInMchmsAntenatal(), indParams), "");
-        dsd.addColumn("HV02-05", "Initial Test at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.testedForHivInMchmsDelivery(), indParams), "");
-        dsd.addColumn("HV02-06", "Initial Test at PNC <=6 Weeks)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCUpto6Weeks(), indParams), "");
+
         dsd.addColumn("HV02-07", "Known HIV Status Total)", ReportUtils.map(moh731GreenCardIndicators.testedForHivInMchms(), indParams), "");
-        dsd.addColumn("HV02-08", "PNC Retest within 6 weeks)", ReportUtils.map(moh731GreenCardIndicators.pncRetestUpto6Weeks(), indParams), "");
-        dsd.addColumn("HV02-09", "PNC Testing >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.pncTestBtwn6WeeksAnd6Months(), indParams), "");
-        dsd.addColumn("HV02-10", "HIV positive Before First ANC)", ReportUtils.map(moh731GreenCardIndicators.knownHivPositiveAtFirstANC(), indParams), "");
-        dsd.addColumn("HV02-11", "HIV positive results ANC", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInMchmsAntenatal(), indParams), "");
-        dsd.addColumn("HV02-12", "HIV positive results (Labor and Delivery)", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInMchmsDelivery(), indParams), "");
-        dsd.addColumn("HV02-13", "HIV positive results PNC <=6 weeks)", ReportUtils.map(moh731GreenCardIndicators.testedHivPositiveInPNCWithin6Weeks(), indParams), "");
-        dsd.addColumn("HV02-14", "Total HIV positive Mothers)", ReportUtils.map(moh731GreenCardIndicators.totalHivPositiveInMchms(), indParams), "");
+
+
         dsd.addColumn("HV02-15", "HIV Positive results PNC >6 weeks and <=6 months", ReportUtils.map(moh731GreenCardIndicators.pncHIVPositiveBetween7weeksAnd6Months(), indParams), "");
         dsd.addColumn("HV02-16", "On HAART at 1st ANC", ReportUtils.map(moh731GreenCardIndicators.onHAARTAtFirstANC(), indParams), "");
         dsd.addColumn("HV02-17", "Start HAART during ANC", ReportUtils.map(moh731GreenCardIndicators.startHAARTANC(), indParams), "");

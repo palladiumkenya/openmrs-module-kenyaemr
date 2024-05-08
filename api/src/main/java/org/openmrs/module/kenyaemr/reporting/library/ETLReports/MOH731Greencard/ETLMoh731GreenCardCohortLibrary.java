@@ -2659,6 +2659,492 @@ public class ETLMoh731GreenCardCohortLibrary {
 
         return cd;
     }
+    public CohortDefinition initialTestAtANC(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id,\n" +
+                "             anc_date,\n" +
+                "             hts_date,\n" +
+                "             max(e.visit_date) as enrollment_date,\n" +
+                "             v.patient_id      as anc_client,\n" +
+                "             t.patient_id      as hts_client,\n" +
+                "             v.anc_count,\n" +
+                "             t.hts_count\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, max(v.visit_date) as anc_date, count(v.patient_id) as anc_count\n" +
+                "                          FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                            and final_test_result in ('Positive', 'Negative')\n" +
+                "                          GROUP BY v.patient_id\n" +
+                "                          having count(patient_id) >= 1) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date, count(patient_id) as hts_count\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 160538\n" +
+                "                            and DATE(t.visit_date) <= DATE(:endDate)\n" +
+                "                            and t.final_test_result in ('Positive', 'Negative')\n" +
+                "                          group by patient_id\n" +
+                "                          having count(patient_id) >= 1) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      group by e.patient_id) a\n" +
+                "where ((a.anc_client is not null and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and\n" +
+                "        (a.hts_client is not null and\n" +
+                "         TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10) and anc_date = hts_date)\n" +
+                "   or (\n" +
+                "    (hts_client is not null and hts_count = 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10 and anc_client is null) or\n" +
+                "    (anc_client is not null and anc_count = 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and hts_client is null);";
+        cd.setName("initialTestAtANC");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("initial Test At ANC");
+
+        return cd;
+    }
+
+    public CohortDefinition retestAtANC(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id,\n" +
+                "             anc_date,\n" +
+                "             hts_date,\n" +
+                "             max(e.visit_date) as enrollment_date,\n" +
+                "             v.patient_id      as anc_client,\n" +
+                "             t.patient_id      as hts_client,\n" +
+                "             v.anc_count,\n" +
+                "             t.hts_count\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, max(v.visit_date) as anc_date, count(v.patient_id) as anc_count\n" +
+                "                          FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                            and final_test_result in ('Positive', 'Negative')\n" +
+                "                          GROUP BY v.patient_id\n" +
+                "                          having count(patient_id) >= 1) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date, count(patient_id) as hts_count\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 160538\n" +
+                "                            and DATE(t.visit_date) <= DATE(:endDate)\n" +
+                "                            and t.final_test_result in ('Positive', 'Negative')\n" +
+                "                          group by patient_id\n" +
+                "                          having count(patient_id) >= 1) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      group by e.patient_id) a\n" +
+                "where (((a.anc_client is not null and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and\n" +
+                "        (a.hts_client is not null and\n" +
+                "         TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10)))\n" +
+                "   or (\n" +
+                "    (hts_client is not null and hts_count > 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10) or\n" +
+                "    (anc_client is not null and anc_count > 1\n" +
+                "        and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10));";
+        cd.setName("retestAtANC");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Retest Test At ANC");
+
+        return cd;
+    }
+
+    public CohortDefinition initialTestPositiveAtANC(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id,\n" +
+                "             anc_date,\n" +
+                "             hts_date,\n" +
+                "             max(e.visit_date) as enrollment_date,\n" +
+                "             v.patient_id      as anc_client,\n" +
+                "             t.patient_id      as hts_client,\n" +
+                "             v.anc_count,\n" +
+                "             t.hts_count\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, max(v.visit_date) as anc_date, count(v.patient_id) as anc_count\n" +
+                "                          FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                            and final_test_result = 'Positive'\n" +
+                "                          GROUP BY v.patient_id\n" +
+                "                          having count(patient_id) >= 1) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date, count(patient_id) as hts_count\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 160538\n" +
+                "                            and DATE(t.visit_date) <= DATE(:endDate)\n" +
+                "                            and t.final_test_result = 'Positive'\n" +
+                "                          group by patient_id\n" +
+                "                          having count(patient_id) >= 1) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      group by e.patient_id) a\n" +
+                "where ((a.anc_client is not null and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and\n" +
+                "       (a.hts_client is not null and\n" +
+                "        TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10) and anc_date = hts_date)\n" +
+                "   or (\n" +
+                "    (hts_client is not null and hts_count = 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10 and anc_client is null) or\n" +
+                "    (anc_client is not null and anc_count = 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and hts_client is null);";
+        cd.setName("initialTestPositiveAtANC");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Initial Test Positive At ANC");
+
+        return cd;
+    }
+
+    public CohortDefinition retestPositiveAtANC(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id,\n" +
+                "             anc_date,\n" +
+                "             hts_date,\n" +
+                "             max(e.visit_date) as enrollment_date,\n" +
+                "             v.patient_id      as anc_client,\n" +
+                "             t.patient_id      as hts_client,\n" +
+                "             v.anc_count,\n" +
+                "             t.hts_count\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, max(v.visit_date) as anc_date, count(v.patient_id) as anc_count\n" +
+                "                          FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                            and final_test_result = 'Positive'\n" +
+                "                          GROUP BY v.patient_id\n" +
+                "                          having count(patient_id) >= 1) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date, count(patient_id) as hts_count\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 160538\n" +
+                "                            and DATE(t.visit_date) <= DATE(:endDate)\n" +
+                "                            and t.final_test_result = 'Positive'\n" +
+                "                          group by patient_id\n" +
+                "                          having count(patient_id) >= 1) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      group by e.patient_id) a\n" +
+                "where ((a.anc_client is not null and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10) and\n" +
+                "        (a.hts_client is not null and\n" +
+                "         TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10) and hts_date <> anc_date)\n" +
+                "   or (\n" +
+                "    (hts_client is not null and hts_count > 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(hts_date)) <= 10 and anc_client is null) or\n" +
+                "    (anc_client is not null and anc_count > 1 and TIMESTAMPDIFF(MONTH, DATE(enrollment_date), DATE(anc_date)) <= 10 and hts_client is null));";
+        cd.setName("retestPositiveAtANC");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Retest Positive At ANC");
+
+        return cd;
+    }
+
+    public CohortDefinition testedAtLabourAndDelivery(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "         left join (SELECT v.patient_id\n" +
+                "                    FROM kenyaemr_etl.etl_mchs_delivery v\n" +
+                "                    WHERE DATE(v.visit_date) between DATE(:startDate) and DATE(:endDate)\n" +
+                "                      and final_test_result in ('Positive','Negative')\n" +
+                "                    GROUP BY v.patient_id) v\n" +
+                "                   on e.patient_id = v.patient_id\n" +
+                "         left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                    from kenyaemr_etl.etl_hts_test t\n" +
+                "                    where t.hts_entry_point = 160456\n" +
+                "                      and DATE(t.visit_date) between DATE(:startDate) and DATE(:endDate)\n" +
+                "                    group by patient_id) t\n" +
+                "                   on v.patient_id = t.patient_id\n" +
+                "where (v.patient_id is not null or t.patient_id is not null)\n" +
+                "group by e.patient_id;";
+        cd.setName("testedAtLabourAndDelivery");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested At Labour and Delivery");
+
+        return cd;
+    }
+    public CohortDefinition initialTestAtLabourAndDelivery(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtLabourAndDelivery",
+                ReportUtils.map(testedAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",
+                ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",
+                ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtLabourAndDelivery AND NOT (initialTestAtANC OR retestAtANC)");
+        return cd;
+    }
+
+    public CohortDefinition retestAtLabourAndDelivery(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtLabourAndDelivery",
+                ReportUtils.map(testedAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",
+                ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",
+                ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtLabourAndDelivery AND (initialTestAtANC OR retestAtANC)");
+        return cd;
+    }
+    public CohortDefinition testedAtPNCWithin6Weeks(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id, hts_date, delivery_date\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, v.delivery_date\n" +
+                "                          FROM kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                            and final_test_result in ('Positive','Negative')\n" +
+                "                            and TIMESTAMPDIFF(WEEK, v.delivery_date, DATE(v.visit_date)) <= 6\n" +
+                "                          GROUP BY v.patient_id) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 1623\n" +
+                "                            and DATE(t.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                          group by patient_id) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      where ((v.patient_id is not null) or\n" +
+                "             (t.patient_id is not null and TIMESTAMPDIFF(WEEK, DATE(delivery_date), DATE(hts_date)) <= 6))\n" +
+                "      group by e.patient_id) a;";
+        cd.setName("testedAtPNCWithin6Weeks");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested At PNC within 6 weeks");
+
+        return cd;
+    }
+
+    public CohortDefinition testedAtPNCBtwn6WeeksAnd6Months(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id, hts_date, delivery_date\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, v.delivery_date\n" +
+                "                          FROM kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                            and final_test_result in ('Positive','Negative')\n" +
+                "                            and TIMESTAMPDIFF(WEEK, v.delivery_date, DATE(v.visit_date)) > 6\n" +
+                "                            and TIMESTAMPDIFF(MONTH, v.delivery_date, DATE(v.visit_date)) <= 6\n" +
+                "                          GROUP BY v.patient_id) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 1623\n" +
+                "                            and DATE(t.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                          group by patient_id) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      where ((v.patient_id is not null) or\n" +
+                "             (t.patient_id is not null and TIMESTAMPDIFF(WEEK, DATE(delivery_date), DATE(hts_date)) > 6) and\n" +
+                "             TIMESTAMPDIFF(MONTH, v.delivery_date, DATE(hts_date)) <= 6)\n" +
+                "      group by e.patient_id) a;";
+        cd.setName("testedAtPNCBtwn6WeeksAnd6Months");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested At PNC between weeks and 6 months");
+
+        return cd;
+    }
+
+    public CohortDefinition initialTestAtPNCWithin6Weeks(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtPNCWithin6Weeks",ReportUtils.map(testedAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtLabourAndDelivery",ReportUtils.map(initialTestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtLabourAndDelivery",ReportUtils.map(retestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtPNCWithin6Weeks AND NOT (initialTestAtANC OR initialTestAtLabourAndDelivery OR retestAtANC OR retestAtLabourAndDelivery)");
+        return cd;
+    }
+
+    public CohortDefinition retestAtPNCWithin6Weeks(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtPNCWithin6Weeks",ReportUtils.map(testedAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtLabourAndDelivery",ReportUtils.map(initialTestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtLabourAndDelivery",ReportUtils.map(retestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtPNCWithin6Weeks",ReportUtils.map(initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtPNCWithin6Weeks AND (initialTestAtANC OR initialTestAtLabourAndDelivery OR retestAtANC OR retestAtLabourAndDelivery OR initialTestAtPNCWithin6Weeks)");
+        return cd;
+    }
+    public CohortDefinition initialTestAtPNCBtwn6WeeksAnd6Months(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtPNCBtwn6WeeksAnd6Months",ReportUtils.map(testedAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("testedAtPNCWithin6Weeks",ReportUtils.map(testedAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtLabourAndDelivery",ReportUtils.map(initialTestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtLabourAndDelivery",ReportUtils.map(retestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtPNCWithin6Weeks",ReportUtils.map(initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtPNCWithin6Weeks",ReportUtils.map(retestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtPNCBtwn6WeeksAnd6Months AND NOT (testedAtPNCWithin6Weeks OR initialTestAtANC OR retestAtANC OR initialTestAtLabourAndDelivery OR retestAtLabourAndDelivery OR retestAtPNCWithin6Weeks)");
+        return cd;
+    }
+
+    public CohortDefinition retestAtPNCBtwn6WeeksAnd6Months(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedAtPNCBtwn6WeeksAnd6Months",ReportUtils.map(testedAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("testedAtPNCWithin6Weeks",ReportUtils.map(testedAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANC",ReportUtils.map(initialTestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtANC",ReportUtils.map(retestAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtLabourAndDelivery",ReportUtils.map(initialTestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtLabourAndDelivery",ReportUtils.map(retestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtPNCWithin6Weeks",ReportUtils.map(initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestAtPNCWithin6Weeks",ReportUtils.map(retestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedAtPNCBtwn6WeeksAnd6Months AND (testedAtPNCWithin6Weeks OR initialTestAtANC OR retestAtANC OR initialTestAtLabourAndDelivery OR retestAtLabourAndDelivery OR retestAtPNCWithin6Weeks)");
+
+        return cd;
+    }
+    public CohortDefinition hivPositiveAtANC(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("initialTestPositiveAtANC",
+                ReportUtils.map(initialTestPositiveAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("retestPositiveAtANC",
+                ReportUtils.map(retestPositiveAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("initialTestPositiveAtANC OR retestPositiveAtANC");
+        return cd;
+    }
+    public CohortDefinition testedPositiveAtLabourAndDelivery(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "         left join (SELECT v.patient_id\n" +
+                "                    FROM kenyaemr_etl.etl_mchs_delivery v\n" +
+                "                    WHERE DATE(v.visit_date) between DATE(:startDate) and DATE(:endDate)\n" +
+                "                      and final_test_result = 'Positive'\n" +
+                "                    GROUP BY v.patient_id) v\n" +
+                "                   on e.patient_id = v.patient_id\n" +
+                "         left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                    from kenyaemr_etl.etl_hts_test t\n" +
+                "                    where t.hts_entry_point = 160456\n" +
+                "                      and t.final_test_result = 'Positive'\n" +
+                "                      and DATE(t.visit_date) between DATE(:startDate) and DATE(:endDate)\n" +
+                "                    group by patient_id) t\n" +
+                "                   on v.patient_id = t.patient_id\n" +
+                "where (v.patient_id is not null or t.patient_id is not null)\n" +
+                "group by e.patient_id;";
+        cd.setName("testedPositiveAtLabourAndDelivery");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested Positve at Labour and Delivery");
+
+        return cd;
+    }
+
+    public CohortDefinition hivPositiveAtLabourAndDelivery(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("hivPositiveAtANC",
+                ReportUtils.map(hivPositiveAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("testedPositiveAtLabourAndDelivery",
+                ReportUtils.map(testedPositiveAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedPositiveAtLabourAndDelivery AND NOT hivPositiveAtANC");
+        return cd;
+    }
+    public CohortDefinition testedPositiveAtPNCWithin6Weeks(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id, hts_date, delivery_date\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, v.delivery_date\n" +
+                "                          FROM kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                            and final_test_result = 'Positive'\n" +
+                "                            and TIMESTAMPDIFF(WEEK, v.delivery_date, DATE(v.visit_date)) <= 6\n" +
+                "                          GROUP BY v.patient_id) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 1623\n" +
+                "                            and DATE(t.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                          group by patient_id) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      where ((v.patient_id is not null) or\n" +
+                "             (t.patient_id is not null and TIMESTAMPDIFF(WEEK, DATE(delivery_date), DATE(hts_date)) <= 6))\n" +
+                "      group by e.patient_id) a;";
+        cd.setName("testedPositiveAtPNCWithin6Weeks");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested Positive at PNC within 6 weeks");
+
+        return cd;
+    }
+    public CohortDefinition testedPositiveAtPNCBtwn6WeeksAnd6Months(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select e.patient_id, hts_date, delivery_date\n" +
+                "      from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "               left join (SELECT v.patient_id, v.delivery_date\n" +
+                "                          FROM kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "                          WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                            and final_test_result = 'Positive'\n" +
+                "                            and TIMESTAMPDIFF(WEEK, v.delivery_date, DATE(v.visit_date)) > 6\n" +
+                "                            and TIMESTAMPDIFF(MONTH, v.delivery_date, DATE(v.visit_date)) <= 6\n" +
+                "                          GROUP BY v.patient_id) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "               left join (select t.patient_id, max(t.visit_date) as hts_date\n" +
+                "                          from kenyaemr_etl.etl_hts_test t\n" +
+                "                          where t.hts_entry_point = 1623\n" +
+                "                            and DATE(t.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                          group by patient_id) t\n" +
+                "                         on v.patient_id = t.patient_id\n" +
+                "      where ((v.patient_id is not null) or\n" +
+                "             (t.patient_id is not null and TIMESTAMPDIFF(WEEK, DATE(delivery_date), DATE(hts_date)) > 6) and\n" +
+                "             TIMESTAMPDIFF(MONTH, v.delivery_date, DATE(hts_date)) <= 6)\n" +
+                "      group by e.patient_id) a;";
+        cd.setName("testedPositiveAtPNCBtwn6WeeksAnd6Months");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Tested Positive at PNC btwn 6 weeks and 6 Months");
+
+        return cd;
+    }
+
+    public CohortDefinition hivPositiveAtPNCWithin6Weeks(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedPositiveAtPNCWithin6Weeks",ReportUtils.map(testedPositiveAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("hivPositiveAtLabourAndDelivery",ReportUtils.map(hivPositiveAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedPositiveAtPNCWithin6Weeks AND NOT hivPositiveAtLabourAndDelivery");
+        return cd;
+    }
+
+    public CohortDefinition hivPositiveAtPNCBtwn6WeeksAnd6Months(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("testedPositiveAtPNCBtwn6WeeksAnd6Months",ReportUtils.map(testedPositiveAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("hivPositiveAtPNCWithin6Weeks",ReportUtils.map(hivPositiveAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("testedPositiveAtPNCBtwn6WeeksAnd6Months AND NOT hivPositiveAtPNCWithin6Weeks");
+        return cd;
+    }
     /**
      * Clients withInitial test at ANC 1 HV02-04     *
      * Composed using negativePMTCTANC1 OR positivePMTCTANC1
