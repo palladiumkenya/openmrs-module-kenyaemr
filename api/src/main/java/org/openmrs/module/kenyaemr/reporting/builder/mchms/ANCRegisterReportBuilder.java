@@ -158,6 +158,9 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         ANCHIVTestTwoDataDefinition ancHIVTestTwoDataDefinition = new ANCHIVTestTwoDataDefinition();
         ancHIVTestTwoDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancHIVTestTwoDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ANCHIVTestThreeDataDefinition ancHIVTestThreeDataDefinition = new ANCHIVTestThreeDataDefinition();
+        ancHIVTestThreeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancHIVTestThreeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         ANCFinalTestResultsDataDefinition ancFinalTestResultsDataDefinition = new ANCFinalTestResultsDataDefinition();
         ancFinalTestResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancFinalTestResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -282,6 +285,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("HIV Test Type", ancHIVTestTypeDataDefinition, paramMapping);
         dsd.addColumn("HIV Test One", ancHIVTestOneDataDefinition, paramMapping);
         dsd.addColumn("HIV Test Two", ancHIVTestTwoDataDefinition, paramMapping);
+        dsd.addColumn("HIV Test Three", ancHIVTestThreeDataDefinition, paramMapping);
         dsd.addColumn("HIV Test Results", ancFinalTestResultsDataDefinition, paramMapping);
         dsd.addColumn("WHO Stage", ancWHOStageDataDefinition, paramMapping);
         dsd.addColumn("VL Test Results", ancVLTestResultsDataDefinition, paramMapping);

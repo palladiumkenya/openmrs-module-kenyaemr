@@ -224,6 +224,9 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		MaternityHIVTestTwoDataDefinition maternityHIVTestTwoDataDefinition = new MaternityHIVTestTwoDataDefinition();
 		maternityHIVTestTwoDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		maternityHIVTestTwoDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		MaternityHIVTestThreeDataDefinition maternityHIVTestThreeDataDefinition = new MaternityHIVTestThreeDataDefinition();
+		maternityHIVTestThreeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		maternityHIVTestThreeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		MaternityHIVFinalResultsDataDefinition maternityHIVFinalResultsDataDefinition = new MaternityHIVFinalResultsDataDefinition();
 		maternityHIVFinalResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		maternityHIVFinalResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -328,6 +331,7 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("HIV Status at ANC", maternityHIVStatusAtANCDataDefinition, paramMapping);
 		dsd.addColumn("HIV Test One", maternityHIVTestOneDataDefinition, paramMapping);
 		dsd.addColumn("HIV Test Two", maternityHIVTestTwoDataDefinition, paramMapping);
+		dsd.addColumn("HIV Test Three", maternityHIVTestThreeDataDefinition, paramMapping);
 		dsd.addColumn("HIV Final Results", maternityHIVFinalResultsDataDefinition, paramMapping);
 		dsd.addColumn("ARV Prophylaxis Issued from ANC", maternityARVProphylaxisIssuedFromANCDataDefinition, paramMapping);
 		dsd.addColumn("ARV Prophylaxis Issued at Maternity", maternityARVProphylaxisIssuedAtMaternityDataDefinition, paramMapping);
