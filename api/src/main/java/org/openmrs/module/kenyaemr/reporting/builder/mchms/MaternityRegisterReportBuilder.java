@@ -300,7 +300,7 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("Marital Status", kenyaEMRMaritalStatusDataDefinition, paramMapping);
 		dsd.addColumn("Parity", maternityANCParityDataDefinition, paramMapping);
 		dsd.addColumn("Gravida", maternityGravidaDataDefinition, paramMapping);
-		dsd.addColumn("LMP", maternityLMPDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
+		dsd.addColumn("LMP", maternityLMPDateDataDefinition, paramMapping);
 		dsd.addColumn("Ultra Sound", maternityEDDUltrasoundDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
 		dsd.addColumn("Diagnosis", maternityDiagnosisDataDefinition, paramMapping);
 		dsd.addColumn("Duration of Labour", maternityDurationOfLabourDataDefinition, paramMapping);
