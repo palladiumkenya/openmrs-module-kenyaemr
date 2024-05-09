@@ -33,6 +33,7 @@ import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensi
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
 import org.openmrs.module.reporting.data.DataDefinition;
+import org.openmrs.module.reporting.data.converter.BirthdateConverter;
 import org.openmrs.module.reporting.data.converter.DataConverter;
 import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
@@ -40,10 +41,7 @@ import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeD
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PersonAttributeDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.*;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.EncounterDataSetDefinition;
@@ -102,8 +100,10 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
         PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
         PNCRegisterNumberDataDefinition pncRegisterNumberDataDefinition = new PNCRegisterNumberDataDefinition();
         pncRegisterNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -180,6 +180,9 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         PNCTestTwoResultsDataDefinition pncTestTwoResultsDataDefinition = new PNCTestTwoResultsDataDefinition();
         pncTestTwoResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pncTestTwoResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		PNCTestThreeResultsDataDefinition pncTestThreeResultsDataDefinition = new PNCTestThreeResultsDataDefinition();
+		pncTestThreeResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		pncTestThreeResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         PNCHIVResultsWithin6WeeksDataDefinition pnchivResultsWithin6WeeksDataDefinition = new PNCHIVResultsWithin6WeeksDataDefinition();
         pnchivResultsWithin6WeeksDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pnchivResultsWithin6WeeksDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -222,6 +225,9 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         PNCModernFPCounsellingDataDefinition pncModernFPCounsellingDataDefinition = new PNCModernFPCounsellingDataDefinition();
         pncModernFPCounsellingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pncModernFPCounsellingDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		PNCModernFPMethodCounsellingDataDefinition pncModernFPMethodCounsellingDataDefinition = new PNCModernFPMethodCounsellingDataDefinition();
+		pncModernFPMethodCounsellingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		pncModernFPMethodCounsellingDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         PNCModernFPWithin6WeeksDataDefinition pncModernFPWithin6WeeksDataDefinition = new PNCModernFPWithin6WeeksDataDefinition();
         pncModernFPWithin6WeeksDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pncModernFPWithin6WeeksDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -237,12 +243,18 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         PNCReferredToDataDefinition pncReferredToDataDefinition = new PNCReferredToDataDefinition();
         pncReferredToDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pncReferredToDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		PNCReferralReasonDataDefinition pcnReferralReasonDataDefinition = new PNCReferralReasonDataDefinition();
+		pcnReferralReasonDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		pcnReferralReasonDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         PNCRemarksDataDefinition pncRemarksDataDefinition = new PNCRemarksDataDefinition();
         pncRemarksDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         pncRemarksDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
         ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ageAtReportingDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		PNCInitiatedPrepDataDefinition pncInitiatedPrepDataDefinition = new PNCInitiatedPrepDataDefinition();
+		pncInitiatedPrepDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		pncInitiatedPrepDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -252,8 +264,10 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(), "", new DateConverter(ENC_DATE_FORMAT));
         // new columns
         dsd.addColumn("PNC Number", pncRegisterNumberDataDefinition, paramMapping);
+		dsd.addColumn("National Unique Patient Identifier", nupiDef, null);
         dsd.addColumn("Visit Number", pncVisitNumberDataDefinition,  paramMapping);
         dsd.addColumn("Name", nameDef, "");
+		dsd.addColumn("Date of Birth", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
         dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
         dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
@@ -282,6 +296,8 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Tested HIV at PNC", pncTestedForHIVAtPNCDataDefinition,  paramMapping);
         dsd.addColumn("Test 1 Results", pncTestOneResultsDataDefinition,  paramMapping);
         dsd.addColumn("Test 2 Results", pncTestTwoResultsDataDefinition,  paramMapping);
+		dsd.addColumn("Test 3 Results", pncTestThreeResultsDataDefinition,  paramMapping);
+        dsd.addColumn("Initiated on PrEP", pncInitiatedPrepDataDefinition,  paramMapping);
         dsd.addColumn("HIV Results <=6 weeks", pnchivResultsWithin6WeeksDataDefinition,  paramMapping);
         dsd.addColumn("HIV Results >6 weeks", pnchivResultsGreaterThan6WeeksDataDefinition,  paramMapping);
         dsd.addColumn("NVP and AZT for Baby <=6 weeks", pncnvpAndAZTForBabyWithin6WeeksDataDefinition,  paramMapping);
@@ -296,11 +312,13 @@ public class PNCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Cervical Cancer Screening Results", pncCervicalCancerScreeningResultsDataDefinition,  paramMapping);
         dsd.addColumn("Exercise Given", pncExerciseGivenDataDefinition,  paramMapping);
         dsd.addColumn("Counselled on Modern Post Partum FP", pncModernFPCounsellingDataDefinition,  paramMapping);
+        dsd.addColumn("Counselled method received", pncModernFPMethodCounsellingDataDefinition,  paramMapping);
         dsd.addColumn("Received Modern Post Partum FP",pncModernFPWithin6WeeksDataDefinition,  paramMapping);
         dsd.addColumn("Diagnosis", pncDiagnosisDataDefinition,  paramMapping);
         dsd.addColumn("Haemanitics", pncHaematinicsDataDefinition,  paramMapping);
         dsd.addColumn("Referred From", pncReferredFromDataDefinition,  paramMapping);
         dsd.addColumn("Referred To", pncReferredToDataDefinition,  paramMapping);
+        dsd.addColumn("Referral Reason", pcnReferralReasonDataDefinition,  paramMapping);
         dsd.addColumn("Remarks",pncRemarksDataDefinition,  paramMapping);
 
         PNCRegisterCohortDefinition cd = new PNCRegisterCohortDefinition();

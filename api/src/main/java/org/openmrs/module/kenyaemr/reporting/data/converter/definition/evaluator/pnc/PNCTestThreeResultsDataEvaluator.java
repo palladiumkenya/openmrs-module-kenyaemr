@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.pnc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCFistulaScreeningDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCTestThreeResultsDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * PNC Fistula Screening column
+ * PNC test 3 results column
  */
-@Handler(supports= PNCFistulaScreeningDataDefinition.class, order=50)
-public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= PNCTestThreeResultsDataDefinition.class, order=50)
+public class PNCTestThreeResultsDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,12 +36,17 @@ public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator 
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-			"     (case v.fistula_screening when 1107 then 'None'\n" +
-			"                               when 49 then 'Vesicovaginal Fistula\"'\n" +
-			"                               when 127847 then 'Rectovaginal fistula'\n" +
-			"                               when 111521 then 'Vesicovaginal Reflux'\n" +
-			"                               when 1118 then 'Not done' else '' end) as fistula_screening\n" +
-			"    from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			" CONCAT_WS('\\r\\n', v.test_3_kit_name, v.test_3_kit_lot_no, v.test_3_kit_expiry,\n" +
+			"          v.test_3_result) as Test_three_results\n" +
+			"                from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+			"                where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                union\n" +
+			"                select ht.encounter_id,\n" +
+			"     CONCAT_WS('\\r\\n', ht.test_3_kit_name, ht.test_3_kit_lot_no, ht.test_3_kit_expiry,\n" +
+			"          ht.test_2_result) as Test_three_results\n" +
+			"                from kenyaemr_etl.etl_hts_test ht\n" +
+			"   join kenyaemr_etl.etl_mch_antenatal_visit anc\n" +
+			"        on anc.patient_id = ht.patient_id and anc.visit_date = ht.visit_date;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
