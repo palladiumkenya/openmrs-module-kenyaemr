@@ -10,6 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator;
 
 import org.openmrs.annotation.Handler;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSReferredForDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -22,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 
 /**
- * Evaluates a HTSTestSettingDataEvaluator to produce a VisitData
+ * Evaluates a HTS Referred for DataEvaluator to produce a VisitData
  */
-@Handler(supports= HTSReferredForDataEvaluator.class, order=50)
+@Handler(supports= HTSReferredForDataDefinition.class, order=50)
 public class HTSReferredForDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired

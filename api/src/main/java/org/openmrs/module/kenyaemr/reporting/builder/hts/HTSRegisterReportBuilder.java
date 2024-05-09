@@ -107,7 +107,7 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
 
         dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
         // new columns
-        dsd.addColumn("Population Type", new HTSPopulationTypeDataDefinition(), null);
+        dsd.addColumn("Population Type", new PopulationTypeDataDefinition(), null);
         dsd.addColumn("everTested", new EverTestedForHIVDataDefinition(), null);
         dsd.addColumn("disability", new PatientDisabilityDataDefinition(), null);
         dsd.addColumn("setting", new HTSTestSettingDataDefinition(), null);
