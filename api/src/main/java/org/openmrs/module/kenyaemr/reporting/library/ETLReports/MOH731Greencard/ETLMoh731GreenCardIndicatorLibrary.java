@@ -426,6 +426,73 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.knownPositiveAtFirstANC(), "startDate=${startDate},endDate=${endDate}")
         );
     }
+    public CohortIndicator initialTestAtANC() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.initialTestAtANC(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator retestAtANC() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.retestAtANC(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator initialTestAtLabourAndDelivery() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.initialTestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator retestAtLabourAndDelivery() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.retestAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator initialTestAtPNCWithin6Weeks() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator reestAtPNCWithin6Weeks() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.retestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator initialTestAtPNCBtwn6WeeksAnd6Months() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.initialTestAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    public CohortIndicator retestAtPNCBtwn6WeeksAnd6Months() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.retestAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hivPositiveAtANC() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.hivPositiveAtANC(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hivPositiveAtLabourAndDelivery() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.hivPositiveAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hivPositiveAtPNCWithin6Weeks() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.hivPositiveAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hivPositiveAtPNCBtwn6WeeksAnd6Months() {
+        return cohortIndicator(null,
+                map(moh731Cohorts.hivPositiveAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
 
     /**
      * Number of patients who tested for HIV in MCHMS during the ANTENATAL {@link org.openmrs.module.kenyaemr.PregnancyStage}
@@ -616,7 +683,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      */
     public CohortIndicator startedHAARTPNCUpto6Weeks() {
         return cohortIndicator("Started HAART within 6 weeks of PNC",
-                map(moh731Cohorts.totalStartedHAARTAtPNCUpto6Weeks(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.totalStartedHAARTAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -639,7 +706,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      */
     public CohortIndicator onHAARTFrom7WeeksTo6Months() {
         return cohortIndicator("Started HAART between 7 weeks and 6 months",
-                map(moh731Cohorts.totalStartedOnHAARTBtw7WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.totalStartedOnHAARTBtw6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
