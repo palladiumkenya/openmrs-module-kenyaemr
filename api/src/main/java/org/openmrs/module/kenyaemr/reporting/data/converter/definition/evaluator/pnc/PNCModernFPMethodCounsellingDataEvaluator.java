@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.pnc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCFistulaScreeningDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCModernFPMethodCounsellingDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * PNC Fistula Screening column
+ * PNC Modern FP Method counselling column
  */
-@Handler(supports= PNCFistulaScreeningDataDefinition.class, order=50)
-public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= PNCModernFPMethodCounsellingDataDefinition.class, order=50)
+public class PNCModernFPMethodCounsellingDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,12 +36,20 @@ public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator 
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-			"     (case v.fistula_screening when 1107 then 'None'\n" +
-			"                               when 49 then 'Vesicovaginal Fistula\"'\n" +
-			"                               when 127847 then 'Rectovaginal fistula'\n" +
-			"                               when 111521 then 'Vesicovaginal Reflux'\n" +
-			"                               when 1118 then 'Not done' else '' end) as fistula_screening\n" +
-			"    from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"       (case v.family_planning_method when 160570 then 'Emergency contraceptive pills'\n" +
+			"                                    when 780 then 'Oral Contraceptives Pills' \n" +
+			"                                    when 5279 then 'Injectible' \n" +
+			"                                    when 1359 then 'Implant'\n" +
+			"                                    when 5275 then 'Intrauterine Device' \n" +
+			"                                    when 136163 then 'Lactational Amenorhea Method' \n" +
+			"                                    when 5278 then 'Diaphram/Cervical Cap'\n" +
+			"                                    when 5277 then 'Fertility Awareness'\n" +
+			"                                    when 1472 then 'Tubal Ligation' \n" +
+			"                                    when 190 then 'Condoms' \n" +
+			"                                    when 1489 then 'Vasectomy' \n" +
+			"                                    when 162332 then 'Undecided' else '' end) as family_planning_method\n" +
+			"    from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+			"    where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
