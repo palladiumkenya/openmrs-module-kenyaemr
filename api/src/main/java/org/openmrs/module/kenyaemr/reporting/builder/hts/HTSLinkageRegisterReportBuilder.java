@@ -9,20 +9,24 @@
  */
 package org.openmrs.module.kenyaemr.reporting.builder.hts;
 
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.HTSClientsLinkageRegisterCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.HTSMaritalStatusConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSLinkageFacilityLinkedDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSLinkageIdentifierDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSLinkageProviderHandedToDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSTracingContactStatusDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HTSTracingContactTypeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.KenyaEMRMaritalStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.HTSStrategyConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.*;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLArtStartDateDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.data.DataDefinition;
 import org.openmrs.module.reporting.data.converter.BirthdateConverter;
@@ -30,7 +34,9 @@ import org.openmrs.module.reporting.data.converter.DataConverter;
 import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeDataDefinition;
+import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition;
+import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.AgeDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.BirthdateDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
@@ -81,24 +87,31 @@ public class HTSLinkageRegisterReportBuilder extends AbstractReportBuilder {
 
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
+		DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+		PatientIdentifierType natID = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_ID);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
+		DataDefinition natIdDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(natID.getName(), natID), identifierFormatter);
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
+        //dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
+		dsd.addColumn("National ID", natIdDef, "");
+		dsd.addColumn("NUPI", nupiDef, "");
         dsd.addColumn("Date of Birth", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age", new AgeDataDefinition(), "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
-        dsd.addColumn("Marital Status", new KenyaEMRMaritalStatusDataDefinition(), null, new HTSMaritalStatusConverter());
-        dsd.addColumn("Contact Type", new HTSTracingContactTypeDataDefinition(), null);
-        dsd.addColumn("Contact Status", new HTSTracingContactStatusDataDefinition(), null);
-
-        dsd.addColumn("Unique Patient Number", new HTSLinkageIdentifierDataDefinition(), null);
-
+		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
+		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
+		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
+		dsd.addColumn("Identification Strategy", new HTSTestStrategyDataDefinition(), null, new HTSStrategyConverter());
+		dsd.addColumn("Date started on ART", new HTSLinkageArtStartDateToDataDefinition(), "", new DateConverter(DATE_FORMAT));
+		dsd.addColumn("Unique Patient Number", new HTSLinkageIdentifierDataDefinition(), null);
         dsd.addColumn("Facility Linked", new HTSLinkageFacilityLinkedDataDefinition(),"");
-        // new columns
         dsd.addColumn("Provider Handed to", new HTSLinkageProviderHandedToDataDefinition(), "");
+        dsd.addColumn("Remarks", new HTSLinkageRemarksToDataDefinition(), "");
 
         HTSClientsLinkageRegisterCohortDefinition cd = new HTSClientsLinkageRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
