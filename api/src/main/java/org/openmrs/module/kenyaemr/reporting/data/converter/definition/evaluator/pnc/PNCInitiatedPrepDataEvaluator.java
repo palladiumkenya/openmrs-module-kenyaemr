@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.pnc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCFistulaScreeningDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.pnc.PNCInitiatedPrepDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * PNC Fistula Screening column
+ * PNC Initiated prep column
  */
-@Handler(supports= PNCFistulaScreeningDataDefinition.class, order=50)
-public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= PNCInitiatedPrepDataDefinition.class, order=50)
+public class PNCInitiatedPrepDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,12 +36,12 @@ public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator 
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-			"     (case v.fistula_screening when 1107 then 'None'\n" +
-			"                               when 49 then 'Vesicovaginal Fistula\"'\n" +
-			"                               when 127847 then 'Rectovaginal fistula'\n" +
-			"                               when 111521 then 'Vesicovaginal Reflux'\n" +
-			"                               when 1118 then 'Not done' else '' end) as fistula_screening\n" +
-			"    from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"       if(e.patient_type = 'New Patient', 'Yes','No') as prep_initiated\n" +
+			"from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+			"         left join (select e.encounter_id,e.patient_id, e.patient_type as patient_type from\n" +
+			"                            kenyaemr_etl.etl_prep_enrolment e where date(e.visit_date) between date(:startDate) and date(:endDate)) e\n" +
+			"                              on e.patient_id = v.patient_id\n" +
+			"         where date(v.visit_date) between date(:startDate) and date(:endDate) ;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
