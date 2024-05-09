@@ -7,13 +7,13 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.maternity;
+package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity.MaternityUterotonicGivenDataDefinition;
-import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
-import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCInfantProphylaxisDataDefinition;
+import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
+import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
+import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -24,22 +24,22 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates a PersonDataDefinition
+ * Evaluates a Visit Number Data Definition to produce a Visit Number
  */
-@Handler(supports= MaternityUterotonicGivenDataDefinition.class, order=50)
-public class MaternityUterotonicGivenDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= ANCInfantProphylaxisDataDefinition.class, order=50)
+public class ANCInfantProphylaxisDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
+    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "  v.patient_id,\n" +
-                "  (case v.uterotonic_given when 81369 then \"Oxytocin\" when 104590 then \"Carbetocin\" when 1107 then \"none\" when 5622 then \"other\" else \"\" end) as uterotonic_given\n" +
-                "from kenyaemr_etl.etl_mchs_delivery v where date(v.visit_date) between date(:startDate) and date(:endDate);";
-
+        String qry = "select v.encounter_id,\n" +
+                " (IF(v.azt_given = 86663 AND v.nvp_given = 80586, 'AZT&NVP',\n" +
+                "IF(v.azt_given = 86663, 'AZT',\n" +
+                "IF(v.nvp_given = 80586, 'NVP', '')))) AS infant_prophylaxis\n" +
+        "from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

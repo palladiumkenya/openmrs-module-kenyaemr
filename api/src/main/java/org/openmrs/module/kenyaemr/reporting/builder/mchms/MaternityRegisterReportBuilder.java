@@ -104,8 +104,10 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
 		DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
 		DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
 		DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName}");
 		DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
@@ -273,12 +275,16 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		MaternityCommentsDataDefinition maternityCommentsDataDefinition = new MaternityCommentsDataDefinition();
 		maternityCommentsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		maternityCommentsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		MaternityTypeOfDeformityDataDefinition maternityTypeOfDeformityDataDefinition = new MaternityTypeOfDeformityDataDefinition();
+		maternityTypeOfDeformityDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		maternityTypeOfDeformityDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 
 		dsd.addColumn("Unique Patient No", identifierDef, "");
 		dsd.addColumn("Sex", new GenderDataDefinition(), "");
 		// new columns
 		dsd.addColumn("Admission Number", maternityAdmissionNumberDataDefinition, paramMapping);
+		dsd.addColumn("National Unique Patient Identifier", nupiDef, "");
 		dsd.addColumn("Date of Admission", maternityAdmissionDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
 		dsd.addColumn("Number of ANC Visits", maternityNumberOfANCVisitsDataDefinition, paramMapping);
 		dsd.addColumn("Name", nameDef, "");
@@ -315,6 +321,7 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("TEO Given at Birth", maternityTEOGivenAtBirthDataDefinition, paramMapping);
 		dsd.addColumn("Chlorhexidine applied on cord stump", maternityTEOGivenAtBirthDataDefinition, paramMapping);
 		dsd.addColumn("Baby with deformity", maternityBabyWithDeformityDataDefinition, paramMapping);
+		dsd.addColumn("Type of deformity", maternityTypeOfDeformityDataDefinition, paramMapping);
 		dsd.addColumn("Given Vitamin K", maternityGivenVitaminKDataDefinition, paramMapping);
 		dsd.addColumn("APGAR Score", maternityApgarScoreDataDefinition, paramMapping);
 		dsd.addColumn("VDRL/RPR Results", maternityVDRLRPRResultsDataDefinition, paramMapping);

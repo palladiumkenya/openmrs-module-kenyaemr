@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.maternity;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity.MaternityUterotonicGivenDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.maternity.MaternityTypeOfDeformityDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates a PersonDataDefinition
  */
-@Handler(supports= MaternityUterotonicGivenDataDefinition.class, order=50)
-public class MaternityUterotonicGivenDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= MaternityTypeOfDeformityDataDefinition.class, order=50)
+public class MaternityTypeOfDeformityDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -37,7 +37,7 @@ public class MaternityUterotonicGivenDataEvaluator implements PersonDataEvaluato
 
         String qry = "select\n" +
                 "  v.patient_id,\n" +
-                "  (case v.uterotonic_given when 81369 then \"Oxytocin\" when 104590 then \"Carbetocin\" when 1107 then \"none\" when 5622 then \"other\" else \"\" end) as uterotonic_given\n" +
+                " (case v.type_of_birth_deformity when 143672 then \"Congenital syphilis\" when 126208 then \"Spina bifida\" when 117470 then \"Hydrocephalus\" when 125048 then \"Talipes\" else \"\" end) as type_of_birth_deformity\n" +
                 "from kenyaemr_etl.etl_mchs_delivery v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
