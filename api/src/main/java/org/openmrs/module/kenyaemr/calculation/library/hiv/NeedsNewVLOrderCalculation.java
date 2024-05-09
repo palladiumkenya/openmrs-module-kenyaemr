@@ -60,7 +60,7 @@ public class NeedsNewVLOrderCalculation extends AbstractPatientCalculation imple
             if (vlOrders.size() > 0) {
                 Integer latestVlOrder = Collections.max(vlOrders);
                 if (dueForVl.contains(ptId) && orderService.getOrder(latestVlOrder).isVoided()
-                        && (orderService.getOrder(latestVlOrder).getVoidReason().equalsIgnoreCase("Sample not taken")
+                && orderService.getOrder(latestVlOrder).getVoidReason() != null && (orderService.getOrder(latestVlOrder).getVoidReason().equalsIgnoreCase("Sample not taken")
                         || orderService.getOrder(latestVlOrder).getVoidReason().equalsIgnoreCase("Collect new sample")
                         || orderService.getOrder(latestVlOrder).getVoidReason().equalsIgnoreCase("Sample rejected")
                         || orderService.getOrder(latestVlOrder).getVoidReason().equalsIgnoreCase("No reagents"))) {
