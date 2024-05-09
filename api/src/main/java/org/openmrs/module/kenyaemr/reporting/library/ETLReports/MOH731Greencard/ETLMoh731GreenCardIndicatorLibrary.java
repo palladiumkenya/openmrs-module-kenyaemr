@@ -650,6 +650,11 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.totalOnHAARTAtFirstANC(), "startDate=${startDate},endDate=${endDate}")
         );
     }
+    public CohortIndicator startedHAARTAtMCH() {
+        return cohortIndicator("Started on HAART at MCH",
+                map(moh731Cohorts.startedHAARTAtMCH(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
 
     /**
      * Number of Patients started HAART At ANC
@@ -707,6 +712,25 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator onHAARTFrom7WeeksTo6Months() {
         return cohortIndicator("Started HAART between 7 weeks and 6 months",
                 map(moh731Cohorts.totalStartedOnHAARTBtw6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
+    /**
+     * Screened for HBV at ANC
+     * @return
+     */
+    public CohortIndicator screenedForHBVAtANC() {
+        return cohortIndicator("Screened for HBV at ANC",
+                map(moh731Cohorts.screenedForHBVAtANC(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    /**
+     * Screened Positive for HBV at ANC
+     * @return
+     */
+    public CohortIndicator screenedPositiveForHBVAtANC() {
+        return cohortIndicator("Screened Positive for HBV",
+                map(moh731Cohorts.screenedPositiveForHBVAtANC(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -871,9 +895,9 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      *
      * @return the indicator
      */
-    public CohortIndicator adolescentsHIVPositive() {
+    public CohortIndicator newHIVPositiveAtMCH() {
         return cohortIndicator("adolescentsHIVPositive",
-                map(moh731Cohorts.adolescentsHIVPositive(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.newHIVPositiveAtMCH(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -1087,9 +1111,9 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      *
      * @return the indicator
      */
-    public CohortIndicator exclusiveBFAt6Months12MonthCohort() {
+    public CohortIndicator exclusiveBFAt6Months6MonthCohort() {
         return cohortIndicator("exclusiveBFAt6Months",
-                map(moh731Cohorts.exclusiveBFAt6Months12MonthCohort(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.exclusiveBFAt6Months6MonthCohort(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -1142,26 +1166,24 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     }
 
     /**
-     * Breastfeeding at 18 months
+     * Breastfeeding at 6 to 24 months (24-month cohort)
      * BF (18 Months) HV02-57
      *
      * @return the indicator
      */
-    public CohortIndicator breastFeedingAt18Months24MonthCohort() {
-        return cohortIndicator("breastFeedingAt18Months",
-                map(moh731Cohorts.breastFeedingAt18Months24MonthCohort(), "startDate=${startDate},endDate=${endDate}")
+    public CohortIndicator breastFeedingAt6To24Months24MonthCohort() {
+        return cohortIndicator("breastFeedingAt6To24Months24MonthCohort",
+                map(moh731Cohorts.breastFeedingAt6To24Months24MonthCohort(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
     /**
-     * Not Breastfeeding at 18 months
-     * Not BF(18 Months) HV02-58
-     *
+     * Not Breastfeeding at 6-24 months
      * @return the indicator
      */
-    public CohortIndicator notBreastFeedingAt18Months24MonthCohort() {
-        return cohortIndicator("notBreastFeedingAt18Months",
-                map(moh731Cohorts.notBreastFeedingAt18Months24MonthCohort(), "startDate=${startDate},endDate=${endDate}")
+    public CohortIndicator notBreastFeedingAt6To24Months24MonthCohort() {
+        return cohortIndicator("notBreastFeedingAt6To24Months",
+                map(moh731Cohorts.notBreastFeedingAt6To24Months24MonthCohort(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
