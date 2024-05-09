@@ -35,8 +35,7 @@ public class HTSLinkageRemarksDateDataEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select rl.encounter_id, coalesce(date(rl.art_start_date),date(dr.date_started)) from kenyaemr_etl.etl_hts_referral_and_linkage rl\n" +
-			"    left join kenyaemr_etl.etl_drug_event dr on dr.patient_id = rl.patient_id;";
+        String qry = "select encounter_id, remarks from kenyaemr_etl.etl_hts_referral_and_linkage;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
