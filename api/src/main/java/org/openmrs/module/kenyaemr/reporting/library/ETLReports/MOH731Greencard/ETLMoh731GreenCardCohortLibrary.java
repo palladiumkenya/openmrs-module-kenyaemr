@@ -3496,8 +3496,7 @@ public class ETLMoh731GreenCardCohortLibrary {
                 "                    GROUP BY patient_id) d on v.patient_id = d.patient_id\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
                 "  and v.anc_visit_number = 1\n" +
-                "  and (date(e.ti_date_started_art) < date(v.visit_date) or\n" +
-                "       (d.date_started_art < date(v.visit_date)));";
+                "  and coalesce(date(e.ti_date_started_art), date(d.date_started_art)) < date(v.visit_date);";
 
         cd.setName("totalOnHAARTAtFirstANC");
         cd.setQuery(sqlQuery);
@@ -3513,7 +3512,7 @@ public class ETLMoh731GreenCardCohortLibrary {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery =  "select v.patient_id\n" +
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "where v.haart_given = 1\n" +
+                "where v.prophylaxis_given in (105281, 74250)\n" +
                 "  and date(v.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("givenHAARTAtANC");
         cd.setQuery(sqlQuery);
@@ -3537,18 +3536,16 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setCompositionString("givenHAARTAtANC AND NOT totalOnHAARTAtFirstANC");
         return cd;
     }
-
-    //Start HAART During Labour and Delivery HV02-18
-    public CohortDefinition totalStartedHAARTAtLabourAndDelivery(){
+    public CohortDefinition startedHAARTAtLabourAndDelivery(){
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select distinct ld.patient_id\n" +
-                "from kenyaemr_etl.etl_mchs_delivery ld\n" +
-                "inner join kenyaemr_etl.etl_drug_event d on d.patient_id=ld.patient_id\n" +
-                "where d.program = 'HIV' and date(ld.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "and d.date_started >= ld.visit_date;";
+        String sqlQuery =  "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_mchs_delivery v\n" +
+                "where v.mother_started_haart_at_maternity = 1065\n" +
+                "  and v.mother_on_haart_during_anc != 1065\n" +
+                "  and date(v.visit_date) between date(:startDate) and date(:endDate);";
 
-        cd.setName("totalStartedHAARTAtLabourAndDelivery");
+        cd.setName("startedHAARTAtLabourAndDelivery");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -3556,24 +3553,38 @@ public class ETLMoh731GreenCardCohortLibrary {
 
         return cd;
     }
-
-    //Started HAART upto 6 weeks HV02-19
-    public CohortDefinition totalStartedHAARTAtPNCUpto6Weeks(){
+    //Start HAART During Labour and Delivery HV02-18
+    public CohortDefinition totalStartedHAARTAtLabourAndDelivery(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("startedHAARTAtANC",ReportUtils.map(startedHAARTAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedHAARTAtLabourAndDelivery",ReportUtils.map(startedHAARTAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("startedHAARTAtLabourAndDelivery AND NOT startedHAARTAtANC");
+        return cd;
+    }
+    public CohortDefinition startedHAARTAtPNCWithin6Weeks(){
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select e.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "         inner join (select p.patient_id, p.visit_date, p.delivery_date\n" +
-                "                          from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
-                "                          where p.mother_haart_given = 1065\n" +
-                "                            and date(p.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "                          group by p.patient_id\n" +
-                "                          having max(date(p.visit_date))) p\n" +
-                "                         on p.patient_id = e.patient_id\n" +
-                "where date(e.visit_date) <= date(:endDate)\n" +
-                "  and timestampdiff(WEEK,date(p.delivery_date),date(p.visit_date)) between 0 and 6;";
+        String sqlQuery =  "select p.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+                "         left join kenyaemr_etl.etl_hts_test t\n" +
+                "                   on p.patient_id = t.patient_id and p.visit_date = t.visit_date and t.final_test_result = 'Positive'\n" +
+                "         left join (select e.patient_id, min(e.date_started) as date_started\n" +
+                "                    from kenyaemr_etl.etl_drug_event e\n" +
+                "                    where date(e.date_started) <= date(:endDate)\n" +
+                "                      and e.program = 'HIV'\n" +
+                "                    group by e.patient_id) e\n" +
+                "                   on p.patient_id = e.patient_id and p.visit_date = e.date_started\n" +
+                "where p.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and ((p.final_test_result = 'Positive' and p.mother_haart_given = 1065 and\n" +
+                "        timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) between 0 and 6) or\n" +
+                "       (t.patient_id is not null and\n" +
+                "        ((timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) between 0 and 6 and\n" +
+                "          p.mother_haart_given = 1065) or (e.patient_id is not null\n" +
+                "            and timestampdiff(WEEK, date(p.delivery_date), date(e.date_started)) between 0 and 6))));";
 
-        cd.setName("totalStartedHAARTAtPNCUpto6Weeks");
+        cd.setName("startedHAARTAtPNCWithin6Weeks");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -3581,44 +3592,54 @@ public class ETLMoh731GreenCardCohortLibrary {
 
         return cd;
     }
-
-    //Total maternal HAART HV02-20
-    public CohortDefinition totalMaternalHAART(){
+    public CohortDefinition startedHAARTAtPNCBtwn6WeeksAnd6Months(){
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  ";";
+        String sqlQuery =  "select p.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+                "         left join kenyaemr_etl.etl_hts_test t\n" +
+                "                   on p.patient_id = t.patient_id and p.visit_date = t.visit_date and t.final_test_result = 'Positive'\n" +
+                "         left join (select e.patient_id, min(e.date_started) as date_started\n" +
+                "                    from kenyaemr_etl.etl_drug_event e\n" +
+                "                    where date(e.date_started) <= date(:endDate)\n" +
+                "                      and e.program = 'HIV'\n" +
+                "                    group by e.patient_id) e\n" +
+                "                   on p.patient_id = e.patient_id and p.visit_date = e.date_started\n" +
+                "where p.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and ((p.final_test_result = 'Positive' and p.mother_haart_given = 1065 and\n" +
+                "        timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) between 6 and 24) or\n" +
+                "       (t.patient_id is not null and\n" +
+                "        ((timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) between 6 and 24 and\n" +
+                "          p.mother_haart_given = 1065) or (e.patient_id is not null\n" +
+                "            and timestampdiff(WEEK, date(p.delivery_date), date(e.date_started)) between 6 and 24))));";
 
-        cd.setName("totalMaternalHAART");
+        cd.setName("startedHAARTAtPNCBtwn6WeeksAnd6Months");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Total maternal HAART");
+        cd.setDescription("Started HAART At PNC after 6 weeks upto 6 months");
 
         return cd;
     }
-    //Start HAART_PNC >6 wks to 6 mths	HV02-21
-    public CohortDefinition totalStartedOnHAARTBtw7WeeksAnd6Months(){
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select e.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "         inner join (select p.patient_id, p.visit_date, p.delivery_date\n" +
-                "                     from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
-                "                     where p.mother_haart_given = 1065\n" +
-                "                       and date(p.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "                     group by p.patient_id\n" +
-                "                     having max(date(p.visit_date))) p\n" +
-                "                    on p.patient_id = e.patient_id\n" +
-                "where date(e.visit_date) <= date(:endDate)\n" +
-                "and (timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) > 6 and\n" +
-                "    timestampdiff(MONTH, date(p.delivery_date), date(p.visit_date)) <= 6);";
-
-        cd.setName("totalStartedOnHAARTBtw7WeeksAnd6Months");
-        cd.setQuery(sqlQuery);
+    //Started HAART upto 6 weeks HV02-17
+    public CohortDefinition totalStartedHAARTAtPNCWithin6Weeks(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Total started on HAART between 7 weeks and 6 months");
+        cd.addSearch("startedHAARTAtPNCWithin6Weeks",ReportUtils.map(startedHAARTAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedHAARTAtLabourAndDelivery",ReportUtils.map(startedHAARTAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("startedHAARTAtPNCWithin6Weeks AND NOT startedHAARTAtLabourAndDelivery");
+        return cd;
+    }
 
+    //Start HAART_PNC >6 wks to 6 mths	HV02-18
+    public CohortDefinition totalStartedOnHAARTBtw6WeeksAnd6Months(){
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("totalStartedHAARTAtPNCWithin6Weeks",ReportUtils.map(totalStartedHAARTAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedHAARTAtPNCBtwn6WeeksAnd6Months",ReportUtils.map(startedHAARTAtPNCBtwn6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("startedHAARTAtPNCBtwn6WeeksAnd6Months AND NOT totalStartedHAARTAtPNCWithin6Weeks");
         return cd;
     }
     //On maternal HAART_12 mths	HV02-22

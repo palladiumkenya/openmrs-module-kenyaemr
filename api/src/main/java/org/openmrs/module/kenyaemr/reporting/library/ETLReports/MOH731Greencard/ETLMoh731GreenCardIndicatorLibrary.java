@@ -683,7 +683,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      */
     public CohortIndicator startedHAARTPNCUpto6Weeks() {
         return cohortIndicator("Started HAART within 6 weeks of PNC",
-                map(moh731Cohorts.totalStartedHAARTAtPNCUpto6Weeks(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.totalStartedHAARTAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -706,7 +706,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      */
     public CohortIndicator onHAARTFrom7WeeksTo6Months() {
         return cohortIndicator("Started HAART between 7 weeks and 6 months",
-                map(moh731Cohorts.totalStartedOnHAARTBtw7WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
+                map(moh731Cohorts.totalStartedOnHAARTBtw6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
