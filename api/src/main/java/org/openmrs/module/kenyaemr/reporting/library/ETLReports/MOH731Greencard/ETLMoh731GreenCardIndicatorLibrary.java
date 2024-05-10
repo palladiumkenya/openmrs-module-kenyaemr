@@ -1327,14 +1327,16 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     }
 
     /**
-     * Number of patients who were started on Art
+     * Number of patients who were started on Art. Includes started in MCH
      *
      * @return the indicator
      */
+    public CohortIndicator startingArt() {
+        return cohortIndicator("Started on ART", ReportUtils.map(moh731Cohorts.startingArt(), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator startedOnArt() {
         return cohortIndicator("Started on ART", ReportUtils.map(moh731Cohorts.startedOnART(), "startDate=${startDate},endDate=${endDate}"));
     }
-
 
     /**
      * Cumulative number of patients on ART
