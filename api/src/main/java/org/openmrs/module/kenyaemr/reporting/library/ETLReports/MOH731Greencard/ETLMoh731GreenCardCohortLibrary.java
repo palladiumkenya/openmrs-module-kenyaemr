@@ -123,6 +123,18 @@ public class ETLMoh731GreenCardCohortLibrary {
         return cd;
     }
 
+    public  CohortDefinition startingArt() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("startedHAARTAtANC",ReportUtils.map(startedHAARTAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalStartedHAARTAtLabourAndDelivery",ReportUtils.map(totalStartedHAARTAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalStartedHAARTAtPNCWithin6Weeks",ReportUtils.map(totalStartedHAARTAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalStartedOnHAARTBtw6WeeksAnd6Months",ReportUtils.map(totalStartedOnHAARTBtw6WeeksAnd6Months(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedOnART", ReportUtils.map(startedOnART(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("startedOnART OR startedHAARTAtANC OR totalStartedHAARTAtLabourAndDelivery OR totalStartedHAARTAtPNCWithin6Weeks OR totalStartedOnHAARTBtw6WeeksAnd6Months");
+        return cd;
+    }
     public  CohortDefinition startedOnART() {
         String sqlQuery="select  net.patient_id\n" +
                 "  from (\n" +
@@ -398,9 +410,9 @@ public class ETLMoh731GreenCardCohortLibrary {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("txcurr",ReportUtils.map(currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startingArt",ReportUtils.map(startingArt(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("screenedForTbWithinPeriod", ReportUtils.map(screenedForTbWithinPeriod(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("txcurr AND screenedForTbWithinPeriod");
+        cd.setCompositionString("startingArt AND screenedForTbWithinPeriod");
         return cd;
     }
 
@@ -2400,22 +2412,34 @@ public class ETLMoh731GreenCardCohortLibrary {
         return cd;
     }
     /**
-     * started on ipt
+     * started on ipt within period
      * looks for patients started on ipt during a given period
      */
-    public CohortDefinition startedOnIPT() {
+    public CohortDefinition startedOnIPTWithinPeriod() {
         String sqlQuery = "select patient_id \n" +
                 "from kenyaemr_etl.etl_ipt_initiation \n" +
                 "where visit_date between date(:startDate) and date(:endDate) and voided=0 " +
                 " ;";
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("startedOnIPT");
+        cd.setName("startedOnIPTWithinPeriod");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Patients started on TPT");
+        cd.setDescription("Patients started on TPT within the period");
         return cd;
-
+    }
+    /**
+     * started on ipt
+     * looks for patients started on ipt during a given period
+     */
+    public CohortDefinition startedOnIPT() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("startingArt",ReportUtils.map(startingArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedOnIPTWithinPeriod", ReportUtils.map(startedOnIPTWithinPeriod(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("startingArt AND startedOnIPTWithinPeriod");
+        return cd;
     }
 
     /**
