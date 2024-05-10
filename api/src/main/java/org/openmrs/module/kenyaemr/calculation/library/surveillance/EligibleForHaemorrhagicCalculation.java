@@ -51,6 +51,8 @@ import java.util.Set;
 public class EligibleForHaemorrhagicCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
     protected static final Log log = LogFactory.getLog(EligibleForHaemorrhagicCalculation.class);
 
+	public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
+	public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
     public static final EncounterType consultationEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.CONSULTATION);
     public static final Form clinicalEncounterForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.CLINICAL_ENCOUNTER);
 
@@ -82,6 +84,7 @@ public class EligibleForHaemorrhagicCalculation extends AbstractPatientCalculati
                 String todayDate = dateFormat.format(currentDate);
                 Patient patient = patientService.getPatient(ptId);
 
+				Encounter lastTriageEncounter = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);   //last triage form
                 Encounter lastHivFollowUpEncounter = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);   //last greencard followup form
                 Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
 
@@ -90,6 +93,8 @@ public class EligibleForHaemorrhagicCalculation extends AbstractPatientCalculati
                 Concept bleedingResult = cs.getConcept(BLEEDING_TENDENCIES);
                 Concept screeningQuestion = cs.getConcept(SCREENING_QUESTION);
 
+				boolean patientFeverResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, feverResult) : false;
+				boolean patientBleedingResulTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bleedingResult) : false;
                 boolean patientFeverResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, feverResult) : false;
                 boolean patientBleedingResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bleedingResult) : false;
                 boolean patientFeverResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, feverResult) : false;
@@ -124,6 +129,20 @@ public class EligibleForHaemorrhagicCalculation extends AbstractPatientCalculati
                         }
                     }
                 }
+				if (lastTriageEncounter != null) {
+					if (patientFeverResultTriage && patientBleedingResulTriage) {
+						for (Obs obs : lastTriageEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate)) {
+									eligible = true;
+									break;
+								}
+							}
+						}
+					}
+				}
                 ret.put(ptId, new BooleanResult(eligible, this));
             }
         }

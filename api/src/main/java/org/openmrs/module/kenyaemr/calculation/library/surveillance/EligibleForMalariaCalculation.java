@@ -40,6 +40,7 @@ import java.util.*;
  */
 public class EligibleForMalariaCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
     protected static final Log log = LogFactory.getLog(EligibleForMalariaCalculation.class);
+	
     public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
     public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
     public static final EncounterType consultationEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.CONSULTATION);
@@ -94,6 +95,9 @@ public class EligibleForMalariaCalculation extends AbstractPatientCalculation im
 
                 CalculationResultMap tempMap = Calculations.lastObs(cs.getConcept(TEMPERATURE), cohort, context);
 
+				boolean patientHeadacheResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, headacheResult) : false;
+				boolean patientChillsResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, chillsResult) : false;
+				boolean patientFeverResultTriage = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, feverResult) : false;
                 boolean patientHeadacheResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
                 boolean patientChillsResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, chillsResult) : false;
                 boolean patientFeverResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, feverResult) : false;
@@ -144,6 +148,25 @@ public class EligibleForMalariaCalculation extends AbstractPatientCalculation im
                         }
                     }
                 }
+				if (lastTriageEnc != null) {
+					if (patientHeadacheResultTriage && patientChillsResultTriage && patientFeverResultTriage) {
+						for (Obs obs : lastTriageEnc.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getConceptId().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
                 ret.put(ptId, new BooleanResult(eligible, this));
             }
         }
