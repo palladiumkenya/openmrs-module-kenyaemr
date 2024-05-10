@@ -36,8 +36,14 @@ public class PNCBreastExaminationDataEvaluator implements EncounterDataEvaluator
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.breast when 1065 then \"Yes\" when 1066 then \"No\" when 1115 then \"Not done\" else \"\" end) as breast_exam\n" +
-                "from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"        (case v.breast when 1065 then 'Yes'\n" +
+			"                       when 1066 then 'No'\n" +
+			"                       when 127522 then 'Engorged'\n" +
+			"                       when 115915 then 'Mastitis'\n" +
+			"                       when 1115 then 'Normal'\n" +
+			"                       when 143242 then 'Cracked nipple'\n" +
+			"                       when 1115 then 'Not done' else '' end) as breast_exam\n" +
+			"        from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
