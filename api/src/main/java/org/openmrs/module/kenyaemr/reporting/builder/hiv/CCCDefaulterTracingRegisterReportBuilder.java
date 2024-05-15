@@ -92,6 +92,10 @@ public class CCCDefaulterTracingRegisterReportBuilder extends AbstractReportBuil
 
         PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+		PatientIdentifierType natID = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_ID);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
+		DataDefinition natIdDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(natID.getName(), natID), identifierFormatter);
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
 
         EncounterProviderDataDefinition providerDataDefinition = new EncounterProviderDataDefinition();
@@ -115,6 +119,8 @@ public class CCCDefaulterTracingRegisterReportBuilder extends AbstractReportBuil
 
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
+		dsd.addColumn("National ID", natIdDef, "");
+		dsd.addColumn("NUPI", nupiDef, "");
         dsd.addColumn("Date of Birth", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age", new AgeDataDefinition(), "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
