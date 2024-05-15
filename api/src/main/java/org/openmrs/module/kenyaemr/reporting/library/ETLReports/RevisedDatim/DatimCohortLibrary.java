@@ -3097,6 +3097,21 @@ public class DatimCohortLibrary {
     }
 
     /**
+     * KP VMMC Medical examination
+     * @return
+     */
+    public CohortDefinition knownPositiveVMMCMedicalExamination() {
+        String sqlQuery = "select v.patient_id from kenyaemr_etl.etl_vmmc_medical_history v where v.hiv_status = 703 and date(v.visit_date) between date(:startDate) and date(:endDate) and date(v.hiv_test_date) < date(visit_date);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("VMMC_MEDICAL_EXAMINATION_HIV+");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number HIV+ at VMMC Medical examination");
+        return cd;
+    }
+
+    /**
      *Number of males circumcised and tested HIV positive at VMMC site
      * @return
      */
@@ -3106,7 +3121,8 @@ public class DatimCohortLibrary {
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("malesCircumcised", ReportUtils.map(malesCircumcised(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("testedHIVPositiveAtVMMCSite", ReportUtils.map(testedHIVPositiveAtVMMCSite(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("malesCircumcised AND testedHIVPositiveAtVMMCSite");
+        cd.addSearch("knownPositiveVMMCMedicalExamination", ReportUtils.map(knownPositiveVMMCMedicalExamination(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("malesCircumcised AND (testedHIVPositiveAtVMMCSite OR knownPositiveVMMCMedicalExamination)");
         return cd;
     }
 

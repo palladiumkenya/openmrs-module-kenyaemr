@@ -2441,6 +2441,242 @@ public class ETLMoh731GreenCardCohortLibrary {
         cd.setCompositionString("startingArt AND startedOnIPTWithinPeriod");
         return cd;
     }
+    public CohortDefinition dsdEstablished() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select f.patient_id,\n" +
+                "             mid(max(concat(f.visit_date, f.stability)), 11) as stability\n" +
+                "      from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.stability = 1;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("HV03-33");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("DSD-Established");
+        return cd;
+    }
+
+    public CohortDefinition dsdNotEstablished() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select f.patient_id,\n" +
+                "             mid(max(concat(f.visit_date, f.stability)), 11) as stability\n" +
+                "      from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.stability = 2;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("HV03-34");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("DSD-Not Established");
+        return cd;
+    }
+    public CohortDefinition dsdCommunity() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select f.patient_id,\n" +
+                "             mid(max(concat(f.visit_date, f.differentiated_care)), 11) as differentiated_care_setting\n" +
+                "      from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.differentiated_care_setting = 163488;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("HV03-35");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("DSD-Community");
+        return cd;
+    }
+    public CohortDefinition dsdFacility() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select f.patient_id,\n" +
+                "             mid(max(concat(f.visit_date, f.differentiated_care)), 11) as differentiated_care_setting\n" +
+                "      from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.differentiated_care_setting = 1537;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("HV03-36");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("DSD-Facility");
+        return cd;
+    }
+
+    public CohortDefinition clinicalVisit() {
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_patient_hiv_followup f where f.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("ClinicalVisit");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Clinical Visit");
+        return cd;
+    }
+    public CohortDefinition pregnantOrLactatingClinicalVisit() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select f.patient_id,\n" +
+                "             mid(max(concat(f.visit_date, f.pregnancy_status)), 11) as pregnancy_status,\n" +
+                "             mid(max(concat(f.visit_date, f.breastfeeding)), 11)    as breastfeeding\n" +
+                "      from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where (a.breastfeeding = 1065 or a.pregnancy_status = 1065);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Pregnant or Lactating");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Pregnant or Lactating");
+        return cd;
+    }
+    public CohortDefinition severeMalnutritionClients() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select t.patient_id, mid(max(concat(t.visit_date, t.nutritional_status)), 11) as nutritional_status\n" +
+                "      from kenyaemr_etl.etl_patient_triage t\n" +
+                "      where t.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.nutritional_status in (164131, 163302);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("SAM+");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Severe Malnutrition");
+        return cd;
+    }
+
+    public CohortDefinition severeMalnutrition() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("clinicalVisit",ReportUtils.map(clinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("severeMalnutritionClients", ReportUtils.map(severeMalnutritionClients(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("clinicalVisit AND severeMalnutritionClients");
+        return cd;
+    }
+
+    public CohortDefinition severeMalnutritionPregnantOrLactating() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("pregnantOrLactatingClinicalVisit", ReportUtils.map(pregnantOrLactatingClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("severeMalnutrition", ReportUtils.map(severeMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("pregnantOrLactatingClinicalVisit AND severeMalnutrition");
+        return cd;
+    }
+
+    public CohortDefinition moderateMalnutritionClients() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select t.patient_id, mid(max(concat(t.visit_date, t.nutritional_status)), 11) as nutritional_status\n" +
+                "      from kenyaemr_etl.etl_patient_triage t\n" +
+                "      where t.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.nutritional_status in (163303, 123815);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("MAM+");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Moderate Malnutrition");
+        return cd;
+    }
+
+    public CohortDefinition moderateMalnutrition() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("clinicalVisit",ReportUtils.map(clinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("moderateMalnutritionClients", ReportUtils.map(moderateMalnutritionClients(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("clinicalVisit AND moderateMalnutritionClients");
+        return cd;
+    }
+
+    public CohortDefinition moderateMalnutritionPregnantOrLactating() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("moderateMalnutrition", ReportUtils.map(moderateMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pregnantOrLactatingClinicalVisit", ReportUtils.map(pregnantOrLactatingClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("pregnantOrLactatingClinicalVisit AND moderateMalnutrition");
+        return cd;
+    }
+
+    public CohortDefinition OnTherapeuticFoodsClients() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select t.patient_id, mid(max(concat(t.visit_date, t.nutritional_intervention)), 11) as nutritional_intervention\n" +
+                "      from kenyaemr_etl.etl_patient_triage t\n" +
+                "      where t.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.nutritional_intervention = 161650;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("SAM+ Receiving Therapeutic foods");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Severe Malnutrition Receiving therapeutic foods");
+        return cd;
+    }
+
+    public CohortDefinition severeMalnutritionOnTherapeuticFoods() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("severeMalnutrition",ReportUtils.map(severeMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("OnTherapeuticFoodsClients", ReportUtils.map(OnTherapeuticFoodsClients(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("severeMalnutrition AND OnTherapeuticFoodsClients");
+        return cd;
+    }
+
+    public CohortDefinition severeMalnutritionOnTherapeuticFoodsPregnantOrLactating() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("severeMalnutritionOnTherapeuticFoods",ReportUtils.map(severeMalnutritionOnTherapeuticFoods(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pregnantOrLactatingClinicalVisit", ReportUtils.map(pregnantOrLactatingClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("severeMalnutritionOnTherapeuticFoods AND pregnantOrLactatingClinicalVisit");
+        return cd;
+    }
+
+    public CohortDefinition onSupplementalFoodsClients() {
+        String sqlQuery = "select a.patient_id\n" +
+                "from (select t.patient_id, mid(max(concat(t.visit_date, t.nutritional_intervention)), 11) as nutritional_intervention\n" +
+                "      from kenyaemr_etl.etl_patient_triage t\n" +
+                "      where t.visit_date between date(:startDate) and date(:endDate)\n" +
+                "      group by patient_id) a\n" +
+                "where a.nutritional_intervention = 159854;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Receiving Supplementary foods");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Receiving supplementary foods");
+        return cd;
+    }
+
+    public CohortDefinition moderateMalnutritionOnSupplementalFoods() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("moderateMalnutrition",ReportUtils.map(moderateMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("onSupplementalFoodsClients", ReportUtils.map(onSupplementalFoodsClients(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("moderateMalnutrition AND onSupplementalFoodsClients");
+        return cd;
+    }
+
+    public CohortDefinition moderateMalnutritionOnSupplementaryFoodsPregnantOrLactating() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("moderateMalnutritionOnSupplementalFoods",ReportUtils.map(moderateMalnutritionOnSupplementalFoods(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("pregnantOrLactatingClinicalVisit", ReportUtils.map(pregnantOrLactatingClinicalVisit(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("moderateMalnutritionOnSupplementalFoods AND pregnantOrLactatingClinicalVisit");
+        return cd;
+    }
 
     /**
      * those started on ipt 12 months ago and have successfully completed
@@ -2469,7 +2705,7 @@ public class ETLMoh731GreenCardCohortLibrary {
         String sqlQuery = "select  e.patient_id " +
                 " from kenyaemr_etl.etl_tb_enrollment e " +
                 " join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id " +
-                " where date(e.visit_date) between :startDate and :endDate " +
+                " where date(e.visit_date) between date(:startDate) and date(:endDate) " +
                 ";";
         cd.setName("newTBEnrollment");
         cd.setQuery(sqlQuery);
@@ -2486,12 +2722,12 @@ public class ETLMoh731GreenCardCohortLibrary {
      */
     public CohortDefinition tbNewKnownPositive() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select  e.patient_id \n" +
-                "from kenyaemr_etl.etl_tb_enrollment e \n" +
-                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id \n" +
-                "inner join kenyaemr_etl.etl_hiv_enrollment he on he.patient_id=e.patient_id and he.visit_date > e.visit_date\n" +
-                "where  date(e.visit_date) between :startDate and :endDate " +
-                ";";
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_tb_enrollment e\n" +
+                "         inner join kenyaemr_etl.etl_hiv_enrollment he on he.patient_id = e.patient_id and\n" +
+                "                                                          coalesce(date(he.date_confirmed_hiv_positive),\n" +
+                "                                                                   date(he.visit_date)) < date(:startDate)\n" +
+                "where date(e.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("newTBKnownPositive");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2507,12 +2743,12 @@ public class ETLMoh731GreenCardCohortLibrary {
      */
     public CohortDefinition tbTestedForHIV() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select  e.patient_id \n" +
-                "from kenyaemr_etl.etl_tb_enrollment e \n" +
-                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id \n" +
-                "inner join kenyaemr_etl.etl_hts_test h on h.patient_id=e.patient_id and h.visit_date between :startDate and :endDate\n" +
-                "where  date(e.visit_date) between :startDate and :endDate " +
-                ";";
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_tb_enrollment e\n" +
+                "         inner join kenyaemr_etl.etl_hts_test h\n" +
+                "                    on e.patient_id = h.patient_id and h.visit_date between date(:startDate) and date(:endDate) and\n" +
+                "                       h.test_type = 1\n" +
+                "where date(e.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("newTBKnownPositive");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2528,12 +2764,12 @@ public class ETLMoh731GreenCardCohortLibrary {
      */
     public CohortDefinition tbNewTestedHIVPositive() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select  e.patient_id \n" +
-                "from kenyaemr_etl.etl_tb_enrollment e \n" +
-                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id \n" +
-                "inner join kenyaemr_etl.etl_hts_test h on h.patient_id=e.patient_id and h.visit_date between :startDate and :endDate and h.final_test_result=\"Positive\"\n" +
-                "where  date(e.visit_date) between :startDate and :endDate " +
-                ";";
+        String sqlQuery = "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_tb_enrollment e\n" +
+                "         inner join kenyaemr_etl.etl_hts_test h\n" +
+                "                    on e.patient_id = h.patient_id and h.visit_date between date(:startDate) and date(:endDate) and\n" +
+                "                       h.test_type = 1 and h.final_test_result = 'Positive'\n" +
+                "where date(e.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("newTBTestedHIVPositive");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2548,18 +2784,13 @@ public class ETLMoh731GreenCardCohortLibrary {
      * @return
      */
     public CohortDefinition tbNewAlreadyOnHAART() {
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select  e.patient_id\n" +
-                "from kenyaemr_etl.etl_tb_enrollment e\n" +
-                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id\n" +
-                "inner join kenyaemr_etl.etl_drug_event d on d.patient_id=e.patient_id and d.date_started < e.visit_date\n" +
-                "where d.program = 'HIV' and date(e.visit_date) between :startDate and :endDate ;";
-        cd.setName("tbNewAlreadyOnHAART");
-        cd.setQuery(sqlQuery);
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("New TB cases already on HAART");
-
+        cd.addSearch("tbEnrollment",ReportUtils.map(tbEnrollment(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("currentlyOnArt",ReportUtils.map(currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startingArt",ReportUtils.map(startingArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("tbEnrollment AND currentlyOnArt AND NOT startingArt");
         return cd;
     }
 
@@ -2568,18 +2799,12 @@ public class ETLMoh731GreenCardCohortLibrary {
      * @return
      */
     public CohortDefinition tbNewStartingHAART() {
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select  e.patient_id\n" +
-                "from kenyaemr_etl.etl_tb_enrollment e\n" +
-                "join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id\n" +
-                "inner join kenyaemr_etl.etl_drug_event d on d.patient_id=e.patient_id and d.date_started between :startDate and :endDate\n" +
-                "where d.program = 'HIV' and date(e.visit_date) between :startDate and :endDate;";
-        cd.setName("tbNewStartingHAART");
-        cd.setQuery(sqlQuery);
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("New TB cases started on HAART");
-
+        cd.addSearch("tbEnrollment",ReportUtils.map(tbEnrollment(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startingArt",ReportUtils.map(startingArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("tbEnrollment AND startingArt");
         return cd;
     }
 
