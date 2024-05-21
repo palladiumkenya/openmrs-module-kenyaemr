@@ -51,12 +51,12 @@ public class CPMMetadata extends AbstractMetadataBundle {
 		install(encounterType("CPM Enrollment Encounter", "CPM Enrollment Encounter", _EncounterType.CPM_ENROLLMENT_ENCOUNTER));
 		install(encounterType("CPM Referral Encounter", "CPM Referral Encounter", _EncounterType.CPM_REFERRAL_ENCOUNTER));
 		install(encounterType("CPM Discontinuation Encounter", "CPM Discontinuation Encounter", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER));		
-		install(encounterType("CPM Screening Encounter", "CPM Screening Encounter", _EncounterType.CPM_SCREENING_ENCOUNTER));		
+		install(encounterType("CPM Screening Encounter", "CPM Screening Encounter", _EncounterType.CPM_SCREENING_ENCOUNTER));
 
 		install(form("CPM Enrollment Form", "Community Pharmacy Model Enrollment form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_ENROLLMENT_FORM));
 		install(form("CPM Referral Form", "Community Pharmacy Model Referral form", _EncounterType.CPM_REFERRAL_ENCOUNTER, "1", _Form.CPM_REFERRAL_FORM));
 		install(form("CPM Discontinuation Form", "Community Pharmacy Model Discontinuation  Form", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER, "1", _Form.CPM_DISCONTINUATION_FORM));
 		install(form("CPM Screening Form", "Community Pharmacy Model Screening  Form", _EncounterType.CPM_SCREENING_ENCOUNTER, "1", _Form.CPM_SCREENING_FORM));
-	
+
 	}
 }
