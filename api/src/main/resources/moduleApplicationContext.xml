@@ -28,6 +28,7 @@
 	<import resource="content/kenyaemr.ovc.xml" />
 	<import resource="content/kenyaemr.vmmc.xml" />
 	<import resource="content/kenyaemr.mat.xml" />
+	<import resource="content/kenyaemr.cpm.xml" />
 
 	<!-- ===================== App descriptors ===================== -->
 

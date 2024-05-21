@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.cpm.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="8cd42506-2ebd-485f-89d6-4bb9ed328ccc" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.cpm.EligibleForCPMProgramCalculation" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.cpm.form.enrollment.form" />
+		<property name="defaultCompletionForm" ref="kenyaemr.cpm.form.discontinuation" />
+		<property name="visitForms">
+			<set>
+				<ref bean="kenyaemr.cpm.form.referral.visit" />
+			</set>
+		</property>
+		<property name="reports">
+			<set>
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				<entry key="enrollment-summary" value="" />
+				<entry key="care-panel" value="" />
+				<entry key="completion-summary" value="" />
+			</map>
+		</property>
+		<property name="order" value="200" />
+	</bean>
+	<!-- ===================== Forms ===================== -->
+
+	<!-- CPM initial enrollment form -->
+	<bean id="kenyaemr.cpm.form.enrollment.form" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="f01c67f7-2293-4a6a-b0f6-5db0fb5934dd" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- CPM referral visit -->
+	<bean id="kenyaemr.cpm.form.referral.visit" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="b1e1f6fe-1894-4d06-bd8c-2b87f7cd9577" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- CPM discontinuation form -->
+	<bean id="kenyaemr.cpm.form.discontinuation" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="d1e7ebb4-afc0-412b-a98b-6720ab1169cc" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
+	</bean>	
+</beans>
