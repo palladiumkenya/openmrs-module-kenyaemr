@@ -98,5 +98,5 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
-	</bean>
+	</bean>	
 </beans>
