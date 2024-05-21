@@ -3056,7 +3056,7 @@ public class DatimCohortLibrary {
                 "         left join (select t.patient_id,t.visit_date\n" +
                 "                    from kenyaemr_etl.etl_hts_test t\n" +
                 "                    where t.final_test_result = 'Positive'\n" +
-                "                      and t.test_type = 2\n" +
+                "                      and t.test_type = 1\n" +
                 "                      and t.hts_entry_point = 162223\n" +
                 "                      and t.visit_date between date(:startDate) and date(:endDate)) t on e.patient_id = t.patient_id\n" +
                 "where e.visit_date between date(:startDate) and date(:endDate) and ((h.patient_id is not null and e.visit_date >= date(h.hiv_test_date)) or (t.patient_id is not null and e.visit_date >= date(t.visit_date)));";
