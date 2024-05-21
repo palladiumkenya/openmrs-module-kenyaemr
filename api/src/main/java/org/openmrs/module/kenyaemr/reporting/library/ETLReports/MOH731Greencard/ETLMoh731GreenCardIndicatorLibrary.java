@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
+
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
 
 /**
@@ -46,21 +47,20 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator htsTestsMales() {
         return cohortIndicator("HTS tests Males", map(moh731Cohorts.htsTestsMales(), "startDate=${startDate},endDate=${endDate}"));
     }
+
     public CohortIndicator hivTestsFemales() {
         return cohortIndicator("HIV tests Females", map(moh731Cohorts.hivTestsFemales(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator htsNumberTestedAtFacilityMales() {
-        return cohortIndicator("Facility male HTS", map(moh731Cohorts.htsNumberTestedAtFacilityMales(), "startDate=${startDate},endDate=${endDate}"));
+    /**
+     * HTS on KVPs
+     * @return
+     */
+    public CohortIndicator htsNumberTestedKVP() {
+        return cohortIndicator("HTS KVP", map(moh731Cohorts.htsNumberTestedKVP(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    public CohortIndicator htsNumberTestedAtCommunityMales() {
-        return cohortIndicator("Community male HTS", map(moh731Cohorts.htsNumberTestedAtCommunityMales(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator testedHIVPositive() {
+        return cohortIndicator("Tested HIV Positive", map(moh731Cohorts.testedHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    public CohortIndicator htsNumberTestedKVPMales() {
-        return cohortIndicator("HTS KVP males", map(moh731Cohorts.htsNumberTestedKVP(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
     public CohortIndicator htsPositiveMales() {
         return cohortIndicator("HTS Positive males", map(moh731Cohorts.htsPositiveMales(), "startDate=${startDate},endDate=${endDate}"));
     }
@@ -74,7 +74,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     }
 
     public CohortIndicator htsDiscordant() {
-        return cohortIndicator("HTS Positive Discordant", map(moh731Cohorts.htsDiscordant(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("HTS Discordant", map(moh731Cohorts.htsDiscordant(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     /**
@@ -1220,6 +1220,51 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      */
     public CohortIndicator startedOnIPT() {
         return cohortIndicator("Started on IPT", map(moh731Cohorts.startedOnIPT(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dsdEstablished() {
+        return cohortIndicator("DSD-Established", map(moh731Cohorts.dsdEstablished(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator dsdNotEstablished() {
+        return cohortIndicator("DSD-Not Established", map(moh731Cohorts.dsdNotEstablished(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dsdCommunity() {
+        return cohortIndicator("DSD-Community", map(moh731Cohorts.dsdCommunity(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dsdFacility() {
+        return cohortIndicator("DSD-Facility", map(moh731Cohorts.dsdFacility(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator severeMalnutrition() {
+        return cohortIndicator("SAM+", map(moh731Cohorts.severeMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator severeMalnutritionPregnantOrLactating() {
+        return cohortIndicator("SAM+ (Pregnant or Lactating)", map(moh731Cohorts.severeMalnutritionPregnantOrLactating(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator moderateMalnutrition() {
+        return cohortIndicator("MAM+", map(moh731Cohorts.moderateMalnutrition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator moderateMalnutritionPregnantOrLactating() {
+        return cohortIndicator("MAM+ (Pregnant or Lactating)", map(moh731Cohorts.moderateMalnutritionPregnantOrLactating(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator severeMalnutritionOnTherapeuticFoods() {
+        return cohortIndicator("SAM+ Receiving therapeutic foods", map(moh731Cohorts.severeMalnutritionOnTherapeuticFoods(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator severeMalnutritionOnTherapeuticFoodsPregnantOrLactating() {
+        return cohortIndicator("SAM+ Receiving Therapeutic foods (Pregnant or Lactating)", map(moh731Cohorts.severeMalnutritionOnTherapeuticFoodsPregnantOrLactating(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator moderateMalnutritionOnSupplementalFoods() {
+        return cohortIndicator("MAM+ Receiving supplemental foods", map(moh731Cohorts.moderateMalnutritionOnSupplementalFoods(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator moderateMalnutritionOnSupplementaryFoodsPregnantOrLactating() {
+        return cohortIndicator("MAM+ Receiving supplemental foods (Pregnant or Lactating)", map(moh731Cohorts.moderateMalnutritionOnSupplementaryFoodsPregnantOrLactating(), "startDate=${startDate},endDate=${endDate}"));
     }
     /**
      * patients who started ipt 12 months ago and have completed
