@@ -133,6 +133,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String KDOD_CADRE = "96a99acd-2f11-45bb-89f7-648dbcac5ddf";
 		public static final String KDOD_RANK = "9f1f8254-20ea-4be4-a14d-19201fe217bf";
 		public static final String KDOD_UNIT = "848f5688-41c6-464c-b078-ea6524a3e971";
+		public static final String KDOD_CIVILIAN_RANK ="457463c8-dddb-4d35-bb5c-eb365f6d1790";
 		public static final String VERIFICATION_STATUS_WITH_NATIONAL_REGISTRY = "869f623a-f78e-4ace-9202-0bed481822f5";
 		public static final String VERIFICATION_MESSAGE_WITH_NATIONAL_REGISTRY = "752a0331-5293-4aa5-bf46-4d51aaf2cdc5";
 		public static final String CCC_SYNC_STATUS_WITH_NATIONAL_REGISTRY = "4dfa195f-8420-424d-8275-d60cf115303d";
@@ -337,6 +338,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				String.class, null, false, 4.5, _PersonAttributeType.KDOD_RANK));
 		install(personAttributeType("KDoD unit", "KDoD passout unit",
 				String.class, null, false, 4.5, _PersonAttributeType.KDOD_UNIT));
+				install(personAttributeType("KDoD civilian rank", "KDOD classification for civilian staff",
+				String.class, null, false, 4.5, _PersonAttributeType.KDOD_CIVILIAN_RANK));
+		
 
 		// Client Registry Properties
 		install(personAttributeType("cr verification status", "Verification status with national registry",
