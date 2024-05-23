@@ -264,4 +264,11 @@
 		<sqlFile splitStatements="false" path="PatientListForWardAdmission.sql"/>
 	</changeSet>
 
+	<changeSet id="${project.parent.artifactId}-20240506-1400" author="aojwang">
+		<comment>
+			Queries for migrating appointments to bahmni appointment module
+		</comment>
+		<sqlFile splitStatements="true" path="MigrateAppointmentsFromObs.sql"/>
+	</changeSet>
+
 </databaseChangeLog>
