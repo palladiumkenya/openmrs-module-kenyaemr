@@ -1004,7 +1004,7 @@
 			</set>
 		</property>
 		<property name="template" value="kenyaemr:MOH240.xls" />
-		<property name="repeatingSection" value="sheet:3,row:3,dataset:lrr" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH240" />
 	</bean>
   <bean id="kenyaemr.ehrReports.report.fcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="5b59902c-f565-4f9a-8dbb-5624d817e515" />
