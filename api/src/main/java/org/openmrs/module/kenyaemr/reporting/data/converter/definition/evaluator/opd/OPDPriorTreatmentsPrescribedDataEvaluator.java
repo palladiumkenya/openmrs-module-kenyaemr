@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.opd;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDiagnosisDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDPriorTreatmentsPrescribedDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDTreatmentPrescribedDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +25,11 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Diagnosis  
+ * Evaluates prior lab treatment prescribed 
  * OPD Register
  */
-@Handler(supports= OPDDiagnosisDataDefinition.class, order=50)
-public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= OPDPriorTreatmentsPrescribedDataDefinition.class, order=50)
+public class OPDPriorTreatmentsPrescribedDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,16 +37,14 @@ public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-		String qry = "select\n" +
-			"   v.encounter_id,\n" +
-			"   con.name as mnci_diagnosis\n" +
-			" from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"             inner join (select\n" +
-			"                             cn.name, cn.date_created, ed.patient_id\n" +
-			"                         from encounter_diagnosis ed\n" +
-			"                                  inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
-			"                                      and date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
-			" ) con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
+        String qry = "select le.encounter_id,\n" +
+			"       d.drug_name\n" +
+			" from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"     INNER JOIN kenyaemr_etl.etl_drug_order d ON le.patient_id = d.patient_id\n" +
+			"                                                      and d.enc_name = 'Drug Order'\n" +
+			"                                                      and date(d.visit_date) = date(le.visit_date)\n" +
+			" where date(le.visit_date) between date(:startDate) and date(:endDate)\n" +
+			" group by d.encounter_id";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

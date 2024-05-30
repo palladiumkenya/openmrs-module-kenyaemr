@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.opd;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDiagnosisDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDLabRemarksDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +24,11 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Diagnosis  
- * OPD Register
+ * Evaluates Lab remarks
+ * MOH 240 Lab Register 
  */
-@Handler(supports= OPDDiagnosisDataDefinition.class, order=50)
-public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= OPDLabRemarksDataDefinition.class, order=50)
+public class OPDLabRemarksDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -37,15 +37,11 @@ public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
 		String qry = "select\n" +
-			"   v.encounter_id,\n" +
-			"   con.name as mnci_diagnosis\n" +
-			" from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"             inner join (select\n" +
-			"                             cn.name, cn.date_created, ed.patient_id\n" +
-			"                         from encounter_diagnosis ed\n" +
-			"                                  inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
-			"                                      and date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
-			" ) con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
+			"    le.encounter_id,\n" +
+			"    p.notes\n" +
+			"from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"         inner join kenyaemr_etl.etl_progress_note p on p.patient_id = le.patient_id and  date(p.visit_date) = date(le.visit_date)\n" +
+			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
