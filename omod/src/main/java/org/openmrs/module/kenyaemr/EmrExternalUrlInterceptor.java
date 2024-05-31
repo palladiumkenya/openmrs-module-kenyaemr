@@ -54,7 +54,7 @@ public class EmrExternalUrlInterceptor extends HandlerInterceptorAdapter {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		System.out.println("REST: Now handling Emr External Urls");
+		// System.out.println("REST: Now handling Emr External Urls");
 		String controllerPackage = handler.getClass().getPackage().getName();
 
 		// Check Spring controller package name against whitelist
