@@ -3089,4 +3089,39 @@ else {
 
         return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
     }
+
+    /**
+     * Returns the latest patient Obs value coded concept ID and UUID given the patient UUID and Concept UUID
+     * @param patientUuid
+     * @return value coded concept id and uuid
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/latestobs")
+    @ResponseBody
+    public Object getLatestObs(@RequestParam("patientUuid") String patientUuid, @RequestParam("concept") String conceptIdentifier) {
+        SimpleObject ret = SimpleObject.create("conceptId", 0, "conceptUuid", "");
+        if (StringUtils.isBlank(patientUuid)) {
+            return new ResponseEntity<Object>("You must specify a patientUuid in the request!",
+                    new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (StringUtils.isBlank(conceptIdentifier)) {
+            return new ResponseEntity<Object>("You must specify a concept in the request!",
+                    new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        
+        Concept concept = Dictionary.getConcept(conceptIdentifier);
+		List<Obs> obsList = Context.getObsService().getObservationsByPersonAndConcept(patient, concept);
+		if (obsList.size() > 0) {
+			// these are in reverse chronological order
+            Obs currentObs = obsList.get(0);
+			ret.put("conceptId", currentObs.getValueCoded().getId());
+            ret.put("conceptUuid", currentObs.getValueCoded().getUuid());
+		}
+
+        return ret;
+
+    }
 }
