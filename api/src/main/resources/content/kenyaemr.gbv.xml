@@ -17,7 +17,7 @@
 	<!-- ===================== Program ===================== -->
 
 	<bean id="kenyaemr.gbv.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
-		<property name="targetUuid" value="4e07dab1-a664-468d-8ce6-d0d13eb6bbee" />
+		<property name="targetUuid" value="e41c3d74-37c7-4001-9f19-ef9e35224b70" />
 		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.gbv.EligibleForGBVProgramCalculation" />
 		<property name="defaultEnrollmentForm" ref="kenyaemr.gbv.form.enrollment.form" />
 		<property name="defaultCompletionForm" ref="kenyaemr.gbv.form.discontinuation" />
@@ -52,7 +52,7 @@
 
 	<!-- GBV enrollment form -->
 	<bean id="kenyaemr.gbv.form.enrollment.form" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="461ca30e-a7f4-4dd9-9a7d-b6da63b92bdd" />
+		<property name="targetUuid" value="9ba1d4aa-57d7-48f9-a635-a23508e8136c" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -67,7 +67,7 @@
 
 	<!-- GBV discontinuation form -->
 	<bean id="kenyaemr.gbv.form.discontinuation" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="4e563850-9c17-48fb-908e-5bbdce85f900" />
+		<property name="targetUuid" value="8fed3d06-f8a1-4cb8-b853-cd93394bab79" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.clinician" />
@@ -79,7 +79,7 @@
 	</bean>
 	<!-- Trauma counselling form -->
 	<bean id="kenyaemr.gbv.form.trauma.counselling" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="48c995d4-200d-4259-b2f7-d3b1b13f8c77" />
+		<property name="targetUuid" value="e983d758-5adf-4917-8172-0f4be4d8116a" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -93,7 +93,7 @@
 	</bean>
 	<!-- Community Linkage form -->
 	<bean id="kenyaemr.gbv.form.community.linkage" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="f3d7f7b9-af4d-4545-9834-102905fb8790" />
+		<property name="targetUuid" value="f760e38c-3d2f-4a5d-aa3d-e9682576efa8" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -107,7 +107,7 @@
 	</bean>
 	<!-- GBV Legal form -->
 	<bean id="kenyaemr.gbv.form.legal.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="60fa054e-7144-4671-8111-555f669ab285" />
+		<property name="targetUuid" value="d0c36426-4503-4236-ab5d-39bff77f2b50" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -121,7 +121,7 @@
 	</bean>
 	<!-- GBV Perpetrator details form -->
 	<bean id="kenyaemr.gbv.form.perpetrator.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="c8add03a-8b3f-4e8e-9265-a55809af676e" />
+		<property name="targetUuid" value="f37d7e0e-95e8-430d-96a3-8e22664f74d6" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -135,7 +135,7 @@
 	</bean>
 	<!-- GBV Consent form -->
 	<bean id="kenyaemr.gbv.form.consent.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="b3c4e545-b9b3-42f6-a41c-9758679af178" />
+		<property name="targetUuid" value="d720a8b3-52cc-41e2-9a75-3fd0d67744e5" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -149,7 +149,7 @@
 	</bean>
 	<!-- GBV PEP Management Non OCN form -->
 	<bean id="kenyaemr.gbv.form.pep.non.ocn" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="70d46a54-d07c-4658-8ccd-feba6bc941ec" />
+		<property name="targetUuid" value="92de9269-6bb4-4c24-8ec9-870aa2c64b5a" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -163,7 +163,7 @@
 	</bean>
 	<!-- GBV PEP Management OCN form -->
 	<bean id="kenyaemr.gbv.form.pep.ocn" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="9f9dacfa-7952-4f9f-b191-1ff557ae2be4" />
+		<property name="targetUuid" value="556718da-7564-4286-a081-c50f8e4b6504" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -177,7 +177,7 @@
 	</bean>
 	<!-- GBV PEP Management Survivor form -->
 	<bean id="kenyaemr.gbv.form.pep.survivor" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="f6539ca2-fa98-4007-8945-85cbf7d19cc3" />
+		<property name="targetUuid" value="f44b2405-226b-47c4-b98f-b826ea4725ae" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -191,7 +191,7 @@
 	</bean>
 	<!-- SGBV Post Rape Care Part 363A Form-->
 	<bean id="kenyaemr.sgbv.form.prc.363A" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="c3101e2e-ac1e-4b18-8ad1-0fe8a514cf8a" />
+		<property name="targetUuid" value="c46aa4fd-8a5a-4675-90a7-a6f2119f61d8" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
@@ -205,7 +205,7 @@
 	</bean>
 	<!-- SGBV PRC Psychological Assessment 363B Form-->
 	<bean id="kenyaemr.sgbv.form.prc.363B" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="c766da7b-efa3-45e5-b090-1ed3b4339cab" />
+		<property name="targetUuid" value="9d21275a-7657-433a-b305-a736423cc496" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
