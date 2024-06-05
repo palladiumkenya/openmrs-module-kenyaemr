@@ -1,7 +1,7 @@
 name: deploy to prod 8600
 on:
   push:
-    branches: [ master, 2.x ]
+    branches: [ 2.x ]
 jobs:
   build:
     name: deploying to 2.x instance
