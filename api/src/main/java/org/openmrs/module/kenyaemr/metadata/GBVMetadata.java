@@ -46,6 +46,8 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		public static final String PEP_MANAGEMENT_SURVIVOR_ENCOUNTER = "133c8398-1fdc-437a-a74a-e73b1254c1d6";
 		public static final String SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER = "e571c807-8fcc-4bc3-bc64-4ed372b348e4";
 		public static final String SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER = "b5ab0a6b-9425-44da-b0d9-242f609f1605";
+		public static final String GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER = "39d9350b-6eba-4653-a0cf-c554f44f6e91";
+		public static final String GBV_PEP_FOLLOWUP_ENCOUNTER = "24c11d80-986d-4f13-9086-d0a01a84dae3";
 
 	}
 
@@ -62,6 +64,8 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		public static final String PEP_MANAGEMENT_SURVIVOR_FORM = "f44b2405-226b-47c4-b98f-b826ea4725ae";
 		public static final String SGBV_POST_RAPE_CARE_PART_A_FORM = "c46aa4fd-8a5a-4675-90a7-a6f2119f61d8";
 		public static final String SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM = "9d21275a-7657-433a-b305-a736423cc496";
+		public static final String GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM = "a0943862-f0fe-483d-9f11-44f62abae063";
+		public static final String GBV_PEP_FOLLOWUP_FORM = "155ccbe2-a33f-4a58-8ce6-57a7372071ee";
 	}
 	/**
 	 * @see AbstractMetadataBundle#install()
@@ -83,6 +87,8 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		install(encounterType("PEP Management Survivor Encounter", "PEP Management Survivor Encounter", _EncounterType.PEP_MANAGEMENT_SURVIVOR_ENCOUNTER));
 		install(encounterType("SGBV Post Rape Care 363A Encounter", "SGBV Post Rape Care 363A Encounter", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER));
 		install(encounterType("SGBV PRC Psychological Assessment 363B Encounter", "SGBV PRC Psychological Assessment 363B Encounter", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER));
+		install(encounterType("GBV Physical and Emotional Abuse Encounter", "GBV Physical and Emotional Abuse Encounter", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER));
+		install(encounterType("GBV PEP Follow up Encounter", "GBV PEP Follow up Encounter", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER));
 
 		install(form("GBV Enrollment Form", "Gender Based Violence Enrollment Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_ENROLLMENT_FORM));
 		install(form("GBV Trauma Counselling Form", "Gender Based Violence Trauma Counselling Form", _EncounterType.GBV_TRAUMA_COUNSELLING_ENCOUNTER, "1", _Form.GBV_TRAUMA_COUNSELLING_FORM));
@@ -96,6 +102,8 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		install(form("PEP Management Survivor Form", "Post Exposure Prophylaxis Management Survivor Form", _EncounterType.PEP_MANAGEMENT_SURVIVOR_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_SURVIVOR_FORM));
 		install(form("SGBV Post Rape Care 363A Form", "SGBV Post Rape Care 363A Form", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER, "1", _Form.SGBV_POST_RAPE_CARE_PART_A_FORM));
 		install(form("SGBV PRC Psychological Assessment 363B Form", "SGBV PRC Psychological Assessment 363B Form", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER, "1", _Form.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM));
+		install(form("GBV Physical and Emotional Abuse Form", "GBV Physical and Emotional Abuse Form", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER, "1", _Form.GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM));
+		install(form("GBV PEP Follow up Form", "GBV PEP Follow up Form", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER, "1", _Form.GBV_PEP_FOLLOWUP_FORM));
 
 	}
 }
