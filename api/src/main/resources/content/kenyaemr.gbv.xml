@@ -33,6 +33,8 @@
 				<ref bean="kenyaemr.gbv.form.pep.survivor" />
 				<ref bean="kenyaemr.sgbv.form.prc.363A" />
 				<ref bean="kenyaemr.sgbv.form.prc.363B" />
+				<ref bean="kenyaemr.gbv.form.physical.emotional" />
+				<ref bean="kenyaemr.gbv.form.pep.followup" />
 			</set>
 		</property>
 		<property name="reports">
@@ -206,6 +208,34 @@
 	<!-- SGBV PRC Psychological Assessment 363B Form-->
 	<bean id="kenyaemr.sgbv.form.prc.363B" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="9d21275a-7657-433a-b305-a736423cc496" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV Physical and Emotional Abuse Form-->
+	<bean id="kenyaemr.gbv.form.physical.emotional" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="a0943862-f0fe-483d-9f11-44f62abae063" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV PEP Followup Form-->
+	<bean id="kenyaemr.gbv.form.pep.followup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="155ccbe2-a33f-4a58-8ce6-57a7372071ee" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
