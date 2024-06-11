@@ -43,6 +43,7 @@
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
 				<ref bean="kenyaemr.common.form.iliSurveillance"/>
 				<ref bean="kenyaemr.common.form.sariSurveillance"/>
+				<ref bean="kenyaemr.common.form.nutrition"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
 			</set>
@@ -542,6 +543,23 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
 		<property name="order" value="201099" />
+	</bean>
+	<!-- Nutrition -->
+	<bean id="kenyaemr.common.form.nutrition" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="b8357314-0f6a-4fc9-a5b7-339f47095d62" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200010" />
 	</bean>
 
 	<!-- ===================== Reports ===================== -->
