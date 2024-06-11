@@ -66,6 +66,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ILI_SURVEILLANCE = "f60910c7-2edd-4d93-813c-0e57095f892f";
 		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
 		public static final String PROCEDURE_RESULTS = "99a7a6ba-59f4-484e-880d-01cbeaead62f";
+		public static final String NUTRITION = "160fcc03-4ff5-413f-b582-7e944a770bed";
 	}
 
 	public static final class _Form {
@@ -93,6 +94,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 		public static final String ILI_SURVEILLANCE_FORM = "05bcb369-5d50-4130-9a15-19c77a80314a";
 		public static final String SARI_SURVEILLANCE_FORM = "be0f79d3-9e9a-414b-a1ca-6a2974110bc4";
+		public static final String NUTRITION = "b8357314-0f6a-4fc9-a5b7-339f47095d62";
 	}
 
 	public static final class _OrderType {
@@ -195,6 +197,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("ILI Surveillance", "ILI Surveillance encounter type", _EncounterType.ILI_SURVEILLANCE));
 		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
 		install(encounterType("Procedure Results", "Procedure outcome encounter type", _EncounterType.PROCEDURE_RESULTS));
+		install(encounterType("Nutrition", "Nutrition encounter type",_EncounterType.NUTRITION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -218,6 +221,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1", _Form.HIV_SELF_TESTING));
 		install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1", _Form.ILI_SURVEILLANCE_FORM));
 		install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1", _Form.SARI_SURVEILLANCE_FORM));
+		install(form("Nutrition Form", "Form for Nutrition", _EncounterType.NUTRITION, "1",_Form.NUTRITION));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
