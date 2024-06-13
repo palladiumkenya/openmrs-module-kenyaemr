@@ -132,8 +132,9 @@ public class CCCDefaulterTracingRegisterReportBuilder extends AbstractReportBuil
         dsd.addColumn("Outcome", new TracingOutcomeDataDefinition(),"");
         dsd.addColumn("Tracing attempt No", new TracingNumberDataDefinition(),"");
         dsd.addColumn("Final Outcome", new FinalOutcomeDataDefinition(),"");
+        dsd.addColumn("Date of Outcome",  new DateOfFinalOutcomeDataDefinition(),"", new DateConverter(DATE_FORMAT));
         dsd.addColumn("Last Visit Date", lastVisitBeforeMissedApp,dateParams, new DateConverter(DATE_FORMAT));
-        dsd.addColumn("Last Appointment Date", dateMissedAppointment, dateParams, new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Date of missed appointment", dateMissedAppointment, dateParams, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Reason for missed appointment", new ReasonForMissedAppointmentDataDefinition(),"", new MissedAppointmentReasonsConverter());
         dsd.addColumn("Date promised to come", new ReturnToCareDateDataDefinition(),"", new DateConverter(DATE_FORMAT));
         dsd.addColumn("Honoured appointment date", dateHonouredAppointment,dateParams, new DateConverter(DATE_FORMAT));
