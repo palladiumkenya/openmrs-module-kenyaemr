@@ -21,6 +21,7 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -38,12 +39,17 @@ public class DateOfFinalOutcomeDataEvaluator implements EncounterDataEvaluator {
         String qry = "select encounter_id,\n" +
 			"       visit_date\n" +
 			"from kenyaemr_etl.etl_ccc_defaulter_tracing\n" +
-			"           where true_status in (160432,1693,160037,5240,142917);";
+			"           where true_status in (160432,1693,160037,5240,142917)\n" +
+			"           and visit_date between date(:startDate) and date(:endDate);";
 
-        SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
-        queryBuilder.append(qry);
-        Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
-        c.setData(data);
-        return c;
+		SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
+		queryBuilder.append(qry);
+		Date startDate = (Date)context.getParameterValue("startDate");
+		Date endDate = (Date)context.getParameterValue("endDate");
+		queryBuilder.addParameter("endDate", endDate);
+		queryBuilder.addParameter("startDate", startDate);
+		Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
+		c.setData(data);
+		return c;
     }
 }
