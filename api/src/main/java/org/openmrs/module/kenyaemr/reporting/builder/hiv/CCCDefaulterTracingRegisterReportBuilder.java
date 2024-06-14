@@ -116,8 +116,15 @@ public class CCCDefaulterTracingRegisterReportBuilder extends AbstractReportBuil
         lastVisitBeforeMissedApp.addParameter(new Parameter("startDate", "Start Date", Date.class));
         lastVisitBeforeMissedApp.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+		FinalOutcomeDataDefinition finalOutcomeDataDefinition = new FinalOutcomeDataDefinition();
+		finalOutcomeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		finalOutcomeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-        dsd.addColumn("Name", nameDef, "");
+		DateOfFinalOutcomeDataDefinition dateOfFinalOutcomeDataDefinition = new DateOfFinalOutcomeDataDefinition();
+		dateOfFinalOutcomeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		dateOfFinalOutcomeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+		dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
 		dsd.addColumn("National ID", natIdDef, "");
 		dsd.addColumn("NUPI", nupiDef, "");
@@ -131,8 +138,8 @@ public class CCCDefaulterTracingRegisterReportBuilder extends AbstractReportBuil
         dsd.addColumn("Tracing Type", new TracingTypeDataDefinition(),"");
         dsd.addColumn("Outcome", new TracingOutcomeDataDefinition(),"");
         dsd.addColumn("Tracing attempt No", new TracingNumberDataDefinition(),"");
-        dsd.addColumn("Final Outcome", new FinalOutcomeDataDefinition(),"");
-        dsd.addColumn("Date of Outcome",  new DateOfFinalOutcomeDataDefinition(),"", new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Final Outcome", finalOutcomeDataDefinition,dateParams);
+        dsd.addColumn("Date of Outcome",  dateOfFinalOutcomeDataDefinition,dateParams, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Last Visit Date", lastVisitBeforeMissedApp,dateParams, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Date of missed appointment", dateMissedAppointment, dateParams, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Reason for missed appointment", new ReasonForMissedAppointmentDataDefinition(),"", new MissedAppointmentReasonsConverter());
