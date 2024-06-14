@@ -10,6 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.defaulterTracing;
 
 import org.openmrs.annotation.Handler;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.defaulterTracing.DateOfFinalOutcomeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.defaulterTracing.FinalOutcomeDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
@@ -24,10 +25,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates final tracing outcome to produce a VisitData
+ * Evaluates date of final tracing outcome to produce a VisitData
  */
-@Handler(supports=FinalOutcomeDataDefinition.class, order=50)
-public class FinalOutcomeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= DateOfFinalOutcomeDataDefinition.class, order=50)
+public class DateOfFinalOutcomeDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,14 +37,10 @@ public class FinalOutcomeDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select encounter_id,\n" +
-			"       (case true_status\n" +
-			"           when 160432 then 'Dead'\n" +
-			"           when 1693 then 'Receiving ART from another clinic/Transferred'\n" +
-			"           when 160037 then 'Still in care at CCC'\n" +
-			"           when 5240 then 'Lost to follow up'\n" +
-			"           when 142917 then 'Other' else ''  end) as outcome\n" +
+			"       visit_date\n" +
 			"from kenyaemr_etl.etl_ccc_defaulter_tracing\n" +
-			"where visit_date between date(:startDate) and date(:endDate);";
+			"           where true_status in (160432,1693,160037,5240,142917)\n" +
+			"           and visit_date between date(:startDate) and date(:endDate);";
 
 		SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
 		queryBuilder.append(qry);
