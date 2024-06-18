@@ -19,52 +19,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class FmapIndicatorLibrary {
 
-    @Autowired
-    private FmapCohortLibrary fmapCohortLibrary;
+	@Autowired
+	private FmapCohortLibrary fmapCohortLibrary;
 
-    //Indicator Libraries based on Queries and MOH710 dimensions
+	//Indicator Libraries
 
-//    public CohortIndicator adultfirstlinetld() {
-//
-//        return cohortIndicator("tdf3tcdtg",map(fmapCohortLibrary.mothersReceivedARV12MonthsCohort(), "startDate=${startDate},endDate=${endDate}")
-//        );
-//    }
+	public CohortIndicator patientsOnSpecificRegimen(String regimenName, String regimenLine, String ageGroup, String gender) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup, gender), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
 
-    public CohortIndicator adultFirstLineTLD() {
-
-        return cohortIndicator("TDF+3TC+DTG",map(fmapCohortLibrary.AdultFirstTLD(), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator adultFirstLineTLE() {
-
-        return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.AdultFirstTLE(), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator patientsOnAdultFirstLine(String regimenName, String regimenLine, String ageGroup) {
-        return cohortIndicator("AdultFirstLine",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator patientsOnAdultSecondLine(String regimenName, String regimenLine, String ageGroup) {
-        return cohortIndicator("AdultSecondLine",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator patientsOnAdultThirdLine(String regimenName, String regimenLine, String ageGroup) {
-        return cohortIndicator("AdultThirdLine",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator patientsOnSpecificRegimen(String regimenName, String regimenLine, String ageGroup) {
-        return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
-
-    public CohortIndicator patientsOnOtherRegimen(String regimenName, String regimenLine, String ageGroup) {
-        return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnAnyOtherRegimenandRegimenLine(regimenName,regimenLine, ageGroup), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
+	public CohortIndicator patientsOnOtherRegimen(String regimenName, String regimenLine, String ageGroup, String gender) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnAnyOtherRegimenandRegimenLine(regimenName,regimenLine, ageGroup, gender), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
 
 }
