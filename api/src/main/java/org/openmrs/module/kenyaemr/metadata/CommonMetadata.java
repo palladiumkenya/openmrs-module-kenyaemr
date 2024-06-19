@@ -13,6 +13,8 @@ import org.openmrs.Form;
 import org.openmrs.PatientIdentifierType.LocationBehavior;
 import org.openmrs.api.context.Context;
 import org.openmrs.PersonAttributeType;
+import org.openmrs.customdatatype.CustomDatatype;
+import org.openmrs.customdatatype.datatype.DateDatatype;
 import org.openmrs.module.idgen.validator.LuhnMod25IdentifierValidator;
 import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.Metadata;
@@ -22,6 +24,8 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 import org.openmrs.customdatatype.datatype.ConceptDatatype;
+
+import java.util.Date;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
@@ -154,6 +158,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 	public static final class _ProviderAttributeType {
 		public static final String PRIMARY_FACILITY = "5a53dddd-b382-4245-9bf1-03bce973f24b";
+		public static final String LICENSE_NUMBER = "bcaaa67b-cc72-4662-90c2-e1e992ceda66";
+		public static final String LICENSE_EXPIRY_DATE = "00539959-a1c7-4848-a5ed-8941e9d5e835";
 	}
 
 	public static final class _RelationshipType {
@@ -379,7 +385,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY));
 
 		// Provider attribute types.
-		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY ));
+		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY));
+		install(providerAttributeType("Practising License Number", "Provider Practising License Number", FreeTextDatatype.class, "", 0, 9999 , _ProviderAttributeType.LICENSE_NUMBER));
+		install(providerAttributeType("License Expiry Date", "Provider Practising License Expiry Date", DateDatatype.class, "", 0, 9999 , _ProviderAttributeType.LICENSE_EXPIRY_DATE));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects", _RelationshipType.GUARDIAN_DEPENDANT));
 		install(relationshipType("Spouse", "Spouse", "A spouse is a partner in a marriage, civil union, domestic partnership or common-law marriage a male spouse is a husband and a female spouse is a wife", _RelationshipType.SPOUSE));
