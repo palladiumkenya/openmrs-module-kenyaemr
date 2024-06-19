@@ -212,6 +212,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static final String MSW_UUID = "973e5b6c-ae5e-4d6a-a624-2d259763771f";
 
     public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    public static final String GP_COUNTY = "kenyakeypop.countyCode";
+    public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
+
+
 
     /**
      * Gets a list of available/completed forms for a patient
@@ -2294,12 +2298,10 @@ else {
         return  personRelationshipName;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/generateKPNumber")
+    @RequestMapping(method = RequestMethod.GET, value = "/kpIdentifier")
     @ResponseBody
-    public String getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid, @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
-                                           @RequestParam("county") String county, @RequestParam("ward") String ward, @RequestParam("implementingPartnerCode") String implementingPartnerCodeVal,
-                                           @RequestParam("hotspotCode") String hotSpotCodeVal) {
-        EncounterService encounterService = Context.getEncounterService();
+    public Object getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid, @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
+                                            @RequestParam("ward") String ward, @RequestParam("hotspotCode") String hotSpotCodeVal) {
         PersonService personService = Context.getPersonService();
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
         Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -2317,58 +2319,30 @@ else {
         String countyCode = null;
         String implementingPartnerCode = null;
         StringBuilder identifier = new StringBuilder();
-
-        Encounter lastEnc = EmrUtils.lastEncounter(patient,
-                encounterService.getEncounterTypeByUuid(KP_IDENTIFIER_UUID));
-        if (lastEnc != null) {
-            for (Obs obs : lastEnc.getObs()) {
-                if (obs.getConcept().getConceptId() == 164829) {
-                    wardCode = obs.getValueText();
-                } else if (obs.getConcept().getConceptId() == 161564) {
-                    subCountyCode = obs.getValueText();
-                } else if (obs.getConcept().getConceptId() == 165006) {
-                    hotSpotCode = obs.getValueText();
-                } else if (obs.getConcept().getConceptId() == 165347) {
-                    implementingPartnerCode = obs.getValueText().toUpperCase();
-                } else if (obs.getConcept().getConceptId() == 162725) {
-                    countyCode = obs.getValueText();
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165083) {
-                    kpTypeCode = "01";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 160578) {
-                    kpTypeCode = "02";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 105) {
-                    kpTypeCode = "03";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165085) {
-                    kpTypeCode = "04";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165100) {
-                    kpTypeCode = "05";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 165084) {
-                    kpTypeCode = "07";
-                } else if (obs.getConcept().getConceptId() == 164929 && obs.getValueCoded().getConceptId() == 162277) {
-                    kpTypeCode = "08";
-                }
-            }
-        } else {
-            wardCode = ward;
-            subCountyCode = subCounty;
-            countyCode = county;
-            hotSpotCode = hotSpotCodeVal;
-            implementingPartnerCode = implementingPartnerCodeVal;
-            if (kpTypeVal.equals(FSW_UUID)) {
-                kpTypeCode = "01";
-            } else if (kpTypeVal.equals(MSM_UUID)) {
-                kpTypeCode = "02";
-            } else if (kpTypeVal.equals(PWID_UUID)) {
-                kpTypeCode = "03";
-            } else if (kpTypeVal.equals(PWUD_UUID)) {
-                kpTypeCode = "04";
-            } else if (kpTypeVal.equals(TRANSGENDER_UUID)) {
-                kpTypeCode = "05";
-            } else if (kpTypeVal.equals(MSW_UUID)) {
-                kpTypeCode = "07";
-            } else if (kpTypeVal.equals(PEOPLE_IN_PRISON_UUID)) {
-                kpTypeCode = "08";
-            }
+        GlobalProperty globalCountyCode = Context.getAdministrationService().getGlobalPropertyObject(GP_COUNTY);
+        GlobalProperty globalImplementingPartnerCode = Context.getAdministrationService().getGlobalPropertyObject(GP_KP_IMPLEMENTING_PARTNER);
+		String strCountyCode = globalCountyCode.getPropertyValue();
+        String strImplementingPartner = globalImplementingPartnerCode.getPropertyValue();
+        SimpleObject kpIdentifier = new SimpleObject();
+        wardCode = ward;
+        subCountyCode = subCounty;
+        countyCode = strCountyCode;
+        hotSpotCode = hotSpotCodeVal;
+        implementingPartnerCode = strImplementingPartner;
+        if (kpTypeVal.equals(FSW_UUID)) {
+            kpTypeCode = "01";
+        } else if (kpTypeVal.equals(MSM_UUID)) {
+            kpTypeCode = "02";
+        } else if (kpTypeVal.equals(PWID_UUID)) {
+            kpTypeCode = "03";
+        } else if (kpTypeVal.equals(PWUD_UUID)) {
+            kpTypeCode = "04";
+        } else if (kpTypeVal.equals(TRANSGENDER_UUID)) {
+            kpTypeCode = "05";
+        } else if (kpTypeVal.equals(MSW_UUID)) {
+            kpTypeCode = "07";
+        } else if (kpTypeVal.equals(PEOPLE_IN_PRISON_UUID)) {
+            kpTypeCode = "08";
         }
 
         identifier.append(countyCode);
@@ -2399,19 +2373,14 @@ else {
             PatientIdentifierType pit = MetadataUtils.existing(PatientIdentifierType.class, KP_UNIQUE_PATIENT_NUMBER_UUID);
             PatientIdentifier pObject = patient.getPatientIdentifier(pit);
             sb.append(pObject.getIdentifier());
-        }
-
-        if (lastEnc != null) {
+        } else {
             sb.append(identifier);
         }
-
-        if (lastEnc == null && programs.size() <= 0) {
-            sb.append(" ");
-        }
-
-        return sb.toString();
+        kpIdentifier.put("kpIdentifier", sb.toString());
+        return kpIdentifier;
 
     }
+
     String entryPointAbbriviations(Concept concept) {
         String value = "Other";
         if(concept != null) {
