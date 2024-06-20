@@ -154,6 +154,7 @@ import java.util.Locale;
 import java.util.Comparator;
 
 import org.springframework.http.MediaType;
+import java.util.Base64;
 
 /**
  * The rest controller for exposing resources through kenyacore and kenyaemr modules
@@ -3264,4 +3265,124 @@ else {
         return ret;
 
     }
+
+    /**
+     * End Point for getting Patient resource from SHA client registry
+     * @param payload
+     * @param identifier
+     * @param identifierType
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{payload}/{identifier}/{identifierType}")
+    public ResponseEntity<String> getSHAPatient(@PathVariable String payload, @PathVariable String identifier, @PathVariable String identifierType) {
+        String strUserName = "";
+        String strPassword = "";
+
+        String errorResponse = "{\"status\": \"Error\"}";
+        try {
+            // Retrieve base URL from global properties
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if (baseURL == null || baseURL.trim().isEmpty()) {
+                // TODO  replace base URL with the actual external default url
+                baseURL = "http://127.0.0.1:9342/api/shaPatientResource";
+            }
+
+            // Get Auth credentials
+            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
+            strUserName = globalGetUsername.getPropertyValue();
+
+            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
+            strPassword = globalGetPassword.getPropertyValue();
+            // Prepare URL
+            String completeURL = baseURL + "/"  + payload + "/" + identifier  + "/" + identifierType;
+            System.out.println("SHA Client registry verification: Using SHA GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            // Set up connection
+            String auth = strUserName + ":" + strPassword;
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
+        } catch (Exception ex) {
+            log.error("SHA client registry verification: ERROR: {} "+ ex.getMessage(), ex);
+        }
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    }
+
+    /**
+     * End Point for getting Practitioner resource from SHA client registry
+     * @param registrationNumber
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+   // @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search/{registrationNumber}")
+    @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search")
+    public ResponseEntity<String> getSHAPractitioner(@PathVariable String registrationNumber) {
+        String strUserName = "";
+        String strPassword = "";
+
+        String errorResponse = "{\"status\": \"Error\"}";
+        try {
+            // Retrieve base URL from global properties
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if (baseURL == null || baseURL.trim().isEmpty()) {
+                // TODO  replace base URL with the actual external default url
+                baseURL = "http://127.0.0.1:9342/api/practitioner-search";
+            }
+
+            // Get Auth credentials
+            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
+            strUserName = globalGetUsername.getPropertyValue();
+
+            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
+            strPassword = globalGetPassword.getPropertyValue();
+            // Prepare URL
+            String completeURL = baseURL + "/"  + registrationNumber;
+            System.out.println("SHA practitioner search: Using SHA GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            // Set up connection
+            String auth = strUserName + ":" + strPassword;
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
+        } catch (Exception ex) {
+            log.error("SHA practitioner search: ERROR: {} "+ ex.getMessage(), ex);
+        }
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    }
+
 }
