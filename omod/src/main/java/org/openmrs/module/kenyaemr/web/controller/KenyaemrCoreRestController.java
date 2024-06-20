@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.kenyaemr.web.controller;
 
-import com.sun.xml.bind.v2.TODO;
 import org.openmrs.Form;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
