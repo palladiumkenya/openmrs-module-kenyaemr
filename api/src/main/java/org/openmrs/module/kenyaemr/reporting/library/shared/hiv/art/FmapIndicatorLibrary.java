@@ -24,24 +24,30 @@ public class FmapIndicatorLibrary {
 
 	//Indicator Libraries
 
-	public CohortIndicator patientsOnSpecificRegimen(String regimenName, String regimenLine, String ageGroup, String gender, String pmtct) {
-		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup, gender, pmtct), "startDate=${startDate},endDate=${endDate}")
+	public CohortIndicator patientsOnSpecificRegimen(String regimenName, String regimenLine, String ageGroup, String pmtct) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnSpecificRegimenAndRegimenLine(regimenName,regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
 
-	public CohortIndicator patientsOnOtherRegimen(String regimenName, String regimenLine, String ageGroup, String gender, String pmtct) {
-		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnAnyOtherRegimenandRegimenLine(regimenName,regimenLine, ageGroup, gender, pmtct), "startDate=${startDate},endDate=${endDate}")
+	public CohortIndicator patientsOnOtherRegimen(String regimenName, String regimenLine, String ageGroup, String pmtct) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrpatientOnAnyOtherRegimenandRegimenLine(regimenName,regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
 
-	public CohortIndicator pmtctPatientsRegimen(String regimenName, String gender, String pmtct) {
-		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPmtctPatientOnSpecificRegimen(regimenName, gender, pmtct), "startDate=${startDate},endDate=${endDate}")
+	public CohortIndicator pmtctPatientsRegimen(String regimenName, String regimenLine, String pmtct) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPmtctPatientOnSpecificRegimen(regimenName, regimenLine, pmtct), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
 
-	public CohortIndicator pmtctPatientsOnOtherRegimen(String regimenName, String gender, String pmtct) {
-		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPmtctPatientOnAnyOtherRegimen(regimenName, gender, pmtct), "startDate=${startDate},endDate=${endDate}")
+	public CohortIndicator pmtctPatientsOnOtherRegimen(String regimenName, String regimenLine, String pmtct) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPmtctPatientOnAnyOtherRegimen(regimenName, regimenLine, pmtct), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
+
+	public CohortIndicator peadPatientsOnSpecificRegimen(String regimenName,String regimenLine,String ageGroup,String pmtct, String minAge, String maxAge) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPeadOnSpecificRegimenAndRegimenLine(regimenName,regimenLine,ageGroup,pmtct, minAge,maxAge), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+
 
 }

@@ -58,17 +58,14 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
-	public CohortDefinition patientOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup, String gender, String pmtct){
+	public CohortDefinition patientOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct){
 		String sqlQuery = "SELECT regimeData.patient_id\n" +
 			" FROM\n" +
 			"   (SELECT\n" +
 			"      de.patient_id as patient_id,\n" +
 			"      CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
 			"        THEN 'adult'\n" +
-			"      ELSE 'child' END AS agegroup,\n" +
-			"      CASE WHEN d.Gender = 'M' THEN 'Male'\n" +
-			"           WHEN d.Gender = 'F' THEN 'Female'\n" +
-			"           ELSE '' END AS gender,\n" +
+			"      ELSE 'child' END AS agegroup,\n" +			
 			"          CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
 			"               ELSE 'False' END AS pmtct,\n" +
 			"      de.program       AS program,\n" +
@@ -91,13 +88,11 @@ public class FmapCohortLibrary {
 			"    AND regimen = ':regimenName'\n" +
 			"        AND  regimen_line = ':regimenLine'\n" +
 			"        AND  patient_id IS NOT NULL\n" +
-			"        AND agegroup = ':ageGroup'\n" +
-			"        AND gender = ':gender'\n" +
+			"        AND agegroup = ':ageGroup'\n" +			
 			"        AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
-		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);
-		sqlQuery = sqlQuery.replaceAll(":gender", gender);
+		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);		
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("Regimens");
@@ -108,17 +103,17 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 	
-	public CohortDefinition txCurrpatientOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup, String gender, String pmtct) {
+	public CohortDefinition txCurrpatientOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct) {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("patientOnSpecificRegimenAndRegimenLine", ReportUtils.map(patientOnSpecificRegimenAndRegimenLine(regimenName, regimenLine, ageGroup, gender, pmtct), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("patientOnSpecificRegimenAndRegimenLine", ReportUtils.map(patientOnSpecificRegimenAndRegimenLine(regimenName, regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("(txcurr AND patientOnSpecificRegimenAndRegimenLine");
 		return cd;
 	}
 
-	public CohortDefinition patientOnAnyOtherRegimenandRegimenLine(String regimenName,String regimenLine,String ageGroup, String gender,  String pmtct){
+	public CohortDefinition patientOnAnyOtherRegimenandRegimenLine(String regimenName,String regimenLine,String ageGroup, String pmtct){
 		String sqlQuery = "SELECT regimeData.patient_id\n" +
 			"FROM\n" +
 			"  (SELECT\n" +
@@ -127,9 +122,6 @@ public class FmapCohortLibrary {
 			"       THEN 'adult'\n" +
 			"     ELSE 'child' END AS agegroup,\n" +
 			"     de.program       AS program,\n" +
-			"     CASE WHEN d.Gender = 'M' THEN 'Male'\n" +
-			"            WHEN d.Gender = 'F' THEN 'Female'\n" +
-			"            ELSE '' END AS gender,\n" +
 			"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
 			"          ELSE 'False' END AS pmtct,\n" +
 			"     de.date_started AS date_started,\n" +
@@ -147,17 +139,15 @@ public class FmapCohortLibrary {
 			"   GROUP BY de.encounter_id\n" +
 			"  ) regimeData\n" +
 			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
-			"                               'AZT/3TC/NVP','AZT/3TC/EFV','AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/NVP','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/NVP','ABC/3TC/EFV','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r')\n" +
+			"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
 			"      AND  date_started <= :endDate AND regimen = ':regimenName'\n" +
 			"      AND  regimen_line = ':regimenLine'\n" +
 			"      AND  patient_id IS NOT NULL\n" +
-			"      AND agegroup = ':ageGroup'\n" +
-			"      AND gender = ':gender'\n" +
+			"      AND agegroup = ':ageGroup'\n" +			
 			"      AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
-		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);
-		sqlQuery = sqlQuery.replaceAll(":gender", gender);
+		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);		
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("Regimens");
@@ -168,24 +158,21 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
-	public CohortDefinition txCurrpatientOnAnyOtherRegimenandRegimenLine(String regimenName,String regimenLine,String ageGroup,String gender,String pmtct) {
+	public CohortDefinition txCurrpatientOnAnyOtherRegimenandRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct) {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("patientOnAnyOtherRegimenandRegimenLine", ReportUtils.map(patientOnAnyOtherRegimenandRegimenLine(regimenName, regimenLine, ageGroup, gender, pmtct), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("patientOnAnyOtherRegimenandRegimenLine", ReportUtils.map(patientOnAnyOtherRegimenandRegimenLine(regimenName, regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("(txcurr AND patientOnAnyOtherRegimenandRegimenLine");
 		return cd;
 	}
 
-	public CohortDefinition pmtctPatientOnSpecificRegimen(String regimenName, String gender, String pmtct){
+	public CohortDefinition pmtctPatientOnSpecificRegimen(String regimenName, String regimenLine, String pmtct){
 		String sqlQuery = "SELECT regimeData.patient_id\n" +
 			"FROM\n" +
 			"    (SELECT\n" +
-			"         de.patient_id as patient_id,\n" +
-			"         CASE WHEN d.Gender = 'M' THEN 'Male'\n" +
-			"              WHEN d.Gender = 'F' THEN 'Female'\n" +
-			"              ELSE '' END AS gender,\n" +
+			"         de.patient_id as patient_id,\n" +		
 			"         CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
 			"              ELSE 'False' END AS pmtct,\n" +
 			"         de.program       AS program,\n" +
@@ -205,12 +192,12 @@ public class FmapCohortLibrary {
 			"    ) regimeData\n" +
 			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH')\n" +
 			"  AND  date_started <= :endDate\n" +
-			"  AND regimen = ':regimenName'\n" +
-			"  AND  patient_id IS NOT NULL\n" +
-			"  AND gender = ':gender'\n" +
+			"  AND  regimen = ':regimenName'\n" +
+			"  AND  regimen_line = ':regimenLine'\n" +			
+			"  AND  patient_id IS NOT NULL\n" +		
 			"  AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
-		sqlQuery = sqlQuery.replaceAll(":gender", gender);
+		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("PmtctRegimens");
@@ -221,17 +208,17 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
-	public CohortDefinition txCurrPmtctPatientOnSpecificRegimen(String regimenName,String gender,String pmtct) {
+	public CohortDefinition txCurrPmtctPatientOnSpecificRegimen(String regimenName,String regimenLine, String pmtct) {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("pmtctPatientOnSpecificRegimen", ReportUtils.map(pmtctPatientOnSpecificRegimen(regimenName, gender, pmtct), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("pmtctPatientOnSpecificRegimen", ReportUtils.map(pmtctPatientOnSpecificRegimen(regimenName, regimenLine, pmtct), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("(txcurr AND pmtctPatientOnSpecificRegimen");
 		return cd;
 	}
 	
-	public CohortDefinition pmtctPatientOnAnyOtherRegimen(String regimenName,String gender, String pmtct){
+	public CohortDefinition pmtctPatientOnAnyOtherRegimen(String regimenName, String regimenLine, String pmtct){
 		String sqlQuery = "SELECT regimeData.patient_id\n" +
 			"FROM\n" +
 			"  (SELECT\n" +
@@ -239,10 +226,7 @@ public class FmapCohortLibrary {
 			"     CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
 			"       THEN 'adult'\n" +
 			"     ELSE 'child' END AS agegroup,\n" +
-			"     de.program       AS program,\n" +
-			"     CASE WHEN d.Gender = 'M' THEN 'Male'\n" +
-			"            WHEN d.Gender = 'F' THEN 'Female'\n" +
-			"            ELSE '' END AS gender,\n" +
+			"     de.program       AS program,\n" +			
 			"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
 			"          ELSE 'False' END AS pmtct,\n" +
 			"     de.date_started AS date_started,\n" +
@@ -260,13 +244,13 @@ public class FmapCohortLibrary {
 			"   GROUP BY de.encounter_id\n" +
 			"  ) regimeData\n" +
 			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
-			"                               'AZT/3TC/NVP','AZT/3TC/EFV','AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/NVP','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/NVP','ABC/3TC/EFV','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r')\n" +
+			"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
 			"      AND  date_started <= :endDate AND regimen = ':regimenName'\n" +
 			"      AND  patient_id IS NOT NULL\n" +
-			"      AND gender = ':gender'\n" +
+			"      AND  regimen_line = ':regimenLine'\n" +
 			"      AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
-		sqlQuery = sqlQuery.replaceAll(":gender", gender);
+		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("pmtctOtherRegimens");
@@ -277,15 +261,40 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
-	public CohortDefinition txCurrPmtctPatientOnAnyOtherRegimen(String regimenName,String gender,String pmtct) {
+	public CohortDefinition txCurrPmtctPatientOnAnyOtherRegimen(String regimenName, String regimenLine, String pmtct) {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("pmtctPatientOnAnyOtherRegimen", ReportUtils.map(pmtctPatientOnAnyOtherRegimen(regimenName, gender, pmtct), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("pmtctPatientOnAnyOtherRegimen", ReportUtils.map(pmtctPatientOnAnyOtherRegimen(regimenName, regimenLine, pmtct), "startDate=${startDate},endDate=${endDate}"));
 		cd.setCompositionString("(txcurr AND pmtctPatientOnAnyOtherRegimen");
 		return cd;
 	}
 
+	public CohortDefinition txCurrPeadOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct, String minAge, String maxAge) {
+		CompositionCohortDefinition cd = new CompositionCohortDefinition();
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("patientOnSpecificRegimenAndRegimenLine", ReportUtils.map(patientOnSpecificRegimenAndRegimenLine(regimenName, regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("peadWeight", ReportUtils.map(peadWeight(minAge, maxAge)));
+		cd.setCompositionString("(txcurr AND patientOnSpecificRegimenAndRegimenLine AND peadWeight");
+		return cd;
+	}
 
+	public CohortDefinition peadWeight(String minAge, String maxAge) {
+		String sqlQuery = "SELECT tf.patient_id FROM (SELECT t.patient_id,\n" +
+			"                                  mid(max(concat(t.visit_date, t.weight)), 11) AS weight\n" +
+			"                           FROM kenyaemr_etl.etl_patient_triage t\n" +
+			"                                    INNER JOIN kenyaemr_etl.etl_patient_hiv_followup f\n" +
+			"                                               on t.patient_id = f.patient_id and t.visit_date = f.visit_date\n" +
+			"                           WHERE f.weight " + minAge + " and f.weight " + maxAge + "\n" +
+			"                           GROUP BY t.patient_id) tf";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("latestGreenCardWeight");
+		cd.setQuery(sqlQuery);
+		cd.setDescription("latestGreenCardWeight");
+		return cd;
+	}
+	
 }
