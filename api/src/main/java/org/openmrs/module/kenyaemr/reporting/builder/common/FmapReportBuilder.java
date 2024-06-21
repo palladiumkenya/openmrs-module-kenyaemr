@@ -38,6 +38,21 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 
 	protected static final Log log = LogFactory.getLog(FmapReportBuilder.class);
 
+	static final String MIN_WEIGHT_3 = ">= 3";
+	static final String MAX_WEIGHT_6 = "<= 5.9";
+	static final String MIN_WEIGHT_6 = ">= 6";
+	static final String MAX_WEIGHT_10 = "<= 9.9";
+	static final String MIN_WEIGHT_10 = ">= 10";
+	static final String MAX_WEIGHT_14 = "<= 13.9";
+	static final String MIN_WEIGHT_14 = ">= 14";
+	static final String MAX_WEIGHT_20 = "<= 19.9";
+	static final String MIN_WEIGHT_20 = ">= 20";
+	static final String MAX_WEIGHT_25 = "<= 24.9";
+	static final String MIN_WEIGHT_25 = ">= 25";
+	static final String MAX_WEIGHT_30 = "<= 29.9";
+	static final String MIN_WEIGHT_30 = ">= 30";
+	static final String MAX_WEIGHT_ABOVE_30 = "<= 100";
+
 	@Autowired
 	private FmapIndicatorLibrary fmapIndicators;
 
@@ -69,150 +84,190 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 
 
 	/**
-	 * Creates the dataset for Adult first line regimens
+	 * Creates the dataset for FMAPS
 	 *
 	 * @return the dataset
 	 */
 	protected DataSetDefinition fmapPatientRegimens() {
 		CohortIndicatorDataSetDefinition cohortDsd = new CohortIndicatorDataSetDefinition();
-		cohortDsd.setName("patientReegimen");
+		cohortDsd.setName("patientRegimens");
 		cohortDsd.setDescription("ARV Treatment Regimen");
 		cohortDsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
 		String indParams = "startDate=${startDate},endDate=${endDate}";
 		//Adult First Line
-		//Male
-		cohortDsd.addColumn("AF1A_M", "AZT+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/NVP","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF1B_M", "AZT+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/EFV","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF1D_M", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF1E_M", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF1F_M", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF2A_M", "TDF+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/NVP","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF2B_M", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/EFV","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF2D_M", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF2E_M", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF2F_M", "TDF+3TC+LPVr(1L Adults < 40kg)", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF4A_M", "ABC+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/NVP","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF4B_M", "ABC+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/EFV","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF4C_M", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","First line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AF5X_M", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","First line","adult", "Male", "False"), indParams),"");
-		//Female
-		cohortDsd.addColumn("AF1A_F", "AZT+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/NVP","First line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF1B_F", "AZT+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/EFV","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF1D_F", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF1E_F", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF1F_F", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF2A_F", "TDF+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/NVP","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF2B_F", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/EFV","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF2D_F", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF2E_F", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF2F_F", "TDF+3TC+LPVr(1L Adults < 40kg)", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF4A_F", "ABC+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/NVP","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF4B_F", "ABC+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/EFV","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF4C_F", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","First line","adult","Female", "False"), indParams),"");
-		cohortDsd.addColumn("AF5X_F", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","First line","adult","Female", "False"), indParams),"");
+		cohortDsd.addColumn("AF2E", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF2B", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/EFV","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF1D", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF4C", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF2D", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF2F", "TDF+3TC+LPVr(1L Adults < 40kg)", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF1E", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF1F", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","First line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AF5X", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","First line","adult", "False"), indParams),"");
+		
 		//Adult Second Line
-		//Male
-		cohortDsd.addColumn("AS1A_M", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS1B_M", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS1C_M", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS2A_M", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS2B_M", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS2C_M", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/ATV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS5A_M", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS5B_M", "ABC+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/ATV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS5C_M", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS6X_M", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Second line","adult", "Male", "False"), indParams),"");
-		//Female
-		cohortDsd.addColumn("AS1A_F", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS1B_F", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS1C_F", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS2A_F", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS2B_F", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS2C_F", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/ATV/r","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS5A_F", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS5B_F", "ABC+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/ATV/r","Second line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AS5C_F", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","Second line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AS6X_F", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Second line","adult", "Female", "False"), indParams),"");
-
+		cohortDsd.addColumn("AS1A", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS1B", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/ATV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS1C", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS2A", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/LPV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS2B", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS2C", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/ATV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS5A", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS5B", "ABC+3TC+ATVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/ATV/r","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS5C", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","Second line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AS6X", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Second line","adult", "False"), indParams),"");
+				
 		//Adult Third Line
-		//Male
-		cohortDsd.addColumn("AT2D_M", "TDF+3TC+DTG+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/DRV/RTV","Third line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AT2E_M", "TDF+3TC+RAL+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/RAL/DRV/RTV","Third line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AT2F_M", "TDF+3TC+DTG+ETV+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/ETV/DRV/RTV","Third line","adult", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("AT2X_M", "Any other thirdline adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Third line","adult", "Male", "False"), indParams),"");
-		//Female
-		cohortDsd.addColumn("AT2D_F", "TDF+3TC+DTG+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/DRV/RTV","Third line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AT2E_F", "TDF+3TC+RAL+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/RAL/DRV/RTV","Third line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AT2F_F", "TDF+3TC+DTG+ETV+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/ETV/DRV/RTV","Third line","adult", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("AT2X_F", "Any other thirdline adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Third line","adult", "Female", "False"), indParams),"");
+		cohortDsd.addColumn("AT2D", "TDF+3TC+DTG+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/DRV/RTV","Third line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AT2F", "TDF+3TC+DTG+ETV+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG/ETV/DRV/RTV","Third line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AT2G", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","Third line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AT2H", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG","Third line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AT2I", "AZT+3TC+DTG+DRV+RTV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DTG/DRV/RTV","Third line","adult", "False"), indParams),"");
+		cohortDsd.addColumn("AT2X", "Any other thirdline adult regimens", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("Other","Third line","adult", "False"), indParams),"");
+		
+		//Pregnant women or HEI Mothers
+		//PMTCT
+		cohortDsd.addColumn("PM5_1", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/LPV/r", "First line", "True"), indParams),"");
+		cohortDsd.addColumn("PM5_2", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/LPV/r", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM5_3", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/LPV/r", "Third line","True"), indParams),"");
+		
+		cohortDsd.addColumn("PM7_1", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/LPV/r", "First line", "True"), indParams),"");
+		cohortDsd.addColumn("PM7_2", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/LPV/r", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM7_3", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/LPV/r", "Third line","True"), indParams),"");
 
-		//Paediatric First Line
-		//Male		
-		cohortDsd.addColumn("CF1A_M", "AZT+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/NVP","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF1B_M", "AZT+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/EFV","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF1C_M", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF2A_M", "ABC+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/NVP","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF2B_M", "ABC+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/EFV","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF2D_M", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF2G_M", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF4E_M", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CF5X_M", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","First line","child", "Male", "False"), indParams),"");
+		cohortDsd.addColumn("PM9_1", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/EFV", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM9_2", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/EFV", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM9_3", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/EFV", "Third line","True"), indParams),"");
 
-		//Female		
-		cohortDsd.addColumn("CF1A_F", "AZT+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/NVP","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF1B_F", "AZT+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/EFV","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF1C_F", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF2A_F", "ABC+3TC+NVP", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/NVP","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF2B_F", "ABC+3TC+EFV", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/EFV","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF2D_F", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF2G_F", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF4E_F", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CF5X_F", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","First line","child", "Female", "False"), indParams),"");
+		cohortDsd.addColumn("PM10_1", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/ATV/r", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM10_2", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/ATV/r", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM10_3", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/ATV/r", "Third line","True"), indParams),"");
 
 
-		//Paediatric Second Line
-		//Male
-		cohortDsd.addColumn("CS1A_M", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CS1C_M", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Second line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CS2A_M", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CS2B_M", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CS2D_M", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Second line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CS4X_M", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Second line","child", "Male", "False"), indParams),"");
-		//Female
-		cohortDsd.addColumn("CS1A_F", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CS1C_F", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Second line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CS2A_F", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CS2B_F", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CS2D_F", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Second line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CS4X_F", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Second line","child", "Female", "False"), indParams),"");
+		cohortDsd.addColumn("PM11_1", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/ATV/r", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM11_2", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/ATV/r", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM11_3", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/ATV/r", "Third line","True"), indParams),"");
+
+		cohortDsd.addColumn("PM12_1", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/DTG", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM12_2", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/DTG", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM12_3", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/DTG", "Third line","True"), indParams),"");
+
+		cohortDsd.addColumn("PM13_1", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/DTG", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM13_2", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/DTG", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM13_3", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/DTG", "Third line","True"), indParams),"");
+
+		cohortDsd.addColumn("PM14_1", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("ABC/3TC/DTG", "First line","True"), indParams),"");
+		cohortDsd.addColumn("PM14_2", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("ABC/3TC/DTG", "Second line","True"), indParams),"");
+		cohortDsd.addColumn("PM14_3", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("ABC/3TC/DTG", "Third line","True"), indParams),"");
+
+		cohortDsd.addColumn("PM1X_1", "Any other PMTCT regimens for Women", ReportUtils.map(fmapIndicators.pmtctPatientsOnOtherRegimen("Other", "First line","True"), indParams),"");	
+		cohortDsd.addColumn("PM1X_2", "Any other PMTCT regimens for Women", ReportUtils.map(fmapIndicators.pmtctPatientsOnOtherRegimen("Other", "Second line","True"), indParams),"");	
+		cohortDsd.addColumn("PM1X_3", "Any other PMTCT regimens for Women", ReportUtils.map(fmapIndicators.pmtctPatientsOnOtherRegimen("Other", "Third line","True"), indParams),"");	
+		
+		//Paediatric
+		//First Line																																																		
+		cohortDsd.addColumn("CF2G_W1", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W2", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W3", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W4", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W5", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W6", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30 ), indParams),"");
+		cohortDsd.addColumn("CF2G_W7", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","First line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30 ), indParams),"");
+		
+		cohortDsd.addColumn("CF1D_W1", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W2", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W3", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W4", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W5", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W6", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30 ), indParams),"");
+		cohortDsd.addColumn("CF1D_W7", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","First line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30 ), indParams),"");
+
+		cohortDsd.addColumn("CF4E_W1", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W2", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W3", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W4", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W5", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W6", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30 ), indParams),"");
+		cohortDsd.addColumn("CF4E_W7", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("TDF/3TC/DTG","First line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30 ), indParams),"");
+
+		cohortDsd.addColumn("CF5X_W1", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CF5X_W2", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CF5X_W3", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CF5X_W4", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CF5X_W5", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25 ), indParams),"");
+		cohortDsd.addColumn("CF5X_W6", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CF5X_W7", "Any other first line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","First line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
+
+		//Paediatric Second Line		
+		cohortDsd.addColumn("CS1A_W1", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CS1A_W2", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CS1A_W3", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CS1A_W4", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CS1A_W5", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CS1A_W6", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CS1A_W7", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
+
+		cohortDsd.addColumn("CS1B_W1", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6 ), indParams),"");
+		cohortDsd.addColumn("CS1B_W2", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10 ), indParams),"");
+		cohortDsd.addColumn("CS1B_W3", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14 ), indParams),"");
+		cohortDsd.addColumn("CS1B_W4", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CS1B_W5", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CS1B_W6", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CS1B_W7", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DTG","Second line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
+
+		cohortDsd.addColumn("CS2A_W1", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CS2A_W2", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10 ), indParams),"");
+		cohortDsd.addColumn("CS2A_W3", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14 ), indParams),"");
+		cohortDsd.addColumn("CS2A_W4", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CS2A_W5", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CS2A_W6", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CS2A_W7", "ABC+3TC+LPVr", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/LPV/r","Second line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
+
+		cohortDsd.addColumn("CS2B_W1", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CS2B_W2", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CS2B_W3", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CS2B_W4", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CS2B_W5", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CS2B_W6", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CS2B_W7", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DTG","Second line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
+
+		cohortDsd.addColumn("CS4X_W1", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CS4X_W2", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CS4X_W3", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CS4X_W4", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CS4X_W5", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CS4X_W6", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CS4X_W7", "Any other second line adult regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Second line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 
 		//Paediatric Third Line
-		cohortDsd.addColumn("CT1H_M", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CT2D_M", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "Male", "False"), indParams),"");
-		cohortDsd.addColumn("CT3X_M", "Any other thirdline adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Third line","child", "Male", "False"), indParams),"");
+		cohortDsd.addColumn("CT1H_W1", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CT1H_W2", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CT1H_W3", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CT1H_W4", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CT1H_W5", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CT1H_W6", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CT1H_W7", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 
-		cohortDsd.addColumn("CT1H_F", "AZT+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("AZT/3TC/DRV/RTV/RAL","Third line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CT2D_F", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.patientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "Female", "False"), indParams),"");
-		cohortDsd.addColumn("CT3X_F", "Any other thirdline adult regimens", ReportUtils.map(fmapIndicators.patientsOnOtherRegimen("Other","Third line","child", "Female", "False"), indParams),"");
+		cohortDsd.addColumn("CT2D_W1", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CT2D_W2", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CT2D_W3", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CT2D_W4", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CT2D_W5", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CT2D_W6", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CT2D_W7", "ABC+3TC+DRV+RTV+RAL", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("ABC/3TC/DRV/RTV/RAL","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 
-		//Pregnant women or HEI Mothers
-		cohortDsd.addColumn("PM3", "AZT+3TC+NVP", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/NVP","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM4", "AZT+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/EFV","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM5", "AZT+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/LPV/r","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM6", "TDF+3TC+NVP", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/NVP","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM7", "TDF+3TC+LPVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/LPV/r","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM9", "TDF+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/EFV","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM10", "AZT+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/ATV/r","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM11", "TDF+3TC+ATVr", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/ATV/r","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM12", "TDF+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("TDF/3TC/DTG","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM13", "AZT+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("AZT/3TC/DTG","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM14", "ABC+3TC+DTG", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("ABC/3TC/DTG","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM15", "ABC+3TC+EFV", ReportUtils.map(fmapIndicators.pmtctPatientsRegimen("ABC/3TC/EFV","Female", "True"), indParams),"");
-		cohortDsd.addColumn("PM1X", "Any other PMTCT regimens for Women", ReportUtils.map(fmapIndicators.pmtctPatientsOnOtherRegimen("Other","Female", "True"), indParams),"");
+
+		cohortDsd.addColumn("CT3X_W1", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_3, MAX_WEIGHT_6), indParams),"");
+		cohortDsd.addColumn("CT3X_W2", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_6, MAX_WEIGHT_10), indParams),"");
+		cohortDsd.addColumn("CT3X_W3", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_10, MAX_WEIGHT_14), indParams),"");
+		cohortDsd.addColumn("CT3X_W4", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_14, MAX_WEIGHT_20), indParams),"");
+		cohortDsd.addColumn("CT3X_W5", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_20, MAX_WEIGHT_25), indParams),"");
+		cohortDsd.addColumn("CT3X_W6", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
+		cohortDsd.addColumn("CT3X_W7", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 		
-		
+			
 		return cohortDsd;
 	}
 
