@@ -44,10 +44,24 @@ public class FmapIndicatorLibrary {
 		);
 	}
 
-	public CohortIndicator peadPatientsOnSpecificRegimen(String regimenName,String regimenLine,String ageGroup,String pmtct, String minAge, String maxAge) {
-		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPeadOnSpecificRegimenAndRegimenLine(regimenName,regimenLine,ageGroup,pmtct, minAge,maxAge), "startDate=${startDate},endDate=${endDate}")
+	public CohortIndicator peadPatientsOnSpecificRegimen(String regimenName,String regimenLine,String ageGroup,String pmtct, String minWeight, String maxWeight) {
+		return cohortIndicator("TDF+3TC+EFV",map(fmapCohortLibrary.txCurrPeadOnSpecificRegimenAndRegimenLine(regimenName,regimenLine,ageGroup,pmtct, minWeight,maxWeight), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
 
+	public CohortIndicator infantBreastfeedingPC8Regimen() {
+		return cohortIndicator("AZT+NVP BreastFeeding",map(fmapCohortLibrary.infantBreastfeedingPC8Regimen(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+	
+	public CohortIndicator infantNotBreastfeedingPC7Regimen() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.infantNotBreastfeedingPC7Regimen(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+
+	public CohortIndicator infantAnyOtherRegimenRegimen() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.infantAnyOtherRegimenRegimen(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}	
 
 }

@@ -271,24 +271,24 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
-	public CohortDefinition txCurrPeadOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct, String minAge, String maxAge) {
+	public CohortDefinition txCurrPeadOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct, String minWeight, String maxWeight) {
 		CompositionCohortDefinition cd = new CompositionCohortDefinition();
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
 		cd.addSearch("patientOnSpecificRegimenAndRegimenLine", ReportUtils.map(patientOnSpecificRegimenAndRegimenLine(regimenName, regimenLine, ageGroup, pmtct), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("peadWeight", ReportUtils.map(peadWeight(minAge, maxAge)));
+		cd.addSearch("peadWeight", ReportUtils.map(peadWeight(minWeight, maxWeight)));
 		cd.setCompositionString("(txcurr AND patientOnSpecificRegimenAndRegimenLine AND peadWeight");
 		return cd;
 	}
 
-	public CohortDefinition peadWeight(String minAge, String maxAge) {
+	public CohortDefinition peadWeight(String minWeight, String maxWeight) {
 		String sqlQuery = "SELECT tf.patient_id FROM (SELECT t.patient_id,\n" +
 			"                                  mid(max(concat(t.visit_date, t.weight)), 11) AS weight\n" +
 			"                           FROM kenyaemr_etl.etl_patient_triage t\n" +
 			"                                    INNER JOIN kenyaemr_etl.etl_patient_hiv_followup f\n" +
 			"                                               on t.patient_id = f.patient_id and t.visit_date = f.visit_date\n" +
-			"                           WHERE f.weight " + minAge + " and f.weight " + maxAge + "\n" +
+			"                           WHERE f.weight " + minWeight + " and f.weight " + maxWeight + "\n" +
 			"                           GROUP BY t.patient_id) tf";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("latestGreenCardWeight");
@@ -296,5 +296,52 @@ public class FmapCohortLibrary {
 		cd.setDescription("latestGreenCardWeight");
 		return cd;
 	}
-	
+
+	public CohortDefinition infantBreastfeedingPC8Regimen() {
+		String sqlQuery = "SELECT hv.patient_id\n" +
+			"      FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
+			"      INNER JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
+			"WHERE (hv.nvp_given = 86663 OR  hv.ctx_given = 80586)\n" +
+			"  AND hv.infant_feeding IN (5526,5632)\n" +			
+			"  AND date(hv.visit_date) BETWEEN date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("latestGreenCardWeight");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("infantProphylaxisBreastFeeding");
+		return cd;
+	}
+
+	public CohortDefinition infantNotBreastfeedingPC7Regimen() {
+		String sqlQuery = "SELECT hv.patient_id\n" +
+			"      FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
+			"      INNER JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
+			"WHERE (hv.nvp_given = 86663 OR  hv.ctx_given = 80586)\n" +
+			"  AND hv.infant_feeding IN (164478,1595)\n" +			
+			"  AND date(hv.visit_date) BETWEEN date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("infantProphylaxisNotBreastFeeding");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("infantProphylaxisNotBreastFeeding");
+		return cd;
+	}
+
+	public CohortDefinition infantAnyOtherRegimenRegimen() {
+		String sqlQuery = "SELECT hv.patient_id\n" +
+			"FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
+			"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
+			"WHERE (hv.nvp_given != 86663 OR  hv.ctx_given != 80586)\n" +			
+			"  AND date(hv.visit_date) BETWEEN date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("infantProphylaxisOther");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("infantProphylaxisOther");
+		return cd;
+	}
+
 }
