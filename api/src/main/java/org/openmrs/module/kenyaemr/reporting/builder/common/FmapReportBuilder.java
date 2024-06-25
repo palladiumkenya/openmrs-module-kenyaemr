@@ -15,6 +15,8 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
+import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.shared.hiv.art.FmapIndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
@@ -37,7 +39,7 @@ import java.util.List;
 public class FmapReportBuilder extends AbstractReportBuilder {
 
 	protected static final Log log = LogFactory.getLog(FmapReportBuilder.class);
-
+      //Weight categories for pediatrics
 	static final String MIN_WEIGHT_3 = ">= 3";
 	static final String MAX_WEIGHT_6 = "<= 5.9";
 	static final String MIN_WEIGHT_6 = ">= 6";
@@ -52,6 +54,8 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 	static final String MAX_WEIGHT_30 = "<= 29.9";
 	static final String MIN_WEIGHT_30 = ">= 30";
 	static final String MAX_WEIGHT_ABOVE_30 = "<= 100";
+	
+
 
 	@Autowired
 	private FmapIndicatorLibrary fmapIndicators;
@@ -59,6 +63,15 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 	@Autowired
 	private CommonDimensionLibrary commonDimensions;
 
+	ColumnParameters infants_0_to_84= new ColumnParameters(null, "0-84", "age=0-84");
+	ColumnParameters infants_84_to_184= new ColumnParameters(null, "85-184", "age=85-184");
+	ColumnParameters infants_185_to_270= new ColumnParameters(null, "185-270", "age=185-270");
+	ColumnParameters infants_271_to_300= new ColumnParameters(null, "271-300", "age=271-300");
+	ColumnParameters infants_301_to_360= new ColumnParameters(null, "301-360", "age=301-360");
+	ColumnParameters infants_361_And_Above= new ColumnParameters(null, ">=361", "age=361+");
+	List<ColumnParameters> infantsAgeInDaysDisaggregation = Arrays.asList(
+		infants_0_to_84,  infants_84_to_184, infants_185_to_270,
+		infants_271_to_300, infants_301_to_360 , infants_361_And_Above);
 	/**
 	 * @see org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder#getParameters(org.openmrs.module.kenyacore.report.ReportDescriptor)
 	 */
@@ -90,6 +103,7 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 	 */
 	protected DataSetDefinition fmapPatientRegimens() {
 		CohortIndicatorDataSetDefinition cohortDsd = new CohortIndicatorDataSetDefinition();
+		cohortDsd.addDimension("age", ReportUtils.map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
 		cohortDsd.setName("patientRegimens");
 		cohortDsd.setDescription("ARV Treatment Regimen");
 		cohortDsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -267,7 +281,10 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addColumn("CT3X_W6", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
 		cohortDsd.addColumn("CT3X_W7", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 		
-			
+		//Infants PC8 : Breastfeeding
+		EmrReportingUtils.addRow(cohortDsd, "PC8", "AZT + NVP for 6 weeks then NVP Breastfeeding", ReportUtils.map(fmapIndicators.infantBreastfeedingPC8Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06"));
+		EmrReportingUtils.addRow(cohortDsd, "PC7", "AZT + NVP for 6 weeks then NVP Not Breastfeeding", ReportUtils.map(fmapIndicators.infantNotBreastfeedingPC7Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06"));
+		EmrReportingUtils.addRow(cohortDsd, "PC1X", "ANy other regimens for Infants", ReportUtils.map(fmapIndicators.infantAnyOtherRegimenRegimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05", "06"));
 		return cohortDsd;
 	}
 
