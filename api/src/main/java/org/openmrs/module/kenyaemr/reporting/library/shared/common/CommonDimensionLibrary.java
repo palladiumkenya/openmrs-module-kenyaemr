@@ -117,6 +117,13 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("15+", map(commonCohortLibrary.agedAtLeast(15), "effectiveDate=${onDate}"));
         //Age group in days
         dim.addCohortDefinition("0-60", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(0, 60),"effectiveDate=${onDate}"));
+        //fmaps
+        dim.addCohortDefinition("0-84", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(0, 84),"effectiveDate=${onDate}"));
+        dim.addCohortDefinition("85-184", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(85, 184),"effectiveDate=${onDate}"));
+        dim.addCohortDefinition("185-270", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(185, 270),"effectiveDate=${onDate}"));
+        dim.addCohortDefinition("271-300", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(271, 300),"effectiveDate=${onDate}"));
+        dim.addCohortDefinition("301-360", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(301, 360),"effectiveDate=${onDate}"));
+        dim.addCohortDefinition("361+", map(commonCohortLibrary.agedAtLeast(361),"effectiveDate=${onDate}"));
 
         return dim;
     }
