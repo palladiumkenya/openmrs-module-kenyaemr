@@ -281,10 +281,18 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addColumn("CT3X_W6", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
 		cohortDsd.addColumn("CT3X_W7", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 		
-		//Infants PC8 : Breastfeeding
+		//Infants Regimens PC8 and PC7 : 
 		EmrReportingUtils.addRow(cohortDsd, "PC8", "AZT + NVP for 6 weeks then NVP Breastfeeding", ReportUtils.map(fmapIndicators.infantBreastfeedingPC8Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
 		EmrReportingUtils.addRow(cohortDsd, "PC7", "AZT + NVP for 6 weeks then NVP Not Breastfeeding", ReportUtils.map(fmapIndicators.infantNotBreastfeedingPC7Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
 		EmrReportingUtils.addRow(cohortDsd, "PC1X", "ANy other regimens for Infants", ReportUtils.map(fmapIndicators.infantAnyOtherRegimenRegimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
+
+		//Prep Regimens
+		cohortDsd.addColumn("PRP1A", "TDF + FTC", ReportUtils.map(fmapIndicators.prepTdfFtcRegimen(), indParams),"");
+		cohortDsd.addColumn("PRP1B", "TDF + 3TC", ReportUtils.map(fmapIndicators.prepTdf3tcRegimen(), indParams),"");
+		cohortDsd.addColumn("PRP1D", "Dapivirine ring", ReportUtils.map(fmapIndicators.dapivirinePrepType(), indParams),"");
+		cohortDsd.addColumn("PRP1E", "Cabotegravir", ReportUtils.map(fmapIndicators.cabotegravirPrepType(), indParams),"");
+		cohortDsd.addColumn("PRP1X", "Others", ReportUtils.map(fmapIndicators.otherPrepRegimenPrepType(), indParams),"");
+
 		return cohortDsd;
 	}
 
