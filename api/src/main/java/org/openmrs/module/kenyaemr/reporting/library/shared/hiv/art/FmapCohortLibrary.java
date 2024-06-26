@@ -344,4 +344,127 @@ public class FmapCohortLibrary {
 		return cd;
 	}
 
+	public CohortDefinition prepTdfFtcRegimen() {
+		String sqlQuery = "select d.patient_id\n" +
+			"     from kenyaemr_etl.etl_patient_demographics d\n" +
+			"      left join(select pf.patient_id,\n" +
+			"                        max(pf.visit_date)    as latest_pf_visit_date\n" +
+			"                 from kenyaemr_etl.etl_prep_followup pf\n" +
+			"                where pf.regimen_prescribed = 'TDF/FTC(Preferred)'\n" +
+			"                 and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                 group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+			"       left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
+			"                 from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+			"                 where pm.prescribed_regimen = 'TDF/FTC(Preferred)'\n" +
+			"                 and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                 group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+			"    where pf.patient_id is not null or pm.patient_id is not null\n" +
+			"group by d.patient_id;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("prepTdfFtcRegimen");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("prepTdfFtcRegimen");
+		return cd;
+	}
+	public CohortDefinition prepTdf3tcRegimen() {
+		String sqlQuery = "select d.patient_id\n" +
+			"from kenyaemr_etl.etl_patient_demographics d\n" +
+			"         left join(select pf.patient_id,\n" +
+			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+			"                   where pf.regimen_prescribed = 'TDF/3TC'\n" +
+			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+			"                   where pm.prescribed_regimen = 'TDF/3TC'\n" +
+			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+			"where pf.patient_id is not null or pm.patient_id is not null\n" +
+			"group by d.patient_id;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("prepTdf3tcRegimen");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("prepTdf3tcRegimen");
+		return cd;
+	}
+
+	public CohortDefinition dapivirinePrepType() {
+		String sqlQuery = "select d.patient_id\n" +
+			"from kenyaemr_etl.etl_patient_demographics d\n" +
+			"         left join(select pf.patient_id,\n" +
+			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+			"                   where pf.prep_type = 'Dapivirine ring'\n" +
+			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+			"                   where pm.prep_type = 'Dapivirine ring'\n" +
+			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+			"where pf.patient_id is not null or pm.patient_id is not null\n" +
+			"group by d.patient_id;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("dapivirinePrepType");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("dapivirinePrepType");
+		return cd;
+	}
+
+	public CohortDefinition cabotegravirPrepType() {
+		String sqlQuery = "select d.patient_id\n" +
+			"from kenyaemr_etl.etl_patient_demographics d\n" +
+			"         left join(select pf.patient_id,\n" +
+			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+			"                   where pf.prep_type = 'CAB-LA'\n" +
+			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+			"                   where pm.prep_type = 'CAB-LA'\n" +
+			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+			"where pf.patient_id is not null or pm.patient_id is not null\n" +
+			"group by d.patient_id;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("cabotegravirPrepType");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("cabotegravirPrepType");
+		return cd;
+	}
+
+	public CohortDefinition otherPrepRegimenPrepType() {
+		String sqlQuery = "select d.patient_id\n" +
+			"from kenyaemr_etl.etl_patient_demographics d\n" +
+			"         left join(select pf.patient_id,\n" +
+			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+			"                   where(pf.regimen_prescribed not in ('TDF/3TC', 'TDF/FTC(Preferred)')) OR (pf.prep_type not in ('CAB-LA','Dapivirine ring'))\n" +
+			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
+			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+			"                   where (pm.prescribed_regimen not in ('TDF/3TC', 'TDF/FTC(Preferred)')) OR (pm.prep_type not in ('CAB-LA','Dapivirine ring'))\n" +
+			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+			"where pf.patient_id is not null and pm.patient_id is not null\n" +
+			"group by d.patient_id;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("otherPrepRegimenPrepType");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("otherPrepRegimenPrepType");
+		return cd;
+	}
 }
