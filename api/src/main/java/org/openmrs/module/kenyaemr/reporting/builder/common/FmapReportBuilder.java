@@ -68,7 +68,7 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 	ColumnParameters infants_7_to_9mths= new ColumnParameters(null, "7-9 Months", "age=7-9");
 	ColumnParameters infants_10_to_12mths= new ColumnParameters(null, "10-12 Months", "age=10-12");
 	ColumnParameters infants_above_12mths= new ColumnParameters(null, "1+ Year", "age=1+");
-	
+
 	List<ColumnParameters> infantsAgeInDaysDisaggregation = Arrays.asList(
 		infants_1_to_12wks,  infants_12w_to_6mths, infants_7_to_9mths,
 		infants_10_to_12mths, infants_above_12mths);
@@ -281,7 +281,7 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addColumn("CT3X_W6", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_25, MAX_WEIGHT_30), indParams),"");
 		cohortDsd.addColumn("CT3X_W7", "Any other third line pead regimens", ReportUtils.map(fmapIndicators.peadPatientsOnSpecificRegimen("Other","Third line","child", "False", MIN_WEIGHT_30, MAX_WEIGHT_ABOVE_30), indParams),"");
 		
-		//Infants Regimens PC8 and PC7 : 
+		//Infants Regimens PC8 and PC7 :
 		EmrReportingUtils.addRow(cohortDsd, "PC8", "AZT + NVP for 6 weeks then NVP Breastfeeding", ReportUtils.map(fmapIndicators.infantBreastfeedingPC8Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
 		EmrReportingUtils.addRow(cohortDsd, "PC7", "AZT + NVP for 6 weeks then NVP Not Breastfeeding", ReportUtils.map(fmapIndicators.infantNotBreastfeedingPC7Regimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
 		EmrReportingUtils.addRow(cohortDsd, "PC1X", "ANy other regimens for Infants", ReportUtils.map(fmapIndicators.infantAnyOtherRegimenRegimen(), indParams), infantsAgeInDaysDisaggregation, Arrays.asList("01", "02", "03", "04", "05"));
