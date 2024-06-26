@@ -52,16 +52,33 @@ public class FmapIndicatorLibrary {
 	public CohortIndicator infantBreastfeedingPC8Regimen() {
 		return cohortIndicator("AZT+NVP BreastFeeding",map(fmapCohortLibrary.infantBreastfeedingPC8Regimen(), "startDate=${startDate},endDate=${endDate}")
 		);
-	}
-	
+	}	
 	public CohortIndicator infantNotBreastfeedingPC7Regimen() {
 		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.infantNotBreastfeedingPC7Regimen(), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
-
 	public CohortIndicator infantAnyOtherRegimenRegimen() {
 		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.infantAnyOtherRegimenRegimen(), "startDate=${startDate},endDate=${endDate}")
 		);
-	}	
-
+	}
+	public CohortIndicator prepTdfFtcRegimen() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.prepTdfFtcRegimen(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+	public CohortIndicator prepTdf3tcRegimen() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.prepTdf3tcRegimen(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+	public CohortIndicator dapivirinePrepType() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.dapivirinePrepType(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+	public CohortIndicator cabotegravirPrepType() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.cabotegravirPrepType(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
+	public CohortIndicator otherPrepRegimenPrepType() {
+		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.otherPrepRegimenPrepType(), "startDate=${startDate},endDate=${endDate}")
+		);
+	}
 }
