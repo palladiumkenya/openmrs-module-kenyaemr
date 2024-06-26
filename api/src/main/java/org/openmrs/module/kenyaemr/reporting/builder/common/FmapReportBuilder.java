@@ -63,11 +63,11 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 	@Autowired
 	private CommonDimensionLibrary commonDimensions;
 
-	ColumnParameters infants_1_to_12wks= new ColumnParameters(null, "0-84", "age=0-12");
-	ColumnParameters infants_12w_to_6mths= new ColumnParameters(null, "85-184", "age=12-24");
-	ColumnParameters infants_7_to_9mths= new ColumnParameters(null, "185-270", "age=7-9");
-	ColumnParameters infants_10_to_12mths= new ColumnParameters(null, "271-300", "age=10-12");
-	ColumnParameters infants_above_12mths= new ColumnParameters(null, "301-360", "age=1+");
+	ColumnParameters infants_1_to_12wks= new ColumnParameters(null, "0-12 Weeks", "age=0-12");
+	ColumnParameters infants_12w_to_6mths= new ColumnParameters(null, "12-24 Weeks", "age=12-24");
+	ColumnParameters infants_7_to_9mths= new ColumnParameters(null, "7-9 Months", "age=7-9");
+	ColumnParameters infants_10_to_12mths= new ColumnParameters(null, "10-12 Months", "age=10-12");
+	ColumnParameters infants_above_12mths= new ColumnParameters(null, "1+ Year", "age=1+");
 	
 	List<ColumnParameters> infantsAgeInDaysDisaggregation = Arrays.asList(
 		infants_1_to_12wks,  infants_12w_to_6mths, infants_7_to_9mths,
