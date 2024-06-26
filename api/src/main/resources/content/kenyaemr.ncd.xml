@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.ncd.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="ffee43c4-9ccd-4e55-8a70-93194e7fafc6" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.ncd.form.initial" />
+		<property name="visitForms">
+			<set>
+				<ref bean="kenyaemr.ncd.form.followup" />
+			</set>
+		</property>
+		<property name="reports">
+			<set>
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				<entry key="enrollment-summary" value="" />
+				<entry key="care-panel" value="" />
+				<entry key="completion-summary" value="" />
+			</map>
+		</property>
+		<property name="order" value="200" />
+	</bean>
+
+	<!-- ===================== Identifiers ===================== -->
+
+
+	<!-- ===================== Forms ===================== -->
+
+
+
+	<!-- NCD Intial form -->
+	<bean id="kenyaemr.ncd.form.initial" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="c4994dd7-f2b6-4c28-bdc7-8b1d9d2a6a97" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:ncd/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- NCD followup form -->
+	<bean id="kenyaemr.ncd.form.followup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="3e1057da-f130-44d9-b2bb-53e039b953c6" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:ncd/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- ===================== Reports ===================== -->
+
+
+</beans>

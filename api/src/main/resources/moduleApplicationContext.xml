@@ -30,6 +30,7 @@
 	<import resource="content/kenyaemr.mat.xml" />
 	<import resource="content/kenyaemr.cpm.xml" />
 	<import resource="content/kenyaemr.gbv.xml" />
+	<import resource="content/kenyaemr.ncd.xml" />
 
 	<!-- ===================== App descriptors ===================== -->
 
