@@ -84,4 +84,8 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator totalDischarges() {
         return cohortIndicator("Total Discharges", ReportUtils.map(moh717CohortLibrary.totalDischarges(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator laboratoryTests() {
+        return cohortIndicator("Number of Laboratory tests", ReportUtils.map(moh717CohortLibrary.laboratoryTests(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
 }

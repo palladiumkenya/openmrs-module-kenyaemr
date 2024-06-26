@@ -201,4 +201,13 @@ public class Moh717CohortLibrary {
         sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_discharge d where d.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
+    public CohortDefinition laboratoryTests() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Number of Laboratory tests");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select encounter_id from kenyaemr_etl.etl_laboratory_extract x where x.visit_date between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+
 }
