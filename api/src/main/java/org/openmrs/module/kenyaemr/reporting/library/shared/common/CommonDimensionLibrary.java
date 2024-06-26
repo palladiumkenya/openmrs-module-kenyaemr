@@ -50,7 +50,7 @@ public class CommonDimensionLibrary {
      */
     public CohortDefinitionDimension standardAgeGroups() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
-        dim.setName("age groups (<1, <15, 15+, <5, 5+, 60+)");
+        dim.setName("age groups (<1, <15, 15+, <5, 5+,5-59, 60+)");
         dim.addParameter(new Parameter("onDate", "Date", Date.class));
         dim.addCohortDefinition("<1", map(commonCohortLibrary.agedAtMost(0), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("<15", map(commonCohortLibrary.agedAtMost(14), "effectiveDate=${onDate}"));
@@ -58,6 +58,7 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("<5", map(commonCohortLibrary.agedAtMost(4), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("5+", map(commonCohortLibrary.agedAtLeast(5), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("60+", map(commonCohortLibrary.agedAtLeast(60), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("5-59", map(commonCohortLibrary.agedAtLeastAgedAtMost(5, 59), "effectiveDate=${onDate}"));
         return dim;
     }
 
