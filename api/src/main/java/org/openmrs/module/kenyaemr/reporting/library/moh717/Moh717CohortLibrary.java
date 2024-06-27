@@ -209,5 +209,63 @@ public class Moh717CohortLibrary {
         sql.setQuery("select encounter_id from kenyaemr_etl.etl_laboratory_extract x where x.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
-
+    public CohortDefinition totalAmountCollected() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Total Amount Collected");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(sum(ifnull(r.total_sales,0)) AS UNSIGNED) as total_amount_collected from kenyaemr_etl.etl_daily_revenue_summary r where date(transaction_date) between date(:startDate) and date(:endDate);\n");
+        return sql;
+    }
+    public CohortDefinition totalAmountReceived() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Total Amount Received");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(sum(ifnull(r.cash_receipts_cash_from_daily_services, 0) + ifnull(r.cash_receipt_nhif_receipt, 0) +\n" +
+                "           ifnull(r.cash_receipt_other_debtors_receipt, 0)) AS UNSIGNED) as total_amount_received\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition clientsWaived() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Number of Clients Waived");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(count(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers,0)) AS UNSIGNED) as clients_waived\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition totalAmountWaived() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Total Amount Waived");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(sum(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers,0)) AS UNSIGNED) as total_waived\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition clientsExempted() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Number of Clients Exempted");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(count(ifnull(r.revenue_not_collected_write_offs_exemptions,0)) AS UNSIGNED) as clients_exempted\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition totalAmountExempted() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Total Amount Exempted");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select CAST(sum(ifnull(r.revenue_not_collected_write_offs_exemptions,0)) AS UNSIGNED) as total_exempted\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
 }
