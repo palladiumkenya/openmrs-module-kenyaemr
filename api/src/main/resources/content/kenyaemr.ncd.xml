@@ -18,6 +18,7 @@
 
 	<bean id="kenyaemr.ncd.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
 		<property name="targetUuid" value="ffee43c4-9ccd-4e55-8a70-93194e7fafc6" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.ncd.EligibleForNCDProgramCalculation" />
 		<property name="defaultEnrollmentForm" ref="kenyaemr.ncd.form.initial" />
 		<property name="visitForms">
 			<set>
