@@ -537,7 +537,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 programObj.put("uuid", descriptor.getTargetUuid());
                 programObj.put("display", descriptor.getTarget().getName());
                 programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
-                programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
+                if(descriptor.getDefaultCompletionForm() != null && descriptor.getDefaultCompletionForm().getTargetUuid() != null) {
+                    programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
+
+                }
                 programObj.put("enrollmentStatus", activePrograms.contains(descriptor) ? "active" : "eligible");
                 programList.add(programObj);
             }
@@ -1182,8 +1185,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
         ArrayList enrollmentDetails = new ArrayList<SimpleObject>();
         for(ProgramDescriptor descriptor: programs) {
             Program program = descriptor.getTarget();
+            Form defaultCompletionForm = null ;
             Form defaultEnrollmentForm = descriptor.getDefaultEnrollmentForm().getTarget();
-            Form defaultCompletionForm = descriptor.getDefaultCompletionForm().getTarget();
+            if(descriptor.getDefaultCompletionForm()!= null) {
+                defaultCompletionForm = descriptor.getDefaultCompletionForm().getTarget();
+            }
 
             List<PatientProgram> allEnrollments = programManager.getPatientEnrollments(patient, program);
             for (PatientProgram patientProgramEnrollment : allEnrollments) {
