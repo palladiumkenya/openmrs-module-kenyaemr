@@ -233,6 +233,9 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         ANCMaternalHAARTDataDefinition ancMaternalHAARTDataDefinition = new ANCMaternalHAARTDataDefinition();
         ancMaternalHAARTDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancMaternalHAARTDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ANCBloodRhesusGroupDataDefinition ancBloodRhesusGroupDataDefinition = new ANCBloodRhesusGroupDataDefinition();
+        ancBloodRhesusGroupDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancBloodRhesusGroupDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
@@ -268,6 +271,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Height", ancHeightDataDefinition, paramMapping);
         dsd.addColumn("Weight", ancWeightDataDefinition, paramMapping);
         dsd.addColumn("Blood Pressure", ancBloodPressureDataDefinition, paramMapping);
+        dsd.addColumn("Blood Rhesus Group", ancBloodRhesusGroupDataDefinition,  paramMapping);
         dsd.addColumn("Breast Exam", ancBreastExamDoneDataDefinition, paramMapping);
         dsd.addColumn("FGM Done", ancFGMDoneDataDefinition, paramMapping);
         dsd.addColumn("FGM Complications", ancFGMComplicationsDataDefinition, paramMapping);
