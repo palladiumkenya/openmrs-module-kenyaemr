@@ -15,16 +15,17 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.*;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ActivePatientsPopulationTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.AgeAtReportingDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.ComplaintAttendantProviderDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.DiseaseDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.VisitDateWithComplaintsDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.VisitTypeWithComplaintsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.*;
 import org.openmrs.module.kenyaemr.reporting.library.dmi.IDSRIndicatorLibrary;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.data.DataDefinition;
@@ -334,6 +335,34 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+        ComplaintsOnsetDateDataDefinition complaintsOnsetDateDataDefinition = new ComplaintsOnsetDateDataDefinition();
+        complaintsOnsetDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        complaintsOnsetDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DurationOfComplaintsDataDefinition durationOfComplaintsDataDefinition = new DurationOfComplaintsDataDefinition();
+        durationOfComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        durationOfComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        MedicalConditionsDataDefinition medicalConditionsDataDefinition = new MedicalConditionsDataDefinition();
+        medicalConditionsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        medicalConditionsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        PresentingComplaintsDataDefinition presentingComplaintsDataDefinition = new PresentingComplaintsDataDefinition();
+        presentingComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        presentingComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        OxygenSaturationDataDefinition oxygenSaturationDataDefinition = new OxygenSaturationDataDefinition();
+        oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        RespiratoryRateDataDefinition respiratoryRateDataDefinition = new RespiratoryRateDataDefinition();
+        respiratoryRateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        respiratoryRateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        IDSRTemperatureDataDefinition idsrTemperatureDataDefinition = new IDSRTemperatureDataDefinition();
+        idsrTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
                 new PreferredNameDataDefinition(), formatter);
@@ -346,8 +375,16 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
         dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-         dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
+        dsd.addColumn("Village_Estate_Landmark", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "", new RDQACalculationResultConverter());
         dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Presenting Complaints", presentingComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Duration of Presenting Complaints", durationOfComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Date of onset of the current Illness", complaintsOnsetDateDataDefinition, paramMapping);
+        dsd.addColumn("Medical Conditions", medicalConditionsDataDefinition, paramMapping);
+        dsd.addColumn("Temperature", idsrTemperatureDataDefinition, paramMapping);
+        dsd.addColumn("Respiratory Rate", respiratoryRateDataDefinition, paramMapping);
+        dsd.addColumn("Oxygen saturation", oxygenSaturationDataDefinition, paramMapping);
 
         ILICohortDefinition cd = new ILICohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
