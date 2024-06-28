@@ -7,6 +7,8 @@
 		<% if (primaryFacility) { %>
 		    ${ ui.includeFragment("kenyaui", "widget/dataPoint", [ label: "Provider Primary Facility", value: primaryFacility.getName() ]) }
 		<% } %>
+		${ ui.includeFragment("kenyaui", "widget/dataPoint", [ label: "Provider License Number", value: providerLicense ]) }
+		${ ui.includeFragment("kenyaui", "widget/dataPoint", [ label: "License Expiry Date", value: providerLicenseExpiryDate ]) }
 	</div>
 	<% } %>
 
@@ -25,9 +27,9 @@
 				action: "submit",
 				prefix: "provider",
 				commandObject: form,
-				properties: [ "identifier", "providerFacility" ],
+				properties: [ "identifier", "providerFacility", "providerLicense", "providerLicenseExpiryDate"],
 				fieldConfig: [
-						providerFacility: [ fieldFragment: "field/org.openmrs.Location" ]
+						providerFacility: [ fieldFragment: "field/org.openmrs.Location" ]	
 				],
 				extraFields: [
 						[ hiddenInputName: "personId", value: person.id ],

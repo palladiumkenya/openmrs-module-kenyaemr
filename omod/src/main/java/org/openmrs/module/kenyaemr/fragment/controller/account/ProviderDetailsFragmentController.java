@@ -27,22 +27,26 @@ import org.openmrs.ui.framework.annotation.FragmentParam;
 import org.openmrs.ui.framework.annotation.MethodParam;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.openmrs.ui.framework.fragment.action.SuccessResult;
+import org.openmrs.util.DateUtil;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Editable Provider details
  */
 public class ProviderDetailsFragmentController {
-		
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");	
 	public void controller(@FragmentParam("person") Person person,
 	        @FragmentParam(value = "provider", required = false) Provider provider, FragmentModel model) {
 		Location primaryFacility = null;
+		String providerLicense = "";
+		Date providerLicenseExpiryDate = null;
+		
 
 		if (provider != null) {
 			List<ProviderAttribute> attributes = new ArrayList<ProviderAttribute>(provider.getActiveAttributes());
@@ -51,15 +55,23 @@ public class ProviderDetailsFragmentController {
 					if (attribute.getAttributeType().getUuid().equals(CommonMetadata._ProviderAttributeType.PRIMARY_FACILITY)) {
 						primaryFacility = (Location) attribute.getValue();
 					}
+					if (attribute.getAttributeType().getUuid().equals(CommonMetadata._ProviderAttributeType.LICENSE_NUMBER)) {
+						providerLicense = attribute.getValue().toString();
+					}
+					if (attribute.getAttributeType().getUuid().equals(CommonMetadata._ProviderAttributeType.LICENSE_EXPIRY_DATE)) {
+						providerLicenseExpiryDate = (Date) attribute.getValue();						
+					}
 				}
 			}
 		}
 
 		List<Location> facilities = Context.getLocationService().getAllLocations();
-		
+
 		model.addAttribute("person", person);
 		model.addAttribute("provider", provider);
 		model.addAttribute("primaryFacility", primaryFacility);
+		model.addAttribute("providerLicense", providerLicense);
+		model.addAttribute("providerLicenseExpiryDate", providerLicenseExpiryDate);
 		model.addAttribute("form", newEditProviderDetailsForm(provider, person));
 	}
 	
@@ -85,7 +97,27 @@ public class ProviderDetailsFragmentController {
 		private Person origPerson;
 		
 		private String providerFacility;
-		
+
+		private String providerLicense;
+
+		private Date providerLicenseExpiryDate;
+
+		public Date getProviderLicenseExpiryDate() {
+			return providerLicenseExpiryDate;
+		}
+
+		public void setProviderLicenseExpiryDate(Date providerLicenseExpiryDate) {
+			this.providerLicenseExpiryDate = providerLicenseExpiryDate;
+		}	
+
+		public String getProviderLicense() {
+			return providerLicense;
+		}
+
+		public void setProviderLicense(String providerLicense) {
+			this.providerLicense = providerLicense;
+		}
+
 		public String getProviderFacility() {
 			return providerFacility;
 		}
@@ -127,6 +159,14 @@ public class ProviderDetailsFragmentController {
 			if (attribute != null) {
 				ret.setAttribute(attribute);
 			}
+			ProviderAttribute licenseAttribute = getLicenseAttribute(providerLicense);
+			if (licenseAttribute != null) {
+				ret.setAttribute(licenseAttribute);
+			}
+			ProviderAttribute licenseExpiryDateAttribute = getLicenseExpiryDateAttribute(providerLicenseExpiryDate);
+			if (licenseExpiryDateAttribute != null) {
+				ret.setAttribute(licenseExpiryDateAttribute);
+			}
 			return ret;
 		}
 		
@@ -140,7 +180,27 @@ public class ProviderDetailsFragmentController {
 			primaryFacilityAttr.setValue(Context.getLocationService().getLocation(Integer.parseInt(facility)));
 			return primaryFacilityAttr;
 		}
-		
+
+		ProviderAttribute getLicenseAttribute(String license) {
+			if (StringUtils.isEmpty(license)) {
+				return null;
+			}
+			ProviderAttribute providerLicenseAttr = new ProviderAttribute();
+			providerLicenseAttr.setAttributeType(Context.getService(ProviderService.class)
+				.getProviderAttributeTypeByUuid(CommonMetadata._ProviderAttributeType.LICENSE_NUMBER));
+			providerLicenseAttr.setValue(license);
+			return providerLicenseAttr;
+		}
+		ProviderAttribute getLicenseExpiryDateAttribute(Date providerLicenseExpiryDate) {
+			if (providerLicenseExpiryDate == null) {
+				return null;
+			}
+			ProviderAttribute providerLicenseAttr = new ProviderAttribute();
+			providerLicenseAttr.setAttributeType(Context.getService(ProviderService.class)
+				.getProviderAttributeTypeByUuid(CommonMetadata._ProviderAttributeType.LICENSE_EXPIRY_DATE));
+			providerLicenseAttr.setValue(providerLicenseExpiryDate);
+			return providerLicenseAttr;
+		}
 		/**
 		 * @see org.springframework.validation.Validator#validate(java.lang.Object,
 		 *      org.springframework.validation.Errors)
@@ -174,5 +234,15 @@ public class ProviderDetailsFragmentController {
 			this.identifier = identifier;
 		}
 		
+	}
+	private Date parseDate(final String dateValue) {
+		Date date = null;
+		try {
+			date = DATE_FORMAT.parse(dateValue);
+		} catch (ParseException e) {
+
+			System.out.println("Unable to parse date data from the payload!");
+		}
+		return date;
 	}
 }
