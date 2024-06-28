@@ -152,9 +152,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DUPLICATE_NUPI_SITES_WITH_NATIONAL_REGISTRY = "876816a4-fa3e-4f93-b1f1-4443cebd9f30";
 		public static final String DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY = "2816180c-46a2-49d7-b15f-e44fd81b5057";
 		public static final String PNS_APPROACH = "59d1b886-90c8-4f7f-9212-08b20a9ee8cf";
-		public static final String BASE_LINE_HIV_STATUS = "3ca03c84-632d-4e53-95ad-91f1bd9d96d6";
-		public static final String LIVING_WITH_CONTACT= "35a08d84-9f80-4991-92b4-c4ae5903536e";
-		public static final String CONTACT_CREATED= "7c94bd35-fba7-4ef7-96f5-29c89a318fcf";
+		public static final String PNS_PATIENT_CONTACT_BASELINE_HIV_STATUS = "3ca03c84-632d-4e53-95ad-91f1bd9d96d6";
+		public static final String PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT= "35a08d84-9f80-4991-92b4-c4ae5903536e";
+		public static final String PNS_PATIENT_CONTACT_REGISTRATION_SOURCE= "7c94bd35-fba7-4ef7-96f5-29c89a318fcf";
 
 
 	}
@@ -406,12 +406,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY));
 		install(personAttributeType("PNS Approach", "PNS Approach",
 				String.class, null, false, 4.5, _PersonAttributeType.PNS_APPROACH));	
-		install(personAttributeType("Baseline HIV Status", "Baseline HIV Status",
-				String.class, null, false, 4.5, _PersonAttributeType.BASE_LINE_HIV_STATUS));
-		install(personAttributeType("Living with contact", "Living with contact",
-				String.class, null, false, 4.5, _PersonAttributeType.LIVING_WITH_CONTACT));
-		install(personAttributeType("Contact Created", "Contact Created",
-				String.class, null, false, 4.5, _PersonAttributeType.CONTACT_CREATED));
+		install(personAttributeType("PNS Baseline HIV Status", "PNS Baseline HIV Status",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_BASELINE_HIV_STATUS));
+		install(personAttributeType("Contact living with patient", "Contact living  with patient",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT));
+		install(personAttributeType("Contact registration from PNS", "Contact registration source from PNS",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_REGISTRATION_SOURCE));
 
 		// Provider attribute types.
 		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY ));
