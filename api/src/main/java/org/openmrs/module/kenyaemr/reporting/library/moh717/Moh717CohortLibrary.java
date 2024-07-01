@@ -214,7 +214,8 @@ public class Moh717CohortLibrary {
         sql.setName("Total Amount Collected");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(sum(ifnull(r.total_sales,0)) AS UNSIGNED) as total_amount_collected from kenyaemr_etl.etl_daily_revenue_summary r where date(transaction_date) between date(:startDate) and date(:endDate);\n");
+        sql.setQuery("select CAST(IFNULL(sum(ifnull(r.total_sales,0)),0) AS SIGNED) as total_amount_collected from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition totalAmountReceived() {
@@ -222,10 +223,10 @@ public class Moh717CohortLibrary {
         sql.setName("Total Amount Received");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(sum(ifnull(r.cash_receipts_cash_from_daily_services, 0) + ifnull(r.cash_receipt_nhif_receipt, 0) +\n" +
-                "           ifnull(r.cash_receipt_other_debtors_receipt, 0)) AS UNSIGNED) as total_amount_received\n" +
-                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select CAST(ifnull(sum(ifnull(r.cash_receipts_cash_from_daily_services, 0) + ifnull(r.cash_receipt_nhif_receipt, 0) +\n" +
+                "                           ifnull(r.cash_receipt_other_debtors_receipt, 0)), 0) AS SIGNED) as total_amount_received\n" +
+                "                from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "                where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition clientsWaived() {
@@ -233,7 +234,7 @@ public class Moh717CohortLibrary {
         sql.setName("Number of Clients Waived");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(count(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers,0)) AS UNSIGNED) as clients_waived\n" +
+        sql.setQuery("select CAST(IFNULL(count(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)), 0) AS SIGNED) as clients_waived\n" +
                 "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
@@ -243,7 +244,7 @@ public class Moh717CohortLibrary {
         sql.setName("Total Amount Waived");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(sum(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers,0)) AS UNSIGNED) as total_waived\n" +
+        sql.setQuery("select CAST(ifnull(sum(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)),0) AS SIGNED) as total_waived\n" +
                 "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
@@ -253,7 +254,7 @@ public class Moh717CohortLibrary {
         sql.setName("Number of Clients Exempted");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(count(ifnull(r.revenue_not_collected_write_offs_exemptions,0)) AS UNSIGNED) as clients_exempted\n" +
+        sql.setQuery("select CAST(ifnull(count(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as clients_exempted\n" +
                 "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
@@ -263,7 +264,7 @@ public class Moh717CohortLibrary {
         sql.setName("Total Amount Exempted");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(sum(ifnull(r.revenue_not_collected_write_offs_exemptions,0)) AS UNSIGNED) as total_exempted\n" +
+        sql.setQuery("select CAST(IFNULL(sum(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as total_exempted\n" +
                 "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sql;
