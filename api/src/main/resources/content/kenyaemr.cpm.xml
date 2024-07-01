@@ -24,6 +24,7 @@
 		<property name="visitForms">
 			<set>
 				<ref bean="kenyaemr.cpm.form.referral.visit" />
+				<ref bean="kenyaemr.cpm.form.screening.visit" />
 			</set>
 		</property>
 		<property name="reports">
@@ -82,5 +83,20 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/completion.png" />
 		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
-	</bean>	
+	</bean>
+
+	<!-- CPM Screening form -->
+	<bean id="kenyaemr.cpm.form.screening.visit" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="f7dbe6b6-2a5a-46e6-af52-45bf2962f4aa" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:cpm/formDoesNotExistOn2x.html" />
+	</bean>
 </beans>
