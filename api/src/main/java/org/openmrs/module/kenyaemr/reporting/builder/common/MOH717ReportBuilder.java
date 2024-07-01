@@ -204,5 +204,5 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sqlDataSetDefinition;
     }
-    
+
 }
