@@ -25,7 +25,9 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.openmrs.module.reporting.indicator.CohortIndicator;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -123,13 +125,14 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Total Discharges (new born)", "", ReportUtils.map(moh717IndicatorLibrary.totalDischarges(), indParams), "");
 
         dsd.addColumn( "Number of Laboratory tests", "", ReportUtils.map(moh717IndicatorLibrary.laboratoryTests(), indParams), "");
-//        dsd.addColumn( "Number of Examinations (X-Ray & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xraysAndImaging(), indParams), "");
+//      dsd.addColumn( "Number of Examinations (X-Ray & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xraysAndImaging(), indParams), "");
         dsd.addColumn( "Total Amount Collected", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountCollected(), indParams), "");
         dsd.addColumn( "Total Amount Received", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountReceived(), indParams), "");
         dsd.addColumn( "Number of Clients Waived", "", ReportUtils.map(moh717IndicatorLibrary.clientsWaived(), indParams), "");
         dsd.addColumn( "Total Amount Waived", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountWaived(), indParams), "");
         dsd.addColumn( "Number of Clients Exempted", "", ReportUtils.map(moh717IndicatorLibrary.clientsExempted(), indParams), "");
         dsd.addColumn( "Total Amount Exempted", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountExempted(), indParams), "");
+
         return dsd;
     }
 }
