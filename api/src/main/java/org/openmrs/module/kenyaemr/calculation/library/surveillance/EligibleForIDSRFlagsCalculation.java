@@ -231,11 +231,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
-											idsrMessage.append(" Suspected ILI Case");
+											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI ") : idsrMessage.append(",ILI ");
 											break;
 										} else {
 											eligible = true;
-											idsrMessage.append(" Suspected SARI Case");
+											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI ") : idsrMessage.append(",SARI ");											
 											break;
 										}
 									}
@@ -255,7 +255,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Chikungunya case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya ") : idsrMessage.append(",Chikungunya ");
 										break;
 									}
 								}
@@ -271,7 +271,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Cholera case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera ") : idsrMessage.append(",Cholera ");
 										break;
 									}
 								}								
@@ -286,7 +286,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Dysentery case");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery ") : idsrMessage.append(",Dysentery ");
 									break;
 								}
 							}							
@@ -300,7 +300,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Haemorrhagic Fever");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Haemorrhagic Fever ") : idsrMessage.append(",Haemorrhagic Fever ");
 									break;
 								}
 							}							
@@ -318,7 +318,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Malaria case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");										
 										break;
 									}
 								}
@@ -337,7 +337,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Measles case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");				
 										break;
 									}
 								}
@@ -357,7 +357,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Rift Valley Fever case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever") : idsrMessage.append(",Rift Valley Fever");
 										break;
 									}
 								}
@@ -373,7 +373,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Poliomyelitis case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");
 										break;
 									}
 								}								
@@ -398,11 +398,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
-											idsrMessage.append(" Suspected ILI Case");
+											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI") : idsrMessage.append(",ILI");
 											break;
 										} else {
 											eligible = true;
-											idsrMessage.append(" Suspected SARI Case");
+											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI") : idsrMessage.append(",SARI");
 											break;
 										}
 									}
@@ -422,7 +422,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Chikungunya case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya") : idsrMessage.append(",Chikungunya");
 										break;
 									}
 								}
@@ -438,7 +438,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Cholera case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera") : idsrMessage.append(",Cholera");
 										break;
 									}
 								}	break;
@@ -454,7 +454,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Dysentery case");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery") : idsrMessage.append(",Dysentery");			
 									break;
 								}
 							}							
@@ -468,7 +468,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Haemorrhagic Fever");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Haemorrhagic Fever") : idsrMessage.append(",Haemorrhagic Fever");
 									break;
 								}
 							}							
@@ -486,7 +486,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Malaria case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");							
 										break;
 									}
 								}
@@ -505,7 +505,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Measles case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");						
 										break;
 									}
 								}
@@ -524,7 +524,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Rift Valley Fever case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever ") : idsrMessage.append(",Rift Valley Fever");
 										break;
 									}
 								}
@@ -540,7 +540,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Poliomyelitis case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");
 										break;
 									}
 								}							
@@ -564,11 +564,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 										if (createdDate.equals(todayDate)) {									
 											if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 												eligible = true;
-												idsrMessage.append(" Suspected ILI Case");
+												idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI") : idsrMessage.append(",ILI");										
 												break;
 											} else {
 												eligible = true;
-												idsrMessage.append(" Suspected SARI Case");
+												idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI") : idsrMessage.append(",SARI");											
 												break;
 											}
 										}
@@ -589,7 +589,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Chikungunya case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya") : idsrMessage.append(",Chikungunya");								
 										break;
 									}
 								}
@@ -605,7 +605,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Cholera case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera") : idsrMessage.append(",Cholera");									
 										break;
 									}
 								}								
@@ -621,7 +621,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Dysentery case");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery") : idsrMessage.append(",Dysentery");							
 									break;
 								}
 							}							
@@ -635,7 +635,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage.append(" Suspected Haemorrhagic Fever");
+									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Hemorrhagic Fever") : idsrMessage.append(",Hemorrhagic Fever");						
 									break;
 								}
 							}							
@@ -653,7 +653,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Malaria case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");
 										break;
 									}
 								}
@@ -672,7 +672,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Measles case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");									
 										break;
 									}
 								}
@@ -691,8 +691,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Rift Valley Fever case");
-										break;
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever") : idsrMessage.append(",Rift Valley Fever");
+									    break;
 									}
 								}
 							}							
@@ -707,7 +707,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.append(" Suspected Poliomyelitis case");
+										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");						
 										break;
 									}
 								}								
@@ -723,7 +723,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 
 	@Override
 	public String getFlagMessage() {
-		return idsrMessage.toString();
+		return "Suspected "+ idsrMessage.toString();
 
 	}
 }
