@@ -38,7 +38,7 @@ import java.util.*;
  * @should calculate not admitted
  * @should calculate duration < 10 days
  */
-public class EligibleForIliScreeningCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+public class EligibleForIliScreeningCalculation extends AbstractPatientCalculation  {
     protected static final Log log = LogFactory.getLog(EligibleForIliScreeningCalculation.class);
     public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
     public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
@@ -46,11 +46,6 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
     public static final Form clinicalEncounterForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.CLINICAL_ENCOUNTER);
     public static final EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
     public static final Form greenCardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
-
-    @Override
-    public String getFlagMessage() {
-        return "Suspected ILI Case";
-    }
 
     Integer MEASURE_FEVER = 140238;
     Integer COUGH_PRESENCE = 143264;
