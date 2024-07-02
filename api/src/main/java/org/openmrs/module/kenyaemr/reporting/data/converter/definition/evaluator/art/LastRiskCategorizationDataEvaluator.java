@@ -37,7 +37,7 @@ public class LastRiskCategorizationDataEvaluator implements PersonDataEvaluator 
 
         String qry = "select ml.patient_id,\n" +
 			"       mid(max(concat(ml.date_created ,concat(ml.description ))),20) as risk_score\n" +
-			"from kenyaemr_ml_patient_risk_score ml where ml.date_created <= date(:endDate)\n" +
+			"from kenyaemr_ml_patient_risk_score ml where date(ml.date_created) <= date(:endDate)\n" +
 			"GROUP BY ml.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
