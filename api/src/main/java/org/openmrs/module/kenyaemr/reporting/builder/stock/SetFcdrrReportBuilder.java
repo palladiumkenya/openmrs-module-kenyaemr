@@ -36,7 +36,8 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor,
                                                             ReportDefinition reportDefinition) {
-        return Arrays.asList(ReportUtils.map(getFcdrrDatasetDefition(), "startDate=${startDate},endDate=${endDate}"));
+        return Arrays.asList(ReportUtils.map(getFcdrrDatasetDefition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(getFcdrrTotalAbacavirLamivudine(),"startDate=${startDate},endDate=${endDate}"));
     }
 
     private DataSetDefinition getFcdrrDatasetDefition(){
@@ -45,6 +46,16 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
         sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         sqlDataSetDefinition.setSqlQuery("SELECT COUNT(*) AS total_items FROM stockmgmt_stock_item WHERE date_created BETWEEN :startDate AND :endDate ");
+        return sqlDataSetDefinition;
+    }
+
+    private DataSetDefinition getFcdrrTotalAbacavirLamivudine() {
+
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("FCDRR_AVIRLAMIVUDINE");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("SELECT COUNT(*) AS total FROM stockmgmt_stock_item WHERE date_created BETWEEN :startDate AND :endDate "); // Abacavir/Lamivudine (ABC/3TC) 600mg/300mg FDC Tabs
         return sqlDataSetDefinition;
     }
 }
