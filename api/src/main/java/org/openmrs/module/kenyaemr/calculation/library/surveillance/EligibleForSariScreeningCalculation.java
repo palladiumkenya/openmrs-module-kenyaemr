@@ -37,7 +37,7 @@ import java.util.*;
  * @should calculate admitted
  * @should calculate duration < 10 days
  */
-public class EligibleForSariScreeningCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+public class EligibleForSariScreeningCalculation extends AbstractPatientCalculation {
     protected static final Log log = LogFactory.getLog(EligibleForSariScreeningCalculation.class);
     public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
     public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
@@ -46,10 +46,6 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
     public static final EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
     public static final Form greenCardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
 
-    @Override
-    public String getFlagMessage() {
-         return "Suspected SARI Case";
-    }
     Integer MEASURE_FEVER = 140238;
     Integer COUGH_PRESENCE = 143264;
     Integer DURATION = 159368;
