@@ -95,6 +95,8 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.openmrs.ui.framework.annotation.SpringBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,7 +116,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.openmrs.util.PrivilegeConstants;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProgramWorkflowService;
 
@@ -307,6 +308,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
     @ResponseBody
+    @Cacheable(value = "patientFlagCache", key = "#patientUuid")
     public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid, @SpringBean CalculationManager calculationManager) {
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
@@ -314,20 +316,30 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-        ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
 
         if (patient == null) {
             return new ResponseEntity<Object>("The provided patient was not found in the system!",
                     new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
+
+        ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
+
+        CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
+        if (cacheManager.getCache("patientFlagCache").get(patientUuid) != null) {
+            HashMap<String,String> flagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid).get();
+            flagsObj.put("results", composePatientFlagsFromMap(flagsMap));
+            return flagsObj.toString();
+        }
+
         calculationManager.refresh();
-        ArrayNode flags = JsonNodeFactory.instance.arrayNode();
+        // define a hashmap of flag name and value for ease of update in other parts of the code
+        Map<String,String> patientFlagsMap = new HashMap<>();
         for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
 
             try {
                 CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(), calc);
                 if (result != null && (Boolean) result.getValue()) {
-                    flags.add(calc.getFlagMessage());
+                    patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
                 }
             }
             catch (Exception ex) {
@@ -336,12 +348,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         new HttpHeaders(), HttpStatus.NOT_FOUND);
             }
         }
-        flagsObj.put("results", flags);
-
+        cacheManager.getCache("patientFlagCache").putIfAbsent(patientUuid, patientFlagsMap);
+        flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
         return flagsObj.toString();
 
     }
 
+    private ArrayNode composePatientFlagsFromMap(Map<String,String> flagsMap) {
+        ArrayNode flags = JsonNodeFactory.instance.arrayNode();
+        if (flagsMap.isEmpty()) {
+            return flags;
+        }
+        for (Map.Entry<String,String> entry : flagsMap.entrySet()) {
+            flags.add(entry.getValue());
+        }
+        return flags;
+    }
     /**
      * Returns custom patient object
      * @param patientUuid
