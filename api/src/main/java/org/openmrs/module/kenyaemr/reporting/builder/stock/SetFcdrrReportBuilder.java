@@ -27,6 +27,7 @@ import java.util.List;
 @Component
 @Builds({ "kenyaemr.ehrReports.report.fcdrr" })
 public class SetFcdrrReportBuilder extends AbstractReportBuilder {
+
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
         return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), new Parameter("endDate", "End Date",

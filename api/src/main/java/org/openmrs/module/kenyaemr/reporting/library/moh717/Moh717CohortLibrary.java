@@ -209,6 +209,15 @@ public class Moh717CohortLibrary {
         sql.setQuery("select encounter_id from kenyaemr_etl.etl_laboratory_extract x where x.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
+
+    public CohortDefinition xrayAndImaging() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Number of imagings and xrays");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select o.encounter_id from orders o where o.order_type_id = 4 and o.voided = 0 and date(o.date_activated) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
     public CohortDefinition totalAmountCollected() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Total Amount Collected");
