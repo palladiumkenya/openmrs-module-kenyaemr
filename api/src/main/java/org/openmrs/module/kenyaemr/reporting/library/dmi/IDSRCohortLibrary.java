@@ -9,7 +9,9 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.dmi;
 
+import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.stereotype.Component;
@@ -57,14 +59,15 @@ public class IDSRCohortLibrary {
     public CohortDefinition choleraCases() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select a.patient_id\n" +
-                "from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint, c.complaint_date as complaint_date\n" +
-                "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-                "      where c.complaint in (161887,122983)\n" +
-                "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "      group by patient_id) a\n" +
-                "         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
-                "where timestampdiff(YEAR,date(d.DOB),coalesce(date(a.complaint_date),date(a.visit_date))) > 2 and FIND_IN_SET(122983, a.complaint) > 0\n" +
-                "  and FIND_IN_SET(161887, a.complaint) > 0;";
+                "                from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date,\n" +
+                "                            c.complaint_duration\n" +
+                "                      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+                "                      where c.complaint in (161887,122983)\n" +
+                "                        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "                      group by patient_id) a\n" +
+                "                         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
+                "                where timestampdiff(YEAR,date(d.DOB),coalesce(date(DATE_SUB(a.visit_date, INTERVAL a.complaint_duration DAY)),date(a.visit_date))) > 2 and FIND_IN_SET(122983, a.complaint) > 0\n" +
+                "                  and FIND_IN_SET(161887, a.complaint) > 0;";
         cd.setName("choleraCases");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -81,10 +84,10 @@ public class IDSRCohortLibrary {
     public CohortDefinition iliCases() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select a.patient_id\n" +
-                "from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
+                "from (select patient_id, c.complaint as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date, c.visit_date\n" +
                 "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
                 "      where c.complaint = 143264\n" +
-                "        and timestampdiff(DAY, date(c.complaint_date), date(c.visit_date)) < 10\n" +
+                "        and c.complaint_duration < 10\n" +
                 "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
                 "      group by patient_id) a\n" +
                 "         join openmrs.visit v\n" +
@@ -107,10 +110,10 @@ public class IDSRCohortLibrary {
     public CohortDefinition sariCases() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select a.patient_id\n" +
-                "from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
+                "from (select patient_id, c.complaint as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date, c.visit_date\n" +
                 "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
                 "      where c.complaint = 143264\n" +
-                "        and timestampdiff(DAY, date(c.complaint_date), date(c.visit_date)) < 10\n" +
+                "        and c.complaint_duration < 10\n" +
                 "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
                 "      group by patient_id) a\n" +
                 "         join openmrs.visit v\n" +
@@ -305,5 +308,4 @@ public class IDSRCohortLibrary {
 
         return cd;
     }
-
 }

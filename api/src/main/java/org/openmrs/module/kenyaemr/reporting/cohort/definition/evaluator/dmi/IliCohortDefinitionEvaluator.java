@@ -49,10 +49,10 @@ public class IliCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 		Cohort newCohort = new Cohort();
 		
 		String qry = "select a.patient_id\n" +
-				"from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
+				"from (select patient_id, c.complaint as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date, c.visit_date\n" +
 				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
 				"      where c.complaint = 143264\n" +
-				"        and timestampdiff(DAY, date(c.complaint_date), date(c.visit_date)) < 10\n" +
+				"        and c.complaint_duration < 10\n" +
 				"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
 				"      group by patient_id) a\n" +
 				"         join visit v\n" +

@@ -52,7 +52,7 @@ public class IDSRSuspectedCasesCohortDefinitionEvaluator implements CohortDefini
 				"from (select c.patient_id,\n" +
 				"             group_concat(c.complaint) as complaint,\n" +
 				"             epd.dob,\n" +
-				"             c.complaint_date,\n" +
+				"             DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY),\n" +
 				"             c.visit_date,\n" +
 				"             v.visit_type_id,\n" +
 				"             t.temperature,\n" +
@@ -61,7 +61,8 @@ public class IDSRSuspectedCasesCohortDefinitionEvaluator implements CohortDefini
 				"                     SUBSTRING_INDEX(\n" +
 				"                             SUBSTRING_INDEX(group_concat(concat_ws('|', c.complaint, c.complaint_duration)), '|', -1),\n" +
 				"                             ',', 1)\n" +
-				"                 END                   AS fever_duration_from_days\n" +
+				"                 END                   AS fever_duration_from_days,\n" +
+				"          c.complaint_duration\n" +
 				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
 				"               inner join kenyaemr_etl.etl_patient_demographics epd on c.patient_id = epd.patient_id\n" +
 				"               inner join openmrs.visit v ON c.patient_id = v.patient_id AND DATE(c.visit_date) = DATE(v.date_started)\n" +
@@ -71,8 +72,8 @@ public class IDSRSuspectedCasesCohortDefinitionEvaluator implements CohortDefini
 				"      group by patient_id) a\n" +
 				"where ((FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0)\n" +
 				"   OR (FIND_IN_SET(161887, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
-				"       timestampdiff(YEAR, date(a.DOB), coalesce(date(a.complaint_date), date(a.visit_date))) > 2)\n" +
-				"   OR (FIND_IN_SET(143264, a.complaint) > 0 AND timestampdiff(DAY, date(a.complaint_date), date(a.visit_date)) < 10 AND\n" +
+				"       timestampdiff(YEAR, date(a.DOB), coalesce(date(DATE_SUB(a.visit_date, INTERVAL a.complaint_duration DAY)), date(a.visit_date))) > 2)\n" +
+				"   OR (FIND_IN_SET(143264, a.complaint) > 0 AND timestampdiff(DAY, date(DATE_SUB(a.visit_date, INTERVAL a.complaint_duration DAY)), date(a.visit_date)) < 10 AND\n" +
 				"       date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id IN (1, 3) AND\n" +
 				"       a.temperature >= 38)\n" +
 				"   OR (FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(141830, a.complaint) > 0 AND\n" +
