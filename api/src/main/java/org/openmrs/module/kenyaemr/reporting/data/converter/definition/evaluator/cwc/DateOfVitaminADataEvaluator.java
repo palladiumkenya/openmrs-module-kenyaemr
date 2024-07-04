@@ -43,7 +43,7 @@ public class DateOfVitaminADataEvaluator implements EncounterDataEvaluator {
                 "\tif(VitaminA_2_yr != '', STR_TO_DATE(VitaminA_2_yr, '%Y/%m/%d'),\"\"),\n" +
                 "\tif(VitaminA_2_to_5_yr != '', STR_TO_DATE(VitaminA_2_to_5_yr, '%Y/%m/%d'),\"\")\n" +
                 "\t) as dates\n" +
-                "from kenyaemr_etl.etl_hei_immunization ";
+                "from kenyaemr_etl.etl_immunization ";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

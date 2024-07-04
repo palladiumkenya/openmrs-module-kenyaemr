@@ -35,7 +35,7 @@ public class VaccinatedAgainstInfluenzaDataEvaluator implements PersonDataEvalua
 
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
-        String qry = "select i.patient_id, if(timestampdiff(YEAR, DATE(i.influenza), DATE(:endDate)) <= 12, 'Y','N') as is_vaccinated from kenyaemr_etl.etl_hei_immunization i;";
+        String qry = "select i.patient_id, if(timestampdiff(YEAR, DATE(i.influenza), DATE(:endDate)) <= 12, 'Y','N') as is_vaccinated from kenyaemr_etl.etl_immunization i;";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
