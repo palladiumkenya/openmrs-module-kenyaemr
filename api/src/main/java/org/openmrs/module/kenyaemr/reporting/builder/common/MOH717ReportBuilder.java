@@ -20,6 +20,7 @@ import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717IndicatorLibra
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
+import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
@@ -74,9 +75,15 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     }
 
     @Override
-    protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor,
-                                                            ReportDefinition reportDefinition) {
-        return Arrays.asList(ReportUtils.map(moh717DatasetDefinition(), "startDate=${startDate},endDate=${endDate}"));
+    protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor,ReportDefinition reportDefinition) {
+        return Arrays.asList(ReportUtils.map(moh717DatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(totalAmountCollectedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(totalAmountReceivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(clientsWaivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(totalAmountWaivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(clientsExemptedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(totalAmountExemptedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}")
+                );
     }
 
     private DataSetDefinition moh717DatasetDefinition() {
@@ -125,14 +132,77 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Total Discharges (new born)", "", ReportUtils.map(moh717IndicatorLibrary.totalDischarges(), indParams), "");
 
         dsd.addColumn( "Number of Laboratory tests", "", ReportUtils.map(moh717IndicatorLibrary.laboratoryTests(), indParams), "");
-//      dsd.addColumn( "Number of Examinations (X-Ray & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xraysAndImaging(), indParams), "");
-        dsd.addColumn( "Total Amount Collected", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountCollected(), indParams), "");
-        dsd.addColumn( "Total Amount Received", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountReceived(), indParams), "");
-        dsd.addColumn( "Number of Clients Waived", "", ReportUtils.map(moh717IndicatorLibrary.clientsWaived(), indParams), "");
-        dsd.addColumn( "Total Amount Waived", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountWaived(), indParams), "");
-        dsd.addColumn( "Number of Clients Exempted", "", ReportUtils.map(moh717IndicatorLibrary.clientsExempted(), indParams), "");
-        dsd.addColumn( "Total Amount Exempted", "", ReportUtils.map(moh717IndicatorLibrary.totalAmountExempted(), indParams), "");
-
+        dsd.addColumn("Number of Examinations (XRay & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(), indParams), "");
         return dsd;
     }
+    private DataSetDefinition totalAmountCollectedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("AmountCollected");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("select CAST(IFNULL(sum(ifnull(r.total_sales, 0)), 0) AS SIGNED) as total_amount_collected\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    private DataSetDefinition totalAmountReceivedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("AmountReceived");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("SELECT CAST(\n" +
+                "               IFNULL(\n" +
+                "                       SUM(\n" +
+                "                               IFNULL(r.cash_receipts_cash_from_daily_services, 0) +\n" +
+                "                               IFNULL(r.cash_receipt_nhif_receipt, 0) +\n" +
+                "                               IFNULL(r.cash_receipt_other_debtors_receipt, 0)\n" +
+                "                       ),\n" +
+                "                       0) AS SIGNED\n" +
+                "       ) AS total_amount_received\n" +
+                "FROM kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "WHERE DATE(transaction_date) BETWEEN DATE(:startDate) AND DATE(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    private DataSetDefinition clientsWaivedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("clientsWaived");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("select CAST(IFNULL(count(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)),\n" +
+                "                   0) AS SIGNED) as clients_waived\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    private DataSetDefinition totalAmountWaivedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("AmountWaived");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("select CAST(ifnull(sum(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)), 0) AS SIGNED) as total_waived\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    private DataSetDefinition clientsExemptedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("clientsExempted");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("select CAST(ifnull(count(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as clients_exempted\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    private DataSetDefinition totalAmountExemptedDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("AmountExempted");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.setSqlQuery("select CAST(IFNULL(sum(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as total_exempted\n" +
+                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
+                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sqlDataSetDefinition;
+    }
+    
 }
