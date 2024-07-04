@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.dmi;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.SpecimenForInfluenzaCollectedDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.DateSpecimenForInfluenzaCollectedDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -24,9 +24,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates a ComplaintAttendantProviderDataDefinition
+ * Evaluates a DateSpecimenForInfluenzaCollectedDataDefinition
  */
-@Handler(supports= SpecimenForInfluenzaCollectedDataDefinition.class, order=50)
+@Handler(supports= DateSpecimenForInfluenzaCollectedDataDefinition.class, order=50)
 public class DateSpecimenForInfluenzaCollectedDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
