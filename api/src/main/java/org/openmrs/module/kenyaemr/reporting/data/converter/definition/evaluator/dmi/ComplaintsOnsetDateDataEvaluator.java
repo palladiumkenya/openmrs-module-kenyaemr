@@ -11,7 +11,6 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.ComplaintsOnsetDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.DurationOfComplaintsDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -36,17 +35,20 @@ public class ComplaintsOnsetDateDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select a.patient_id,date(a.complaint_date) as complaint_date\n" +
-                "from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
-                "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-                "      where c.complaint = 143264\n" +
-                "        and timestampdiff(DAY, date(c.complaint_date), date(c.visit_date)) < 10\n" +
-                "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "      group by patient_id) a\n" +
-                "         join openmrs.visit v\n" +
-                "              on a.patient_id = v.patient_id and date(a.visit_date) = date(v.date_started) and v.visit_type_id = 1\n" +
-                "         join kenyaemr_etl.etl_patient_triage t\n" +
-                "              on a.patient_id = t.patient_id and date(t.visit_date) = date(v.date_started) and t.temperature >= 38;\n";
+        String qry = "select a.patient_id, a.complaint_date\n" +
+                "              from (select patient_id,\n" +
+                "                           DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY)                                               as complaint_date,\n" +
+                "                           c.visit_date,\n" +
+                "                           c.complaint_duration\n" +
+                "                    from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+                "                    where c.complaint = 143264\n" +
+                "                      and c.complaint_duration < 10\n" +
+                "                      and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "                    group by patient_id) a\n" +
+                "                       join kenyaemr_etl.etl_clinical_encounter v\n" +
+                "                            on a.patient_id = v.patient_id and date(a.visit_date) = date(v.visit_date)\n" +
+                "                       join kenyaemr_etl.etl_patient_triage t\n" +
+                "                            on a.patient_id = t.patient_id and date(t.visit_date) = date(v.visit_date) and t.temperature >= 38;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

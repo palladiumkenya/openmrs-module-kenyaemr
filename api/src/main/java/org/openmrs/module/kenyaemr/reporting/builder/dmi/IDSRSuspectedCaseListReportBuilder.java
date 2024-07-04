@@ -363,6 +363,22 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         idsrTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         idsrTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+        VaccinatedAgainstCovid19DataDefinition vaccinatedAgainstCovid19DataDefinition = new VaccinatedAgainstCovid19DataDefinition();
+        vaccinatedAgainstCovid19DataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        vaccinatedAgainstCovid19DataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VaccinatedAgainstInfluenzaDataDefinition vaccinatedAgainstInfluenzaDataDefinition = new VaccinatedAgainstInfluenzaDataDefinition();
+        vaccinatedAgainstInfluenzaDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        vaccinatedAgainstInfluenzaDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        SpecimenForInfluenzaCollectedDataDefinition specimenForInfluenzaCollectedDataDefinition = new SpecimenForInfluenzaCollectedDataDefinition();
+        specimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        specimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DateSpecimenForInfluenzaCollectedDataDefinition dateSpecimenForInfluenzaCollectedDataDefinition = new DateSpecimenForInfluenzaCollectedDataDefinition();
+        dateSpecimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dateSpecimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
                 new PreferredNameDataDefinition(), formatter);
@@ -374,10 +390,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
         dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
         dsd.addColumn("Village_Estate_Landmark", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "", new RDQACalculationResultConverter());
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+       // dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Presenting Complaints", presentingComplaintsDataDefinition, paramMapping);
         dsd.addColumn("Duration of Presenting Complaints", durationOfComplaintsDataDefinition, paramMapping);
         dsd.addColumn("Date of onset of the current Illness", complaintsOnsetDateDataDefinition, paramMapping);
@@ -385,6 +401,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Temperature", idsrTemperatureDataDefinition, paramMapping);
         dsd.addColumn("Respiratory Rate", respiratoryRateDataDefinition, paramMapping);
         dsd.addColumn("Oxygen saturation", oxygenSaturationDataDefinition, paramMapping);
+        //dsd.addColumn("Vaccinated Against Covid19", vaccinatedAgainstCovid19DataDefinition, paramMapping);
+        dsd.addColumn("Vaccinated Against Influenza", vaccinatedAgainstInfluenzaDataDefinition, paramMapping);
+        dsd.addColumn("Specimen Collected", specimenForInfluenzaCollectedDataDefinition, paramMapping);
+        dsd.addColumn("Date Specimen Collected", dateSpecimenForInfluenzaCollectedDataDefinition, paramMapping);
 
         ILICohortDefinition cd = new ILICohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -429,6 +449,58 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+        ComplaintsOnsetDateDataDefinition complaintsOnsetDateDataDefinition = new ComplaintsOnsetDateDataDefinition();
+        complaintsOnsetDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        complaintsOnsetDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DurationOfComplaintsDataDefinition durationOfComplaintsDataDefinition = new DurationOfComplaintsDataDefinition();
+        durationOfComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        durationOfComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        MedicalConditionsDataDefinition medicalConditionsDataDefinition = new MedicalConditionsDataDefinition();
+        medicalConditionsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        medicalConditionsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DateOfHospitalAdmissionDataDefinition dateOfHospitalAdmissionDataDefinition = new DateOfHospitalAdmissionDataDefinition();
+        dateOfHospitalAdmissionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dateOfHospitalAdmissionDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        PresentingComplaintsDataDefinition presentingComplaintsDataDefinition = new PresentingComplaintsDataDefinition();
+        presentingComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        presentingComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        OxygenSaturationDataDefinition oxygenSaturationDataDefinition = new OxygenSaturationDataDefinition();
+        oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        RespiratoryRateDataDefinition respiratoryRateDataDefinition = new RespiratoryRateDataDefinition();
+        respiratoryRateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        respiratoryRateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        IDSRTemperatureDataDefinition idsrTemperatureDataDefinition = new IDSRTemperatureDataDefinition();
+        idsrTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        AdmittedInICUOrHDUDataDefinition admittedInICUOrHDUDataDefinition = new AdmittedInICUOrHDUDataDefinition();
+        admittedInICUOrHDUDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        admittedInICUOrHDUDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VaccinatedAgainstCovid19DataDefinition vaccinatedAgainstCovid19DataDefinition = new VaccinatedAgainstCovid19DataDefinition();
+        vaccinatedAgainstCovid19DataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        vaccinatedAgainstCovid19DataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VaccinatedAgainstInfluenzaDataDefinition vaccinatedAgainstInfluenzaDataDefinition = new VaccinatedAgainstInfluenzaDataDefinition();
+        vaccinatedAgainstInfluenzaDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        vaccinatedAgainstInfluenzaDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        SpecimenForInfluenzaCollectedDataDefinition specimenForInfluenzaCollectedDataDefinition = new SpecimenForInfluenzaCollectedDataDefinition();
+        specimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        specimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DateSpecimenForInfluenzaCollectedDataDefinition dateSpecimenForInfluenzaCollectedDataDefinition = new DateSpecimenForInfluenzaCollectedDataDefinition();
+        dateSpecimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dateSpecimenForInfluenzaCollectedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
                 new PreferredNameDataDefinition(), formatter);
@@ -440,9 +512,24 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
+        dsd.addColumn("Village_Estate_Landmark", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "", new RDQACalculationResultConverter());
         dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-         dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+        //dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        //dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+        dsd.addColumn("Admission Date", dateOfHospitalAdmissionDataDefinition, paramMapping);
+        dsd.addColumn("Presenting Complaints", presentingComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Duration of Presenting Complaints", durationOfComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Date of onset of the current Illness", complaintsOnsetDateDataDefinition, paramMapping);
+        dsd.addColumn("Medical Conditions", medicalConditionsDataDefinition, paramMapping);
+        dsd.addColumn("Temperature", idsrTemperatureDataDefinition, paramMapping);
+        dsd.addColumn("Respiratory Rate", respiratoryRateDataDefinition, paramMapping);
+        dsd.addColumn("Oxygen saturation", oxygenSaturationDataDefinition, paramMapping);
+        dsd.addColumn("Admitted to ICU or HDU", admittedInICUOrHDUDataDefinition, paramMapping);
+        //dsd.addColumn("Vaccinated Against Covid19", vaccinatedAgainstCovid19DataDefinition, paramMapping);
+        dsd.addColumn("Vaccinated Against Influenza", vaccinatedAgainstInfluenzaDataDefinition, paramMapping);
+        dsd.addColumn("Specimen Collected", specimenForInfluenzaCollectedDataDefinition, paramMapping);
+        dsd.addColumn("Date Specimen Collected", dateSpecimenForInfluenzaCollectedDataDefinition, paramMapping);
 
         SARICohortDefinition cd = new SARICohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
