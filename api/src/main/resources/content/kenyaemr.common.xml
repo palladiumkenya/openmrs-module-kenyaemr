@@ -55,7 +55,7 @@
 			<set>
 				<ref bean="kenyaemr.etl.common.report.fmap"/>
 				<ref bean="kenyaemr.common.report.artDrug" />
-				<ref bean="kenyaemr.common.report.etlMissedAppointments" />
+				<!--<ref bean="kenyaemr.common.report.etlMissedAppointments" />-->
 				<ref bean="kenyaemr.etl.common.report.moh731"/>
 				<ref bean="kenyaemr.etl.common.report.htsprediction"/>
 				<ref bean="kenyaemr.common.report.moh745"/>
@@ -564,7 +564,7 @@
 
 	<!-- ===================== Reports ===================== -->
 
-	<bean id="kenyaemr.common.report.etlMissedAppointments" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+<!--	<bean id="kenyaemr.common.report.etlMissedAppointments" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="9a254c29-2c8a-4966-83ba-66595eee4695" />
 		<property name="name" value="Missed Appointments" />
 		<property name="description" value="Missed Appointments" />
@@ -573,7 +573,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set>
 		</property>
-	</bean>
+	</bean>-->
 
 	<bean id="kenyaemr.etl.common.report.moh731" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="a66bf454-2a11-4e51-b28d-3d7ece76aa13" />
