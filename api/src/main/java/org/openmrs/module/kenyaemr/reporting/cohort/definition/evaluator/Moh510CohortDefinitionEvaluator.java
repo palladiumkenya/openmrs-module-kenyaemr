@@ -42,7 +42,7 @@ public class Moh510CohortDefinitionEvaluator implements EncounterQueryEvaluator 
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
 		String qry = "select i.encounter_id \n" +
-				"from kenyaemr_etl.etl_hei_immunization i inner join kenyaemr_etl.etl_hei_enrollment e on e.patient_id=i.patient_id\n" +
+				"from kenyaemr_etl.etl_immunization i inner join kenyaemr_etl.etl_hei_enrollment e on e.patient_id=i.patient_id\n" +
 				"where e.visit_date between date(:startDate) and (:endDate) ; ";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();

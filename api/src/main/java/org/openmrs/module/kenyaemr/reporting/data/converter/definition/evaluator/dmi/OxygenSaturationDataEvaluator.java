@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.dmi;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.VisitDateWithComplaintsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.OxygenSaturationDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.RespiratoryRateDataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -24,10 +25,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates a VisitDateDataDefinition
+ * Evaluates a ComplaintAttendantProviderDataDefinition
  */
-@Handler(supports= VisitDateWithComplaintsDataDefinition.class, order=50)
-public class VisitDateWithComplaintsDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= OxygenSaturationDataDefinition.class, order=50)
+public class OxygenSaturationDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,7 +36,7 @@ public class VisitDateWithComplaintsDataEvaluator implements PersonDataEvaluator
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select a.patient_id, a.visit_date\n" +
+        String qry = "select a.patient_id, t.oxygen_saturation\n" +
                 "from (select patient_id,\n" +
                 "             c.visit_date\n" +
                 "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +

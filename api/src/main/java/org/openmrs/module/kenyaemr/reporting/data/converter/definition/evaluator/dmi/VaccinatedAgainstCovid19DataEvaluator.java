@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.dmi;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.VisitDateWithComplaintsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.VaccinatedAgainstCovid19DataDefinition;
 import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates a VisitDateDataDefinition
+ * Evaluates a ComplaintAttendantProviderDataDefinition
  */
-@Handler(supports= VisitDateWithComplaintsDataDefinition.class, order=50)
-public class VisitDateWithComplaintsDataEvaluator implements PersonDataEvaluator {
+@Handler(supports= VaccinatedAgainstCovid19DataDefinition.class, order=50)
+public class VaccinatedAgainstCovid19DataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,19 +35,12 @@ public class VisitDateWithComplaintsDataEvaluator implements PersonDataEvaluator
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select a.patient_id, a.visit_date\n" +
-                "from (select patient_id,\n" +
-                "             c.visit_date\n" +
-                "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-                "      where c.complaint = 143264\n" +
-                "        and c.complaint_duration < 10\n" +
-                "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "      group by patient_id) a\n" +
-                "         join kenyaemr_etl.etl_clinical_encounter v\n" +
-                "              on a.patient_id = v.patient_id and date(a.visit_date) = date(v.visit_date)\n" +
-                "         join kenyaemr_etl.etl_patient_triage t\n" +
-                "              on a.patient_id = t.patient_id and date(t.visit_date) = date(v.visit_date) and t.temperature >= 38;";
-
+        String qry = "select patient_id\n" +
+                "from kenyaemr_etl.etl_covid19_assessment\n" +
+                "where date(visit_date) <= date(:endDate)\n" +
+                "group by patient_id\n" +
+                "having mid(max(concat(visit_date, final_vaccination_status)), 11) in\n" +
+                "       (166192, 5585);";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
