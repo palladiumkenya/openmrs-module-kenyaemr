@@ -14,6 +14,8 @@ import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
+
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
 
 @Component
@@ -87,5 +89,25 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator laboratoryTests() {
         return cohortIndicator("Number of Laboratory tests", ReportUtils.map(moh717CohortLibrary.laboratoryTests(), "startDate=${startDate},endDate=${endDate}"));
     }
-
+    public CohortIndicator xrayAndImaging() {
+        return cohortIndicator("xrays and imaging", ReportUtils.map(moh717CohortLibrary.xrayAndImaging(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator totalAmountCollected() {
+        return cohortIndicator("Total Amount Collected", ReportUtils.map(moh717CohortLibrary.totalAmountCollected(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator totalAmountReceived() {
+        return cohortIndicator("Total Amount Received", ReportUtils.map(moh717CohortLibrary.totalAmountReceived(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator clientsWaived() {
+        return cohortIndicator("Number of Clients Waived", ReportUtils.map(moh717CohortLibrary.clientsWaived(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator totalAmountWaived() {
+        return cohortIndicator("Total Amount Waived", ReportUtils.map(moh717CohortLibrary.totalAmountWaived(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator clientsExempted() {
+        return cohortIndicator("Number of Clients Exempted", ReportUtils.map(moh717CohortLibrary.clientsExempted(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator totalAmountExempted() {
+        return cohortIndicator("Total Amount Exempted", ReportUtils.map(moh717CohortLibrary.totalAmountExempted(), "startDate=${startDate},endDate=${endDate}"));
+    }
 }

@@ -271,7 +271,6 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("HV03-042", " Viral load Suppressed <1000cp/mls last 12 mths ", ReportUtils.map(moh731GreenCardIndicators.patientsWithSuppressedVlLast12Months(), indParams), "");
         cohortDsd.addColumn("HV03-043", " Patients with Viral load results last 12 mths ", ReportUtils.map(moh731GreenCardIndicators.patientsWithVLResultsLast12Months(), indParams), "");
 
-
         // 3.6 on CTX/Dapsone
         EmrReportingUtils.addRow(cohortDsd, "HV03", "On CTX/Dapsone", ReportUtils.map(moh731GreenCardIndicators.onCotrimoxazoleProphylaxis(), indParams), standardAgeOnlyDisaggregationWithInfants, Arrays.asList("044", "045", "046", "047", "048", "049", "050"));
 
