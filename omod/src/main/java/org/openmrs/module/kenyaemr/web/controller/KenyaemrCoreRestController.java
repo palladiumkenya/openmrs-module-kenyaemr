@@ -1569,7 +1569,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         programDetails.put("discontinuationEncounterUuid", kpDiscontinuationEncounter.getUuid());
                     }
                     programDetails.put("enrollmentFormUuid", KP_CLIENT_ENROLMENT);
-                    programDetails.put("enrollmentFormUuid", "KP Enrollment");
+                    programDetails.put("enrollmentFormName", "KP Enrollment");
                     programDetails.put("discontinuationFormUuid", KP_CLIENT_DISCONTINUATION);
                     programDetails.put("discontinuationFormName", "KP Discontinuation");
                 }
