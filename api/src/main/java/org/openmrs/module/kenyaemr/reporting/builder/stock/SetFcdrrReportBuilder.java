@@ -35,6 +35,23 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int DARUNAVIR_600MG = 2221;
 	static final int DOLUTEGRAVIR_50MG_TABS  = 2225;
 	static final int LAMIVUDINE_150MG_ORAL_TABLET  = 1819;
+	static final int ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC = 1822;
+	static final int RITONAVIR_RTV_80MG = 2105;
+	static final int ZIDOVUDINE_10MG_100ML = 2205;
+	static final int ZIDOVUDINE_10MG_240ML = 0000;
+	static final int RALTEGRAVIR_25MG = 2214;
+	static final int RALTEGRAVIR_100MG = 2215;
+	static final int NEVIRAPINE_10MG_100ML = 1940;
+	static final int NEVIRAPINE_10MG_240ML = 0000;
+	static final int LOPINAVIR_RITONAVIR_80_20MG = 1859;
+	static final int LOPINAVIR_RITONAVIR_40_10MG = 1859;
+	static final int LOPINAVIR_RITONAVIR_100_25MG = 1856;
+	static final int LAMIVUDINE_10MG = 1856;
+	static final int ETRAVIRINE_100MG = 2212;
+	static final int EFAVIRENZ_200MG = 1640;
+	static final int DOLUTEGRAVIR_10MG = 2223;
+	
+	
 	@Override
 	protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
 		return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), new Parameter("endDate", "End Date",
@@ -48,7 +65,20 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 				ReportUtils.map(getDataSetDefinition("ABC3TC", ABACAVIR_LAMIVUDINE_600MG_300MG_TABS), "startDate=${startDate},endDate=${endDate}"),
 				ReportUtils.map(getDataSetDefinition("DARUNAVIR600MG", DARUNAVIR_600MG), "startDate=${startDate},endDate=${endDate}"),
 				ReportUtils.map(getDataSetDefinition("DOLUTEGRAVIR50MGTABS", DOLUTEGRAVIR_50MG_TABS), "startDate=${startDate},endDate=${endDate}"),
-				ReportUtils.map(getDataSetDefinition("LAMIVUDINE150MGORALTABLET", LAMIVUDINE_150MG_ORAL_TABLET), "startDate=${startDate},endDate=${endDate}")
+				ReportUtils.map(getDataSetDefinition("LAMIVUDINE150MGORALTABLET", LAMIVUDINE_150MG_ORAL_TABLET), "startDate=${startDate},endDate=${endDate}"),
+				ReportUtils.map(getDataSetDefinition("AZT_3TC_FDC", ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("RTV", RITONAVIR_RTV_80MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("AZT_100MG_100ML", ZIDOVUDINE_10MG_100ML), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("RAL_25MG", RALTEGRAVIR_25MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("RAL_100MG", RALTEGRAVIR_100MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("NVP_10MG_100ML", NEVIRAPINE_10MG_100ML), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("LPV_R_80_20MG", LOPINAVIR_RITONAVIR_80_20MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("LPV_R_40_10MG", LOPINAVIR_RITONAVIR_40_10MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("LPV_R_100_25MG", LOPINAVIR_RITONAVIR_100_25MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("3TC_10MG", LAMIVUDINE_10MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("ETV_100MG", ETRAVIRINE_100MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("EFV_200MG", EFAVIRENZ_200MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("DTG_10MG", DOLUTEGRAVIR_10MG), "startDate=${startDate},endDate=${endDate}")
 		);
 
 	}
