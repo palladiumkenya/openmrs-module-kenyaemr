@@ -45,10 +45,18 @@ public class TBScreeningConverter implements DataConverter {
             return "Missing";
         }
 
-        String value = (String) obj;
 
-        if(value == null) {
-            return  "Missing";
+        String value;
+        if (obj instanceof Long) {
+            value = ((Long) obj).toString();
+        } else if (obj instanceof String) {
+            value = (String) obj;
+        } else {
+            return "Invalid value";
+        }
+
+        if (value == null) {
+            return "Missing";
         }
 
         Integer tbStatusCode = Integer.valueOf(value);
