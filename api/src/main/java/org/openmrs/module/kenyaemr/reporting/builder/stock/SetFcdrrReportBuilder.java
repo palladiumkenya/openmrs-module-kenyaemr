@@ -50,6 +50,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int ETRAVIRINE_100MG = 2212;
 	static final int EFAVIRENZ_200MG = 1640;
 	static final int DOLUTEGRAVIR_10MG = 2223;
+	static final int DARUNAVIR_100MG = 2218;
 	
 	
 	@Override
@@ -78,7 +79,8 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 			    ReportUtils.map(getDataSetDefinition("3TC_10MG", LAMIVUDINE_10MG), "startDate=${startDate},endDate=${endDate}"),
 			    ReportUtils.map(getDataSetDefinition("ETV_100MG", ETRAVIRINE_100MG), "startDate=${startDate},endDate=${endDate}"),
 			    ReportUtils.map(getDataSetDefinition("EFV_200MG", EFAVIRENZ_200MG), "startDate=${startDate},endDate=${endDate}"),
-			    ReportUtils.map(getDataSetDefinition("DTG_10MG", DOLUTEGRAVIR_10MG), "startDate=${startDate},endDate=${endDate}")
+			    ReportUtils.map(getDataSetDefinition("DTG_10MG", DOLUTEGRAVIR_10MG), "startDate=${startDate},endDate=${endDate}"),
+			    ReportUtils.map(getDataSetDefinition("DRV_10MG", DARUNAVIR_100MG), "startDate=${startDate},endDate=${endDate}")
 		);
 
 	}
