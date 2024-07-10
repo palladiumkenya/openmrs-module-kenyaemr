@@ -27,6 +27,7 @@ import java.util.List;
 @Component
 @Builds({ "kenyaemr.ehrReports.report.fcdrr" })
 public class SetFcdrrReportBuilder extends AbstractReportBuilder {
+  
 	//FCDRR is meant only for drugs, so we use drug_ID for uniqueness
 	static final int ABACAVIR_300MG_TABS = 1325;
 	static final int ABACAVIR_LAMIVUDINE_600MG_300MG_TABS = 4873;
