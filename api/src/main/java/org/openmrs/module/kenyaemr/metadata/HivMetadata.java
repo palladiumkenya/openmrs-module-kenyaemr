@@ -48,6 +48,8 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String GENDER_BASED_VIOLENCE = "f091b067-bea5-4657-8445-cfec05dc46a2";
 		public static final String ENHANCED_ADHERENCE = "54df6991-13de-4efc-a1a9-2d5ac1b72ff8";
 		public static final String ART_PREPARATION = "ec2a91e5-444a-4ca0-87f1-f71ddfaf57eb";
+		public static final String HIGH_IIT_INTERVENTION = "84d66c25-e2bd-48a2-8686-c1652eb9d283";
+
 
 
 	}
@@ -70,6 +72,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String ENHANCED_ADHERENCE_SCREENING = "c483f10f-d9ee-4b0d-9b8c-c24c1ec24701";
 		public static final String CCC_DEFAULTER_TRACING = "a1a62d1e-2def-11e9-b210-d663bd873d93";
 		public static final String LAB_ORDERS_FORM_UUID = "2cdeded1-3f69-3bda-beff-1ed2ead94eaf";
+		public static final String HIGH_IIT_INTERVENTION = "6817d322-f938-4f38-8ccf-caa6fa7a499f";
 
 	}
 
@@ -104,6 +107,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(encounterType("ART Preparation", "ART Preparation", _EncounterType.ART_PREPARATION));
 		install(encounterType("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE));
 		install(encounterType("Gender Based Violence Screening", "Gender Based Violence Screening", _EncounterType.GENDER_BASED_VIOLENCE));
+		install(encounterType("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION));
 
 		install(form("HIV Enrollment", null, _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_ENROLLMENT));
 		install(form("Clinical Encounter - HIV addendum", null, _EncounterType.HIV_CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER_HIV_ADDENDUM));
@@ -122,6 +126,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(form("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE, "1", _Form.ENHANCED_ADHERENCE_SCREENING));
 		install(form("CCC Defaulter Tracing", "Defaulter Tracing Form", _EncounterType.CCC_DEFAULTER_TRACING, "1", _Form.CCC_DEFAULTER_TRACING));
 		install(form("Laboratory Test Orders", "Laboratory Test Orders", _EncounterType.LAB_ORDER, "1", _Form.LAB_ORDERS_FORM_UUID));
+		install(form("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION, "1", _Form.HIGH_IIT_INTERVENTION));
 
 		install(patientIdentifierType("KDoD number", "Unique Id for KDoD patient", "(?i)^(KDOD)+[0-9]{4,5}$", "Must start with KDoD followed by 4-5 digit number. Example: KDoD12345 or kdod1233",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.KDoD_NUMBER));
