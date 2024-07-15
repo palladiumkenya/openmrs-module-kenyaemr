@@ -89,8 +89,9 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 
 	@Override
 	protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
-		return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), new Parameter("endDate", "End Date",
-			Date.class), new Parameter("dateBasedReporting", "", String.class));
+		return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), 
+			                 new Parameter("endDate", "End Date", Date.class)
+			);
 	}
 
 	@Override
