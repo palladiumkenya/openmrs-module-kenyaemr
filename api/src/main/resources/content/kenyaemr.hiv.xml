@@ -36,6 +36,7 @@
 <!--				<ref bean="kenyaemr.common.form.tbScreening" />-->
 				<ref bean="kenyaemr.hiv.form.artFastTrackForm"/>
 				<ref bean="kenyaemr.hiv.form.cccDefaulterTracing"/>
+				<ref bean="kenyaemr.hiv.form.hivHighITTIntervention" />
 			</set>
 		</property>
 		<property name="reports">
@@ -184,6 +185,19 @@
 		</property>
 		<property name="icon" value="kenyaui:forms/completion.png" />
 		<property name="htmlform" value="kenyaemr:hiv/hivDiscontinuation.html" />
+	</bean>
+	<!-- HIV- High IIT intervention -->
+	<bean id="kenyaemr.hiv.form.hivHighITTIntervention" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="6817d322-f938-4f38-8ccf-caa6fa7a499f" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:hiv/formDoesNotExistOn2x.html" />
+		<property name="order" value="200015" />
 	</bean>
 
 	<!-- MOH257 Face Page -->
