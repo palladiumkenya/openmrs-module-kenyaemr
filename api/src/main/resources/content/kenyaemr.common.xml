@@ -88,6 +88,7 @@
 				<ref bean="kenyaemr.common.report.moh711"/>
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
+				<ref bean="kenyaemr.common.report.duplicateNUPI"/>
 			</set>
 		</property>
 		<property name="ehrReports">
@@ -105,6 +106,14 @@
 			</set>
 		</property>
 	</bean>
+
+	<bean id="kenyaemr.common.report.duplicateNUPI" class="org.openmrs.module.kenyacore.report.CalculationReportDescriptor">
+        <property name="targetUuid" value="7b60235c-f565-48ee-82ed-38a8dd5e9e53" />
+        <property name="name" value="Duplicate NUPI" />
+        <property name="description" value="Patients with Duplicate NUPI" />
+        <property name="calculation" value="org.openmrs.module.kenyaemr.calculation.library.nupi.DuplicateNUPICalculation" />
+        <property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
+    </bean>
 
 	<bean id="kenyaemr.config.regimen" class="org.openmrs.module.kenyaemr.regimen.RegimenConfiguration">
 		<property name="definitionsPath" value="regimens.xml" />
