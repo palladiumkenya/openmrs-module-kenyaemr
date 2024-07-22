@@ -18,17 +18,16 @@ import org.openmrs.module.kenyacore.report.builder.AbstractHybridReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
 import org.openmrs.module.kenyaemr.calculation.library.TelephoneNumberCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.LastReturnVisitDateCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.EncounterDatetimeConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.ScheduledAppointmentCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.ArtDrugRefillAppointmentConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultDateYYMMDDConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CustomDateStringConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HivProgramLastDiscontinuationDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.HonouredAppointmentDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentBetweenDatesDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.common.TimeQualifier;
@@ -39,11 +38,7 @@ import org.openmrs.module.reporting.data.converter.ObjectFormatter;
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.EncountersForPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.AgeDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PersonIdDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.*;
 import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -97,12 +92,16 @@ public class PatientAppointmentOnDayReportBuilder extends AbstractHybridReportBu
 		honouredVisitDs.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		honouredVisitDs.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+		ETLNextAppointmentBetweenDatesDataDefinition nextAppointmentDateDataDefinition = new ETLNextAppointmentBetweenDatesDataDefinition();
+		nextAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		nextAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
 		List<EncounterType> encounterTypes = Arrays.asList(hivConsultation, consultation);
 
 		definition.setWhich(TimeQualifier.LAST);
 		definition.setTypes(encounterTypes);
 		dsd.addColumn("Last Visit Date", definition, "", new EncounterDatetimeConverter());
-		dsd.addColumn("Next HIV Appointment date", new CalculationDataDefinition("Appointment date", new LastReturnVisitDateCalculation()), "", new DataConverter[]{new CalculationResultConverter()});
+		dsd.addColumn("Next HIV Appointment date", nextAppointmentDateDataDefinition, "startDate=${startDate},endDate=${endDate}", new DateConverter(DATE_FORMAT));
 		dsd.addColumn("Last Discontinuation Date", new HivProgramLastDiscontinuationDateDataDefinition(), "", new CustomDateStringConverter());
 		dsd.addColumn("Has visit on day", honouredVisitDs, paramMapping, new ArtDrugRefillAppointmentConverter());
 
