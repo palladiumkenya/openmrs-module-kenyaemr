@@ -30,19 +30,16 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 
 	//FCDRR is meant only for drugs, so we use drug_ID for uniqueness
 	static final int ABACAVIR_300MG_TABS = 1325;
-	static final int ABACAVIR_LAMIVUDINE_600MG_300MG_TABS = 4873;
-	static final int ATANAZAVIR_RITONAVIR_300_100MG_TABS = 122;
+	static final int ABACAVIR_LAMIVUDINE_600MG_300MG_TABS = 4873;	
 	static final int DARUNAVIR_600MG = 2221;
 	static final int DOLUTEGRAVIR_50MG_TABS  = 2225;
 	static final int LAMIVUDINE_150MG_ORAL_TABLET  = 1819;
 	static final int ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC = 1822;
 	static final int RITONAVIR_RTV_80MG = 2105;
-	static final int ZIDOVUDINE_10MG_100ML = 2205;
-	static final int ZIDOVUDINE_10MG_240ML = 0000;
+	static final int ZIDOVUDINE_10MG_100ML = 2205;	
 	static final int RALTEGRAVIR_25MG = 2214;
 	static final int RALTEGRAVIR_100MG = 2215;
-	static final int NEVIRAPINE_10MG_100ML = 1940;
-	static final int NEVIRAPINE_10MG_240ML = 0000;
+	static final int NEVIRAPINE_10MG_100ML = 1940;	
 	static final int LOPINAVIR_RITONAVIR_80_20MG = 1859;
 	static final int LOPINAVIR_RITONAVIR_40_10MG = 1859;
 	static final int LOPINAVIR_RITONAVIR_100_25MG = 1856;
@@ -85,8 +82,14 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int RIFABUTIN_150MG_TAB= 11;
 	static final int RIFAPENTINE_150_TAB= 2245;
 	static final int RIFAPENTINE_ISONIAZID_300MG_300MG= 2246;
-
-
+	
+	/*	
+	 ZIDOVUDINE_10MG_240ML 
+	 NEVIRAPINE_10MG_240ML
+	 ATANAZAVIR_RITONAVIR_300_100MG_TABS
+	TODO: Include the above 3 missing drugs into drugs list. The difference is in packaging units
+	*/
+	
 	@Override
 	protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
 		return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), 
