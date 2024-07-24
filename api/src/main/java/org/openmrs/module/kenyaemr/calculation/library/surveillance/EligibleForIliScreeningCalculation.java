@@ -47,13 +47,13 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
     public static final EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
     public static final Form greenCardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
 
-    Integer MEASURE_FEVER = 140238;
-    Integer COUGH_PRESENCE = 143264;
-    Integer DURATION = 159368;
-    Integer SCREENING_QUESTION = 5219;
-    Integer TEMPERATURE = 5088;
-    Integer PATIENT_OUTCOME = 160433;
-    Integer INPATIENT_ADMISSION = 1654;
+    String MEASURE_FEVER = "140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String COUGH_PRESENCE = "143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String DURATION = "159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String SCREENING_QUESTION = "5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String TEMPERATURE = "5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String PATIENT_OUTCOME = "160433AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String INPATIENT_ADMISSION = "1654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     /**
      * Evaluates the calculation
@@ -83,13 +83,13 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
                 Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
 
                 ConceptService cs = Context.getConceptService();
-                Concept measureFeverResult = cs.getConcept(MEASURE_FEVER);
-                Concept coughPresenceResult = cs.getConcept(COUGH_PRESENCE);
-                Concept screeningQuestion = cs.getConcept(SCREENING_QUESTION);
-                Concept adminQuestion = cs.getConcept(PATIENT_OUTCOME);
-                Concept admissionAnswer = cs.getConcept(INPATIENT_ADMISSION);
+                Concept measureFeverResult = cs.getConceptByUuid(MEASURE_FEVER);
+                Concept coughPresenceResult = cs.getConceptByUuid(COUGH_PRESENCE);
+                Concept screeningQuestion = cs.getConceptByUuid(SCREENING_QUESTION);
+                Concept adminQuestion = cs.getConceptByUuid(PATIENT_OUTCOME);
+                Concept admissionAnswer = cs.getConceptByUuid(INPATIENT_ADMISSION);
 
-                CalculationResultMap tempMap = Calculations.lastObs(cs.getConcept(TEMPERATURE), cohort, context);
+                CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
                 boolean patientFeverResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, measureFeverResult) : false;
                 boolean patientCoughResult = lastTriageEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEnc, screeningQuestion, coughPresenceResult) : false;
                 boolean patientFeverResultGreenCard = lastFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
@@ -108,7 +108,7 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
                     if (patientFeverResult && patientCoughResult) {
                         for (Obs obs : lastTriageEnc.getObs()) {
                             dateCreated = obs.getDateCreated();
-                            if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            if (obs.getConcept().getUuid().equals(DURATION)) {
                                 duration = obs.getValueNumeric();
                             }
                             if (dateCreated != null) {
@@ -130,7 +130,7 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
                     if (patientFeverResultGreenCard && patientCoughResultGreenCard) {
                         for (Obs obs : lastFollowUpEncounter.getObs()) {
                             dateCreated = obs.getDateCreated();
-                            if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            if (obs.getConcept().getUuid().equals(DURATION)) {
                                 duration = obs.getValueNumeric();
                             }
                             if (dateCreated != null) {
@@ -151,7 +151,7 @@ public class EligibleForIliScreeningCalculation extends AbstractPatientCalculati
                     if (patientFeverResultClinical && patientCoughResultClinical) {
                         for (Obs obs : lastClinicalEncounter.getObs()) {
                             dateCreated = obs.getDateCreated();
-                            if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            if (obs.getConcept().getUuid().equals(DURATION)) {
                                 duration = obs.getValueNumeric();
                             }
                             if (dateCreated != null) {
