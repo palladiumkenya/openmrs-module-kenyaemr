@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.calculation.library.surveillance;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -44,7 +45,8 @@ import java.util.*;
 public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
 	protected static final Log log = LogFactory.getLog(EligibleForIDSRFlagsCalculation.class);
 
-	StringBuilder idsrMessage = new StringBuilder();
+	List<String> idsrMessage = new ArrayList<String>();
+	String idsrMessageString = "";
 
 	public static final EncounterType triageEncType = MetadataUtils.existing(EncounterType.class, CommonMetadata._EncounterType.TRIAGE);
 	public static final Form triageScreeningForm = MetadataUtils.existing(Form.class, CommonMetadata._Form.TRIAGE);
@@ -53,39 +55,39 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 	public static final EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
 	public static final Form greenCardForm = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
 
-	Integer SCREENING_QUESTION = 5219;
+	String SCREENING_QUESTION = "5219AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-	Integer FEVER = 140238;
-	Integer COUGH_PRESENCE = 143264;
-	Integer DURATION = 159368;
+	String FEVER = "140238AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String COUGH_PRESENCE = "143264AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String DURATION = "159368AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-	Integer TEMPERATURE = 5088;
-	Integer PATIENT_OUTCOME = 160433;
-	Integer INPATIENT_ADMISSION = 1654;
+	String TEMPERATURE = "5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String PATIENT_OUTCOME = "160433AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String INPATIENT_ADMISSION = "1654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Chikungunya
-	Integer JOINT_PAIN = 116558;
+	String JOINT_PAIN = "116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Cholera
-	Integer VOMITING = 122983;
-	Integer WATERY_DIARRHEA = 161887;
+	String VOMITING = "122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String WATERY_DIARRHEA = "161887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Dysentry
-	Integer BLOOD_IN_STOOL = 117671;
-	Integer DIARRHEA = 142412;
+	String BLOOD_IN_STOOL = "117671AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String DIARRHEA = "142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Viral Haemorrhagic Fever
-	Integer BLEEDING_TENDENCIES = 162628;
+	String BLEEDING_TENDENCIES = "162628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//MALARIA
-	Integer HEADACHE = 139084;
-	Integer CHILLS = 871;
+	String HEADACHE = "139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String CHILLS = "871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Measles
-	Integer RASH = 512;
-	Integer CORYZA = 106;
-	Integer CONJUCTIVITIS = 127777;
+	String RASH = "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String CORYZA = "106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String CONJUCTIVITIS = "127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Rift Valley Fever
-	Integer JAUNDICE = 136443;
-	Integer DIZZINESS = 141830;
-	Integer MALAISE = 135367;
-	Integer SCREENING_QUESTION_EXAMINATION = 162737;
+	String JAUNDICE = "136443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String DIZZINESS = "141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String MALAISE = "135367AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String SCREENING_QUESTION_EXAMINATION = "162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Polio
-	Integer LIMBS_WEAKNESS = 157498;
+	String LIMBS_WEAKNESS = "157498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 	/**
 	 * Evaluates the calculation
@@ -99,7 +101,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 		CalculationResultMap ret = new CalculationResultMap();
 
 		for (Integer ptId : alive) {
-			boolean eligible = false;
+			boolean eligible = false;			
 			List<Visit> activeVisits = Context.getVisitService().getActiveVisitsByPatient(patientService.getPatient(ptId));
 			if (!activeVisits.isEmpty()) {
 				Date currentDate = new Date();
@@ -115,98 +117,109 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
 
 				ConceptService cs = Context.getConceptService();
-				Concept screeningQuestion = cs.getConcept(SCREENING_QUESTION);
-				Concept screeningQuestionExam = cs.getConcept(SCREENING_QUESTION_EXAMINATION);
+				Concept screeningQuestion = cs.getConceptByUuid(SCREENING_QUESTION);
+				Concept screeningQuestionExam = cs.getConceptByUuid(SCREENING_QUESTION_EXAMINATION);
 
-				Concept measureFeverResult = cs.getConcept(FEVER);
-				Concept coughPresenceResult = cs.getConcept(COUGH_PRESENCE);
-				Concept adminQuestion = cs.getConcept(PATIENT_OUTCOME);
-				Concept admissionAnswer = cs.getConcept(INPATIENT_ADMISSION);
-				Concept jointPainResult = cs.getConcept(JOINT_PAIN);
-				Concept vomitingResult = cs.getConcept(VOMITING);
-				Concept wateryDiarrheaResult = cs.getConcept(WATERY_DIARRHEA);
-				Concept bloodyStoolResult = cs.getConcept(BLOOD_IN_STOOL);
-				Concept diarrheaResult = cs.getConcept(DIARRHEA);
-				Concept bleedingResult = cs.getConcept(BLEEDING_TENDENCIES);
-				Concept headacheResult = cs.getConcept(HEADACHE);
-				Concept chillsResult = cs.getConcept(CHILLS);
-				Concept rashResult = cs.getConcept(RASH);
-				Concept coryzaResult = cs.getConcept(CORYZA);
-				Concept conjunctivitisResult = cs.getConcept(CONJUCTIVITIS);
-				Concept jaundiceResult = cs.getConcept(JAUNDICE);
-				Concept dizzinessResult = cs.getConcept(DIZZINESS);
-				Concept malaiseResult = cs.getConcept(MALAISE);
-				Concept limbsWeaknessResult = cs.getConcept(LIMBS_WEAKNESS);
-				//Teperature
-				CalculationResultMap tempMap = Calculations.lastObs(cs.getConcept(TEMPERATURE), cohort, context);
+				Concept measureFeverResult = cs.getConceptByUuid(FEVER);
+				Concept coughPresenceResult = cs.getConceptByUuid(COUGH_PRESENCE);
+				Concept adminQuestion = cs.getConceptByUuid(PATIENT_OUTCOME);
+				Concept admissionAnswer = cs.getConceptByUuid(INPATIENT_ADMISSION);
+				Concept jointPainResult = cs.getConceptByUuid(JOINT_PAIN);
+				Concept vomitingResult = cs.getConceptByUuid(VOMITING);
+				Concept wateryDiarrheaResult = cs.getConceptByUuid(WATERY_DIARRHEA);
+				Concept bloodyStoolResult = cs.getConceptByUuid(BLOOD_IN_STOOL);
+				Concept diarrheaResult = cs.getConceptByUuid(DIARRHEA);
+				Concept bleedingResult = cs.getConceptByUuid(BLEEDING_TENDENCIES);
+				Concept headacheResult = cs.getConceptByUuid(HEADACHE);
+				Concept chillsResult = cs.getConceptByUuid(CHILLS);
+				Concept rashResult = cs.getConceptByUuid(RASH);
+				Concept coryzaResult = cs.getConceptByUuid(CORYZA);
+				Concept conjunctivitisResult = cs.getConceptByUuid(CONJUCTIVITIS);
+				Concept jaundiceResult = cs.getConceptByUuid(JAUNDICE);
+				Concept dizzinessResult = cs.getConceptByUuid(DIZZINESS);
+				Concept malaiseResult = cs.getConceptByUuid(MALAISE);
+				Concept limbsWeaknessResult = cs.getConceptByUuid(LIMBS_WEAKNESS);				
+				//Conditions					
+				String chikungunya = "Chikungunya";				
+				String ili = "ILI";				
+				String sari = "SARI";				
+				String cholera = "Cholera";				
+				String dysentry = "Dysentery";				
+				String haemorrhagic_fever = "Haemorrhagic Fever";				
+				String malaria = "Malaria";				
+				String measles = "Measles";				
+				String rift_valley_fever = "Rift Valley Fever";				
+				String poliomyelitis = "Poliomyelitis";						
+				//Temperature
+				CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
 				//Fever
-				boolean patientFeverResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, measureFeverResult) : false;
-				boolean patientFeverResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
-				boolean patientFeverResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, measureFeverResult) : false;
+				boolean triageEncounterHasFever = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, measureFeverResult) : false;
+				boolean hivFollowupEncounterHasFever = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
+				boolean clinicalEncounterHasFever = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, measureFeverResult) : false;
 				//Cough
-				boolean patientCoughResult = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coughPresenceResult) : false;
-				boolean patientCoughResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
-				boolean patientCoughResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coughPresenceResult) : false;
+				boolean triageEncounterHasCough = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coughPresenceResult) : false;
+				boolean hivFollowupEncounterHasCough = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
+				boolean clinicalEncounterHasCough = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coughPresenceResult) : false;
 				//Joint Pains
-				boolean patientJointPainResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, jointPainResult) : false;
-				boolean patientJointPainResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, jointPainResult) : false;
-				boolean patientJointPainResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, jointPainResult) : false;
+				boolean triageEncounterHasJointPain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, jointPainResult) : false;
+				boolean hivFollowupEncounterHasJointPain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, jointPainResult) : false;
+				boolean clinicalEncounterHasJointPain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, jointPainResult) : false;
 				// Vomiting
-				boolean patientVomitTriageEncResult = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, vomitingResult) : false;
-				boolean patientVomitGreenCardResult = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, vomitingResult) : false;
-				boolean patientVomitClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, vomitingResult) : false;
+				boolean triageEncounterHasVomit = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, vomitingResult) : false;
+				boolean hivFollowupEncounterHasVomit = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, vomitingResult) : false;
+				boolean clinicalEncounterHasVomit = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, vomitingResult) : false;
 				//Watery diarrhea
-				boolean patientWateryDiarrheaTriageEncResult = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, wateryDiarrheaResult) : false;
-				boolean patientWateryDiarrheaGreenCardResult = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, wateryDiarrheaResult) : false;
-				boolean patientWateryDiarrheaClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+				boolean triageEncounterHasWateryDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+				boolean hivFollowupEncounterHasWateryDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+				boolean clinicalEncounterHasWateryDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, wateryDiarrheaResult) : false;
 				//Diarrhea
-				boolean patientDiarrheaTriageEncResult = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, diarrheaResult) : false;
-				boolean patientDiarrheaGreenCardResult = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, diarrheaResult) : false;
-				boolean patientDiarrheaClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;
+				boolean triageEncounterHasDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, diarrheaResult) : false;
+				boolean hivFollowupEncounterHasDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, diarrheaResult) : false;
+				boolean clinicalEncounterHasDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;
 				//Blood in stool
-				boolean patientBloodyStoolTriageEncResult = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bloodyStoolResult) : false;
-				boolean patientBloodyStoolGreenCardResult = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bloodyStoolResult) : false;
-				boolean patientBloodyStoolClinicalEncResult = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bloodyStoolResult) : false;
+				boolean triageEncounterHasBloodyStool = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bloodyStoolResult) : false;
+				boolean hivFollowupEncounterHasBloodyStool = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bloodyStoolResult) : false;
+				boolean clinicalEncounterHasBloodyStool = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bloodyStoolResult) : false;
 				//Bleeding tendencies
-				boolean patientBleedingResulTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bleedingResult) : false;
-				boolean patientBleedingResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bleedingResult) : false;
-				boolean patientBleedingResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bleedingResult) : false;
+				boolean triageEncounterHasBleeding = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bleedingResult) : false;
+				boolean hivFollowupEncounterHasBleeding = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bleedingResult) : false;
+				boolean clinicalEncounterHasBleeding = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bleedingResult) : false;
 				//Headache
-				boolean patientHeadacheResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, headacheResult) : false;
-				boolean patientHeadacheResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
-				boolean patientHeadacheResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, headacheResult) : false;
+				boolean triageEncounterHasHeadache = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, headacheResult) : false;
+				boolean hivFollowupEncounterHasHeadache = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
+				boolean clinicalEncounterHasHeadache = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, headacheResult) : false;
 				//Chills
-				boolean patientChillsResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, chillsResult) : false;
-				boolean patientChillsResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, chillsResult) : false;
-				boolean patientChillsResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, chillsResult) : false;
+				boolean triageEncounterHasChills= lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, chillsResult) : false;
+				boolean hivFollowupEncounterHasChills = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, chillsResult) : false;
+				boolean clinicalEncounterHasChills = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, chillsResult) : false;
 				//Rash
-				boolean patientRashResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
-				boolean patientRashResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
-				boolean patientRashResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
+				boolean triageEncounterHasRash = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
+				boolean hivFollowupEncounterHasRash = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
+				boolean clinicalEncounterHasRash = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
 				//Coryza
-				boolean patientCoryzaResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coryzaResult) : false;
-				boolean patientCoryzaResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coryzaResult) : false;
-				boolean patientCoryzaResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coryzaResult) : false;
+				boolean triageEncounterHasCoryza = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coryzaResult) : false;
+				boolean hivFollowupEncounterHasCoryza = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coryzaResult) : false;
+				boolean clinicalEncounterHasCoryza = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coryzaResult) : false;
 				//Conjunctivitis
-				boolean patientConjunctivitisResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, conjunctivitisResult) : false;
-				boolean patientConjunctivitisResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, conjunctivitisResult) : false;
-				boolean patientConjunctivitisResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, conjunctivitisResult) : false;
+				boolean triageEncounterHasConjunctivitis = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, conjunctivitisResult) : false;
+				boolean hivFollowupEncounterHasConjunctivitis = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, conjunctivitisResult) : false;
+				boolean clinicalEncounterHasConjunctivitis = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, conjunctivitisResult) : false;
 				//Jaundice
-				boolean patientJaundiceResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestionExam, jaundiceResult) : false;
-				boolean patientJaundiceResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionExam, jaundiceResult) : false;
-				boolean patientJaundiceResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestionExam, jaundiceResult) : false;
+				boolean triageEncounterHasJaundice = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestionExam, jaundiceResult) : false;
+				boolean hivFollowupEncounterHasJaundice = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionExam, jaundiceResult) : false;
+				boolean clinicalEncounterHasJaundice = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestionExam, jaundiceResult) : false;
 				//Dizziness
-				boolean patientDizzinessResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, dizzinessResult) : false;
-				boolean patientDizzinessResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, dizzinessResult) : false;
-				boolean patientDizzinessResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, dizzinessResult) : false;
+				boolean triageEncounterHasDizziness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, dizzinessResult) : false;
+				boolean hivFollowupEncounterHasDizziness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, dizzinessResult) : false;
+				boolean clinicalEncounterHasDizziness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, dizzinessResult) : false;
 				//Malaise
-				boolean patientMalaiseResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, malaiseResult) : false;
-				boolean patientMalaiseResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, malaiseResult) : false;
-				boolean patientMalaiseResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, malaiseResult) : false;
+				boolean triageEncounterHasMalaise = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, malaiseResult) : false;
+				boolean hivFollowupEncounterHasMalaise = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, malaiseResult) : false;
+				boolean clinicalEncounterHasMalaise = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, malaiseResult) : false;
 				//Weakness of limbs
-				boolean patientWeakLimbsResultTriage = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, limbsWeaknessResult) : false;
-				boolean patientWeakLimbsResultGreenCard = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
-				boolean patientWeakLimbsResultClinical = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
+				boolean triageEncounterHasWeakLimbs = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, limbsWeaknessResult) : false;
+				boolean hivFollowupEncounterHasWeakLimbs = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
+				boolean clinicalEncounterHasWeakLimbs = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
 
 				//Check admission status : Found in clinical encounter and type of visit
 				boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
@@ -219,10 +232,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				//Triage
 				if (lastTriageEncounter != null) {
 					//1. SARI and ILI
-					if (patientFeverResultTriage && patientCoughResult) {
+					if (triageEncounterHasFever && triageEncounterHasCough) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -231,11 +244,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
-											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI ") : idsrMessage.append(",ILI ");
+											idsrMessage.add(ili);
 											break;
 										} else {
 											eligible = true;
-											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI ") : idsrMessage.append(",SARI ");											
+											idsrMessage.add(sari);											
 											break;
 										}
 									}
@@ -244,10 +257,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//2. CHIKUNGUNYA
-					if (patientJointPainResultTriage && patientFeverResultTriage) {
+					if (triageEncounterHasJointPain && triageEncounterHasFever) {						
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -255,7 +268,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya ") : idsrMessage.append(",Chikungunya ");
+										idsrMessage.add(chikungunya);
 										break;
 									}
 								}
@@ -263,7 +276,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//3. CHOLERA
-					if (patientVomitTriageEncResult && patientWateryDiarrheaTriageEncResult) {
+					if (triageEncounterHasVomit && triageEncounterHasWateryDiarrhea) {
 						if (patient.getAge() > 2) {
 							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -271,7 +284,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera ") : idsrMessage.append(",Cholera ");
+										idsrMessage.add(cholera);
 										break;
 									}
 								}								
@@ -279,38 +292,38 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//4.Dysentry
-					if (patientBloodyStoolTriageEncResult && patientDiarrheaTriageEncResult) {
+					if (triageEncounterHasBloodyStool && triageEncounterHasDiarrhea) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery ") : idsrMessage.append(",Dysentery ");
+									idsrMessage.add(dysentry);
 									break;
 								}
 							}							
 						}
 					}
 					//5. Viral Haemorrhagic fever
-					if (patientFeverResultTriage && patientBleedingResulTriage) {
+					if (triageEncounterHasFever && triageEncounterHasBleeding) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Haemorrhagic Fever ") : idsrMessage.append(",Haemorrhagic Fever ");
+									idsrMessage.add(haemorrhagic_fever);
 									break;
 								}
 							}							
 						}
 					}
 					//6. Malaria
-					if (patientHeadacheResultTriage && patientChillsResultTriage && patientFeverResultTriage) {
+					if (triageEncounterHasHeadache && triageEncounterHasChills && triageEncounterHasFever) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -318,7 +331,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");										
+										idsrMessage.add(malaria);										
 										break;
 									}
 								}
@@ -326,10 +339,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//7.Measles				
-					if (patientFeverResultTriage && patientRashResultTriage && patientCoryzaResultTriage && patientCoughResult && patientConjunctivitisResultTriage) {
+					if (triageEncounterHasFever && triageEncounterHasRash && triageEncounterHasCoryza && triageEncounterHasCough && triageEncounterHasConjunctivitis) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -337,7 +350,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");				
+										idsrMessage.add(measles);				
 										break;
 									}
 								}
@@ -346,10 +359,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 					}
 
 					//8.Rift Valley Fever					
-					if (patientJaundiceResultTriage && patientDizzinessResultTriage && patientMalaiseResultTriage && patientFeverResultTriage) {
+					if (triageEncounterHasJaundice && triageEncounterHasDizziness && triageEncounterHasMalaise && triageEncounterHasFever) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -357,7 +370,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever") : idsrMessage.append(",Rift Valley Fever");
+										idsrMessage.add(rift_valley_fever);
 										break;
 									}
 								}
@@ -365,7 +378,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//9.Poliomyelitis
-					if (patientWeakLimbsResultTriage) {
+					if (triageEncounterHasWeakLimbs) {
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -373,7 +386,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");
+										idsrMessage.add(poliomyelitis);
 										break;
 									}
 								}								
@@ -386,10 +399,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				//Hiv followup encounter
 				if (lastHivFollowUpEncounter != null) {
 					//1. SARI and ILI
-					if (patientFeverResultGreenCard && patientCoughResultGreenCard) {
+					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasCough) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -398,11 +411,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
-											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI") : idsrMessage.append(",ILI");
+											idsrMessage.add(ili);
 											break;
 										} else {
 											eligible = true;
-											idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI") : idsrMessage.append(",SARI");
+											idsrMessage.add(sari);
 											break;
 										}
 									}
@@ -411,10 +424,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//2. CHIKUNGUNYA
-					if (patientJointPainResultGreenCard && patientFeverResultGreenCard) {
+					if (hivFollowupEncounterHasJointPain && hivFollowupEncounterHasFever) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -422,7 +435,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya") : idsrMessage.append(",Chikungunya");
+										idsrMessage.add(chikungunya);
 										break;
 									}
 								}
@@ -430,7 +443,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//3. CHOLERA
-					if (patientVomitGreenCardResult && patientWateryDiarrheaGreenCardResult) {
+					if (hivFollowupEncounterHasVomit && hivFollowupEncounterHasWateryDiarrhea) {
 						if (patient.getAge() > 2) {
 							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -438,7 +451,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera") : idsrMessage.append(",Cholera");
+										idsrMessage.add(cholera);
 										break;
 									}
 								}	break;
@@ -447,38 +460,38 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 					}
 
 					//4.Dysentry
-					if (patientBloodyStoolGreenCardResult && patientDiarrheaGreenCardResult) {
+					if (hivFollowupEncounterHasBloodyStool && hivFollowupEncounterHasDiarrhea) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery") : idsrMessage.append(",Dysentery");			
+									idsrMessage.add(dysentry);			
 									break;
 								}
 							}							
 						}
 					}
 					//5. Viral Haemorrhagic fever
-					if (patientFeverResultGreenCard && patientBleedingResultGreenCard) {
+					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasBleeding) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Haemorrhagic Fever") : idsrMessage.append(",Haemorrhagic Fever");
+									idsrMessage.add(haemorrhagic_fever);
 									break;
 								}
 							}							
 						}
 					}
 					//6. Malaria
-					if (patientHeadacheResultGreenCard && patientChillsResultGreenCard && patientFeverResultGreenCard) {
+					if (hivFollowupEncounterHasHeadache && hivFollowupEncounterHasChills && hivFollowupEncounterHasFever) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -486,7 +499,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");							
+										idsrMessage.add(malaria);
 										break;
 									}
 								}
@@ -494,10 +507,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//7.Measles
-					if (patientFeverResultGreenCard && patientRashResultGreenCard && patientCoryzaResultGreenCard && patientCoughResultGreenCard && patientConjunctivitisResultGreenCard) {
+					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasRash && hivFollowupEncounterHasCoryza && hivFollowupEncounterHasCough && hivFollowupEncounterHasConjunctivitis) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -505,7 +518,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");						
+										idsrMessage.add(measles);
 										break;
 									}
 								}
@@ -513,10 +526,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//8.Rift Valley Fever
-					if (patientJaundiceResultGreenCard && patientDizzinessResultGreenCard && patientFeverResultGreenCard && patientMalaiseResultGreenCard) {
+					if (hivFollowupEncounterHasJaundice && hivFollowupEncounterHasDizziness && hivFollowupEncounterHasFever && hivFollowupEncounterHasMalaise) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -524,7 +537,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever ") : idsrMessage.append(",Rift Valley Fever");
+										idsrMessage.add(rift_valley_fever);
 										break;
 									}
 								}
@@ -532,7 +545,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//9.Poliomyelitis
-					if (patientWeakLimbsResultGreenCard) {
+					if (hivFollowupEncounterHasWeakLimbs) {
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -540,7 +553,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");
+										idsrMessage.add(poliomyelitis);
 										break;
 									}
 								}							
@@ -553,10 +566,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				//Clinical Encounter
 				if (lastClinicalEncounter != null) {
 					//1. SARI and ILI
-					if (patientFeverResultClinical && patientCoughResultClinical) {
+					if (clinicalEncounterHasFever && clinicalEncounterHasCough) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
@@ -564,11 +577,11 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 										if (createdDate.equals(todayDate)) {									
 											if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 												eligible = true;
-												idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("ILI") : idsrMessage.append(",ILI");										
+												idsrMessage.add(ili);									
 												break;
 											} else {
 												eligible = true;
-												idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("SARI") : idsrMessage.append(",SARI");											
+												idsrMessage.add(sari);										
 												break;
 											}
 										}
@@ -578,10 +591,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//2. CHIKUNGUNYA
-					if (patientJointPainResultClinical && patientFeverResultClinical) {
+					if (clinicalEncounterHasJointPain && clinicalEncounterHasFever) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -589,7 +602,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 38.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Chikungunya") : idsrMessage.append(",Chikungunya");								
+										idsrMessage.add(chikungunya);							
 										break;
 									}
 								}
@@ -597,7 +610,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//3. CHOLERA
-					if (patientVomitClinicalEncResult && patientWateryDiarrheaClinicalEncResult) {
+					if (clinicalEncounterHasVomit && clinicalEncounterHasWateryDiarrhea) {
 						if (patient.getAge() > 2) {
 							for (Obs obs : lastClinicalEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -605,7 +618,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Cholera") : idsrMessage.append(",Cholera");									
+										idsrMessage.add(cholera);								
 										break;
 									}
 								}								
@@ -614,38 +627,38 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//4.DYSENTRY
-					if (patientDiarrheaClinicalEncResult && patientBloodyStoolClinicalEncResult) {
+					if (clinicalEncounterHasDiarrhea && clinicalEncounterHasBloodyStool) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Dysentery") : idsrMessage.append(",Dysentery");							
+									idsrMessage.add(dysentry);						
 									break;
 								}
 							}							
 						}
 					}
 					//5. Viral Haemorrhagic fever
-					if (patientFeverResultClinical && patientBleedingResultClinical) {
+					if (clinicalEncounterHasFever && clinicalEncounterHasBleeding) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if (createdDate.equals(todayDate)) {
 									eligible = true;
-									idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Hemorrhagic Fever") : idsrMessage.append(",Hemorrhagic Fever");						
+									idsrMessage.add(haemorrhagic_fever);					
 									break;
 								}
 							}							
 						}
 					}
 					//6. Malaria
-					if (patientHeadacheResultClinical && patientChillsResultClinical && patientFeverResultClinical) {
+					if (clinicalEncounterHasHeadache && clinicalEncounterHasChills && clinicalEncounterHasFever) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -653,7 +666,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Malaria") : idsrMessage.append(",Malaria");
+										idsrMessage.add(malaria);
 										break;
 									}
 								}
@@ -661,10 +674,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//7.Measles					
-					if (patientFeverResultClinical && patientRashResultClinical && patientCoryzaResultClinical && patientCoughResultClinical && patientConjunctivitisResultClinical) {
+					if (clinicalEncounterHasFever && clinicalEncounterHasRash && clinicalEncounterHasCoryza && clinicalEncounterHasCough && clinicalEncounterHasConjunctivitis) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -672,7 +685,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Measles") : idsrMessage.append(",Measles");									
+										idsrMessage.add(measles);
 										break;
 									}
 								}
@@ -680,10 +693,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//8.Rift Valley Fever
-					if (patientJaundiceResultClinical && patientDizzinessResultClinical && patientFeverResultClinical && patientMalaiseResultClinical) {
+					if (clinicalEncounterHasJaundice && clinicalEncounterHasDizziness && clinicalEncounterHasFever && clinicalEncounterHasMalaise) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getConceptId().equals(DURATION)) {
+							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
@@ -691,7 +704,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 								if (duration > 2 && tempValue != null && tempValue > 37.5) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Rift Valley Fever") : idsrMessage.append(",Rift Valley Fever");
+										idsrMessage.add(rift_valley_fever);
 									    break;
 									}
 								}
@@ -699,7 +712,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						}
 					}
 					//9.Poliomyelitis
-					if (patientWeakLimbsResultClinical) {
+					if (clinicalEncounterHasWeakLimbs) {
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastClinicalEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
@@ -707,7 +720,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage = idsrMessage.length() == 0 ? idsrMessage.append("Poliomyelitis") : idsrMessage.append(",Poliomyelitis");						
+										idsrMessage.add(poliomyelitis);						
 										break;
 									}
 								}								
@@ -716,6 +729,10 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 					}
 				}
 			}
+			if (idsrMessage.size() > 0) {
+				idsrMessageString = StringUtils.join(idsrMessage, ",");
+
+			}
 			ret.put(ptId, new BooleanResult(eligible, this));
 		}
 		return ret;
@@ -723,7 +740,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 
 	@Override
 	public String getFlagMessage() {
-		return "Suspected "+ idsrMessage.toString();
+		return "Suspected "+ idsrMessageString;
 
 	}
 }
