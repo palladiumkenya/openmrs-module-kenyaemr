@@ -60,6 +60,7 @@
 				<ref bean="kenyaemr.mchcs.report.pamaReport" />
 				<ref bean="kenyaemr.ahd.report.advancedHivDiseaseLineList" />
 				<ref bean="kenyaemr.common.report.missedAppointmentTrackerReport" />
+				<ref bean="kenyaemr.hiv.report.appointmentsTracker" />
 			</set>
 		</property>
 		<property name="fragments">
@@ -477,6 +478,13 @@
 		<property name="targetUuid" value="50b6de99-9569-46c0-9ab0-bc27604b1a2c" />
 		<property name="name" value="Missed Appointment Tracking report" />
 		<property name="description" value="Provides a list of patients who missed an appointment, and the tracing history for the appointment" />
+		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
+	</bean>
+
+	<bean id="kenyaemr.hiv.report.appointmentsTracker" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="71d06cae-7b11-43b2-9c69-5559813ece66" />
+		<property name="name" value="Appointment Tracking report" />
+		<property name="description" value="Provides a list of patients who had a visit and appointment dates documented" />
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 	</bean>
 
