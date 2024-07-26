@@ -41,8 +41,9 @@ public class PatientAppointmentScheduledDateDateDataEvaluator implements PersonD
 			"    date(mid(max(concat(pp.date_created,pp.date_appointment_scheduled, '' )),20)) as scheduled_date\n" +
 			"from patient_appointment pp\n" +
 			"         inner join person d on d.person_id=pp.patient_id and d.voided=0\n" +
-			"where pp.appointment_service_id = 1\n" +
-			"  and date(pp.date_created)  <= date(:endDate)\n" +
+			"             inner join encounter e on e.patient_id = pp.patient_id\n" +
+			"where pp.appointment_service_id = 1 and date(e.encounter_datetime) = date(pp.date_appointment_scheduled)\n" +
+			"  and date(pp.date_created) <= date(:endDate)\n" +
 			"group by pp.patient_id,pp.date_appointment_scheduled;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
