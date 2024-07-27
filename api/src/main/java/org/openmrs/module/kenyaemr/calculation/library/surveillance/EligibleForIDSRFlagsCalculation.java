@@ -88,6 +88,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 	String SCREENING_QUESTION_EXAMINATION = "162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Polio
 	String LIMBS_WEAKNESS = "157498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String ONSET_QUESTION = "d7a3441d-6aeb-49be-b7d6-b2a3bb39e78d";
+	String SUDDEN_ONSET = "162707AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 	/**
 	 * Evaluates the calculation
@@ -108,6 +110,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				Double tempValue = 0.0;
 				Double duration = 0.0;
 				Date dateCreated = null;
+				String onsetStatus = null;
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String todayDate = dateFormat.format(currentDate);
 				Patient patient = patientService.getPatient(ptId);
@@ -379,12 +382,15 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 					}
 					//9.Poliomyelitis
 					if (triageEncounterHasWeakLimbs) {
-						if (patient.getAge() < 15) {
+						if (patient.getAge() < 15) {							
 							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
+								if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+									onsetStatus = obs.getValueCoded().getUuid();
+								}								
+								if (dateCreated != null && onsetStatus != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
+									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
 										eligible = true;
 										idsrMessage.add(poliomyelitis);
 										break;
@@ -549,9 +555,12 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
+								if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+									onsetStatus = obs.getValueCoded().getUuid();
+								}
+								if (dateCreated != null && onsetStatus != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
+									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
 										eligible = true;
 										idsrMessage.add(poliomyelitis);
 										break;
@@ -716,9 +725,12 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastClinicalEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
+								if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+									onsetStatus = obs.getValueCoded().getUuid();
+								}
+								if (dateCreated != null && onsetStatus != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
+									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
 										eligible = true;
 										idsrMessage.add(poliomyelitis);						
 										break;
