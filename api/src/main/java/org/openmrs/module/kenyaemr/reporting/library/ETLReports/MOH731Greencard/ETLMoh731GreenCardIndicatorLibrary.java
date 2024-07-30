@@ -401,6 +401,11 @@ public class ETLMoh731GreenCardIndicatorLibrary {
         );
     }
 
+    public CohortIndicator totalMaternalHAART() {
+        return cohortIndicator("Total Maternal HAART",
+                map(moh731Cohorts.totalMaternalHAART(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
     /**
      * Number of Patients started on maternal HAART
      * Total maternal HAART HV02-20
@@ -560,7 +565,7 @@ public class ETLMoh731GreenCardIndicatorLibrary {
      * Total known status male HV02-32
      *
      * @return the indicator
-     *
+     **/
     public CohortIndicator totalKnownHIVStatusMale() {
         return cohortIndicator("totalKnownHIVStatusMale",
                 map(moh731Cohorts.totalKnownHIVStatusMale(), "startDate=${startDate},endDate=${endDate}")
@@ -937,12 +942,18 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator tbTestedForHIV() {
         return cohortIndicator("New TB cases tested for HIV", map(moh731Cohorts.tbTestedForHIV(), "startDate=${startDate},endDate=${endDate}"));
     }
-
+    // TB cases, Known HIV status
+    public CohortIndicator tbCasesKnownHIVStatus() {
+        return cohortIndicator("New TB cases tested for HIV", map(moh731Cohorts.tbCasesKnownHIVStatus(), "startDate=${startDate},endDate=${endDate}"));
+    }
     // new TB cases tested HIV positive
     public CohortIndicator tbNewTestedHIVPositive() {
         return cohortIndicator("New TB cases tested HIV Positive", map(moh731Cohorts.tbNewTestedHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    public CohortIndicator tbCasesHIVPositive() {
+        return cohortIndicator("TB case, HIV Positive", map(moh731Cohorts.tbCasesHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
+    }
     // new TB cases already on HAART
     public CohortIndicator tbNewAlreadyOnHAART() {
         return cohortIndicator("New TB cases already on HAART", map(moh731Cohorts.tbNewAlreadyOnHAART(), "startDate=${startDate},endDate=${endDate}"));

@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard;
 
+import org.checkerframework.checker.units.qual.C;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -788,9 +789,10 @@ public class ETLMoh731GreenCardCohortLibrary {
     public CohortDefinition hivCareVisitsTotal() {
 
         String sqlQuery = "select f.patient_id\n" +
-                "from kenyaemr_etl.etl_patient_hiv_followup f\n" +
-                "         join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id = f.patient_id\n" +
-                "where date(f.visit_date) between date(:startDate) and date(:endDate);";
+                "             from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "                      join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id = f.patient_id\n" +
+                "                      join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id\n" +
+                "             where timestampdiff(YEAR,d.dob,f.visit_date) >= 18 and date(f.visit_date) between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("hivCareVisitsTotal");
         cd.setQuery(sqlQuery);
@@ -1649,6 +1651,19 @@ public class ETLMoh731GreenCardCohortLibrary {
     }
 
     /**
+     * TB Cases, Known HIV status
+     * @return
+     */
+    public CohortDefinition tbCasesKnownHIVStatus() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("tbNewKnownPositive",ReportUtils.map(tbNewKnownPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("tbTestedForHIV",ReportUtils.map(tbTestedForHIV(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("tbNewKnownPositive AND tbTestedForHIV");
+        return cd;
+    }
+    /**
      * new tb cases who tested hiv positive
      * @return
      */
@@ -1669,6 +1684,19 @@ public class ETLMoh731GreenCardCohortLibrary {
         return cd;
     }
 
+    /**
+     * TOtal TB cases, HIV+
+     * @return
+     */
+    protected CohortDefinition tbCasesHIVPositive() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("tbNewKnownPositive", ReportUtils.map(tbNewKnownPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("tbNewTestedHIVPositive", ReportUtils.map(tbNewTestedHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("tbNewTestedHIVPositive or tbNewTestedHIVPositive");
+        return cd;
+    }
     /**
      * new tb cases already on HAART at diagnosis
      * @return
@@ -2108,7 +2136,10 @@ public class ETLMoh731GreenCardCohortLibrary {
                 ReportUtils.map(testedForHivInMchmsDelivery(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("initialTestAtPNCUpto6Weeks",
                 ReportUtils.map(initialTestAtPNCUpto6Weeks(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("(knownPositiveAtFirstANC OR initialHIVTestInMchmsAntenatal OR testedForHivInMchmsDelivery OR initialTestAtPNCUpto6Weeks ");
+        ReportUtils.map(testedForHivInMchmsDelivery(), "startDate=${startDate},endDate=${endDate}");
+        cd.addSearch("totalHivPositivePNC6WeeksTo6monthsInMchms",
+                ReportUtils.map(totalHivPositivePNC6WeeksTo6monthsInMchms(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("knownPositiveAtFirstANC OR initialHIVTestInMchmsAntenatal OR testedForHivInMchmsDelivery OR initialTestAtPNCUpto6Weeks or totalHivPositivePNC6WeeksTo6monthsInMchms");
         return cd;
     }
     //   PNC >6 weeks and <=6 months   HV02-15
@@ -2245,19 +2276,16 @@ public class ETLMoh731GreenCardCohortLibrary {
 
         return cd;
     }
-
     //Total maternal HAART HV02-20
     public CohortDefinition totalMaternalHAART(){
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  ";";
-
-        cd.setName("totalMaternalHAART");
-        cd.setQuery(sqlQuery);
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Total maternal HAART");
-
+        cd.addSearch("totalOnHAARTAtFirstANC",ReportUtils.map(totalOnHAARTAtFirstANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("startedHAARTAtANC",ReportUtils.map(startedHAARTAtANC(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalStartedHAARTAtLabourAndDelivery",ReportUtils.map(totalStartedHAARTAtLabourAndDelivery(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalStartedHAARTAtPNCUpto6Weeks",ReportUtils.map(totalStartedHAARTAtPNCUpto6Weeks(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("totalOnHAARTAtFirstANC OR startedHAARTAtANC OR totalStartedHAARTAtLabourAndDelivery OR totalStartedHAARTAtPNCUpto6Weeks");
         return cd;
     }
     //Start HAART_PNC >6 wks to 6 mths	HV02-21
@@ -2495,19 +2523,17 @@ public class ETLMoh731GreenCardCohortLibrary {
         return cd;
     }
     //Total Known Status Male	HV02-32
-  /*  public CohortDefinition totalKnownHIVStatusMale(){
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  ";";
-
-        cd.setName("totalKnownHIVStatusMale");
-        cd.setQuery(sqlQuery);
+    public CohortDefinition totalKnownHIVStatusMale() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Total males with known HIV Status");
-
+        cd.addSearch("initialTestAtPNCForMale", ReportUtils.map(initialTestAtPNCForMale(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtDeliveryForMale", ReportUtils.map(initialTestAtDeliveryForMale(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("initialTestAtANCForMale", ReportUtils.map(initialTestAtANCForMale(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("knownHIVStatusAt1stContact", ReportUtils.map(knownHIVStatusAt1stContact(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("knownHIVStatusAt1stContact OR initialTestAtPNCForMale OR initialTestAtDeliveryForMale OR initialTestAtANCForMale");
         return cd;
-    }*/
+    }
 
     //1st ANC KP adolescents (10-19)	HV02-33
     public CohortDefinition firstANCKPAdolescents(){
