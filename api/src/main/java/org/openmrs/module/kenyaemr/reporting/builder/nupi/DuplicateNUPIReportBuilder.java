@@ -28,7 +28,10 @@ import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLAr
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegLineDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLCurrentRegimenDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstRegimenDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.nupi.FacilityDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.data.DataDefinition;
 import org.openmrs.module.reporting.data.converter.DateConverter;
@@ -53,7 +56,8 @@ public class DuplicateNUPIReportBuilder extends CalculationReportBuilder {
 		DataDefinition nupiIdentifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupiIdentifierType.getName(), nupiIdentifierType), new IdentifierConverter());
 		PersonAttributeType duplicateSitesPA = Context.getPersonService().getPersonAttributeTypeByUuid(CommonMetadata._PersonAttributeType.DUPLICATE_NUPI_SITES_WITH_NATIONAL_REGISTRY);
         PersonAttributeType duplicateTotalSitesPA = Context.getPersonService().getPersonAttributeTypeByUuid(CommonMetadata._PersonAttributeType.DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY);
-		DataDefinition duplicateSiteNamesDef = new ConvertedPersonDataDefinition("attribute", new PersonAttributeDataDefinition(duplicateSitesPA.getName(), duplicateSitesPA));
+		// DataDefinition duplicateSiteNamesDef = new ConvertedPersonDataDefinition("attribute", new PersonAttributeDataDefinition(duplicateSitesPA.getName(), duplicateSitesPA));
+		DataDefinition duplicateSiteNamesDef = new ConvertedPersonDataDefinition("attribute", new FacilityDataDefinition(duplicateSitesPA.getName(), duplicateSitesPA));
 		DataDefinition duplicateTotalSitesDef = new ConvertedPersonDataDefinition("attribute", new PersonAttributeDataDefinition(duplicateTotalSitesPA.getName(), duplicateTotalSitesPA));
 		
 		addStandardColumns(report, dsd);
@@ -67,5 +71,7 @@ public class DuplicateNUPIReportBuilder extends CalculationReportBuilder {
 		dsd.addColumn("Current Regimen", new ETLCurrentRegimenDataDefinition(), "");
 		dsd.addColumn("Current Regimen Line", new ETLCurrentRegLineDataDefinition(), "");
 		dsd.addColumn("Next Appointment Date", new ETLNextAppointmentDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
+		dsd.addColumn("Last VL Date", new ETLLastVLDateDataDefinition(), "");
+		dsd.addColumn("Last VL Result", new ETLLastVLResultDataDefinition(), "");
 	}
 }
