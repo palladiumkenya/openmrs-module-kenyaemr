@@ -406,17 +406,6 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.totalMaternalHAART(), "startDate=${startDate},endDate=${endDate}")
         );
     }
-    /**
-     * Number of Patients started on maternal HAART
-     * Total maternal HAART HV02-20
-     *
-     * @return the indicator
-     *
-    public CohortIndicator totalMaternalHAART() {
-        return cohortIndicator("Total maternal HAART",
-                map(moh731Cohorts.totalMaternalHAART(), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
 
     /**
      * Number of Patients started HAART between 7 weeks and 6 months
