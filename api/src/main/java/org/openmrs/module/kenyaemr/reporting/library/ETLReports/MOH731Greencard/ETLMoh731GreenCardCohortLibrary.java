@@ -1156,6 +1156,20 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         return cd;
     }
 
+    public CohortDefinition inconclusiveResults() {
+        String sqlQuery = "select t.patient_id\n" +
+                "from kenyaemr_etl.etl_hts_test t\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+                "where t.final_test_result = 'Inconclusive'\n" +
+                "  and t.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("inconclusiveResults");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("inconclusiveResults");
+        return cd;
+    }
     /**
      * General Population initiated On PrEP
      * @return

@@ -247,7 +247,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
 
-		String adxMappingString = "[{\"reportName\":\"MOH 731\",\"prefix\":\"Y18_\",\"datasets\":[{\"name\":\"2\",\"dhisName\":\"xUesg8lcmDs\"},{\"name\":\"1\",\"dhisName\":\"ptIUGFkE6jn\"},{\"name\":\"3\",\"dhisName\":\"Vo4KDrUFwnA\"}]}]";
+		String adxMappingString = "[{\"reportName\":\"MOH 731\",\"prefix\":\"Y23_\",\"datasets\":[{\"name\":\"1\",\"dhisName\":\"OaIjkmzEeNO\"},{\"name\":\"2\",\"dhisName\":\"L7hIEAumRnQ\"},{\"name\":\"3\",\"dhisName\":\"gtDFQTNBp7y\"},{\"name\":\"4\",\"dhisName\":\"SoiOUE3lOJd\"}]}]";
 		//3pm Adx string
 		String adx3pmMappingString = "[{\"reportName\":\"Monthly report\",\"prefix\":\"\",\"datasets\":[{\"name\":\"1\",\"3pmName\":\"qzJqoxdfXJn\"}]}]";
 
