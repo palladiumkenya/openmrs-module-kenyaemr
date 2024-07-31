@@ -77,6 +77,9 @@ public class ETLMoh731GreenCardIndicatorLibrary {
         return cohortIndicator("HTS Discordant", map(moh731Cohorts.htsDiscordant(), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    public CohortIndicator inconclusiveResults() {
+        return cohortIndicator("Inconclusive Results", map(moh731Cohorts.inconclusiveResults(), "startDate=${startDate},endDate=${endDate}"));
+    }
     /**
      * Initiated On PrEP GP
      * @return

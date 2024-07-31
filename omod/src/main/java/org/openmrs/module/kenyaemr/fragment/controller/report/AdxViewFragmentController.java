@@ -77,10 +77,12 @@ public class AdxViewFragmentController {
     protected final Log log = LogFactory.getLog(getClass());
 
     private LocationService locationService;
-    public String SERVER_ADDRESS = "http://41.204.187.152:9721/api/";
+    //public String SERVER_ADDRESS = "http://41.204.187.152:9721/api/";
+    public String SERVER_ADDRESS = "https://openhimapi.kenyahmis.org/rest/api//IL/MOH_731/test";
     public String KPIF_SERVER_ADDRESS = "https://il.kenyahmis.org:9721/api/3pm/";
     DateFormat isoDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
     DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    DateFormat isoYearMonthFormat = new SimpleDateFormat("yyyyMM");
     public static final String KPIF_MONTHLY_REPORT = "Monthly report";
     public static final String MOH_731 = "MOH 731";
 
@@ -152,11 +154,11 @@ public class AdxViewFragmentController {
         }
 
         StringBuilder w = new StringBuilder();
-        w.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+/*        w.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         w.append("<adx xmlns=\"urn:ihe:qrph:adx:2015\"\n" +
                 "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
                 "xsi:schemaLocation=\"urn:ihe:qrph:adx:2015 ../schema/adx_loose.xsd\"\n" +
-                "exported=\"" + isoDateTimeFormat.format(new Date()) + "\">\n");
+                "exported=\"" + isoDateTimeFormat.format(new Date()) + "\">\n");*/
 
         for (String dsKey : reportData.getDataSets().keySet()) {
 
@@ -187,8 +189,8 @@ public class AdxViewFragmentController {
 
             mappingDetails.get("datasets").getElements();
 
-            w.append("\t").append("<group orgUnit=\"" + mfl + "\" period=\"" + isoDateFormat.format(reportDate)
-                    + "/P1M\" dataSetId=\"" + datasetName + "\">\n");
+            w.append("\t").append("<dataValueSet xmlns=\"http://dhis2.org/schema/dxf/2.0\" orgUnit=\"" + mfl + "\" period=\"" + isoYearMonthFormat.format(reportDate)
+                    + "\" completeDate=\"" + isoDateFormat.format(new Date()) + "\" dataSet=\"" + datasetName + "\" attributeOptionCombo=\"NhSoXUMPK2K\">\n");
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
 
@@ -198,9 +200,15 @@ public class AdxViewFragmentController {
                     Object value = row.getColumnValue(column);
 
                     if (reportName.equals(MOH_731)) {
-                        w.append("\t\t").append("<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" value=\"" + value.toString() + "\"/>\n");
+                        w.append("\t\t").append("<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" categoryOptionCombo=\"default\" value=\"" + value.toString() + "\"/>\n");
+
                     } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
 
+                        w.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+                        w.append("<adx xmlns=\"urn:ihe:qrph:adx:2015\"\n" +
+                                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                                "xsi:schemaLocation=\"urn:ihe:qrph:adx:2015 ../schema/adx_loose.xsd\"\n" +
+                                "exported=\"" + isoDateTimeFormat.format(new Date()) + "\">\n");
                         if (indicatorName.contains("PWUD"))
                             continue;
 
@@ -212,7 +220,7 @@ public class AdxViewFragmentController {
                     }
                 }
             }
-            w.append("</group>\n");
+            w.append("</dataValueSet>\n");
         }
         if (reportName.equals(MOH_731)) {
             for (ReportDatasetValueEntryMapper e : getFaclityReportData(MOH_731_ID, isoDateFormat.format(reportDate), isoDateFormat.format(endDate))) {
@@ -234,7 +242,7 @@ public class AdxViewFragmentController {
                 w.append("</group>\n");
             }
         }
-        w.append("</adx>\n");
+        //w.append("</adx>\n");
         //w.flush();
         return w.toString();
     }
