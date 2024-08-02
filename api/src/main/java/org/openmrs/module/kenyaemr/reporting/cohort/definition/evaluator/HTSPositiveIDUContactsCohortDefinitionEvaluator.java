@@ -47,7 +47,7 @@ public class HTSPositiveIDUContactsCohortDefinitionEvaluator implements CohortDe
 
 		Cohort newCohort = new Cohort();
 
-		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type =157351 and c.final_test_result = 'Positive'\n" +
+		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type =9 and c.final_test_result = 'Positive'\n" +
 				"group by c.id;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();

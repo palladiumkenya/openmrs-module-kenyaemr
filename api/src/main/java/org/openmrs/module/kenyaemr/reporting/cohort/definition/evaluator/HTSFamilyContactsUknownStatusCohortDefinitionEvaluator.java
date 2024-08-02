@@ -47,7 +47,7 @@ public class HTSFamilyContactsUknownStatusCohortDefinitionEvaluator implements C
 
 		Cohort newCohort = new Cohort();
 
-		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type in (970,971,972,1528,5617,162221) and c.final_test_result = 'Inconclusive'\n" +
+		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type in (2, 3, 6,8) and c.final_test_result = 'Inconclusive'\n" +
 				"group by c.id;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
