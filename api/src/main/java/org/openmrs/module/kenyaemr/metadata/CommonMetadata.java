@@ -435,7 +435,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(relationshipType("Partner", "Partner", "Someone I had sex with for fun without commitment to a relationship", _RelationshipType.PARTNER));
 		install(relationshipType("Co-wife", "Co-wife", "Female member spouse in a polygamist household", _RelationshipType.CO_WIFE));
 		install(relationshipType("SNS", "SNS", "Social Network Strategy", _RelationshipType.SNS));
-		install(relationshipType("Case manager", "Case", "Case manager", _RelationshipType.CASE_MANAGER));
+		install(relationshipType("Case manager", "Client", "Case manager", _RelationshipType.CASE_MANAGER));
 		install(relationshipType("Primary caregiver", "Primary caregiver", "Primary caregiver", _RelationshipType.CARE_GIVER));
 
 
