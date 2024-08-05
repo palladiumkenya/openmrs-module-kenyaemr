@@ -110,7 +110,7 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor, ReportDefinition reportDefinition) {
         return Arrays.asList(
-                ReportUtils.map(hivTestingAndCouselingDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
+                //ReportUtils.map(hivTestingAndCouselingDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(pmtctDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(careAndTreatmentDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(voluntaryMaleCircumcisionDatasetDefinition(), "startDate=${startDate},endDate=${endDate}")
@@ -119,7 +119,6 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
     /**
      * Creates the dataset for section #1
      * : hiv testing and counseling
-     *
      * @return the dataset
      */
     protected DataSetDefinition hivTestingAndCouselingDatasetDefinition() {
@@ -161,16 +160,6 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(cohortDsd, "HV01", "AYP (15-24yrs) Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("29", "30"));
 
         cohortDsd.addColumn("HV01-31", "Pregnant and breastfeeding Initiated on PrEP (NEW)", ReportUtils.map(moh731GreenCardIndicators.initiatedOnPrEPPregnantOrBreastfeeding(), indParams),"");
-
-        // 1.4. No. Current on PrEP: Retired in Final MoH revision Ver.July 2023
-        /*EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP GP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPGP(), indParams), genderDisaggregation, Arrays.asList("32", "33"));
-        cohortDsd.addColumn("HV01-34", "Current on PrEP MSM and MSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPMSMAndMSW(), indParams),"");
-        cohortDsd.addColumn("HV01-35","Current on PrEP FSW", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPFSW(), indParams), "");
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP PWID and PWUD", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPWIDAndPWUD(), indParams), genderDisaggregation, Arrays.asList("36", "37"));
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Discordant Couple", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPDiscordantCouple(), indParams), genderDisaggregation, Arrays.asList("38", "39"));
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP Vulnerable Population", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPVulnerablePopulation(), indParams), genderDisaggregation, Arrays.asList("40", "41"));
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Current on PrEP AYP", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPAdolescentsYoungPeople(), indParams), genderDisaggregation, Arrays.asList("42", "43"));
-        cohortDsd.addColumn("HV01-44", "Current on PrEP Pregnant or Breastfeeding", ReportUtils.map(moh731GreenCardIndicators.currentOnPrEPPregnantOrBreastfeeding(), indParams),"");*/
 
         // 1.4. Number on PrEP Diagnosed with STI
         EmrReportingUtils.addRow(cohortDsd, "HV01", "On PrEP Diagnosed with STI GP",
@@ -223,7 +212,7 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         String indParams = "startDate=${startDate},endDate=${endDate}";
 
         // 2.1  Maternal HIV Testing
-        dsd.addColumn("HV02-01", "Known Positive at 1st ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), "");
+        dsd.addColumn("HV02-01A", "Known Positive at 1st ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), "");
         dsd.addColumn("HV02-02", "Initial test at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtANC(), indParams), "");
         dsd.addColumn("HV02-03", "Retest at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.retestAtANC(), indParams), "");
         dsd.addColumn("HV02-04", "Initial Test at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.initialTestAtLabourAndDelivery(), indParams), "");
