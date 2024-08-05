@@ -77,7 +77,6 @@ public class AdxViewFragmentController {
     protected final Log log = LogFactory.getLog(getClass());
 
     private LocationService locationService;
-    //public String SERVER_ADDRESS = "http://41.204.187.152:9721/api/";
     public String SERVER_ADDRESS = "https://openhimapi.kenyahmis.org/rest/api//IL/MOH_731/test";
     public String KPIF_SERVER_ADDRESS = "https://il.kenyahmis.org:9721/api/3pm/";
     DateFormat isoDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
@@ -85,6 +84,7 @@ public class AdxViewFragmentController {
     DateFormat isoYearMonthFormat = new SimpleDateFormat("yyyyMM");
     public static final String KPIF_MONTHLY_REPORT = "Monthly report";
     public static final String MOH_731 = "MOH 731";
+    private static final String COMBO_ID = "NhSoXUMPK2K";
 
     public void get(@RequestParam("request") ReportRequest reportRequest,
                     @RequestParam("returnUrl") String returnUrl,
@@ -149,16 +149,13 @@ public class AdxViewFragmentController {
         String datasetName = null;
         String indicatorName = null;
         String mappedIndicatorId = null;
+        String comboId  ="NhSoXUMPK2K";
+
         if (location != null) {
             mfl = new Facility(location).getMflCode();
         }
 
         StringBuilder w = new StringBuilder();
-/*        w.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        w.append("<adx xmlns=\"urn:ihe:qrph:adx:2015\"\n" +
-                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "xsi:schemaLocation=\"urn:ihe:qrph:adx:2015 ../schema/adx_loose.xsd\"\n" +
-                "exported=\"" + isoDateTimeFormat.format(new Date()) + "\">\n");*/
 
         for (String dsKey : reportData.getDataSets().keySet()) {
 
@@ -190,7 +187,7 @@ public class AdxViewFragmentController {
             mappingDetails.get("datasets").getElements();
 
             w.append("\t").append("<dataValueSet xmlns=\"http://dhis2.org/schema/dxf/2.0\" orgUnit=\"" + mfl + "\" period=\"" + isoYearMonthFormat.format(reportDate)
-                    + "\" completeDate=\"" + isoDateFormat.format(new Date()) + "\" dataSet=\"" + datasetName + "\" attributeOptionCombo=\"NhSoXUMPK2K\">\n");
+                    + "\" completeDate=\"" + isoDateFormat.format(new Date()) + "\" dataSet=\"" + datasetName + "\" attributeOptionCombo=\"" + comboId + "\">\n");
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
 
@@ -200,7 +197,7 @@ public class AdxViewFragmentController {
                     Object value = row.getColumnValue(column);
 
                     if (reportName.equals(MOH_731)) {
-                        w.append("\t\t").append("<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" categoryOptionCombo=\"default\" value=\"" + value.toString() + "\"/>\n");
+                        w.append("\t\t").append("<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" categoryOptionCombo=\"" + comboId + "\" value=\"" + value.toString() + "\"/>\n");
 
                     } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
 
@@ -222,14 +219,14 @@ public class AdxViewFragmentController {
             }
             w.append("</dataValueSet>\n");
         }
-        if (reportName.equals(MOH_731)) {
+   /*     if (reportName.equals(MOH_731)) {
             for (ReportDatasetValueEntryMapper e : getFaclityReportData(MOH_731_ID, isoDateFormat.format(reportDate), isoDateFormat.format(endDate))) {
 
                 Integer datasetId = Integer.parseInt(e.getDatasetID());
                 FacilityReportDataset ds = facilityreportingService.getDatasetById(datasetId);
 
-                w.append("\t").append("<group orgUnit=\"" + mfl + "\" period=\"" + isoDateFormat.format(reportDate)
-                        + "/P1M\" dataSetId=\"" + ds.getMapping() + "\">\n");
+                w.append("\t").append("<group orgUnit=\"" + mfl + "\" period=\"" + isoYearMonthFormat.format(reportDate)
+                        + " dataSetId=\"" + ds.getMapping() + "\">\n");
                 for (DatasetIndicatorDetails row : e.getIndicators()) {
                     if (row.getValue() != null && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
                         String name = row.getName();
@@ -239,9 +236,9 @@ public class AdxViewFragmentController {
 
                     }
                 }
-                w.append("</group>\n");
+                w.append("</dataValueSet>\n");
             }
-        }
+        }*/
         //w.append("</adx>\n");
         //w.flush();
         return w.toString();
@@ -289,11 +286,11 @@ public class AdxViewFragmentController {
         Document document = documentBuilder.newDocument();
 
         Element root = document.createElement("adx");
-        root.setAttribute("xmlns", "urn:ihe:qrph:adx:2015");
+   /*     root.setAttribute("xmlns", "urn:ihe:qrph:adx:2015");
         root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         root.setAttribute("xsi:schemaLocation", "urn:ihe:qrph:adx:2015 ../schema/adx_loose.xsd");
         root.setAttribute("exported", isoDateTimeFormat.format(new Date()));
-
+*/
         for (String dsKey : reportData.getDataSets().keySet()) {
 
             String datasetName = null;
@@ -323,11 +320,14 @@ public class AdxViewFragmentController {
             if (datasetName == null)
                 continue;
 
-            Element eDataset = document.createElement("group");
+            Element eDataset = document.createElement("dataValueSet");
             // add group attributes
+            eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
             eDataset.setAttribute("orgUnit", mfl);
-            eDataset.setAttribute("period", isoDateFormat.format(reportDate).concat("/P1M"));
+            eDataset.setAttribute("period", isoYearMonthFormat.format(reportDate));
+            eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
             eDataset.setAttribute("dataSet", datasetName);
+            eDataset.setAttribute("attributeOptionCombo", COMBO_ID);
 
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
@@ -340,6 +340,7 @@ public class AdxViewFragmentController {
                     Element dataValue = document.createElement("dataValue");
                     if (reportName.equals(MOH_731)) {
                         dataValue.setAttribute("dataElement", columnPrefix.concat(name));
+                        dataValue.setAttribute("categoryOptionCombo", COMBO_ID);
                         dataValue.setAttribute("value", value.toString());
                     }
                     else if(reportName.equals(KPIF_MONTHLY_REPORT)){
@@ -354,7 +355,7 @@ public class AdxViewFragmentController {
                     eDataset.appendChild(dataValue);
                 }
             }
-            root.appendChild(eDataset);
+                root.appendChild(eDataset);
         }
 
         // add additional MOH 731 indicators for air
@@ -366,11 +367,14 @@ public class AdxViewFragmentController {
                     FacilityReportDataset ds = facilityreportingService.getDatasetById(datasetId);
                     String datasetName = ds.getMapping();
 
-                    Element eDataset = document.createElement("group");
+                    Element eDataset = document.createElement("dataValueSet");
                     // add group attributes
+                    eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
                     eDataset.setAttribute("orgUnit", mfl);
-                    eDataset.setAttribute("period", isoDateFormat.format(reportDate).concat("/P1M"));
-                    eDataset.setAttribute("dataSetId", datasetName);
+                    eDataset.setAttribute("period", isoYearMonthFormat.format(reportDate));
+                    eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
+                    eDataset.setAttribute("dataSet", datasetName);
+                    eDataset.setAttribute("attributeOptionCombo", COMBO_ID);
 
                     for (DatasetIndicatorDetails row : e.getIndicators()) {
                         if (row.getValue() != null && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
@@ -379,13 +383,13 @@ public class AdxViewFragmentController {
                             // add data values
                             Element dataValue = document.createElement("dataValue");
                             dataValue.setAttribute("dataElement", columnPrefix.concat(name));
+                            dataValue.setAttribute("categoryOptionCombo", COMBO_ID);
                             dataValue.setAttribute("value", value.toString());
                             eDataset.appendChild(dataValue);
 
                         }
                     }
-
-                    root.appendChild(eDataset);
+                    document.appendChild(eDataset);
                 }
             }
         }
