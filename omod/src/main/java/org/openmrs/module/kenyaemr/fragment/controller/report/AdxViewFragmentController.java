@@ -219,7 +219,7 @@ public class AdxViewFragmentController {
             }
             w.append("</dataValueSet>\n");
         }
-   /*     if (reportName.equals(MOH_731)) {
+        if (reportName.equals(MOH_731)) {
             for (ReportDatasetValueEntryMapper e : getFaclityReportData(MOH_731_ID, isoDateFormat.format(reportDate), isoDateFormat.format(endDate))) {
 
                 Integer datasetId = Integer.parseInt(e.getDatasetID());
@@ -238,8 +238,8 @@ public class AdxViewFragmentController {
                 }
                 w.append("</dataValueSet>\n");
             }
-        }*/
-        //w.append("</adx>\n");
+        }
+        w.append("</adx>\n");
         //w.flush();
         return w.toString();
     }
@@ -286,11 +286,10 @@ public class AdxViewFragmentController {
         Document document = documentBuilder.newDocument();
 
         Element root = document.createElement("adx");
-   /*     root.setAttribute("xmlns", "urn:ihe:qrph:adx:2015");
+        root.setAttribute("xmlns", "urn:ihe:qrph:adx:2015");
         root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         root.setAttribute("xsi:schemaLocation", "urn:ihe:qrph:adx:2015 ../schema/adx_loose.xsd");
         root.setAttribute("exported", isoDateTimeFormat.format(new Date()));
-*/
         for (String dsKey : reportData.getDataSets().keySet()) {
 
             String datasetName = null;
@@ -323,7 +322,7 @@ public class AdxViewFragmentController {
             Element eDataset = document.createElement("dataValueSet");
             // add group attributes
             eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
-            eDataset.setAttribute("orgUnit", mfl);
+            eDataset.setAttribute("orgUnit", "25081");
             eDataset.setAttribute("period", isoYearMonthFormat.format(reportDate));
             eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
             eDataset.setAttribute("dataSet", datasetName);
@@ -370,7 +369,7 @@ public class AdxViewFragmentController {
                     Element eDataset = document.createElement("dataValueSet");
                     // add group attributes
                     eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
-                    eDataset.setAttribute("orgUnit", mfl);
+                    eDataset.setAttribute("orgUnit", "25081");
                     eDataset.setAttribute("period", isoYearMonthFormat.format(reportDate));
                     eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
                     eDataset.setAttribute("dataSet", datasetName);
