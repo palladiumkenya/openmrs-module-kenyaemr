@@ -67,6 +67,11 @@
 		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.OutpatientToInpatientCheckinOnAdmissionRequest</class>
 	</advice>
 
+	<advice>
+		<point>org.openmrs.api.EncounterService</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.RefreshPatientFlagsOnEncounterSave</class>
+	</advice>
+
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>
