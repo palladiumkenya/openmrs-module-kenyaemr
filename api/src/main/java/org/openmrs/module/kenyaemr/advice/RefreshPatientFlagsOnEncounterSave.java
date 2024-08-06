@@ -20,7 +20,6 @@ import org.openmrs.module.kenyacore.calculation.CalculationManager;
 import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.springframework.aop.AfterReturningAdvice;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 
 import java.lang.reflect.Method;
@@ -33,9 +32,6 @@ import java.util.Map;
  * Refreshes patient flags cache from changes in patient clinical data
  */
 public class RefreshPatientFlagsOnEncounterSave implements AfterReturningAdvice {
-
-    @Autowired
-    CalculationManager calculationManager;
     private Log log = LogFactory.getLog(this.getClass());
 
     @Override
@@ -44,16 +40,18 @@ public class RefreshPatientFlagsOnEncounterSave implements AfterReturningAdvice 
         if (method.getName().equals("saveEncounter")) {
             Encounter enc = (Encounter) args[0];
             Patient patient = enc.getPatient();
+
             /**
              * We only want to refresh data for an active visit.
              * TODO: should we also limit this to Point-of-care visit?
              */
             if (enc != null && enc.getVisit() != null && enc.getVisit().getStopDatetime() == null && enc.getForm() != null && (CommonMetadata._Form.TRIAGE.equalsIgnoreCase(enc.getForm().getUuid()) || CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid()))) {
-
                 // we can use global property to track this list for ease of management
                 List<String> patientFlagsToRefresh = Arrays.asList(
                         "EligibleForIDSRFlagsCalculation"
                 );
+                CalculationManager calculationManager = Context.getRegisteredComponent("calculationManager", CalculationManager.class);
+
                 CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
                 calculationManager.refresh();
                 // check if patient already has data in the cache
@@ -76,7 +74,9 @@ public class RefreshPatientFlagsOnEncounterSave implements AfterReturningAdvice 
                         log.error("Error updating patient flag for  " + calc.getClass(), ex);
                     }
                 }
-                cacheManager.getCache("patientFlagCache").put(patient.getUuid(), patientFlagsMap);
+                if (!patientFlagsMap.isEmpty()) {
+                    cacheManager.getCache("patientFlagCache").put(patient.getUuid(), patientFlagsMap);
+                }
             }
         }
 
