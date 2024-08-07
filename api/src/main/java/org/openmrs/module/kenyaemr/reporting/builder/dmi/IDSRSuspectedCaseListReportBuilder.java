@@ -355,7 +355,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-        IDSRModeOfOxygenCollectionDataDefinition idsrModeOfOxygenCollection = new IDSRModeOfOxygenCollectionDataDefinition();
+        ModeOfOxygenSaturationCollectionDataDefinition idsrModeOfOxygenCollection = new ModeOfOxygenSaturationCollectionDataDefinition();
         idsrModeOfOxygenCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
         idsrModeOfOxygenCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
 
@@ -483,7 +483,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-        IDSRModeOfOxygenCollectionDataDefinition idsrModeOfOxygenCollection = new IDSRModeOfOxygenCollectionDataDefinition();
+        ModeOfOxygenSaturationCollectionDataDefinition idsrModeOfOxygenCollection = new ModeOfOxygenSaturationCollectionDataDefinition();
         idsrModeOfOxygenCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
         idsrModeOfOxygenCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
 
