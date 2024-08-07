@@ -39,7 +39,7 @@ public class OPDImmunizationStatusDataEvaluator implements EncounterDataEvaluato
         String qry = "select v.encounter_id,\n" +
 			"       if(m.fully_immunized = 1065,'Y','N') as fully_immunized\n" +
 			"from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"         INNER JOIN kenyaemr_etl.etl_immunization m ON v.patient_id = m.patient_id\n" +
+			"         INNER JOIN kenyaemr_etl.etl_hei_immunization m ON v.patient_id = m.patient_id\n" +
 			"  and date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

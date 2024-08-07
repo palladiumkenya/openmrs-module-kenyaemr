@@ -62,22 +62,7 @@
 							class: java.util.List,
 							fieldFragment: "field/org.openmrs.Location"
 					]
-			],
-			[
-				[
-					formFieldName: "providerLicense",
-					label: "Provider License",
-					class: java.lang.String					
-				]
-			],[
-				[
-					formFieldName: "providerLicenseExpiryDate",
-					label: "License Expiry Date",
-					class: java.util.Date,
-					initialValue: new Date(),
-					showTime: false					
-				]
-	        ]
+			]
 	]
 %>
 

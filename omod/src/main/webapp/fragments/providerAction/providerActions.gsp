@@ -115,12 +115,56 @@
 			</li>
 
 			<li class="float-left" style="margin-top: 7px">
+			<a href="${ ui.pageLink("kenyaemr", "registration/registrationSearch") }" class="float-left">
+					<i class="fa fa-search fa-2x"></i>
+					Find/Create Patient
+				</a>
+			</li>
+
+			<li class="float-left" style="margin-top: 7px">
 				<a href="${ ui.pageLink("hivtestingservices", "patientContactList", [patientId: currentPatient.patientId]) }" class="float-left">
 					<i class="fa fa-list-ul fa-2x"></i>
 					Contact Listing
 				</a>
 			</li>
 
+			<li class="float-left" style="margin-top: 7px">
+				<a href="${ ui.pageLink("kenyaemrorderentry", "orders/drugOrderHome", [patientId: currentPatient]) }" class="float-left">
+					<i class="fa fa-medkit fa-2x"></i>
+					Drug Orders
+				</a>
+			</li>
+
+			<li class="float-left" style="margin-top: 7px">
+				<a href="${ ui.pageLink("kenyaemrorderentry", "orders/labOrderHome", [patientId: currentPatient]) }" class="float-left">
+					<i class="fa fa-flask fa-2x"></i>
+					Lab Orders
+				</a>
+			</li>
+			<li class="float-left" style="margin-top: 7px">
+				<a href="${ ui.pageLink("covid19", "covidHome", [patientId: currentPatient]) }" class="float-left">
+					<i class="fa fa fa-cog fa-2x"></i>
+					Covid-19
+				</a>
+			</li>
+			<li class="float-left" style="margin-top: 7px">
+				<a href="javascript:getO3URL()" class="float-left">
+				  <i class="fa fa fa-cog fa-2x"></i>
+					3.x New Patient Chart
+				</a>
+			</li>
+			<li class="float-left" style="margin-top: 7px">
+				<a href="javascript:getO3ServiceQueuesURL()" class="float-left">
+					<i class="fa fa fa-cog fa-2x"></i>
+					3.x New Service Queue Module
+				</a>
+			</li>
+			<li class="float-left" style="margin-top: 7px">
+				  <a href="javascript:getO3AppointmentsURL()" class="float-left">
+					  <i class="fa fa fa-cog fa-2x"></i>
+					  3.x New Appointment Module
+				  </a>
+			</li>
 		</ul>
 	</div>
 

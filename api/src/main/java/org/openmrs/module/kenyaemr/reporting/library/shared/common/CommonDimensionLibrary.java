@@ -50,7 +50,7 @@ public class CommonDimensionLibrary {
      */
     public CohortDefinitionDimension standardAgeGroups() {
         CohortDefinitionDimension dim = new CohortDefinitionDimension();
-        dim.setName("age groups (<1, <15, 15+, <5, 5+,5-59, 60+)");
+        dim.setName("age groups (<1, <15, 15+, <5, 5+, 60+)");
         dim.addParameter(new Parameter("onDate", "Date", Date.class));
         dim.addCohortDefinition("<1", map(commonCohortLibrary.agedAtMost(0), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("<15", map(commonCohortLibrary.agedAtMost(14), "effectiveDate=${onDate}"));
@@ -58,7 +58,6 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("<5", map(commonCohortLibrary.agedAtMost(4), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("5+", map(commonCohortLibrary.agedAtLeast(5), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("60+", map(commonCohortLibrary.agedAtLeast(60), "effectiveDate=${onDate}"));
-        dim.addCohortDefinition("5-59", map(commonCohortLibrary.agedAtLeastAgedAtMost(5, 59), "effectiveDate=${onDate}"));
         return dim;
     }
 
@@ -118,12 +117,6 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("15+", map(commonCohortLibrary.agedAtLeast(15), "effectiveDate=${onDate}"));
         //Age group in days
         dim.addCohortDefinition("0-60", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(0, 60),"effectiveDate=${onDate}"));
-        //fmaps
-        dim.addCohortDefinition("0-12", map(commonCohortLibrary.agedAtLeastAgedAtMostDays(1, 12),"effectiveDate=${onDate}"));
-        dim.addCohortDefinition("12-24", map(commonCohortLibrary.agedAtLeastAgedAtMostWeeks(12, 24),"effectiveDate=${onDate}"));
-        dim.addCohortDefinition("7-9", map(commonCohortLibrary.agedAtLeastAgedAtMostInMonths(7, 9),"effectiveDate=${onDate}"));
-        dim.addCohortDefinition("10-12", map(commonCohortLibrary.agedAtLeastAgedAtMostInMonths(10, 12),"effectiveDate=${onDate}"));
-        dim.addCohortDefinition("1+", map(commonCohortLibrary.agedAtLeast(1),"effectiveDate=${onDate}"));
 
         return dim;
     }

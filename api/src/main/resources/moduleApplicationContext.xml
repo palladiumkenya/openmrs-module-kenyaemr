@@ -28,7 +28,6 @@
 	<import resource="content/kenyaemr.ovc.xml" />
 	<import resource="content/kenyaemr.vmmc.xml" />
 	<import resource="content/kenyaemr.mat.xml" />
-	<import resource="content/kenyaemr.ncd.xml" />
 	<import resource="content/kenyaemr.cpm.xml" />
 	<import resource="content/kenyaemr.gbv.xml" />
 
@@ -37,7 +36,7 @@
 	<bean id="kenyaemr.app.registration" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.registration" />
 		<constructor-arg value="Registration" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/registration/registrationHome.page" />
 		<constructor-arg value="kenyaui:apps/registration.png" />
 		<constructor-arg value="100" />
 	</bean>
@@ -45,7 +44,7 @@
 	<bean id="kenyaemr.app.intake" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.intake" />
 		<constructor-arg value="Triage" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/intake/intakeHome.page" />
 		<constructor-arg value="kenyaui:apps/intake.png" />
 		<constructor-arg value="200" />
 	</bean>
@@ -53,7 +52,7 @@
 	<bean id="kenyaemr.app.hts" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.hivtesting" />
 		<constructor-arg value="HIV Testing Services" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/hivTesting/htsHome.page" />
 		<constructor-arg value="kenyaui:apps/hts.png" />
 		<constructor-arg value="250" />
 	</bean>
@@ -61,7 +60,7 @@
 	<bean id="kenyaemr.app.counselling" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.counselling" />
 		<constructor-arg value="Adherence Counselling" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/adherenceCounselling/counsellingHome.page" />
 		<constructor-arg value="kenyaemr:apps/counselling.png" />
 		<constructor-arg value="255" />
 	</bean>
@@ -69,7 +68,7 @@
 	<bean id="kenyaemr.app.clinician" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.medicalEncounter" />
 		<constructor-arg value="Clinician" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/clinician/clinicianHome.page" />
 		<constructor-arg value="kenyaui:apps/clinician.png" />
 		<constructor-arg value="300" />
 	</bean>
@@ -77,7 +76,7 @@
 	<bean id="kenyaemr.app.prep" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.prep" />
 		<constructor-arg value="PrEP" />
-		<constructor-arg value=""/>
+		<constructor-arg value="kenyaemr/prep/prepHome.page"/>
 		<constructor-arg value="kenyaui:apps/prep.png" />
 		<constructor-arg value="350" />
 	</bean>
@@ -85,7 +84,7 @@
 	<bean id="kenyaemr.app.defaultertracing" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.defaultertracing" />
 		<constructor-arg value="Patient Tracing" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/defaulterTracing/defaulterTracingHome.page" />
 		<constructor-arg value="kenyaui:apps/defaulter_tracing.png" />
 		<constructor-arg value="399" />
 	</bean>
@@ -93,7 +92,7 @@
 	<bean id="kenyaemr.app.chart" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.medicalChart" />
 		<constructor-arg value="Chart" />
-		<constructor-arg value="" />
+		<constructor-arg value="kenyaemr/chart/chartHome.page" />
 		<constructor-arg value="kenyaui:apps/chart.png" />
 		<constructor-arg value="400" />
 	</bean>
@@ -144,6 +143,30 @@
 		<constructor-arg value="kenyaemr/nupi/nupiVerificationHome.page" />
 		<constructor-arg value="kenyaemr:apps/upi.png" />
 		<constructor-arg value="840" />
+	</bean>
+
+	<bean id="kenyaemr.app.openmrs3Shortcut" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+		<constructor-arg value="kenyaemr.openmrs3Shortcut" />
+		<constructor-arg value="3.x Patient Chart" />
+		<constructor-arg value="kenyaemr/shortcuts/o3Home.page" />
+		<constructor-arg value="kenyaemr:apps/O3.png" />
+		<constructor-arg value="999999" />
+	</bean>
+
+	<bean id="kenyaemr.app.openmrs3ServiceQueueShortcut" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+		<constructor-arg value="kenyaemr.openmrs3ServiceQueueShortcut" />
+		<constructor-arg value="3.x Service Queue Module" />
+		<constructor-arg value="kenyaemr/shortcuts/o3ServiceQueuesHome.page" />
+		<constructor-arg value="kenyaemr:apps/queue.png" />
+		<constructor-arg value="999999" />
+	</bean>
+
+	<bean id="kenyaemr.app.openmrs3AppointmentsShortcut" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+		<constructor-arg value="kenyaemr.openmrs3AppointmentsShortcut" />
+		<constructor-arg value="3.x Appointment Module" />
+		<constructor-arg value="kenyaemr/shortcuts/o3AppointmentsHome.page" />
+		<constructor-arg value="kenyaemr:apps/appointment.png" />
+		<constructor-arg value="1000001" />
 	</bean>
 
 	<bean id="kenyaemr.app.developer" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">

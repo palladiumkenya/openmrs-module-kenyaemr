@@ -37,7 +37,7 @@ public class DateOfVaccineDataEvaluator implements EncounterDataEvaluator {
 
         String tableColumn = def.getVaccineTableColumn();
 
-        String qry = "select encounter_id, (CASE WHEN :vaccineColumn != '' THEN STR_TO_DATE(:vaccineColumn, '%Y-%m-%d') ELSE NULL END) from kenyaemr_etl.etl_immunization ";
+        String qry = "select encounter_id, (CASE WHEN :vaccineColumn != '' THEN STR_TO_DATE(:vaccineColumn, '%Y-%m-%d') ELSE NULL END) from kenyaemr_etl.etl_hei_immunization ";
 
         qry = qry.replaceAll(":vaccineColumn", tableColumn);
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

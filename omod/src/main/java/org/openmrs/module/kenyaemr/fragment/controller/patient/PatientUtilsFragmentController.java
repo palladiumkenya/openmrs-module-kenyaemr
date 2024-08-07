@@ -78,8 +78,27 @@ public class PatientUtilsFragmentController {
 	public List<SimpleObject> getFlags(@RequestParam("patientId") Integer patientId, @SpringBean CalculationManager calculationManager) {
 
 		List<SimpleObject> flags = new ArrayList<SimpleObject>();
+		List<String> openFlags = Arrays.asList(
+				"NeedsCACXTestCalculation",
+				"NotVaccinatedCalculation",
+				"IsPregnantCalculation",
+				"EligibleForIliScreeningCalculation",
+				"EligibleForSariScreeningCalculation",
+				"EligibleForCholeraCalculation",
+				"EligibleForDysenteryCalculation",
+				"EligibleForMalariaCalculation",
+				"EligibleForHaemorrhagicCalculation",
+				"EligibleForChikungunyaCalculation",
+				"EligibleForMeaslesCalculation",
+				"EligibleForPoliomyelitisCalculation",
+				"EligibleForRiftValleyFeverCalculation"
+		); // flags that don't require specific role
 		// Gather all flag calculations that evaluate to true
 		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
+			if (openFlags.isEmpty() || !openFlags.contains(calc.getClass().getSimpleName())) {
+				// TODO: check if logged in user has the globally required role/privilege
+				continue;
+			}
 			try {
 				CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patientId, calc);
 				if (result != null && (Boolean) result.getValue()) {

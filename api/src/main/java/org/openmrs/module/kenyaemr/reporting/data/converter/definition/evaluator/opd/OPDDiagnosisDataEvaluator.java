@@ -37,15 +37,14 @@ public class OPDDiagnosisDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
 		String qry = "select\n" +
-			"   v.encounter_id,\n" +
-			"   con.name as mnci_diagnosis\n" +
-			" from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"             inner join (select\n" +
-			"                             cn.name, cn.date_created, ed.patient_id\n" +
-			"                         from encounter_diagnosis ed\n" +
-			"                                  inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
-			"                                      and date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
-			" ) con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
+			"    v.encounter_id,\n" +
+			"    con.name as mnci_diagnosis\n" +
+			"from kenyaemr_etl.etl_clinical_encounter v\n" +
+			"              inner join (select\n" +
+			"                              cn.name, cn.date_created, ed.patient_id\n" +
+			"                          from encounter_diagnosis ed\n" +
+			"                                   inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
+			") con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

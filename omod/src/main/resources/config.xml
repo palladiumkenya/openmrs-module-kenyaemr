@@ -184,19 +184,4 @@
 		</description>
 	</globalProperty>
 
-	<globalProperty>
-		<property>datafilter_locationBasedUserFilter.disabled</property>
-		<defaultValue>true</defaultValue>
-		<description>
-			Location based user filter. To enable, set value to false
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>datafilter_locationBasedPatientFilter.disabled</property>
-		<defaultValue>true</defaultValue>
-		<description>
-			Location based patient filter. To enable, set value to false
-		</description>
-	</globalProperty>
 </module>

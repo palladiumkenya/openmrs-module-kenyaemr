@@ -37,7 +37,7 @@ public class VisitTypeWithComplaintsDataEvaluator implements PersonDataEvaluator
 
         String qry = "select a.patient_id, if(\n" +
                 "e.patient_outcome in (1693,160429) or v.visit_type_id = 1, 'OPD', if(e.patient_outcome = 1654 or v.visit_type_id = 2, 'IPD','N/A')) as visit_type\n" +
-                "from (select patient_id, c.complaint as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date, c.visit_date\n" +
+                "from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
                 "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
                 "      where date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
                 "      group by patient_id) a\n" +

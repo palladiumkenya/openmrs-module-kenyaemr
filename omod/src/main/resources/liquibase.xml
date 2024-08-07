@@ -271,11 +271,4 @@
 		<sqlFile splitStatements="true" path="MigrateAppointmentsFromObs.sql"/>
 	</changeSet>
 
-	<changeSet id="${project.parent.artifactId}-20240801-1408" author="pwangoo">
-		<comment>
-			Queries for migrating misaligned Case manager - Case relationships
-		</comment>
-		<sqlFile splitStatements="true" path="AlignCaseManagerCaseRelationships.sql"/>
-	</changeSet>
-
 </databaseChangeLog>
