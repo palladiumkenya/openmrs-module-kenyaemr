@@ -23,11 +23,7 @@ import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.HTSPredictionCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.IdentifierConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.MFLCodeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstHIVTestDateDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLFirstHIVTestResultDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLHTSEntryPointDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionCategoryDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLPredictionScoreDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.data.DataDefinition;
@@ -36,10 +32,7 @@ import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PersonIdDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.*;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
@@ -123,14 +116,19 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
                 ETLFirstHIVTestDateDataDefinition firstHIVTestDateDataDefinition = new ETLFirstHIVTestDateDataDefinition();
                 firstHIVTestDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
                 firstHIVTestDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+				ETLHTSNegReferralServicesDataDefinition negativeReferralServicesDataDefinition = new ETLHTSNegReferralServicesDataDefinition();
+				negativeReferralServicesDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+				negativeReferralServicesDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-                DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+
+			DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
                 DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), formatter);
                 dsd.addColumn("MFL Code", new MFLCodeDataDefinition(), "");
                 dsd.addColumn("id", new PersonIdDataDefinition(), "");
                 dsd.addColumn("Name", nameDef, "");
                 dsd.addColumn("CCC No", identifierDef, "");
                 dsd.addColumn("NUPI", nupiDef, "");
+			    dsd.addColumn("Age", new AgeDataDefinition(), "");
                 dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
                 dsd.addColumn("UPN", identifierDef, "");
                 dsd.addColumn("Entry Point", entryPointDataDefinition, "startDate=${startDate},endDate=${endDate}");
@@ -138,6 +136,7 @@ public class HTSPredictionReportBuilder extends AbstractHybridReportBuilder {
                 dsd.addColumn("ML Prediction Category", predictionCategoryDataDefinition, "startDate=${startDate},endDate=${endDate}");
                 dsd.addColumn("Date Of Test", firstHIVTestDateDataDefinition, "startDate=${startDate},endDate=${endDate}", new DateConverter(DATE_FORMAT));
                 dsd.addColumn("Actual Test Results", firstHIVTestResultDataDefinition, "startDate=${startDate},endDate=${endDate}");
+                dsd.addColumn("Preventive Services", negativeReferralServicesDataDefinition, "startDate=${startDate},endDate=${endDate}");
                 return dsd;
         }
 }

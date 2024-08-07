@@ -13,6 +13,8 @@ import org.openmrs.Form;
 import org.openmrs.PatientIdentifierType.LocationBehavior;
 import org.openmrs.api.context.Context;
 import org.openmrs.PersonAttributeType;
+import org.openmrs.customdatatype.CustomDatatype;
+import org.openmrs.customdatatype.datatype.DateDatatype;
 import org.openmrs.module.idgen.validator.LuhnMod25IdentifierValidator;
 import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.Metadata;
@@ -22,6 +24,8 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 import org.openmrs.customdatatype.datatype.ConceptDatatype;
+
+import java.util.Date;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
@@ -39,7 +43,13 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.visitTyp
 @Component
 public class CommonMetadata extends AbstractMetadataBundle {
 
+	public static final String GP_CLIENT_VERIFICATION_USE_EMR_PROXY = "kenyaemr.client.registry.use.emr.proxy"; 
+	public static final String GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL = "kenyaemr.client.registry.emr.verification.proxy.url";
 	public static final String GP_CLIENT_VERIFICATION_GET_END_POINT = "kenyaemr.client.registry.get.api";
+	public static final String GP_SHA_CLIENT_VERIFICATION_GET_END_POINT = "kenyaemr.sha.registry.get.api";
+	public static final String GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT = "kenyaemr.sha.healthworker.registry.get.api";
+	public static final String GP_SHA_CLIENT_VERIFICATION_GET_API_USER = "kenyaemr.sha.registry.get.api.user";
+	public static final String GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET = "kenyaemr.sha.registry.get.api.secret";
 	public static final String GP_CLIENT_VERIFICATION_POST_END_POINT = "kenyaemr.client.registry.post.api";
 	public static final String GP_CLIENT_VERIFICATION_API_TOKEN = "kenyaemr.client.registry.api.token";
 	public static final String GP_CLIENT_VERIFICATION_TOKEN_URL = "kenyaemr.client.registry.token.url";
@@ -66,6 +76,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ILI_SURVEILLANCE = "f60910c7-2edd-4d93-813c-0e57095f892f";
 		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
 		public static final String PROCEDURE_RESULTS = "99a7a6ba-59f4-484e-880d-01cbeaead62f";
+		public static final String NUTRITION = "160fcc03-4ff5-413f-b582-7e944a770bed";
 	}
 
 	public static final class _Form {
@@ -93,6 +104,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 		public static final String ILI_SURVEILLANCE_FORM = "05bcb369-5d50-4130-9a15-19c77a80314a";
 		public static final String SARI_SURVEILLANCE_FORM = "be0f79d3-9e9a-414b-a1ca-6a2974110bc4";
+		public static final String NUTRITION = "b8357314-0f6a-4fc9-a5b7-339f47095d62";
 	}
 
 	public static final class _OrderType {
@@ -115,6 +127,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DRIVING_LICENSE = Metadata.IdentifierType.DRIVING_LICENSE;
 		public static final String RECENCY_TESTING_ID = Metadata.IdentifierType.RECENCY_TESTING_ID;
 		public static final String SOCIAL_HEALTH_INSURANCE_NUMBER = Metadata.IdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER;
+		public static final String SHA_UNIQUE_IDENTIFICATION_NUMBER = Metadata.IdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER;
 	}
 
 	public static final class _PersonAttributeType {
@@ -133,6 +146,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String KDOD_CADRE = "96a99acd-2f11-45bb-89f7-648dbcac5ddf";
 		public static final String KDOD_RANK = "9f1f8254-20ea-4be4-a14d-19201fe217bf";
 		public static final String KDOD_UNIT = "848f5688-41c6-464c-b078-ea6524a3e971";
+		public static final String KDOD_CIVILIAN_RANK ="457463c8-dddb-4d35-bb5c-eb365f6d1790";
+		public static final String KDOD_SERVICE ="cdcda371-3b8a-4ce1-b753-76eaac0ab3cb";
 		public static final String VERIFICATION_STATUS_WITH_NATIONAL_REGISTRY = "869f623a-f78e-4ace-9202-0bed481822f5";
 		public static final String VERIFICATION_MESSAGE_WITH_NATIONAL_REGISTRY = "752a0331-5293-4aa5-bf46-4d51aaf2cdc5";
 		public static final String CCC_SYNC_STATUS_WITH_NATIONAL_REGISTRY = "4dfa195f-8420-424d-8275-d60cf115303d";
@@ -142,6 +157,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DUPLICATE_NUPI_FACILITY_WITH_NATIONAL_REGISTRY = "39673db2-c229-441c-bd84-f30edf1cc1a7";
 		public static final String DUPLICATE_NUPI_SITES_WITH_NATIONAL_REGISTRY = "876816a4-fa3e-4f93-b1f1-4443cebd9f30";
 		public static final String DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY = "2816180c-46a2-49d7-b15f-e44fd81b5057";
+		public static final String PNS_APPROACH = "59d1b886-90c8-4f7f-9212-08b20a9ee8cf";
+		public static final String PNS_PATIENT_CONTACT_BASELINE_HIV_STATUS = "3ca03c84-632d-4e53-95ad-91f1bd9d96d6";
+		public static final String PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT= "35a08d84-9f80-4991-92b4-c4ae5903536e";
+		public static final String PNS_PATIENT_CONTACT_REGISTRATION_SOURCE= "7c94bd35-fba7-4ef7-96f5-29c89a318fcf";
+
+
 	}
 
 	public static final class _Provider {
@@ -150,6 +171,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 	public static final class _ProviderAttributeType {
 		public static final String PRIMARY_FACILITY = "5a53dddd-b382-4245-9bf1-03bce973f24b";
+		public static final String LICENSE_NUMBER = "bcaaa67b-cc72-4662-90c2-e1e992ceda66";
+		public static final String LICENSE_EXPIRY_DATE = "00539959-a1c7-4848-a5ed-8941e9d5e835";
 	}
 
 	public static final class _RelationshipType {
@@ -195,6 +218,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("ILI Surveillance", "ILI Surveillance encounter type", _EncounterType.ILI_SURVEILLANCE));
 		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
 		install(encounterType("Procedure Results", "Procedure outcome encounter type", _EncounterType.PROCEDURE_RESULTS));
+		install(encounterType("Nutrition", "Nutrition encounter type",_EncounterType.NUTRITION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -218,6 +242,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1", _Form.HIV_SELF_TESTING));
 		install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1", _Form.ILI_SURVEILLANCE_FORM));
 		install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1", _Form.SARI_SURVEILLANCE_FORM));
+		install(form("Nutrition Form", "Form for Nutrition", _EncounterType.NUTRITION, "1",_Form.NUTRITION));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
@@ -233,8 +258,27 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(globalProperty("client_number_label", "Label for Client Number", "Client Number"));
 		install(globalProperty("clientNumber.enabled", "Switch to show client number", "false"));
 
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_USE_EMR_PROXY) == null) {
+			install(globalProperty(GP_CLIENT_VERIFICATION_USE_EMR_PROXY, "Use the EMR backend to proxy NUPI requests (true or false)", "false"));
+		}    
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL) == null) {
+			install(globalProperty(GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL, "The local EMR URL to proxy NUPI verification requests", "http://127.0.0.1:8080/openmrs/ws/rest/v1/kenyaemr/verifynupi"));
+		} 
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT) == null) {
 			install(globalProperty(GP_CLIENT_VERIFICATION_GET_END_POINT, "A GET API for getting client information at the client registry", "https://afyakenyaapi.health.go.ke/partners/registry/search"));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_END_POINT) == null) {
+			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_GET_END_POINT, "A GET API for getting SHA client information from the client registry", "http://127.0.0.1:9342/api/shaPatientResource"));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT) == null) {
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Health Worker information from Healthcare Worker registry", "http://127.0.0.1:9342/api/practitioner-search"));
+		}
+
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER) == null) {
+			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_GET_API_USER, "API user for for connecting to the SHA client registry", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET) == null) {
+			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET, "API secret token for for connecting to the SHA client registry", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_POST_END_POINT) == null) {
 			install(globalProperty(GP_CLIENT_VERIFICATION_POST_END_POINT, "A POST API for posting client information to the client registry", "https://afyakenyaapi.health.go.ke/partners/registry"));
@@ -301,6 +345,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.RECENCY_TESTING_ID));
 		install(patientIdentifierType("Social Health Insurance Number", "Social Health Insurance Number", "", "Allows for alphanumeric format",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER));
+		install(patientIdentifierType("Social Health Authority Identification Number", "Social Health Authority Unique Identification Number", "", "Allows for alphanumeric format",
+			null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER));
+
 
 
 		install(personAttributeType("Telephone contact", "Telephone contact number",
@@ -337,6 +384,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				String.class, null, false, 4.5, _PersonAttributeType.KDOD_RANK));
 		install(personAttributeType("KDoD unit", "KDoD passout unit",
 				String.class, null, false, 4.5, _PersonAttributeType.KDOD_UNIT));
+				install(personAttributeType("KDoD civilian rank", "KDOD classification for civilian staff",
+				String.class, null, false, 4.5, _PersonAttributeType.KDOD_CIVILIAN_RANK));
+		install(personAttributeType("KDoD Service", "Service in KDoD e.g Army, Navy, Airforce",
+				String.class, null, false, 4.5, _PersonAttributeType.KDOD_SERVICE));
 
 		// Client Registry Properties
 		install(personAttributeType("cr verification status", "Verification status with national registry",
@@ -365,16 +416,26 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 		install(personAttributeType("nupi duplication total sites", "NUPI Duplication total number of sites with national registry",
 				String.class, null, false, 4.5, _PersonAttributeType.DUPLICATE_NUPI_TOTALSITES_WITH_NATIONAL_REGISTRY));
+		install(personAttributeType("PNS Approach", "PNS Approach",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_APPROACH));	
+		install(personAttributeType("PNS Baseline HIV Status", "PNS Baseline HIV Status",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_BASELINE_HIV_STATUS));
+		install(personAttributeType("Contact living with patient", "Contact living  with patient",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT));
+		install(personAttributeType("Contact registration from PNS", "Contact registration source from PNS",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_REGISTRATION_SOURCE));
 
 		// Provider attribute types.
-		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY ));
+		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY));
+		install(providerAttributeType("Practising License Number", "Provider Practising License Number", FreeTextDatatype.class, "", 0, 9999 , _ProviderAttributeType.LICENSE_NUMBER));
+		install(providerAttributeType("License Expiry Date", "Provider Practising License Expiry Date", DateDatatype.class, "", 0, 9999 , _ProviderAttributeType.LICENSE_EXPIRY_DATE));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects", _RelationshipType.GUARDIAN_DEPENDANT));
 		install(relationshipType("Spouse", "Spouse", "A spouse is a partner in a marriage, civil union, domestic partnership or common-law marriage a male spouse is a husband and a female spouse is a wife", _RelationshipType.SPOUSE));
 		install(relationshipType("Partner", "Partner", "Someone I had sex with for fun without commitment to a relationship", _RelationshipType.PARTNER));
 		install(relationshipType("Co-wife", "Co-wife", "Female member spouse in a polygamist household", _RelationshipType.CO_WIFE));
 		install(relationshipType("SNS", "SNS", "Social Network Strategy", _RelationshipType.SNS));
-		install(relationshipType("Case manager", "Case manager", "Case manager", _RelationshipType.CASE_MANAGER));
+		install(relationshipType("Case manager", "Client", "Case manager", _RelationshipType.CASE_MANAGER));
 		install(relationshipType("Primary caregiver", "Primary caregiver", "Primary caregiver", _RelationshipType.CARE_GIVER));
 
 

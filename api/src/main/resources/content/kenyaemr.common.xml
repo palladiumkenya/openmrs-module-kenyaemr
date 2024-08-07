@@ -43,6 +43,7 @@
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
 				<ref bean="kenyaemr.common.form.iliSurveillance"/>
 				<ref bean="kenyaemr.common.form.sariSurveillance"/>
+				<ref bean="kenyaemr.common.form.nutrition"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
 			</set>
@@ -54,7 +55,7 @@
 			<set>
 				<ref bean="kenyaemr.etl.common.report.fmap"/>
 				<ref bean="kenyaemr.common.report.artDrug" />
-				<ref bean="kenyaemr.common.report.etlMissedAppointments" />
+				<!--<ref bean="kenyaemr.common.report.etlMissedAppointments" />-->
 				<ref bean="kenyaemr.etl.common.report.moh731"/>
 				<ref bean="kenyaemr.etl.common.report.htsprediction"/>
 				<ref bean="kenyaemr.common.report.moh745"/>
@@ -87,6 +88,7 @@
 				<ref bean="kenyaemr.common.report.moh711"/>
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
+				<ref bean="kenyaemr.common.report.duplicateNUPI"/>
 			</set>
 		</property>
 		<property name="ehrReports">
@@ -104,6 +106,14 @@
 			</set>
 		</property>
 	</bean>
+
+	<bean id="kenyaemr.common.report.duplicateNUPI" class="org.openmrs.module.kenyacore.report.CalculationReportDescriptor">
+        <property name="targetUuid" value="7b60235c-f565-48ee-82ed-38a8dd5e9e53" />
+        <property name="name" value="Duplicate NUPI" />
+        <property name="description" value="Patients with Duplicate NUPI" />
+        <property name="calculation" value="org.openmrs.module.kenyaemr.calculation.library.nupi.DuplicateNUPICalculation" />
+        <property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
+    </bean>
 
 	<bean id="kenyaemr.config.regimen" class="org.openmrs.module.kenyaemr.regimen.RegimenConfiguration">
 		<property name="definitionsPath" value="regimens.xml" />
@@ -543,10 +553,27 @@
 		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
 		<property name="order" value="201099" />
 	</bean>
+	<!-- Nutrition -->
+	<bean id="kenyaemr.common.form.nutrition" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="b8357314-0f6a-4fc9-a5b7-339f47095d62" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200010" />
+	</bean>
 
 	<!-- ===================== Reports ===================== -->
 
-	<bean id="kenyaemr.common.report.etlMissedAppointments" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+<!--	<bean id="kenyaemr.common.report.etlMissedAppointments" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="9a254c29-2c8a-4966-83ba-66595eee4695" />
 		<property name="name" value="Missed Appointments" />
 		<property name="description" value="Missed Appointments" />
@@ -555,7 +582,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set>
 		</property>
-	</bean>
+	</bean>-->
 
 	<bean id="kenyaemr.etl.common.report.moh731" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="a66bf454-2a11-4e51-b28d-3d7ece76aa13" />
@@ -1004,7 +1031,7 @@
 			</set>
 		</property>
 		<property name="template" value="kenyaemr:MOH240.xls" />
-		<property name="repeatingSection" value="sheet:3,row:3,dataset:lrr" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH240" />
 	</bean>
   <bean id="kenyaemr.ehrReports.report.fcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="5b59902c-f565-4f9a-8dbb-5624d817e515" />

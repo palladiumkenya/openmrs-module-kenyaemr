@@ -12,6 +12,8 @@ package org.openmrs.module.kenyaemr.web.controller;
 import org.openmrs.Form;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.Encounter;
@@ -64,6 +66,7 @@ import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.metadata.MchMetadata;
 import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
+import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
 import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
 import org.openmrs.module.kenyaemr.Dictionary;
@@ -94,20 +97,29 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.openmrs.ui.framework.annotation.SpringBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.xml.sax.SAXException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.openmrs.util.PrivilegeConstants;
+import org.openmrs.api.PersonService;
+import org.openmrs.api.ProgramWorkflowService;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -125,8 +137,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.Calendar;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -138,6 +155,9 @@ import java.util.Set;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Comparator;
+
+import org.springframework.http.MediaType;
+import java.util.Base64;
 
 /**
  * The rest controller for exposing resources through kenyacore and kenyaemr modules
@@ -179,6 +199,28 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static String ISONIAZID_DRUG_UUID = "78280AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static String RIFAMPIN_ISONIAZID_DRUG_UUID = "1194AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
+    public static final String KP_IDENTIFIER_UUID = "b046eb36-7bd0-40cf-bdcb-c662bc0f00c3";
+
+    public static final String KP_UNIQUE_PATIENT_NUMBER_UUID = "b7bfefd0-239b-11e9-ab14-d663bd873d93";
+
+    public static final String FSW_UUID = "89828287-b96f-449c-b3ae-d518d55703e1";
+
+    public static final String MSM_UUID = "160578AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    public static final String PWID_UUID = "105AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    public static final String PWUD_UUID = "642945a8-045a-4010-b3f3-bc50aaaab386" ;
+
+    public static final String TRANSGENDER_UUID = "bd370cad-06fe-4950-a36f-ed991b280ce6";
+
+    public static final String MSW_UUID = "973e5b6c-ae5e-4d6a-a624-2d259763771f";
+
+    public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    public static final String GP_COUNTY = "kenyakeypop.countyCode";
+    public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
+
+
+
     /**
      * Gets a list of available/completed forms for a patient
      * @param request
@@ -206,16 +248,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         if (!activeVisits.isEmpty()) {
             Visit patientVisit = activeVisits.get(0);
-
-            /**
-                 *  {uuid: string;
-                 *   encounterType?: EncounterType;
-                 *   name: string;
-                 *   display: string;
-                 *   version: string;
-                 *   published: boolean;
-                 *   retired: boolean;}
-                 */
 
             FormManager formManager = CoreContext.getInstance().getManager(FormManager.class);
             List<FormDescriptor> uncompletedFormDescriptors = formManager.getAllUncompletedFormsForVisit(patientVisit);
@@ -268,6 +300,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
     @ResponseBody
+    @Cacheable(value = "patientFlagCache", key = "#patientUuid")
     public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid, @SpringBean CalculationManager calculationManager) {
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
@@ -275,20 +308,30 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-        ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
 
         if (patient == null) {
             return new ResponseEntity<Object>("The provided patient was not found in the system!",
                     new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
+
+        ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
+
+        CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
+        if (cacheManager.getCache("patientFlagCache").get(patientUuid) != null) {
+            HashMap<String,String> flagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid).get();
+            flagsObj.put("results", composePatientFlagsFromMap(flagsMap));
+            return flagsObj.toString();
+        }
+
         calculationManager.refresh();
-        ArrayNode flags = JsonNodeFactory.instance.arrayNode();
+        // define a hashmap of flag name and value for ease of update in other parts of the code
+        Map<String,String> patientFlagsMap = new HashMap<>();
         for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
 
             try {
                 CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(), calc);
                 if (result != null && (Boolean) result.getValue()) {
-                    flags.add(calc.getFlagMessage());
+                    patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
                 }
             }
             catch (Exception ex) {
@@ -297,12 +340,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         new HttpHeaders(), HttpStatus.NOT_FOUND);
             }
         }
-        flagsObj.put("results", flags);
-
+        cacheManager.getCache("patientFlagCache").putIfAbsent(patientUuid, patientFlagsMap);
+        flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
         return flagsObj.toString();
 
     }
 
+    private ArrayNode composePatientFlagsFromMap(Map<String,String> flagsMap) {
+        ArrayNode flags = JsonNodeFactory.instance.arrayNode();
+        if (flagsMap.isEmpty()) {
+            return flags;
+        }
+        for (Map.Entry<String,String> entry : flagsMap.entrySet()) {
+            flags.add(entry.getValue());
+        }
+        return flags;
+    }
     /**
      * Returns custom patient object
      * @param patientUuid
@@ -483,22 +536,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
         if (!patient.isVoided()) {
             Collection<ProgramDescriptor> activePrograms = programManager.getPatientActivePrograms(patient);
             Collection<ProgramDescriptor> eligiblePrograms = programManager.getPatientEligiblePrograms(patient);
-
-            /**
-             * ProgramEndPoint {
-             *   uuid: string;
-             *   display: string;
-             *   enrollmentFormUuid: string;
-             *   discontinuationFormUuid: string;
-             *   enrollmentStatus: string;
-             * }
-             */
             for (ProgramDescriptor descriptor : eligiblePrograms) {
                 ObjectNode programObj = JsonNodeFactory.instance.objectNode();
                 programObj.put("uuid", descriptor.getTargetUuid());
                 programObj.put("display", descriptor.getTarget().getName());
                 programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
-                programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
+                if(descriptor.getDefaultCompletionForm() != null && descriptor.getDefaultCompletionForm().getTargetUuid() != null) {
+                    programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
+
+                }
                 programObj.put("enrollmentStatus", activePrograms.contains(descriptor) ? "active" : "eligible");
                 programList.add(programObj);
             }
@@ -773,7 +819,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
         SimpleObject mchChildResponseObj = new SimpleObject();
         SimpleObject hivResponseObj = new SimpleObject();
         SimpleObject tbResponseObj = new SimpleObject();
-        SimpleObject firstEncDetails = null;
         CalculationResult enrolledInHiv = EmrCalculationUtils.evaluateForPatient(HIVEnrollment.class, null, patient);
 
         if((Boolean) enrolledInHiv.getValue() == false) {
@@ -981,7 +1026,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
             List<Obs> milestones = new ArrayList<Obs>();
             String prophylaxis;
             String feeding;
-            List<Obs> remarks = new ArrayList<Obs>();
             String heiOutcomes;
             Integer prophylaxisQuestion = 1282;
             Integer feedingMethodQuestion = 1151;
@@ -990,10 +1034,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
             EncounterType mchcs_consultation_encounterType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION);
             Encounter lastMchcsConsultation = patientWrapper.lastEncounter(mchcs_consultation_encounterType);
 
-            Concept pcrInitialTest = Dictionary.getConcept(Dictionary.HIV_DNA_POLYMERASE_CHAIN_REACTION_QUALITATIVE);
-            Concept rapidTest = Dictionary.getConcept(Dictionary.RAPID_HIV_CONFIRMATORY_TEST);
-            CalculationResultMap pcrObs = Calculations.allObs(Dictionary.getConcept(Dictionary.HIV_DNA_POLYMERASE_CHAIN_REACTION_QUALITATIVE), Arrays.asList(patient.getPatientId()), context);
-            CalculationResultMap rapidTestObs = Calculations.allObs(Dictionary.getConcept(Dictionary.RAPID_HIV_CONFIRMATORY_TEST), Arrays.asList(patient.getPatientId()), context);
             Encounter lastHeiCWCFollowupEncounter = Utils.lastEncounter(patient, Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_CONSULTATION));
             Encounter lastHeiOutComeEncounter = Utils.lastEncounter(patient, Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_HEI_COMPLETION));
 
@@ -1003,6 +1043,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         heiOutcomes = obs.getValueCoded().getName().toString();
                         mchChildResponseObj.put("heiOutcome", heiOutcomes);
                         mchChildResponseObj.put("heiOutcomeDate", obs.getValueDatetime());
+                        break;
                     }
                 }
             }
@@ -1143,8 +1184,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
         ArrayList enrollmentDetails = new ArrayList<SimpleObject>();
         for(ProgramDescriptor descriptor: programs) {
             Program program = descriptor.getTarget();
+            Form defaultCompletionForm = null ;
             Form defaultEnrollmentForm = descriptor.getDefaultEnrollmentForm().getTarget();
-            Form defaultCompletionForm = descriptor.getDefaultCompletionForm().getTarget();
+            if(descriptor.getDefaultCompletionForm()!= null) {
+                defaultCompletionForm = descriptor.getDefaultCompletionForm().getTarget();
+            }
 
             List<PatientProgram> allEnrollments = programManager.getPatientEnrollments(patient, program);
             for (PatientProgram patientProgramEnrollment : allEnrollments) {
@@ -1167,53 +1211,50 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     }
 
                     // art start date
-                    Date artStartDate = null;
                     CalculationResult artStartDateResults = EmrCalculationUtils
                             .evaluateForPatient(InitialArtStartDateCalculation.class, null, patient);
                     if (artStartDateResults != null) {
-                        artStartDate = (Date) artStartDateResults.getValue();
                         programDetails.put("artStartDate", formatDate((Date) artStartDateResults.getValue()));
                     } else {
                         programDetails.put("artStartDate", "");
                     }
 
                     if (hivEnrollmentEncounter != null) {
-                        for (Obs obs : hivEnrollmentEncounter.getAllObs(true)) {
+                        for (Obs obs : hivEnrollmentEncounter.getAllObs(false)) {
                             if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.METHOD_OF_ENROLLMENT))) {
                                 programDetails.put("entryPoint", entryPointAbbriviations(obs.getValueCoded()));
-                            }
-
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.CD4_COUNT))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.CD4_COUNT))) {
                                 programDetails.put("cd4Count", obs.getValueNumeric().intValue());
                                 programDetails.put("cd4CountDate", formatDate(obs.getObsDatetime()));
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.CD4_PERCENT))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.CD4_PERCENT))) {
                                 programDetails.put("cd4Percentage", obs.getValueNumeric().intValue());
                                 programDetails.put("cd4PercentageDate", formatDate(obs.getObsDatetime()));
                             }
-                            Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient,
-                                    "ARV");
-                            SimpleObject firstEncDetails = null;
-                            if (firstEnc != null) {
-                                firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
-                                        firstEnc);
-                            }
-                            Encounter lastEnc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");
-                            SimpleObject lastEncDetails = null;
-                            if (lastEnc != null) {
-                                lastEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(lastEnc.getObs(),
-                                        lastEnc);
-                            }
-                            programDetails.put("enrollmentEncounterUuid", hivEnrollmentEncounter.getUuid());
-                            programDetails.put("lastEncounter", lastEncDetails);
-                            programDetails.put("firstEncounter", firstEncDetails);
                         }
+
+                        Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient,
+                                "ARV");
+                        SimpleObject firstEncDetails = null;
+                        if (firstEnc != null) {
+                            firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
+                                    firstEnc);
+                        }
+                        Encounter lastEnc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");
+                        SimpleObject lastEncDetails = null;
+                        if (lastEnc != null) {
+                            lastEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(lastEnc.getObs(),
+                                    lastEnc);
+                        }
+                        programDetails.put("enrollmentEncounterUuid", hivEnrollmentEncounter.getUuid());
+                        programDetails.put("lastEncounter", lastEncDetails);
+                        programDetails.put("firstEncounter", firstEncDetails);
                     }
                     if (hivCompletionEncounter != null) {
-                        for (Obs obs : hivCompletionEncounter.getAllObs(true)) {
+                        for (Obs obs : hivCompletionEncounter.getAllObs(false)) {
                             if (obs.getConcept()
                                     .equals(Dictionary.getConcept(Dictionary.REASON_FOR_PROGRAM_DISCONTINUATION))) {
                                 programDetails.put("reason", obs.getValueCoded().getName().getName());
+                                break;
                             }
                         }
                         programDetails.put("discontinuationEncounterUuid", hivCompletionEncounter.getUuid());
@@ -1222,8 +1263,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("discontinuationFormName", "HIV Discontinuation");
                     programDetails.put("enrollmentFormUuid", HivMetadata._Form.HIV_ENROLLMENT);
                     programDetails.put("enrollmentFormName", "HIV Enrollment");
-                }
-
+                } else
                 // tpt program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(TPT_PROGRAM_UUID)) {
                     Enrollment tptEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1237,6 +1277,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                             if (obs.getConcept()
                                     .equals(Dictionary.getConcept(Dictionary.INDICATION_FOR_TB_PROPHYLAXIS))) {
                                 programDetails.put("tptIndication", obs.getValueCoded().getName().getName());
+                                break;
                             }
                         }
                         programDetails.put("enrollmentEncounterUuid", tptEnrollmentEncounter.getUuid());
@@ -1246,15 +1287,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     }
                     try {
                         // get medication patient is on
-                        List<DrugOrder> allDrugOrders = EmrUtils.drugOrdersFromOrders(patient, null);
+                        OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, null, drugOrderType, false);
                         List<DrugOrder> tptDrugOrders = new ArrayList<DrugOrder>();
-
-                        for (DrugOrder order : allDrugOrders) {
+                        for (Order order : allDrugOrders) {
                             if (order != null && order.getConcept() != null) {
                                 ConceptName cn = order.getConcept().getName(CoreConstants.LOCALE);
                                 if (cn != null && (cn.getUuid().equals(ISONIAZID_DRUG_UUID)
                                         || cn.getUuid().equals(RIFAMPIN_ISONIAZID_DRUG_UUID))) {
-                                    tptDrugOrders.add(order);
+                                    tptDrugOrders.add((DrugOrder) order);
                                 }
                             }
                         }
@@ -1284,8 +1325,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "IPT Initiation");
                     programDetails.put("discontinuationFormUuid", IPTMetadata._Form.IPT_OUTCOME);
                     programDetails.put("discontinuationFormName", "IPT Outcome");
-                }
-
+                } else
                 // tb program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(TB_PROGRAM_UUID)) {
                     Enrollment tbEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1299,16 +1339,18 @@ public class KenyaemrCoreRestController extends BaseRestController {
                             if (obs.getConcept()
                                     .equals(Dictionary.getConcept(Dictionary.REFERRING_CLINIC_OR_HOSPITAL))) {
                                 programDetails.put("referredFrom", obs.getValueCoded().getName().getName());
+                                break;
                             }
-                            programDetails.put("enrollmentEncounterUuid", tbEnrollmentEncounter.getUuid());
-                            Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "TB");
-                            SimpleObject firstEncDetails = null;
-                            if (firstEnc != null) {
-                                firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
-                                        firstEnc);
-                            }
-                            programDetails.put("firstEncounter", firstEncDetails);
                         }
+
+                        programDetails.put("enrollmentEncounterUuid", tbEnrollmentEncounter.getUuid());
+                        Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "TB");
+                        SimpleObject firstEncDetails = null;
+                        if (firstEnc != null) {
+                            firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
+                                    firstEnc);
+                        }
+                        programDetails.put("firstEncounter", firstEncDetails);
                     }
                     if (tbDiscontinuationEncounter != null) {
                         programDetails.put("discontinuationEncounterUuid", tbDiscontinuationEncounter.getUuid());
@@ -1337,8 +1379,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         for (Obs obs : mchmEnrollmentEncounter.getAllObs(true)) {
                             if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.ANTENATAL_CASE_NUMBER))) {
                                 programDetails.put("ancNumber", obs.getValueCoded().getName().getName());
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.LAST_MONTHLY_PERIOD))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.LAST_MONTHLY_PERIOD))) {
                                 if (deliveryEncounter == null) {
                                     Weeks weeks = Weeks.weeksBetween(new DateTime(obs.getValueDate()),
                                             new DateTime(new Date()));
@@ -1351,26 +1392,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
                                     programDetails.put("lmp", "N/A");
                                     programDetails.put("eddLmp", "N/A");
                                 }
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.EXPECTED_DATE_OF_DELIVERY))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.EXPECTED_DATE_OF_DELIVERY))) {
                                 if (deliveryEncounter == null) {
                                     programDetails.put("eddUltrasound", formatDate(obs.getValueDate()));
                                 }
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.GRAVIDA))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.GRAVIDA))) {
                                 programDetails.put("gravida", obs.getValueNumeric().intValue());
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.PARITY_TERM))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.PARITY_TERM))) {
                                 parityTerm = obs.getValueNumeric().intValue();
-                            }
-                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.PARITY_ABORTION))) {
+                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.PARITY_ABORTION))) {
                                 gravida = obs.getValueNumeric().intValue();
                             }
-                            if (parityTerm != null && gravida != null) {
-                                programDetails.put("parity", parityTerm + gravida);
-                            }
-                            programDetails.put("enrollmentEncounterUuid", mchmEnrollmentEncounter.getUuid());
                         }
+                        if (parityTerm != null && gravida != null) {
+                            programDetails.put("parity", parityTerm + gravida);
+                        }
+                        programDetails.put("enrollmentEncounterUuid", mchmEnrollmentEncounter.getUuid());
 
                     }
                     if (mchmDiscontinuationEncounter != null) {
@@ -1380,7 +1417,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "MCH-MS Enrollment");
                     programDetails.put("discontinuationFormUuid", MchMetadata._Form.MCHMS_DISCONTINUATION);
                     programDetails.put("discontinuationFormName", "MCH-MS Discontinuation");
-                }
+                } else
 
                 // mch child program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(MCH_CHILD_PROGRAM_UUID)) {
@@ -1394,9 +1431,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         for (Obs obs : mchcEnrollmentEncounter.getAllObs(true)) {
                             if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.METHOD_OF_ENROLLMENT))) {
                                 programDetails.put("entryPoint", entryPointAbbriviations(obs.getValueCoded()));
+                                break;
                             }
-                            programDetails.put("enrollmentEncounterUuid", mchcEnrollmentEncounter.getUuid());
                         }
+                        programDetails.put("enrollmentEncounterUuid", mchcEnrollmentEncounter.getUuid());
                     }
                     if (mchcDiscontinuationEncounter != null) {
                         programDetails.put("discontinuationEncounterUuid", mchcDiscontinuationEncounter.getUuid());
@@ -1405,8 +1443,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "Mch Child Enrolment Form");
                     programDetails.put("discontinuationFormUuid", MchMetadata._Form.MCHCS_DISCONTINUATION);
                     programDetails.put("discontinuationFormName", "Child Welfare Services Discontinuation");
-                }
-
+                } else
                 // otz program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(OTZ_PROGRAM_UUID)) {
                     Enrollment otzEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1425,8 +1462,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "OTZ Enrollment Form");
                     programDetails.put("discontinuationFormUuid", OTZMetadata._Form.OTZ_DISCONTINUATION_FORM);
                     programDetails.put("discontinuationFormName", "OTZ Discontinuation Form");
-                }
-
+                } else
                 // ovc program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(OVC_PROGRAM_UUID)) {
                     Enrollment ovcEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1445,8 +1481,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "OVC Enrollment Form");
                     programDetails.put("discontinuationFormUuid", OVCMetadata._Form.OVC_DISCONTINUATION_FORM);
                     programDetails.put("discontinuationFormName", "OVC Discontinuation Form");
-                }
-
+                } else
                 // vmmc program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(VMMC_PROGRAM_UUID)) {
                     Enrollment vmmcEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1465,8 +1500,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "VMMC Enrollment Form");
                     programDetails.put("discontinuationFormUuid", VMMCMetadata._Form.VMMC_DISCONTINUATION_FORM);
                     programDetails.put("discontinuationFormName", "VMMC Discontinuation Form");
-                }
-
+                } else
                 // prep program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(PREP_PROGRAM_UUID)) {
                     Enrollment prepEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1485,8 +1519,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormName", "PrEP Enrollment");
                     programDetails.put("discontinuationFormUuid", PREP_DISCONTINUATION_FORM);
                     programDetails.put("discontinuationFormName", "PrEP Client Discontinuation");
-                }
-
+                } else
                 // kp program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(KP_PROGRAM_UUID)) {
                     Enrollment kpEnrollment = new Enrollment(patientProgramEnrollment);
@@ -1502,7 +1535,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         programDetails.put("discontinuationEncounterUuid", kpDiscontinuationEncounter.getUuid());
                     }
                     programDetails.put("enrollmentFormUuid", KP_CLIENT_ENROLMENT);
-                    programDetails.put("enrollmentFormUuid", "KP Enrollment");
+                    programDetails.put("enrollmentFormName", "KP Enrollment");
                     programDetails.put("discontinuationFormUuid", KP_CLIENT_DISCONTINUATION);
                     programDetails.put("discontinuationFormName", "KP Discontinuation");
                 }
@@ -2260,6 +2293,89 @@ else {
         return  personRelationshipName;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/kpIdentifier")
+    @ResponseBody
+    public Object getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid, @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
+                                            @RequestParam("ward") String ward, @RequestParam("hotspotCode") String hotSpotCodeVal) {
+        PersonService personService = Context.getPersonService();
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+        StringBuilder sb = new StringBuilder();
+        String sql = "SELECT count(*) FROM patient_program pp\n" + "join program p on p.program_id = pp.program_id\n"
+                + "where p.uuid ='7447305a-18a7-11e9-ab14-d663bd873d93' ;";
+        List<List<Object>> everEnrolled = Context.getAdministrationService().executeSQL(sql, true);
+        Long everEnrolledTotal = (Long) everEnrolled.get(0).get(0);
+        Integer kpSerialNumber = everEnrolledTotal.intValue() != 0 ? everEnrolledTotal.intValue() + 1 : 1;
+        Program kpProgram = MetadataUtils.existing(Program.class, KP_PROGRAM_UUID);
+        String hotSpotCode = null;
+        String kpTypeCode = null;
+        String wardCode = null;
+        String subCountyCode = null;
+        String countyCode = null;
+        String implementingPartnerCode = null;
+        StringBuilder identifier = new StringBuilder();
+        GlobalProperty globalCountyCode = Context.getAdministrationService().getGlobalPropertyObject(GP_COUNTY);
+        GlobalProperty globalImplementingPartnerCode = Context.getAdministrationService().getGlobalPropertyObject(GP_KP_IMPLEMENTING_PARTNER);
+		String strCountyCode = globalCountyCode.getPropertyValue();
+        String strImplementingPartner = globalImplementingPartnerCode.getPropertyValue();
+        SimpleObject kpIdentifier = new SimpleObject();
+        wardCode = ward;
+        subCountyCode = subCounty;
+        countyCode = strCountyCode;
+        hotSpotCode = hotSpotCodeVal;
+        implementingPartnerCode = strImplementingPartner;
+        if (kpTypeVal.equals(FSW_UUID)) {
+            kpTypeCode = "01";
+        } else if (kpTypeVal.equals(MSM_UUID)) {
+            kpTypeCode = "02";
+        } else if (kpTypeVal.equals(PWID_UUID)) {
+            kpTypeCode = "03";
+        } else if (kpTypeVal.equals(PWUD_UUID)) {
+            kpTypeCode = "04";
+        } else if (kpTypeVal.equals(TRANSGENDER_UUID)) {
+            kpTypeCode = "05";
+        } else if (kpTypeVal.equals(MSW_UUID)) {
+            kpTypeCode = "07";
+        } else if (kpTypeVal.equals(PEOPLE_IN_PRISON_UUID)) {
+            kpTypeCode = "08";
+        }
+
+        identifier.append(countyCode);
+        identifier.append(subCountyCode);
+        identifier.append(wardCode);
+        identifier.append(implementingPartnerCode.toUpperCase());
+        identifier.append(hotSpotCode);
+        identifier.append(kpTypeCode);
+
+        Date birthDate = personService.getPerson(patient.getId()).getBirthdate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(birthDate);
+        int month = cal.get(Calendar.MONTH) + 1;
+        String middleName = personService.getPerson(patient.getId()).getMiddleName() != null ? personService
+                .getPerson(patient.getId()).getMiddleName().substring(0, 2).toUpperCase() : "";
+        String lastName = personService.getPerson(patient.getId()).getFamilyName().substring(0, 2).toUpperCase();
+        String firstName = personService.getPerson(patient.getId()).getGivenName().substring(0, 2).toUpperCase();
+        identifier.append(firstName).append(middleName).append(lastName);
+        identifier.append(month);
+        String serialNumber = String.format("%04d", kpSerialNumber);
+        identifier.append(serialNumber);
+
+        ProgramWorkflowService service = Context.getProgramWorkflowService();
+        List<PatientProgram> programs = service.getPatientPrograms(Context.getPatientService().getPatient(patient.getId()),
+                kpProgram, null, null, null, null, true);
+
+        if (programs.size() > 0) {
+            PatientIdentifierType pit = MetadataUtils.existing(PatientIdentifierType.class, KP_UNIQUE_PATIENT_NUMBER_UUID);
+            PatientIdentifier pObject = patient.getPatientIdentifier(pit);
+            sb.append(pObject.getIdentifier());
+        } else {
+            sb.append(identifier);
+        }
+        kpIdentifier.put("kpIdentifier", sb.toString());
+        return kpIdentifier;
+
+    }
+
     String entryPointAbbriviations(Concept concept) {
         String value = "Other";
         if(concept != null) {
@@ -2671,4 +2787,565 @@ else {
         return Context.getService(KenyaEmrService.class).search(query, request.getParameterMap());
 
     }
+
+    /**
+     * Verify NUPI exists (EndPoint)
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/verifynupi/{country}/{identifierType}/{identifier}")
+    @ResponseBody
+    public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
+        String ret = "{\"status\": \"Error\"}";
+        try {
+            System.out.println("NUPI verification: Country: " + country + " IdentifierType: " + identifierType + " Identifier: " + identifier);
+
+            // Create URL
+            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if(baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+            }
+            String completeURL = baseURL + "/"  + country + "/" + identifierType  + "/" + identifier;
+            System.out.println("NUPI verification: Using NUPI GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            String authToken = upiUtilsDataExchange.getToken();
+
+            HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+                // Read the response
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                
+                String input;
+                StringBuffer response = new StringBuffer();
+
+                while ((input = in.readLine()) != null) {
+                    response.append(input);
+                }
+                in.close();
+
+                String returnResponse = response.toString();
+                System.out.println("NUPI verification: Got the Response as: " + returnResponse);
+            
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                return ResponseEntity.ok().headers(headers).body(returnResponse);
+            } else {
+                System.out.println("NUPI verification: Error verifying NUPI for client: " + responseCode);
+
+                InputStream errorStream = con.getErrorStream();                   
+                // Read the error response body
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                
+                // Close the reader and the error stream
+                errorReader.close();
+                errorStream.close();
+                
+                // Handle or log the error response
+                String errorBody = errorResponse.toString();
+                System.err.println("New NUPI: Error response body: " + errorBody);
+
+                HttpHeaders headers = new HttpHeaders();
+                String contentType = con.getHeaderField("Content-Type");
+                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                } else {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                }
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+            }
+        } catch(Exception ex) {
+            System.err.println("NUPI verification: ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
+    }
+
+    /**
+     * Search for NUPI (EndPoint)
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/searchnupi/{searchkey}/{searchvalue}")
+    @ResponseBody
+    public Object searchNUPI(@PathVariable String searchkey, @PathVariable String searchvalue) {
+        String ret = "{\"status\": \"Error\"}";
+        try {
+            System.out.println("NUPI search: SearchKey: " + searchkey + " SearchValue: " + searchvalue);
+
+            // Create URL
+            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if(baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+            }
+            String completeURL = baseURL + "/"  + searchkey + "/" + searchvalue;
+            System.out.println("NUPI search: Using NUPI GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            String authToken = upiUtilsDataExchange.getToken();
+
+            HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+                // Read the response
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                
+                String input;
+                StringBuffer response = new StringBuffer();
+
+                while ((input = in.readLine()) != null) {
+                    response.append(input);
+                }
+                in.close();
+
+                String returnResponse = response.toString();
+                System.out.println("NUPI search: Got the Response as: " + returnResponse);
+           
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                return ResponseEntity.ok().headers(headers).body(returnResponse);
+            } else {
+                System.out.println("NUPI search: Error searching NUPI for client: " + responseCode);
+
+                InputStream errorStream = con.getErrorStream();                   
+                // Read the error response body
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                
+                // Close the reader and the error stream
+                errorReader.close();
+                errorStream.close();
+                
+                // Handle or log the error response
+                String errorBody = errorResponse.toString();
+                System.err.println("New NUPI: Error response body: " + errorBody);
+
+                HttpHeaders headers = new HttpHeaders();
+                String contentType = con.getHeaderField("Content-Type");
+                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                } else {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                }
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+            }
+        } catch(Exception ex) {
+            System.err.println("NUPI search: ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
+    }
+
+    /**
+     * Get a new NUPI (EndPoint)
+     * @param request
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.POST, value = "/newnupi")
+    @ResponseBody
+    public Object newNUPI(HttpServletRequest request) {
+        String ret = "{\"status\": \"Error\"}";
+
+        // InputStream errorStream = null;
+        HttpsURLConnection con = null;
+        try {
+            System.out.println("New NUPI: Received NUPI details: " + request.getQueryString());
+
+            // Create URL
+            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            GlobalProperty globalPostUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_POST_END_POINT);
+            String baseURL = globalPostUrl.getPropertyValue();
+            if(baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            }
+            String completeURL = baseURL;
+            System.out.println("New NUPI: Using NUPI POST URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            String authToken = upiUtilsDataExchange.getToken();
+
+            // Make the Connection 
+            con =(HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            // Repost the request
+            String requestBody = "";
+            BufferedReader requestReader = request.getReader();
+            
+            for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
+            System.out.println("New NUPI: Sending to remote: " + requestBody);
+            PrintStream os = new PrintStream(con.getOutputStream());
+			os.print(requestBody);
+			os.close();
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+
+                // Read the response
+                BufferedReader in = null;
+                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                
+                String input;
+                StringBuffer response = new StringBuffer();
+
+                while ((input = in.readLine()) != null) {
+                    response.append(input);
+                }
+                in.close();
+
+                String returnResponse = response.toString();
+                System.out.println("New NUPI: Got the Response as: " + returnResponse);
+
+            
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                return ResponseEntity.ok().headers(headers).body(returnResponse);
+            } else {
+                System.out.println("New NUPI: Error posting new NUPI for client: " + responseCode);
+
+                InputStream errorStream = con.getErrorStream();                   
+                // Read the error response body
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                
+                // Close the reader and the error stream
+                errorReader.close();
+                errorStream.close();
+                
+                // Handle or log the error response
+                String errorBody = errorResponse.toString();
+                System.err.println("New NUPI: Error response body: " + errorBody);
+
+                HttpHeaders headers = new HttpHeaders();
+                String contentType = con.getHeaderField("Content-Type");
+                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                } else {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                }
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+            }
+        } catch(Exception ex) {
+            System.err.println("New NUPI: ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
+    }
+
+    /**
+     * Modify NUPI patient data e.g CCC Number (EndPoint)
+     * @param request
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.PUT, value = "/modifynupi/{nupinumber}/{searchtype}")
+    @ResponseBody
+    public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber, @PathVariable String searchtype) {
+        String ret = "{\"status\": \"Error\"}";
+
+        // InputStream errorStream = null;
+        HttpsURLConnection con = null;
+        try {
+            System.out.println("Modify NUPI: Received NUPI details: " + request.getQueryString());
+            System.out.println("Modify NUPI: nupi number: " + nupinumber + " SearchType: " + searchtype);
+
+            // Create URL
+            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            GlobalProperty globalPostUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_UPDATE_END_POINT);
+            String baseURL = globalPostUrl.getPropertyValue();
+            if(baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
+            }
+            String completeURL = baseURL + "/" + nupinumber + "/" + searchtype;
+            System.out.println("Modify NUPI: Using NUPI POST URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            String authToken = upiUtilsDataExchange.getToken();
+
+            // Make the Connection 
+            con =(HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setDoOutput(true);
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            // Reput the request
+            String requestBody = "";
+            BufferedReader requestReader = request.getReader();
+            
+            for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
+            System.out.println("Modify NUPI: Sending to remote: " + requestBody);
+            PrintStream os = new PrintStream(con.getOutputStream());
+			os.print(requestBody);
+			os.close();
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+
+                // Read the response
+                BufferedReader in = null;
+                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                
+                String input;
+                StringBuffer response = new StringBuffer();
+
+                while ((input = in.readLine()) != null) {
+                    response.append(input);
+                }
+                in.close();
+
+                String returnResponse = response.toString();
+                System.out.println("Modify NUPI: Got the Response as: " + returnResponse);
+
+            
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                return ResponseEntity.ok().headers(headers).body(returnResponse);
+            } else {
+                System.out.println("Modify NUPI: Error posting new NUPI for client: " + responseCode);
+
+                InputStream errorStream = con.getErrorStream();                   
+                // Read the error response body
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                
+                // Close the reader and the error stream
+                errorReader.close();
+                errorStream.close();
+                
+                // Handle or log the error response
+                String errorBody = errorResponse.toString();
+                System.err.println("Modify NUPI: Error response body: " + errorBody);
+
+                HttpHeaders headers = new HttpHeaders();
+                String contentType = con.getHeaderField("Content-Type");
+                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                } else {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                }
+                
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+            }
+        } catch(Exception ex) {
+            System.err.println("Modify NUPI: ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ret);
+    }
+
+    /**
+     * Returns the latest patient Obs value coded concept ID and UUID given the patient UUID and Concept UUID
+     * @param patientUuid
+     * @return value coded concept id and uuid
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/latestobs")
+    @ResponseBody
+    public Object getLatestObs(@RequestParam("patientUuid") String patientUuid, @RequestParam("concept") String conceptIdentifier) {
+        SimpleObject ret = SimpleObject.create("conceptId", 0, "conceptUuid", "");
+        if (StringUtils.isBlank(patientUuid)) {
+            return new ResponseEntity<Object>("You must specify a patientUuid in the request!",
+                    new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (StringUtils.isBlank(conceptIdentifier)) {
+            return new ResponseEntity<Object>("You must specify a concept in the request!",
+                    new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        
+        Concept concept = Dictionary.getConcept(conceptIdentifier);
+		List<Obs> obsList = Context.getObsService().getObservationsByPersonAndConcept(patient, concept);
+		if (obsList.size() > 0) {
+			// these are in reverse chronological order
+            Obs currentObs = obsList.get(0);
+			ret.put("conceptId", currentObs.getValueCoded().getId());
+            ret.put("conceptUuid", currentObs.getValueCoded().getUuid());
+		}
+
+        return ret;
+
+    }
+
+    /**
+     * End Point for getting Patient resource from SHA client registry
+     * @param payload
+     * @param identifier
+     * @param identifierType
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{payload}/{identifier}/{identifierType}")
+    public ResponseEntity<String> getSHAPatient(@PathVariable String payload, @PathVariable String identifier, @PathVariable String identifierType) {
+        String strUserName = "";
+        String strPassword = "";
+
+        String errorResponse = "{\"status\": \"Error\"}";
+        try {
+            // Retrieve base URL from global properties
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if (baseURL == null || baseURL.trim().isEmpty()) {
+                // TODO  replace base URL with the actual external default url
+                baseURL = "http://127.0.0.1:9342/api/shaPatientResource";
+            }
+
+            // Get Auth credentials
+            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
+            strUserName = globalGetUsername.getPropertyValue();
+
+            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
+            strPassword = globalGetPassword.getPropertyValue();
+            // Prepare URL
+            String completeURL = baseURL + "/"  + payload + "/" + identifier  + "/" + identifierType;
+            System.out.println("SHA Client registry verification: Using SHA GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            // Set up connection
+            String auth = strUserName + ":" + strPassword;
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
+        } catch (Exception ex) {
+            log.error("SHA client registry verification: ERROR: {} "+ ex.getMessage(), ex);
+        }
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    }
+
+    /**
+     * End Point for getting Practitioner resource from SHA client registry
+     * @param registrationNumber
+     * @return
+     */
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+   // @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search/{registrationNumber}")
+    @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search")
+    public ResponseEntity<String> getSHAPractitioner(@PathVariable String registrationNumber) {
+        String strUserName = "";
+        String strPassword = "";
+
+        String errorResponse = "{\"status\": \"Error\"}";
+        try {
+            // Retrieve base URL from global properties
+            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
+            String baseURL = globalGetUrl.getPropertyValue();
+            if (baseURL == null || baseURL.trim().isEmpty()) {
+                // TODO  replace base URL with the actual external default url
+                baseURL = "http://127.0.0.1:9342/api/practitioner-search";
+            }
+
+            // Get Auth credentials
+            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
+            strUserName = globalGetUsername.getPropertyValue();
+
+            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
+            strPassword = globalGetPassword.getPropertyValue();
+            // Prepare URL
+            String completeURL = baseURL + "/"  + registrationNumber;
+            System.out.println("SHA practitioner search: Using SHA GET URL: " + completeURL);
+            URL url = new URL(completeURL);
+
+            // Set up connection
+            String auth = strUserName + ":" + strPassword;
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(10000); // set timeout to 10 seconds
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            }
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
+        } catch (Exception ex) {
+            log.error("SHA practitioner search: ERROR: {} "+ ex.getMessage(), ex);
+        }
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    }
+
 }

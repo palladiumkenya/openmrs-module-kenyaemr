@@ -4341,7 +4341,7 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery =  "select distinct he.patient_id\n" +
                 "from kenyaemr_etl.etl_hei_enrollment he\n" +
-                "  inner join kenyaemr_etl.etl_hei_immunization hi on hi.patient_id=he.patient_id\n" +
+                "  inner join kenyaemr_etl.etl_immunization hi on hi.patient_id=he.patient_id\n" +
                 "where date(hi.visit_date) between (:startDate) and (:endDate)\n" +
                 "      and he.child_exposed != 1067 AND\n" +
                 "      hi.PCV_10_1 = \"Yes\" ;";
@@ -4361,7 +4361,7 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery =  "select distinct he.patient_id\n" +
                 "                from kenyaemr_etl.etl_hei_enrollment he\n" +
-                "                 inner join kenyaemr_etl.etl_hei_immunization hi on hi.patient_id=he.patient_id\n" +
+                "                 inner join kenyaemr_etl.etl_immunization hi on hi.patient_id=he.patient_id\n" +
                 "                where date(hi.visit_date) between (:startDate) and (:endDate)\n" +
                 "                  and hi.PCV_10_1 = \"Yes\" ;";
 

@@ -121,9 +121,13 @@ public class NewAccountFragmentController {
 		
 		private Set<Role> roles;
 		
-		private String providerIdentifier;
-		
+		private String providerIdentifier;		
+
 		private String providerFacility;
+
+		private String providerLicense;
+
+		private Date providerLicenseExpiryDate;
 		
 		public CreateAccountForm() {
 			personName = new PersonName();
@@ -264,6 +268,7 @@ public class NewAccountFragmentController {
 				defaultLocation.put("kenyaemr.defaultLocation", providerFacility);
 				ret.setUserProperties(defaultLocation);
 			}
+			
 			return ret;
 		}
 		
@@ -278,6 +283,14 @@ public class NewAccountFragmentController {
 			if (attribute != null) {
 				ret.setAttribute(attribute);
 			}
+			ProviderAttribute licenseAttribute = getLicenseAttribute(providerLicense);
+			if (licenseAttribute != null) {
+				ret.setAttribute(licenseAttribute);
+			}
+			ProviderAttribute licenseExpiryDateAttribute = getLicenseExpiryDateAttribute(providerLicenseExpiryDate);
+			if (licenseExpiryDateAttribute != null) {
+				ret.setAttribute(licenseExpiryDateAttribute);
+			}
 			return ret;
 		}
 		
@@ -291,6 +304,27 @@ public class NewAccountFragmentController {
 			attribute.setValue(Context.getLocationService().getLocation(Integer.parseInt(facility)));
 			return attribute;
 		}
+		ProviderAttribute getLicenseAttribute(String license) {
+			if (StringUtils.isEmpty(license)) {
+				return null;
+			}
+			ProviderAttribute providerLicenseAttr = new ProviderAttribute();
+			providerLicenseAttr.setAttributeType(Context.getService(ProviderService.class)
+				.getProviderAttributeTypeByUuid(CommonMetadata._ProviderAttributeType.LICENSE_NUMBER));
+			providerLicenseAttr.setValue(license);
+			return providerLicenseAttr;
+		}
+		ProviderAttribute getLicenseExpiryDateAttribute(Date providerLicenseExpiryDate) {
+			if (providerLicenseExpiryDate == null) {
+				return null;
+			}
+			ProviderAttribute providerLicenseAttr = new ProviderAttribute();
+			providerLicenseAttr.setAttributeType(Context.getService(ProviderService.class)
+				.getProviderAttributeTypeByUuid(CommonMetadata._ProviderAttributeType.LICENSE_EXPIRY_DATE));
+			providerLicenseAttr.setValue(providerLicenseExpiryDate);
+			return providerLicenseAttr;
+		}
+		
 		
 		public Person getOriginal() {
 			return original;
@@ -422,6 +456,22 @@ public class NewAccountFragmentController {
 		
 		public String getProviderFacility() {
 			return providerFacility;
+		}
+
+		public Date getProviderLicenseExpiryDate() {
+			return providerLicenseExpiryDate;
+		}
+
+		public void setProviderLicenseExpiryDate(Date providerLicenseExpiryDate) {
+			this.providerLicenseExpiryDate = providerLicenseExpiryDate;
+		}
+
+		public String getProviderLicense() {
+			return providerLicense;
+		}
+
+		public void setProviderLicense(String providerLicense) {
+			this.providerLicense = providerLicense;
 		}
 	}
 }
