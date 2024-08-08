@@ -35,9 +35,11 @@ public class PNCBloodPressureDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "     concat_ws('/',v.systolic_bp,v.diastolic_bp) as Blood_pressure from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
+		String qry = "select v.encounter_id,\n" +
+			"       coalesce(concat_ws('/',t.systolic_pressure,t.diastolic_pressure),concat_ws('/',v.systolic_bp,v.diastolic_bp)) as Blood_pressure\n" +
+			"from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+			"         LEFT JOIN kenyaemr_etl.etl_patient_triage t ON v.patient_id = t.patient_id AND date(v.visit_date) = date(t.visit_date)\n" +
+			"where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

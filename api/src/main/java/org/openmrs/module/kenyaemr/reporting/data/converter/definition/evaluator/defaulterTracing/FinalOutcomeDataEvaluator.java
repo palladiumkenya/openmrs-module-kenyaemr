@@ -20,6 +20,7 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -34,12 +35,24 @@ public class FinalOutcomeDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select encounter_id, (case true_status  when 160432 then 'Dead' when 1693 then 'Receiving ART from another clinic/Transferred' when 160037 then 'Still in care at CCC' when 5240 then 'Lost to follow up' when 142917 then 'Other' else ''  end) as outcome from kenyaemr_etl.etl_ccc_defaulter_tracing ";
+        String qry = "select encounter_id,\n" +
+			"       (case true_status\n" +
+			"           when 160432 then 'Dead'\n" +
+			"           when 1693 then 'Receiving ART from another clinic/Transferred'\n" +
+			"           when 160037 then 'Still in care at CCC'\n" +
+			"           when 5240 then 'Lost to follow up'\n" +
+			"           when 142917 then 'Other' else ''  end) as outcome\n" +
+			"from kenyaemr_etl.etl_ccc_defaulter_tracing\n" +
+			"where visit_date between date(:startDate) and date(:endDate);";
 
-        SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
-        queryBuilder.append(qry);
-        Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
-        c.setData(data);
-        return c;
+		SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
+		queryBuilder.append(qry);
+		Date startDate = (Date)context.getParameterValue("startDate");
+		Date endDate = (Date)context.getParameterValue("endDate");
+		queryBuilder.addParameter("endDate", endDate);
+		queryBuilder.addParameter("startDate", startDate);
+		Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
+		c.setData(data);
+		return c;
     }
 }

@@ -152,6 +152,16 @@ public class CommonCohortLibrary {
 		cd.setMaxAgeUnit(DurationUnit.WEEKS);
 		return cd;
 	}
+	public CohortDefinition agedAtLeastDaysAgedAtMostYears(int minAge, int maxAge) {
+		AgeCohortDefinition cd = new AgeCohortDefinition();
+		cd.setName("aged between "+minAge+" days and "+maxAge+" years");
+		cd.addParameter(new Parameter("effectiveDate", "Effective Date", Date.class));
+		cd.setMinAge(minAge);
+		cd.setMaxAge(maxAge);
+		cd.setMinAgeUnit(DurationUnit.DAYS);
+		cd.setMaxAgeUnit(DurationUnit.YEARS);
+		return cd;
+	}
 
 	/**
 	 * Patients who are female and at least 18 years old on ${effectiveDate}

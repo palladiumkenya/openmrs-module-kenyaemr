@@ -36,8 +36,12 @@ public class PNCFistulaScreeningDataEvaluator implements EncounterDataEvaluator 
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.fistula_screening when 1107 then \"None\" when 49 then \"VVF\" when 127847 then \"RVF\" when 1118 then \"Not done\" else \"\" end) as \"Fistula Screening\"\n" +
-                "from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"     (case v.fistula_screening when 1107 then 'None'\n" +
+			"                               when 49 then 'Vesicovaginal Fistula\"'\n" +
+			"                               when 127847 then 'Rectovaginal fistula'\n" +
+			"                               when 111521 then 'Vesicovaginal Reflux'\n" +
+			"                               when 1118 then 'Not done' else '' end) as fistula_screening\n" +
+			"    from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

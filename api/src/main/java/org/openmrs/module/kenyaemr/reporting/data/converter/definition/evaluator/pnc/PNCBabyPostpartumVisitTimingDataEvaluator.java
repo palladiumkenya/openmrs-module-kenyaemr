@@ -35,8 +35,11 @@ public class PNCBabyPostpartumVisitTimingDataEvaluator implements EncounterDataE
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id, (case v.visit_timing_baby when 167012 then '0-48 Hours' when 167013 then '3 days-6 weeks' when 167015 then '>6 weeks' end)\n" +
-                "from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select v.encounter_id, (case v.visit_timing_baby\n" +
+			"when 167012 then '0-48 Hours'\n" +
+			"when 167013 then '3 Days -6 Weeks'\n" +
+			"when 167015 then 'More than weeks'   else ''  end ) as visit_timimg_baby\n" +
+			"from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

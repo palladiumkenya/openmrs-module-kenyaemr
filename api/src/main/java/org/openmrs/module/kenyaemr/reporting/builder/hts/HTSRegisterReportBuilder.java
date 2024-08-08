@@ -89,9 +89,10 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
         PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
-
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
         dsd.addColumn("Name", nameDef, "");
@@ -102,12 +103,14 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
         dsd.addColumn("Marital Status", new KenyaEMRMaritalStatusDataDefinition(), null,new HTSMaritalStatusConverter());
         dsd.addColumn("Unique Patient Number", identifierDef, null);
+        dsd.addColumn("National Unique Patient Identifier", nupiDef, null);
 
         dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
         // new columns
-        dsd.addColumn("Population Type", new PopulationTypeDataDefinition(), null, new KPTypeConverter());
+        dsd.addColumn("Population Type", new PopulationTypeDataDefinition(), null);
         dsd.addColumn("everTested", new EverTestedForHIVDataDefinition(), null);
         dsd.addColumn("disability", new PatientDisabilityDataDefinition(), null);
+        dsd.addColumn("setting", new HTSTestSettingDataDefinition(), null);
         dsd.addColumn("consent", new PatientConsentDataDefinition(), null);
         dsd.addColumn("clientTestedAs", new IndividualORCoupleTestDataDefinition(), null);
         dsd.addColumn("monthsSinceLastTest", new HTSMonthsSinceLastTestDataDefinition(), null);
@@ -115,6 +118,7 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("testEntryPoint", new HTSTestEntryPointDataDefinition(),null,new HTSEntryPointConverter());
         dsd.addColumn("hivTest1", new HIVTestOneDataDefinition(), null);
         dsd.addColumn("hivTest2", new HIVTestTwoDataDefinition(), null);
+        dsd.addColumn("hivTest3", new HIVTestThreeDataDefinition(), null);
         dsd.addColumn("finalResult", new FinalResultDataDefinition(), null);
         dsd.addColumn("finalResultGiven", new FinalResultGivenDataDefinition(), null);
         dsd.addColumn("coupleDiscordant", new HTSDiscordanceDataDefinition(), null);
@@ -123,6 +127,7 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("assessedForHIVRisk", new HTSRiskDoneDataDefinition(),"", new HTSRiskAssessedConverter());
         dsd.addColumn("Linked", new HTSLinkageIdentifierDataDefinition(), null);
         dsd.addColumn("provider", new HTSProviderDataDefinition(), null);
+        dsd.addColumn("referredFor", new HTSReferredForDataDefinition(), null);
         dsd.addColumn("remarks", new HTSRemarksDataDefinition(), null);
 
         HTSRegisterCohortDefinition cd = new HTSRegisterCohortDefinition();

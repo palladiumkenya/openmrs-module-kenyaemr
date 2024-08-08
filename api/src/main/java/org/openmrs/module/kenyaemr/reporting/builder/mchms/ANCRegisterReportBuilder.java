@@ -158,6 +158,9 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         ANCHIVTestTwoDataDefinition ancHIVTestTwoDataDefinition = new ANCHIVTestTwoDataDefinition();
         ancHIVTestTwoDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancHIVTestTwoDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ANCHIVTestThreeDataDefinition ancHIVTestThreeDataDefinition = new ANCHIVTestThreeDataDefinition();
+        ancHIVTestThreeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancHIVTestThreeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         ANCFinalTestResultsDataDefinition ancFinalTestResultsDataDefinition = new ANCFinalTestResultsDataDefinition();
         ancFinalTestResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancFinalTestResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -221,10 +224,19 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         ANCPPFPCounseledDataDefinition ancPPFPCounseledDataDefinition = new ANCPPFPCounseledDataDefinition();
         ancPPFPCounseledDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ancPPFPCounseledDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
+        ANCInfantProphylaxisDataDefinition ancInfantProphylaxisDataDefinition = new ANCInfantProphylaxisDataDefinition();
+        ancInfantProphylaxisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancInfantProphylaxisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
         ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ageAtReportingDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ANCMaternalHAARTDataDefinition ancMaternalHAARTDataDefinition = new ANCMaternalHAARTDataDefinition();
+        ancMaternalHAARTDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancMaternalHAARTDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ANCBloodRhesusGroupDataDefinition ancBloodRhesusGroupDataDefinition = new ANCBloodRhesusGroupDataDefinition();
+        ancBloodRhesusGroupDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ancBloodRhesusGroupDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -259,6 +271,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Height", ancHeightDataDefinition, paramMapping);
         dsd.addColumn("Weight", ancWeightDataDefinition, paramMapping);
         dsd.addColumn("Blood Pressure", ancBloodPressureDataDefinition, paramMapping);
+        dsd.addColumn("Blood Rhesus Group", ancBloodRhesusGroupDataDefinition,  paramMapping);
         dsd.addColumn("Breast Exam", ancBreastExamDoneDataDefinition, paramMapping);
         dsd.addColumn("FGM Done", ancFGMDoneDataDefinition, paramMapping);
         dsd.addColumn("FGM Complications", ancFGMComplicationsDataDefinition, paramMapping);
@@ -276,6 +289,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("HIV Test Type", ancHIVTestTypeDataDefinition, paramMapping);
         dsd.addColumn("HIV Test One", ancHIVTestOneDataDefinition, paramMapping);
         dsd.addColumn("HIV Test Two", ancHIVTestTwoDataDefinition, paramMapping);
+        dsd.addColumn("HIV Test Three", ancHIVTestThreeDataDefinition, paramMapping);
         dsd.addColumn("HIV Test Results", ancFinalTestResultsDataDefinition, paramMapping);
         dsd.addColumn("WHO Stage", ancWHOStageDataDefinition, paramMapping);
         dsd.addColumn("VL Test Results", ancVLTestResultsDataDefinition, paramMapping);
@@ -284,11 +298,13 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Prophylaxis Given", ancProphylaxisGivenDataDefinition, paramMapping);
         dsd.addColumn("AZT Dispensed", ancAZTDispensedDataDefinition, paramMapping);
         dsd.addColumn("NVP Dispensed", ancNVPDispensedDataDefinition, paramMapping);
+        dsd.addColumn("Infant Prophylaxis", ancInfantProphylaxisDataDefinition, paramMapping);
+        dsd.addColumn("Maternal HAART", ancMaternalHAARTDataDefinition, paramMapping);
         dsd.addColumn("TB Screening", ancTBScreeningResultsDataDefinition, paramMapping);
        // dsd.addColumn("CaCx Screening", new ANCCaCxScreeningResultsDataDefinition(),""); d-ropped
         dsd.addColumn("Other Illnesses", ancOtherIllnessesDataDefinition, paramMapping);
         dsd.addColumn("Deworming", ancDewormingDataDefinition, paramMapping);
-        dsd.addColumn("IPT Dose 1-7", ancIPTmalariaDataDefinition, paramMapping);
+        dsd.addColumn("IPT Dose 1-3", ancIPTmalariaDataDefinition, paramMapping);
         dsd.addColumn("TTT Given", ancTTTDataDefinition, paramMapping);
         dsd.addColumn("Suppliment", ancSupplimentDataDefinition, paramMapping);
         dsd.addColumn("ITN", ancITNDataDefinition, paramMapping);

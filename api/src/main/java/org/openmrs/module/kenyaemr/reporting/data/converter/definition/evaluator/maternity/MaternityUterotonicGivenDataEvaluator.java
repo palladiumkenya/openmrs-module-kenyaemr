@@ -37,7 +37,7 @@ public class MaternityUterotonicGivenDataEvaluator implements PersonDataEvaluato
 
         String qry = "select\n" +
                 "  v.patient_id,\n" +
-                "  (case v.uterotonic_given when 81369 then \"Oxytocin\" when 104590 then \"Carbetocin\" when 1107 then \"none\" else \"\" end) as uterotonic_given\n" +
+                "  (case v.uterotonic_given when 81369 then \"Oxytocin\" when 104590 then \"Carbetocin\" when 1107 then \"none\" when 5622 then \"other\" else \"\" end) as uterotonic_given\n" +
                 "from kenyaemr_etl.etl_mchs_delivery v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

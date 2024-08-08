@@ -191,7 +191,7 @@ public class Moh731KDoDReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(indicatorDsd,"HV02-31", "Initial Test at Delivery Male", ReportUtils.map(moh731GreenCardIndicators.initialTestAtDeliveryForMale(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-32", "Initial Test at PNC Male", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCForMale(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-34", "1st ANC KP Adolescent (10-19)", ReportUtils.map(moh731GreenCardIndicators.firstANCKPAdolescents(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
-        EmrReportingUtils.addRow(indicatorDsd,"HV02-35", "HIV Positive Adolescents", ReportUtils.map(moh731GreenCardIndicators.adolescentsHIVPositive(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
+        EmrReportingUtils.addRow(indicatorDsd,"HV02-35", "HIV Positive Adolescents", ReportUtils.map(moh731GreenCardIndicators.newHIVPositiveAtMCH(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-36", "Adolescents started on HAART", ReportUtils.map(moh731GreenCardIndicators.adolescentsStartedOnHAART(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         //Infant HIV Exposure status at Penta 1
         EmrReportingUtils.addRow(indicatorDsd,"HV02-37", "Known Exposure at Penta 1", ReportUtils.map(moh731GreenCardIndicators.knownExposureAtPenta1(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
@@ -210,13 +210,13 @@ public class Moh731KDoDReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(indicatorDsd,"HV02-50", "Net Cohort HEI in 24 months", ReportUtils.map(moh731GreenCardIndicators.netCohortHeiIn24Months(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-51", "Mother-baby pairs in 24 months", ReportUtils.map(moh731GreenCardIndicators.motherBabyPairsIn24Months(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-53", "Pair net cohort in 24 months", ReportUtils.map(moh731GreenCardIndicators.pairNetCohortIn24Months(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
-        EmrReportingUtils.addRow(indicatorDsd,"HV02-53", "Exclusive Breastfeeding at 6 months", ReportUtils.map(moh731GreenCardIndicators.exclusiveBFAt6Months12MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
+        EmrReportingUtils.addRow(indicatorDsd,"HV02-53", "Exclusive Breastfeeding at 6 months", ReportUtils.map(moh731GreenCardIndicators.exclusiveBFAt6Months6MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-54", "Exclusive Replacement Feeding at 6 months", ReportUtils.map(moh731GreenCardIndicators.exclusiveRFAt6Months12MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-55", "Mixed Feeding at 6 months", ReportUtils.map(moh731GreenCardIndicators.mixedFeedingAt6Months12MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-56", "Breast Feeding at 12 months", ReportUtils.map(moh731GreenCardIndicators.breastFeedingAt12Months12MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
         EmrReportingUtils.addRow(indicatorDsd,"HV02-57", "Not Breast Feeding at 12 months", ReportUtils.map(moh731GreenCardIndicators.notBreastFeedingAt12Months12MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
-        EmrReportingUtils.addRow(indicatorDsd,"HV02-58", "Breast Feeding at 18 months", ReportUtils.map(moh731GreenCardIndicators.breastFeedingAt18Months24MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
-        EmrReportingUtils.addRow(indicatorDsd,"HV02-59", "Not Breast Feeding at 18 months", ReportUtils.map(moh731GreenCardIndicators.notBreastFeedingAt18Months24MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
+        EmrReportingUtils.addRow(indicatorDsd,"HV02-58", "Breast Feeding at 18 months", ReportUtils.map(moh731GreenCardIndicators.breastFeedingAt6To24Months24MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
+        EmrReportingUtils.addRow(indicatorDsd,"HV02-59", "Not Breast Feeding at 18 months", ReportUtils.map(moh731GreenCardIndicators.notBreastFeedingAt6To24Months24MonthCohort(), indParams), cadreDisaggregation,Arrays.asList("1","2","3"));
 
         return indicatorDsd;
     }

@@ -37,7 +37,7 @@ public class MaternityDeathAuditedDataEvaluator implements PersonDataEvaluator {
 
         String qry = "select\n" +
                 "  v.patient_id,\n" +
-                "  (case v.maternal_death_audited when 1065 then \"Yes\" when 1066 then \"No\" else \"\" end) as maternal_death_audited\n" +
+                "  (case v.maternal_death_audited when 1065 then \"Yes\" when 1066 then \"No\" when 1067 then \"NA\" else \"\" end) as maternal_death_audited\n" +
                 "from kenyaemr_etl.etl_mchs_delivery v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

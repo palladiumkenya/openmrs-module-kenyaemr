@@ -39,6 +39,7 @@ public class PNCTBScreeningDataEvaluator implements EncounterDataEvaluator {
                 "                     (case s.resulting_tb_status\n" +
                 "                          when 1660 then 'No TB Signs'\n" +
                 "                          when 142177 then 'Presumed TB'\n" +
+                "                          when 164128 then 'On TPT'\n" +
                 "                          when 1662 then 'TB Confirmed'\n" +
                 "                          when 160737 then 'TB Screening Not Done'\n" +
                 "                          else '' end) as resulting_tb_status\n" +
