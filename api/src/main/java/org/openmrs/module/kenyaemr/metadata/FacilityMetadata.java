@@ -61,6 +61,11 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		} else {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
+		install(locationAttributeType(
+				"SHA Accredited Facility", "SHA accredited verification status",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_ACCREDITATION
+		));
 	}
 
 	/**
@@ -91,12 +96,6 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				"Official Fax", "Fax telephone number",
 				FreeTextDatatype.class, "", 0, 1,
 				_LocationAttributeType.TELEPHONE_FAX
-		));
-
-		install(locationAttributeType(
-				"SHA Accredited Facility", "SHA accredited verification status",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_ACCREDITATION
 		));
 
 		if (full) {
