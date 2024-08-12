@@ -29,55 +29,70 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
     public void perform(PrintWriter out) {
 
         String insertPersonAttributes = "insert into person_attribute (person_id, value, person_attribute_type_id, creator, date_created, changed_by,\n" +
-                "                              date_changed, voided, voided_by, date_voided, void_reason, uuid)\n" +
-                "    (select c.patient_id,\n" +
-                "            case c.baseline_hiv_status when 'Negative' then 664 when 'Positive' then 703 else 1067 end,\n" +
-                "            (select person_attribute_type_id from person_attribute_type t where uuid ='3ca03c84-632d-4e53-95ad-91f1bd9d96d6'),\n" +
-                "            c.changed_by,\n" +
-                "            c.date_created,\n" +
-                "            null,\n" +
-                "            c.date_changed,\n" +
-                "            c.voided,\n" +
-                "            c.voided_by,\n" +
-                "            c.date_voided,\n" +
-                "            c.voided_reason,\n" +
-                "            uuid()\n" +
-                "     from kenyaemr_hiv_testing_patient_contact c\n" +
-                "     where c.patient_id is not null)\n" +
+                "                                          date_changed, voided, voided_by, date_voided, void_reason, uuid)\n" +
+                "                (select c.patient_id,\n" +
+                "                        case c.baseline_hiv_status when 'Negative' then 664 when 'Positive' then 703 else 1067 end,\n" +
+                "                        (select person_attribute_type_id from person_attribute_type t where uuid ='3ca03c84-632d-4e53-95ad-91f1bd9d96d6'),\n" +
+                "                        c.changed_by,\n" +
+                "                        c.date_created,\n" +
+                "                        null,\n" +
+                "                        c.date_changed,\n" +
+                "                        c.voided,\n" +
+                "                        c.voided_by,\n" +
+                "                        c.date_voided,\n" +
+                "                        c.voided_reason,\n" +
+                "                        uuid()\n" +
+                "                 from kenyaemr_hiv_testing_patient_contact c\n" +
+                "                 where c.patient_id is not null)\n" +
+                "            union all\n" +
+                "            (select c.patient_id,\n" +
+                "                    ifnull(c.living_with_patient,1067),\n" +
+                "                    (select person_attribute_type_id from person_attribute_type t where uuid = '35a08d84-9f80-4991-92b4-c4ae5903536e'),\n" +
+                "                    c.changed_by,\n" +
+                "                    c.date_created,\n" +
+                "                    null,\n" +
+                "                    c.date_changed,\n" +
+                "                    c.voided,\n" +
+                "                    c.voided_by,\n" +
+                "                    c.date_voided,\n" +
+                "                    c.voided_reason,\n" +
+                "                    uuid()\n" +
+                "             from kenyaemr_hiv_testing_patient_contact c\n" +
+                "             where c.patient_id is not null)\n" +
+                "            union all\n" +
+                "            (select c.patient_id,\n" +
+                "                    ifnull(c.pns_approach,1067),\n" +
+                "                    (select person_attribute_type_id from person_attribute_type t where uuid ='59d1b886-90c8-4f7f-9212-08b20a9ee8cf'),\n" +
+                "                    c.changed_by,\n" +
+                "                    c.date_created,\n" +
+                "                    null,\n" +
+                "                    c.date_changed,\n" +
+                "                    c.voided,\n" +
+                "                    c.voided_by,\n" +
+                "                    c.date_voided,\n" +
+                "                    c.voided_reason,\n" +
+                "                    uuid()\n" +
+                "             from kenyaemr_hiv_testing_patient_contact c\n" +
+                "             where c.patient_id is not null)\n" +
+                "            union all\n" +
+                "            (select c.patient_id,\n" +
+                "                    1065,\n" +
+                "                    (select person_attribute_type_id from person_attribute_type t where uuid = '7c94bd35-fba7-4ef7-96f5-29c89a318fcf'),\n" +
+                "                    c.changed_by,\n" +
+                "                    c.date_created,\n" +
+                "                    null,\n" +
+                "                    c.date_changed,\n" +
+                "                    c.voided,\n" +
+                "                    c.voided_by,\n" +
+                "                    c.date_voided,\n" +
+                "                    c.voided_reason,\n" +
+                "                    uuid()\n" +
+                "             from kenyaemr_hiv_testing_patient_contact c\n" +
+                "             where c.patient_id is not null)\n" +
                 "union all\n" +
                 "(select c.patient_id,\n" +
-                "        ifnull(c.living_with_patient,1067),\n" +
-                "        (select person_attribute_type_id from person_attribute_type t where uuid = '35a08d84-9f80-4991-92b4-c4ae5903536e'),\n" +
-                "        c.changed_by,\n" +
-                "        c.date_created,\n" +
-                "        null,\n" +
-                "        c.date_changed,\n" +
-                "        c.voided,\n" +
-                "        c.voided_by,\n" +
-                "        c.date_voided,\n" +
-                "        c.voided_reason,\n" +
-                "        uuid()\n" +
-                " from kenyaemr_hiv_testing_patient_contact c\n" +
-                " where c.patient_id is not null)\n" +
-                "union all\n" +
-                "(select c.patient_id,\n" +
-                "        ifnull(c.pns_approach,1067),\n" +
-                "        (select person_attribute_type_id from person_attribute_type t where uuid ='59d1b886-90c8-4f7f-9212-08b20a9ee8cf'),\n" +
-                "        c.changed_by,\n" +
-                "        c.date_created,\n" +
-                "        null,\n" +
-                "        c.date_changed,\n" +
-                "        c.voided,\n" +
-                "        c.voided_by,\n" +
-                "        c.date_voided,\n" +
-                "        c.voided_reason,\n" +
-                "        uuid()\n" +
-                " from kenyaemr_hiv_testing_patient_contact c\n" +
-                " where c.patient_id is not null)\n" +
-                "union all\n" +
-                "(select c.patient_id,\n" +
-                "        1065,\n" +
-                "        (select person_attribute_type_id from person_attribute_type t where uuid = '7c94bd35-fba7-4ef7-96f5-29c89a318fcf'),\n" +
+                "        ifnull(c.ipv_outcome,'False'),\n" +
+                "        (select person_attribute_type_id from person_attribute_type t where uuid = '49c543c2-a72a-4b0a-8cca-39c375c0726f'),\n" +
                 "        c.changed_by,\n" +
                 "        c.date_created,\n" +
                 "        null,\n" +
