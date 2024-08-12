@@ -45,6 +45,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String TELEPHONE_LANDLINE = "4ecb5b3f-1518-4056-a266-c4da1def45f5";
 		public static final String TELEPHONE_MOBILE = "8760f471-b2bb-4ded-8970-badf95d3bb44";
 		public static final String TELEPHONE_FAX = "29e1e758-d03e-4e84-a55e-288fa63d533a";
+		public static final String SHA_ACCREDITATION = "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb";
 	}
 
 	/**
@@ -60,6 +61,11 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		} else {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
+		install(locationAttributeType(
+				"SHA Accredited Facility", "SHA accredited verification status",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_ACCREDITATION
+		));
 	}
 
 	/**

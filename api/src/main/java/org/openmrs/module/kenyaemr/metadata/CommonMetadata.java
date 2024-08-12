@@ -192,6 +192,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String  PAYMENT_METHOD_UUID = "e6cb0c3b-04b0-4117-9bc6-ce24adbda802";
 		public static final String POLICY_NUMBER = "0f4f3306-f01b-43c6-af5b-fdb60015cb02";
 		public static final String INSURANCE_SCHEME = "2d0fa959-6780-41f1-85b1-402045935068";
+		public static final String SHA_BENEFITS_PACKAGE = "338725fa-3790-4679-98b9-be623214ee29";
 	}
 
 	public static final class _VisitType {
@@ -447,7 +448,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(visitAttributeType("Payment Method", "The payment method used by the patient to settle payment", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.PAYMENT_METHOD_UUID));
 		install(visitAttributeType("Policy Number", "The insurance policy number or member number", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.POLICY_NUMBER));
 		install(visitAttributeType("Insurance scheme", "The insurance scheme the patient is using to settle payment for services e.g. NHIF, Old mutual.", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.INSURANCE_SCHEME));
-		
+		install(visitAttributeType("SHA Benefits Package", "SHA benefits package the patient is entitled to", FreeTextDatatype.class, null, 0, 1, _VisitAttributeType.SHA_BENEFITS_PACKAGE));
+
 		install(visitType("Outpatient", "Visit where the patient is not admitted to the hospital", _VisitType.OUTPATIENT));
 		install(visitType("Inpatient", "Visit where the patient is admitted to the hospital", _VisitType.INPATIENT));
 		uninstall(possible(PersonAttributeType.class, "73d34479-2f9e-4de3-a5e6-1f79a17459bb"), "Became patient identifier"); // National ID attribute type
