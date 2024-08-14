@@ -19,11 +19,8 @@ import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.HTSConfirmationRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.HTSRegisterCohortDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.HTSEntryPointConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.HTSMaritalStatusConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.HTSRiskAssessedConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.HTSStrategyConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.KPTypeConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.*;
+import org.openmrs.module.kenyaemr.reporting.data.converter.NationalIdentifiersTypeConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -94,6 +91,8 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
         DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        PatientIdentifierType nationalId = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_ID);
+        DataDefinition nationalIdDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nationalId.getName(), nationalId), identifierFormatter);
 
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
@@ -102,6 +101,7 @@ public class HTSRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
         dsd.addColumn("Marital Status", new KenyaEMRMaritalStatusDataDefinition(), null,new HTSMaritalStatusConverter());
+        dsd.addColumn("National Id", nationalIdDef, null);
         dsd.addColumn("Unique Patient Number", identifierDef, null);
         dsd.addColumn("National Unique Patient Identifier", nupiDef, null);
 
