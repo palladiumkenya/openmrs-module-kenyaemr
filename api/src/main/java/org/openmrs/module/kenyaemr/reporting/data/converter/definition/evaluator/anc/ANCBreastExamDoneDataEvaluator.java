@@ -37,7 +37,7 @@ public class ANCBreastExamDoneDataEvaluator implements EncounterDataEvaluator {
 
         String qry = "select\n" +
                 "   v.encounter_id,\n" +
-                "  (case v.breast_exam_done when 1065 then 'Yes' when 1066 then 'No' else '' end) as breast_exam\n" +
+                "  (case v.breast_exam_done when 1065 then 'Yes' when 1066 then 'No' when 1115 then 'Normal' when 1116 then 'Abnormal' else '' end) as breast_exam\n" +
                 "  from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

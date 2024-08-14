@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.gbv.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="e41c3d74-37c7-4001-9f19-ef9e35224b70" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.gbv.EligibleForGBVProgramCalculation" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.gbv.form.enrollment.form" />
+		<property name="defaultCompletionForm" ref="kenyaemr.gbv.form.discontinuation" />
+		<property name="visitForms">
+			<set>
+				<ref bean="kenyaemr.gbv.form.trauma.counselling" />
+				<ref bean="kenyaemr.gbv.form.community.linkage" />
+				<ref bean="kenyaemr.gbv.form.legal.details" />
+				<ref bean="kenyaemr.gbv.form.perpetrator.details" />
+				<ref bean="kenyaemr.gbv.form.consent.details" />
+				<ref bean="kenyaemr.gbv.form.pep.non.ocn" />
+				<ref bean="kenyaemr.gbv.form.pep.ocn" />
+				<ref bean="kenyaemr.gbv.form.pep.survivor" />
+				<ref bean="kenyaemr.sgbv.form.prc.363A" />
+				<ref bean="kenyaemr.sgbv.form.prc.363B" />
+				<ref bean="kenyaemr.gbv.form.physical.emotional" />
+				<ref bean="kenyaemr.gbv.form.pep.followup" />
+			</set>
+		</property>
+		<property name="reports">
+			<set>
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				<entry key="enrollment-summary" value="" />
+				<entry key="care-panel" value="" />
+				<entry key="completion-summary" value="" />
+			</map>
+		</property>
+		<property name="order" value="200" />
+	</bean>
+	<!-- ===================== Forms ===================== -->
+
+	<!-- GBV enrollment form -->
+	<bean id="kenyaemr.gbv.form.enrollment.form" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="9ba1d4aa-57d7-48f9-a635-a23508e8136c" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- GBV discontinuation form -->
+	<bean id="kenyaemr.gbv.form.discontinuation" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="8fed3d06-f8a1-4cb8-b853-cd93394bab79" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- Trauma counselling form -->
+	<bean id="kenyaemr.gbv.form.trauma.counselling" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="e983d758-5adf-4917-8172-0f4be4d8116a" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- Community Linkage form -->
+	<bean id="kenyaemr.gbv.form.community.linkage" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="f760e38c-3d2f-4a5d-aa3d-e9682576efa8" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV Legal form -->
+	<bean id="kenyaemr.gbv.form.legal.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="d0c36426-4503-4236-ab5d-39bff77f2b50" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV Perpetrator details form -->
+	<bean id="kenyaemr.gbv.form.perpetrator.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="f37d7e0e-95e8-430d-96a3-8e22664f74d6" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV Consent form -->
+	<bean id="kenyaemr.gbv.form.consent.details" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="d720a8b3-52cc-41e2-9a75-3fd0d67744e5" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV PEP Management Non OCN form -->
+	<bean id="kenyaemr.gbv.form.pep.non.ocn" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="92de9269-6bb4-4c24-8ec9-870aa2c64b5a" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV PEP Management OCN form -->
+	<bean id="kenyaemr.gbv.form.pep.ocn" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="556718da-7564-4286-a081-c50f8e4b6504" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV PEP Management Survivor form -->
+	<bean id="kenyaemr.gbv.form.pep.survivor" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="f44b2405-226b-47c4-b98f-b826ea4725ae" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- SGBV Post Rape Care Part 363A Form-->
+	<bean id="kenyaemr.sgbv.form.prc.363A" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="c46aa4fd-8a5a-4675-90a7-a6f2119f61d8" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- SGBV PRC Psychological Assessment 363B Form-->
+	<bean id="kenyaemr.sgbv.form.prc.363B" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="9d21275a-7657-433a-b305-a736423cc496" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV Physical and Emotional Abuse Form-->
+	<bean id="kenyaemr.gbv.form.physical.emotional" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="a0943862-f0fe-483d-9f11-44f62abae063" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+	<!-- GBV PEP Followup Form-->
+	<bean id="kenyaemr.gbv.form.pep.followup" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="155ccbe2-a33f-4a58-8ce6-57a7372071ee" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:gbv/formDoesNotExistOn2x.html" />
+	</bean>
+</beans>

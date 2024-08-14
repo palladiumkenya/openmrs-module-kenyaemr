@@ -20,4 +20,6 @@
 	<ref key="OVC" uuid="6eda83f0-09d9-11ea-8d71-362b9e155667" />
 	<ref key="VMMC" uuid="228538f4-cad9-476b-84c3-ab0086150bcc" />
 	<ref key="MAT" uuid="4b898e20-9b2d-11ee-b9d1-0242ac120002" />
+	<ref key="CPM" uuid="8cd42506-2ebd-485f-89d6-4bb9ed328ccc" />
+	<ref key="GBV" uuid="e41c3d74-37c7-4001-9f19-ef9e35224b70" />
 </refs>
