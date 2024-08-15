@@ -355,6 +355,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+        ModeOfOxygenSaturationCollectionDataDefinition idsrModeOfOxygenCollection = new ModeOfOxygenSaturationCollectionDataDefinition();
+        idsrModeOfOxygenCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrModeOfOxygenCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
+
         RespiratoryRateDataDefinition respiratoryRateDataDefinition = new RespiratoryRateDataDefinition();
         respiratoryRateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         respiratoryRateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -362,6 +366,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         IDSRTemperatureDataDefinition idsrTemperatureDataDefinition = new IDSRTemperatureDataDefinition();
         idsrTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         idsrTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        IDSRModeOfTempCollectionDataDefinition idsrModeOfTempCollection = new IDSRModeOfTempCollectionDataDefinition();
+        idsrModeOfTempCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrModeOfTempCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         VaccinatedAgainstCovid19DataDefinition vaccinatedAgainstCovid19DataDefinition = new VaccinatedAgainstCovid19DataDefinition();
         vaccinatedAgainstCovid19DataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -399,8 +407,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Date of onset of the current Illness", complaintsOnsetDateDataDefinition, paramMapping);
         dsd.addColumn("Medical Conditions", medicalConditionsDataDefinition, paramMapping);
         dsd.addColumn("Temperature", idsrTemperatureDataDefinition, paramMapping);
+        dsd.addColumn("Mode of Temperature Collection", idsrModeOfTempCollection, paramMapping);
         dsd.addColumn("Respiratory Rate", respiratoryRateDataDefinition, paramMapping);
         dsd.addColumn("Oxygen saturation", oxygenSaturationDataDefinition, paramMapping);
+        dsd.addColumn("Mode of Oxygen saturation Collection", idsrModeOfOxygenCollection, paramMapping);
         //dsd.addColumn("Vaccinated Against Covid19", vaccinatedAgainstCovid19DataDefinition, paramMapping);
         dsd.addColumn("Vaccinated Against Influenza", vaccinatedAgainstInfluenzaDataDefinition, paramMapping);
         dsd.addColumn("Specimen Collected", specimenForInfluenzaCollectedDataDefinition, paramMapping);
@@ -473,6 +483,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         oxygenSaturationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         oxygenSaturationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
+        ModeOfOxygenSaturationCollectionDataDefinition idsrModeOfOxygenCollection = new ModeOfOxygenSaturationCollectionDataDefinition();
+        idsrModeOfOxygenCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrModeOfOxygenCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
+
         RespiratoryRateDataDefinition respiratoryRateDataDefinition = new RespiratoryRateDataDefinition();
         respiratoryRateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         respiratoryRateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -480,6 +494,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         IDSRTemperatureDataDefinition idsrTemperatureDataDefinition = new IDSRTemperatureDataDefinition();
         idsrTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         idsrTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        IDSRModeOfTempCollectionDataDefinition idsrModeOfTempCollection = new IDSRModeOfTempCollectionDataDefinition();
+        idsrModeOfTempCollection.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        idsrModeOfTempCollection.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         AdmittedInICUOrHDUDataDefinition admittedInICUOrHDUDataDefinition = new AdmittedInICUOrHDUDataDefinition();
         admittedInICUOrHDUDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -523,8 +541,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Date of onset of the current Illness", complaintsOnsetDateDataDefinition, paramMapping);
         dsd.addColumn("Medical Conditions", medicalConditionsDataDefinition, paramMapping);
         dsd.addColumn("Temperature", idsrTemperatureDataDefinition, paramMapping);
+        dsd.addColumn("Mode of Temperature Collection", idsrModeOfTempCollection, paramMapping);
         dsd.addColumn("Respiratory Rate", respiratoryRateDataDefinition, paramMapping);
         dsd.addColumn("Oxygen saturation", oxygenSaturationDataDefinition, paramMapping);
+        dsd.addColumn("Mode of Oxygen saturation Collection", idsrModeOfOxygenCollection, paramMapping);
         dsd.addColumn("Admitted to ICU or HDU", admittedInICUOrHDUDataDefinition, paramMapping);
         //dsd.addColumn("Vaccinated Against Covid19", vaccinatedAgainstCovid19DataDefinition, paramMapping);
         dsd.addColumn("Vaccinated Against Influenza", vaccinatedAgainstInfluenzaDataDefinition, paramMapping);
