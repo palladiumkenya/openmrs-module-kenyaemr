@@ -34,9 +34,7 @@ public class HTSTestSettingDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select encounter_id, \n" +
-                " (case setting when 1537 then \"Facility\" when 163488 then \"Community\" else \"\" end) as setting\n" +
-                "from kenyaemr_etl.etl_hts_test";
+        String qry = "select encounter_id, setting from kenyaemr_etl.etl_hts_test";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
