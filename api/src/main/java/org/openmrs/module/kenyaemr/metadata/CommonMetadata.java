@@ -161,7 +161,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PNS_PATIENT_CONTACT_BASELINE_HIV_STATUS = "3ca03c84-632d-4e53-95ad-91f1bd9d96d6";
 		public static final String PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT= "35a08d84-9f80-4991-92b4-c4ae5903536e";
 		public static final String PNS_PATIENT_CONTACT_REGISTRATION_SOURCE= "7c94bd35-fba7-4ef7-96f5-29c89a318fcf";
-
+		public static final String PNS_PATIENT_CONTACT_IPV_OUTCOME= "49c543c2-a72a-4b0a-8cca-39c375c0726f";
 
 	}
 
@@ -425,6 +425,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_LIVING_WITH_PATIENT));
 		install(personAttributeType("Contact registration from PNS", "Contact registration source from PNS",
 				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_REGISTRATION_SOURCE));
+		install(personAttributeType("Contact IPV Outcome", "Contact IPV Outcome",
+				String.class, null, false, 4.5, _PersonAttributeType.PNS_PATIENT_CONTACT_IPV_OUTCOME));
 
 		// Provider attribute types.
 		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "", 0, 9999 , _ProviderAttributeType.PRIMARY_FACILITY));

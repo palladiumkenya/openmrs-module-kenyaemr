@@ -47,7 +47,7 @@ public class HTSIDUContactsTestedCohortDefinitionEvaluator implements CohortDefi
 
 		Cohort newCohort = new Cohort();
 
-		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type =157351\n" +
+		String qry="select c.id from kenyaemr_etl.etl_hts_contacts c where c.relationship_type =9\n" +
 				"group by c.id;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
