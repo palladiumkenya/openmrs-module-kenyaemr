@@ -37,6 +37,7 @@
 				<ref bean="kenyaemr.hiv.form.artFastTrackForm"/>
 				<ref bean="kenyaemr.hiv.form.cccDefaulterTracing"/>
 				<ref bean="kenyaemr.hiv.form.hivHighITTIntervention" />
+				<ref bean="kenyaemr.hiv.form.homeVisitChecklist" />
 			</set>
 		</property>
 		<property name="reports">
@@ -199,6 +200,20 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:hiv/formDoesNotExistOn2x.html" />
 		<property name="order" value="200015" />
+	</bean>
+
+	<!-- HIV- Home visit checklist -->
+	<bean id="kenyaemr.hiv.form.homeVisitChecklist" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="ac3152de-1728-4786-828a-7fb4db0fc384" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:hiv/formDoesNotExistOn2x.html" />
+		<property name="order" value="200016" />
 	</bean>
 
 	<!-- MOH257 Face Page -->
