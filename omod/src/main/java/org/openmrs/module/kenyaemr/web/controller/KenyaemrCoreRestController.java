@@ -667,8 +667,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                             regimenLineValue = "Continuation Phase (Adult)";
                         }
 
-                    
-                    
+
+
 
                         standardRegimenObj.put("regimenline", groupName);
                         standardRegimenObj.put("regimenLineValue", regimenLineValue);
@@ -2811,7 +2811,7 @@ else {
             System.out.println("NUPI verification: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
-            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
             HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
@@ -2827,7 +2827,7 @@ else {
             if (responseCode == HttpURLConnection.HTTP_OK) { //success
                 // Read the response
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                
+
                 String input;
                 StringBuffer response = new StringBuffer();
 
@@ -2838,7 +2838,7 @@ else {
 
                 String returnResponse = response.toString();
                 System.out.println("NUPI verification: Got the Response as: " + returnResponse);
-            
+
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -2846,7 +2846,7 @@ else {
             } else {
                 System.out.println("NUPI verification: Error verifying NUPI for client: " + responseCode);
 
-                InputStream errorStream = con.getErrorStream();                   
+                InputStream errorStream = con.getErrorStream();
                 // Read the error response body
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
                 StringBuilder errorResponse = new StringBuilder();
@@ -2854,11 +2854,11 @@ else {
                 while ((line = errorReader.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                
+
                 // Close the reader and the error stream
                 errorReader.close();
                 errorStream.close();
-                
+
                 // Handle or log the error response
                 String errorBody = errorResponse.toString();
                 System.err.println("New NUPI: Error response body: " + errorBody);
@@ -2870,8 +2870,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                
-                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("NUPI verification: ERROR: " + ex.getMessage());
@@ -2904,7 +2904,7 @@ else {
             System.out.println("NUPI search: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
-            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
             HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
@@ -2920,7 +2920,7 @@ else {
             if (responseCode == HttpURLConnection.HTTP_OK) { //success
                 // Read the response
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                
+
                 String input;
                 StringBuffer response = new StringBuffer();
 
@@ -2931,14 +2931,14 @@ else {
 
                 String returnResponse = response.toString();
                 System.out.println("NUPI search: Got the Response as: " + returnResponse);
-           
+
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 return ResponseEntity.ok().headers(headers).body(returnResponse);
             } else {
                 System.out.println("NUPI search: Error searching NUPI for client: " + responseCode);
 
-                InputStream errorStream = con.getErrorStream();                   
+                InputStream errorStream = con.getErrorStream();
                 // Read the error response body
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
                 StringBuilder errorResponse = new StringBuilder();
@@ -2946,11 +2946,11 @@ else {
                 while ((line = errorReader.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                
+
                 // Close the reader and the error stream
                 errorReader.close();
                 errorStream.close();
-                
+
                 // Handle or log the error response
                 String errorBody = errorResponse.toString();
                 System.err.println("New NUPI: Error response body: " + errorBody);
@@ -2962,8 +2962,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                
-                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("NUPI search: ERROR: " + ex.getMessage());
@@ -3000,10 +3000,10 @@ else {
             System.out.println("New NUPI: Using NUPI POST URL: " + completeURL);
             URL url = new URL(completeURL);
 
-            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
-            // Make the Connection 
+            // Make the Connection
             con =(HttpsURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setDoOutput(true);
@@ -3015,7 +3015,7 @@ else {
             // Repost the request
             String requestBody = "";
             BufferedReader requestReader = request.getReader();
-            
+
             for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
             System.out.println("New NUPI: Sending to remote: " + requestBody);
             PrintStream os = new PrintStream(con.getOutputStream());
@@ -3029,7 +3029,7 @@ else {
                 // Read the response
                 BufferedReader in = null;
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                
+
                 String input;
                 StringBuffer response = new StringBuffer();
 
@@ -3041,14 +3041,14 @@ else {
                 String returnResponse = response.toString();
                 System.out.println("New NUPI: Got the Response as: " + returnResponse);
 
-            
+
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 return ResponseEntity.ok().headers(headers).body(returnResponse);
             } else {
                 System.out.println("New NUPI: Error posting new NUPI for client: " + responseCode);
 
-                InputStream errorStream = con.getErrorStream();                   
+                InputStream errorStream = con.getErrorStream();
                 // Read the error response body
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
                 StringBuilder errorResponse = new StringBuilder();
@@ -3056,11 +3056,11 @@ else {
                 while ((line = errorReader.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                
+
                 // Close the reader and the error stream
                 errorReader.close();
                 errorStream.close();
-                
+
                 // Handle or log the error response
                 String errorBody = errorResponse.toString();
                 System.err.println("New NUPI: Error response body: " + errorBody);
@@ -3072,8 +3072,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                
-                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("New NUPI: ERROR: " + ex.getMessage());
@@ -3111,10 +3111,10 @@ else {
             System.out.println("Modify NUPI: Using NUPI POST URL: " + completeURL);
             URL url = new URL(completeURL);
 
-            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange(); 
+            UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
-            // Make the Connection 
+            // Make the Connection
             con =(HttpsURLConnection) url.openConnection();
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
@@ -3126,7 +3126,7 @@ else {
             // Reput the request
             String requestBody = "";
             BufferedReader requestReader = request.getReader();
-            
+
             for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
             System.out.println("Modify NUPI: Sending to remote: " + requestBody);
             PrintStream os = new PrintStream(con.getOutputStream());
@@ -3140,7 +3140,7 @@ else {
                 // Read the response
                 BufferedReader in = null;
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                
+
                 String input;
                 StringBuffer response = new StringBuffer();
 
@@ -3152,14 +3152,14 @@ else {
                 String returnResponse = response.toString();
                 System.out.println("Modify NUPI: Got the Response as: " + returnResponse);
 
-            
+
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 return ResponseEntity.ok().headers(headers).body(returnResponse);
             } else {
                 System.out.println("Modify NUPI: Error posting new NUPI for client: " + responseCode);
 
-                InputStream errorStream = con.getErrorStream();                   
+                InputStream errorStream = con.getErrorStream();
                 // Read the error response body
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
                 StringBuilder errorResponse = new StringBuilder();
@@ -3167,11 +3167,11 @@ else {
                 while ((line = errorReader.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                
+
                 // Close the reader and the error stream
                 errorReader.close();
                 errorStream.close();
-                
+
                 // Handle or log the error response
                 String errorBody = errorResponse.toString();
                 System.err.println("Modify NUPI: Error response body: " + errorBody);
@@ -3183,8 +3183,8 @@ else {
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
                 }
-                
-                return ResponseEntity.status(responseCode).headers(headers).body(errorBody); 
+
+                return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
         } catch(Exception ex) {
             System.err.println("Modify NUPI: ERROR: " + ex.getMessage());
@@ -3215,7 +3215,7 @@ else {
         }
 
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-        
+
         Concept concept = Dictionary.getConcept(conceptIdentifier);
 		List<Obs> obsList = Context.getObsService().getObservationsByPersonAndConcept(patient, concept);
 		if (obsList.size() > 0) {
@@ -3237,8 +3237,8 @@ else {
      * @return
      */
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{payload}/{identifier}/{identifierType}")
-    public ResponseEntity<String> getSHAPatient(@PathVariable String payload, @PathVariable String identifier, @PathVariable String identifierType) {
+    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
+    public ResponseEntity<String> getSHAPatient( @PathVariable String identifier, @PathVariable String identifierType) {
         String strUserName = "";
         String strPassword = "";
 
@@ -3259,12 +3259,13 @@ else {
             GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
             strPassword = globalGetPassword.getPropertyValue();
             // Prepare URL
-            String completeURL = baseURL + "/"  + payload + "/" + identifier  + "/" + identifierType;
+            String completeURL = baseURL +  "?" + identifierType  + "=" + identifier;
             System.out.println("SHA Client registry verification: Using SHA GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
             // Set up connection
             String auth = strUserName + ":" + strPassword;
+            System.out.printf("Auth credentials"+auth);
             String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -3346,6 +3347,11 @@ else {
             log.error("SHA practitioner search: ERROR: {} "+ ex.getMessage(), ex);
         }
         return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
+    public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
+        return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
     }
 
 }

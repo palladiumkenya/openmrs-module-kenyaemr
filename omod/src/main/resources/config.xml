@@ -199,4 +199,32 @@
 			Location based patient filter. To enable, set value to false
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.sms.url</property>
+		<defaultValue>https://api.africastalking.com/version1/messaging</defaultValue>
+		<description>
+			The URL of the SMS gateway
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.sms.apiToken</property>
+		<defaultValue>test-api-token</defaultValue>
+		<description>
+			The API token of the SMS gateway
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.sms.senderId</property>
+		<defaultValue>HMIS-SMS</defaultValue>
+		<description>
+			The sender ID of the SMS gateway
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.sms.gateway</property>
+		<defaultValue>test-gateway</defaultValue>
+		<description>
+			The gateway of the SMS gateway
+		</description>
+	</globalProperty>
 </module>
