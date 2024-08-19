@@ -204,4 +204,11 @@
 			Location based patient filter. To enable, set value to false
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.billing.exemptions</property>
+		<defaultValue></defaultValue>
+		<description>
+			Billing exemption config
+		</description>
+	</globalProperty>
 </module>
