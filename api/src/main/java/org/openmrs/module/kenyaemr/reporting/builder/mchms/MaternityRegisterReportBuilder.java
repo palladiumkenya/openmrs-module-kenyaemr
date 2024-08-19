@@ -334,12 +334,10 @@ public class MaternityRegisterReportBuilder extends AbstractHybridReportBuilder 
 		dsd.addColumn("HIV Test Three", maternityHIVTestThreeDataDefinition, paramMapping);
 		dsd.addColumn("HIV Final Results", maternityHIVFinalResultsDataDefinition, paramMapping);
 		dsd.addColumn("ARV Prophylaxis Issued from ANC", maternityARVProphylaxisIssuedFromANCDataDefinition, paramMapping);
-		dsd.addColumn("ARV Prophylaxis Issued at Maternity", maternityARVProphylaxisIssuedAtMaternityDataDefinition, paramMapping);
+		dsd.addColumn("Maternal HAART", maternityARVProphylaxisIssuedAtMaternityDataDefinition, paramMapping);
 		dsd.addColumn("Infant Prophylaxis", maternityARVProphylaxisToBabyAtMaternityDataDefinition, paramMapping);
-		dsd.addColumn("CTX To Mother", maternityCTXToMotherDataDefinition, paramMapping);
 		dsd.addColumn("Vitamin A", maternityVitaminADataDefinition, paramMapping);
 		dsd.addColumn("Partner Tested For HIV", maternityPartnerTestedForHIVDataDefinition, paramMapping);
-		dsd.addColumn("Partner HIV Test Results", maternityPartnerHIVTestResultsDataDefinition, paramMapping);
 		dsd.addColumn("Counselled on Infant Feeding", maternityCounselledOnInfantFeedingDataDefinition, paramMapping);
 		dsd.addColumn("Delivery Conducted by", maternityDeliveryConductedByDataDefinition, paramMapping);
 		dsd.addColumn("Birth Notification Number", maternityBirthNotificationNumberDataDefinition, paramMapping);
