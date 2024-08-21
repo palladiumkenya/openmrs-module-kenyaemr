@@ -3,7 +3,7 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- * <p>
+ *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -26,7 +26,6 @@ import org.openmrs.LocationAttributeType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -35,10 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A scheduled task that automatically updates the facility status.
@@ -52,7 +56,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
-    private static final String MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
+    private static final String MFL_CODE = "14706"; //Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
 
     @Override
     public void execute() {
@@ -116,22 +120,37 @@ public class FacilityStatusTask extends AbstractTask {
         return Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
     }
 
-    private static String extractOperationalStatus(String response) {
+    private static Map<String, String> extractFacilityStatus(String response) {
+        Map<String, String> statusMap = new HashMap<>();
+        statusMap.put("operationalStatus", "Unknown");
+        statusMap.put("approved", "Unknown");
+
         try {
             JSONObject jsonResponse = new JSONObject(response);
             JSONArray extensions = jsonResponse.optJSONArray("extension");
             if (extensions != null) {
                 for (int i = 0; i < extensions.length(); i++) {
                     JSONObject extension = extensions.optJSONObject(i);
-                    if (extension != null && "https://shr.tiberbuapps.com/fhir/StructureDefinition/operational-status".equals(extension.getString("url"))) {
-                        return extension.getJSONObject("valueCoding").getString("display");
+                    if (extension != null) {
+                        String url = extension.getString("url");
+                        if ("https://shr.tiberbuapps.com/fhir/StructureDefinition/operational-status".equals(url)) {
+                            statusMap.put("operationalStatus", extension.getJSONObject("valueCoding").getString("display"));
+                        } else if ("https://shr.tiberbuapps.com/fhir/StructureDefinition/approved".equals(url)) {
+                            statusMap.put("approved", extension.getJSONObject("valueCoding").getString("display"));
+                        }
                     }
                 }
             }
         } catch (JSONException e) {
             logDiagnostics(response);
         }
-        return "Unknown";
+        for (Map.Entry<String, String> entry : statusMap.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+// Option 2: Print the entire map
+        System.out.println(statusMap);
+        return statusMap;
     }
 
     private static void logDiagnostics(String response) {
@@ -155,37 +174,158 @@ public class FacilityStatusTask extends AbstractTask {
             throw new RuntimeException("Error parsing response", e);
         }
     }
+    @Transactional
+    public void saveFacilityStatus() {
+        try {
+            ResponseEntity<String> responseEntity = getFacilityStatus();
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                Map<String, String> facilityStatus = extractFacilityStatus(responseEntity.getBody());
 
-    public static void saveFacilityStatus() {
-        ResponseEntity<String> responseEntity = getFacilityStatus();
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            String operationalStatus = extractOperationalStatus(responseEntity.getBody());
-            final Location LOCATION = locationService.getLocation(LOCATION_ID);
+                String operationalStatus = facilityStatus.getOrDefault("operationalStatus", "Unknown");
+                String approved = facilityStatus.getOrDefault("approved", "Unknown");
 
-            LocationAttributeType shaAccreditationType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION);
+                final Location LOCATION = locationService.getLocation(LOCATION_ID);
 
-            LocationAttribute existingAttribute = LOCATION.getActiveAttributes(shaAccreditationType).stream()
-                    .findFirst()
-                    .orElse(null);
+                // Handle SHA Accreditation Attribute
+                handleSHAAccreditationAttribute(LOCATION, operationalStatus);
 
-            if (existingAttribute == null) {
-                existingAttribute = new LocationAttribute();
-                existingAttribute.setAttributeType(shaAccreditationType);
-                LOCATION.addAttribute(existingAttribute);
-                log.info("New attribute created and set: {}", operationalStatus);
+                // Handle SHA Facility Attribute
+                handleSHAFacilityAttribute(LOCATION, approved);
+
             } else {
-                if (!operationalStatus.equals(existingAttribute.getValue())) {
-                    existingAttribute.setValue(operationalStatus);
-                    log.info("Existing attribute updated to new value: {}", operationalStatus);
-                } else {
-                    log.info("No update needed. Existing attribute value is the same: {}", operationalStatus);
-                }
+                log.error("Failed to save facility status: {}", responseEntity.getBody());
             }
-            existingAttribute.setValue(operationalStatus);
-            locationService.saveLocation(LOCATION);
-            log.info("Facility status for MFL Code {} saved successfully: {}", MFL_CODE, operationalStatus);
-        } else {
-            log.error("Failed to save facility status: {}", responseEntity.getBody());
+        } catch (Exception e) {
+            log.error("Error in saving Facility Status: ", e);
+            throw e;  // Re-throw the exception to ensure the transaction is properly rolled back
         }
     }
+
+    @Transactional
+    public void handleSHAAccreditationAttribute(Location LOCATION, String operationalStatus) {
+        LocationAttributeType shaAccreditationType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION);
+
+        LocationAttribute shaAccreditationAttribute = LOCATION.getActiveAttributes(shaAccreditationType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(shaAccreditationType))
+                .findFirst()
+                .orElse(null);
+
+        if (shaAccreditationAttribute == null) {
+            shaAccreditationAttribute = new LocationAttribute();
+            shaAccreditationAttribute.setAttributeType(shaAccreditationType);
+            shaAccreditationAttribute.setValue(operationalStatus);
+            LOCATION.addAttribute(shaAccreditationAttribute);
+            log.info("New SHA Accreditation attribute created and set: {}", operationalStatus);
+        } else {
+            if (!operationalStatus.equals(shaAccreditationAttribute.getValue())) {
+                shaAccreditationAttribute.setValue(operationalStatus);
+                log.info("SHA Accreditation attribute updated to new value: {}", operationalStatus);
+            } else {
+                log.info("No update needed. SHA Accreditation attribute value is the same: {}", operationalStatus);
+            }
+        }
+        locationService.saveLocation(LOCATION);
+        log.info("Facility status for MFL Code {} saved successfully: Operational Status = {}", MFL_CODE, operationalStatus);
+    }
+
+    @Transactional
+    public void handleSHAFacilityAttribute(Location LOCATION, String approved) {
+        LocationAttributeType isSHAFacility = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY);
+
+        LocationAttribute isSHAFacilityAttribute = LOCATION.getActiveAttributes(isSHAFacility)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(isSHAFacility))
+                .findFirst()
+                .orElse(null);
+
+        if (isSHAFacilityAttribute == null) {
+            isSHAFacilityAttribute = new LocationAttribute();
+            isSHAFacilityAttribute.setAttributeType(isSHAFacility);
+            isSHAFacilityAttribute.setValue(approved);
+            LOCATION.addAttribute(isSHAFacilityAttribute);
+            log.info("New SHA Facility attribute created and set: {}", approved);
+        } else {
+            if (!approved.equals(isSHAFacilityAttribute.getValue())) {
+                isSHAFacilityAttribute.setValue(approved);
+                log.info("SHA Facility attribute updated to new value: {}", approved);
+            } else {
+                log.info("No update needed. SHA Facility attribute value is the same: {}", approved);
+            }
+        }
+        locationService.saveLocation(LOCATION);
+        log.info("Facility status for MFL Code {} saved successfully: , Approved = {}", MFL_CODE, approved);
+    }
+
+/*    @Transactional
+    public void saveFacilityStatus() {
+        try {
+            ResponseEntity<String> responseEntity = getFacilityStatus();
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                Map<String, String> facilityStatus = extractFacilityStatus(responseEntity.getBody());
+
+                String operationalStatus = facilityStatus.getOrDefault("operationalStatus", "Unknown");
+                String approved = facilityStatus.getOrDefault("approved", "Unknown");
+
+                final Location LOCATION = locationService.getLocation(LOCATION_ID);
+
+                LocationAttributeType shaAccreditationType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION);
+                LocationAttributeType isSHAFacility = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY);
+
+                List<LocationAttribute> existingAttributes = LOCATION.getActiveAttributes(shaAccreditationType)
+                        .stream()
+                        .filter(attr -> attr.getAttributeType().equals(shaAccreditationType) ||
+                                attr.getAttributeType().equals(isSHAFacility))
+                        .collect(Collectors.toList());
+
+                LocationAttribute shaAccreditationAttribute = existingAttributes.stream()
+                        .filter(attr -> attr.getAttributeType().equals(shaAccreditationType))
+                        .findFirst()
+                        .orElse(null);
+
+                LocationAttribute isSHAFacilityAttribute = existingAttributes.stream()
+                        .filter(attr -> attr.getAttributeType().equals(isSHAFacility))
+                        .findFirst()
+                        .orElse(null);
+
+                // Handling the SHA Accreditation Attribute
+                if (shaAccreditationAttribute == null) {
+                    shaAccreditationAttribute = new LocationAttribute();
+                    shaAccreditationAttribute.setAttributeType(shaAccreditationType);
+                    LOCATION.addAttribute(shaAccreditationAttribute);
+                    log.info("New SHA Accreditation attribute created and set: {}", operationalStatus);
+                } else {
+                    if (!operationalStatus.equals(shaAccreditationAttribute.getValue())) {
+                        shaAccreditationAttribute.setValue(operationalStatus);
+                        log.info("SHA Accreditation attribute updated to new value: {}", operationalStatus);
+                    } else {
+                        log.info("No update needed. SHA Accreditation attribute value is the same: {}", operationalStatus);
+                    }
+                }
+
+                // Handling the SHA Facility Attribute
+                if (isSHAFacilityAttribute == null) {
+                    isSHAFacilityAttribute = new LocationAttribute();
+                    isSHAFacilityAttribute.setAttributeType(isSHAFacility);
+                    LOCATION.addAttribute(isSHAFacilityAttribute);
+                    log.info("New SHA Facility attribute created and set: {}", approved);
+                } else {
+                    if (!approved.equals(isSHAFacilityAttribute.getValue())) {
+                        isSHAFacilityAttribute.setValue(approved);
+                        log.info("SHA Facility attribute updated to new value: {}", approved);
+                    } else {
+                        log.info("No update needed. SHA Facility attribute value is the same: {}", approved);
+                    }
+                }
+
+                locationService.saveLocation(LOCATION);
+                log.info("Facility status for MFL Code {} saved successfully: Operational Status = {}, Approved = {}", MFL_CODE, operationalStatus, approved);
+            } else {
+                log.error("Failed to save facility status: {}", responseEntity.getBody());
+            }
+        } catch (Exception e) {
+            log.error("Error in saving Facility Status: ", e);
+            throw e;  // Re-throw the exception to ensure the transaction is properly rolled back
+        }
+    }*/
 }
