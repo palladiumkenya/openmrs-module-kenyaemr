@@ -230,6 +230,9 @@
 		<defaultValue>test-gateway</defaultValue>
 		<description>
 			The gateway of the SMS gateway
+		</description>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.billing.exemptions</property>
 		<defaultValue></defaultValue>
 		<description>
