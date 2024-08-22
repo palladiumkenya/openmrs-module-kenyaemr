@@ -67,6 +67,11 @@
 		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.OutpatientToInpatientCheckinOnAdmissionRequest</class>
 	</advice>
 
+	<advice>
+		<point>org.openmrs.api.EncounterService</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.RefreshPatientFlagsOnEncounterSave</class>
+	</advice>
+
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>
@@ -225,6 +230,10 @@
 		<defaultValue>test-gateway</defaultValue>
 		<description>
 			The gateway of the SMS gateway
+		<property>kenyaemr.billing.exemptions</property>
+		<defaultValue></defaultValue>
+		<description>
+			Billing exemption config
 		</description>
 	</globalProperty>
 </module>

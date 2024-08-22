@@ -316,12 +316,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
 
-        CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
-        if (cacheManager.getCache("patientFlagCache").get(patientUuid) != null) {
-            HashMap<String,String> flagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid).get();
-            flagsObj.put("results", composePatientFlagsFromMap(flagsMap));
-            return flagsObj.toString();
-        }
+//        CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
+//        if (cacheManager.getCache("patientFlagCache").get(patientUuid) != null) {
+//            HashMap<String,String> flagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid).get();
+//            flagsObj.put("results", composePatientFlagsFromMap(flagsMap));
+//            return flagsObj.toString();
+//        }
 
         calculationManager.refresh();
         // define a hashmap of flag name and value for ease of update in other parts of the code
@@ -340,7 +340,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         new HttpHeaders(), HttpStatus.NOT_FOUND);
             }
         }
-        cacheManager.getCache("patientFlagCache").putIfAbsent(patientUuid, patientFlagsMap);
+       // cacheManager.getCache("patientFlagCache").putIfAbsent(patientUuid, patientFlagsMap);
         flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
         return flagsObj.toString();
 
