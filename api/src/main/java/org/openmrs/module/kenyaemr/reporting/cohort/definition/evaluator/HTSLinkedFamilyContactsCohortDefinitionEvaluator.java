@@ -47,7 +47,7 @@ public class HTSLinkedFamilyContactsCohortDefinitionEvaluator implements CohortD
 
 		Cohort newCohort = new Cohort();
 
-		String qry="select c.id from kenyaemr_etl.etl_contacts_linked c where c.relationship_type in (3,2,6,8) group by c.id;";
+		String qry="select c.patient_id from kenyaemr_etl.etl_contacts_linked c where c.relationship_type in (3,2,6,8) group by c.patient_id;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
