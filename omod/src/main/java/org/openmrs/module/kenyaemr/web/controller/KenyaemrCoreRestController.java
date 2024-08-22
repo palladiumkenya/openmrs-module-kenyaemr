@@ -435,6 +435,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
         locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
+        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
         locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
 
         return locationNode.toString();
