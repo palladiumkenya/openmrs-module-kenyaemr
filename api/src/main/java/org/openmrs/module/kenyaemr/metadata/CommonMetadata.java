@@ -51,6 +51,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_FACILITY_VERIFICATION_GET_API_USER = "kenyaemr.sha.facilityregistry.get.api.user";
 	public static final String GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET = "kenyaemr.sha.facilityregistry.get.api.secret";
 	public static final String GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT = "kenyaemr.sha.healthworker.registry.get.api";
+	public static final String GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER = "kenyaemr.sha.healthworker.get.api.user";
+	public static final String GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET = "kenyaemr.sha.healthworker.get.api.secret";
 	public static final String GP_SHA_CLIENT_VERIFICATION_GET_API_USER = "kenyaemr.sha.registry.get.api.user";
 	public static final String GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET = "kenyaemr.sha.registry.get.api.secret";
 	public static final String GP_CLIENT_VERIFICATION_POST_END_POINT = "kenyaemr.client.registry.post.api";
@@ -278,7 +280,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			install(globalProperty(GP_SHA_FACILITY_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Facility status information from the registry", "https://sandbox.tiberbu.health/api/v4/"));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Health Worker information from Healthcare Worker registry", "http://127.0.0.1:9342/api/practitioner-search"));
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Health Worker information from Healthcare Worker registry", "https://sandbox.tiberbu.health/api/v4"));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER) == null) {
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER, "API user for for connecting to the SHA provider registry", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET) == null) {
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET, "API secret token for for connecting to the SHA provider registry", ""));
 		}
 
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER) == null) {
