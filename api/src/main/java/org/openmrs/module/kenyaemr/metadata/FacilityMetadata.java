@@ -46,6 +46,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String TELEPHONE_MOBILE = "8760f471-b2bb-4ded-8970-badf95d3bb44";
 		public static final String TELEPHONE_FAX = "29e1e758-d03e-4e84-a55e-288fa63d533a";
 		public static final String SHA_ACCREDITATION = "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb";
+		public static final String SHA_CONTRACTED_FACILITY = "68d9200e-a469-482f-8cc8-9d0953a3c917";
 	}
 
 	/**
@@ -62,9 +63,15 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
 		install(locationAttributeType(
-				"SHA Accredited Facility", "SHA accredited verification status",
+				"SHA Facility Operational Status", "SHA accredited verification status",
 				FreeTextDatatype.class, "", 0, 1,
 				_LocationAttributeType.SHA_ACCREDITATION
+		));
+
+		install(locationAttributeType(
+				"Contracted by SHA", "Facility contracted by SHA",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_CONTRACTED_FACILITY
 		));
 	}
 

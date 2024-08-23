@@ -9,36 +9,18 @@
  */
 package org.openmrs.module.kenyaemr.web.controller;
 
-import org.openmrs.Form;
-import org.openmrs.GlobalProperty;
-import org.openmrs.Location;
-import org.openmrs.Order;
-import org.openmrs.OrderType;
-import org.openmrs.Patient;
-import org.openmrs.Visit;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.Person;
-import org.openmrs.Program;
-import org.openmrs.PatientProgram;
-import org.openmrs.Relationship;
-import org.openmrs.DrugOrder;
-import org.openmrs.Concept;
-import org.openmrs.EncounterType;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.patient.PatientCalculationService;
 import org.openmrs.calculation.result.CalculationResult;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.ListResult;
+import org.openmrs.module.kenyaemr.metadata.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.kenyaemrorderentry.util.Utils;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
@@ -56,16 +38,9 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadAndLdlCa
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.BMICalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferInDateCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsDischargeCalculation;
-import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.util.ZScoreUtil;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
-import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemr.metadata.TbMetadata;
-import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
-import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
-import org.openmrs.module.kenyaemr.metadata.MchMetadata;
-import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
 import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
 import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
@@ -73,7 +48,6 @@ import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.util.EncounterBasedRegimenUtils;
 import org.openmrs.module.kenyaemr.wrapper.PatientWrapper;
 import org.openmrs.module.kenyaemr.wrapper.Enrollment;
-import org.openmrs.module.kenyaemr.metadata.IPTMetadata;
 import org.openmrs.module.kenyacore.CoreContext;
 import org.openmrs.module.kenyacore.calculation.CalculationManager;
 import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
@@ -85,7 +59,6 @@ import org.openmrs.module.kenyacore.calculation.Calculations;
 import org.openmrs.module.kenyacore.calculation.CalculationUtils;
 import org.openmrs.module.kenyacore.CoreUtils;
 import org.openmrs.module.kenyacore.CoreConstants;
-import org.openmrs.ConceptName;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.CD4AtARTInitiationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllVlCountCalculation;
@@ -443,11 +416,27 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         Location location = (Location) gp.getValue();
+
+        LocationAttribute operationalStatusAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION)))
+                .findFirst()
+                .orElse(null);
+
+        LocationAttribute isSHAFacilityAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY)))
+                .findFirst()
+                .orElse(null);
+
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
 
         locationNode.put("locationId", location.getLocationId());
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
+        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
+        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
+        locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
 
         return locationNode.toString();
 
