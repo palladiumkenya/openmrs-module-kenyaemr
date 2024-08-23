@@ -26,7 +26,6 @@ import org.openmrs.LocationAttributeType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -54,7 +53,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
-    private static final String MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
+    private static final String MFL_CODE = "14706"; //Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
 
     @Override
     public void execute() {
@@ -120,28 +119,52 @@ public class FacilityStatusTask extends AbstractTask {
 
     private static Map<String, String> extractFacilityStatus(String response) {
         Map<String, String> statusMap = new HashMap<>();
-        statusMap.put("operationalStatus", "Unknown");
-        statusMap.put("approved", "Unknown");
+        statusMap.put("operationalStatus", "--");
+        statusMap.put("approved", "--");
+        statusMap.put("shaFacilityExpiryDate", "--");
 
         try {
             JSONObject jsonResponse = new JSONObject(response);
+            log.info("JSON Response: {}", jsonResponse.toString(2));
+
             JSONArray extensions = jsonResponse.optJSONArray("extension");
             if (extensions != null) {
                 for (int i = 0; i < extensions.length(); i++) {
                     JSONObject extension = extensions.optJSONObject(i);
                     if (extension != null) {
-                        String url = extension.getString("url");
-                        if ("https://shr.tiberbuapps.com/fhir/StructureDefinition/operational-status".equals(url)) {
-                            statusMap.put("operationalStatus", extension.getJSONObject("valueCoding").getString("display"));
-                        } else if ("https://shr.tiberbuapps.com/fhir/StructureDefinition/approved".equals(url)) {
-                            statusMap.put("approved", extension.getJSONObject("valueCoding").getString("display"));
+                        String url = extension.optString("url", "");
+                        log.debug("Processing extension URL: {}", url);
+
+                        switch (url) {
+                            case "https://shr.tiberbuapps.com/fhir/StructureDefinition/operational-status":
+                                statusMap.put("operationalStatus", extension.getJSONObject("valueCoding").optString("display", "--"));
+                                break;
+
+                            case "https://shr.tiberbuapps.com/fhir/StructureDefinition/approved":
+                                statusMap.put("approved", extension.getJSONObject("valueCoding").optString("display", "--"));
+                                break;
+
+                            case "https://shr.tiberbuapps.com/fhir/StructureDefinition/facility-license-info":
+                                JSONArray licenseExtensions = extension.optJSONArray("extension");
+                                if (licenseExtensions != null) {
+                                    for (int j = 0; j < licenseExtensions.length(); j++) {
+                                        JSONObject licenseExtension = licenseExtensions.optJSONObject(j);
+                                        if (licenseExtension != null &&
+                                                "https://shr.tiberbuapps.com/fhir/StructureDefinition/last-expiry-date".equals(licenseExtension.optString("url", ""))) {
+                                            statusMap.put("shaFacilityExpiryDate", licenseExtension.optString("valueString", "--"));
+                                        }
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
             }
         } catch (JSONException e) {
+            log.error("Error parsing facility status JSON: {}", e.getMessage());
             logDiagnostics(response);
         }
+
         return statusMap;
     }
 
@@ -173,8 +196,9 @@ public class FacilityStatusTask extends AbstractTask {
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 Map<String, String> facilityStatus = extractFacilityStatus(responseEntity.getBody());
 
-                String operationalStatus = facilityStatus.getOrDefault("operationalStatus", "Unknown");
-                String approved = facilityStatus.getOrDefault("approved", "Unknown");
+                String operationalStatus = facilityStatus.getOrDefault("operationalStatus", "--");
+                String approved = facilityStatus.getOrDefault("approved", "--");
+                String facilityExpiryDate = facilityStatus.getOrDefault("facilityExpiryDate", "--");
 
                 final Location LOCATION = locationService.getLocation(LOCATION_ID);
 
@@ -184,6 +208,8 @@ public class FacilityStatusTask extends AbstractTask {
                 // Handle SHA Facility Attribute
                 handleSHAFacilityAttribute(LOCATION, approved);
 
+                //Handle SHA facility expiry date
+                handleSHAFacilityExpiryDateAttribute(LOCATION, facilityExpiryDate);
             } else {
                 log.error("Failed to save facility status: {}", responseEntity.getBody());
             }
@@ -245,5 +271,32 @@ public class FacilityStatusTask extends AbstractTask {
         }
         locationService.saveLocation(LOCATION);
         log.info("Facility status for MFL Code {} saved successfully: , Approved: {}", MFL_CODE, approved);
+    }
+
+    public void handleSHAFacilityExpiryDateAttribute(Location LOCATION, String facilityExpiryDate) {
+        LocationAttributeType facilityExpiryDateAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE);
+
+        LocationAttribute facilityExpiryDateAttribute = LOCATION.getActiveAttributes(facilityExpiryDateAttributeType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(facilityExpiryDateAttributeType))
+                .findFirst()
+                .orElse(null);
+
+        if (facilityExpiryDateAttribute == null) {
+            facilityExpiryDateAttribute = new LocationAttribute();
+            facilityExpiryDateAttribute.setAttributeType(facilityExpiryDateAttributeType);
+            facilityExpiryDateAttribute.setValue(facilityExpiryDate);
+            LOCATION.addAttribute(facilityExpiryDateAttribute);
+            log.info("SHA License expiry date attribute updated to new value: {}", facilityExpiryDate);
+        } else {
+            if (!facilityExpiryDate.equals(facilityExpiryDateAttribute.getValue())) {
+                facilityExpiryDateAttribute.setValue(facilityExpiryDate);
+                log.info("SHA Facility attribute updated to new value: {}", facilityExpiryDate);
+            } else {
+                log.info("No update needed.SHA Facility License expiry date attribute value is the same: {}", facilityExpiryDate);
+            }
+        }
+        locationService.saveLocation(LOCATION);
+        log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", MFL_CODE, facilityExpiryDate);
     }
 }

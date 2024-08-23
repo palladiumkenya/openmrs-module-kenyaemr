@@ -429,6 +429,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .findFirst()
                 .orElse(null);
 
+        LocationAttribute shaFacilityExpiryDate = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE)))
+                .findFirst()
+                .orElse(null);
+
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
 
         locationNode.put("locationId", location.getLocationId());
@@ -437,6 +443,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
         locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
         locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
+        locationNode.put("shaFacilityExpiryDate", shaFacilityExpiryDate != null ? shaFacilityExpiryDate.getValue().toString() : "--" );
 
         return locationNode.toString();
 

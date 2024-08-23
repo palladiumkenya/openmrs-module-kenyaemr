@@ -47,6 +47,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String TELEPHONE_FAX = "29e1e758-d03e-4e84-a55e-288fa63d533a";
 		public static final String SHA_ACCREDITATION = "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb";
 		public static final String SHA_CONTRACTED_FACILITY = "68d9200e-a469-482f-8cc8-9d0953a3c917";
+		public static final String SHA_FACILITY_EXPIRY_DATE = "8e1ec5d4-4810-466a-9c90-b801bae9d063";
 	}
 
 	/**
@@ -73,6 +74,13 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				FreeTextDatatype.class, "", 0, 1,
 				_LocationAttributeType.SHA_CONTRACTED_FACILITY
 		));
+
+		install(locationAttributeType(
+				"Facility Expiry Date", "Expiry date for SHA contracted Facility",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_FACILITY_EXPIRY_DATE
+		));
+
 	}
 
 	/**
