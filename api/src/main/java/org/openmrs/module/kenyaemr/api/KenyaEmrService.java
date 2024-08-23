@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Transactional
 public interface KenyaEmrService extends OpenmrsService {
-	
+
 	/**
 	 * Get if this server has been properly configured
 	 * @return whether or not all required settings in the application are configured.
@@ -35,7 +35,7 @@ public interface KenyaEmrService extends OpenmrsService {
 	 */
 	@Transactional(readOnly = true)
 	boolean isSetupRequired();
-	
+
 	/**
 	 * Sets the default location for this server, i.e. the value that should be auto-set for new
 	 * encounters, visits, etc.
@@ -107,4 +107,6 @@ public interface KenyaEmrService extends OpenmrsService {
 	 */
 	@Authorized
 	public List<SimpleObject> search(String sqlQuery, Map<String, String[]> params);
+
+	public SimpleObject sendKenyaEmrSms(String recipient, String message);
 }

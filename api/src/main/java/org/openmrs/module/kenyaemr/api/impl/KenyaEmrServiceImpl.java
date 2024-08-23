@@ -11,6 +11,13 @@ package org.openmrs.module.kenyaemr.api.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.LocationAttributeType;
@@ -18,6 +25,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Visit;
 import org.openmrs.api.APIException;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -75,7 +83,7 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 	public void setKenyaEmrDAO(KenyaEmrDAO dao) {
 		this.dao = dao;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.kenyaemr.api.KenyaEmrService#isSetupRequired()
 	 */
@@ -104,7 +112,7 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 		gp.setValue(location);
 		Context.getAdministrationService().saveGlobalProperty(gp);
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.kenyaemr.api.KenyaEmrService#getDefaultLocation()
 	 */
@@ -122,7 +130,7 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 			Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
 		}
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.kenyaemr.api.KenyaEmrService#getDefaultLocationMflCode()
 	 */
@@ -301,5 +309,52 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 			updatedParams.put("visit_location_uuid", visitLocationValue);
 		}
 		return updatedParams;
+	}
+
+	@Override
+	public SimpleObject sendKenyaEmrSms(String recipient, String message) {
+		SimpleObject response = new SimpleObject();
+		try {
+			response.add("response", _Sms(recipient, message));
+		} catch (Exception e) {
+			response.add("response", "Failed to send SMS " + e.getMessage());
+			throw new RuntimeException(e);
+		}
+
+		return response;
+	}
+	public static String _Sms(String recipient, String message) throws Exception {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		String responseMsg = null;
+		try {
+			AdministrationService administrationService = Context.getAdministrationService();
+			HttpPost postRequest = new HttpPost(administrationService.getGlobalProperty("kenyaemr.sms.url"));
+			postRequest.setHeader("api-token", administrationService.getGlobalProperty("kenyaemr.sms.apiToken"));
+			JSONObject json = new JSONObject();
+			json.put("destination", recipient);
+			json.put("msg", message);
+			json.put("sender_id", administrationService.getGlobalProperty("kenyaemr.sms.senderId"));
+			json.put("gateway", administrationService.getGlobalProperty("kenyaemr.sms.gateway") );
+
+			StringEntity entity = new StringEntity(json.toString());
+			postRequest.setEntity(entity);
+			postRequest.setHeader("Content-Type", "application/json");
+
+			try (CloseableHttpResponse response = httpClient.execute(postRequest)) {
+				int statusCode = response.getStatusLine().getStatusCode();
+				String responseBody = EntityUtils.toString(response.getEntity());
+
+				if (statusCode == 200) {
+					responseMsg = "SMS sent successfully" + responseBody;
+					System.out.println("SMS sent successfully \n" + responseBody);
+				} else {
+					responseMsg = "Failed to send SMS " + responseBody;
+					System.err.println("Failed to send SMS \n" + responseBody);
+				}
+			}
+		} finally {
+			httpClient.close();
+		}
+		return responseMsg;
 	}
 }
