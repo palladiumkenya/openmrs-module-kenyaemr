@@ -26,6 +26,7 @@ import org.openmrs.LocationAttributeType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -53,7 +54,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
-    private static final String MFL_CODE = "14706"; //Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
+    private static final String MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
 
     @Override
     public void execute() {
