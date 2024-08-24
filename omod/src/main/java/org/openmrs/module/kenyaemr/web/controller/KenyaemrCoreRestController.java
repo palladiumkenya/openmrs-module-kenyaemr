@@ -117,6 +117,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -3288,13 +3290,12 @@ else {
 
     /**
      * End Point for getting Practitioner resource from SHA client registry
-     * @param registrationNumber
+     * @param allParams to capture the query parameters
      * @return
      */
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-   // @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search/{registrationNumber}")
-    @RequestMapping(method = RequestMethod.GET, value = "/practitioner-search")
-    public ResponseEntity<String> getSHAPractitioner(@PathVariable String registrationNumber) {
+    @RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
+    public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) {
         String strUserName = "";
         String strPassword = "";
 
@@ -3304,18 +3305,28 @@ else {
             GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
             if (baseURL == null || baseURL.trim().isEmpty()) {
-                // TODO  replace base URL with the actual external default url
-                baseURL = "http://127.0.0.1:9342/api/practitioner-search";
+                baseURL = "https://sandbox.tiberbu.health/api/v4";
             }
 
             // Get Auth credentials
-            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
+            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER);
             strUserName = globalGetUsername.getPropertyValue();
 
-            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
+            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET);
             strPassword = globalGetPassword.getPropertyValue();
-            // Prepare URL
-            String completeURL = baseURL + "/"  + registrationNumber;
+            if (allParams.size() != 1) {
+                return ResponseEntity.badRequest().body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at atime\"}");
+            }
+
+            Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
+            String identifier = entry.getKey();
+            String value = entry.getValue();
+
+            String completeURL = baseURL + "/Practitioner?" + 
+            URLEncoder.encode(identifier, StandardCharsets.UTF_8.toString()) + 
+            "=" + 
+            URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+
             System.out.println("SHA practitioner search: Using SHA GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
