@@ -101,6 +101,13 @@ import org.w3c.dom.NodeList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
@@ -127,6 +134,7 @@ import org.joda.time.Weeks;
 import org.joda.time.Years;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Comparator;
@@ -3296,66 +3304,93 @@ else {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
     @RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
     public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) {
-        String strUserName = "";
-        String strPassword = "";
+    String strUserName = "";
+    String strPassword = "";
+    String errorResponse = "{\"status\": \"Error\"}";
+    
+    try {
+        // Retrieve base URL from global properties
+        GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
+        String baseURL = globalGetUrl.getPropertyValue();
+        if (baseURL == null || baseURL.trim().isEmpty()) {
+            baseURL = "https://sandbox.tiberbu.health/api/v4";
+        }
 
-        String errorResponse = "{\"status\": \"Error\"}";
-        try {
-            // Retrieve base URL from global properties
-            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
-            String baseURL = globalGetUrl.getPropertyValue();
-            if (baseURL == null || baseURL.trim().isEmpty()) {
-                baseURL = "https://sandbox.tiberbu.health/api/v4";
-            }
+        // Get Auth credentials
+        GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER);
+        strUserName = globalGetUsername.getPropertyValue();
 
-            // Get Auth credentials
-            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER);
-            strUserName = globalGetUsername.getPropertyValue();
+        GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET);
+        strPassword = globalGetPassword.getPropertyValue();
 
-            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET);
-            strPassword = globalGetPassword.getPropertyValue();
-            if (allParams.size() != 1) {
-                return ResponseEntity.badRequest().body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at atime\"}");
-            }
+        // Check if credentials are available
+        if (strUserName == null || strUserName.isEmpty() || strPassword == null || strPassword.isEmpty()) {
+            log.error("SHA practitioner search: API credentials are missing or empty");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"status\": \"Error\", \"message\": \"API credentials are missing or empty\"}");
+        }
 
-            Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
-            String identifier = entry.getKey();
-            String value = entry.getValue();
+        if (allParams.size() != 1) {
+            return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at a time\"}");
+        }
 
-            String completeURL = baseURL + "/Practitioner?" + 
+        Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
+        String identifier = entry.getKey();
+        String value = entry.getValue();
+
+        String completeURL = baseURL + "/Practitioner?" + 
             URLEncoder.encode(identifier, StandardCharsets.UTF_8.toString()) + 
             "=" + 
             URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
 
-            System.out.println("SHA practitioner search: Using SHA GET URL: " + completeURL);
-            URL url = new URL(completeURL);
+        log.info("SHA practitioner search: Using SHA GET URL: " + completeURL);
 
-            // Set up connection
+        // Set up SSL connection
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+            SSLContexts.createDefault(),
+            new String[] { "TLSv1.2" },
+            null,
+            SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+
+        try (CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build()) {
+            HttpGet request = new HttpGet(completeURL);
+
+            // Set up Basic Authentication
             String auth = strUserName + ":" + strPassword;
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+            request.setHeader(HttpHeaders.ACCEPT, "application/json");
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setConnectTimeout(10000); // set timeout to 10 seconds
+            // Execute the request
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.info("SHA practitioner search: Response Code: " + statusCode);
 
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
+                String responseBody = EntityUtils.toString(response.getEntity());
+
+                if (statusCode == 200) {
+                    return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(responseBody);
+                } else {
+                    log.error("SHA practitioner search: ERROR: HTTP " + statusCode + " - " + responseBody);
+                    return ResponseEntity.status(statusCode)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body("{\"status\": \"Error\", \"message\": \"HTTP " + statusCode + " - " + responseBody + "\"}");
                 }
             }
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
-        } catch (Exception ex) {
-            log.error("SHA practitioner search: ERROR: {} "+ ex.getMessage(), ex);
         }
-        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
+    } catch (Exception ex) {
+        log.error("SHA practitioner search: ERROR: " + ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body("{\"status\": \"Error\", \"message\": \"" + ex.getMessage() + "\"}");
     }
-
+}
     @RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
     public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
         return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
