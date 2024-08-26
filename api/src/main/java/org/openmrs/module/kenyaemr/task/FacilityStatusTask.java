@@ -55,7 +55,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
-    private static final String DEFAULT_MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
+    private static final String DEFAULT_MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode().trim();
 
     @Override
     public void execute() {
@@ -114,7 +114,7 @@ public class FacilityStatusTask extends AbstractTask {
         return globalGetUrl.getPropertyValue() != null ? globalGetUrl.getPropertyValue().trim() : DEFAULT_BASE_URL.trim();
     }
     private static String getMFLCode() {
-        return  GP_MFL_CODE != null ? GP_MFL_CODE : DEFAULT_MFL_CODE.trim();
+        return  GP_MFL_CODE != null ? GP_MFL_CODE : DEFAULT_MFL_CODE;
     }
 
     private static String getAuthCredentials() {
