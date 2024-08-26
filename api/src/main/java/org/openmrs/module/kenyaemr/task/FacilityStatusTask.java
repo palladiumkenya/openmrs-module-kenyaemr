@@ -50,6 +50,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final AdministrationService administrationService = Context.getAdministrationService();
     private static final LocationService locationService = Context.getLocationService();
     private static final Integer LOCATION_ID = Integer.parseInt(administrationService.getGlobalProperty("kenyaemr.defaultLocation"));
+    private static final String GP_MFL_CODE = administrationService.getGlobalProperty("facility.mflcode");
     private static final String BASE_URL_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_END_POINT;
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
@@ -73,6 +74,7 @@ public class FacilityStatusTask extends AbstractTask {
 
     public static ResponseEntity<String> getFacilityStatus() {
         String auth = getAuthCredentials();
+
         if (auth.isEmpty()) {
             log.error("Configure authentication credentials");
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
@@ -112,8 +114,7 @@ public class FacilityStatusTask extends AbstractTask {
         return globalGetUrl.getPropertyValue() != null ? globalGetUrl.getPropertyValue().trim() : DEFAULT_BASE_URL.trim();
     }
     private static String getMFLCode() {
-        GlobalProperty mflGlobalProperty = administrationService.getGlobalPropertyObject(FacilityMetadata._LocationAttributeType.MASTER_FACILITY_CODE);
-        return mflGlobalProperty.getPropertyValue() != null ? mflGlobalProperty.getPropertyValue().trim() : DEFAULT_MFL_CODE.trim();
+        return GP_MFL_CODE != null ? GP_MFL_CODE : DEFAULT_MFL_CODE.trim();
     }
 
     private static String getAuthCredentials() {
