@@ -54,7 +54,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
-    private static final String MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
+    private static final String DEFAULT_MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode();
 
     @Override
     public void execute() {
@@ -80,7 +80,7 @@ public class FacilityStatusTask extends AbstractTask {
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
-            HttpGet getRequest = new HttpGet(getBaseUrl() + "/Organization?facility-code=" + MFL_CODE);
+            HttpGet getRequest = new HttpGet(getBaseUrl() + "/Organization?facility-code=" + getMFLCode());
             getRequest.setHeader("Authorization", "Basic " + auth);
 
             HttpResponse response = httpClient.execute(getRequest);
@@ -110,6 +110,10 @@ public class FacilityStatusTask extends AbstractTask {
     private static String getBaseUrl() {
         GlobalProperty globalGetUrl = administrationService.getGlobalPropertyObject(BASE_URL_KEY);
         return globalGetUrl.getPropertyValue() != null ? globalGetUrl.getPropertyValue().trim() : DEFAULT_BASE_URL.trim();
+    }
+    private static String getMFLCode() {
+        GlobalProperty mflGlobalProperty = administrationService.getGlobalPropertyObject(FacilityMetadata._LocationAttributeType.MASTER_FACILITY_CODE);
+        return mflGlobalProperty.getPropertyValue() != null ? mflGlobalProperty.getPropertyValue().trim() : DEFAULT_MFL_CODE.trim();
     }
 
     private static String getAuthCredentials() {
@@ -244,7 +248,7 @@ public class FacilityStatusTask extends AbstractTask {
             }
         }
         locationService.saveLocation(LOCATION);
-        log.info("Facility status for MFL Code {} saved successfully: Operational Status: {}", MFL_CODE, operationalStatus);
+        log.info("Facility status for MFL Code {} saved successfully: Operational Status: {}", getMFLCode(), operationalStatus);
     }
 
     public void handleSHAFacilityAttribute(Location LOCATION, String approved) {
@@ -271,7 +275,7 @@ public class FacilityStatusTask extends AbstractTask {
             }
         }
         locationService.saveLocation(LOCATION);
-        log.info("Facility status for MFL Code {} saved successfully: , Approved: {}", MFL_CODE, approved);
+        log.info("Facility status for MFL Code {} saved successfully: , Approved: {}", getMFLCode(), approved);
     }
 
     public void handleSHAFacilityExpiryDateAttribute(Location LOCATION, String facilityExpiryDate) {
@@ -298,6 +302,6 @@ public class FacilityStatusTask extends AbstractTask {
             }
         }
         locationService.saveLocation(LOCATION);
-        log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", MFL_CODE, facilityExpiryDate);
+        log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", getMFLCode(), facilityExpiryDate);
     }
 }
