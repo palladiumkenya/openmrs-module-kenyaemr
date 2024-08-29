@@ -133,7 +133,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String RECENCY_TESTING_ID = Metadata.IdentifierType.RECENCY_TESTING_ID;
 		public static final String SOCIAL_HEALTH_INSURANCE_NUMBER = Metadata.IdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER;
 		public static final String SHA_UNIQUE_IDENTIFICATION_NUMBER = Metadata.IdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER;
-		public static final String PUBLICATION_NUMBER= Metadata.IdentifierType.PUBLICATION_NUMBER;
+		public static final String KDOD_PUBLICATION_NUMBER= Metadata.IdentifierType.KDOD_PUBLICATION_NUMBER;
 	}
 
 	public static final class _PersonAttributeType {
@@ -375,7 +375,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(patientIdentifierType("Social Health Authority Identification Number", "Social Health Authority Unique Identification Number", "", "Allows for alphanumeric format",
 			null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER));
 		install(patientIdentifierType("Publication Number", "Uniquely identifies military dependents, aiding in organizing and linking them to service members", "", "Allows for alphanumeric format",
-			null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.PUBLICATION_NUMBER));
+			null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.KDOD_PUBLICATION_NUMBER));
 
 
 
