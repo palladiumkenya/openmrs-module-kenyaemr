@@ -17,12 +17,14 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Program;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
-import org.openmrs.module.appointments.service.AppointmentServiceDefinitionService;
 import org.openmrs.module.appointments.service.AppointmentsService;
 import org.openmrs.module.appointments.model.Appointment;
+import org.openmrs.module.appointments.model.AppointmentSearchRequest;
+import org.openmrs.module.appointments.model.AppointmentStatus;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.CalculationUtils;
@@ -53,13 +55,14 @@ public class EligibleForFastrackPatientsCalculation extends AbstractPatientCalcu
 
     protected static final Log log = LogFactory.getLog(EligibleForFastrackPatientsCalculation.class);
     static ConceptService conceptService = Context.getConceptService();
+    static PatientService patientService = Context.getPatientService();
+
 
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
 
-        String hivConsultation = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
+        String hivConsultationService = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
         AppointmentsService appointmentsService = Context.getService(AppointmentsService.class);
-        AppointmentServiceDefinitionService apptServiceDefinitionService = Context.getService(AppointmentServiceDefinitionService.class);
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         Set<Integer> alive = Filters.alive(cohort, context);
         Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
@@ -73,11 +76,16 @@ public class EligibleForFastrackPatientsCalculation extends AbstractPatientCalcu
             Date appointmentDate = null;
             boolean patientInHivProgram = false;
             boolean eligible = false;
-            List<Appointment> appointments = appointmentsService.getAllFutureAppointmentsForService(apptServiceDefinitionService.getAppointmentServiceByUuid(hivConsultation));
-            
+            Date currentDate = new Date();
+            AppointmentSearchRequest appointmentSearchRequest = new AppointmentSearchRequest();
+            appointmentSearchRequest.setPatientUuid(patientService.getPatient(ptId).getUuid());
+            appointmentSearchRequest.setStatus(AppointmentStatus.Scheduled);
+            appointmentSearchRequest.setStartDate(currentDate);
+            List<Appointment> appointments = appointmentsService.search(appointmentSearchRequest);
+      
             // Check if patient has a future appointment and get the appointment date
             Optional<Appointment> futureAppointment = appointments.stream()
-                .filter(appointment -> appointment.getPatient().getPatientId().equals(ptId))
+                .filter(appointment -> appointment.getService().getUuid().equals(hivConsultationService))
                 .findFirst();
 
             if (futureAppointment.isPresent()) {
@@ -86,7 +94,7 @@ public class EligibleForFastrackPatientsCalculation extends AbstractPatientCalcu
             }
 
             //With Greencard TCA more than 30 days
-            Encounter lastFollowUpEncounter = EmrUtils.lastEncounter(Context.getPatientService().getPatient(ptId), Context.getEncounterService().getEncounterTypeByUuid("a0034eee-1940-4e35-847f-97537a35d05e"));   //last greencard followup form
+            Encounter lastFollowUpEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), Context.getEncounterService().getEncounterTypeByUuid("a0034eee-1940-4e35-847f-97537a35d05e"));   //last greencard followup form
             if (lastFollowUpEncounter != null) {
                 for (Obs obs : lastFollowUpEncounter.getObs()) {
                     tcaObsDate = obs.getObsDatetime();
