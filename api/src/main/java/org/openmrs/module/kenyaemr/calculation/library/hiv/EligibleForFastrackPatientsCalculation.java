@@ -68,19 +68,18 @@ public class EligibleForFastrackPatientsCalculation extends AbstractPatientCalcu
         Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
         Set<Integer> ltfu = CalculationUtils.patientsThatPass(calculate(new LostToFollowUpCalculation(), cohort, context));
         CalculationResultMap ret = new CalculationResultMap();
+        Date currentDate = new Date();
+        AppointmentSearchRequest appointmentSearchRequest = new AppointmentSearchRequest();
+        appointmentSearchRequest.setStatus(AppointmentStatus.Scheduled);
+        appointmentSearchRequest.setStartDate(currentDate);
 
 
         for(Integer ptId: cohort){
             Integer tcaPlus30days = 0;
-            Date tcaObsDate = null;
             Date appointmentDate = null;
             boolean patientInHivProgram = false;
             boolean eligible = false;
-            Date currentDate = new Date();
-            AppointmentSearchRequest appointmentSearchRequest = new AppointmentSearchRequest();
             appointmentSearchRequest.setPatientUuid(patientService.getPatient(ptId).getUuid());
-            appointmentSearchRequest.setStatus(AppointmentStatus.Scheduled);
-            appointmentSearchRequest.setStartDate(currentDate);
             List<Appointment> appointments = appointmentsService.search(appointmentSearchRequest);
       
             // Check if patient has a future appointment and get the appointment date
@@ -93,22 +92,18 @@ public class EligibleForFastrackPatientsCalculation extends AbstractPatientCalcu
                 
             }
 
-            //With Greencard TCA more than 30 days
+            //With appointment date more than 30 days
             Encounter lastFollowUpEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), Context.getEncounterService().getEncounterTypeByUuid("a0034eee-1940-4e35-847f-97537a35d05e"));   //last greencard followup form
-            if (lastFollowUpEncounter != null) {
-                for (Obs obs : lastFollowUpEncounter.getObs()) {
-                    tcaObsDate = obs.getObsDatetime();
-                    if(appointmentDate != null && tcaObsDate != null) {
-                        tcaPlus30days = daysBetween(appointmentDate, tcaObsDate);
-                    }
-                }
+            
+            if (lastFollowUpEncounter != null && appointmentDate != null) {
+                tcaPlus30days = daysBetween(appointmentDate, lastFollowUpEncounter.getEncounterDatetime());
             }
 
             if (inHivProgram.contains(ptId) && !ltfu.contains(ptId)) {
                 patientInHivProgram = true;
             }
 
-            if(patientInHivProgram && appointmentDate != null && tcaObsDate != null && appointmentDate.after(new Date()) && tcaPlus30days >= 30) {
+            if(patientInHivProgram && appointmentDate != null && appointmentDate.after(new Date()) && tcaPlus30days >= 30) {
                 eligible = true;
             }
             ret.put(ptId, new BooleanResult(eligible, this));
