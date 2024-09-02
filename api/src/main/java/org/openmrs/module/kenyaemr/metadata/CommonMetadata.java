@@ -82,6 +82,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String SARI_SURVEILLANCE = "76d55715-88cc-4851-b5e0-09136426fd46";
 		public static final String PROCEDURE_RESULTS = "99a7a6ba-59f4-484e-880d-01cbeaead62f";
 		public static final String NUTRITION = "160fcc03-4ff5-413f-b582-7e944a770bed";
+		public static final String AUDIOLOGY = "49da00fd-5b62-437a-a2d4-a28b3d22fa27";
+		public static final String PSYCHIATRIC = "7671cc06-b852-46e6-a279-afc8e2343a04";
+		public static final String ONCOLOGY = "70a0158e-98f3-400b-9c90-a13c84b72065";
+		public static final String PHYSIOTHERAPY = "a0ee267f-4555-48d7-9b1b-6d0dadee8506";
+		public static final String GOPC = "92be533c-35f0-4505-bfbd-95724bea0208";
+		public static final String MOPC = "4c629037-c0cd-4094-84d7-0737ab7b1bd0";
+		public static final String SOPC = "d14dde5b-95dc-40a1-8ff0-acad34fb58b2";
+		public static final String POPC = "6f8e49f2-3bff-4aff-909b-20568c316625";
 	}
 
 	public static final class _Form {
@@ -110,6 +118,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ILI_SURVEILLANCE_FORM = "05bcb369-5d50-4130-9a15-19c77a80314a";
 		public static final String SARI_SURVEILLANCE_FORM = "be0f79d3-9e9a-414b-a1ca-6a2974110bc4";
 		public static final String NUTRITION = "b8357314-0f6a-4fc9-a5b7-339f47095d62";
+		public static final String ONCOLOGY_FORM = "31a371c6-3cfe-431f-94db-4acadad8d209";
+		public static final String PSYCHIATRIC_FORM = "1fbd26f1-0478-437c-be1e-b8468bd03ffa";
+		public static final String AUDIOLOGY_FORM = "d9f74419-e179-426e-9aff-ec97f334a075";
+		public static final String PHYSIOTHERAPY_FORM = "18c209ac-0787-4b51-b9aa-aa8b1581239c";
+		public static final String GOPC_FORM = "35ab0825-33af-49e7-ac01-bb0b05753732";
+		public static final String MOPC_FORM = "00aa7662-e3fd-44a5-8f3a-f73eb7afa437";
+		public static final String SOPC_FORM = "da1f7e74-5371-4997-8a02-b7b9303ddb61";
+		public static final String POPC_FORM = "d95e44dd-e389-42ae-a9b6-1160d8eeebc4";
 	}
 
 	public static final class _OrderType {
@@ -231,6 +247,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("SARI Surveillance", "SARI Surveillance encounter type", _EncounterType.SARI_SURVEILLANCE));
 		install(encounterType("Procedure Results", "Procedure outcome encounter type", _EncounterType.PROCEDURE_RESULTS));
 		install(encounterType("Nutrition", "Nutrition encounter type",_EncounterType.NUTRITION));
+		install(encounterType("Audiology", "Audiology encounter type", _EncounterType.AUDIOLOGY));
+		install(encounterType("Psychiatric", "Psychiatric encounter type", _EncounterType.PSYCHIATRIC));
+		install(encounterType("Oncology", "Oncology encounter type", _EncounterType.ONCOLOGY));
+		install(encounterType("Physiotherapy", "Physiotherapy encounter type", _EncounterType.PHYSIOTHERAPY));
+		install(encounterType("GOPC", "GOPC encounter type", _EncounterType.GOPC));
+		install(encounterType("MOPC", "MOPC encounter type", _EncounterType.MOPC));
+		install(encounterType("SOPC", "SOPC encounter type", _EncounterType.SOPC));
+		install(encounterType("POPC", "POPC encounter type", _EncounterType.POPC));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -255,6 +279,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1", _Form.ILI_SURVEILLANCE_FORM));
 		install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1", _Form.SARI_SURVEILLANCE_FORM));
 		install(form("Nutrition Form", "Form for Nutrition", _EncounterType.NUTRITION, "1",_Form.NUTRITION));
+		install(form("Audiology", "Form for Audiology", _EncounterType.AUDIOLOGY, "1", _Form.AUDIOLOGY_FORM));
+		install(form("Psychiatric Form", "Form for Psychiatric", _EncounterType.PSYCHIATRIC, "1", _Form.PSYCHIATRIC_FORM));
+		install(form("Oncology Form", "Form for Oncology", _EncounterType.ONCOLOGY, "1", _Form.ONCOLOGY_FORM));
+		install(form("Physiotherapy Form", "Form for Physiotherapy", _EncounterType.PHYSIOTHERAPY, "1", _Form.PHYSIOTHERAPY_FORM));
+		install(form("GOPC Form", "Form for Oncology", _EncounterType.GOPC, "1", _Form.GOPC_FORM));
+		install(form("MOPC Form", "Form for Oncology", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
+		install(form("SOPC Form", "Form for Oncology", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
+		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
