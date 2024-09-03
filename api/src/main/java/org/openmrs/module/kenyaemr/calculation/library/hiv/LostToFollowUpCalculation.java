@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.kenyaemr.calculation.library.hiv;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
@@ -23,6 +22,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
+import org.openmrs.module.appointments.service.AppointmentServiceDefinitionService;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.Filters;
@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,6 +75,9 @@ public class LostToFollowUpCalculation extends AbstractPatientCalculation implem
 		Set<Integer> alive = Filters.alive(cohort, context);
 		Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
 		Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		String hivConsultationService = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
+		AppointmentServiceDefinitionService appointmentServiceDefinitionService = Context.getService(AppointmentServiceDefinitionService.class);		
+
 
 		CalculationResultMap ret = new CalculationResultMap();
 		for (Integer ptId : cohort) {
@@ -88,12 +92,20 @@ public class LostToFollowUpCalculation extends AbstractPatientCalculation implem
 			Encounter lastHivDiscontinuationEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), hivDiscEncType, hivDiscForm);  //last hiv discontinuation encounter
 			EncounterType hivEnrolmentEncounter = encounterService.getEncounterTypeByUuid(HivMetadata._EncounterType.HIV_ENROLLMENT);
 			Encounter lastHivEnrollmentEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), hivEnrolmentEncounter);
-			// Is patient alive and in HIV program
+			Integer appointmentServiceId = appointmentServiceDefinitionService.getAppointmentServiceByUuid(hivConsultationService).getAppointmentServiceId();
 			
 			// Check patient latest appointment and get the appointment date
-			String sql = "select max(start_date_time) as appointment_date from patient_appointment" + " where patient_id =" + ptId + " and appointment_service_id = 1;";
-			String lastAppointmentDate = Context.getAdministrationService().executeSQL(sql, true).get(0).get(0).toString();
-			if(lastAppointmentDate != null || !StringUtils.isBlank(lastAppointmentDate)) {
+			String sql = "SELECT MAX(start_date_time) AS appointment_date FROM patient_appointment WHERE" + " patient_id =" + ptId + " AND appointment_service_id =" +appointmentServiceId;
+			String lastAppointmentDate = null;
+			try {
+				List<List<Object>> result = Context.getAdministrationService().executeSQL(sql, true);
+				if (result != null && !result.isEmpty() && result.get(0) != null && result.get(0).get(0) != null) {
+					lastAppointmentDate = result.get(0).get(0).toString();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(lastAppointmentDate != null) {
 				LocalDateTime localDateTime = LocalDateTime.parse(lastAppointmentDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			    appointmentDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
