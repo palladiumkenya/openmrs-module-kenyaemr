@@ -22,6 +22,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
+import org.openmrs.module.appointments.service.AppointmentServiceDefinitionService;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
 import org.openmrs.module.kenyacore.calculation.Filters;
@@ -31,11 +32,15 @@ import org.openmrs.module.kenyaemr.HivConstants;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.util.PrivilegeConstants;
 
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,15 +74,17 @@ public class LostToFollowUpCalculation extends AbstractPatientCalculation implem
 		Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
 		Set<Integer> alive = Filters.alive(cohort, context);
 		Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
+		Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		String hivConsultationService = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
+		AppointmentServiceDefinitionService appointmentServiceDefinitionService = Context.getService(AppointmentServiceDefinitionService.class);		
+
 
 		CalculationResultMap ret = new CalculationResultMap();
 		for (Integer ptId : cohort) {
 			boolean lost = false;
-			Integer tcaConcept = 5096;
-			Date tcaDate = null;
+			Date appointmentDate = null;
 			PatientService patientService = Context.getPatientService();
 			EncounterService encounterService = Context.getEncounterService();
-
 			Concept reasonForDiscontinuation = Dictionary.getConcept(Dictionary.REASON_FOR_PROGRAM_DISCONTINUATION);
 			Concept discontinued_ltfu = Dictionary.getConcept(Dictionary.LOST_TO_FOLLOWUP);
 			EncounterType hivDiscEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_DISCONTINUATION);
@@ -85,27 +92,35 @@ public class LostToFollowUpCalculation extends AbstractPatientCalculation implem
 			Encounter lastHivDiscontinuationEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), hivDiscEncType, hivDiscForm);  //last hiv discontinuation encounter
 			EncounterType hivEnrolmentEncounter = encounterService.getEncounterTypeByUuid(HivMetadata._EncounterType.HIV_ENROLLMENT);
 			Encounter lastHivEnrollmentEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), hivEnrolmentEncounter);
-			// Is patient alive and in HIV program
+			Integer appointmentServiceId = appointmentServiceDefinitionService.getAppointmentServiceByUuid(hivConsultationService).getAppointmentServiceId();
+			
+			// Check patient latest appointment and get the appointment date
+			String sql = "SELECT MAX(start_date_time) AS appointment_date FROM patient_appointment WHERE" + " patient_id =" + ptId + " AND appointment_service_id =" +appointmentServiceId;
+			String lastAppointmentDate = null;
+			try {
+				List<List<Object>> result = Context.getAdministrationService().executeSQL(sql, true);
+				if (result != null && !result.isEmpty() && result.get(0) != null && result.get(0).get(0) != null) {
+					lastAppointmentDate = result.get(0).get(0).toString();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(lastAppointmentDate != null) {
+				LocalDateTime localDateTime = LocalDateTime.parse(lastAppointmentDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			    appointmentDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+			}
 
 			//With Greencard Encounter
 			EncounterType greenCardEncType = MetadataUtils.existing(EncounterType.class, HivMetadata._EncounterType.HIV_CONSULTATION);
 			Form pocHivFollowup = MetadataUtils.existing(Form.class, HivMetadata._Form.HIV_GREEN_CARD);
 			Form rdeHivFollowup = MetadataUtils.existing(Form.class, HivMetadata._Form.MOH_257_VISIT_SUMMARY);
 			Encounter lastFollowUpEncounter = EmrUtils.lastEncounter(patientService.getPatient(ptId), greenCardEncType, Arrays.asList(pocHivFollowup, rdeHivFollowup));  //last hiv followup encounter
-
+ 
 			if (inHivProgram.contains(ptId)) {
-
-				if (lastFollowUpEncounter != null) {
-					for (Obs obs : lastFollowUpEncounter.getObs()) {
-						if (obs.getConcept().getConceptId().equals(tcaConcept)) {
-							tcaDate = obs.getValueDatetime();
-							if (tcaDate != null) {
-								if (daysSince(tcaDate, context) > HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS) {
-									lost = true;
-									break;
-								}
-							}
-						}
+				if (lastFollowUpEncounter != null && appointmentDate != null) {
+					if (daysSince(appointmentDate, context) > HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS) {
+						lost = true;
 					}
 				}
 			}
