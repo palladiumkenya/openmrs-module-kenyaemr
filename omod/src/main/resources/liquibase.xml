@@ -300,4 +300,18 @@
 			<column name="uuid" value="566c425b-0ab7-4e13-a625-dc5e0b3a5e45" />
 		</insert>
 	</changeSet>
+	<!--Removing scheduled Facility status Task -->
+	<changeSet id="${project.parent.artifactId}-20240903-1320" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.kenyaemr.task.FacilityStatusTask'
+				And name = 'Get Facility status from the Registry'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Facility status Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.kenyaemr.task.FacilityStatusTask'</where>
+		</delete>
+	</changeSet>
 </databaseChangeLog>
