@@ -64,6 +64,15 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_CLIENT_VERIFICATION_QUERY_UPI_END_POINT = "kenyaemr.client.registry.query.upi.api";
 	public static final String GP_CLIENT_VERIFICATION_QUERY_CCC_END_POINT = "kenyaemr.client.registry.query.ccc.api";
 	public static final String GP_CLIENT_VERIFICATION_UPDATE_END_POINT = "kenyaemr.client.registry.update.api";
+	public static final String HIV_CONSULTATION_SERVICE = "885b4ad3-fd4c-4a16-8ed3-08813e6b01fa";
+	public static final String PREP_MONTHLY_REFILL_SERVICE = "b8c3efd9-e106-4409-ae0e-b9c651484a20";
+	public static final String DRUG_REFILL_SERVICE = "a96921a1-b89e-4dd2-b6b4-7310f13bbabe";
+	public static final String PREP_FOLLOWUP_SERVICE = "6f9b19f6-ac25-41f9-a75c-b8b125dec3da";
+	public static final String PREP_INITIAL_SERVICE = "242f74b9-b0a3-4ba6-9be3-8f57591e3dff";
+
+
+
+
 
 	public static final class _EncounterType {
 		public static final String CONSULTATION = "465a92f2-baf8-42e9-9612-53064be868e8";

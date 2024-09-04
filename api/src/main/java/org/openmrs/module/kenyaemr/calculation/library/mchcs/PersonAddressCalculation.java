@@ -38,36 +38,38 @@ public class PersonAddressCalculation extends AbstractPatientCalculation {
 
 	@Override
 	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues,
-			PatientCalculationContext context) {
-		CalculationResultMap ret = new CalculationResultMap();
+        PatientCalculationContext context) {
+    CalculationResultMap ret = new CalculationResultMap();
 
-		for (Integer ptId : cohort) {
-			String personAddressString = null;
+    for (Integer ptId : cohort) {
+        String personAddressString = null;
+        Patient patient = Context.getPatientService().getPatient(ptId);
 
-			Patient patient = Context.getPatientService().getPatient(ptId);
-			PersonAddress personAddress = patient.getPersonAddress();
-			List<String> addresses = new ArrayList<String>();
+        if (patient != null) {
+            PersonAddress personAddress = patient.getPersonAddress();
+            List<String> addresses = new ArrayList<String>();
 
-			// get village
-			if (personAddress !=null && personAddress.getCityVillage() != null) {
-				addresses.add(patient.getPersonAddress().getCityVillage());
-			}
+            if (personAddress != null) {
+                // get village
+                if (personAddress.getCityVillage() != null) {
+                    addresses.add(personAddress.getCityVillage());
+                }
 
-			// get landmark
-			if (personAddress !=null && personAddress.getAddress2() != null) {
-				addresses.add(patient.getPersonAddress().getAddress2());
-			}
+                // get landmark
+                if (personAddress.getAddress2() != null) {
+                    addresses.add(personAddress.getAddress2());
+                }
+            }
 
-			if (addresses.size() > 0) {
-				personAddressString = StringUtils.join(addresses, "|");
+            if (!addresses.isEmpty()) {
+                personAddressString = StringUtils.join(addresses, "|");
+            }
+        }
 
-			}
+        ret.put(ptId, new SimpleResult(personAddressString, this, context));
+    }
 
-			ret.put(ptId, new SimpleResult(personAddressString, this, context));
-		}
-
-		return ret;
-
+    return ret;
 	}
 
 }

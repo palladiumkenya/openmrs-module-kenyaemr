@@ -41,6 +41,9 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Relationship;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -336,6 +339,28 @@ public class EmrUtils {
 		}
 		return formsList;
 
+	}
+	public static Date getLatestAppointmentDateForService (Integer patientId, Integer appointmentServiceId) {
+		Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		Date appointmentDate = null;
+		String sql = "SELECT MAX(start_date_time) AS appointment_date FROM patient_appointment WHERE" + " patient_id =" + patientId + " AND appointment_service_id =" +appointmentServiceId;
+		String lastAppointmentDate = null;
+		try {
+			List<List<Object>> result = Context.getAdministrationService().executeSQL(sql, true);
+			if (result != null && !result.isEmpty() && result.get(0) != null && result.get(0).get(0) != null) {
+				lastAppointmentDate = result.get(0).get(0).toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(lastAppointmentDate != null) {
+			LocalDateTime localDateTime = LocalDateTime.parse(lastAppointmentDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			appointmentDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+		}
+
+
+		return appointmentDate;
 	}
 
 }
