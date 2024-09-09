@@ -314,4 +314,202 @@
 			<where>schedulable_class='org.openmrs.module.kenyaemr.task.FacilityStatusTask'</where>
 		</delete>
 	</changeSet>
+	<!--Removing Muzima Queue Data Processor Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1357" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.muzima.task.ProcessQueueDataTask'
+				And name = 'Muzima Queue Data Processor'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Muzima Queue Data Processor Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.muzima.task.ProcessQueueDataTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Medic Queue Data Processor Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1400" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.afyastat.task.ProcessQueueInfoTask'
+				And name = 'Medic Queue Data Processor'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Medic Queue Data Processor Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.afyastat.task.ProcessQueueInfoTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Push Contact list to Medic Mobile CHT system Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1401" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.afyastat.task.PushContactsToMedicMobileTask'
+				And name = 'Push Contact list to Medic Mobile CHT system'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Push Contact list to Medic Mobile CHT system Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.afyastat.task.PushContactsToMedicMobileTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Push positive clients pending linkage to Afyastat Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1403" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.afyastat.task.PushLinkageListToMedicMobileTask'
+				And name = 'Push positive clients pending linkage to Afyastat'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Push positive clients pending linkage to Afyastat Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.afyastat.task.PushLinkageListToMedicMobileTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Push Patient info to Vdot system Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1405" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.vdot.task.PushPatientInfoToVdotTask'
+				And name = 'Push Patient info to Vdot system'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Push Patient info to Vdot system Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.vdot.task.PushPatientInfoToVdotTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Pull Patient data from Vdot system Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1407" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.vdot.task.PullPatientDataFromVdotTask'
+				And name = 'Pull Patient data from Vdot system'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Pull Patient data from Vdot system Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.vdot.task.PullPatientDataFromVdotTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Vdot Enrollment Queue Data Processor Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1409" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.vdot.task.VdotQueueDataProcessorTask'
+				And name = 'Vdot Enrollment Queue Data Processor'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Vdot Enrollment Queue Data Processor Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.vdot.task.VdotQueueDataProcessorTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Process Outbox Task Processor Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1410" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.kenyaemrIL.ProcessOutboxTask'
+				And name = 'Process Outbox Task'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Process Outbox Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.kenyaemrIL.ProcessOutboxTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Process Inbox Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1412" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.kenyaemrIL.ProcessInboxTask'
+				And name = 'Process Inbox Task'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Process Inbox Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.kenyaemrIL.ProcessInboxTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing HTS Contact Listing form processor Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1413" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.hivtestingservices.task.ContactListingFormProcessorTask'
+				And name = 'HTS Contact Listing form processor'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting HTS Contact Listing form processor Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.hivtestingservices.task.ContactListingFormProcessorTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Queue positive clients pending linkage to Afyastat Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1414" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.afyastat.task.QueueLinkageListToMedicMobileTask'
+				And name = 'Queue positive clients pending linkage to Afyastat'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Queue positive clients pending linkage to Afyastat Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.afyastat.task.QueueLinkageListToMedicMobileTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Queue Contact list to Medic Mobile CHT system Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1416" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.afyastat.task.QueueContactsToMedicMobileTask'
+				And name = 'Queue Contact list to Medic Mobile CHT system'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Queue Contact list to Medic Mobile CHT system Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.afyastat.task.QueueContactsToMedicMobileTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Sync CCC numbers with CR Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1417" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.kenyaemr.task.UpdateCCCnumbersTask'
+				And name = 'Sync CCC numbers with CR Task'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Sync CCC numbers with CR Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.kenyaemr.task.UpdateCCCnumbersTask'</where>
+		</delete>
+	</changeSet>
+	<!--Removing Pull Mlab viral load results Task -->
+	<changeSet id="${project.parent.artifactId}-20240909-1447" author="pwangoo">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(*) FROM scheduler_task_config
+				WHERE schedulable_class = 'org.openmrs.module.kenyaemrIL.MLabViralLoadResultsPullTask'
+				And name = 'Pull Mlab viral load results Task'
+			</sqlCheck>
+		</preConditions>
+		<comment>Deleting Pull Mlab viral load results Task from 'schedule_task_config' table</comment>
+		<delete tableName="scheduler_task_config">
+			<where>schedulable_class='org.openmrs.module.kenyaemrIL.MLabViralLoadResultsPullTask'</where>
+		</delete>
+	</changeSet>
 </databaseChangeLog>
+
+
