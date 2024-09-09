@@ -510,7 +510,6 @@
 			<where>schedulable_class='org.openmrs.module.kenyaemrIL.MLabViralLoadResultsPullTask'</where>
 		</delete>
 	</changeSet>
-
 </databaseChangeLog>
 
 
