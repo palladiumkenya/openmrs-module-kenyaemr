@@ -588,26 +588,26 @@
 
 	<bean id="kenyaemr.etl.common.report.moh731" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="a66bf454-2a11-4e51-b28d-3d7ece76aa13" />
-		<property name="name" value="MOH 731" />
+		<property name="name" value="Revised MOH 731" />
 		<property name="description" value="Comprehensive HIV/AIDS Facility Reporting Form - NASCOP (Y23)" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<!--<property name="template" value="kenyaemr:moh731_greencard_template.xls" />-->
-		<property name="template" value="kenyaemr:moh731.xls" />
+		<property name="template" value="kenyaemr:moh731_revised.xls" />
 	</bean>
 
 	<bean id="kenyaemr.etl.common.report.oldmoh731" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="4cca7cdf-da00-4a24-9a57-ab0791987441" />
-		<property name="name" value="Old MOH 731" />
+		<property name="name" value="MOH 731" />
 		<property name="description" value="Comprehensive HIV/AIDS Facility Reporting Form - NASCOP (Y18)" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<!--<property name="template" value="kenyaemr:moh731_greencard_template.xls" />-->
-		<property name="template" value="kenyaemr:moh731_old_y18.xls" />
+		<property name="template" value="kenyaemr:moh731_y18.xls" />
 	</bean>
 
 	<bean id="kenyaemr.etl.common.report.htsprediction" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
@@ -629,23 +629,23 @@
 
 	<bean id="kenyaemr.etl.common.report.Moh731KDoD" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="d67f43e3-f553-4777-8151-837bbaf84bde" />
-		<property name="name" value="KDoD MOH 731" />
-		<property name="description" value="Comprehensive HIV/AIDS Facility Reporting Form - NASCOP" />
+		<property name="name" value="Revised KDoD MOH 731" />
+		<property name="description" value="Comprehensive HIV/AIDS Facility Reporting Form - NASCOP (Y23)" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:moh731-KDoD.xls" />
+		<property name="template" value="kenyaemr:moh731-KDoD_Revised.xls" />
 	</bean>
 	<bean id="kenyaemr.etl.common.report.Moh731KDoD.old" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="dc1d8f67-ea2f-448f-b115-4b96a4df4605" />
-		<property name="name" value="Old KDoD MOH 731" />
+		<property name="name" value="KDoD MOH 731" />
 		<property name="description" value="Comprehensive HIV/AIDS Facility Reporting Form - NASCOP (Y18)" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:moh731-KDoD-old.xls" />
+		<property name="template" value="kenyaemr:moh731-KDoD.xls" />
 	</bean>
 
 	<!-- Datim report-->
