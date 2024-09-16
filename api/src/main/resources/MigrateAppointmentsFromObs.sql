@@ -1,7 +1,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 delete from patient_appointment_audit;
-delete from patient_appointment where appointment_service_id is null or (appointment_service_id in (1,2,3,4,5,6,7,8,9,13,11,12) and date_created < '2024-04-25 18:00:00');
+delete from patient_appointment where appointment_service_id is null or (appointment_service_id in (1,2,3,4,5,6,7,8,9,13,11,12));
 SET FOREIGN_KEY_CHECKS=1;
     
     
