@@ -99,6 +99,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MOPC = "4c629037-c0cd-4094-84d7-0737ab7b1bd0";
 		public static final String SOPC = "d14dde5b-95dc-40a1-8ff0-acad34fb58b2";
 		public static final String POPC = "6f8e49f2-3bff-4aff-909b-20568c316625";
+		public static final String MAXILLOFACIAL = "92999f52-f352-415a-9e0d-87872e5b2c8d";
 	}
 
 	public static final class _Form {
@@ -135,6 +136,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MOPC_FORM = "00aa7662-e3fd-44a5-8f3a-f73eb7afa437";
 		public static final String SOPC_FORM = "da1f7e74-5371-4997-8a02-b7b9303ddb61";
 		public static final String POPC_FORM = "d95e44dd-e389-42ae-a9b6-1160d8eeebc4";
+		public static final String MAXILLOFACIAL_CLINICAL_FORM = "b40d369c-31d0-4c1d-a80a-7e4b7f73bea0";
 	}
 
 	public static final class _OrderType {
@@ -264,6 +266,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("MOPC", "MOPC encounter type", _EncounterType.MOPC));
 		install(encounterType("SOPC", "SOPC encounter type", _EncounterType.SOPC));
 		install(encounterType("POPC", "POPC encounter type", _EncounterType.POPC));
+		install(encounterType("MAXILLOFACIAL", "Maxillofacial encounter type", _EncounterType.MAXILLOFACIAL));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -296,6 +299,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("MOPC Form", "Form for Oncology", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
 		install(form("SOPC Form", "Form for Oncology", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
 		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
+		install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter", _EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
