@@ -49,7 +49,7 @@ public class PatientsEligibleForHtsScreeningCalculation extends AbstractPatientC
 
             Age age = new Age(patient.getBirthdate());
 
-           if(age.getFullMonths() >= 19) {
+           if(age.getFullMonths() >= 18) {
                List<Encounter> enrollmentEncounters = encounterService.getEncounters(
                        Context.getPatientService().getPatient(ptId),
                        null,
