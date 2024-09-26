@@ -42,8 +42,8 @@ import java.util.*;
  * SARI
  * * @should calculate admitted
  */
-public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation {
-	protected static final Log log = LogFactory.getLog(EligibleForIDSRFlagsCalculation.class);
+public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+	protected static final Log log = LogFactory.getLog(EligibleForIDSRSymptomsFlagsCalculation.class);
 
 	List<String> idsrMessage = new ArrayList<String>();
 	String idsrMessageString = "";
@@ -68,29 +68,50 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 	String JOINT_PAIN = "116558AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Cholera
 	String VOMITING = "122983AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-	String WATERY_DIARRHEA = "161887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	//String WATERY_DIARRHEA = "161887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Dysentry
 	String BLOOD_IN_STOOL = "117671AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String DIARRHEA = "142412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Viral Haemorrhagic Fever
 	String BLEEDING_TENDENCIES = "162628AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//MALARIA
-	String HEADACHE = "139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	//String HEADACHE = "139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String CHILLS = "871AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Measles
-	String RASH = "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+//	String RASH = "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String CORYZA = "106AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String CONJUCTIVITIS = "127777AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	//Rift Valley Fever
-	String JAUNDICE = "136443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	//String JAUNDICE = "136443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String DIZZINESS = "141830AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String MALAISE = "135367AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String SCREENING_QUESTION_EXAMINATION = "162737AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String 	TYPE_OF_SERVICE_PROVIDED = "168146";
 	//Polio
 	String LIMBS_WEAKNESS = "157498AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	String ONSET_QUESTION = "d7a3441d-6aeb-49be-b7d6-b2a3bb39e78d";
 	String SUDDEN_ONSET = "162707AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	//Acute Jaundice Syndrome
+	String JAUNDICE = "136443AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	//Acute Febrile Rash Infection
+	String RASH = "512AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
+	//Neurological Syndrome
+	String REFUSAL_TO_FEED = "6017AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String CONVULSIONS = "113054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+	//Acute Watery Diarrhoeal Disease
+	String NUMBER_OF_MOTIONS = "164456AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String WATERY_DIARRHEA = "161887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+	////
+	String HEADACHE = "139084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String LYMPHADENOPATHY = "135488AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String MYALGIA = "121AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	String BACKPAIN = "148035AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+	//NECK STIFFNESS
+	String NECK_STIFFNESS = "112721AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	/**
 	 * Evaluates the calculation
 	 */
@@ -103,12 +124,13 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 		CalculationResultMap ret = new CalculationResultMap();
 
 		for (Integer ptId : alive) {
-			boolean eligible = false;			
+			boolean eligible = false;
 			List<Visit> activeVisits = Context.getVisitService().getActiveVisitsByPatient(patientService.getPatient(ptId));
 			if (!activeVisits.isEmpty()) {
 				Date currentDate = new Date();
 				Double tempValue = 0.0;
 				Double duration = 0.0;
+				Double motions = 0.0;
 				Date dateCreated = null;
 				String onsetStatus = null;
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -122,6 +144,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				ConceptService cs = Context.getConceptService();
 				Concept screeningQuestion = cs.getConceptByUuid(SCREENING_QUESTION);
 				Concept screeningQuestionExam = cs.getConceptByUuid(SCREENING_QUESTION_EXAMINATION);
+				Concept typeOfServiceProvided = cs.getConceptByUuid(TYPE_OF_SERVICE_PROVIDED);
 
 				Concept measureFeverResult = cs.getConceptByUuid(FEVER);
 				Concept coughPresenceResult = cs.getConceptByUuid(COUGH_PRESENCE);
@@ -141,18 +164,28 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				Concept jaundiceResult = cs.getConceptByUuid(JAUNDICE);
 				Concept dizzinessResult = cs.getConceptByUuid(DIZZINESS);
 				Concept malaiseResult = cs.getConceptByUuid(MALAISE);
-				Concept limbsWeaknessResult = cs.getConceptByUuid(LIMBS_WEAKNESS);				
-				//Conditions					
-				String chikungunya = "Chikungunya";				
-				String ili = "ILI";				
-				String sari = "SARI";				
-				String cholera = "Cholera";				
-				String dysentry = "Dysentery";				
-				String haemorrhagic_fever = "Haemorrhagic Fever";				
-				String malaria = "Malaria";				
-				String measles = "Measles";				
-				String rift_valley_fever = "Rift Valley Fever";				
-				String poliomyelitis = "Poliomyelitis";						
+				Concept limbsWeaknessResult = cs.getConceptByUuid(LIMBS_WEAKNESS);
+				Concept meningitisResult = cs.getConceptByUuid(SUDDEN_ONSET);
+				Concept acuteFebrileRashInfectionResult = cs.getConceptByUuid(RASH);
+				Concept refusalToFeedResult = cs.getConceptByUuid(REFUSAL_TO_FEED);
+				Concept convulsionsResult = cs.getConceptByUuid(CONVULSIONS);
+				Concept lymphadenopathyResult = cs.getConceptByUuid(LYMPHADENOPATHY);
+				Concept myalgiaResult = cs.getConceptByUuid(MYALGIA);
+				Concept backpainResult = cs.getConceptByUuid(BACKPAIN);
+				Concept neckStiffnessResult = cs.getConceptByUuid(NECK_STIFFNESS);
+				//Conditions
+				String ili = "ILI";
+				String sari = "SARI";
+				String haemorrhagic_fever = "Acute Haemorrhagic Fever";
+				String poliomyelitis = "Acute Flaccid Paralysis";
+				// up to here
+				String jaundice = "Acute Jaundice";
+				String meningitis = "Acute Meningitis and Encephalitis";
+				String acute_febrile_rash_infection = "Acute Febrile Rash Infection";
+				String acute_watery_diarrhoeal = "Acute Watery Diarrhoeal";
+				String neurological_syndrome = "Neurological Syndrome";
+				String acute_febrile_illness = "Acute Febrile Illness";
+				String mpox = "Mpox";
 				//Temperature
 				CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
 				//Fever
@@ -179,6 +212,12 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				boolean triageEncounterHasDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, diarrheaResult) : false;
 				boolean hivFollowupEncounterHasDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, diarrheaResult) : false;
 				boolean clinicalEncounterHasDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;
+
+				//neckStiffnessResult
+				boolean triageEncounterHasNeckStiffness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, neckStiffnessResult) : false;
+				boolean hivFollowupEncounterHasNeckStiffness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, neckStiffnessResult) : false;
+				boolean clinicalEncounterHasNeckStiffness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, neckStiffnessResult) : false;
+
 				//Blood in stool
 				boolean triageEncounterHasBloodyStool = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bloodyStoolResult) : false;
 				boolean hivFollowupEncounterHasBloodyStool = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bloodyStoolResult) : false;
@@ -199,6 +238,22 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				boolean triageEncounterHasRash = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
 				boolean hivFollowupEncounterHasRash = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
 				boolean clinicalEncounterHasRash = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
+
+				//Acute Febrile Rash Infection
+				boolean triageEncounterHasAcuteRashInfection = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+				boolean hivFollowupEncounterHasAcuteRashInfection = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+				boolean clinicalEncounterHasAcuteRashInfection = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+
+				//Refusal to feed
+				boolean triageEncounterHasRefusalToFeed = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, refusalToFeedResult) : false;
+				boolean hivFollowupEncounterHasRefusalToFeed = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, refusalToFeedResult) : false;
+				boolean clinicalEncounterHasRefusalToFeed = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, refusalToFeedResult) : false;
+
+				//Convulsions
+				boolean triageEncounterHasConvulsions = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, convulsionsResult) : false;
+				boolean hivFollowupEncounterHasConvulsions = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, convulsionsResult) : false;
+				boolean clinicalEncounterHasConvulsions = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, convulsionsResult) : false;
+
 				//Coryza
 				boolean triageEncounterHasCoryza = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coryzaResult) : false;
 				boolean hivFollowupEncounterHasCoryza = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coryzaResult) : false;
@@ -224,6 +279,29 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				boolean hivFollowupEncounterHasWeakLimbs = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
 				boolean clinicalEncounterHasWeakLimbs = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
 
+				//Acute Meningitis and Encephalitis Syndrome
+//				boolean triageEncounterHasMeningitis = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, meningitisResult) : false;
+//				boolean hivFollowupEncounterHasMeningitis = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, meningitisResult) : false;
+//				boolean clinicalEncounterHasMeningitis = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, meningitisResult) : false;
+
+				//Sudden Onset
+				boolean triageEncounterHasSuddenOnset = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, meningitisResult) : false;
+				boolean hivFollowupEncounterHasSuddenOnset = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, meningitisResult) : false;
+				boolean clinicalEncounterHasSuddenOnset = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, meningitisResult) : false;
+
+				//lymphadenopathy
+				boolean triageEncounterHasLymphadenopathy = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, lymphadenopathyResult) : false;
+				boolean hivFollowupEncounterHasLymphadenopathy = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, lymphadenopathyResult) : false;
+				boolean clinicalEncounterHasLymphadenopathy = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, lymphadenopathyResult) : false;
+				//myalgia
+				boolean triageEncounterHasMyalgia = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, myalgiaResult) : false;
+				boolean hivFollowupEncounterHasMyalgia = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, myalgiaResult) : false;
+				boolean clinicalEncounterHasMyalgia = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, myalgiaResult) : false;
+				//backpain
+				boolean triageEncounterHasBackpain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, backpainResult) : false;
+				boolean hivFollowupEncounterHasBackpain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, backpainResult) : false;
+				boolean clinicalEncounterHasBackpain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, backpainResult) : false;
+
 				//Check admission status : Found in clinical encounter and type of visit
 				boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
 				//Visit type is inpatient
@@ -234,8 +312,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				}
 				//Triage
 				if (lastTriageEncounter != null) {
-					//1.1 ILI
-					if (triageEncounterHasCough) {
+					//1. SARI and ILI
+					if (triageEncounterHasFever && triageEncounterHasCough) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -243,8 +321,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
-									if (tempValue != null && tempValue >= 38.0) {
+								if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
 											idsrMessage.add(ili);
@@ -255,147 +333,37 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 											break;
 										}
 									}
-									if (triageEncounterHasFever) {
-										if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
-											eligible = true;
-											idsrMessage.add(sari);
-											break;
-										}
-
-									}
 								}
-							}							
-						}
-					}
-					//2. CHIKUNGUNYA
-					if (triageEncounterHasJointPain && triageEncounterHasFever) {						
-						for (Obs obs : lastTriageEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
-							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 38.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(chikungunya);
-										break;
-									}
-								}
-							}							
-						}
-					}
-					//3. CHOLERA
-					if (triageEncounterHasVomit && triageEncounterHasWateryDiarrhea) {
-						if (patient.getAge() > 2) {
-							for (Obs obs : lastTriageEncounter.getObs()) {
-								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
-									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(cholera);
-										break;
-									}
-								}								
 							}
 						}
 					}
-					//4.Dysentry
-					if (triageEncounterHasBloodyStool && triageEncounterHasDiarrhea) {
-						for (Obs obs : lastTriageEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(dysentry);
-									break;
-								}
-							}							
-						}
-					}
-					//5. Viral Haemorrhagic fever
+					//2. Viral Haemorrhagic fever
 					if (triageEncounterHasFever && triageEncounterHasBleeding) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(haemorrhagic_fever);
-									break;
-								}
-							}							
-						}
-					}
-					//6. Malaria
-					if (triageEncounterHasHeadache && triageEncounterHasChills && triageEncounterHasFever) {
-						for (Obs obs : lastTriageEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
+								if(duration > 0.0 && duration < 14) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.add(malaria);										
+										idsrMessage.add(haemorrhagic_fever);
 										break;
 									}
 								}
-							}							
-						}
-					}
-					//7.Measles				
-					if (triageEncounterHasFever && triageEncounterHasRash && triageEncounterHasCoryza && triageEncounterHasCough && triageEncounterHasConjunctivitis) {
-						for (Obs obs : lastTriageEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
 							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(measles);				
-										break;
-									}
-								}
-							}							
 						}
 					}
-
-					//8.Rift Valley Fever					
-					if (triageEncounterHasJaundice && triageEncounterHasDizziness && triageEncounterHasMalaise && triageEncounterHasFever) {
-						for (Obs obs : lastTriageEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
-							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 37.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(rift_valley_fever);
-										break;
-									}
-								}
-							}							
-						}
-					}
-					//9.Poliomyelitis
+					//3.Poliomyelitis
 					if (triageEncounterHasWeakLimbs) {
-						if (patient.getAge() < 15) {							
+						if (patient.getAge() < 15) {
 							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
 								if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
 									onsetStatus = obs.getValueCoded().getUuid();
-								}								
+								}
 								if (dateCreated != null && onsetStatus != null) {
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
@@ -403,17 +371,145 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 										idsrMessage.add(poliomyelitis);
 										break;
 									}
-								}								
+								}
 							}
 						}
 
 					}
-				}
+					//4. Acute Meningitis and Encephalitis Syndrome
+					if (triageEncounterHasNeckStiffness) {
+							for (Obs obs : lastTriageEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+									onsetStatus = obs.getValueCoded().getUuid();
+								}
+								if (dateCreated != null && onsetStatus != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
+										eligible = true;
+										idsrMessage.add(meningitis);
+										break;
+									}
+								}
+							}
+					}
 
+
+					//5. Acute Febrile Rash Infection
+					if (triageEncounterHasFever && triageEncounterHasAcuteRashInfection) {
+						for (Obs obs : lastTriageEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_rash_infection);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//6. Neurological Syndrome
+					if (triageEncounterHasRefusalToFeed && triageEncounterHasConvulsions) {
+						if (patient.getAge() > 2) {
+							for (Obs obs : lastTriageEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (obs.getConcept().getUuid().equals(DURATION)) {
+									duration = obs.getValueNumeric();
+								}
+								if ((duration > 2 && duration < 28)) {
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(neurological_syndrome);
+										break;
+									}
+								}
+							 }
+							}
+						}
+					}
+					//7. Acute Febrile Illness
+					if (triageEncounterHasFever) {
+						for (Obs obs : lastTriageEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14) && tempValue != null && tempValue >= 38.0) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_illness);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//8. Acute Watery Diarrhoeal Disease
+					if (triageEncounterHasWateryDiarrhea) {
+						for (Obs obs : lastTriageEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
+								motions = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((motions < 3)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_watery_diarrhoeal);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//9. Jaundice
+					if (triageEncounterHasJaundice) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate)) {
+									eligible = true;
+									idsrMessage.add(jaundice);
+									break;
+								}
+							}
+						}
+					}
+					//10. Monkeypox
+					if (triageEncounterHasRash && triageEncounterHasFever) {
+						if (triageEncounterHasHeadache || triageEncounterHasLymphadenopathy || triageEncounterHasMyalgia || triageEncounterHasBackpain) {
+							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (tempValue != null && tempValue >= 38.5) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(mpox);
+										break;
+									}
+									}
+								}
+							}
+						}
+					}
+				}
 				//Hiv followup encounter
 				if (lastHivFollowUpEncounter != null) {
 					//1. SARI and ILI
-					if (hivFollowupEncounterHasCough) {
+					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasCough) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -421,8 +517,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
-									if (tempValue != null && tempValue >= 38.0) {
+								if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+									if (createdDate.equals(todayDate)) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
 											idsrMessage.add(ili);
@@ -433,140 +529,30 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 											break;
 										}
 									}
-									if (triageEncounterHasFever) {
-										if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
-											eligible = true;
-											idsrMessage.add(sari);
-											break;
-										}
-
-									}
 								}
-							}							
-						}
-					}
-					//2. CHIKUNGUNYA
-					if (hivFollowupEncounterHasJointPain && hivFollowupEncounterHasFever) {
-						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
 							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 38.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(chikungunya);
-										break;
-									}
-								}
-							}							
 						}
 					}
-					//3. CHOLERA
-					if (hivFollowupEncounterHasVomit && hivFollowupEncounterHasWateryDiarrhea) {
-						if (patient.getAge() > 2) {
-							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
-									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(cholera);
-										break;
-									}
-								}	break;
-							}							
-						}
-					}
-
-					//4.Dysentry
-					if (hivFollowupEncounterHasBloodyStool && hivFollowupEncounterHasDiarrhea) {
-						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(dysentry);			
-									break;
-								}
-							}							
-						}
-					}
-					//5. Viral Haemorrhagic fever
+					//2. Acute Haemorrhagic fever
 					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasBleeding) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(haemorrhagic_fever);
-									break;
-								}
-							}							
-						}
-					}
-					//6. Malaria
-					if (hivFollowupEncounterHasHeadache && hivFollowupEncounterHasChills && hivFollowupEncounterHasFever) {
-						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
+								if(duration > 0.0 && duration < 14) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.add(malaria);
+										idsrMessage.add(haemorrhagic_fever);
 										break;
 									}
 								}
-							}							
-						}
-					}
-					//7.Measles
-					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasRash && hivFollowupEncounterHasCoryza && hivFollowupEncounterHasCough && hivFollowupEncounterHasConjunctivitis) {
-						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
 							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(measles);
-										break;
-									}
-								}
-							}							
 						}
 					}
-					//8.Rift Valley Fever
-					if (hivFollowupEncounterHasJaundice && hivFollowupEncounterHasDizziness && hivFollowupEncounterHasFever && hivFollowupEncounterHasMalaise) {
-						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
-							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 37.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(rift_valley_fever);
-										break;
-									}
-								}
-							}							
-						}
-					}
-					//9.Poliomyelitis
+					//3.Poliomyelitis
 					if (hivFollowupEncounterHasWeakLimbs) {
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
@@ -581,25 +567,152 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 										idsrMessage.add(poliomyelitis);
 										break;
 									}
-								}							
+								}
 							}
 
 						}
 					}
+					// 4. Jaundice
+					if (hivFollowupEncounterHasJaundice) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate)) {
+									eligible = true;
+									idsrMessage.add(jaundice);
+									break;
+								}
+							}
+						}
+					}
+					//5. Acute Menigitis and Encephalitis Syndrome
+					if (hivFollowupEncounterHasNeckStiffness) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+								onsetStatus = obs.getValueCoded().getUuid();
+							}
+							if (dateCreated != null && onsetStatus != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
+									eligible = true;
+									idsrMessage.add(meningitis);
+									break;
+								}
+							}
+						}
+					}
 
+					//5. Acute Febrile Rash Infection
+					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasAcuteRashInfection) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_rash_infection);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//6. Neurological Syndrome
+					if (hivFollowupEncounterHasRefusalToFeed && hivFollowupEncounterHasConvulsions) {
+						if (patient.getAge() > 2) {
+							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (obs.getConcept().getUuid().equals(DURATION)) {
+									duration = obs.getValueNumeric();
+								}
+								if ((duration > 2 && duration < 28)) {
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(neurological_syndrome);
+										break;
+									}
+								}
+							 }
+							}
+						}
+					}
+					//7. Acute Febrile Illness
+					if (hivFollowupEncounterHasFever) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14) && tempValue != null && tempValue >= 38.0) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_illness);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//8. Acute Watery Diarrhoeal Disease
+					if (hivFollowupEncounterHasWateryDiarrhea) {
+						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
+								motions = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((motions < 3)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_watery_diarrhoeal);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//9. Mpox
+					if (hivFollowupEncounterHasRash  && hivFollowupEncounterHasFever) {
+						if (hivFollowupEncounterHasHeadache || hivFollowupEncounterHasLymphadenopathy || hivFollowupEncounterHasMyalgia || hivFollowupEncounterHasBackpain) {
+							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (tempValue != null && tempValue >= 38.5) {
+										if (createdDate.equals(todayDate)) {
+											eligible = true;
+											idsrMessage.add(mpox);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 				//Clinical Encounter
 				if (lastClinicalEncounter != null) {
 					//1. SARI and ILI
-					if (clinicalEncounterHasCough) {
+					if (clinicalEncounterHasFever && clinicalEncounterHasCough) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
-										if (tempValue != null && tempValue >= 38.0) {
+									if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+										if (createdDate.equals(todayDate)) {
 											if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 												eligible = true;
 												idsrMessage.add(ili);
@@ -610,140 +723,32 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 												break;
 											}
 										}
-										if (triageEncounterHasFever) {
-											if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
-												eligible = true;
-												idsrMessage.add(sari);
-												break;
-											}
-										}
 									}
 								}
-							}							
-						}
-					}
-					//2. CHIKUNGUNYA
-					if (clinicalEncounterHasJointPain && clinicalEncounterHasFever) {
-						for (Obs obs : lastClinicalEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
 							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 38.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(chikungunya);							
-										break;
-									}
-								}
-							}							
 						}
 					}
-					//3. CHOLERA
-					if (clinicalEncounterHasVomit && clinicalEncounterHasWateryDiarrhea) {
-						if (patient.getAge() > 2) {
-							for (Obs obs : lastClinicalEncounter.getObs()) {
-								dateCreated = obs.getDateCreated();
-								if (dateCreated != null) {
-									String createdDate = dateFormat.format(dateCreated);
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(cholera);								
-										break;
-									}
-								}								
-							}
-							
-						}
-					}
-					//4.DYSENTRY
-					if (clinicalEncounterHasDiarrhea && clinicalEncounterHasBloodyStool) {
-						for (Obs obs : lastClinicalEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(dysentry);						
-									break;
-								}
-							}							
-						}
-					}
-					//5. Viral Haemorrhagic fever
+					//2. Acute Haemorrhagic fever
 					if (clinicalEncounterHasFever && clinicalEncounterHasBleeding) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (createdDate.equals(todayDate)) {
-									eligible = true;
-									idsrMessage.add(haemorrhagic_fever);					
-									break;
-								}
-							}							
-						}
-					}
-					//6. Malaria
-					if (clinicalEncounterHasHeadache && clinicalEncounterHasChills && clinicalEncounterHasFever) {
-						for (Obs obs : lastClinicalEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 1 && tempValue != null && tempValue >= 37.5) {
+								if(duration > 0.0 && duration < 14) {
 									if (createdDate.equals(todayDate)) {
 										eligible = true;
-										idsrMessage.add(malaria);
+										idsrMessage.add(haemorrhagic_fever);
 										break;
 									}
 								}
-							}							
-						}
-					}
-					//7.Measles					
-					if (clinicalEncounterHasFever && clinicalEncounterHasRash && clinicalEncounterHasCoryza && clinicalEncounterHasCough && clinicalEncounterHasConjunctivitis) {
-						for (Obs obs : lastClinicalEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
 							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(measles);
-										break;
-									}
-								}
-							}							
 						}
+
 					}
-					//8.Rift Valley Fever
-					if (clinicalEncounterHasJaundice && clinicalEncounterHasDizziness && clinicalEncounterHasFever && clinicalEncounterHasMalaise) {
-						for (Obs obs : lastClinicalEncounter.getObs()) {
-							dateCreated = obs.getDateCreated();
-							if (obs.getConcept().getUuid().equals(DURATION)) {
-								duration = obs.getValueNumeric();
-							}
-							if (dateCreated != null) {
-								String createdDate = dateFormat.format(dateCreated);
-								if (duration > 2 && tempValue != null && tempValue > 37.5) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(rift_valley_fever);
-									    break;
-									}
-								}
-							}							
-						}
-					}
-					//9.Poliomyelitis
+					//3.Poliomyelitis
 					if (clinicalEncounterHasWeakLimbs) {
 						if (patient.getAge() < 15) {
 							for (Obs obs : lastClinicalEncounter.getObs()) {
@@ -755,13 +760,141 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 									String createdDate = dateFormat.format(dateCreated);
 									if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
 										eligible = true;
-										idsrMessage.add(poliomyelitis);						
+										idsrMessage.add(poliomyelitis);
 										break;
 									}
-								}								
+								}
 							}
 						}
 					}
+					//4. Jaundice
+					if (clinicalEncounterHasJaundice) {
+						for (Obs obs : lastClinicalEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate)) {
+									eligible = true;
+									idsrMessage.add(jaundice);
+									break;
+								}
+							}
+						}
+					}
+					//5. Acute Meningitis and Encephalitis Syndrome
+					if (clinicalEncounterHasNeckStiffness) {
+						for (Obs obs : lastClinicalEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(ONSET_QUESTION)) {
+								onsetStatus = obs.getValueCoded().getUuid();
+							}
+							if (dateCreated != null && onsetStatus != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if (createdDate.equals(todayDate) && onsetStatus.equals(SUDDEN_ONSET)) {
+									eligible = true;
+									idsrMessage.add(meningitis);
+									break;
+								}
+							}
+						}
+					}
+					//6. Acute Febrile Rash Infection
+					if (clinicalEncounterHasFever && clinicalEncounterHasAcuteRashInfection) {
+						for (Obs obs : lastClinicalEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_rash_infection);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//7. Neurological Syndrome
+					if (clinicalEncounterHasRefusalToFeed && clinicalEncounterHasConvulsions) {
+						if (patient.getAge() > 2) {
+							for (Obs obs : lastClinicalEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (obs.getConcept().getUuid().equals(DURATION)) {
+									duration = obs.getValueNumeric();
+								}
+								if ((duration > 2 && duration < 28)) {
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(neurological_syndrome);
+										break;
+									}
+								}
+							 }
+							}
+						}
+					}
+					//8. Acute Febrile Illness
+					if (clinicalEncounterHasFever) {
+						for (Obs obs : lastClinicalEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((duration > 0.0 && duration < 14) && tempValue != null && tempValue >= 38.0) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_febrile_illness);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//9. Acute Watery Diarrhoeal Disease
+					if (clinicalEncounterHasWateryDiarrhea) {
+						for (Obs obs : lastClinicalEncounter.getObs()) {
+							dateCreated = obs.getDateCreated();
+							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
+								motions = obs.getValueNumeric();
+							}
+							if (dateCreated != null) {
+								String createdDate = dateFormat.format(dateCreated);
+								if ((motions < 3)) {
+									if (createdDate.equals(todayDate)) {
+										eligible = true;
+										idsrMessage.add(acute_watery_diarrhoeal);
+										break;
+									}
+								}
+							}
+						}
+					}
+					//10. Mpox
+					if (clinicalEncounterHasRash && clinicalEncounterHasFever) {
+						if (clinicalEncounterHasHeadache || clinicalEncounterHasLymphadenopathy || clinicalEncounterHasMyalgia || clinicalEncounterHasBackpain) {
+							for (Obs obs : lastClinicalEncounter.getObs()) {
+								dateCreated = obs.getDateCreated();
+								if (dateCreated != null) {
+									String createdDate = dateFormat.format(dateCreated);
+									if (tempValue != null && tempValue >= 38.5) {
+										if (createdDate.equals(todayDate)) {
+											eligible = true;
+											idsrMessage.add(mpox);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+
 				}
 			}
 			if (idsrMessage.size() > 0) {
@@ -773,9 +906,9 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 		return ret;
 	}
 
-//	@Override
-//	public String getFlagMessage() {
-//		return "Suspected "+ idsrMessageString;
-//
-//	}
+	@Override
+	public String getFlagMessage() {
+		return "Suspected "+ idsrMessageString;
+
+	}
 }

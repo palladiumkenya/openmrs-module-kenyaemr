@@ -317,7 +317,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
         Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
         List<String> patientFlagsToRefreshOnEveryRequest = Arrays.asList(
-                "EligibleForIDSRFlagsCalculation"
+               // "EligibleForIDSRFlagsCalculation"
+                "EligibleForIDSRSymptomsFlagsCalculation"
         );
         calculationManager.refresh();
 
