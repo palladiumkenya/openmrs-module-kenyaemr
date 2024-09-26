@@ -36,11 +36,11 @@ public class ETLCaseManagerDataEvaluator implements PersonDataEvaluator {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
 
-        String qry = "SELECT t.patient_id, t.latest_case_manager from (SELECT r.person_a AS patient_id, mid(max(concat(date(r.start_date)," +
-                " concat_ws( ' ', pn.family_name, pn.given_name, pn.middle_name ))), 11) as latest_case_manager, max(r.start_date)" +
-                " as start_date FROM relationship r INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id " +
-                "INNER JOIN person_name pn ON r.person_b = pn.person_id WHERE t.uuid = '9065e3c6-b2f5-4f99-9cbf-f67fd9f82ec5' " +
-                "and date(r.start_date) <= (:endDate) GROUP BY patient_id having date(start_date) <= (:endDate)) as t;";
+        String qry = "SELECT t.patient_id, t.latest_case_manager from (SELECT r.person_b as patient_id,r.person_b AS case_manager_id, mid(max(concat(date(r.start_date),\n" +
+                "        concat_ws( ' ', pn.family_name, pn.given_name, pn.middle_name ))), 11) as latest_case_manager, max(r.start_date)\n" +
+                "        as start_date FROM relationship r INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id\n" +
+                "       INNER JOIN person_name pn ON r.person_a = pn.person_id WHERE t.uuid = '9065e3c6-b2f5-4f99-9cbf-f67fd9f82ec5'\n" +
+                "       and date(r.start_date) <= (:endDate) GROUP BY case_manager_id) as t;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
