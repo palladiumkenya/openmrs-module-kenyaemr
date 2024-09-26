@@ -122,6 +122,14 @@
                 <component drugCode="3TC" />
                 <component drugCode="DTG" />
             </regimen>
+			<regimen name="TAF/3TC/DTG" conceptRef="a7c25c03-3fe6-41b5-97a1-5b2abaae84fa" orderSetRef="9cbdad88-c867-4a67-859e-60172733085d">
+				<component drugCode="TAF" />
+				<component drugCode="3TC" />
+				<component drugCode="DTG" />
+			</regimen>
+			<regimen name="TAF" conceptRef="c0854602-6e51-422e-a4e5-45e263e9d3e0" orderSetRef="6d05e06c-2624-4fbf-925b-6dbbd713bd17">
+				<component drugCode="TAF" />
+			</regimen>
         </group>
 
         <!-- Adult second line -->
