@@ -461,13 +461,18 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
 								motions = obs.getValueNumeric();
 							}
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if ((motions < 3)) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(acute_watery_diarrhoeal);
-										break;
+									if ((duration > 0.0 && duration < 14)) {
+										if (createdDate.equals(todayDate)) {
+											eligible = true;
+											idsrMessage.add(acute_watery_diarrhoeal);
+											break;
+										}
 									}
 								}
 							}
@@ -670,13 +675,18 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
 								motions = obs.getValueNumeric();
 							}
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if ((motions < 3)) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(acute_watery_diarrhoeal);
-										break;
+									if ((duration > 0.0 && duration < 14)) {
+										if (createdDate.equals(todayDate)) {
+											eligible = true;
+											idsrMessage.add(acute_watery_diarrhoeal);
+											break;
+										}
 									}
 								}
 							}
@@ -864,13 +874,18 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							if (obs.getConcept().getUuid().equals(NUMBER_OF_MOTIONS)) {
 								motions = obs.getValueNumeric();
 							}
+							if (obs.getConcept().getUuid().equals(DURATION)) {
+								duration = obs.getValueNumeric();
+							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
 								if ((motions < 3)) {
-									if (createdDate.equals(todayDate)) {
-										eligible = true;
-										idsrMessage.add(acute_watery_diarrhoeal);
-										break;
+									if ((duration > 0.0 && duration < 14)) {
+										if (createdDate.equals(todayDate)) {
+											eligible = true;
+											idsrMessage.add(acute_watery_diarrhoeal);
+											break;
+										}
 									}
 								}
 							}
