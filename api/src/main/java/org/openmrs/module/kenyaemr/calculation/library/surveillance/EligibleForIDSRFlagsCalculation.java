@@ -42,7 +42,7 @@ import java.util.*;
  * SARI
  * * @should calculate admitted
  */
-public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
+public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation {
 	protected static final Log log = LogFactory.getLog(EligibleForIDSRFlagsCalculation.class);
 
 	List<String> idsrMessage = new ArrayList<String>();
@@ -750,9 +750,9 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 		return ret;
 	}
 
-	@Override
-	public String getFlagMessage() {
-		return "Suspected "+ idsrMessageString;
-
-	}
+//	@Override
+//	public String getFlagMessage() {
+//		return "Suspected "+ idsrMessageString;
+//
+//	}
 }

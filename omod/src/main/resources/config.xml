@@ -90,7 +90,13 @@
 			Defines whether facility is KDoD site or not
 		</description>
 	</globalProperty>
-
+	<globalProperty>
+		<property>kenyaemr.isDmi</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Defines whether facility is DMI site or not
+		</description>
+	</globalProperty>
 	<globalProperty>
 		<property>kenyaemr.generateUPN</property>
 		<defaultValue>false</defaultValue>
