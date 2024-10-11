@@ -59,7 +59,7 @@ import java.util.TreeSet;
 public class ReportPageController {
 	private AdministrationService admService;
 	public static final String KPIF_MONTHLY_REPORT = "Monthly report";
-	public static final String MOH_731 = "MOH 731";
+	public static final String MOH_731 = "Revised MOH 731";
 
 	public void get(@RequestParam("reportUuid") String reportUuid,
 					@RequestParam(required = false, value = "startDate") Date startDate,
