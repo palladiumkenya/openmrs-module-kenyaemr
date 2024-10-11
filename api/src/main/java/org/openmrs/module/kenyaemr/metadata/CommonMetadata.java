@@ -343,14 +343,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				"The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
 
-		String adxMappingString = "[{\"reportName\":\"MOH 731\",\"prefix\":\"Y18_\",\"datasets\":[{\"name\":\"2\",\"dhisName\":\"xUesg8lcmDs\"},{\"name\":\"1\",\"dhisName\":\"ptIUGFkE6jn\"},{\"name\":\"3\",\"dhisName\":\"Vo4KDrUFwnA\"}]}]";
-		// 3pm Adx string
+		String adxMappingString = "[{\"reportName\":\"Revised MOH 731\",\"prefix\":\"Y23_\",\"datasets\":[{\"name\":\"1\",\"dhisName\":\"OaIjkmzEeNO\"},{\"name\":\"2\",\"dhisName\":\"L7hIEAumRnQ\"},{\"name\":\"3\",\"dhisName\":\"gtDFQTNBp7y\"},{\"name\":\"4\",\"dhisName\":\"SoiOUE3lOJd\"}]}]";
+		//3pm Adx string
 		String adx3pmMappingString = "[{\"reportName\":\"Monthly report\",\"prefix\":\"\",\"datasets\":[{\"name\":\"1\",\"3pmName\":\"qzJqoxdfXJn\"}]}]";
 
-		install(globalProperty(EmrConstants.GP_DHIS2_DATASET_MAPPING, "ADX Mapping for KenyaEMR and DHIS2 datasets",
-				adxMappingString));
-		install(globalProperty(EmrConstants.GP_3PM_DATASET_MAPPING, "ADX Mapping for KenyaEMR and 3PM datasets",
-				adx3pmMappingString));
+		install(globalProperty(EmrConstants.GP_DHIS2_DATASET_MAPPING, "ADX Mapping for KenyaEMR and DHIS2 datasets", adxMappingString));
+		install(globalProperty(EmrConstants.GP_3PM_DATASET_MAPPING, "ADX Mapping for KenyaEMR and 3PM datasets", adx3pmMappingString));
+		install(globalProperty(EmrConstants.GP_DHIS_USERNAME, "Username for DHIS server", ""));
+		install(globalProperty(EmrConstants.GP_DHIS_PASSWORD, "Password for DHIS server","" ));
 
 		install(globalProperty("order.drugDosingUnitsConceptUuid", "Drug dosing units concept",
 				"162384AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
