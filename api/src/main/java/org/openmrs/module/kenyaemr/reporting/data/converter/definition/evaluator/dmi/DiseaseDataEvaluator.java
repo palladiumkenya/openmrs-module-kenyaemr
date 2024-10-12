@@ -35,12 +35,55 @@ public class DiseaseDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
+//        String qry = "select a.patient_id,\n" +
+//                "                       CASE\n" +
+//                "                           WHEN FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0 THEN 'Dysentery'\n" +
+//                "                           WHEN FIND_IN_SET(142412, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
+//                "                                a.complaint_duration > 2\n" +
+//                "                               THEN 'Cholera'\n" +
+//                "                           WHEN a.complaint = 143264 AND a.complaint_duration < 10 AND\n" +
+//                "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id = 1 AND\n" +
+//                "                                a.temperature >= 38 THEN 'ILI'\n" +
+//                "                           WHEN a.complaint = 143264 AND a.complaint_duration < 10 AND\n" +
+//                "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id = 3 AND\n" +
+//                "                                a.temperature >= 38 THEN 'SARI'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(141830, a.complaint) > 0 AND\n" +
+//                "                                FIND_IN_SET(136443, a.complaint) > 0 AND FIND_IN_SET(135367, a.complaint) > 0 AND\n" +
+//                "                                a.fever_duration_from_days > 2 THEN 'Rift Valley Fever'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(139084, a.complaint) > 0 AND\n" +
+//                "                                FIND_IN_SET(871, a.complaint) > 0 AND a.fever_duration_from_days > 1 THEN 'Malaria'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(116558, a.complaint) > 0 AND a.temperature > 38.5 AND a.fever_duration_from_days > 2\n" +
+//                "                               THEN 'Chikungunya'\n" +
+//                "                           WHEN FIND_IN_SET(157498, a.complaint) > 0 AND timestampdiff(YEAR, a.DOB, a.visit_date) <= 15\n" +
+//                "                               THEN 'Poliomyelitis'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(162628, a.complaint) > 0 AND\n" +
+//                "                                a.fever_duration_from_days >= 3 THEN 'Viral Haemorrhagic Fever'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(512, a.complaint) > 0 AND\n" +
+//                "                                FIND_IN_SET(106, a.complaint) > 0 AND FIND_IN_SET(516, a.complaint) > 0 AND\n" +
+//                "                                FIND_IN_SET(143264, a.complaint) > 0  AND a.fever_duration_from_days > 2 THEN 'Measles'\n" +
+//                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(512, a.complaint) > 0 AND FIND_IN_SET(139084, a.complaint) > 0 AND a.temperature > 38.5\n" +
+//                "                               or FIND_IN_SET(135488, a.complaint) > 0\n" +
+//                "                               or FIND_IN_SET(121, a.complaint) > 0\n" +
+//                "                               or FIND_IN_SET(148035, a.complaint) > 0 THEN 'Mpox'\n" +
+//                "                           WHEN FIND_IN_SET(6017, a.complaint) > 0\n"+
+//                "                               AND FIND_IN_SET(113054, a.complaint) > 0\n" +
+//                "                               AND TIMESTAMPDIFF(DAY, d.DOB, a.visit_date) BETWEEN 2 AND 28 THEN 'Neurological Syndrome'\n" +
+//                "                           WHEN    FIND_IN_SET(161887, a.complaint) > 0 \n"+
+//                "                               AND a.complaint_duration < 14 THEN 'Acute Watery Diarrhoea'\n"+
+//                "                           WHEN    FIND_IN_SET(140238, a.complaint) > 0 \n"+
+//                "                               AND a.complaint_duration < 14 \n"+
+//                "                               AND FIND_IN_SET(512, a.complaint) > 0 THEN 'Acute Febrile Rash Infections'\n"+
+//                "                          WHEN    FIND_IN_SET(140238, a.complaint) > 0 \n"+
+//                "                               AND a.complaint_duration < 14 \n"+
+//                "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND\n" +
+//                "                                a.temperature >= 38 THEN 'Acute Febrile Illness'\n" +
+//                "                          WHEN FIND_IN_SET(112721, a.complaint) > 0 THEN 'Acute Meningitis and Encephalitis'\n" +
+//                "                           END AS disease\n" +
         String qry = "select a.patient_id,\n" +
                 "                       CASE\n" +
                 "                           WHEN FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0 THEN 'Dysentery'\n" +
                 "                           WHEN FIND_IN_SET(142412, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
-                "                                a.complaint_duration > 2\n" +
-                "                               THEN 'Cholera'\n" +
+                "                                a.complaint_duration > 2 THEN 'Cholera'\n" +
                 "                           WHEN a.complaint = 143264 AND a.complaint_duration < 10 AND\n" +
                 "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id = 1 AND\n" +
                 "                                a.temperature >= 38 THEN 'ILI'\n" +
@@ -52,16 +95,31 @@ public class DiseaseDataEvaluator implements PersonDataEvaluator {
                 "                                a.fever_duration_from_days > 2 THEN 'Rift Valley Fever'\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(139084, a.complaint) > 0 AND\n" +
                 "                                FIND_IN_SET(871, a.complaint) > 0 AND a.fever_duration_from_days > 1 THEN 'Malaria'\n" +
-                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(116558, a.complaint) > 0 AND a.temperature > 38.5 AND a.fever_duration_from_days > 2\n" +
-                "                               THEN 'Chikungunya'\n" +
-                "                           WHEN FIND_IN_SET(157498, a.complaint) > 0 AND timestampdiff(YEAR, a.DOB, a.visit_date) <= 15\n" +
-                "                               THEN 'Poliomyelitis'\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(116558, a.complaint) > 0 AND a.temperature > 38.5 AND a.fever_duration_from_days > 2 THEN 'Chikungunya'\n" +
+                "                           WHEN FIND_IN_SET(157498, a.complaint) > 0 AND timestampdiff(YEAR, a.DOB, a.visit_date) <= 15 THEN 'Acute Flaccid Paralysis'\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(162628, a.complaint) > 0 AND\n" +
-                "                                a.fever_duration_from_days >= 3 THEN 'Viral Haemorrhagic Fever'\n" +
+                "                                a.fever_duration_from_days >= 3 THEN 'Acute Haemorrhagic Fever'\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(512, a.complaint) > 0 AND\n" +
                 "                                FIND_IN_SET(106, a.complaint) > 0 AND FIND_IN_SET(516, a.complaint) > 0 AND\n" +
-                "                                FIND_IN_SET(143264, a.complaint) > 0  AND a.fever_duration_from_days > 2 THEN 'Measles'\n" +
-                "                           END AS disease\n" +
+                "                                FIND_IN_SET(143264, a.complaint) > 0 AND a.fever_duration_from_days > 2 THEN 'Measles'\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(512, a.complaint) > 0 AND FIND_IN_SET(139084, a.complaint) > 0 AND a.temperature > 38.5\n" +
+                "                               OR FIND_IN_SET(135488, a.complaint) > 0\n" +
+                "                               OR FIND_IN_SET(121, a.complaint) > 0\n" +
+                "                               OR FIND_IN_SET(148035, a.complaint) > 0 THEN 'Mpox'\n" +
+                "                           WHEN FIND_IN_SET(6017, a.complaint) > 0\n" +
+                "                               AND FIND_IN_SET(113054, a.complaint) > 0\n" +
+                "                               AND TIMESTAMPDIFF(DAY, a.DOB, a.visit_date) BETWEEN 2 AND 28 THEN 'Neurological Syndrome'\n" +
+                "                           WHEN FIND_IN_SET(161887, a.complaint) > 0\n" +
+                "                               AND a.complaint_duration < 14 THEN 'Acute Watery Diarrhoea'\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0\n" +
+                "                               AND a.complaint_duration < 14\n" +
+                "                               AND FIND_IN_SET(512, a.complaint) > 0 THEN 'Acute Febrile Rash Infections'\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0\n" +
+                "                               AND a.complaint_duration < 14\n" +
+                "                               AND date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND\n" +
+                "                               a.temperature >= 38 THEN 'Acute Febrile Illness'\n" +
+                "                           WHEN FIND_IN_SET(112721, a.complaint) > 0 THEN 'Acute Meningitis and Encephalitis'\n" +
+                "                           END AS disease\n"+
                 "                from (select c.patient_id,\n" +
                 "                             group_concat(c.complaint) as complaint,\n" +
                 "                             epd.dob,\n" +

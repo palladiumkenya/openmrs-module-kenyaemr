@@ -93,7 +93,7 @@ public class IDSRIndicatorLibrary {
      * @return indicator
      */
     public CohortIndicator poliomyelitisCases() {
-        return cohortIndicator("HIV Positive tests", map(idsrCohortLibrary.poliomyelitisCases(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("Acute Flaccid Paralysis", map(idsrCohortLibrary.poliomyelitisCases(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     /**
@@ -101,7 +101,7 @@ public class IDSRIndicatorLibrary {
      * @return indicator
      */
     public CohortIndicator viralHaemorrhagicFeverCases() {
-        return cohortIndicator("HIV Negative tests", map(idsrCohortLibrary.viralHaemorrhagicFeverCases(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("Acute Haemorrhagic Fever", map(idsrCohortLibrary.viralHaemorrhagicFeverCases(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     /**
@@ -112,4 +112,53 @@ public class IDSRIndicatorLibrary {
         return cohortIndicator("Measles cases", map(idsrCohortLibrary.measlesCases(), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    /**
+     * Monkey Pox Cases
+     * @return indicator
+     */
+    public CohortIndicator monkeyPoxCases() {
+        return cohortIndicator("Monkey Pox", map(idsrCohortLibrary.monkeyPoxCases(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Jaundice case
+     * @return indicator
+     */
+    public CohortIndicator jaundiceCases() {
+        return cohortIndicator("Acute Jaundice", map(idsrCohortLibrary.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Neurological Syndrome
+     * @return
+     */
+    public CohortIndicator neurologicalSyndromeCases() {
+        return cohortIndicator("Neurological Syndrome", map(idsrCohortLibrary.neurologicalSyndrome(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Acute Watery Diarrhoea
+     * @return
+     */
+    public CohortIndicator acuteWateryDiarrhoeaCases() {
+        return cohortIndicator("Acute Watery Diarrhoea", map(idsrCohortLibrary.acuteWateryDiarrhoea(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Acute Febrile Rash infections
+     * @return
+     */
+    public CohortIndicator acuteFebrileRashCases() {
+        return cohortIndicator("Acute Febrile Rash Infections", map(idsrCohortLibrary.acuteFebrileRashInfections(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
+     * Acute Febrile illness
+     * @return
+     */
+    public CohortIndicator acuteFebrileIllnessCases() {
+        return cohortIndicator("Acute Febrile Illness", map(idsrCohortLibrary.acuteFebrileIllness(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    /**
+     * Acute Meningitis and Encephalitis
+     */
+    public CohortIndicator acuteMeningitisCases() {
+        return cohortIndicator("Acute Meningitis and Encephalitis", map(idsrCohortLibrary.acuteMeningitisAndEncephalitis(), "startDate=${startDate},endDate=${endDate}"));
+    }
 }
