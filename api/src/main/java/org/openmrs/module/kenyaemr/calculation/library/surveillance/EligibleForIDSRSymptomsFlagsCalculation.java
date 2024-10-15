@@ -121,197 +121,198 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 	@Override
 	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
 
-		Set<Integer> alive = Filters.alive(cohort, context);
-		PatientService patientService = Context.getPatientService();
 		CalculationResultMap ret = new CalculationResultMap();
+		if (isDmi.equals("true")) {
+			Set<Integer> alive = Filters.alive(cohort, context);
+			PatientService patientService = Context.getPatientService();
 
-		for (Integer ptId : alive) {
-			boolean eligible = false;
-			List<Visit> activeVisits = Context.getVisitService().getActiveVisitsByPatient(patientService.getPatient(ptId));
-			if (!activeVisits.isEmpty()) {
-				Date currentDate = new Date();
-				Double tempValue = 0.0;
-				Double duration = 0.0;
-				Double motions = 0.0;
-				Date dateCreated = null;
-				String onsetStatus = null;
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				String todayDate = dateFormat.format(currentDate);
-				Patient patient = patientService.getPatient(ptId);
+			for (Integer ptId : alive) {
+				boolean eligible = false;
+				List<Visit> activeVisits = Context.getVisitService().getActiveVisitsByPatient(patientService.getPatient(ptId));
+				if (!activeVisits.isEmpty()) {
+					Date currentDate = new Date();
+					Double tempValue = 0.0;
+					Double duration = 0.0;
+					Double motions = 0.0;
+					Date dateCreated = null;
+					String onsetStatus = null;
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					String todayDate = dateFormat.format(currentDate);
+					Patient patient = patientService.getPatient(ptId);
 
-				Encounter lastTriageEncounter = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
-				Encounter lastHivFollowUpEncounter = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);   //last greencard followup form
-				Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
+					Encounter lastTriageEncounter = EmrUtils.lastEncounter(patient, triageEncType, triageScreeningForm);
+					Encounter lastHivFollowUpEncounter = EmrUtils.lastEncounter(patient, greenCardEncType, greenCardForm);   //last greencard followup form
+					Encounter lastClinicalEncounter = EmrUtils.lastEncounter(patient, consultationEncType, clinicalEncounterForm);   //last clinical encounter form
 
-				ConceptService cs = Context.getConceptService();
-				Concept screeningQuestion = cs.getConceptByUuid(SCREENING_QUESTION);
-				Concept screeningQuestionExam = cs.getConceptByUuid(SCREENING_QUESTION_EXAMINATION);
-				Concept typeOfServiceProvided = cs.getConceptByUuid(TYPE_OF_SERVICE_PROVIDED);
+					ConceptService cs = Context.getConceptService();
+					Concept screeningQuestion = cs.getConceptByUuid(SCREENING_QUESTION);
+					Concept screeningQuestionExam = cs.getConceptByUuid(SCREENING_QUESTION_EXAMINATION);
+					Concept typeOfServiceProvided = cs.getConceptByUuid(TYPE_OF_SERVICE_PROVIDED);
 
-				Concept measureFeverResult = cs.getConceptByUuid(FEVER);
-				Concept coughPresenceResult = cs.getConceptByUuid(COUGH_PRESENCE);
-				Concept adminQuestion = cs.getConceptByUuid(PATIENT_OUTCOME);
-				Concept admissionAnswer = cs.getConceptByUuid(INPATIENT_ADMISSION);
-				Concept jointPainResult = cs.getConceptByUuid(JOINT_PAIN);
-				Concept vomitingResult = cs.getConceptByUuid(VOMITING);
-				Concept wateryDiarrheaResult = cs.getConceptByUuid(WATERY_DIARRHEA);
-				Concept bloodyStoolResult = cs.getConceptByUuid(BLOOD_IN_STOOL);
-				Concept diarrheaResult = cs.getConceptByUuid(DIARRHEA);
-				Concept bleedingResult = cs.getConceptByUuid(BLEEDING_TENDENCIES);
-				Concept headacheResult = cs.getConceptByUuid(HEADACHE);
-				Concept chillsResult = cs.getConceptByUuid(CHILLS);
-				Concept rashResult = cs.getConceptByUuid(RASH);
-				Concept coryzaResult = cs.getConceptByUuid(CORYZA);
-				Concept conjunctivitisResult = cs.getConceptByUuid(CONJUCTIVITIS);
-				Concept jaundiceResult = cs.getConceptByUuid(JAUNDICE);
-				Concept dizzinessResult = cs.getConceptByUuid(DIZZINESS);
-				Concept malaiseResult = cs.getConceptByUuid(MALAISE);
-				Concept limbsWeaknessResult = cs.getConceptByUuid(LIMBS_WEAKNESS);
-				Concept meningitisResult = cs.getConceptByUuid(SUDDEN_ONSET);
-				Concept acuteFebrileRashInfectionResult = cs.getConceptByUuid(RASH);
-				Concept refusalToFeedResult = cs.getConceptByUuid(REFUSAL_TO_FEED);
-				Concept convulsionsResult = cs.getConceptByUuid(CONVULSIONS);
-				Concept lymphadenopathyResult = cs.getConceptByUuid(LYMPHADENOPATHY);
-				Concept myalgiaResult = cs.getConceptByUuid(MYALGIA);
-				Concept backpainResult = cs.getConceptByUuid(BACKPAIN);
-				Concept neckStiffnessResult = cs.getConceptByUuid(NECK_STIFFNESS);
-				//Conditions
-				String ili = "ILI";
-				String sari = "SARI";
-				String haemorrhagic_fever = "Acute Haemorrhagic Fever";
-				String poliomyelitis = "Acute Flaccid Paralysis";
-				// up to here
-				String jaundice = "Acute Jaundice";
-				String meningitis = "Acute Meningitis and Encephalitis";
-				String acute_febrile_rash_infection = "Acute Febrile Rash Infection";
-				String acute_watery_diarrhoeal = "Acute Watery Diarrhoeal";
-				String neurological_syndrome = "Neurological Syndrome";
-				String acute_febrile_illness = "Acute Febrile Illness";
-				String mpox = "Mpox";
-				//Temperature
-				CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
-				//Fever
-				boolean triageEncounterHasFever = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, measureFeverResult) : false;
-				boolean hivFollowupEncounterHasFever = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
-				boolean clinicalEncounterHasFever = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, measureFeverResult) : false;
-				//Cough
-				boolean triageEncounterHasCough = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coughPresenceResult) : false;
-				boolean hivFollowupEncounterHasCough = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
-				boolean clinicalEncounterHasCough = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coughPresenceResult) : false;
-				//Joint Pains
-				boolean triageEncounterHasJointPain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, jointPainResult) : false;
-				boolean hivFollowupEncounterHasJointPain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, jointPainResult) : false;
-				boolean clinicalEncounterHasJointPain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, jointPainResult) : false;
-				// Vomiting
-				boolean triageEncounterHasVomit = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, vomitingResult) : false;
-				boolean hivFollowupEncounterHasVomit = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, vomitingResult) : false;
-				boolean clinicalEncounterHasVomit = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, vomitingResult) : false;
-				//Watery diarrhea
-				boolean triageEncounterHasWateryDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, wateryDiarrheaResult) : false;
-				boolean hivFollowupEncounterHasWateryDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, wateryDiarrheaResult) : false;
-				boolean clinicalEncounterHasWateryDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, wateryDiarrheaResult) : false;
-				//Diarrhea
-				boolean triageEncounterHasDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, diarrheaResult) : false;
-				boolean hivFollowupEncounterHasDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, diarrheaResult) : false;
-				boolean clinicalEncounterHasDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;
+					Concept measureFeverResult = cs.getConceptByUuid(FEVER);
+					Concept coughPresenceResult = cs.getConceptByUuid(COUGH_PRESENCE);
+					Concept adminQuestion = cs.getConceptByUuid(PATIENT_OUTCOME);
+					Concept admissionAnswer = cs.getConceptByUuid(INPATIENT_ADMISSION);
+					Concept jointPainResult = cs.getConceptByUuid(JOINT_PAIN);
+					Concept vomitingResult = cs.getConceptByUuid(VOMITING);
+					Concept wateryDiarrheaResult = cs.getConceptByUuid(WATERY_DIARRHEA);
+					Concept bloodyStoolResult = cs.getConceptByUuid(BLOOD_IN_STOOL);
+					Concept diarrheaResult = cs.getConceptByUuid(DIARRHEA);
+					Concept bleedingResult = cs.getConceptByUuid(BLEEDING_TENDENCIES);
+					Concept headacheResult = cs.getConceptByUuid(HEADACHE);
+					Concept chillsResult = cs.getConceptByUuid(CHILLS);
+					Concept rashResult = cs.getConceptByUuid(RASH);
+					Concept coryzaResult = cs.getConceptByUuid(CORYZA);
+					Concept conjunctivitisResult = cs.getConceptByUuid(CONJUCTIVITIS);
+					Concept jaundiceResult = cs.getConceptByUuid(JAUNDICE);
+					Concept dizzinessResult = cs.getConceptByUuid(DIZZINESS);
+					Concept malaiseResult = cs.getConceptByUuid(MALAISE);
+					Concept limbsWeaknessResult = cs.getConceptByUuid(LIMBS_WEAKNESS);
+					Concept meningitisResult = cs.getConceptByUuid(SUDDEN_ONSET);
+					Concept acuteFebrileRashInfectionResult = cs.getConceptByUuid(RASH);
+					Concept refusalToFeedResult = cs.getConceptByUuid(REFUSAL_TO_FEED);
+					Concept convulsionsResult = cs.getConceptByUuid(CONVULSIONS);
+					Concept lymphadenopathyResult = cs.getConceptByUuid(LYMPHADENOPATHY);
+					Concept myalgiaResult = cs.getConceptByUuid(MYALGIA);
+					Concept backpainResult = cs.getConceptByUuid(BACKPAIN);
+					Concept neckStiffnessResult = cs.getConceptByUuid(NECK_STIFFNESS);
+					//Conditions
+					String ili = "ILI";
+					String sari = "SARI";
+					String haemorrhagic_fever = "Acute Haemorrhagic Fever";
+					String poliomyelitis = "Acute Flaccid Paralysis";
+					// up to here
+					String jaundice = "Acute Jaundice";
+					String meningitis = "Acute Meningitis and Encephalitis";
+					String acute_febrile_rash_infection = "Acute Febrile Rash Infection";
+					String acute_watery_diarrhoeal = "Acute Watery Diarrhoeal";
+					String neurological_syndrome = "Neurological Syndrome";
+					String acute_febrile_illness = "Acute Febrile Illness";
+					String mpox = "Mpox";
+					//Temperature
+					CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
+					//Fever
+					boolean triageEncounterHasFever = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, measureFeverResult) : false;
+					boolean hivFollowupEncounterHasFever = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
+					boolean clinicalEncounterHasFever = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, measureFeverResult) : false;
+					//Cough
+					boolean triageEncounterHasCough = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coughPresenceResult) : false;
+					boolean hivFollowupEncounterHasCough = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coughPresenceResult) : false;
+					boolean clinicalEncounterHasCough = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coughPresenceResult) : false;
+					//Joint Pains
+					boolean triageEncounterHasJointPain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, jointPainResult) : false;
+					boolean hivFollowupEncounterHasJointPain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, jointPainResult) : false;
+					boolean clinicalEncounterHasJointPain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, jointPainResult) : false;
+					// Vomiting
+					boolean triageEncounterHasVomit = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, vomitingResult) : false;
+					boolean hivFollowupEncounterHasVomit = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, vomitingResult) : false;
+					boolean clinicalEncounterHasVomit = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, vomitingResult) : false;
+					//Watery diarrhea
+					boolean triageEncounterHasWateryDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+					boolean hivFollowupEncounterHasWateryDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+					boolean clinicalEncounterHasWateryDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, wateryDiarrheaResult) : false;
+					//Diarrhea
+					boolean triageEncounterHasDiarrhea = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, diarrheaResult) : false;
+					boolean hivFollowupEncounterHasDiarrhea = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, diarrheaResult) : false;
+					boolean clinicalEncounterHasDiarrhea = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, diarrheaResult) : false;
 
-				//neckStiffnessResult
-				boolean triageEncounterHasNeckStiffness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, neckStiffnessResult) : false;
-				boolean hivFollowupEncounterHasNeckStiffness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, neckStiffnessResult) : false;
-				boolean clinicalEncounterHasNeckStiffness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, neckStiffnessResult) : false;
+					//neckStiffnessResult
+					boolean triageEncounterHasNeckStiffness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, neckStiffnessResult) : false;
+					boolean hivFollowupEncounterHasNeckStiffness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, neckStiffnessResult) : false;
+					boolean clinicalEncounterHasNeckStiffness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, neckStiffnessResult) : false;
 
-				//Blood in stool
-				boolean triageEncounterHasBloodyStool = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bloodyStoolResult) : false;
-				boolean hivFollowupEncounterHasBloodyStool = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bloodyStoolResult) : false;
-				boolean clinicalEncounterHasBloodyStool = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bloodyStoolResult) : false;
-				//Bleeding tendencies
-				boolean triageEncounterHasBleeding = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bleedingResult) : false;
-				boolean hivFollowupEncounterHasBleeding = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bleedingResult) : false;
-				boolean clinicalEncounterHasBleeding = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bleedingResult) : false;
-				//Headache
-				boolean triageEncounterHasHeadache = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, headacheResult) : false;
-				boolean hivFollowupEncounterHasHeadache = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
-				boolean clinicalEncounterHasHeadache = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, headacheResult) : false;
-				//Chills
-				boolean triageEncounterHasChills = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, chillsResult) : false;
-				boolean hivFollowupEncounterHasChills = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, chillsResult) : false;
-				boolean clinicalEncounterHasChills = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, chillsResult) : false;
-				//Rash
-				boolean triageEncounterHasRash = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
-				boolean hivFollowupEncounterHasRash = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
-				boolean clinicalEncounterHasRash = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
+					//Blood in stool
+					boolean triageEncounterHasBloodyStool = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bloodyStoolResult) : false;
+					boolean hivFollowupEncounterHasBloodyStool = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bloodyStoolResult) : false;
+					boolean clinicalEncounterHasBloodyStool = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bloodyStoolResult) : false;
+					//Bleeding tendencies
+					boolean triageEncounterHasBleeding = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, bleedingResult) : false;
+					boolean hivFollowupEncounterHasBleeding = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, bleedingResult) : false;
+					boolean clinicalEncounterHasBleeding = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, bleedingResult) : false;
+					//Headache
+					boolean triageEncounterHasHeadache = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, headacheResult) : false;
+					boolean hivFollowupEncounterHasHeadache = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
+					boolean clinicalEncounterHasHeadache = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, headacheResult) : false;
+					//Chills
+					boolean triageEncounterHasChills = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, chillsResult) : false;
+					boolean hivFollowupEncounterHasChills = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, chillsResult) : false;
+					boolean clinicalEncounterHasChills = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, chillsResult) : false;
+					//Rash
+					boolean triageEncounterHasRash = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
+					boolean hivFollowupEncounterHasRash = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
+					boolean clinicalEncounterHasRash = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
 
-				//Acute Febrile Rash Infection
-				boolean triageEncounterHasAcuteRashInfection = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
-				boolean hivFollowupEncounterHasAcuteRashInfection = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
-				boolean clinicalEncounterHasAcuteRashInfection = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+					//Acute Febrile Rash Infection
+					boolean triageEncounterHasAcuteRashInfection = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+					boolean hivFollowupEncounterHasAcuteRashInfection = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
+					boolean clinicalEncounterHasAcuteRashInfection = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, acuteFebrileRashInfectionResult) : false;
 
-				//Refusal to feed
-				boolean triageEncounterHasRefusalToFeed = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, refusalToFeedResult) : false;
-				boolean hivFollowupEncounterHasRefusalToFeed = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, refusalToFeedResult) : false;
-				boolean clinicalEncounterHasRefusalToFeed = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, refusalToFeedResult) : false;
+					//Refusal to feed
+					boolean triageEncounterHasRefusalToFeed = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, refusalToFeedResult) : false;
+					boolean hivFollowupEncounterHasRefusalToFeed = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, refusalToFeedResult) : false;
+					boolean clinicalEncounterHasRefusalToFeed = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, refusalToFeedResult) : false;
 
-				//Convulsions
-				boolean triageEncounterHasConvulsions = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, convulsionsResult) : false;
-				boolean hivFollowupEncounterHasConvulsions = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, convulsionsResult) : false;
-				boolean clinicalEncounterHasConvulsions = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, convulsionsResult) : false;
+					//Convulsions
+					boolean triageEncounterHasConvulsions = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, convulsionsResult) : false;
+					boolean hivFollowupEncounterHasConvulsions = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, convulsionsResult) : false;
+					boolean clinicalEncounterHasConvulsions = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, convulsionsResult) : false;
 
-				//Coryza
-				boolean triageEncounterHasCoryza = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coryzaResult) : false;
-				boolean hivFollowupEncounterHasCoryza = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coryzaResult) : false;
-				boolean clinicalEncounterHasCoryza = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coryzaResult) : false;
-				//Conjunctivitis
-				boolean triageEncounterHasConjunctivitis = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, conjunctivitisResult) : false;
-				boolean hivFollowupEncounterHasConjunctivitis = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, conjunctivitisResult) : false;
-				boolean clinicalEncounterHasConjunctivitis = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, conjunctivitisResult) : false;
-				//Jaundice
-				boolean triageEncounterHasJaundice = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestionExam, jaundiceResult) : false;
-				boolean hivFollowupEncounterHasJaundice = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionExam, jaundiceResult) : false;
-				boolean clinicalEncounterHasJaundice = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestionExam, jaundiceResult) : false;
-				//Dizziness
-				boolean triageEncounterHasDizziness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, dizzinessResult) : false;
-				boolean hivFollowupEncounterHasDizziness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, dizzinessResult) : false;
-				boolean clinicalEncounterHasDizziness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, dizzinessResult) : false;
-				//Malaise
-				boolean triageEncounterHasMalaise = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, malaiseResult) : false;
-				boolean hivFollowupEncounterHasMalaise = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, malaiseResult) : false;
-				boolean clinicalEncounterHasMalaise = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, malaiseResult) : false;
-				//Weakness of limbs
-				boolean triageEncounterHasWeakLimbs = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, limbsWeaknessResult) : false;
-				boolean hivFollowupEncounterHasWeakLimbs = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
-				boolean clinicalEncounterHasWeakLimbs = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
+					//Coryza
+					boolean triageEncounterHasCoryza = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, coryzaResult) : false;
+					boolean hivFollowupEncounterHasCoryza = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, coryzaResult) : false;
+					boolean clinicalEncounterHasCoryza = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, coryzaResult) : false;
+					//Conjunctivitis
+					boolean triageEncounterHasConjunctivitis = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, conjunctivitisResult) : false;
+					boolean hivFollowupEncounterHasConjunctivitis = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, conjunctivitisResult) : false;
+					boolean clinicalEncounterHasConjunctivitis = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, conjunctivitisResult) : false;
+					//Jaundice
+					boolean triageEncounterHasJaundice = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestionExam, jaundiceResult) : false;
+					boolean hivFollowupEncounterHasJaundice = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestionExam, jaundiceResult) : false;
+					boolean clinicalEncounterHasJaundice = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestionExam, jaundiceResult) : false;
+					//Dizziness
+					boolean triageEncounterHasDizziness = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, dizzinessResult) : false;
+					boolean hivFollowupEncounterHasDizziness = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, dizzinessResult) : false;
+					boolean clinicalEncounterHasDizziness = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, dizzinessResult) : false;
+					//Malaise
+					boolean triageEncounterHasMalaise = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, malaiseResult) : false;
+					boolean hivFollowupEncounterHasMalaise = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, malaiseResult) : false;
+					boolean clinicalEncounterHasMalaise = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, malaiseResult) : false;
+					//Weakness of limbs
+					boolean triageEncounterHasWeakLimbs = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, limbsWeaknessResult) : false;
+					boolean hivFollowupEncounterHasWeakLimbs = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
+					boolean clinicalEncounterHasWeakLimbs = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
 
-				//Acute Meningitis and Encephalitis Syndrome
+					//Acute Meningitis and Encephalitis Syndrome
 //				boolean triageEncounterHasMeningitis = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, meningitisResult) : false;
 //				boolean hivFollowupEncounterHasMeningitis = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, meningitisResult) : false;
 //				boolean clinicalEncounterHasMeningitis = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, meningitisResult) : false;
 
-				//Sudden Onset
-				boolean triageEncounterHasSuddenOnset = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, meningitisResult) : false;
-				boolean hivFollowupEncounterHasSuddenOnset = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, meningitisResult) : false;
-				boolean clinicalEncounterHasSuddenOnset = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, meningitisResult) : false;
+					//Sudden Onset
+					boolean triageEncounterHasSuddenOnset = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, meningitisResult) : false;
+					boolean hivFollowupEncounterHasSuddenOnset = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, meningitisResult) : false;
+					boolean clinicalEncounterHasSuddenOnset = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, meningitisResult) : false;
 
-				//lymphadenopathy
-				boolean triageEncounterHasLymphadenopathy = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, lymphadenopathyResult) : false;
-				boolean hivFollowupEncounterHasLymphadenopathy = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, lymphadenopathyResult) : false;
-				boolean clinicalEncounterHasLymphadenopathy = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, lymphadenopathyResult) : false;
-				//myalgia
-				boolean triageEncounterHasMyalgia = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, myalgiaResult) : false;
-				boolean hivFollowupEncounterHasMyalgia = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, myalgiaResult) : false;
-				boolean clinicalEncounterHasMyalgia = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, myalgiaResult) : false;
-				//backpain
-				boolean triageEncounterHasBackpain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, backpainResult) : false;
-				boolean hivFollowupEncounterHasBackpain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, backpainResult) : false;
-				boolean clinicalEncounterHasBackpain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, backpainResult) : false;
+					//lymphadenopathy
+					boolean triageEncounterHasLymphadenopathy = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					boolean hivFollowupEncounterHasLymphadenopathy = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					boolean clinicalEncounterHasLymphadenopathy = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					//myalgia
+					boolean triageEncounterHasMyalgia = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, myalgiaResult) : false;
+					boolean hivFollowupEncounterHasMyalgia = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, myalgiaResult) : false;
+					boolean clinicalEncounterHasMyalgia = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, myalgiaResult) : false;
+					//backpain
+					boolean triageEncounterHasBackpain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, backpainResult) : false;
+					boolean hivFollowupEncounterHasBackpain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, backpainResult) : false;
+					boolean clinicalEncounterHasBackpain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, backpainResult) : false;
 
-				//Check admission status : Found in clinical encounter and type of visit
-				boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
-				//Visit type is inpatient
-				Visit currentVisit = activeVisits.get(0);
-				Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
-				if (lastTempObs != null) {
-					tempValue = lastTempObs.getValueNumeric();
-				}
+					//Check admission status : Found in clinical encounter and type of visit
+					boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
+					//Visit type is inpatient
+					Visit currentVisit = activeVisits.get(0);
+					Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
+					if (lastTempObs != null) {
+						tempValue = lastTempObs.getValueNumeric();
+					}
 
 					//Triage
 					if (lastTriageEncounter != null) {
@@ -904,23 +905,20 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 					}
 
 
-			}
+				}
 
-			if (idsrMessage.size() > 0) {
-				idsrMessageString = StringUtils.join(idsrMessage, ",");
+				if (idsrMessage.size() > 0) {
+					idsrMessageString = StringUtils.join(idsrMessage, ",");
 
+				}
+				ret.put(ptId, new BooleanResult(eligible, this));
 			}
-			ret.put(ptId, new BooleanResult(eligible, this));
 		}
 		return ret;
 	}
 
 	@Override
 	public String getFlagMessage() {
-		if (isDmi.equals("true")) {
 			return "Suspected " + idsrMessageString;
-		} else {
-			return "";
-		}
 	}
 }
