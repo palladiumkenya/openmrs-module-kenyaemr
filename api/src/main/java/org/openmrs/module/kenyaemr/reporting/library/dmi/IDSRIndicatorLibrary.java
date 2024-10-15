@@ -31,23 +31,6 @@ public class IDSRIndicatorLibrary {
     @Autowired
     private IDSRCohortLibrary idsrCohortLibrary;
 
-
-    /**
-     * Dysentery Cases
-     * @return indicator
-     */
-    public CohortIndicator dysenteryCases() {
-        return cohortIndicator("Individuals tested at the facility", map(idsrCohortLibrary.dysenteryCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-    /**
-     * Cholera Cases
-     * @return indicator
-     */
-    public CohortIndicator choleraCases() {
-        return cohortIndicator("Individuals tested", map(idsrCohortLibrary.choleraCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
     /**
      * ILI Cases
      * @return indicator
@@ -65,30 +48,6 @@ public class IDSRIndicatorLibrary {
     }
 
     /**
-     * Riftvalley Fever Cases
-     * @return indicator
-     */
-    public CohortIndicator riftvalleyFeverCases() {
-        return cohortIndicator("Repeat tests", map(idsrCohortLibrary.riftvalleyFeverCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-    /**
-     * Malaria
-     * @return indicator
-     */
-    public CohortIndicator malariaCases() {
-        return cohortIndicator("Couple testing", map(idsrCohortLibrary.malariaCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-    /**
-     * Chikungunya Cases
-     * @return indicator
-     */
-    public CohortIndicator chikungunyaCases() {
-        return cohortIndicator("Key population testing", map(idsrCohortLibrary.chikungunyaCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-    /**
      * Poliomyelitis Cases
      * @return indicator
      */
@@ -102,14 +61,6 @@ public class IDSRIndicatorLibrary {
      */
     public CohortIndicator viralHaemorrhagicFeverCases() {
         return cohortIndicator("Acute Haemorrhagic Fever", map(idsrCohortLibrary.viralHaemorrhagicFeverCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-
-    /**
-     * Measles cases
-     * @return indicator
-     */
-    public CohortIndicator measlesCases() {
-        return cohortIndicator("Measles cases", map(idsrCohortLibrary.measlesCases(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     /**
