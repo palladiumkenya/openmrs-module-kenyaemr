@@ -1343,8 +1343,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     }
                     try {
                         // get medication patient is on
+                        CareSetting outpatient = Context.getOrderService().getCareSettingByName("OUTPATIENT"); // TODO: include all relevant care settings
                         OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
-                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, null, drugOrderType, false);
+                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, outpatient, drugOrderType, false);
                         List<DrugOrder> tptDrugOrders = new ArrayList<DrugOrder>();
                         for (Order order : allDrugOrders) {
                             if (order != null && order.getConcept() != null) {
