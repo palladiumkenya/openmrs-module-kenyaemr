@@ -36,11 +36,27 @@ public class ActiveInMchDataDefinitionEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select pp.patient_id,if(p.name is not null,'Yes','No') from patient_program pp\n" +
-                "  inner join program p on p.program_id = pp.program_id\n" +
-                "where date(pp.date_completed) is null and p.name in ('MCH - Child Services','MCH - Mother Services')\n" +
-                "group by pp.patient_id\n" +
-                "having max(date(pp.date_enrolled)) <= date(:endDate);";
+        String qry = "SELECT pp.patient_id,\n" +
+                "       CASE \n" +
+                "         WHEN d.gender = 'M' THEN 'N/A'\n" +
+                "         WHEN (pf.pregnant = 'Yes' OR hf.pregnancy_status = 'Yes' OR es.pregnant = 'Yes') THEN 'Pregnant'\n" +
+                "         WHEN (pf.breastfeeding = 'Yes' OR hf.breastfeeding = 'Yes' OR es.breastfeeding_mother = 'Yes') THEN 'Breastfeeding'\n" +
+                "         ELSE 'No'\n" +
+                "       END AS program_status\n" +
+                "FROM kenyaemr_etl.etl_patient_program pp\n" +
+                "LEFT JOIN kenyaemr_etl.etl_prep_followup pf \n" +
+                "       ON pp.patient_id = pf.patient_id\n" +
+                "LEFT JOIN kenyaemr_etl.etl_patient_hiv_followup hf \n" +
+                "       ON pp.patient_id = hf.patient_id\n" +
+                "LEFT JOIN kenyaemr_etl.etl_hts_eligibility_screening es \n" +
+                "       ON pp.patient_id = es.patient_id\n" +
+                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d\n" +
+                "       ON pp.patient_id = d.patient_id\n" +
+                "WHERE DATE(pp.date_completed) IS NULL\n" +
+                "  AND pp.program IN ('MCH-Child Services', 'MCH-Mother Services')\n" +
+                "GROUP BY pp.patient_id\n" +
+                "HAVING MAX(DATE(pp.date_enrolled)) <= DATE(:endDate);";
+
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
