@@ -11,6 +11,7 @@ package org.openmrs.module.kenyaemr.task;
 
 import org.openmrs.Patient;
 import org.openmrs.Visit;
+import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.scheduler.tasks.AbstractTask;
 import org.openmrs.util.OpenmrsUtil;
@@ -22,6 +23,7 @@ import java.util.List;
 
 /**
  * A scheduled task that automatically closes all unvoided active visits
+ * The focus should only be on the OUTPATIENT visit type
  * Set date_stopped to 11 23:59:59 of the date_started
  */
 public class AutoCloseActiveVisitsTask extends AbstractTask {
@@ -38,16 +40,23 @@ public class AutoCloseActiveVisitsTask extends AbstractTask {
 				log.debug("Starting Auto Close Visits Task...");
 			}
 
+			String openVisitsQuery = "select visit_id from visit v\n" +
+					"inner join visit_type vt on vt.visit_type_id = v.visit_type_id and vt.uuid ='3371a4d4-f66f-4454-a86d-92c7b3da990c'\n" +
+					"where v.date_stopped is null";
+
 			startExecuting();
-			List<Patient> allPatients = Context.getPatientService().getAllPatients();
+			VisitService visitService = Context.getVisitService();
 
-			// Fetch all visits haven't ended or been closed and close them
-			List<Visit> visits = Context.getVisitService().getVisits(null, allPatients, null, null, null, new Date(), null, null, null, true, false);
+			List<List<Object>> visits = Context.getAdministrationService().executeSQL(openVisitsQuery, true);
 			if (visits.size() > 0) {
-				for (Visit visit : visits) {
+				for (List<Object> ls : visits) {
 					try {
-
-					visit.setStopDatetime(OpenmrsUtil.getLastMomentOfDay(visit.getStartDatetime()));
+						if (ls.get(0) != null) {
+							Integer visitId = (Integer) ls.get(0);
+							Visit visit = visitService.getVisit(visitId);
+							visit.setStopDatetime(OpenmrsUtil.getLastMomentOfDay(visit.getStartDatetime()));
+							visitService.saveVisit(visit);
+						}
 
 					} catch (Exception e) {
 						log.error("Error while auto closing visits:", e);
