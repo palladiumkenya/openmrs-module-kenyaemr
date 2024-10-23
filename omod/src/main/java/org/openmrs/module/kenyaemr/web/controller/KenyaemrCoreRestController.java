@@ -2863,13 +2863,12 @@ else {
     @RequestMapping(method = RequestMethod.GET, value = "/getemrmetrics")
     @ResponseBody
     public Object getKenyaEMRDetails(HttpServletRequest request) {
-
-        return "{\n" +
-                "    \"EmrName\":\"KenyaEMR\",\n" +
-                "    \"EmrVersion\":\"" + DwapiMetricsUtil.getKenyaemrVersion() + "\",\n" +
-                "    \"LastLoginDate\":\"" + DwapiMetricsUtil.getLastLogin() + "\",\n" +
-                "    \"LastMoH731RunDate\":\"" + DwapiMetricsUtil.getDateofLastMOH731() + "\"" +
-                "}";
+        return SimpleObject.create(
+              "EmrName", "KenyaEMR",
+                "EmrVersion", DwapiMetricsUtil.getKenyaemrVersion(),
+                "LastLoginDate", DwapiMetricsUtil.getLastLogin(),
+                "LastMoH731RunDate", DwapiMetricsUtil.getDateofLastMOH731()
+        );
     }
 
     /**
@@ -2882,17 +2881,12 @@ else {
     public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
         String ret = "{\"status\": \"Error\"}";
         try {
-            System.out.println("NUPI verification: Country: " + country + " IdentifierType: " + identifierType + " Identifier: " + identifier);
-
-            // Create URL
-            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
             GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
             if(baseURL == null || baseURL.trim().isEmpty()) {
-                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";//TODO: we need to remove this ASAP
             }
             String completeURL = baseURL + "/"  + country + "/" + identifierType  + "/" + identifier;
-            System.out.println("NUPI verification: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
             UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
