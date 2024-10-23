@@ -14,6 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.patient.PatientCalculationService;
@@ -2852,6 +2853,23 @@ else {
     public List<org.openmrs.module.webservices.rest.SimpleObject> search(@RequestParam("q") String query, HttpServletRequest request) throws Exception {
         return Context.getService(KenyaEmrService.class).search(query, request.getParameterMap());
 
+    }
+
+    /**
+     * Generates KenyaEMR related metrics
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/getemrmetrics")
+    @ResponseBody
+    public Object getKenyaEMRDetails(HttpServletRequest request) {
+
+        return "{\n" +
+                "    \"EmrName\":\"KenyaEMR\",\n" +
+                "    \"EmrVersion\":\"" + DwapiMetricsUtil.getKenyaemrVersion() + "\",\n" +
+                "    \"LastLoginDate\":\"" + DwapiMetricsUtil.getLastLogin() + "\",\n" +
+                "    \"LastMoH731RunDate\":\"" + DwapiMetricsUtil.getDateofLastMOH731() + "\"" +
+                "}";
     }
 
     /**
