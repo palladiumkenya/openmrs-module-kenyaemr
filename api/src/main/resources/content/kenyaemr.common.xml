@@ -44,6 +44,7 @@
 				<ref bean="kenyaemr.common.form.iliSurveillance"/>
 				<ref bean="kenyaemr.common.form.sariSurveillance"/>
 				<ref bean="kenyaemr.common.form.nutrition"/>
+				<ref bean="kenyaemr.common.form.familyPlanning"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
 			</set>
@@ -551,6 +552,23 @@
 			</set>
 		</property>
 		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.surveillance.EligibleForSariScreeningCalculation" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
+		<property name="order" value="201099" />
+	</bean>
+	<!-- Family planning Form -->
+	<bean id="kenyaemr.common.form.familyPlanning" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="a52c57d4-110f-4879-82ae-907b0d90add6" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
 		<property name="order" value="201099" />
