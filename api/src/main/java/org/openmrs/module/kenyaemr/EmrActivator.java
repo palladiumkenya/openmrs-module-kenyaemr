@@ -14,18 +14,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleActivator;
 import org.openmrs.module.kenyacore.CoreContext;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.util.ServerInformation;
 import org.openmrs.module.reporting.report.service.ReportService;
 import org.openmrs.util.OpenmrsUtil;
+import org.openmrs.web.WebConstants;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
@@ -80,10 +86,19 @@ public class EmrActivator implements ModuleActivator {
 	 * @see ModuleActivator#started()
 	 */
 	public void started() {
-		// Context.getService(ReportService.class).deleteOldReportRequests();
 		log.info("KenyaEMR started");
-		Context.getAdministrationService().executeSQL("UPDATE form SET published = 1 where retired = 0", false);
+		AdministrationService administrationService = Context.getAdministrationService();
+		administrationService.executeSQL("UPDATE form SET published = 1 where retired = 0", false);
 
+		Map<String, Object> kenyaemrInfo = ServerInformation.getKenyaemrInformation();
+			String moduleVersion = (String) kenyaemrInfo.get("version");
+		GlobalProperty gp = administrationService.getGlobalPropertyObject(CommonMetadata.GP_KENYAEMR_VERSION);
+		if (gp == null) {
+			gp = new GlobalProperty();
+			gp.setProperty(CommonMetadata.GP_KENYAEMR_VERSION);
+		}
+		gp.setPropertyValue(moduleVersion);
+		administrationService.saveGlobalProperty(gp);
 	}
 
 	/**
