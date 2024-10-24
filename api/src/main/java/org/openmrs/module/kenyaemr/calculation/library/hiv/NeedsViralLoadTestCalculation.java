@@ -12,9 +12,13 @@ package org.openmrs.module.kenyaemr.calculation.library.hiv;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Form;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Program;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
@@ -28,6 +32,9 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.art.InitialArtStartDa
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.LastViralLoadResultCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.OnArtCalculation;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.metadata.MchMetadata;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
+import org.openmrs.module.kenyaemr.util.HtsConstants;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.ui.framework.SimpleObject;
 
@@ -41,6 +48,14 @@ import static org.openmrs.module.kenyaemrorderentry.util.Utils.getLatestObs;
 
 public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
     protected static final Log log = LogFactory.getLog(StablePatientsCalculation.class);
+    String flagMessage = null;
+    public static final Integer HTS_PMTCT_ANC_ENTRY_POINT_CONCEPT_ID = 160538;
+    public static final Integer HTS_PMTCT_MAT_ENTRY_POINT_CONCEPT_ID = 160456;
+    public static final Integer HTS_PMTCT_PNC_ENTRY_POINT_CONCEPT_ID = 1623;
+    public static final Integer HTSENTRYPOINT_QUESTION_CONCEPT_ID = 160540;
+
+
+
 
     /**
      * Needs vl test calculation criteria: New EMR guidelines March 2023
@@ -54,13 +69,20 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
      */
     @Override
     public String getFlagMessage() {
-        return "Due for Viral Load";
+        return flagMessage;
     }
 
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         PatientService patientService = Context.getPatientService();
+        ConceptService cs = Context.getConceptService();
+        EncounterType mchEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION);
+        Form mchAncForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_ANTENATAL_VISIT);
+        Form mchDeliveryForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_DELIVERY);
+        Form mchPostnatalForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_POSTNATAL_VISIT);
+
+
 
         Set<Integer> alive = Filters.alive(cohort, context);
         Set<Integer> inHivProgram = Filters.inProgram(hivProgram, alive, context);
@@ -129,10 +151,12 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                                 || (obsPregStatusDate != null && lastVLResultDate != null && obsPregStatusDate.after(lastVLResultDate)) || (obsBFStatusDate != null && lastVLResultDate != null && obsBFStatusDate.after(lastVLResultDate)))) {
 
                     needsViralLoadTest = true;
+                    flagMessage = "Due for Viral Load";
                 }
                 //After 3 months: All with unsuppressed VL (>200 cps/ml)
                 else if (lastVlResultValue != null && lastVLResultDate != null && daysSince(lastVLResultDate, context) >= 92 && lastVlResultValue > 200) {
                     needsViralLoadTest = true;
+                    flagMessage = "Due for Viral Load";
                 }
                 //After 3 Months: New positives with no previous VL
                 else if (artStartDate != null && daysSince(artStartDate, context) >= 92 && lastVLResultDate == null) {
@@ -144,10 +168,68 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                 else if (((lastPregStartDate != null && lastVLResultDate != null && lastPregStartDate.before(lastVLResultDate)) || (lastBFStartDate != null && lastVLResultDate != null && lastBFStartDate.before(lastVLResultDate)) || (obsPregStatusDate != null && lastVLResultDate != null && obsPregStatusDate.before(lastVLResultDate)) || (obsBFStatusDate != null && lastVLResultDate != null && obsBFStatusDate.before(lastVLResultDate))
                         || patient.getAge() <= 24) && (lastVLResultDate != null && daysSince(lastVLResultDate, context) >= 183 && (lastVlResultLDL != null || (lastVlResultValue != null && lastVlResultValue < 200)))) {
                     needsViralLoadTest = true;
+                    flagMessage = "Due for Viral Load";
                 }
                 //After 12 Months: > 25 years old with suppressed VL or LDL
                 else if (lastVLResultDate != null && daysSince(lastVLResultDate, context) >= 365 && patient.getAge() >= 25) {
                     needsViralLoadTest = true;
+                    flagMessage = "Due for Viral Load";
+                }
+
+                
+                ret.put(ptId, new BooleanResult(needsViralLoadTest, this));
+            }
+
+            /*Due for Pre-ART viral load test flag
+             * Criteria: In MCH program, Not on art and no previous vl test/Results,confirmed positive while in MCH
+             * 
+             * 
+             */
+            if(activeInMCH.contains(ptId)) {
+                Encounter lastHtsInitialEnc = EmrUtils.lastEncounter(patient, HtsConstants.htsEncType, HtsConstants.htsInitialForm);
+                Encounter lastHtsRetestEnc = EmrUtils.lastEncounter(patient, HtsConstants.htsEncType, HtsConstants.htsRetestForm);
+                Encounter lastAncEnc = EmrUtils.lastEncounter(patient, mchEncType, mchAncForm);
+                Encounter lastMchDeliveryEnc = EmrUtils.lastEncounter(patient, mchEncType, mchDeliveryForm);
+                Encounter lastMchPostnatalEnc = EmrUtils.lastEncounter(patient, mchEncType, mchPostnatalForm);
+                Concept htsFinalTestQuestion = cs.getConcept(HtsConstants.HTS_FINAL_TEST_CONCEPT_ID);
+                Concept htsPositiveResult = cs.getConcept(HtsConstants.HTS_POSITIVE_RESULT_CONCEPT_ID);
+                Concept htsEntryPointQuestion = cs.getConcept(HTSENTRYPOINT_QUESTION_CONCEPT_ID);
+                Concept htsPmtctAncEntryPoint = cs.getConcept(HTS_PMTCT_ANC_ENTRY_POINT_CONCEPT_ID);
+                Concept htsPmtctMatEntryPoint = cs.getConcept(HTS_PMTCT_MAT_ENTRY_POINT_CONCEPT_ID);
+                Concept htsPmtctPncEntryPoint = cs.getConcept(HTS_PMTCT_PNC_ENTRY_POINT_CONCEPT_ID);
+                Encounter lastHtsEnc = null;                
+                if (lastHtsInitialEnc != null && lastHtsRetestEnc == null) {
+                    lastHtsEnc = lastHtsInitialEnc;
+                } else if (lastHtsInitialEnc == null && lastHtsRetestEnc != null) {
+                    lastHtsEnc = lastHtsRetestEnc;
+                } else if (lastHtsInitialEnc != null && lastHtsRetestEnc != null) {
+                    if (lastHtsInitialEnc.getEncounterDatetime().after(lastHtsRetestEnc.getEncounterDatetime())) {
+                        lastHtsEnc = lastHtsInitialEnc;
+                    } else {
+                        lastHtsEnc = lastHtsRetestEnc;
+                    }
+                }
+                boolean isConfirmedPositiveAtAnc = lastAncEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastAncEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+                boolean isConfirmedPositiveAtPostnatal = lastMchPostnatalEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchPostnatalEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+                boolean isConfirmedPositiveAtDelivery = lastMchDeliveryEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchDeliveryEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+
+                if ( !pendingVlResults.contains(ptId) && artStartDate == null && lastVLResultDate == null && 
+                (isConfirmedPositiveAtAnc || isConfirmedPositiveAtPostnatal || isConfirmedPositiveAtDelivery)) {
+                    needsViralLoadTest = true;
+                    flagMessage = "Due for Pre-ART Viral Load";
+                }
+
+                if(lastHtsEnc != null) {
+                    boolean isPositiveTestResult = lastHtsEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastHtsEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+                    if(isPositiveTestResult && !pendingVlResults.contains(ptId) && artStartDate == null && lastVLResultDate == null) {
+                        for (Obs obs : lastHtsEnc.getObs()) { 
+                            if(obs.getConcept().equals(htsEntryPointQuestion) && (obs.getValueCoded().equals(htsPmtctAncEntryPoint) || 
+                            obs.getValueCoded().equals(htsPmtctMatEntryPoint) || obs.getValueCoded().equals(htsPmtctPncEntryPoint))) {
+                                needsViralLoadTest = true;
+                                flagMessage = "Due for Pre-ART Viral Load";
+                            }
+                        }
+                    }
                 }
                 ret.put(ptId, new BooleanResult(needsViralLoadTest, this));
             }
