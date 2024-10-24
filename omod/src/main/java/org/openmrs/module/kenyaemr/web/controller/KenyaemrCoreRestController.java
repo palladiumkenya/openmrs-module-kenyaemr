@@ -14,6 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.patient.PatientCalculationService;
@@ -2855,6 +2856,22 @@ else {
     }
 
     /**
+     * Generates KenyaEMR related metrics
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/getemrmetrics")
+    @ResponseBody
+    public Object getKenyaEMRDetails(HttpServletRequest request) {
+        return SimpleObject.create(
+              "EmrName", "KenyaEMR",
+                "EmrVersion", DwapiMetricsUtil.getKenyaemrVersion(),
+                "LastLoginDate", DwapiMetricsUtil.getLastLogin(),
+                "LastMoH731RunDate", DwapiMetricsUtil.getDateofLastMOH731()
+        );
+    }
+
+    /**
      * Verify NUPI exists (EndPoint)
      * @return
      */
@@ -2864,17 +2881,12 @@ else {
     public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
         String ret = "{\"status\": \"Error\"}";
         try {
-            System.out.println("NUPI verification: Country: " + country + " IdentifierType: " + identifierType + " Identifier: " + identifier);
-
-            // Create URL
-            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
             GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
             if(baseURL == null || baseURL.trim().isEmpty()) {
-                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";//TODO: we need to remove this ASAP
             }
             String completeURL = baseURL + "/"  + country + "/" + identifierType  + "/" + identifier;
-            System.out.println("NUPI verification: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
             UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
