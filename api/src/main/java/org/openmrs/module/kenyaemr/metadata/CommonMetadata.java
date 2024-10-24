@@ -103,6 +103,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POPC = "6f8e49f2-3bff-4aff-909b-20568c316625";
 		public static final String MAXILLOFACIAL = "92999f52-f352-415a-9e0d-87872e5b2c8d";
 		public static final String SPEECHANDLANGUAGE = "5d0b6d85-5b88-410c-9f0f-4dab3db7ceb2";
+		public static final String ADVERSEDRUGREACTION = "7a185fe4-c56f-4195-b682-d3f5afa9d9c2";
 	}
 
 	public static final class _Form {
@@ -141,6 +142,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POPC_FORM = "d95e44dd-e389-42ae-a9b6-1160d8eeebc4";
 		public static final String MAXILLOFACIAL_CLINICAL_FORM = "b40d369c-31d0-4c1d-a80a-7e4b7f73bea0";
 		public static final String SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM = "67f98072-1518-4beb-8a30-aa8a319ee3df";
+		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
 	}
 
 	public static final class _OrderType {
@@ -306,6 +308,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
 		install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter", _EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
 		install(form("Speech and Language Therapy Clinical Form", "Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1", _Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
+		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
