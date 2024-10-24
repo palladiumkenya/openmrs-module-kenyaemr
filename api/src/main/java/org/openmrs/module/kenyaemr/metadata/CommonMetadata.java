@@ -274,6 +274,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("POPC", "POPC encounter type", _EncounterType.POPC));
 		install(encounterType("MAXILLOFACIAL", "Maxillofacial encounter type", _EncounterType.MAXILLOFACIAL));
 		install(encounterType("Speech and Language", "Speech and Language encounter type", _EncounterType.SPEECHANDLANGUAGE));
+		install(encounterType("Adverse Drug Reaction", "Adverse Drug Reaction encounter type", _EncounterType.ADVERSEDRUGREACTION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
