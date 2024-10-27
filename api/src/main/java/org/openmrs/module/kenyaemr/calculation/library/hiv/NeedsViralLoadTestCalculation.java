@@ -16,9 +16,11 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Program;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
@@ -36,10 +38,13 @@ import org.openmrs.module.kenyaemr.metadata.MchMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.kenyaemr.util.HtsConstants;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.parameter.OrderSearchCriteria;
 import org.openmrs.ui.framework.SimpleObject;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,6 +82,7 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         PatientService patientService = Context.getPatientService();
         ConceptService cs = Context.getConceptService();
+        OrderService orderService = Context.getOrderService();
         EncounterType mchEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION);
         Form mchAncForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_ANTENATAL_VISIT);
         Form mchDeliveryForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHMS_DELIVERY);
@@ -120,6 +126,7 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
             Date artStartDate = EmrCalculationUtils.datetimeResultForPatient(dateInitiatedART, ptId);
             Date lastPregStartDate = EmrCalculationUtils.datetimeResultForPatient(pregnancyStartDate, ptId);
             Date lastBFStartDate = EmrCalculationUtils.datetimeResultForPatient(breastFeedingStarDate, ptId);
+            
 
             //Check for latest vl and if it exists (vl is only valid if its for the last 12 months)
             CalculationResult lastvlresult = lastVlResults.get(ptId);
@@ -197,7 +204,12 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                 Concept htsPmtctAncEntryPoint = cs.getConcept(HTS_PMTCT_ANC_ENTRY_POINT_CONCEPT_ID);
                 Concept htsPmtctMatEntryPoint = cs.getConcept(HTS_PMTCT_MAT_ENTRY_POINT_CONCEPT_ID);
                 Concept htsPmtctPncEntryPoint = cs.getConcept(HTS_PMTCT_PNC_ENTRY_POINT_CONCEPT_ID);
-                Encounter lastHtsEnc = null;                
+                Encounter lastHtsEnc = null;  
+                List<Concept> vlOrderConcepts = Arrays.asList(cs.getConceptByUuid(Dictionary.HIV_VIRAL_LOAD), cs.getConceptByUuid(Dictionary.HIV_VIRAL_LOAD_QUALITATIVE));
+                OrderSearchCriteria OrderSearchCriteria = new OrderSearchCriteria( patient, null, vlOrderConcepts, null, null, null, 
+                null, null, false, null, null, null, null, true, true, false, false); 
+                List<Order> vlOrders = orderService.getOrders(OrderSearchCriteria);                
+
                 if (lastHtsInitialEnc != null && lastHtsRetestEnc == null) {
                     lastHtsEnc = lastHtsInitialEnc;
                 } else if (lastHtsInitialEnc == null && lastHtsRetestEnc != null) {
@@ -213,7 +225,7 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                 boolean isConfirmedPositiveAtPostnatal = lastMchPostnatalEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchPostnatalEnc, htsFinalTestQuestion, htsPositiveResult) : false;
                 boolean isConfirmedPositiveAtDelivery = lastMchDeliveryEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchDeliveryEnc, htsFinalTestQuestion, htsPositiveResult) : false;
 
-                if ( !pendingVlResults.contains(ptId) && artStartDate == null && lastVLResultDate == null && 
+                if ( vlOrders.size() == 0 && artStartDate == null && 
                 (isConfirmedPositiveAtAnc || isConfirmedPositiveAtPostnatal || isConfirmedPositiveAtDelivery)) {
                     needsViralLoadTest = true;
                     flagMessage = "Due for Pre-ART Viral Load";
@@ -221,7 +233,7 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
 
                 if(lastHtsEnc != null) {
                     boolean isPositiveTestResult = lastHtsEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastHtsEnc, htsFinalTestQuestion, htsPositiveResult) : false;
-                    if(isPositiveTestResult && !pendingVlResults.contains(ptId) && artStartDate == null && lastVLResultDate == null) {
+                    if(isPositiveTestResult && vlOrders.size() == 0 && artStartDate == null) {
                         for (Obs obs : lastHtsEnc.getObs()) { 
                             if(obs.getConcept().equals(htsEntryPointQuestion) && (obs.getValueCoded().equals(htsPmtctAncEntryPoint) || 
                             obs.getValueCoded().equals(htsPmtctMatEntryPoint) || obs.getValueCoded().equals(htsPmtctPncEntryPoint))) {
