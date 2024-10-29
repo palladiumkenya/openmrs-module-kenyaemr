@@ -11,6 +11,8 @@ package org.openmrs.module.kenyaemr.calculation.library.hiv;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -41,7 +43,13 @@ import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.parameter.OrderSearchCriteria;
 import org.openmrs.ui.framework.SimpleObject;
 
+import liquibase.pro.packaged.b;
+import liquibase.pro.packaged.bo;
+import liquibase.pro.packaged.d;
+import liquibase.pro.packaged.e;
+
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -204,7 +212,10 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                 Concept htsPmtctAncEntryPoint = cs.getConcept(HTS_PMTCT_ANC_ENTRY_POINT_CONCEPT_ID);
                 Concept htsPmtctMatEntryPoint = cs.getConcept(HTS_PMTCT_MAT_ENTRY_POINT_CONCEPT_ID);
                 Concept htsPmtctPncEntryPoint = cs.getConcept(HTS_PMTCT_PNC_ENTRY_POINT_CONCEPT_ID);
-                Encounter lastHtsEnc = null;  
+                Concept dateOfDelivery = cs.getConcept(Dictionary.DATE_OF_CONFINEMENT); //Though named date of confinement, same concept used for delivery date
+                Encounter lastHtsEnc = null; 
+                Date dateOfDeliveryValue = null;
+                Date dateTestedPositiveAtHts = null; 
                 List<Concept> vlOrderConcepts = Arrays.asList(cs.getConceptByUuid(Dictionary.HIV_VIRAL_LOAD), cs.getConceptByUuid(Dictionary.HIV_VIRAL_LOAD_QUALITATIVE));
                 OrderSearchCriteria OrderSearchCriteria = new OrderSearchCriteria( patient, null, vlOrderConcepts, null, null, null, 
                 null, null, false, null, null, null, null, true, true, false, false); 
@@ -224,28 +235,70 @@ public class NeedsViralLoadTestCalculation extends AbstractPatientCalculation im
                 boolean isConfirmedPositiveAtAnc = lastAncEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastAncEnc, htsFinalTestQuestion, htsPositiveResult) : false;
                 boolean isConfirmedPositiveAtPostnatal = lastMchPostnatalEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchPostnatalEnc, htsFinalTestQuestion, htsPositiveResult) : false;
                 boolean isConfirmedPositiveAtDelivery = lastMchDeliveryEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastMchDeliveryEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+                boolean testedPositiveWithin24MonthsInPostnatal = false;
+                
+                if(lastMchPostnatalEnc != null) {
+                    
+                    Date dateTestedPositivePnc = null;
+                    for (Obs obs : lastMchPostnatalEnc.getObs()) {
+                        if(obs.getConcept().equals(dateOfDelivery)) {
+                            dateOfDeliveryValue = obs.getValueDate();
+                        } else if(obs.getConcept().equals(htsFinalTestQuestion) && obs.getValueCoded().equals(htsPositiveResult)) {
+                            dateTestedPositivePnc = obs.getObsDatetime();
+                        }
+                    }
+                    if(dateOfDeliveryValue != null && dateTestedPositivePnc != null) {
+                        testedPositiveWithin24MonthsInPostnatal = testedPositiveWithin24MonthsInPnc(dateOfDeliveryValue, dateTestedPositivePnc);
+                    }
+                }
 
-                if ( vlOrders.size() == 0 && artStartDate == null && 
-                (isConfirmedPositiveAtAnc || isConfirmedPositiveAtPostnatal || isConfirmedPositiveAtDelivery)) {
+                if ( vlOrders.size() == 0 && artStartDate == null &&
+                (isConfirmedPositiveAtAnc || (isConfirmedPositiveAtPostnatal && testedPositiveWithin24MonthsInPostnatal) || isConfirmedPositiveAtDelivery)) {
                     needsViralLoadTest = true;
                     flagMessage = "Due for Pre-ART Viral Load";
                 }
 
                 if(lastHtsEnc != null) {
                     boolean isPositiveTestResult = lastHtsEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastHtsEnc, htsFinalTestQuestion, htsPositiveResult) : false;
+                    if(isPositiveTestResult) {
+                        dateTestedPositiveAtHts = lastHtsEnc.getEncounterDatetime();
+                    }
                     if(isPositiveTestResult && vlOrders.size() == 0 && artStartDate == null) {
                         for (Obs obs : lastHtsEnc.getObs()) { 
                             if(obs.getConcept().equals(htsEntryPointQuestion) && (obs.getValueCoded().equals(htsPmtctAncEntryPoint) || 
-                            obs.getValueCoded().equals(htsPmtctMatEntryPoint) || obs.getValueCoded().equals(htsPmtctPncEntryPoint))) {
+                            obs.getValueCoded().equals(htsPmtctMatEntryPoint))) {
                                 needsViralLoadTest = true;
                                 flagMessage = "Due for Pre-ART Viral Load";
                             }
                         }
                     }
                 }
+                // check if confirmed positive using hts form and still within 24 months at postnatal
+                if(dateTestedPositiveAtHts != null && dateOfDeliveryValue != null && dateTestedPositiveAtHts.after(dateOfDeliveryValue) && vlOrders.size() == 0 && artStartDate == null) {
+                    testedPositiveWithin24MonthsInPostnatal = testedPositiveWithin24MonthsInPnc(dateOfDeliveryValue, dateTestedPositiveAtHts);
+                    if(testedPositiveWithin24MonthsInPostnatal) {
+                        needsViralLoadTest = true;
+                        flagMessage = "Due for Pre-ART Viral Load";
+                    }
+                }
+
                 ret.put(ptId, new BooleanResult(needsViralLoadTest, this));
             }
         }
         return ret;
+    }
+    private boolean testedPositiveWithin24MonthsInPnc(Date deliveryDate ,Date dateTestedPositive) {
+        boolean isTestedPositiveWithin24Months = false;
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(deliveryDate);
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(dateTestedPositive);
+        int yearDiff = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+        int monthDiff = yearDiff * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+
+        if (monthDiff <= 24) {
+            isTestedPositiveWithin24Months = true;
+        }
+        return isTestedPositiveWithin24Months;
     }
 }
