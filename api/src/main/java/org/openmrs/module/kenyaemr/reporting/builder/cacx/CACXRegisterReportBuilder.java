@@ -94,8 +94,13 @@ public class CACXRegisterReportBuilder extends AbstractReportBuilder {
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
         PatientIdentifierType nationalId = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_ID);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nationalId.getName(), nationalId), identifierFormatter);
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        DataDefinition cccNumberDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
+
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -104,6 +109,8 @@ public class CACXRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Visit Type", new CACXVisitTypeDataDefinition(), null);
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("ID Number", identifierDef, "");
+        dsd.addColumn("CCC No", cccNumberDef, "");
+        dsd.addColumn("NUPI", nupiDef, "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Phone Number", new PersonAttributeDataDefinition(phoneNumber), "");
         dsd.addColumn("Age in years", new AgeDataDefinition(), "");
