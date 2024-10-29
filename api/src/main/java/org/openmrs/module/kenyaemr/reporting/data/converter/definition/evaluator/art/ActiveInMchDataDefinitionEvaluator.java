@@ -44,13 +44,13 @@ public class ActiveInMchDataDefinitionEvaluator implements PersonDataEvaluator {
                 "         ELSE 'No'\n" +
                 "       END AS program_status\n" +
                 "FROM kenyaemr_etl.etl_patient_program pp\n" +
-                "LEFT JOIN kenyaemr_etl.etl_prep_followup pf \n" +
+                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnant, breastfeeding FROM kenyaemr_etl.etl_prep_followup GROUP BY patient_id) pf \n" +
                 "       ON pp.patient_id = pf.patient_id\n" +
-                "LEFT JOIN kenyaemr_etl.etl_patient_hiv_followup hf \n" +
+                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnancy_status, breastfeeding FROM kenyaemr_etl.etl_patient_hiv_followup GROUP BY patient_id) hf \n" +
                 "       ON pp.patient_id = hf.patient_id\n" +
-                "LEFT JOIN kenyaemr_etl.etl_hts_eligibility_screening es \n" +
+                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnant, breastfeeding_mother FROM kenyaemr_etl.etl_hts_eligibility_screening GROUP BY patient_id) es \n" +
                 "       ON pp.patient_id = es.patient_id\n" +
-                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d\n" +
+                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d \n" +
                 "       ON pp.patient_id = d.patient_id\n" +
                 "WHERE DATE(pp.date_completed) IS NULL\n" +
                 "  AND pp.program IN ('MCH-Child Services', 'MCH-Mother Services')\n" +
