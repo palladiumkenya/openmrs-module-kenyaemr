@@ -78,7 +78,6 @@ public class AdxViewFragmentController {
     DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static final String KPIF_MONTHLY_REPORT = "Monthly report";
     public static final String MOH_731 = "Revised MOH 731";
-    private static final String COMBO_ID = "NhSoXUMPK2K";
 
     public void get(@RequestParam("request") ReportRequest reportRequest,
                     @RequestParam("returnUrl") String returnUrl,
@@ -110,6 +109,7 @@ public class AdxViewFragmentController {
         model.addAttribute("reportName", definition.getName());
         model.addAttribute("returnUrl", returnUrl);
         if (definition.getName() != null) {
+
             if (definition.getName().equals(KPIF_MONTHLY_REPORT)) {
                 model.addAttribute("serverAddress", KPIF_SERVER_ADDRESS);
             } else if (definition.getName().equals(MOH_731)) {
@@ -153,8 +153,6 @@ public class AdxViewFragmentController {
 
         for (String dsKey : reportData.getDataSets().keySet()) {
 
-            // String datasetName = null;
-
             if (mappingDetails.get("datasets").getElements() != null && reportName.equals(MOH_731)) {
 
                 for (Iterator<JsonNode> it = mappingDetails.get("datasets").iterator(); it.hasNext(); ) {
@@ -180,7 +178,7 @@ public class AdxViewFragmentController {
 
             mappingDetails.get("datasets").getElements();
 
-            w.append("\t").append("<group orgUnit=\"" + getMflCode() + "\" attributeOptionCombo=\"" + COMBO_ID + "\" completeDate=\"" + isoDateFormat.format(new Date()) +  "\" period=\"" + isoDateFormat.format(reportDate)
+            w.append("\t").append("<group orgUnit=\"" + getMflCode() + "\" completeDate=\"" + isoDateFormat.format(new Date()) +  "\" period=\"" + isoDateFormat.format(reportDate)
                     + "/P1M\" dataSet=\"" + datasetName + "\">\n");
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
@@ -190,8 +188,8 @@ public class AdxViewFragmentController {
                     indicatorName = column.getName();
                     Object value = row.getColumnValue(column);
 
-                    if (reportName.equals(MOH_731)) {
-                        w.append("\t\t").append( "<dataValue categoryOptionCombo=\""+ COMBO_ID +"\" dataElement=\"" + columnPrefix + "" + indicatorName + "\" value=\"" + value.toString() + "\"/>\n");
+                    if (reportName.equals(MOH_731) && !"0".equals(value.toString())) {
+                        w.append("\t\t").append( "<dataValue dataElement=\"" + columnPrefix + "" + indicatorName + "\" value=\"" + value + "\"/>\n");
                     } else if (reportName.equals(KPIF_MONTHLY_REPORT)) {
 
                         if (indicatorName.contains("PWUD"))
@@ -304,12 +302,10 @@ public class AdxViewFragmentController {
 
             Element eDataset = document.createElement("group");
             // add group attributes
-            //eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
             eDataset.setAttribute("orgUnit", getMflCode());
             eDataset.setAttribute("period", isoDateFormat.format(reportDate).concat("/P1M"));
             eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
             eDataset.setAttribute("dataSet", datasetName);
-            eDataset.setAttribute("attributeOptionCombo", COMBO_ID);
 
             DataSet dataset = reportData.getDataSets().get(dsKey);
             List<DataSetColumn> columns = dataset.getMetaData().getColumns();
@@ -317,13 +313,12 @@ public class AdxViewFragmentController {
                 for (DataSetColumn column : columns) {
                     String name = column.getName();
                     Object value = row.getColumnValue(column);
-
-                    // add data values
                     Element dataValue = document.createElement("dataValue");
-                    if (reportName.equals(MOH_731)) {
+                    // add data values
+                    if (reportName.equals(MOH_731) && !"0".equals(value.toString())) {
                         dataValue.setAttribute("dataElement", columnPrefix.concat(name));
-                        dataValue.setAttribute("categoryOptionCombo", COMBO_ID);
                         dataValue.setAttribute("value", value.toString());
+                        eDataset.appendChild(dataValue);
                     }
                     else if(reportName.equals(KPIF_MONTHLY_REPORT)){
                         if (name.contains("PWUD"))
@@ -333,8 +328,9 @@ public class AdxViewFragmentController {
                         dataValue.setAttribute("dataElement", columnPrefix.concat(combos[0]));
                         dataValue.setAttribute("categoryOptionCombo", columnPrefix.concat(combos[1]));
                         dataValue.setAttribute("value", value.toString());
+                        eDataset.appendChild(dataValue);
                     }
-                    eDataset.appendChild(dataValue);
+
                 }
             }
                 root.appendChild(eDataset);
@@ -351,21 +347,18 @@ public class AdxViewFragmentController {
 
                     Element eDataset = document.createElement("group");
                     // add group attributes
-                   // eDataset.setAttribute("xmlns","http://dhis2.org/schema/dxf/2.0");
                     eDataset.setAttribute("orgUnit", getMflCode());
                     eDataset.setAttribute("period", isoDateFormat.format(reportDate).concat("/P1M"));
                     eDataset.setAttribute("completeDate", isoDateFormat.format(new Date()));
                     eDataset.setAttribute("dataSet", datasetName);
-                    eDataset.setAttribute("attributeOptionCombo", COMBO_ID);
 
                     for (DatasetIndicatorDetails row : e.getIndicators()) {
-                        if (row.getValue() != null && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
+                        if (row.getValue() != null && !"0".equals(row.getValue()) && !"".equals(row.getValue()) && StringUtils.isNotEmpty(row.getValue())) {
                             String name = row.getName();
                             Object value = row.getValue();
                             // add data values
                             Element dataValue = document.createElement("dataValue");
                             dataValue.setAttribute("dataElement", columnPrefix.concat(name));
-                            dataValue.setAttribute("categoryOptionCombo", COMBO_ID);
                             dataValue.setAttribute("value", value.toString());
                             eDataset.appendChild(dataValue);
 
@@ -388,7 +381,6 @@ public class AdxViewFragmentController {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         StreamResult inMemory = new StreamResult(out);
 
-        //transformer.transform(domSource, printOut);
         transformer.transform(domSource, inMemory);
         if(reportName.equals(MOH_731)){
         if (serverAddress != null) {
@@ -416,7 +408,6 @@ public class AdxViewFragmentController {
         DataOutputStream out = new DataOutputStream(con.getOutputStream());
 
         out.writeBytes(outStream.toString());
-
         out.flush();
         out.close();
 
