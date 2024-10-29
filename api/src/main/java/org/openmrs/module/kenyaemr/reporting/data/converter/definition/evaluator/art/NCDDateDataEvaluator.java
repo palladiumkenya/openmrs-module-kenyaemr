@@ -34,11 +34,11 @@ public class NCDDateDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select ci.patient_id,\n" +
-                "       group_concat(ci.chronic_illness_onset_date) as ChronicIllness_onset\n" +
-                "from kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
-                "where ci.visit_date <= date(:endDate)\n" +
-                "group by ci.patient_id;";
+        String qry = "SELECT ci.patient_id,\n" +
+                "       DATE(MAX(ci.chronic_illness_onset_date)) AS ChronicIllness_onset\n" +
+                "FROM kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
+                "WHERE ci.visit_date <= DATE(:endDate)\n" +
+                "GROUP BY ci.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

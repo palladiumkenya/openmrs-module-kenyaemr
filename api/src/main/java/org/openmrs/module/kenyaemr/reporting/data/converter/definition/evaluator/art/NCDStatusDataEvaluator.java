@@ -34,13 +34,19 @@ public class NCDStatusDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select ci.patient_id,\n" +
-                "       group_concat(case ci.is_chronic_illness_controlled\n" +
-                "                        when 1065 then 'Controlled'\n" +
-                "                        when 1066 then 'Not controlled' end) as controlled_status\n" +
-                "from kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
-                "where ci.visit_date <= date(:endDate)\n" +
-                "group by ci.patient_id;";
+        String qry = "SELECT ci.patient_id,\n" +
+                "       (CASE ci.is_chronic_illness_controlled\n" +
+                "            WHEN 1065 THEN 'Controlled'\n" +
+                "            WHEN 1066 THEN 'Not controlled'\n" +
+                "        END) AS controlled_status\n" +
+                "FROM kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
+                "JOIN (\n" +
+                "    SELECT patient_id, MAX(visit_date) AS latest_visit_date\n" +
+                "    FROM kenyaemr_etl.etl_allergy_chronic_illness\n" +
+                "    WHERE visit_date <= DATE(:endDate)\n" +
+                "    GROUP BY patient_id\n" +
+                ") latest ON ci.patient_id = latest.patient_id AND ci.visit_date = latest.latest_visit_date\n" +
+                "GROUP BY ci.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
