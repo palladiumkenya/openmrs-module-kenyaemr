@@ -168,7 +168,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static String VMMC_PROGRAM_UUID = "228538f4-cad9-476b-84c3-ab0086150bcc";
     public static String PREP_PROGRAM_UUID = "214cad1c-bb62-4d8e-b927-810a046daf62";
     public static String KP_PROGRAM_UUID = "7447305a-18a7-11e9-ab14-d663bd873d93";
-    public static final String KP_CLIENT_ENROLMENT = "c7f47cea-207b-11e9-ab14-d663bd873d93";
+    public static final String KP_CLIENT_ENROLMENT = "185dec84-df6f-4fc7-a370-15aa8be531ec";
     public static final String KP_CLIENT_DISCONTINUATION = "1f76643e-2495-11e9-ab14-d663bd873d93";
 
     public static final String PREP_ENROLLMENT_FORM = "d5ca78be-654e-4d23-836e-a934739be555";
