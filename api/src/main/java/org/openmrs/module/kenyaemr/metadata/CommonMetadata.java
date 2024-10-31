@@ -101,6 +101,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MAXILLOFACIAL = "92999f52-f352-415a-9e0d-87872e5b2c8d";
 		public static final String SPEECHANDLANGUAGE = "5d0b6d85-5b88-410c-9f0f-4dab3db7ceb2";
 		public static final String FAMILY_PLANNING = "85b019dc-18ec-4315-b661-5f7037e7ce38";
+		public static final String DIABETICCONSULTATION = "70dc0091-064d-4428-ade8-119f142a93a2";
 	}
 
 	public static final class _Form {
@@ -140,6 +141,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MAXILLOFACIAL_CLINICAL_FORM = "b40d369c-31d0-4c1d-a80a-7e4b7f73bea0";
 		public static final String SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM = "67f98072-1518-4beb-8a30-aa8a319ee3df";
 		public static final String FAMILY_PLANNING = "a52c57d4-110f-4879-82ae-907b0d90add6";
+		public static final String DIABETIC_CLINICAL_FORM = "9f6543e4-0821-4f9c-9264-94e45dc35e17";
 	}
 
 	public static final class _OrderType {
@@ -280,6 +282,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Speech and Language", "Speech and Language encounter type",
 				_EncounterType.SPEECHANDLANGUAGE));
 		install(encounterType("Family Planning", "Family Planning encounter type", _EncounterType.FAMILY_PLANNING));
+		install(encounterType("Diabetic Clinic", "Diabetic Clinic encounter type", _EncounterType.DIABETICCONSULTATION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -338,6 +341,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Speech and Language Therapy Clinical Form",
 				"Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1",
 				_Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
+		install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
+				_Form.DIABETIC_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
