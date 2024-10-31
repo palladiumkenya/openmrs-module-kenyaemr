@@ -168,7 +168,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static String VMMC_PROGRAM_UUID = "228538f4-cad9-476b-84c3-ab0086150bcc";
     public static String PREP_PROGRAM_UUID = "214cad1c-bb62-4d8e-b927-810a046daf62";
     public static String KP_PROGRAM_UUID = "7447305a-18a7-11e9-ab14-d663bd873d93";
-    public static final String KP_CLIENT_ENROLMENT = "c7f47cea-207b-11e9-ab14-d663bd873d93";
+    public static final String KP_CLIENT_ENROLMENT = "185dec84-df6f-4fc7-a370-15aa8be531ec";
     public static final String KP_CLIENT_DISCONTINUATION = "1f76643e-2495-11e9-ab14-d663bd873d93";
 
     public static final String PREP_ENROLLMENT_FORM = "d5ca78be-654e-4d23-836e-a934739be555";
@@ -573,6 +573,28 @@ public class KenyaemrCoreRestController extends BaseRestController {
         Location facility = Context.getService(KenyaEmrService.class).getLocationByMflCode(facilityCode);
         locationResponseObj.put("name", facility.getName());
         return locationResponseObj;
+    }
+     /**
+     * Gets last hei outcome encounter
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/heiOutcomeEncounter")
+    @ResponseBody
+    public Object getHeiOutcomeEncounter(@RequestParam("patientUuid") String patientUuid) {
+        SimpleObject heiOutcomeResponseObj = new SimpleObject();
+        PatientIdentifierType heiNumber = MetadataUtils.existing(PatientIdentifierType.class, MchMetadata._PatientIdentifierType.HEI_ID_NUMBER);
+        Patient patient =  Context.getPatientService().getPatientByUuid(patientUuid);
+        PatientIdentifier pi = heiNumber != null && patient != null ? patient.getPatientIdentifier(heiNumber) : null;
+        EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
+        Form heiOutcomeForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHCS_HEI_COMPLETION);
+        Encounter lastHeiOutcomeEnc = EmrUtils.lastEncounter(patient, heiOutcomeEncType, heiOutcomeForm);
+        if(pi.getIdentifier() != null) {
+            heiOutcomeResponseObj.put("heiNumber", pi.getIdentifier());
+        }
+        if(lastHeiOutcomeEnc != null) {
+            heiOutcomeResponseObj.put("heiOutcomeEncounterUuid", lastHeiOutcomeEnc.getUuid());
+        }
+        return heiOutcomeResponseObj;
     }
 
     /**
