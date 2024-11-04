@@ -102,6 +102,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String SPEECHANDLANGUAGE = "5d0b6d85-5b88-410c-9f0f-4dab3db7ceb2";
 		public static final String FAMILY_PLANNING = "85b019dc-18ec-4315-b661-5f7037e7ce38";
 		public static final String DIABETICCONSULTATION = "70dc0091-064d-4428-ade8-119f142a93a2";
+		public static final String ADVERSEDRUGREACTION = "7a185fe4-c56f-4195-b682-d3f5afa9d9c2";
 	}
 
 	public static final class _Form {
@@ -142,6 +143,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM = "67f98072-1518-4beb-8a30-aa8a319ee3df";
 		public static final String FAMILY_PLANNING = "a52c57d4-110f-4879-82ae-907b0d90add6";
 		public static final String DIABETIC_CLINICAL_FORM = "9f6543e4-0821-4f9c-9264-94e45dc35e17";
+		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
 	}
 
 	public static final class _OrderType {
@@ -283,6 +285,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				_EncounterType.SPEECHANDLANGUAGE));
 		install(encounterType("Family Planning", "Family Planning encounter type", _EncounterType.FAMILY_PLANNING));
 		install(encounterType("Diabetic Clinic", "Diabetic Clinic encounter type", _EncounterType.DIABETICCONSULTATION));
+		install(encounterType("Adverse Drug Reaction", "Adverse Drug Reaction encounter type", _EncounterType.ADVERSEDRUGREACTION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -343,6 +346,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				_Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
 		install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
 				_Form.DIABETIC_CLINICAL_FORM));
+		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
