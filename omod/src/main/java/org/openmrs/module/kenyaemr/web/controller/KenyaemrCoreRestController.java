@@ -989,13 +989,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
 
             CalculationResult tbPatientClassification = EmrCalculationUtils.evaluateForPatient(TbPatientClassificationCalculation.class, null, patient);
-            if(tbPatientClassification != null){
-                Obs obs  = (Obs) tbPatientClassification.getValue();
-                if(obs.getValueCoded().equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT))) {
-                    tbResponseObj.put("tbPatientClassification", "New tuberculosis patient");
-                }
-                else {
-                    tbResponseObj.put("tbPatientClassification", obs.getValueCoded().getName().getName());
+            if (tbPatientClassification != null) {
+                Obs obs = (Obs) tbPatientClassification.getValue();
+                if (obs != null && obs.getValueCoded() != null) {
+                    Concept valueCoded = obs.getValueCoded();
+                    String classification = valueCoded.equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT)) 
+                                            ? "New tuberculosis patient" 
+                                            : valueCoded.getName().getName();
+                    tbResponseObj.put("tbPatientClassification", classification);
                 }
             }
 
@@ -1069,7 +1070,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 //Check mch enrollment and followup forms
             } else if(hivEnrollmentStatusObs != null || hivFollowUpStatusObs != null) {
                 String regimenName = null;
-                if(hivFollowUpStatusObs != null){
+                if(hivFollowUpStatusObs != null && hivFollowUpStatusObs.getValueCoded() != null) {
                     mchMotherResponseObj.put("hivStatus", hivFollowUpStatusObs.getValueCoded().getName().getName());
                     mchMotherResponseObj.put("hivStatusDate", hivFollowUpStatusObs.getValueDatetime());
                 }else {
@@ -1198,8 +1199,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 if (milestones.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     for (Obs milestone : milestones) {
-                        sb.append(milestone.getValueCoded().getName().toString());
-                        sb.append(", ");
+                        if(milestone.getValueCoded() != null) {
+                            sb.append(milestone.getValueCoded().getName().toString());
+                            sb.append(", ");
+                        }
                     }
                     joined = sb.substring(0, sb.length() - 2);
                     mchChildResponseObj.put("milestonesAttained", joined);
