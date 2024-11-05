@@ -15,11 +15,11 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>kenyaemr</artifactId>
-		<version>19.1.2</version>
+		<version>19.1.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kenyaemr-omod</artifactId>
-    <version>19.1.2</version>
+    <version>19.1.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>KenyaEMR Module OMOD</name>
 	<description>OMOD project for KenyaEMR Module</description>
