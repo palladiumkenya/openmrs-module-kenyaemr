@@ -650,39 +650,37 @@ public class KenyaemrCoreRestController extends BaseRestController {
         ObjectNode encObj = JsonNodeFactory.instance.objectNode();
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-        String event = null;
-
         Encounter enc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, category);
-
         String ARV_TREATMENT_PLAN_EVENT = "1255AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String DATE_REGIMEN_STOPPED = "1191AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String endDate = null;
+        String event = null;
 
-        if (enc != null) {
-            Date latest = null;
-            List<Date> dates = new ArrayList<Date>();
-            for(Obs obs:enc.getObs()) {
-                dates.add(obs.getObsDatetime());
-                latest = Collections.max(dates);
-            }
+        if (enc != null && !enc.getObs().isEmpty()) {
+            // Find the latest observation date
+            Date latest = enc.getObs().stream()
+                            .map(Obs::getObsDatetime)
+                            .max(Date::compareTo)
+                            .orElse(null);
 
-            for(Obs obs:enc.getObs()) {
-				if(obs.getConcept().getUuid().equals(ARV_TREATMENT_PLAN_EVENT) && obs.getObsDatetime().equals(latest)) {
-					event =obs.getValueCoded() != null ?  obs.getValueCoded().getName().getName() : "";
-				}
-                if (obs.getConcept() != null && obs.getConcept().getUuid().equals(DATE_REGIMEN_STOPPED)) {
-                    if(obs.getValueDatetime() != null){
-                        endDate = DATE_FORMAT.format(obs.getValueDatetime());
-                    }
+            for (Obs obs : enc.getObs()) {
+                // ARV Treatment Plan Event
+                if (ARV_TREATMENT_PLAN_EVENT.equals(obs.getConcept().getUuid()) && obs.getObsDatetime().equals(latest)) {
+                    event = obs.getValueCoded() != null ? obs.getValueCoded().getName().getName() : "";
                 }
-
-			}
-
+                
+                // Date Regimen Stopped
+                if (DATE_REGIMEN_STOPPED.equals(obs.getConcept().getUuid()) && obs.getValueDatetime() != null) {
+                    endDate = DATE_FORMAT.format(obs.getValueDatetime());
+                }
+            }
         }
-        node.put("uuid", enc != null ?  enc.getUuid() : "");
-        node.put("startDate", enc != null ? DATE_FORMAT.format(enc.getEncounterDatetime()): "");
-        node.put("endDate", endDate);
-        node.put("event", event);
+
+        // Populate the response JSON node
+        node.put("uuid", enc != null ? enc.getUuid() : "");
+        node.put("startDate", enc != null ? DATE_FORMAT.format(enc.getEncounterDatetime()) : "");
+        node.put("endDate", endDate != null ? endDate : "");
+        node.put("event", event != null ? event : "");
         encObj.put("results", node);
 
         return encObj.toString();
