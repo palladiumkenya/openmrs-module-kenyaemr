@@ -103,6 +103,7 @@
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
 				<ref bean="kenyaemr.ehrReports.report.moh204B" />
+				<ref bean="kenyaemr.ehrReports.report.nutritionRegister" />
 				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
 				<ref bean="kenyaemr.ehrReports.706.report" />
 				<ref bean="kenyaemr.ehrReports.report.240" />
@@ -1043,6 +1044,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.nutritionRegister" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="cdaceb90-a346-48e6-aa76-49d1dd6451c7" />
+		<property name="name" value="Daily Nutrition Register" />
+		<property name="description" value="Daily Nutrition Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:nutritionRegister.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:NUTRITIONRegister" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
