@@ -37,6 +37,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_ENROLLMENT = "3ee036d8-7c13-4393-b5d6-036f2fe45126";
 		public static final String MCHMS_CONSULTATION = "c6d09e05-1f25-4164-8860-9f32c5a02df0";
 		public static final String MCHMS_DISCONTINUATION = "7c426cfc-3b47-4481-b55f-89860c21c7de";
+		public static final String MCHMS_PARTOGRAPH = "022d62af-e2a5-4282-953b-52dd5cba3296";
 	}
 
 	public static final class _Form {
@@ -53,6 +54,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_INFANT_FEEDING = "f4d763bb-8428-476c-be8a-73c705bbc347";
 		public static final String MCHMS_PREVENTIVE_SERVICES = "d3ea25c7-a3e8-4f57-a6a9-e802c3565a30";
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
+		public static final String MCHMS_PARTOGRAPH = "3791e5b7-2cdc-44fc-982b-a81135367c96";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -99,12 +101,14 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(encounterType("MCH Mother Enrollment", "Enrollment of mother onto MCH program", _EncounterType.MCHMS_ENROLLMENT));
 		install(encounterType("MCH Mother Consultation", "Collection of mother data during MCH visit", _EncounterType.MCHMS_CONSULTATION));
 		install(encounterType("MCH Mother Discontinuation", "Discontinuation of mother from MCH program", _EncounterType.MCHMS_DISCONTINUATION));
+		install(encounterType("MCH Partograph", "Labour progression monitoring form", _EncounterType.MCHMS_PARTOGRAPH));
 
 		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
 		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
 		install(form("MCH Postnatal Visit", "MCH postnatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_POSTNATAL_VISIT));
 		install(form("Delivery", "MCH-MS delivery form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DELIVERY));
 		install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
+		install(form("MCH_Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
 		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
