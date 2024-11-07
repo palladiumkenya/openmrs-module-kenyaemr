@@ -76,7 +76,7 @@ public class NutritionalStatusConceptAlignment extends AbstractChore {
             newObs.setObsGroup(oldObs.getObsGroup());
 
             try {
-                Context.getObsService().saveObs(newObs, "Replaced deprecated nutritional status concept {163300}");
+                Context.getObsService().saveObs(newObs, "Replaced deprecated nutritional status concept");
 
                 try {
                     Context.getObsService().voidObs(oldObs, "Replaced by new obs with new nutritional status concept");
