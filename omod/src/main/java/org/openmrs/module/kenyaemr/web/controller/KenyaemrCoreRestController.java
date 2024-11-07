@@ -584,11 +584,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
         SimpleObject heiOutcomeResponseObj = new SimpleObject();
         PatientIdentifierType heiNumber = MetadataUtils.existing(PatientIdentifierType.class, MchMetadata._PatientIdentifierType.HEI_ID_NUMBER);
         Patient patient =  Context.getPatientService().getPatientByUuid(patientUuid);
-        if (patient == null || heiNumber == null) {
-            return new ResponseEntity<Object>("The patient / Hei number was not found in the system!",
-                    new HttpHeaders(), HttpStatus.NOT_FOUND);
-        }
-
         PatientIdentifier pi = heiNumber != null && patient != null ? patient.getPatientIdentifier(heiNumber) : null;
         EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
         Form heiOutcomeForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHCS_HEI_COMPLETION);
