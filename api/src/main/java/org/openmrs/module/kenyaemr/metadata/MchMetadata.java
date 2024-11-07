@@ -108,7 +108,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("MCH Postnatal Visit", "MCH postnatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_POSTNATAL_VISIT));
 		install(form("Delivery", "MCH-MS delivery form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DELIVERY));
 		install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
-		install(form("MCH_Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
+		install(form("MCH Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
 		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
