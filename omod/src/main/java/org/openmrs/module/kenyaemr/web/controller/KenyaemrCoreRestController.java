@@ -588,7 +588,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
         Form heiOutcomeForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHCS_HEI_COMPLETION);
         Encounter lastHeiOutcomeEnc = EmrUtils.lastEncounter(patient, heiOutcomeEncType, heiOutcomeForm);
-        if(pi.getIdentifier() != null) {
+        if(pi != null && pi.getIdentifier() != null) {
             heiOutcomeResponseObj.put("heiNumber", pi.getIdentifier());
         }
         if(lastHeiOutcomeEnc != null) {
