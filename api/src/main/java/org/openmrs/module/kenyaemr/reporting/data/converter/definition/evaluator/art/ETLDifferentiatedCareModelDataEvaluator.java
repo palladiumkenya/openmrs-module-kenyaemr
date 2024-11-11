@@ -37,20 +37,29 @@ public class ETLDifferentiatedCareModelDataEvaluator implements PersonDataEvalua
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry="select fup.patient_id,\n" +
-                "     (case fup.differentiated_care\n" +
-                "      when 164942 then \"Standard Care\"\n" +
-                "        when 164943 then \"Fast Track\"\n" +
-                "        when 164944 then \"Community ART Distribution - HCW Led\"\n" +
-                "        when 164945 then \"Community ART Distribution - Peer Led\"\n" +
-                "        when 164946 then \"Facility ART Distribution Group\" else \"\" end) as differentiated_care_model\n" +
-                "        from\n" +
-                "         (select f.patient_id,\n" +
-                "          mid(max(concat(f.visit_date,f.differentiated_care)),11) as differentiated_care,\n" +
-                "          f.stability stability,\n" +
-                "          f.person_present person_present,\n" +
-                "          f.visit_date visit_date\n" +
-                "        from kenyaemr_etl.etl_patient_hiv_followup f\n" +
-                "        where stability is not null and person_present = 978 and date(visit_date) <= date(:endDate) and f.voided = 0 group by f.patient_id) fup;";
+                "       (case fup.differentiated_care\n" +
+                "            when 164942 then \"Standard Care\"\n" +
+                "            when 164943 then \"Fast Track\"\n" +
+                "            when 166443 then \"Health care worker Led facility ART group(HFAG)\"\n" +
+                "            when 166444 then \"Peer Led Facility ART Group(PFAG)\"\n" +
+                "            when 1555 then \"Health care worker Led Community ART group(HCAG)\"\n" +
+                "            when 164945 then \"Peer Led Community ART Group(PCAG)\"\n" +
+                "            when 1000478 then \"Community Pharmacy(CP)\"\n" +
+                "            when 164944 then \"Community ART Distribution Points(CAPD)\"\n" +
+                "            when 166583 then \"Individual patient ART Community Distribution(IACD)\"\n" +
+                "            when 164946 then \"Facility ART Distribution Group\"\n" +
+                "            else \"\" end) as differentiated_care_model\n" +
+                "from (SELECT f.patient_id,\n" +
+                "             MID(MAX(CONCAT(f.visit_date, f.differentiated_care)), 11) AS differentiated_care\n" +
+                "      FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "               INNER JOIN\n" +
+                "           kenyaemr_etl.etl_patient_demographics d\n" +
+                "           ON f.patient_id = d.patient_id\n" +
+                "      WHERE f.stability IS NOT NULL\n" +
+                "        AND f.person_present = 978\n" +
+                "        AND DATE(f.visit_date) <= DATE(:endDate)\n" +
+                "        AND f.voided = 0\n" +
+                "      GROUP BY f.patient_id) fup;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
