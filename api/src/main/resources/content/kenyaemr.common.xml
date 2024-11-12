@@ -92,6 +92,7 @@
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.duplicateNUPI"/>
+				<ref bean="kenyaemr.common.report.caseReports" />
 			</set>
 		</property>
 		<property name="ehrReports">
@@ -945,6 +946,19 @@
 			</set></property>
 		<property name="template" value="kenyaemr:deceased_patients_linelist.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:deceasedPatients" />
+	</bean>
+
+	<bean id="kenyaemr.common.report.caseReports" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="7ec483e7-b8d9-4adb-a473-e6e4b1e5599d" />
+		<property name="name" value="Case Reports list" />
+		<property name="description" value="Case Reports list" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
+		<property name="template" value="kenyaemr:case_reports.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:illness | sheet:2,row:6,dataset:labs | sheet:3,row:6,dataset:diagnosis | sheet:4,row:6,dataset:complain | sheet:5,row:6,dataset:vitalSigns" />
 	</bean>
 	<bean id="kenyaemr.common.report.moh711" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="3a5e754c-4e81-4450-8694-e79beb1844f0" />
