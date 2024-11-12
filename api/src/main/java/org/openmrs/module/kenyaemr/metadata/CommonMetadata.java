@@ -146,8 +146,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String FAMILY_PLANNING = "a52c57d4-110f-4879-82ae-907b0d90add6";
 		public static final String DIABETIC_CLINICAL_FORM = "9f6543e4-0821-4f9c-9264-94e45dc35e17";
 		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
-		public static final String DERMATOLOGY_CLINICAL_ENCOUNTER_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
-		public static final String UROLOGY_CLINICAL_ENCOUNTER_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
+		public static final String DERMATOLOGY_CLINICAL_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
+		public static final String UROLOGY_CLINICAL_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
 	}
 
 	public static final class _OrderType {
@@ -353,8 +353,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
 				_Form.DIABETIC_CLINICAL_FORM));
 		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
-		install(form("Dermatology Clinical Encounter Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_ENCOUNTER_FORM));
-		install(form("Urology Clinical Encounter Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_ENCOUNTER_FORM));
+		install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
+		install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
