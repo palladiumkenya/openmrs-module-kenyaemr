@@ -61,8 +61,6 @@ import java.util.List;
 public class CaseReportsListReportBuilder extends AbstractReportBuilder {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-
-
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
         return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), new Parameter("endDate", "End Date",
@@ -293,7 +291,6 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         String paramMapping = "startDate=${startDate},endDate=${endDate}";
-
         OPDTemperatureDataDefinition opdTemperatureDataDefinition = new OPDTemperatureDataDefinition();
         opdTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         opdTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -309,8 +306,6 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         ComplainCaseUniqueIdDataDefinition complainCaseUniqueIdDataDefinition = new ComplainCaseUniqueIdDataDefinition();
         complainCaseUniqueIdDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         complainCaseUniqueIdDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-
         dsd.addColumn("id", new PersonIdDataDefinition(), "");
         dsd.addColumn("Case Unique ID", complainCaseUniqueIdDataDefinition, paramMapping);
         dsd.addColumn("Temperature",opdTemperatureDataDefinition, paramMapping);
