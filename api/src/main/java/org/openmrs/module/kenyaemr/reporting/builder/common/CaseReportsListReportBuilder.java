@@ -249,7 +249,7 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
 
     protected DataSetDefinition complaintDataSetDefinitionColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("complain");
+        dsd.setName("complaint");
         dsd.setDescription("Complaint Report Cases information");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -286,7 +286,7 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
 
     protected DataSetDefinition vitalSignsDataSetDefinitionColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("vitalSigns");
+        dsd.setName("vitals");
         dsd.setDescription("Complaint Report Cases information");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));

@@ -958,7 +958,7 @@
 			</set>
 		</property>
 		<property name="template" value="kenyaemr:case_reports.xls" />
-		<property name="repeatingSection" value="sheet:1,row:6,dataset:illness | sheet:2,row:6,dataset:labs | sheet:3,row:6,dataset:diagnosis | sheet:4,row:6,dataset:complain | sheet:5,row:6,dataset:vitalSigns" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:illness | sheet:2,row:6,dataset:labs | sheet:3,row:6,dataset:diagnosis | sheet:4,row:6,dataset:complaint  | sheet:5,row:6,dataset:vitals " />
 	</bean>
 	<bean id="kenyaemr.common.report.moh711" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="3a5e754c-4e81-4450-8694-e79beb1844f0" />

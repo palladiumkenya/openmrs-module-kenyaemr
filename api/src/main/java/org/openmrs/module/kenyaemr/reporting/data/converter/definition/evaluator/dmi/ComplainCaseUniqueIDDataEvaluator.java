@@ -36,7 +36,7 @@ public class ComplainCaseUniqueIDDataEvaluator implements EncounterDataEvaluator
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id, a.visit_id from kenyaemr_etl.etl_clinical_encounter v\n" +
+        String qry = "select v.encounter_id, v.visit_id from kenyaemr_etl.etl_clinical_encounter v\n" +
                 " LEFT JOIN kenyaemr_etl.etl_allergy_chronic_illness a ON v.patient_id = a.patient_id AND date(v.visit_date) = date(a.visit_date)\n" +
                 " where date(v.visit_date)  BETWEEN date(:startDate) AND date(:endDate);";
 
