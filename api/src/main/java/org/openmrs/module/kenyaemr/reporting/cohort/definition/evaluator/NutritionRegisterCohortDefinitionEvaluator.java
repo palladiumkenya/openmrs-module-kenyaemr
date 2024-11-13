@@ -41,9 +41,18 @@ public class NutritionRegisterCohortDefinitionEvaluator implements EncounterQuer
 		context = ObjectUtil.nvl(context, new EvaluationContext());
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
-		String qry = "SELECT ce.encounter_id from kenyaemr_etl.etl_clinical_encounter ce\n" +
-			"                             inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = ce.patient_id and  p.voided = 0\n" +
-			"where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)and ce.voided = 0;";
+		String qry = "SELECT nt.encounter_id \n" +
+				"FROM kenyaemr_etl.etl_nutrition nt\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
+				"    ON p.patient_id = nt.patient_id \n" +
+				"    AND p.voided = 0\n" +
+				"WHERE timestampdiff(YEAR, date(p.DOB), (\n" +
+				"    SELECT MAX(nt2.visit_date) \n" +
+				"    FROM kenyaemr_etl.etl_nutrition nt2 \n" +
+				"    WHERE nt2.patient_id = nt.patient_id\n" +
+				")) <= 15 \n" +
+				"AND date(nt.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
+				"AND nt.voided = 0;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
