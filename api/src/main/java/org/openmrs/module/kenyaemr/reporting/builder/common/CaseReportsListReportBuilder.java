@@ -277,7 +277,7 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Onset Date", complainOnsetDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
         dsd.addColumn("Duration", complainDurationDataDefinition, paramMapping);
 
-        LabsCohortDefinition cd = new LabsCohortDefinition();
+        ComplaintCohortDefinition cd = new ComplaintCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addRowFilter(cd, paramMapping);
@@ -291,6 +291,7 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
         OPDTemperatureDataDefinition opdTemperatureDataDefinition = new OPDTemperatureDataDefinition();
         opdTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         opdTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
