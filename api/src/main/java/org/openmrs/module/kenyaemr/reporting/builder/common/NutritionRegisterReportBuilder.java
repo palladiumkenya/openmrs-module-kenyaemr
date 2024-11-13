@@ -23,6 +23,7 @@ import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.NutritionRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.hei.HEICWCMuacDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -70,7 +71,7 @@ public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
 
     protected DataSetDefinition datasetColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("NUTRITIONRegister");
+        dsd.setName("MOH407");
         dsd.setDescription("OPD Visit information");
         dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -90,33 +91,7 @@ public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
 		OPDWeightDataDefinition opdWeightDataDefinition = new OPDWeightDataDefinition();
 		opdWeightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdWeightDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));		
-		OPDTemperatureDataDefinition opdTemperatureDataDefinition = new OPDTemperatureDataDefinition();
-		opdTemperatureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdTemperatureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));		
-		OPDMalariaAssessmentDataDefinition opdMalariaAssessmentDataDefinition = new OPDMalariaAssessmentDataDefinition();
-		opdMalariaAssessmentDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdMalariaAssessmentDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDTreatmentPrescribedDataDefinition opdTreatmentPrescribedDataDefinition = new OPDTreatmentPrescribedDataDefinition();
-		opdTreatmentPrescribedDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdTreatmentPrescribedDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));		
-		OPDTbScreeningDataDefinition opdTbScreeningDataDefinition = new OPDTbScreeningDataDefinition();
-		opdTbScreeningDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdTbScreeningDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));		
-		OPDReferredToDataDefinition opdReferredToDataDefinition = new OPDReferredToDataDefinition();
-		opdReferredToDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdReferredToDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDReferredFromDataDefinition opdReferredFromDataDefinition = new OPDReferredFromDataDefinition();
-		opdReferredFromDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdReferredFromDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDOutcomeDataDefinition opdOutcomeDataDefinition = new OPDOutcomeDataDefinition();
-		opdOutcomeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdOutcomeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDBMIDataDefinition opdBMIDataDefinition = new OPDBMIDataDefinition();
-		opdBMIDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdBMIDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		OPDBloodPressureDataDefinition opdBloodPressureDataDefinition = new OPDBloodPressureDataDefinition();
-		opdBloodPressureDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		opdBloodPressureDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
 		OPDDiagnosisDataDefinition opdDiagnosisDataDefinition = new OPDDiagnosisDataDefinition();
 		opdDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -129,25 +104,14 @@ public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Age", new AgeDataDefinition(), "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));         
-		dsd.addColumn("OPD Number (New)", patientClinicNo, "");
-		//dsd.addColumn("OPD Number (Revisit)", patientClinicNo, "");   //TODO:Determine revisit vs new visit
-        dsd.addColumn("Referred From", opdReferredFromDataDefinition, paramMapping);
+		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
 		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
 		dsd.addColumn("Weight", opdWeightDataDefinition, paramMapping);
-		dsd.addColumn("Height", opdHeightDataDefinition, paramMapping);	
-		dsd.addColumn("BMI", opdBMIDataDefinition, paramMapping);	
-		dsd.addColumn("Temperature",opdTemperatureDataDefinition, paramMapping);
-		dsd.addColumn("Blood Pressure", opdBloodPressureDataDefinition, paramMapping);		
-		//dsd.addColumn("Visual Acuity", opdBloodPressureDataDefinition, paramMapping);		  //TODO: Determine how to get visual acuity. Is this an examination	
-		dsd.addColumn("TB Screening",opdTbScreeningDataDefinition, paramMapping);
-		dsd.addColumn("Malaria",opdMalariaAssessmentDataDefinition, paramMapping);
+		dsd.addColumn("Height", opdHeightDataDefinition, paramMapping);
+		dsd.addColumn("Muac", new HEICWCMuacDataDefinition(), "");
 		dsd.addColumn("Diagnosis",opdDiagnosisDataDefinition, paramMapping);  //TODO: Add all diagnosis
-		dsd.addColumn("Treatments Prescribed",opdTreatmentPrescribedDataDefinition, paramMapping);
-		dsd.addColumn("Referred to",opdReferredToDataDefinition, paramMapping);  //TODO: missing  1=Community Unit
-		dsd.addColumn("Remarks/Outcome",opdOutcomeDataDefinition, paramMapping);
 
 		NutritionRegisterCohortDefinition cd = new NutritionRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
