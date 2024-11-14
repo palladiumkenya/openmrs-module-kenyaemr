@@ -209,11 +209,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static final String GP_COUNTY = "kenyakeypop.countyCode";
     public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
-    public static final String NATIONAL_ID_UUID = "49af6cdc-7968-4abb-bf46-de10d7f4859f";
-    public static final String PROVIDER_REGISTRATION_NUMBER_UUID = "bcaaa67b-cc72-4662-90c2-e1e992ceda66";
-
-
-
+   
     /**
      * Gets a list of available/completed forms for a patient
      * @param request
@@ -3424,7 +3420,6 @@ else {
 		if (baseURL == null || baseURL.trim().isEmpty()) {
 			System.out.println("CR GET endpoint configs not updated: ");
 		}
-
 		String token = getAuthToken();
 		OkHttpClient client = new OkHttpClient().newBuilder()
 			.build();
