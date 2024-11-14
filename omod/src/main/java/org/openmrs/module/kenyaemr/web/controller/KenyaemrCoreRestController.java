@@ -209,6 +209,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static final String GP_COUNTY = "kenyakeypop.countyCode";
     public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
+    public static final String NATIONAL_ID_UUID = "49af6cdc-7968-4abb-bf46-de10d7f4859f";
+    public static final String PROVIDER_REGISTRATION_NUMBER_UUID = "bcaaa67b-cc72-4662-90c2-e1e992ceda66";
 
 
 
@@ -3362,20 +3364,14 @@ else {
 	@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
 	@RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
 	public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
-		if (allParams.size() != 1) {
+		
+		if (allParams.size() != 2) {
 			return ResponseEntity.badRequest()
 				.contentType(MediaType.APPLICATION_JSON)
-				.body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at a time\"}");
+				.body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
 		}
-		Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
-		String identifierTypeUuid = entry.getKey();
-		String identifier = entry.getValue();
-		String identifierType = "";
-		//TODO:include more verification identifiers 
-		if(identifierTypeUuid.equals("49af6cdc-7968-4abb-bf46-de10d7f4859f")){
-			identifierType = "national-id";
-		}
-
+		String identifierType = allParams.get("identifierType");
+		String identifier = allParams.get("identifierNumber");;			
 		String toReturn = getHwStatus(identifier, identifierType);
 
 		return ResponseEntity.ok()
@@ -3390,17 +3386,17 @@ else {
 		GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
 		String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
 		if (shaJwtTokenUrl == null || shaJwtTokenUrl.trim().isEmpty()) {
-			shaJwtTokenUrl = "https://api.dha.go.ke/v1/hie-auth";
+			System.out.println("Jwt token url configs not updated: ");
 		}
 		GlobalProperty globalGetJwtUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
 		String shaJwtUsername = globalGetJwtUsername.getPropertyValue();
 		if (shaJwtUsername == null || shaJwtUsername.trim().isEmpty()) {
-			shaJwtUsername = "kenya_emr";
+			System.out.println("Jwt token username not updated: ");
 		}
 		GlobalProperty globalGetJwtPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
 		String shaJwtPassword = globalGetJwtPassword.getPropertyValue();
 		if (shaJwtPassword == null || shaJwtPassword.trim().isEmpty()) {
-			shaJwtPassword = "wrert45SWRFGTrt6yhde4";
+			System.out.println("Jwt token password not updated: ");
 		}
 
 		// Encode username and password for Basic Auth
@@ -3426,7 +3422,7 @@ else {
 		GlobalProperty globalGetCRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT);
 		String baseURL = globalGetCRUrl.getPropertyValue();
 		if (baseURL == null || baseURL.trim().isEmpty()) {
-			baseURL = "https://api.dha.go.ke/v4/custom/Patient";
+			System.out.println("CR GET endpoint configs not updated: ");
 		}
 
 		String token = getAuthToken();
@@ -3445,20 +3441,21 @@ else {
 	}
 
 	public static String getHwStatus(String identifier, String identifierType ) throws IOException {
+		
 		GlobalProperty globalGetHRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
 		String baseURL = globalGetHRUrl.getPropertyValue();
 		if (baseURL == null || baseURL.trim().isEmpty()) {
-			baseURL = "https://api.dha.go.ke/v4/custom/Practitioner";
+			System.out.println("HWR GET endpoint configs not updated: ");
 		}
 		String token = getAuthToken();
 		OkHttpClient client = new OkHttpClient().newBuilder()
 			.build();
-		Request request = new Request.Builder()
-			.url(baseURL + "?" + identifierType + "=" + identifier)
+		Request request = new Request.Builder()		
+			.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier)
 			.addHeader("Referer", "")
 			.addHeader("Authorization", "Bearer " + token)
 			.build();
-		Response response = client.newCall(request).execute();
+		Response response = client.newCall(request).execute();	
 		String respo = response.body().string();
 		return   respo;
 	}

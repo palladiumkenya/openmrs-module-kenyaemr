@@ -447,22 +447,22 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			install(globalProperty(GP_CLIENT_VERIFICATION_UPDATE_END_POINT, "A PUT API for updating client information at the client registry", "https://dhpstagingapi.health.go.ke/partners/registry"));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated client registry", "https://api.dha.go.ke/v4/custom/Patient"));
+			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated client registry", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated health worker registry", "https://api.dha.go.ke/v4/custom/Practitioner"));
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated health worker registry", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_FACILITY_VERIFICATION_JWT_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_FACILITY_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated facility registry", "https://api.dha.go.ke/v4/custom/Organization"));
+			install(globalProperty(GP_SHA_FACILITY_VERIFICATION_JWT_GET_END_POINT, "A GET API for connecting to the SHA JWT Authenticated facility registry", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_JWT_TOKEN_GET_END_POINT, "SHA JWT Authentication token url", "https://api.dha.go.ke/v1/hie-auth?key=kenya_emr"));
+			install(globalProperty(GP_SHA_JWT_TOKEN_GET_END_POINT, "SHA JWT Authentication token url", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME) == null) {
-			install(globalProperty(GP_SHA_JWT_TOKEN_USERNAME, "SHA JWT Authentication token username", "kenya_emr"));
+			install(globalProperty(GP_SHA_JWT_TOKEN_USERNAME, "SHA JWT Authentication token username", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD) == null) {
-			install(globalProperty(GP_SHA_JWT_TOKEN_PASSWORD, "SHA JWT Authentication token password", "wrert45SWRFGTrt6yhde4"));
+			install(globalProperty(GP_SHA_JWT_TOKEN_PASSWORD, "SHA JWT Authentication token password", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",
