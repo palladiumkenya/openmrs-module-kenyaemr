@@ -8,7 +8,11 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.web.controller;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.AdministrationService;
@@ -205,9 +209,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static final String GP_COUNTY = "kenyakeypop.countyCode";
     public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
-
-
-
+   
     /**
      * Gets a list of available/completed forms for a patient
      * @param request
@@ -3328,167 +3330,129 @@ else {
 
         return ret;
 
-    }
-
-    /**
-     * End Point for getting Patient resource from SHA client registry
-     * @param payload
-     * @param identifier
-     * @param identifierType
-     * @return
-     */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
-    public ResponseEntity<String> getSHAPatient( @PathVariable String identifier, @PathVariable String identifierType) {
-        String strUserName = "";
-        String strPassword = "";
-
-        String errorResponse = "{\"status\": \"Error\"}";
-        try {
-            // Retrieve base URL from global properties
-            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_END_POINT);
-            String baseURL = globalGetUrl.getPropertyValue();
-            if (baseURL == null || baseURL.trim().isEmpty()) {
-                // TODO  replace base URL with the actual external default url
-                baseURL = "http://127.0.0.1:9342/api/shaPatientResource";
-            }
-
-            // Get Auth credentials
-            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
-            strUserName = globalGetUsername.getPropertyValue();
-
-            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
-            strPassword = globalGetPassword.getPropertyValue();
-            // Prepare URL
-            String completeURL = baseURL +  "?" + identifierType  + "=" + identifier;
-            System.out.println("SHA Client registry verification: Using SHA GET URL: " + completeURL);
-            URL url = new URL(completeURL);
-
-            // Set up connection
-            String auth = strUserName + ":" + strPassword;
-            System.out.printf("Auth credentials"+auth);
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setConnectTimeout(10000); // set timeout to 10 seconds
-
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            }
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
-        } catch (Exception ex) {
-            log.error("SHA client registry verification: ERROR: {} "+ ex.getMessage(), ex);
-        }
-        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
-    }
-
-    /**
-     * End Point for getting Practitioner resource from SHA client registry
-     * @param allParams to capture the query parameters
-     * @return
-     */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-    @RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
-    public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) {
-    String strUserName = "";
-    String strPassword = "";
-    String errorResponse = "{\"status\": \"Error\"}";
-    
-    try {
-        // Retrieve base URL from global properties
-        GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
-        String baseURL = globalGetUrl.getPropertyValue();
-        if (baseURL == null || baseURL.trim().isEmpty()) {
-            baseURL = "https://sandbox.tiberbu.health/api/v4";
-        }
-
-        // Get Auth credentials
-        GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER);
-        strUserName = globalGetUsername.getPropertyValue();
-
-        GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET);
-        strPassword = globalGetPassword.getPropertyValue();
-
-        // Check if credentials are available
-        if (strUserName == null || strUserName.isEmpty() || strPassword == null || strPassword.isEmpty()) {
-            log.error("SHA practitioner search: API credentials are missing or empty");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"status\": \"Error\", \"message\": \"API credentials are missing or empty\"}");
-        }
-
-        if (allParams.size() != 1) {
-            return ResponseEntity.badRequest()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at a time\"}");
-        }
-
-        Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
-        String identifier = entry.getKey();
-        String value = entry.getValue();
-
-        String completeURL = baseURL + "/Practitioner?" + 
-            URLEncoder.encode(identifier, StandardCharsets.UTF_8.toString()) + 
-            "=" + 
-            URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-
-        log.info("SHA practitioner search: Using SHA GET URL: " + completeURL);
-
-        // Set up SSL connection
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-            SSLContexts.createDefault(),
-            new String[] { "TLSv1.2" },
-            null,
-            SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-
-        try (CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build()) {
-            HttpGet request = new HttpGet(completeURL);
-
-            // Set up Basic Authentication
-            String auth = strUserName + ":" + strPassword;
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-            request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
-            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
-            request.setHeader(HttpHeaders.ACCEPT, "application/json");
-
-            // Execute the request
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                log.info("SHA practitioner search: Response Code: " + statusCode);
-
-                String responseBody = EntityUtils.toString(response.getEntity());
-
-                if (statusCode == 200) {
-                    return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(responseBody);
-                } else {
-                    log.error("SHA practitioner search: ERROR: HTTP " + statusCode + " - " + responseBody);
-                    return ResponseEntity.status(statusCode)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body("{\"status\": \"Error\", \"message\": \"HTTP " + statusCode + " - " + responseBody + "\"}");
-                }
-            }
-        }
-    } catch (Exception ex) {
-        log.error("SHA practitioner search: ERROR: " + ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("{\"status\": \"Error\", \"message\": \"" + ex.getMessage() + "\"}");
-    }
-}
+    }   
     @RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
     public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
         return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
     }
+
+	/**
+	 * End Point for getting Patient resource from SHA client registry	 
+	 * @param identifier
+	 * @param identifierType
+	 * @return
+	 */
+	@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
+	public ResponseEntity<String> getSHAPatient(@PathVariable String identifier, @PathVariable String identifierType) throws IOException {
+		String toReturn = getCrStatus(identifier, identifierType);
+
+		return ResponseEntity.ok()
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(toReturn);
+	}
+
+	/**
+	 * End Point for getting Practitioner resource from SHA client registry
+	 * @param allParams to capture the query parameters
+	 * @return
+	 */
+	@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
+	public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
+		
+		if (allParams.size() != 2) {
+			return ResponseEntity.badRequest()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
+		}
+		String identifierType = allParams.get("identifierType");
+		String identifier = allParams.get("identifierNumber");;			
+		String toReturn = getHwStatus(identifier, identifierType);
+
+		return ResponseEntity.ok()
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(toReturn);
+
+	}
+
+	public static String getAuthToken() throws IOException {
+		// Utility function to get auth token
+		OkHttpClient client = new OkHttpClient();
+		GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
+		String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
+		if (shaJwtTokenUrl == null || shaJwtTokenUrl.trim().isEmpty()) {
+			System.out.println("Jwt token url configs not updated: ");
+		}
+		GlobalProperty globalGetJwtUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
+		String shaJwtUsername = globalGetJwtUsername.getPropertyValue();
+		if (shaJwtUsername == null || shaJwtUsername.trim().isEmpty()) {
+			System.out.println("Jwt token username not updated: ");
+		}
+		GlobalProperty globalGetJwtPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
+		String shaJwtPassword = globalGetJwtPassword.getPropertyValue();
+		if (shaJwtPassword == null || shaJwtPassword.trim().isEmpty()) {
+			System.out.println("Jwt token password not updated: ");
+		}
+
+		// Encode username and password for Basic Auth
+		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
+
+		// Build the GET request
+		Request request = new Request.Builder()
+			.url(shaJwtTokenUrl)
+			.header("Authorization", "Basic " + auth)
+			.build();
+
+		// Execute the request
+		Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+//            System.out.println("Response: " + response.body().string());
+		} else {
+			System.out.println("Request failed: " + response.code() + " - " + response.message());
+		}
+
+		return response.body().string();
+	}
+	public static String getCrStatus(String identifier, String identifierType ) throws IOException {
+		GlobalProperty globalGetCRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT);
+		String baseURL = globalGetCRUrl.getPropertyValue();
+		if (baseURL == null || baseURL.trim().isEmpty()) {
+			System.out.println("CR GET endpoint configs not updated: ");
+		}
+		String token = getAuthToken();
+		OkHttpClient client = new OkHttpClient().newBuilder()
+			.build();
+		Request request = new Request.Builder()
+			.url(baseURL + "?"+ identifierType + "=" + identifier)
+			.addHeader("Referer", "")
+			.addHeader("Authorization", "Bearer " + token)
+			.build();
+
+		Response response = client.newCall(request).execute();
+		String respo = response.body().string();
+		//convert response to json
+		return   respo;
+	}
+
+	public static String getHwStatus(String identifier, String identifierType ) throws IOException {
+		
+		GlobalProperty globalGetHRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
+		String baseURL = globalGetHRUrl.getPropertyValue();
+		if (baseURL == null || baseURL.trim().isEmpty()) {
+			System.out.println("HWR GET endpoint configs not updated: ");
+		}
+		String token = getAuthToken();
+		OkHttpClient client = new OkHttpClient().newBuilder()
+			.build();
+		Request request = new Request.Builder()		
+			.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier)
+			.addHeader("Referer", "")
+			.addHeader("Authorization", "Bearer " + token)
+			.build();
+		Response response = client.newCall(request).execute();	
+		String respo = response.body().string();
+		return   respo;
+	}
 
 }
