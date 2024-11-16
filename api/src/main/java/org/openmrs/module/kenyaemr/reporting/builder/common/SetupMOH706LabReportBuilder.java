@@ -63,8 +63,10 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
         cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cohortDsd.setName("MOH706");
         cohortDsd.setDescription("MOH 706 for the lab");
+        cohortDsd.addDimension("age", ReportUtils.map(ReportingUtils.getAge(), "effectiveDate=${endDate}"));
 
-        //URINE ANALYSIS
+
+     //URINE ANALYSIS
         cohortDsd.addColumn("UAGL", "1.2 Glucose",
                 ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisGlucoseTestsPositives(), "startDate=${startDate},endDate=${endDate}"), "");
 
@@ -101,7 +103,6 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("BSRT", "3.3 Malaria Rapid Diagnostic Tests totals",
                 ReportUtils.map(moh706IndicatorLibrary.getAllRapidMalariaTests(), indParam), "");
 
-        /*
         cohortDsd.addColumn("BSRTP", "3.3 Malaria Rapid Diagnostic Tests positives",
                 ReportUtils.map(moh706IndicatorLibrary.getAllRapidMalariaTestsPositiveCases(), indParam), "");
 
@@ -401,7 +402,6 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
                 "2.26 BLOOD CHEMISTRY - CSF Chemistry -  High Glucose",
                 ReportUtils.map(moh706IndicatorLibrary.getResponsesBasedOnValueNumericQuestionBetweenLimits(159647, 0.6, 10), indParam),
                 "");
-*/
 
         return cohortDsd;
     }
