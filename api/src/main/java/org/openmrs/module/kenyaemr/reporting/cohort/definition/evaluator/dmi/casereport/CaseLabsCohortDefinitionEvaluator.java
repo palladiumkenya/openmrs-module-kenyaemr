@@ -44,11 +44,11 @@ public class CaseLabsCohortDefinitionEvaluator implements VisitQueryEvaluator {
 
         String qry = "WITH FilteredOrders AS (SELECT patient_id,\n" +
                 "                               encounter_id\n" +
-                "                        FROM openmrs.orders\n" +
+                "                        FROM orders\n" +
                 "                        WHERE order_type_id = 3 group by patient_id, encounter_id)\n" +
                 "select v.visit_id\n" +
-                "from openmrs.visit v\n" +
-                "         inner join openmrs.encounter e on v.visit_id = e.visit_id\n" +
+                "from visit v\n" +
+                "         inner join encounter e on v.visit_id = e.visit_id\n" +
                 "         inner join FilteredOrders o on o.encounter_id = e.encounter_id\n" +
                 "where date(v.date_started) between date(:startDate) and date(:endDate);";
 

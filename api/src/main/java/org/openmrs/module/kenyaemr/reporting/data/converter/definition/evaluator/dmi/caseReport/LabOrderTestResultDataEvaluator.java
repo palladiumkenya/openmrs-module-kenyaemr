@@ -40,7 +40,7 @@ public class LabOrderTestResultDataEvaluator implements VisitDataEvaluator {
                 "                               encounter_id,\n" +
                 "                               order_id,\n" +
                 "                               concept_id\n" +
-                "                        FROM openmrs.orders\n" +
+                "                        FROM orders\n" +
                 "                        WHERE order_type_id = 3\n" +
                 "                          AND voided = 0\n" +
                 "                          AND DATE(date_activated) = '2024-11-18'\n" +
@@ -50,34 +50,43 @@ public class LabOrderTestResultDataEvaluator implements VisitDataEvaluator {
                 "                                 c.datatype_id     AS member_datatype,\n" +
                 "                                 c.class_id        AS member_class,\n" +
                 "                                 n.name\n" +
-                "                          FROM openmrs.concept_set cs\n" +
-                "                                   INNER JOIN openmrs.concept c ON cs.concept_id = c.concept_id\n" +
-                "                                   INNER JOIN openmrs.concept_name n ON c.concept_id = n.concept_id\n" +
+                "                          FROM concept_set cs\n" +
+                "                                   INNER JOIN concept c ON cs.concept_id = c.concept_id\n" +
+                "                                   INNER JOIN concept_name n ON c.concept_id = n.concept_id\n" +
                 "                              AND n.locale = 'en'\n" +
                 "                              AND n.concept_name_type = 'FULLY_SPECIFIED'\n" +
                 "                          WHERE cs.concept_set = 1000628),\n" +
-                "     CodedLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_coded, n.name\n" +
-                "                              from openmrs.obs o\n" +
-                "                                       inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 2\n" +
-                "                                       inner join openmrs.concept_name n\n" +
+                "     CodedLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_coded, n.name, n1.name as test_name\n" +
+                "                              from obs o\n" +
+                "                                       inner join concept c on o.concept_id = c.concept_id and c.datatype_id = 2\n" +
+                "                                       left join concept_name n\n" +
                 "                                                  on o.value_coded = n.concept_id AND n.locale = 'en' AND\n" +
                 "                                                     n.concept_name_type = 'FULLY_SPECIFIED'\n" +
+                "                                       left join concept_name n1\n" +
+                "                                                 on o.concept_id = n1.concept_id AND n1.locale = 'en' AND\n" +
+                "                                                    n1.concept_name_type = 'FULLY_SPECIFIED'\n" +
                 "                              where o.order_id is not null),\n" +
-                "     NumericLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_numeric\n" +
-                "                                from openmrs.obs o\n" +
-                "                                         inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 1\n" +
-                "                                where o.order_id is not null),\n" +
-                "     TextLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_text, c.class_id\n" +
-                "                             from openmrs.obs o\n" +
-                "                                      inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 3\n" +
+                "     NumericLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_numeric, n.name\n" +
+                "                                from obs o\n" +
+                "                                         inner join concept c on o.concept_id = c.concept_id and c.datatype_id = 1\n" +
+                "                                         inner join concept_name n\n" +
+                "                                                    on o.concept_id = n.concept_id AND n.locale = 'en' AND\n" +
+                "                                                       n.concept_name_type = 'FULLY_SPECIFIED'\n" +
+                "                                where o.order_id is not null ),\n" +
+                "     TextLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_text, c.class_id, n.name\n" +
+                "                             from obs o\n" +
+                "                                      inner join concept c on o.concept_id = c.concept_id and c.datatype_id = 3\n" +
+                "                                      inner join concept_name n\n" +
+                "                                                 on o.concept_id = n.concept_id AND n.locale = 'en' AND\n" +
+                "                                                    n.concept_name_type = 'FULLY_SPECIFIED'\n" +
                 "                             where o.order_id is not null)\n" +
                 "SELECT v.visit_id,\n" +
                 "       GROUP_CONCAT(CASE\n" +
                 "                        WHEN lc.member_concept_id IS NOT NULL\n" +
-                "                            THEN CONCAT(COALESCE(lc.name, '-'), ':', COALESCE(cr.name,nr.value_numeric,tr.value_text)) END ORDER BY\n" +
+                "                            THEN CONCAT(COALESCE(if(cr.test_name IS NOT NULL,cr.test_name,if(nr.name is not null, nr.name,if(tr.name is not null, tr.name,''))), '-'), ':', COALESCE(cr.name,nr.value_numeric,tr.value_text)) END ORDER BY\n" +
                 "                    lc.member_concept_id SEPARATOR ', ') as Lab_result\n" +
-                "FROM openmrs.visit v\n" +
-                "         INNER JOIN openmrs.encounter e\n" +
+                "FROM visit v\n" +
+                "         INNER JOIN encounter e\n" +
                 "                    ON e.visit_id = v.visit_id\n" +
                 "         INNER JOIN FilteredOrders o ON o.encounter_id = e.encounter_id\n" +
                 "         INNER JOIN LabOrderConcepts lc ON o.concept_id = lc.member_concept_id\n" +

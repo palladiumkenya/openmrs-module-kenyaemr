@@ -55,22 +55,7 @@ public class LabOrderDateDataEvaluator implements VisitDataEvaluator {
                 "                                   INNER JOIN openmrs.concept_name n ON c.concept_id = n.concept_id\n" +
                 "                              AND n.locale = 'en'\n" +
                 "                              AND n.concept_name_type = 'FULLY_SPECIFIED'\n" +
-                "                          WHERE cs.concept_set = 1000628),\n" +
-                "     CodedLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_coded, n.name\n" +
-                "                              from openmrs.obs o\n" +
-                "                                       inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 2\n" +
-                "                                       inner join openmrs.concept_name n\n" +
-                "                                                  on o.value_coded = n.concept_id AND n.locale = 'en' AND\n" +
-                "                                                     n.concept_name_type = 'FULLY_SPECIFIED'\n" +
-                "                              where o.order_id is not null),\n" +
-                "     NumericLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_numeric\n" +
-                "                                from openmrs.obs o\n" +
-                "                                         inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 1\n" +
-                "                                where o.order_id is not null),\n" +
-                "     TextLabOrderResults AS (SELECT o.order_id, o.concept_id, o.value_text, c.class_id\n" +
-                "                             from openmrs.obs o\n" +
-                "                                      inner join openmrs.concept c on o.concept_id = c.concept_id and c.datatype_id = 3\n" +
-                "                             where o.order_id is not null)\n" +
+                "                          WHERE cs.concept_set = 1000628)\n" +
                 "SELECT v.visit_id,\n" +
                 "       GROUP_CONCAT(CASE\n" +
                 "                        WHEN lc.member_concept_id IS NOT NULL\n" +
@@ -81,9 +66,6 @@ public class LabOrderDateDataEvaluator implements VisitDataEvaluator {
                 "                    ON e.visit_id = v.visit_id\n" +
                 "         INNER JOIN FilteredOrders o ON o.encounter_id = e.encounter_id\n" +
                 "         INNER JOIN LabOrderConcepts lc ON o.concept_id = lc.member_concept_id\n" +
-                "         LEFT JOIN CodedLabOrderResults cr on o.order_id = cr.order_id\n" +
-                "         LEFT JOIN NumericLabOrderResults nr on o.order_id = nr.order_id\n" +
-                "         LEFT JOIN TextLabOrderResults tr on o.order_id = tr.order_id\n" +
                 "WHERE DATE(v.date_started) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "group by v.visit_id;";
 

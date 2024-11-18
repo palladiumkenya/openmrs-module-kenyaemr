@@ -50,9 +50,9 @@ public class LabOrderTestNameDataEvaluator implements VisitDataEvaluator {
                 "         c.datatype_id     AS member_datatype,\n" +
                 "         c.class_id        AS member_class,\n" +
                 "         n.name\n" +
-                "  FROM openmrs.concept_set cs\n" +
-                "           INNER JOIN openmrs.concept c ON cs.concept_id = c.concept_id\n" +
-                "           INNER JOIN openmrs.concept_name n ON c.concept_id = n.concept_id\n" +
+                "  FROM concept_set cs\n" +
+                "           INNER JOIN concept c ON cs.concept_id = c.concept_id\n" +
+                "           INNER JOIN concept_name n ON c.concept_id = n.concept_id\n" +
                 "      AND n.locale = 'en'\n" +
                 "      AND n.concept_name_type = 'FULLY_SPECIFIED'\n" +
                 "  WHERE cs.concept_set = 1000628)\n" +
@@ -61,8 +61,8 @@ public class LabOrderTestNameDataEvaluator implements VisitDataEvaluator {
                 "WHEN o.concept_id IS NOT NULL\n" +
                 "    THEN CONCAT(COALESCE(o.order_id, '-'), ':', lc.name) END ORDER BY\n" +
                 "lc.member_concept_id SEPARATOR ', ') as Lab_test\n" +
-                "FROM openmrs.visit v\n" +
-                "INNER JOIN openmrs.encounter e ON e.visit_id = v.visit_id\n" +
+                "FROM visit v\n" +
+                "INNER JOIN encounter e ON e.visit_id = v.visit_id\n" +
                 "INNER JOIN FilteredOrders o ON o.encounter_id = e.encounter_id\n" +
                 "INNER JOIN LabOrderConcepts lc ON o.concept_id = lc.member_concept_id\n" +
                 "WHERE DATE(v.date_started) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +

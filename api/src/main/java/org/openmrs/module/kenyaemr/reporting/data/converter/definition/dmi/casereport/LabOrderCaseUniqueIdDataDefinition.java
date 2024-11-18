@@ -18,21 +18,21 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  *Visit Date Column
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-public class LabOrdersCaseUniqueIdDataDefinition extends BaseDataDefinition implements VisitDataDefinition {
+public class LabOrderCaseUniqueIdDataDefinition extends BaseDataDefinition implements VisitDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public LabOrdersCaseUniqueIdDataDefinition() {
+    public LabOrderCaseUniqueIdDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public LabOrdersCaseUniqueIdDataDefinition(String name) {
+    public LabOrderCaseUniqueIdDataDefinition(String name) {
         super(name);
     }
 
