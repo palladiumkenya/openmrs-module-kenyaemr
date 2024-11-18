@@ -23,12 +23,12 @@ import java.util.Date;
  * NutritionRegister cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.NutritionRegisterCohortDefinition")
-public class NutritionRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
+@Localized("reporting.MOH407BRegisterCohortDefinition")
+public class MOH407BRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
 	@ConfigurationProperty
 	private Date asOfDate;
 
-	public NutritionRegisterCohortDefinition() {
+	public MOH407BRegisterCohortDefinition() {
 	}
 
 	public Date getAsOfDate() {

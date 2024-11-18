@@ -23,6 +23,7 @@ import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.MOH407ARegisterCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.MOH407BRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.hei.HEICWCMuacDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.nutrition.*;
@@ -49,8 +50,8 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@Builds({"kenyaemr.ehrReports.report.moh407A"})
-public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
+@Builds({"kenyaemr.ehrReports.report.moh407B"})
+public class MOH407BReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
@@ -72,8 +73,8 @@ public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
 
     protected DataSetDefinition datasetColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("MOH407A");
-        dsd.setDescription("Daily Nutrition MOH407A Report");
+        dsd.setName("MOH407B");
+        dsd.setDescription("Daily Nutrition MOH407B Report");
         dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -246,7 +247,7 @@ public class NutritionRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Type of Admission", nutritionTypeOfAdmissionDataDefinition, paramMapping);
         dsd.addColumn("Next Appointment Date", nutritionNextAppointmentDateDataDefinition, paramMapping);
         dsd.addColumn("Cadre", nutritionCadreDataDefinition, paramMapping);
-        MOH407ARegisterCohortDefinition cd = new MOH407ARegisterCohortDefinition();
+        MOH407BRegisterCohortDefinition cd = new MOH407BRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		

@@ -12,7 +12,7 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.NutritionRegisterCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.MOH407ARegisterCohortDefinition;
 import org.openmrs.module.reporting.common.ObjectUtil;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
@@ -30,8 +30,8 @@ import java.util.List;
  * Evaluator for patients for Nutrition  Register
  *
  */
-@Handler(supports = {NutritionRegisterCohortDefinition.class})
-public class NutritionRegisterCohortDefinitionEvaluator implements EncounterQueryEvaluator {
+@Handler(supports = {MOH407ARegisterCohortDefinition.class})
+public class MOH407ACohortDefinitionEvaluator implements EncounterQueryEvaluator {
 
     private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
@@ -41,18 +41,11 @@ public class NutritionRegisterCohortDefinitionEvaluator implements EncounterQuer
 		context = ObjectUtil.nvl(context, new EvaluationContext());
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
-		String qry = "SELECT nt.encounter_id \n" +
-				"FROM kenyaemr_etl.etl_nutrition nt\n" +
-				"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
-				"    ON p.patient_id = nt.patient_id \n" +
-				"    AND p.voided = 0\n" +
-				"WHERE timestampdiff(YEAR, date(p.DOB), (\n" +
-				"    SELECT MAX(nt2.visit_date) \n" +
-				"    FROM kenyaemr_etl.etl_nutrition nt2 \n" +
-				"    WHERE nt2.patient_id = nt.patient_id\n" +
-				")) <= 15 \n" +
-				"AND date(nt.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
-				"AND nt.voided = 0;";
+		String qry = "SELECT nt.encounter_id FROM kenyaemr_etl.etl_nutrition nt INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
+				"ON p.patient_id = nt.patient_id AND p.voided = 0\n" +
+				"WHERE timestampdiff(YEAR, date(p.DOB), (SELECT MAX(nt2.visit_date) FROM kenyaemr_etl.etl_nutrition nt2 \n" +
+				"WHERE nt2.patient_id = nt.patient_id)) >= 15 \n" +
+				"AND date(nt.visit_date) BETWEEN date(:startDate) AND date(:endDate) AND nt.voided = 0;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
