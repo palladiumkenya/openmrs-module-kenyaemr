@@ -103,7 +103,8 @@
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
 				<ref bean="kenyaemr.ehrReports.report.moh204B" />
-				<ref bean="kenyaemr.ehrReports.report.moh407" />
+				<ref bean="kenyaemr.ehrReports.report.moh407A" />
+				<ref bean="kenyaemr.ehrReports.report.moh407B" />
 				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
 				<ref bean="kenyaemr.ehrReports.706.report" />
 				<ref bean="kenyaemr.ehrReports.report.240" />
@@ -1045,16 +1046,27 @@
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
 	</bean>
-	<bean id="kenyaemr.ehrReports.report.moh407" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh407A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="cdaceb90-a346-48e6-aa76-49d1dd6451c7" />
-		<property name="name" value="Daily Nutrition Register" />
-		<property name="description" value="Daily Nutrition Register" />
+		<property name="name" value="MOH 407A Nutrition Outpatient Register" />
+		<property name="description" value="MOH 407A Daily Nutrition Register For Adults above 15 years" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
-		<property name="template" value="kenyaemr:MOH407.xls" />
-		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407" />
+		<property name="template" value="kenyaemr:MOH407A.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407A" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.moh407B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="ea5c0087-c734-4f14-b673-8e00cfa40675" />
+		<property name="name" value="MOH 407B Nutrition Outpatient Register" />
+		<property name="description" value="MOH 407B Daily Nutrition Register For Children below 15 years" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:MOH407B.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407B" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
