@@ -20,6 +20,7 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalcu
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.casereport.CaseComplaintsCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.casereport.CaseDiagnosisCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.casereport.CaseLabsCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.casereport.CaseVitalsCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.casereport.IllCasesCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
@@ -42,6 +43,11 @@ import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.caser
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.FinalPatientManagementOutcomeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.FinalPatientManagementOutcomeDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.InterviewDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.LabOrderDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.LabOrderIdDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.LabOrderCaseUniqueIdDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.LabOrderTestNameDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.LabOrderTestResultDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.OutpatientDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.VitalSignsDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.dmi.casereport.VitalsCaseUniqueIdDataDefinition;
@@ -89,8 +95,8 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(illnessCasesDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(complaintDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(diagnosisDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(vitalSignsDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}")/*,
-                ReportUtils.map(labsDataSetDefinitionColumns(),"startDate=${startDate},endDate=${endDate}")*/
+                ReportUtils.map(vitalSignsDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(LabsDataSetDefinitionColumns(),"startDate=${startDate},endDate=${endDate}")
         );
     }
 
@@ -305,10 +311,62 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Respiratory Rate", vitalsRespiratoryRateDataDefinition, paramMapping);
         dsd.addColumn("Oxygen Saturation", vitalsOxygenSaturationDataDefinition, paramMapping);
         dsd.addColumn("Oxygen Saturation Mode", vitalsOxygenSaturationModeDataDefinition, paramMapping);
-        // dsd.addColumn("Oxygen Signs Id", vitalsSignsIdDataDefinition, paramMapping);
         dsd.addColumn("Vital Signs Date", vitalSignsDateDataDefinition, paramMapping);
 
         CaseVitalsCohortDefinition cd = new CaseVitalsCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition LabsDataSetDefinitionColumns() {
+        VisitDataSetDefinition dsd = new VisitDataSetDefinition();
+        dsd.setName("labs");
+        dsd.setDescription("Cases Labs information");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        LabOrderCaseUniqueIdDataDefinition labOrdersCaseUniqueIdDataDefinition = new LabOrderCaseUniqueIdDataDefinition();
+        labOrdersCaseUniqueIdDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        labOrdersCaseUniqueIdDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        LabOrderIdDataDefinition labOrderIdDataDefinition = new LabOrderIdDataDefinition();
+        labOrderIdDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        labOrderIdDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        LabOrderTestResultDataDefinition labOrderTestResultDataDefinition = new LabOrderTestResultDataDefinition();
+        labOrderTestResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        labOrderTestResultDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        LabOrderDateDataDefinition labOrderDateDataDefinition = new LabOrderDateDataDefinition();
+        labOrderDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        labOrderDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        LabOrderTestNameDataDefinition labOrderTestNameDataDefinition = new LabOrderTestNameDataDefinition();
+        labOrderTestNameDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        labOrderTestNameDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        VitalsOxygenSaturationModeDataDefinition vitalsOxygenSaturationModeDataDefinition = new VitalsOxygenSaturationModeDataDefinition();
+        vitalsOxygenSaturationModeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        vitalsOxygenSaturationModeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        VitalsSignsIdDataDefinition vitalsSignsIdDataDefinition = new VitalsSignsIdDataDefinition();
+        vitalsSignsIdDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        vitalsSignsIdDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        VitalSignsDateDataDefinition vitalSignsDateDataDefinition = new VitalSignsDateDataDefinition();
+        vitalSignsDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        vitalSignsDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addColumn("Lab Case Unique Id", labOrdersCaseUniqueIdDataDefinition, paramMapping);
+        dsd.addColumn("Lab Order Id", labOrderIdDataDefinition, paramMapping);
+        dsd.addColumn("Lab Test Date", labOrderDateDataDefinition, paramMapping);
+        dsd.addColumn("Lab Test Name", labOrderTestNameDataDefinition, paramMapping);
+        dsd.addColumn("Lab Test Result", labOrderTestResultDataDefinition, paramMapping);
+
+        CaseLabsCohortDefinition cd = new CaseLabsCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addRowFilter(cd, paramMapping);
