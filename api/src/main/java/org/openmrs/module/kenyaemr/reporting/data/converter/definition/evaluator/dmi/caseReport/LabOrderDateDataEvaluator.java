@@ -59,7 +59,7 @@ public class LabOrderDateDataEvaluator implements VisitDataEvaluator {
                 "SELECT v.visit_id,\n" +
                 "       GROUP_CONCAT(CASE\n" +
                 "                        WHEN lc.member_concept_id IS NOT NULL\n" +
-                "                            THEN CONCAT(COALESCE(lc.name, '-'), ':', o.date_activated) END ORDER BY\n" +
+                "                            THEN CONCAT(COALESCE(lc.name, '-'), '|', DATE_FORMAT(o.date_activated, '%Y-%m-%d %H:%i:%s')) END ORDER BY\n" +
                 "                    lc.member_concept_id SEPARATOR ', ') as Lab_date\n" +
                 "FROM openmrs.visit v\n" +
                 "         INNER JOIN openmrs.encounter e\n" +

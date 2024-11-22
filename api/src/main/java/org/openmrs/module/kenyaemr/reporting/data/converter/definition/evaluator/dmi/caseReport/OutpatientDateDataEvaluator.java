@@ -35,7 +35,7 @@ public class OutpatientDateDataEvaluator implements VisitDataEvaluator {
     public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
-        String qry = "select v.visit_id, coalesce(e.visit_date, t.visit_date) as outpatient_date\n" +
+        String qry = "select v.visit_id, DATE_FORMAT(coalesce(e.visit_date, t.visit_date), '%Y-%m-%d %H:%i:%s') as outpatient_date\n" +
                 "from openmrs.visit v\n" +
                 "         left join kenyaemr_etl.etl_clinical_encounter e on v.visit_id = e.visit_id\n" +
                 "         left join kenyaemr_etl.etl_patient_triage t on v.visit_id = t.visit_id\n" +

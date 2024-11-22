@@ -41,7 +41,7 @@ public class ComplaintDataEvaluator implements VisitDataEvaluator {
                 "    GROUP_CONCAT(\n" +
                 "            DISTINCT CASE\n" +
                 "                         WHEN i.complaint IS NOT NULL THEN\n" +
-                "                             CONCAT(i.complaint, ':', COALESCE(\n" +
+                "                             CONCAT(i.complaint, '|', COALESCE(\n" +
                 "                                     case i.complaint\n" +
                 "                                         when 151 then \"Abdominal pain\"\n" +
                 "                                         when 141631 then \"Abnormal Uterine Bleeding\"\n" +

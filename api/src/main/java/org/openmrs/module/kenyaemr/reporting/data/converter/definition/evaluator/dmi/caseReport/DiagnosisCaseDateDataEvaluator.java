@@ -39,7 +39,7 @@ public class DiagnosisCaseDateDataEvaluator implements VisitDataEvaluator {
         String qry = "select e.visit_id,\n" +
                 "       GROUP_CONCAT(CASE\n" +
                 "                        WHEN d.diagnosis_coded IS NOT NULL\n" +
-                "                            THEN CONCAT(COALESCE(n.name, '-'),':', date(d.date_created)) END ORDER BY\n" +
+                "                            THEN CONCAT(COALESCE(n.name, '-'),'|', DATE_FORMAT(d.date_created, '%Y-%m-%d %H:%i:%s')) END ORDER BY\n" +
                 "                    d.diagnosis_coded SEPARATOR ', ') as diagnosis_date\n" +
                 "FROM kenyaemr_etl.etl_clinical_encounter e\n" +
                 "         inner join openmrs.encounter_diagnosis d on e.encounter_id = d.encounter_id and d.voided = 0 and d.dx_rank = 2\n" +

@@ -59,7 +59,7 @@ public class LabOrderTestNameDataEvaluator implements VisitDataEvaluator {
                 "SELECT v.visit_id,\n" +
                 "GROUP_CONCAT(CASE\n" +
                 "WHEN o.concept_id IS NOT NULL\n" +
-                "    THEN CONCAT(COALESCE(o.order_id, '-'), ':', lc.name) END ORDER BY\n" +
+                "    THEN CONCAT(COALESCE(o.order_id, '-'), '|', lc.name) END ORDER BY\n" +
                 "lc.member_concept_id SEPARATOR ', ') as Lab_test\n" +
                 "FROM visit v\n" +
                 "INNER JOIN encounter e ON e.visit_id = v.visit_id\n" +

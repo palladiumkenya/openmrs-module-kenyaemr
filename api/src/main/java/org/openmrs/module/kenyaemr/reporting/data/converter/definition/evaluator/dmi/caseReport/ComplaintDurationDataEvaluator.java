@@ -119,7 +119,7 @@ public class ComplaintDurationDataEvaluator implements VisitDataEvaluator {
                 "                        when 123396 then \"Vaginal Discharge\"\n" +
                 "                        when 122983 then \"Vomiting\"\n" +
                 "                        when 111525 then \"Vertigo\"\n" +
-                "                        when 5622 then \"Other\" end, ':',\n" +
+                "                        when 5622 then \"Other\" end, '|',\n" +
                 "                    COALESCE(i.complaint_duration, '-')\n" +
                 "            )\n" +
                 "        ELSE '-'\n" +

@@ -35,7 +35,7 @@ public class AdmissionDateDataEvaluator implements VisitDataEvaluator {
     public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
-        String qry = "select e.visit_id,e.date_of_patient_admission from kenyaemr_etl.etl_clinical_encounter e where date(e.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select e.visit_id,DATE_FORMAT(e.date_of_patient_admission, '%Y-%m-%d %H:%i:%s') from kenyaemr_etl.etl_clinical_encounter e where date(e.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
