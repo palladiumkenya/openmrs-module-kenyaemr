@@ -81,7 +81,7 @@ import java.util.List;
 @Builds({"kenyaemr.common.report.caseReports"})
 public class CaseReportsListReportBuilder extends AbstractReportBuilder {
 
-    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
@@ -347,18 +347,6 @@ public class CaseReportsListReportBuilder extends AbstractReportBuilder {
         LabOrderTestNameDataDefinition labOrderTestNameDataDefinition = new LabOrderTestNameDataDefinition();
         labOrderTestNameDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         labOrderTestNameDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
-        VitalsOxygenSaturationModeDataDefinition vitalsOxygenSaturationModeDataDefinition = new VitalsOxygenSaturationModeDataDefinition();
-        vitalsOxygenSaturationModeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        vitalsOxygenSaturationModeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
-        VitalsSignsIdDataDefinition vitalsSignsIdDataDefinition = new VitalsSignsIdDataDefinition();
-        vitalsSignsIdDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        vitalsSignsIdDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
-        VitalSignsDateDataDefinition vitalSignsDateDataDefinition = new VitalSignsDateDataDefinition();
-        vitalSignsDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        vitalSignsDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         dsd.addColumn("Lab Case Unique Id", labOrdersCaseUniqueIdDataDefinition, paramMapping);
         dsd.addColumn("Lab Order Id", labOrderIdDataDefinition, paramMapping);

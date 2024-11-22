@@ -36,7 +36,7 @@ public class VitalSignsDateDataEvaluator implements VisitDataEvaluator {
     public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
-        String qry = "select t.visit_id, t.visit_date\n" +
+        String qry = "select t.visit_id, DATE_FORMAT(t.visit_date, '%Y-%m-%d %H:%i:%s')\n" +
                 "from kenyaemr_etl.etl_patient_triage t\n" +
                 "where t.visit_date between date(:startDate) and date(:endDate)\n" +
                 "GROUP BY t.visit_id;";

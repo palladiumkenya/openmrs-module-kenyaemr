@@ -119,8 +119,8 @@ public class ComplaintOnsetDateDataEvaluator implements VisitDataEvaluator {
                 "            when 123396 then \"Vaginal Discharge\"\n" +
                 "            when 122983 then \"Vomiting\"\n" +
                 "            when 111525 then \"Vertigo\"\n" +
-                "            when 5622 then \"Other\" end, ':',\n" +
-                "        COALESCE(DATE_SUB(i.visit_date, INTERVAL i.complaint_duration DAY), '-')\n" +
+                "            when 5622 then \"Other\" end, '|',\n" +
+                "        COALESCE(DATE_FORMAT(DATE_SUB(i.visit_date, INTERVAL i.complaint_duration DAY), '%Y-%m-%d %H:%i:%s'), '-')\n" +
                 ")\n" +
                 "ELSE '-'\n" +
                 "END\n" +
