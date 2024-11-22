@@ -3424,7 +3424,7 @@ else {
 		OkHttpClient client = new OkHttpClient().newBuilder()
 			.build();
 		Request request = new Request.Builder()
-			.url(baseURL + "?"+ identifierType + "=" + identifier)
+			.url(baseURL + "?identifierType=" + identifierType + "&identifierNumber=" + identifier)
 			.addHeader("Referer", "")
 			.addHeader("Authorization", "Bearer " + token)
 			.build();
