@@ -113,6 +113,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DERMATOLOGY = "e6eb6328-3f24-43f8-9f75-92daccb6ac48";
 		public static final String UROLOGY = "1b1d8425-49e0-4cc6-8a66-6a598b5ac0a5";
 		public static final String HEARING_SCREENING = "9c015ff8-8c5d-42bc-8ebd-dc7ea01e19d3";
+		public static final String NEUROLOGY = "14d2b0fb-7fac-49df-bcf5-a07463fa3433";
+		public static final String MORGUE = "32b61a73-4971-4fc0-b20b-9a30176317e2";
 	}
 
 	public static final class _Form {
@@ -157,6 +159,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DERMATOLOGY_CLINICAL_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
 		public static final String UROLOGY_CLINICAL_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
 		public static final String HEARING_SCREENING_CLINICAL_FORM = "270f388f-439f-476a-8919-8211f850d366";
+		public static final String NEUROLOGY_CLINICAL_FORM = "f97f2bf3-c26b-4adf-aacd-e09d720a14cd";
+		public static final String MORGUE_CLINICAL_FORM = "016beec1-edff-4293-b3ed-817c7dddaa93";
 	}
 
 	public static final class _OrderType {
@@ -302,6 +306,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Dermatology Clinic", "Dermatology clinical encounter type", _EncounterType.DERMATOLOGY));
 		install(encounterType("Urology Clinic", "Urology clinical encounter type", _EncounterType.UROLOGY));
 		install(encounterType("Hearing Screening Clinic", "Hearing Screening clinical encounter type", _EncounterType.HEARING_SCREENING));
+		install(encounterType("Neurology Clinic", "Neurology clinical encounter type", _EncounterType.NEUROLOGY));
+		install(encounterType("Morgue", "Morgue clinical encounter type", _EncounterType.MORGUE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -366,6 +372,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
 		install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
 		install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
+		install(form("Neurology Clinical Form", "Form for Neurology clinical encounter", _EncounterType.NEUROLOGY, "1", _Form.NEUROLOGY_CLINICAL_FORM));
+		install(form("Morgue Clinical Form", "Form for Morgue clinical encounter", _EncounterType.MORGUE, "1", _Form.MORGUE_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
