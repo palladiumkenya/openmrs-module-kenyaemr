@@ -112,6 +112,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ADVERSEDRUGREACTION = "7a185fe4-c56f-4195-b682-d3f5afa9d9c2";
 		public static final String DERMATOLOGY = "e6eb6328-3f24-43f8-9f75-92daccb6ac48";
 		public static final String UROLOGY = "1b1d8425-49e0-4cc6-8a66-6a598b5ac0a5";
+		public static final String HEARING_SCREENING = "9c015ff8-8c5d-42bc-8ebd-dc7ea01e19d3";
 	}
 
 	public static final class _Form {
@@ -155,6 +156,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
 		public static final String DERMATOLOGY_CLINICAL_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
 		public static final String UROLOGY_CLINICAL_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
+		public static final String HEARING_SCREENING_CLINICAL_FORM = "270f388f-439f-476a-8919-8211f850d366";
 	}
 
 	public static final class _OrderType {
@@ -299,6 +301,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Adverse Drug Reaction", "Adverse Drug Reaction encounter type", _EncounterType.ADVERSEDRUGREACTION));
 		install(encounterType("Dermatology Clinic", "Dermatology clinical encounter type", _EncounterType.DERMATOLOGY));
 		install(encounterType("Urology Clinic", "Urology clinical encounter type", _EncounterType.UROLOGY));
+		install(encounterType("Hearing Screening Clinic", "Hearing Screening clinical encounter type", _EncounterType.HEARING_SCREENING));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -362,6 +365,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
 		install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
 		install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
+		install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
