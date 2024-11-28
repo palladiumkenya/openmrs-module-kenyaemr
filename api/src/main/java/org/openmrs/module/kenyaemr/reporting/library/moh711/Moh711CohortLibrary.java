@@ -2211,4 +2211,122 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setCompositionString("(latestMCHEnrollment AND (clientTbNotScreenedTBForm OR clientTbNotScreenedAtANC)) AND NOT hivFollowupEncounterWithinPeriod");
         return cd;
     }
+    public CohortDefinition totalSgbvSurvivors(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.type_of_violence in (12791, 145691, 5622) and pms.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("SGBV survivors (Rape, attempted rape, defilement and assault)");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("SGBV survivors (Rape, attempted rape, defilement and assault)");
+
+        return cd;
+    }
+    public CohortDefinition sgbvSurvivorsPresentingWithin72Hrs(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select prc.patient_id from kenyaemr_etl.etl_sgbv_post_rape_care prc where\n" +
+                "timestampdiff(HOUR, COALESCE(prc.date_attended_health_facility,prc.incident_date),prc.examination_date) <= 72\n" +
+                "and prc.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of SGBV survivors presenting within 72 hrs");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of SGBV survivors presenting within 72 hrs");
+
+        return cd;
+    }
+    public CohortDefinition eligibleSgbvSurvivorsInitiatingPEP(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select prc.patient_id\n" +
+                "from kenyaemr_etl.etl_sgbv_post_rape_care prc\n" +
+                "where prc.pep_first_dose = 1065\n" +
+                "  and prc.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of eligible survivors initiating PEP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of eligible survivors initiating PEP");
+
+        return cd;
+    }
+    public CohortDefinition eligibleSgbvSurvivorsCompletedPEP(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pf.patient_id from kenyaemr_etl.etl_sgbv_pep_followup pf where pf.pep_completed = 1065 and pf.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of eligible survivors completed PEP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of eligible survivors completed PEP");
+
+        return cd;
+    }
+
+    public CohortDefinition sgbvSurvivorsSeroconverting3MonthsPostExposure(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pf.patient_id from kenyaemr_etl.etl_sgbv_pep_followup pf where pf.three_month_post_exposure_HIV_serology_result = 703 and pf.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of SGBV survivors seroconverting 3 months after exposure");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of SGBV survivors seroconverting 3 months after exposure");
+
+        return cd;
+    }
+    public CohortDefinition sgbvSurvivorsEligibleForECP(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.pdt = 664 and pms.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of SGBV survivors eligible for ECP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of SGBV survivors eligible for ECP");
+
+        return cd;
+    }
+    public CohortDefinition eligibleSgbvSurvivorsReceivedECP(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.emergency_contraception_issued = 1065 and pms.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of eligible SGBV survivors who received ECP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of eligible SGBV survivors who received ECP");
+
+        return cd;
+    }
+    public CohortDefinition rapeOrDefilementSurvivorsPregnantAfter4Weeks(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select pf.patient_id from kenyaemr_etl.etl_sgbv_pep_followup pf where pf.visit_number = 165307 and pf.pdt_test_result = 703 and pf.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of rape/defilement Survivors Pregnant after 4 weeks");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of rape/defilement Survivors Pregnant after 4 weeks");
+
+        return cd;
+    }
+    public CohortDefinition ipvAndRCClientsSeen(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select epa.patient_id\n" +
+                "from kenyaemr_etl.etl_gbv_physical_emotional_abuse epa\n" +
+                "where epa.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("Number of RC/ IPV clients seen");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of RC/ IPV clients seen");
+
+        return cd;
+    }
+    public CohortDefinition survivorsWithDisability(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="";
+        cd.setName("Number of SGBV survivors with disability");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Number of SGBV survivors with disability");
+
+        return cd;
+    }
 }

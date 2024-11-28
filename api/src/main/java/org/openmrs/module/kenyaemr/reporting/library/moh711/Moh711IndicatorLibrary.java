@@ -664,5 +664,35 @@ public class Moh711IndicatorLibrary {
 		return cohortIndicator("Total Number of people not screened", ReportUtils.map(moh711Cohorts.clientsNotScreenedForTB(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
+	public CohortIndicator totalSgbvSurvivors() {
+		return cohortIndicator("SGBV survivors (Rape, attempted rape, defilement and assault)", ReportUtils.map(moh711Cohorts.totalSgbvSurvivors(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator sgbvSurvivorsPresentingWithin72Hrs() {
+		return cohortIndicator("Number of SGBV survivors presenting within 72 hrs", ReportUtils.map(moh711Cohorts.sgbvSurvivorsPresentingWithin72Hrs(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsInitiatingPEP() {
+		return cohortIndicator("Number of eligible SGBV survivors initiating PEP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsInitiatingPEP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsCompletedPEP() {
+		return cohortIndicator("Number of eligible SGBV survivors completed PEP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsCompletedPEP(), "startDate=${startDate},endDate=${endDate}"));
+	}
 
+	public CohortIndicator sgbvSurvivorsSeroconverting3MonthsPostExposure() {
+		return cohortIndicator("Number of SGBV survivors seroconverting 3 months after exposure", ReportUtils.map(moh711Cohorts.sgbvSurvivorsSeroconverting3MonthsPostExposure(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator sgbvSurvivorsEligibleForECP() {
+		return cohortIndicator("Number of SGBV survivors eligible for ECP", ReportUtils.map(moh711Cohorts.sgbvSurvivorsEligibleForECP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsReceivedECP() {
+		return cohortIndicator("Number of eligible SGBV survivors who received ECP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsReceivedECP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator rapeOrDefilementSurvivorsPregnantAfter4Weeks() {
+		return cohortIndicator("Number of rape/defilement Survivors Pregnant after 4 weeks", ReportUtils.map(moh711Cohorts.rapeOrDefilementSurvivorsPregnantAfter4Weeks(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator ipvAndRCClientsSeen() {
+		return cohortIndicator("Number of RC/ IPV clients seen", ReportUtils.map(moh711Cohorts.ipvAndRCClientsSeen(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator survivorsWithDisability() {
+		return cohortIndicator("Number of SGBV survivors with disability", ReportUtils.map(moh711Cohorts.survivorsWithDisability(), "startDate=${startDate},endDate=${endDate}"));
+	}
 }

@@ -90,18 +90,23 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(createPNCDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(createMaternityNewbornDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(createChildHealthAndNutritionDataSet(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(createTBScreeningDataSet(), "startDate=${startDate},endDate=${endDate}")
+                ReportUtils.map(createTBScreeningDataSet(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(sgbvDataSet(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
+    ColumnParameters all0_9 = new ColumnParameters(null, "0-9 years", "age=0-9");
     ColumnParameters f10_14 = new ColumnParameters(null, "10-14 years", "gender=F|age=10-14");
+    ColumnParameters all10_17 = new ColumnParameters(null, "10-17 years", "age=10-17");
     ColumnParameters f15_19 = new ColumnParameters(null, "15-19 years", "gender=F|age=15-19");
+    ColumnParameters all18_49 = new ColumnParameters(null, "18-49 years", "age=18-49");
     ColumnParameters f20_24 = new ColumnParameters(null, "20-24 years", "gender=F|age=20-24");
     ColumnParameters f25AndAbove = new ColumnParameters(null, "25+ years", "gender=F|age=25+");
 
     ColumnParameters fUnder25 = new ColumnParameters(null, "<25 years", "gender=F|age=<25");
     ColumnParameters f25_49 = new ColumnParameters(null, "25-49 years", "gender=F|age=25-49");
     ColumnParameters f50AndAbove = new ColumnParameters(null, "50+ years", "gender=F|age=>=50");
+    ColumnParameters all50AndAbove = new ColumnParameters(null, "50+ years", "age=>=50");
 
     ColumnParameters f0To5Months = new ColumnParameters(null, "0-5 months, Female", "gender=F|age=0-5");
     ColumnParameters m0To5Months = new ColumnParameters(null, "0-5 months, Male", "gender=M|age=0-5");
@@ -130,6 +135,7 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
     List<ColumnParameters> childMNPsAgeDisaggregations = Arrays.asList(f6To23Months, m6To23Months, colTotal);
     List<ColumnParameters> childDewormingAgeDisaggregations = Arrays.asList(f12To59Months, m12To59Months, colTotal);
     List<ColumnParameters> childDelayedGrowthAgeDisaggregations = Arrays.asList(all0To59Months);
+    List<ColumnParameters> sgbvAgeDisaggregation = Arrays.asList(all0_9, all10_17, all18_49, all50AndAbove);
 
 
     /**
@@ -328,6 +334,27 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total Number of presumptive TB cases", "", ReportUtils.map(moh711Indicators.clientWithPresumptiveTb(), indParams), "");
         dsd.addColumn("Total Number already on TB treatment", "", ReportUtils.map(moh711Indicators.clientonTbTreatment(), indParams), "");
         dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientTbNotScreened(), indParams), "");
+
+        return dsd;
+    }
+
+    private DataSetDefinition sgbvDataSet() {
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("SGBV");
+        dsd.setDescription("Sexual and Gender Based violence");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
+        EmrReportingUtils.addRow(dsd, "Total SGBV survivors", "Rape, attempted rape, defilement and assault", ReportUtils.map(moh711Indicators.totalSgbvSurvivors(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors presenting within 72 hrs", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsPresentingWithin72Hrs(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors initiating PEP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsInitiatingPEP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors completed PEP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsCompletedPEP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors seroconverting 3 months after exposure", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsSeroconverting3MonthsPostExposure(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors eligible for ECP", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsEligibleForECP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors who received ECP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsReceivedECP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of rape/defilement Survivors Pregnant after 4 weeks", "", ReportUtils.map(moh711Indicators.rapeOrDefilementSurvivorsPregnantAfter4Weeks(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of RC/ IPV clients seen", "", ReportUtils.map(moh711Indicators.ipvAndRCClientsSeen(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+       // EmrReportingUtils.addRow(dsd, "Number of SGBV survivors with disability", "", ReportUtils.map(moh711Indicators.survivorsWithDisability(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
 
         return dsd;
     }
