@@ -43,7 +43,6 @@ public class LabOrderTestResultDataEvaluator implements VisitDataEvaluator {
                 "                        FROM orders\n" +
                 "                        WHERE order_type_id = 3\n" +
                 "                          AND voided = 0\n" +
-                "                          AND DATE(date_activated) = '2024-11-18'\n" +
                 "                        GROUP BY patient_id, concept_id),\n" +
                 "     LabOrderConcepts AS (SELECT cs.concept_set_id AS set_id,\n" +
                 "                                 cs.concept_id     AS member_concept_id,\n" +
