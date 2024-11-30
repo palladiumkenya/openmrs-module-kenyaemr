@@ -139,8 +139,17 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("HV01-05", "Tested (KVP)", ReportUtils.map(moh731GreenCardIndicators.htsNumberTestedKVP(), indParams),"");
 
         // 1.2 HIV Positive Results
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Positive", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(), indParams), htsMaleDisaggregation, Arrays.asList("06", "08", "10", "12", "14"));
-        EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Positive", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(), indParams), htsFemaleDisaggregation, Arrays.asList("07", "09", "11", "13", "15"));
+        cohortDsd.addColumn( "HV01-06", "Tested Positive (2-9, Male)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(2, 9), indParams),"");
+        cohortDsd.addColumn( "HV01-08", "Tested Positive (10-14, Male)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(10, 14), indParams),"");
+        cohortDsd.addColumn( "HV01-10", "Tested Positive (15-19, Male)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(15, 19), indParams),"");
+        cohortDsd.addColumn( "HV01-12", "Tested Positive (20-24, Male)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales(20, 24), indParams),"");
+        cohortDsd.addColumn( "HV01-14", "Tested Positive (25+, Male)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveMales25AndAbove(25), indParams),"");
+
+        cohortDsd.addColumn( "HV01-07", "Tested Positive (2-9, Female)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(2, 9), indParams), "");
+        cohortDsd.addColumn( "HV01-09", "Tested Positive (10-14, Female)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(10,14), indParams), "");
+        cohortDsd.addColumn( "HV01-11", "Tested Positive (15-19, Female)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(15, 19), indParams), "");
+        cohortDsd.addColumn( "HV01-13", "Tested Positive (20-24, Female)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales(20, 24), indParams), "");
+        cohortDsd.addColumn( "HV01-15", "Tested Positive (25+, Female)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveFemales25AndAbove(25), indParams), "");
         cohortDsd.addColumn("HV01-16", "Tested Positive (KVP)", ReportUtils.map(moh731GreenCardIndicators.htsPositiveKVP(), indParams),"");
         EmrReportingUtils.addRow(cohortDsd, "HV01", "Tested Discordant", ReportUtils.map(moh731GreenCardIndicators.htsDiscordant(), indParams), genderDisaggregation, Arrays.asList("17", "18"));
         //EmrReportingUtils.addRow(cohortDsd, "HV01", "Inconclusive", ReportUtils.map(moh731GreenCardIndicators.inconclusiveResults(), indParams), genderDisaggregation, Arrays.asList("47", "48"));
