@@ -2329,4 +2329,111 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
 
         return cd;
     }
+
+    public CohortDefinition firstUsersOfContraceptives() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.first_user_of_contraceptive = 1065 and visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("firstUsersOfContraceptives");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("First use of Contraceptives");
+
+        return cd;
+    }
+
+    public CohortDefinition contraceptiveMethodByVisitType(int contraceptiveMethod, int visitType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed = "+contraceptiveMethod+" and f.type_of_visit_for_method = "+visitType+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("contraceptiveMethodByVisitType");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Received Contraceptives");
+
+        return cd;
+    }
+    public CohortDefinition maleAndFemaleCondomsByVisitType(int visitType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed in (164813,164814) and f.type_of_visit_for_method = "+visitType+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("maleAndFemaleCondomsByVisitType");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Male and female condoms");
+
+        return cd;
+    }
+
+    public CohortDefinition counselledOnNaturalFP() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.counselled_on_natural_fp = 1065 and f.type_of_visit_for_method = 164180 and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("counselledOnNaturalFP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Counselled on natural FP");
+
+        return cd;
+    }
+
+    public CohortDefinition givenCycleBeads() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.circle_beads_given = 1065 and f.type_of_visit_for_method = 164180 and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("givenCycleBeads");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Given cycle beads");
+
+        return cd;
+    }
+
+    public CohortDefinition contraceptiveMethodByServiceType(int contraceptiveMethod, int serviceType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed = "+contraceptiveMethod+" and f.type_of_service = "+serviceType+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("contraceptiveMethodByServiceType");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Given contraceptives by service type");
+
+        return cd;
+    }
+
+    public CohortDefinition contraceptiveMethod(int contraceptiveMethod) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed = "+contraceptiveMethod+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("contraceptiveMethod");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Given contraceptives");
+
+        return cd;
+    }
+
+    public CohortDefinition receivingFamilyPlanningServicesByVisitType(int visitType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed is not null and f.type_of_service = "+visitType+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("receivingFamilyPlanningServicesByVisitType");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Received FP services");
+
+        return cd;
+    }
+
+    public CohortDefinition postPartumFP(int postPartum) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.receiving_postpartum_fp = "+postPartum+" and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("postPartumFP");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Post partum FP");
+
+        return cd;
+    }
 }

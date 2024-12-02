@@ -695,4 +695,32 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator survivorsWithDisability() {
 		return cohortIndicator("Number of SGBV survivors with disability", ReportUtils.map(moh711Cohorts.survivorsWithDisability(), "startDate=${startDate},endDate=${endDate}"));
 	}
+	public CohortIndicator firstUsersOfContraceptives() {
+		return cohortIndicator("First users of contraceptives", ReportUtils.map(moh711Cohorts.firstUsersOfContraceptives(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethodByVisitType(int contraceptiveMethod, int visitType) {
+		return cohortIndicator("Contraceptive method by visit type", ReportUtils.map(moh711Cohorts.contraceptiveMethodByVisitType(contraceptiveMethod, visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator maleAndFemaleCondomsByVisitType(int visitType) {
+		return cohortIndicator("Given male and female condoms", ReportUtils.map(moh711Cohorts.maleAndFemaleCondomsByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator counselledOnNaturalFP() {
+		return cohortIndicator("Counselled on natural FP", ReportUtils.map(moh711Cohorts.counselledOnNaturalFP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator givenCycleBeads() {
+		return cohortIndicator("Counselled on natural FP", ReportUtils.map(moh711Cohorts.givenCycleBeads(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethodByServiceType(int contraceptiveMethod, int serviceTYpe) {
+		return cohortIndicator("Contraceptive method by visit type", ReportUtils.map(moh711Cohorts.contraceptiveMethodByServiceType(contraceptiveMethod, serviceTYpe), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethod(int contraceptiveMethod) {
+		return cohortIndicator("Contraceptive method", ReportUtils.map(moh711Cohorts.contraceptiveMethod(contraceptiveMethod), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator receivingFamilyPlanningServicesByVisitType(int visitType) {
+		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.receivingFamilyPlanningServicesByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator postPartumFP(int postPartum) {
+		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.postPartumFP(postPartum), "startDate=${startDate},endDate=${endDate}"));
+	}
 }
