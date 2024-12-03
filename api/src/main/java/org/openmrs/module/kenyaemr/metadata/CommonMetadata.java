@@ -115,6 +115,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String HEARING_SCREENING = "9c015ff8-8c5d-42bc-8ebd-dc7ea01e19d3";
 		public static final String NEUROLOGY = "14d2b0fb-7fac-49df-bcf5-a07463fa3433";
 		public static final String POST_MORTEM = "32b61a73-4971-4fc0-b20b-9a30176317e2";
+		public static final String MORGUE_ADMISSION = "3d2df845-6f3c-45e7-b91a-d828a1f9c2e8";
+		public static final String MORGUE_DISCHARGE = "3d618f40b-b5a3-4f17-81c8-2f04e2aad58e";
 	}
 
 	public static final class _Form {
@@ -258,6 +260,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final class _VisitType {
 		public static final String OUTPATIENT = "3371a4d4-f66f-4454-a86d-92c7b3da990c";
 		public static final String INPATIENT = "a73e2ac6-263b-47fc-99fc-e0f2c09fc914";
+		public static final String MORGUE = "6307dbe2-f336-4c11-a393-50c2769f455a";
 	}
 
 	/**
@@ -308,6 +311,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Hearing Screening Clinic", "Hearing Screening clinical encounter type", _EncounterType.HEARING_SCREENING));
 		install(encounterType("Neurology Clinic", "Neurology clinical encounter type", _EncounterType.NEUROLOGY));
 		install(encounterType("Post-Mortem", "Post-Mortem clinical encounter type", _EncounterType.POST_MORTEM));
+		install(encounterType("Morgue Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
+		install(encounterType("Morgue Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
