@@ -33,41 +33,43 @@ public class NCDSDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT ci.patient_id,\n" +
-                "       SUBSTRING_INDEX(\n" +
-                "           MAX(CONCAT(visit_date, ',', \n" +
-                "           COALESCE(CASE ci.chronic_illness\n" +
-                "               WHEN 149019 THEN 'Alzheimers Disease and other Dementias'\n" +
-                "               WHEN 148432 THEN 'Arthritis'\n" +
-                "               WHEN 153754 THEN 'Asthma'\n" +
-                "               WHEN 159351 THEN 'Cancer'\n" +
-                "               WHEN 119270 THEN 'Cardiovascular diseases'\n" +
-                "               WHEN 120637 THEN 'Chronic Hepatitis'\n" +
-                "               WHEN 145438 THEN 'Chronic Kidney Disease'\n" +
-                "               WHEN 1295 THEN 'Chronic Obstructive Pulmonary Disease(COPD)'\n" +
-                "               WHEN 120576 THEN 'Chronic Renal Failure'\n" +
-                "               WHEN 119692 THEN 'Cystic Fibrosis'\n" +
-                "               WHEN 120291 THEN 'Deafness and Hearing impairment'\n" +
-                "               WHEN 119481 THEN 'Diabetes'\n" +
-                "               WHEN 118631 THEN 'Endometriosis'\n" +
-                "               WHEN 117855 THEN 'Epilepsy'\n" +
-                "               WHEN 117789 THEN 'Glaucoma'\n" +
-                "               WHEN 139071 THEN 'Heart Disease'\n" +
-                "               WHEN 115728 THEN 'Hyperlipidaemia'\n" +
-                "               WHEN 117399 THEN 'Hypertension'\n" +
-                "               WHEN 117321 THEN 'Hypothyroidism'\n" +
-                "               WHEN 151342 THEN 'Mental illness'\n" +
-                "               WHEN 133687 THEN 'Multiple Sclerosis'\n" +
-                "               WHEN 115115 THEN 'Obesity'\n" +
-                "               WHEN 114662 THEN 'Osteoporosis'\n" +
-                "               WHEN 117703 THEN 'Sickle Cell Anaemia'\n" +
-                "               WHEN 118976 THEN 'Thyroid disease'\n" +
-                "               WHEN 141623 THEN 'Dyslipidemia'\n" +
-                "           END))), ',', -1) AS ChronicIllness\n" +
-                "FROM kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
-                "WHERE ci.visit_date <= DATE(:endDate)\n" +
-                "GROUP BY ci.patient_id;";
-
+        String qry = "SELECT ci.patient_id, " +
+                "       GROUP_CONCAT(CASE ci.chronic_illness " +
+                "            WHEN 149019 THEN 'Alzheimers Disease and other Dementias' " +
+                "            WHEN 148432 THEN 'Arthritis' " +
+                "            WHEN 153754 THEN 'Asthma' " +
+                "            WHEN 159351 THEN 'Cancer' " +
+                "            WHEN 119270 THEN 'Cardiovascular diseases' " +
+                "            WHEN 120637 THEN 'Chronic Hepatitis' " +
+                "            WHEN 145438 THEN 'Chronic Kidney Disease' " +
+                "            WHEN 1295 THEN 'Chronic Obstructive Pulmonary Disease(COPD)' " +
+                "            WHEN 120576 THEN 'Chronic Renal Failure' " +
+                "            WHEN 119692 THEN 'Cystic Fibrosis' " +
+                "            WHEN 120291 THEN 'Deafness and Hearing impairment' " +
+                "            WHEN 119481 THEN 'Diabetes' " +
+                "            WHEN 118631 THEN 'Endometriosis' " +
+                "            WHEN 117855 THEN 'Epilepsy' " +
+                "            WHEN 117789 THEN 'Glaucoma' " +
+                "            WHEN 139071 THEN 'Heart Disease' " +
+                "            WHEN 115728 THEN 'Hyperlipidaemia' " +
+                "            WHEN 117399 THEN 'Hypertension' " +
+                "            WHEN 117321 THEN 'Hypothyroidism' " +
+                "            WHEN 151342 THEN 'Mental illness' " +
+                "            WHEN 133687 THEN 'Multiple Sclerosis' " +
+                "            WHEN 115115 THEN 'Obesity' " +
+                "            WHEN 114662 THEN 'Osteoporosis' " +
+                "            WHEN 117703 THEN 'Sickle Cell Anaemia' " +
+                "            WHEN 118976 THEN 'Thyroid disease' " +
+                "            WHEN 141623 THEN 'Dyslipidemia' " +
+                "       END SEPARATOR ', ') AS ChronicIllness " +
+                "FROM kenyaemr_etl.etl_allergy_chronic_illness ci " +
+                "JOIN ( " +
+                "    SELECT patient_id, MAX(visit_date) AS latest_visit_date " +
+                "    FROM kenyaemr_etl.etl_allergy_chronic_illness " +
+                "    WHERE visit_date <= DATE(:endDate)" +
+                "    GROUP BY patient_id " +
+                ") latest ON ci.patient_id = latest.patient_id AND ci.visit_date = latest.latest_visit_date " +
+                "GROUP BY ci.patient_id, ci.visit_date;";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date endDate = (Date)context.getParameterValue("endDate");

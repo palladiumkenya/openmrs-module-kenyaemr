@@ -34,11 +34,32 @@ public class NCDDateDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT ci.patient_id,\n" +
-                "       DATE(MAX(ci.chronic_illness_onset_date)) AS ChronicIllness_onset\n" +
-                "FROM kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
-                "WHERE ci.visit_date <= DATE(:endDate)\n" +
-                "GROUP BY ci.patient_id;";
+        String qry ="WITH LatestIllnessDates AS (\n" +
+                "  SELECT\n" +
+                "    patient_id,\n" +
+                "    MAX(chronic_illness_onset_date) AS latest_onset_date,\n" +
+                "    COUNT(*) AS date_count\n" +
+                "  FROM\n" +
+                "    kenyaemr_etl.etl_allergy_chronic_illness\n" +
+                "  WHERE\n" +
+                "    visit_date <= DATE(:endDate)\n" +
+                "  GROUP BY\n" +
+                "    patient_id\n" +
+                ")\n" +
+                "SELECT\n" +
+                "  ci.patient_id,\n" +
+                "  CASE WHEN lid.date_count > 1 THEN\n" +
+                "    GROUP_CONCAT(ci.chronic_illness_onset_date SEPARATOR ', ')\n" +
+                "  ELSE\n" +
+                "    MAX(ci.chronic_illness_onset_date)\n" +
+                "  END AS ChronicIllness_onset\n" +
+                "FROM\n" +
+                "  kenyaemr_etl.etl_allergy_chronic_illness ci\n" +
+                "INNER JOIN LatestIllnessDates lid ON ci.patient_id = lid.patient_id\n" +
+                "WHERE\n" +
+                "  ci.visit_date <= DATE(:endDate)\n" +
+                "GROUP BY\n" +
+                "  ci.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

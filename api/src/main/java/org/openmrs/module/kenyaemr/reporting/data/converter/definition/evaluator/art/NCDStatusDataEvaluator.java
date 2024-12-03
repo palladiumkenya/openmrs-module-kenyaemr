@@ -35,7 +35,7 @@ public class NCDStatusDataEvaluator implements PersonDataEvaluator {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry = "SELECT ci.patient_id,\n" +
-                "       (CASE ci.is_chronic_illness_controlled\n" +
+                "       GROUP_CONCAT(CASE ci.is_chronic_illness_controlled\n" +
                 "            WHEN 1065 THEN 'Controlled'\n" +
                 "            WHEN 1066 THEN 'Not controlled'\n" +
                 "        END) AS controlled_status\n" +
