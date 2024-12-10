@@ -234,8 +234,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				}
 				//Triage
 				if (lastTriageEncounter != null) {
-					//1. SARI and ILI
-					if (triageEncounterHasFever && triageEncounterHasCough) {
+					//1.1 ILI
+					if (triageEncounterHasCough) {
 						for (Obs obs : lastTriageEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -243,17 +243,25 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
-									if (createdDate.equals(todayDate)) {
+								if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
+									if (tempValue != null && tempValue >= 38.0) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
 											idsrMessage.add(ili);
 											break;
 										} else {
 											eligible = true;
-											idsrMessage.add(sari);											
+											idsrMessage.add(sari);
 											break;
 										}
+									}
+									if (triageEncounterHasFever) {
+										if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
+											eligible = true;
+											idsrMessage.add(sari);
+											break;
+										}
+
 									}
 								}
 							}							
@@ -405,7 +413,7 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				//Hiv followup encounter
 				if (lastHivFollowUpEncounter != null) {
 					//1. SARI and ILI
-					if (hivFollowupEncounterHasFever && hivFollowupEncounterHasCough) {
+					if (hivFollowupEncounterHasCough) {
 						for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -413,8 +421,8 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 							}
 							if (dateCreated != null) {
 								String createdDate = dateFormat.format(dateCreated);
-								if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
-									if (createdDate.equals(todayDate)) {
+								if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
+									if (tempValue != null && tempValue >= 38.0) {
 										if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 											eligible = true;
 											idsrMessage.add(ili);
@@ -424,6 +432,14 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 											idsrMessage.add(sari);
 											break;
 										}
+									}
+									if (triageEncounterHasFever) {
+										if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
+											eligible = true;
+											idsrMessage.add(sari);
+											break;
+										}
+
 									}
 								}
 							}							
@@ -575,22 +591,29 @@ public class EligibleForIDSRFlagsCalculation extends AbstractPatientCalculation 
 				//Clinical Encounter
 				if (lastClinicalEncounter != null) {
 					//1. SARI and ILI
-					if (clinicalEncounterHasFever && clinicalEncounterHasCough) {
+					if (clinicalEncounterHasCough) {
 						for (Obs obs : lastClinicalEncounter.getObs()) {
 							dateCreated = obs.getDateCreated();
 							if (obs.getConcept().getUuid().equals(DURATION)) {
 								duration = obs.getValueNumeric();
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
-										if (createdDate.equals(todayDate)) {									
+									if (duration > 0.0 && duration < 10 && createdDate.equals(todayDate)) {
+										if (tempValue != null && tempValue >= 38.0) {
 											if (!patientAdmissionStatus && !currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
 												eligible = true;
-												idsrMessage.add(ili);									
+												idsrMessage.add(ili);
 												break;
 											} else {
 												eligible = true;
-												idsrMessage.add(sari);										
+												idsrMessage.add(sari);
+												break;
+											}
+										}
+										if (triageEncounterHasFever) {
+											if (patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals("a73e2ac6-263b-47fc-99fc-e0f2c09fc914")) {
+												eligible = true;
+												idsrMessage.add(sari);
 												break;
 											}
 										}
