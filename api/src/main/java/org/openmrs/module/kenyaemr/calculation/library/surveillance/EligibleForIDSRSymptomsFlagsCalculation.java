@@ -479,7 +479,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 						}
 						//9. Jaundice
 						if (triageEncounterHasJaundice) {
-							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
@@ -493,8 +493,8 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 						}
 						//10. Monkeypox
 						if (triageEncounterHasRash && triageEncounterHasFever) {
-							if (triageEncounterHasHeadache || triageEncounterHasLymphadenopathy || triageEncounterHasMyalgia || triageEncounterHasBackpain) {
-								for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+							if (triageEncounterHasHeadache || triageEncounterHasLymphadenopathy || triageEncounterHasMyalgia || triageEncounterHasBackpain)
+								for (Obs obs : lastTriageEncounter.getObs()) {
 									dateCreated = obs.getDateCreated();
 									if (dateCreated != null) {
 										String createdDate = dateFormat.format(dateCreated);
@@ -507,7 +507,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 										}
 									}
 								}
-							}
+
 						}
 					}
 					//Hiv followup encounter
@@ -827,7 +827,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							DateTime birthDate = new DateTime(patient.getBirthdate());
 							int ageInDays = Days.daysBetween(birthDate, new DateTime()).getDays();
 							if (ageInDays >= 2 && ageInDays <= 28) {
-								for (Obs obs : lastTriageEncounter.getObs()) {
+								for (Obs obs : lastClinicalEncounter.getObs()) {
 									dateCreated = obs.getDateCreated();
 									if (dateCreated != null) {
 										String createdDate = dateFormat.format(dateCreated);
