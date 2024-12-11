@@ -38,11 +38,9 @@ public class OPDInvestigationRequiredDataEvaluator implements EncounterDataEvalu
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
 		String qry = "select le.encounter_id,\n" +
-			"       cn.name as investigation_required\n" +
+			"       le.order_test_name as investigation_required\n" +
 			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"               inner join openmrs.concept_name cn on cn.concept_id = le.lab_test and cn.locale = 'en'\n" +
-			"where date(le.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"group by le.encounter_id;";
+			"        where date(le.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

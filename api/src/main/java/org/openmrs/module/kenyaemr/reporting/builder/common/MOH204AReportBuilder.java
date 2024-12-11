@@ -170,7 +170,7 @@ public class MOH204AReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Danger signs",opdDangerSignsDataDefinition, paramMapping);
 		dsd.addColumn("Duration",opdComplaintDurationDataDefinition, paramMapping);
 		dsd.addColumn("Malaria",opdMalariaAssessmentDataDefinition, paramMapping);
-		dsd.addColumn("IMNCI Classification Diagnosis",opdDiagnosisDataDefinition, paramMapping);
+		dsd.addColumn("Clinical Diagnosis",opdDiagnosisDataDefinition, paramMapping);
 		dsd.addColumn("Tracer Drugs Prescribed",opdTracerDrugsPrescribedDataDefinition, paramMapping);
 		dsd.addColumn("Other Treatments Prescribed",opdNonTracerDrugsPrescribedDataDefinition, paramMapping);
 		dsd.addColumn("Immunization Status Up to Date",opdImmunizationStatusDataDefinition, paramMapping);
