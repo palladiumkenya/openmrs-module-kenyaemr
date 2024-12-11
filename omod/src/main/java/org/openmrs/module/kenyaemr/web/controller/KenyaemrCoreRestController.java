@@ -549,7 +549,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 concService.getConcept(159810),
                 concService.getConcept(154378),
                 concService.getConcept(74258),
-                concService.getConcept(164967)
+                concService.getConcept(164967),
+                concService.getConcept(168612),
+                concService.getConcept(84797)
                 );
 
         for (Concept con: arvDrugs) {
