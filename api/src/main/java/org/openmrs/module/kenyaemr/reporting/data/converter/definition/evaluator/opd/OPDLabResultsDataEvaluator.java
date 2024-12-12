@@ -39,12 +39,12 @@ public class OPDLabResultsDataEvaluator implements EncounterDataEvaluator {
 
 		String qry = "SELECT le.encounter_id,\n" +
 			"if(le.lab_test in (SELECT concept_set FROM openmrs.concept_set), GROUP_CONCAT(\n" +
-			"             CONCAT(COALESCE(le.result_test_name, '-'), '|', le.test_result)\n" +
-			"     SEPARATOR ', '),le.test_result) as test_result\n" +
+			"             CONCAT(COALESCE(le.result_test_name, '-'), '|', le.result_name)\n" +
+			"     SEPARATOR ', '),le.result_name) as test_result\n" +
 			"FROM kenyaemr_etl.etl_laboratory_extract le\n" +
 			"INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = le.patient_id and p.voided = 0\n" +
 			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-			"group by le.encounter_id;\n";
+			"group by le.encounter_id";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
