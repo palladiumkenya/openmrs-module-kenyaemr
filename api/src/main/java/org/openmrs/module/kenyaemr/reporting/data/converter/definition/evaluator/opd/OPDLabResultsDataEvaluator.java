@@ -37,9 +37,14 @@ public class OPDLabResultsDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-		String qry = "SELECT le.encounter_id, le.test_result FROM kenyaemr_etl.etl_laboratory_extract le\n" +
-			"             INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = le.patient_id AND  p.voided = 0\n" +
-			"WHERE date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
+		String qry = "SELECT le.encounter_id,\n" +
+			"if(le.lab_test in (SELECT concept_set FROM openmrs.concept_set), GROUP_CONCAT(\n" +
+			"             CONCAT(COALESCE(le.result_test_name, '-'), '|', le.result_name)\n" +
+			"     SEPARATOR ', '),le.result_name) as test_result\n" +
+			"FROM kenyaemr_etl.etl_laboratory_extract le\n" +
+			"INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = le.patient_id and p.voided = 0\n" +
+			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+			"group by le.encounter_id";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
