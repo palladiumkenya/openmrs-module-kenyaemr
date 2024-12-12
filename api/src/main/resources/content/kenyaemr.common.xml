@@ -103,6 +103,7 @@
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
 				<ref bean="kenyaemr.ehrReports.report.moh204B" />
+				<ref bean="kenyaemr.ehrReports.report.moh275" />
 				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
 				<ref bean="kenyaemr.ehrReports.706.report" />
 				<ref bean="kenyaemr.ehrReports.report.240" />
@@ -1043,6 +1044,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.moh275" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="008806d6-f9d6-4ed4-9091-24fa49997edb" />
+		<property name="name" value="MOH 275 Occupational Therapy Register" />
+		<property name="description" value="MOH 275 Occupational Therapy Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh275.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH275" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
