@@ -185,6 +185,12 @@ public class Moh711IndicatorLibrary {
 		return cohortIndicator("No. HIV Positive mothers screened for cacx", map(moh711Cohorts.cacxScreenedAndHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
+	public CohortIndicator screenedForBreastCancer() {
+		return cohortIndicator("No. Screened for Breast Cancer", map(moh711Cohorts.screenedForBreastCancer(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator screenedForColorectalCancer() {
+		return cohortIndicator("No. Screened for Colorectal Cancer", map(moh711Cohorts.screenedForColorectalCancer(), "startDate=${startDate},endDate=${endDate}"));
+	}
 	/**
 	 * Number of Mothers given uterotonics-oxytocin within 1 minute
 	 */
@@ -717,10 +723,48 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator contraceptiveMethod(int contraceptiveMethod) {
 		return cohortIndicator("Contraceptive method", ReportUtils.map(moh711Cohorts.contraceptiveMethod(contraceptiveMethod), "startDate=${startDate},endDate=${endDate}"));
 	}
+	public CohortIndicator iucdRemoval() {
+		return cohortIndicator("IUCD removal", ReportUtils.map(moh711Cohorts.iucdRemoval(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator implantRemoval() {
+		return cohortIndicator("IUCD removal", ReportUtils.map(moh711Cohorts.implantRemoval(), "startDate=${startDate},endDate=${endDate}"));
+	}
 	public CohortIndicator receivingFamilyPlanningServicesByVisitType(int visitType) {
 		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.receivingFamilyPlanningServicesByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator postPartumFP(int postPartum) {
 		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.postPartumFP(postPartum), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator psychosocialCounselling() {
+		return cohortIndicator("Psychosocial Counselling", ReportUtils.map(moh711Cohorts.psychosocialCounselling(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator alcoholAndDrugAbuse() {
+		return cohortIndicator("Alcohol And Drug Abuse", ReportUtils.map(moh711Cohorts.alcoholAndDrugAbuse(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator depression() {
+		return cohortIndicator("Received depression services", ReportUtils.map(moh711Cohorts.depression(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator bipolarDisorder() {
+		return cohortIndicator("Bipolar disorder", ReportUtils.map(moh711Cohorts.bipolarDisorder(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator schizopherniaAndPsychoticDisorder() {
+		return cohortIndicator("Schizophernia and Psychotic Disorder", ReportUtils.map(moh711Cohorts.schizopherniaAndPsychoticDisorder(), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator psychoReferrals() {
+		return cohortIndicator("psychoReferrals", ReportUtils.map(moh711Cohorts.psychoReferrals(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator physioDisorders(int disorder, int visitType) {
+		return cohortIndicator("Neurological disorders receiving physiotherapy", ReportUtils.map(moh711Cohorts.physioDisorders(disorder,visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator preAndPostnatal(int visitType) {
+		return cohortIndicator("Women of reproductive age attending pre and post natal physiotherapy", ReportUtils.map(moh711Cohorts.preAndPostnatal(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator physioDisordersTx(int disorder) {
+		return cohortIndicator("Treated for Physiological disorders", ReportUtils.map(moh711Cohorts.physioDisordersTx(disorder), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator preAndPostnatalTx() {
+		return cohortIndicator("Treated for pre and post natal physiotherapy", ReportUtils.map(moh711Cohorts.preAndPostnatalTx(), "startDate=${startDate},endDate=${endDate}"));
 	}
 }

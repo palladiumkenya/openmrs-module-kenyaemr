@@ -1010,6 +1010,29 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setCompositionString("cacxScreened AND (enrolledInHIV OR htsPositive OR mchPositive OR ancPositive)");
         return cd;
     }
+
+    public CohortDefinition screenedForBreastCancer(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select c.patient_id from kenyaemr_etl.etl_cervical_cancer_screening c where c.breast_cancer = 'Yes' and c.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("screenedForBreastCancer");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Screened for Breast Cancer");
+
+        return cd;
+    }
+    public CohortDefinition screenedForColorectalCancer(){
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery ="select c.patient_id from kenyaemr_etl.etl_cervical_cancer_screening c where c.colorectal_cancer = 'Yes' and c.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("screenedForColorectalCancer");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Screened for Colorectal cancer");
+
+        return cd;
+    }
     public CohortDefinition noOfRevisitingPNCClients() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2213,7 +2236,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     }
     public CohortDefinition totalSgbvSurvivors(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.type_of_violence in (12791, 145691, 5622) and pms.visit_date between date(:startDate) and date(:endDate);";
+        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.type_of_violence in (12791, 145691, 5622, 123157,121387) and pms.visit_date between date(:startDate) and date(:endDate);";
         cd.setName("SGBV survivors (Rape, attempted rape, defilement and assault)");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2320,7 +2343,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     }
     public CohortDefinition survivorsWithDisability(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery ="";
+        String sqlQuery ="select pms.patient_id from kenyaemr_etl.etl_pep_management_survivor pms where pms.disabled = 1065 and pms.visit_date between date(:startDate) and date(:endDate);";
         cd.setName("Number of SGBV survivors with disability");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2412,7 +2435,28 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
 
         return cd;
     }
+    public CohortDefinition iucdRemoval() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.type_of_visit_for_method = 164161 and f.contraceptive_dispensed in (165464,162794) and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("iucdRemoval");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("IUCD removal");
 
+        return cd;
+    }
+    public CohortDefinition implantRemoval() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.type_of_visit_for_method = 164161 and f.contraceptive_dispensed in (76022, 162422, 1873) and f.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("implantRemoval");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Implant removal");
+
+        return cd;
+    }
     public CohortDefinition receivingFamilyPlanningServicesByVisitType(int visitType) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_family_planning f where f.contraceptive_dispensed is not null and f.type_of_service = "+visitType+" and f.visit_date between date(:startDate) and date(:endDate);";
@@ -2433,6 +2477,128 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.setDescription("Post partum FP");
+
+        return cd;
+    }
+    public CohortDefinition psychosocialCounselling() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_psychiatry p where p.counselling_prescribed like '%Psychosocial therapy%' and visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("psychosocialCounselling");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Psychosocial Counselling");
+
+        return cd;
+    }
+    public CohortDefinition alcoholAndDrugAbuse() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_psychiatry p where p.counselling_prescribed like '%Substance Abuse Counseling%' and visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("alcoholAndDrugAbuse");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Alcohol And Drug Abuse");
+
+        return cd;
+    }
+    public CohortDefinition depression() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_psychiatry p inner join kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+                "on p.patient_id = c.patient_id where c.complaint =119537 and p.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("depression");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("depression");
+
+        return cd;
+    }
+
+    public CohortDefinition bipolarDisorder() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id\n" +
+                "from openmrs.encounter_diagnosis d\n" +
+                "         inner join kenyaemr_etl.etl_psychiatry p on d.patient_id = p.patient_id and d.voided = 0\n" +
+                "where d.diagnosis_coded = 121131\n" +
+                "  and p.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("bipolarDisorder");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("bipolarDisorder");
+
+        return cd;
+    }
+    public CohortDefinition schizopherniaAndPsychoticDisorder() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id\n" +
+                "from openmrs.encounter_diagnosis d\n" +
+                "         inner join kenyaemr_etl.etl_psychiatry p on d.patient_id = p.patient_id and d.voided = 0\n" +
+                "where d.diagnosis_coded = 113550\n" +
+                "  and p.visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("schizopherniaAndPsychoticDisorder");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Schizophernia And Psychotic Disorder");
+
+        return cd;
+    }
+
+    public CohortDefinition psychoReferrals() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_psychiatry p where p.patient_outcome = 1693 and visit_date between date(:startDate) and date(:endDate);";
+        cd.setName("psychoReferrals");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Psychiatric Referrals");
+
+        return cd;
+    }
+    public CohortDefinition physioDisorders(int disorder, int visitType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_physiotherapy p where p.visit_date between date(:startDate) and date(:endDate) and p.disorder_category = "+disorder+" and p.visit_type = "+visitType+";";
+        cd.setName("physioDisorders");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("physioDisorders");
+
+        return cd;
+    }
+    public CohortDefinition preAndPostnatal(int visitType) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_physiotherapy p where p.visit_date between date(:startDate) and date(:endDate) and p.disorder_category in (2002192,168812) and p.visit_type = "+visitType+";";
+        cd.setName("preAndPostnatal");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("preAndPostnatal");
+
+        return cd;
+    }
+    public CohortDefinition physioDisordersTx(int disorder) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_physiotherapy p where p.visit_date between date(:startDate) and date(:endDate) and p.disorder_category = "+disorder+" and p.planned_interventions is not null and p.planned_interventions !='';";
+        cd.setName("physioDisordersTx");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("physioDisordersTx");
+
+        return cd;
+    }
+
+    public CohortDefinition preAndPostnatalTx() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_physiotherapy p where p.visit_date between date(:startDate) and date(:endDate) and p.disorder_category in (2002192,168812) and p.planned_interventions is not null and p.planned_interventions !='';";
+        cd.setName("preAndPostnatalTx");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("preAndPostnatalTx");
 
         return cd;
     }

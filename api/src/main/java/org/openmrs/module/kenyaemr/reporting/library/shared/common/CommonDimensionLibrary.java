@@ -207,7 +207,12 @@ public class CommonDimensionLibrary {
         dim.addParameter(new Parameter("onDate", "Date", Date.class));
         dim.addCohortDefinition("<25", map(commonCohortLibrary.agedAtMost(24), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("25-49", map(commonCohortLibrary.agedAtLeastAgedAtMost(25, 49), "effectiveDate=${onDate}"));
-        dim.addCohortDefinition(">=50", map(commonCohortLibrary.agedAtLeast(50), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("<35", map(commonCohortLibrary.agedAtMost(34), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("56+", map(commonCohortLibrary.agedAtLeast(56), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("50+", map(commonCohortLibrary.agedAtLeast(50), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("35-55", map(commonCohortLibrary.agedAtLeastAgedAtMost(35, 55), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("<40", map(commonCohortLibrary.agedAtMost(39), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("40-75", map(commonCohortLibrary.agedAtLeastAgedAtMost(40, 75), "effectiveDate=${onDate}"));
         return dim;
     }
 
