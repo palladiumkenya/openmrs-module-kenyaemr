@@ -43,8 +43,8 @@ public class MOH240LabRegisterCohortDefinitionEvaluator implements EncounterQuer
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
 		String qry = "SELECT le.encounter_id from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"                inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id and  p.voided = 0\n" +
-			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
+			"   inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id and  p.voided = 0\n" +
+			"where le.test_result is not null and (le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
