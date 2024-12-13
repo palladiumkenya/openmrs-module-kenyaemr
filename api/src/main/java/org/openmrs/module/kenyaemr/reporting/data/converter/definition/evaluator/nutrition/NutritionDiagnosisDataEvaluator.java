@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.nutrition;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.nutrition.NutritionMetabolicDisordersDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.nutrition.NutritionDiagnosisDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  *
  */
-@Handler(supports= NutritionMetabolicDisordersDataDefinition.class, order=50)
-public class NutritionMetabolicDisordersDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= NutritionDiagnosisDataDefinition.class, order=50)
+public class NutritionDiagnosisDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,10 +35,15 @@ public class NutritionMetabolicDisordersDataEvaluator implements EncounterDataEv
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT encounter_id,metabolic_disorders\n" +
-                "FROM kenyaemr_etl.etl_nutrition\n" +
-                "WHERE DATE(visit_date) between date(:startDate) and date(:endDate)\n" +
-                "GROUP BY encounter_id;";
+        String qry = "select v.encounter_id,\n" +
+                "con.name as mnci_diagnosis\n" +
+                "from kenyaemr_etl.etl_nutrition v\n" +
+                " inner join (select\n" +
+                " cn.name, cn.date_created, ed.patient_id\n" +
+                "   from encounter_diagnosis ed\n" +
+                " inner join concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en'\n" +
+                "and date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
+                ") con on v.patient_id = con.patient_id and date(v.visit_Date) between date(:startDate) and date(:endDate);";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

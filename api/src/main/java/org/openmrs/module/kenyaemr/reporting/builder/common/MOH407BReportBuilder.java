@@ -203,6 +203,10 @@ public class MOH407BReportBuilder extends AbstractReportBuilder {
         nutritionCadreDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         nutritionCadreDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
+        NutritionDiagnosisDataDefinition nutritionDiagnosisDataDefinition = new NutritionDiagnosisDataDefinition();
+        nutritionDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        nutritionDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
 
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -236,6 +240,7 @@ public class MOH407BReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Metabolic Disorders", nutritionMetabolicDisordersDataDefinition, paramMapping);
         dsd.addColumn("Latest CD4 Count", nutritionLatestCD4CountDataDefinition, paramMapping);
         dsd.addColumn("Latest CD4 Count Date", nutritionLatestCD4CountDateDataDefinition, paramMapping);
+        dsd.addColumn("Diagnosis",nutritionDiagnosisDataDefinition,paramMapping);
         dsd.addColumn("Maternal Nutrition", nutritionMaternalNutritionDataDefinition, paramMapping);
         dsd.addColumn("Critical Nutrition Practices", nutritionCriticalNutritionPracticesDataDefinition, paramMapping);
         dsd.addColumn("Therapeutic Foods", nutritionTherapeuticFoodsDataDefinition, paramMapping);

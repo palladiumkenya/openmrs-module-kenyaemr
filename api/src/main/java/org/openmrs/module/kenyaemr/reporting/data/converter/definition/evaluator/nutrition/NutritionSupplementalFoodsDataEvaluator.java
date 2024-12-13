@@ -35,8 +35,7 @@ public class NutritionSupplementalFoodsDataEvaluator implements EncounterDataEva
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT encounter_id,\n" +
-                "(case supplemental_food when 1107 then 'None' when 159597 then 'FBF' when 162758 then 'CSB' when 166382 then 'RUSF' when 165577 then 'Liquid nutrition supplements' when 5622 then 'Others' else '' end) as supplemental_food\n" +
+        String qry = "SELECT encounter_id,supplemental_food\n" +
                 "FROM kenyaemr_etl.etl_nutrition\n" +
                 "WHERE DATE(visit_date) between date(:startDate) and date(:endDate)\n" +
                 "GROUP BY encounter_id;";

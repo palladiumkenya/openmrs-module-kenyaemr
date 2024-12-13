@@ -35,8 +35,7 @@ public class NutritionCriticalNutritionPracticesDataEvaluator implements Encount
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT encounter_id,\n" +
-                "(case critical_nutrition_practices when 1107 then 'None' when 163300 then 'Nutrition status assessment' when 161648 then 'Dietary/Energy needs' when 1906 then 'Sanitation' when 135797 then 'Positive living behaviour' when 159364 then 'Exercise' when 154358 then 'Safe drinking water' when 1611 then 'Prompt treatment for Opportunistic Infections' when 164377 then 'Drug food interactions side effects' else '' end) as critical_nutrition_practices\n" +
+        String qry = "SELECT encounter_id,critical_nutrition_practices\n" +
                 "FROM kenyaemr_etl.etl_nutrition\n" +
                 "WHERE DATE(visit_date) between date(:startDate) and date(:endDate)\n" +
                 "GROUP BY encounter_id;";

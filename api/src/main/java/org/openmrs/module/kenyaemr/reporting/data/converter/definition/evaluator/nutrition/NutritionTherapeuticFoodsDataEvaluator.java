@@ -35,8 +35,7 @@ public class NutritionTherapeuticFoodsDataEvaluator implements EncounterDataEval
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT encounter_id,\n" +
-                "(case therapeutic_food  when 1107 then 'None' when 163394 then 'RUTF' when 163404 then 'F-75' when 167247 then 'F-100' when 159854 then 'Fiesmol' when 5622 then 'Others' else '' end) as therapeutic_food\n" +
+        String qry = "SELECT encounter_id, therapeutic_food\n" +
                 "FROM kenyaemr_etl.etl_nutrition\n" +
                 "WHERE DATE(visit_date) between date(:startDate) and date(:endDate)\n" +
                 "GROUP BY encounter_id;";
