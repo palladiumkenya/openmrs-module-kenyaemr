@@ -10,8 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.opd;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDateSampleReceivedDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDOrderingClinicianDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDRevisitsDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -25,11 +25,11 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Date sample collected
+ * Evaluates whether the visit is a revisit
  * OPD Lab Register
  */
-@Handler(supports= OPDOrderingClinicianDataDefinition.class, order=50)
-public class OPDOrderingClinicianDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= OPDRevisitsDataDefinition.class, order=50)
+public class OPDRevisitsDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -37,9 +37,11 @@ public class OPDOrderingClinicianDataEvaluator implements EncounterDataEvaluator
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select le.encounter_id, concat_ws(' ', pn.family_name, pn.given_name, pn.middle_name) as creator\n" +
+        String qry = "select le.encounter_id,\n" +
+			"       if(v.visit_type = 'Revisit', 'Yes','No') as revisit\n" +
 			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			" inner join person_name pn on pn.person_id = le.created_by;\n";
+			"         left join kenyaemr_etl.etl_clinical_encounter v on v.encounter_id= le.encounter_id\n" +
+			"where date(le.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
