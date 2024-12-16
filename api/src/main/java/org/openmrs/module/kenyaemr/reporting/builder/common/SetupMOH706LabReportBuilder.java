@@ -37,6 +37,8 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
 
 
     private final Moh706IndicatorLibrary moh706IndicatorLibrary;
+	//Params
+	static final int  URINE_ANALYSIS_GLUCOSE = 159734;
 
     @Autowired
     public SetupMOH706LabReportBuilder(Moh706LabCohortLibrary moh706CohortLibrary, Moh706IndicatorLibrary moh706IndicatorLibrary) {
@@ -64,11 +66,11 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
         cohortDsd.setName("MOH706");
         cohortDsd.setDescription("MOH 706 for the lab");
         cohortDsd.addDimension("age", ReportUtils.map(ReportingUtils.getAge(), "effectiveDate=${endDate}"));
-
-
-     //URINE ANALYSIS
-        cohortDsd.addColumn("UAGL", "1.2 Glucose",
-                ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisGlucoseTestsPositives(), "startDate=${startDate},endDate=${endDate}"), "");
+		
+     //URINE ANALYSIS  
+		cohortDsd.addColumn("UAGL-Total", "1.2 Glucose",ReportUtils.map(moh706IndicatorLibrary.getAllUrineTests(URINE_ANALYSIS_GLUCOSE), "startDate=${startDate},endDate=${endDate}"), "");
+		//GLUCOSE		
+		cohortDsd.addColumn("UAGL-Positive", "1.2 Glucose",ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisGlucoseTestsPositives(URINE_ANALYSIS_GLUCOSE), "startDate=${startDate},endDate=${endDate}"), "");
 
         //#MOH706.UAKET#	Urine Analysis Ketones
         cohortDsd.addColumn("UAKET", "1.3 Ketones",

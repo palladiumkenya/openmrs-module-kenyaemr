@@ -24,11 +24,17 @@ public class Moh706IndicatorLibrary {
     public Moh706IndicatorLibrary(Moh706LabCohortLibrary moh706LabCohortLibrary) {
         this.moh706LabCohortLibrary = moh706LabCohortLibrary;
     }
-
-    public CohortIndicator getAllUrineAnalysisGlucoseTestsPositives() {
+//Urine Analysis
+  public CohortIndicator getAllUrineTests(Integer testConceptId) {
+	return cohortIndicator(
+		"All patients who have urinalysis glucose",
+		map(moh706LabCohortLibrary.getAllUrineTests(testConceptId),
+			"startDate=${startDate},endDate=${endDate}"));
+}
+    public CohortIndicator getAllUrineAnalysisGlucoseTestsPositives(Integer testConceptId) {
         return cohortIndicator(
-                "All patients who have urinalysis glucose",
-                map(moh706LabCohortLibrary.getAllUrineAnalysisGlucoseTestsPositives(),
+                "All patients who tested positive for urinalysis glucose",
+                map(moh706LabCohortLibrary.getAllUrineAnalysisGlucoseTestsPositives(testConceptId),
                         "startDate=${startDate},endDate=${endDate}"));
     }
 

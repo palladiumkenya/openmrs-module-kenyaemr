@@ -21,19 +21,32 @@ import java.util.List;
 
 @Component
 public class Moh706LabCohortLibrary {
+	
+	//1.2 Urine Analysis
+	
+	public CohortDefinition getAllUrineTests(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - glucose");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + "\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
-    public CohortDefinition getAllUrineAnalysisGlucoseTestsPositives() {
+		);
+		return sql;
+	}
+
+    public CohortDefinition getAllUrineAnalysisGlucoseTestsPositives(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Get urine analysis patients - glucose");
+        sql.setName("Get positive urine analysis patients - glucose");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-			"                             WHERE x.lab_test = 1305 AND x.test_result = 1302 AND date(x.visit_date) BETWEEN :startDate AND :endDate\n" +
-			"                            UNION\n" +
-			"                            SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-			"                             WHERE x.lab_test = 856 AND x.test_result IS NOT NULL AND date(x.visit_date) BETWEEN :startDate AND :endDate;"
+        sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1362,1363,1364,1365)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
         );
         return sql;
