@@ -25,7 +25,6 @@ import org.openmrs.module.kenyaemr.reporting.calculation.converter.ObsValueDatet
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.MOH420RegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.*;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ortho.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -94,7 +93,7 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
 
 
 
-		OPDDiagnosisDataDefinition opdDiagnosisDataDefinition = new OPDDiagnosisDataDefinition();
+        OrthoDiagnosisDataDefinition opdDiagnosisDataDefinition = new OrthoDiagnosisDataDefinition();
 		opdDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
