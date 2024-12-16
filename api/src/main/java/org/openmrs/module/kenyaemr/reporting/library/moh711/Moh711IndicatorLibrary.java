@@ -185,6 +185,12 @@ public class Moh711IndicatorLibrary {
 		return cohortIndicator("No. HIV Positive mothers screened for cacx", map(moh711Cohorts.cacxScreenedAndHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
+	public CohortIndicator screenedForBreastCancer() {
+		return cohortIndicator("No. Screened for Breast Cancer", map(moh711Cohorts.screenedForBreastCancer(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator screenedForColorectalCancer() {
+		return cohortIndicator("No. Screened for Colorectal Cancer", map(moh711Cohorts.screenedForColorectalCancer(), "startDate=${startDate},endDate=${endDate}"));
+	}
 	/**
 	 * Number of Mothers given uterotonics-oxytocin within 1 minute
 	 */
@@ -664,5 +670,101 @@ public class Moh711IndicatorLibrary {
 		return cohortIndicator("Total Number of people not screened", ReportUtils.map(moh711Cohorts.clientsNotScreenedForTB(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
+	public CohortIndicator totalSgbvSurvivors() {
+		return cohortIndicator("SGBV survivors (Rape, attempted rape, defilement and assault)", ReportUtils.map(moh711Cohorts.totalSgbvSurvivors(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator sgbvSurvivorsPresentingWithin72Hrs() {
+		return cohortIndicator("Number of SGBV survivors presenting within 72 hrs", ReportUtils.map(moh711Cohorts.sgbvSurvivorsPresentingWithin72Hrs(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsInitiatingPEP() {
+		return cohortIndicator("Number of eligible SGBV survivors initiating PEP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsInitiatingPEP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsCompletedPEP() {
+		return cohortIndicator("Number of eligible SGBV survivors completed PEP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsCompletedPEP(), "startDate=${startDate},endDate=${endDate}"));
+	}
 
+	public CohortIndicator sgbvSurvivorsSeroconverting3MonthsPostExposure() {
+		return cohortIndicator("Number of SGBV survivors seroconverting 3 months after exposure", ReportUtils.map(moh711Cohorts.sgbvSurvivorsSeroconverting3MonthsPostExposure(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator sgbvSurvivorsEligibleForECP() {
+		return cohortIndicator("Number of SGBV survivors eligible for ECP", ReportUtils.map(moh711Cohorts.sgbvSurvivorsEligibleForECP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator eligibleSgbvSurvivorsReceivedECP() {
+		return cohortIndicator("Number of eligible SGBV survivors who received ECP", ReportUtils.map(moh711Cohorts.eligibleSgbvSurvivorsReceivedECP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator rapeOrDefilementSurvivorsPregnantAfter4Weeks() {
+		return cohortIndicator("Number of rape/defilement Survivors Pregnant after 4 weeks", ReportUtils.map(moh711Cohorts.rapeOrDefilementSurvivorsPregnantAfter4Weeks(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator ipvAndRCClientsSeen() {
+		return cohortIndicator("Number of RC/ IPV clients seen", ReportUtils.map(moh711Cohorts.ipvAndRCClientsSeen(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator survivorsWithDisability() {
+		return cohortIndicator("Number of SGBV survivors with disability", ReportUtils.map(moh711Cohorts.survivorsWithDisability(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator firstUsersOfContraceptives() {
+		return cohortIndicator("First users of contraceptives", ReportUtils.map(moh711Cohorts.firstUsersOfContraceptives(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethodByVisitType(int contraceptiveMethod, int visitType) {
+		return cohortIndicator("Contraceptive method by visit type", ReportUtils.map(moh711Cohorts.contraceptiveMethodByVisitType(contraceptiveMethod, visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator maleAndFemaleCondomsByVisitType(int visitType) {
+		return cohortIndicator("Given male and female condoms", ReportUtils.map(moh711Cohorts.maleAndFemaleCondomsByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator counselledOnNaturalFP() {
+		return cohortIndicator("Counselled on natural FP", ReportUtils.map(moh711Cohorts.counselledOnNaturalFP(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator givenCycleBeads() {
+		return cohortIndicator("Counselled on natural FP", ReportUtils.map(moh711Cohorts.givenCycleBeads(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethodByServiceType(int contraceptiveMethod, int serviceTYpe) {
+		return cohortIndicator("Contraceptive method by visit type", ReportUtils.map(moh711Cohorts.contraceptiveMethodByServiceType(contraceptiveMethod, serviceTYpe), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator contraceptiveMethod(int contraceptiveMethod) {
+		return cohortIndicator("Contraceptive method", ReportUtils.map(moh711Cohorts.contraceptiveMethod(contraceptiveMethod), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator iucdRemoval() {
+		return cohortIndicator("IUCD removal", ReportUtils.map(moh711Cohorts.iucdRemoval(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator implantRemoval() {
+		return cohortIndicator("IUCD removal", ReportUtils.map(moh711Cohorts.implantRemoval(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator receivingFamilyPlanningServicesByVisitType(int visitType) {
+		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.receivingFamilyPlanningServicesByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator postPartumFP(int postPartum) {
+		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.postPartumFP(postPartum), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator psychosocialCounselling() {
+		return cohortIndicator("Psychosocial Counselling", ReportUtils.map(moh711Cohorts.psychosocialCounselling(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator alcoholAndDrugAbuse() {
+		return cohortIndicator("Alcohol And Drug Abuse", ReportUtils.map(moh711Cohorts.alcoholAndDrugAbuse(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator depression() {
+		return cohortIndicator("Received depression services", ReportUtils.map(moh711Cohorts.depression(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator bipolarDisorder() {
+		return cohortIndicator("Bipolar disorder", ReportUtils.map(moh711Cohorts.bipolarDisorder(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator schizopherniaAndPsychoticDisorder() {
+		return cohortIndicator("Schizophernia and Psychotic Disorder", ReportUtils.map(moh711Cohorts.schizopherniaAndPsychoticDisorder(), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator psychoReferrals() {
+		return cohortIndicator("psychoReferrals", ReportUtils.map(moh711Cohorts.psychoReferrals(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator physioDisorders(int disorder, int visitType) {
+		return cohortIndicator("Neurological disorders receiving physiotherapy", ReportUtils.map(moh711Cohorts.physioDisorders(disorder,visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator preAndPostnatal(int visitType) {
+		return cohortIndicator("Women of reproductive age attending pre and post natal physiotherapy", ReportUtils.map(moh711Cohorts.preAndPostnatal(visitType), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator physioDisordersTx(int disorder) {
+		return cohortIndicator("Treated for Physiological disorders", ReportUtils.map(moh711Cohorts.physioDisordersTx(disorder), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator preAndPostnatalTx() {
+		return cohortIndicator("Treated for pre and post natal physiotherapy", ReportUtils.map(moh711Cohorts.preAndPostnatalTx(), "startDate=${startDate},endDate=${endDate}"));
+	}
 }

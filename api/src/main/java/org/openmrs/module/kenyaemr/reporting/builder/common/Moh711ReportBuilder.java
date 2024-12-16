@@ -42,22 +42,13 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
 
     protected static final Log log = LogFactory.getLog(Moh711ReportBuilder.class);
 
-    static final String[] VILI_VIA_SCREENING = {"VIA", "VILI"};
-    static final String[] COLPOSCOPY_SCREENING = {"Colposcopy"};
     static final String[] HPV_TEST_SCREENING = {"HPV Test","HPV"};
     static final String[] PAP_SMEAR_SCREENING = {"Pap Smear"};
 
-    static final String[] CRYOTHERAPY = {"Cryotherapy postponed", "Cryotherapy performed (single Visit)", "Cryotherapy performed", "Cryotherapy performed (SVA)", "Cryotherapy performed (previously postponed)"};
-    static final String[] THERMOCOAGULATION = {"Thermocoagulation","Thermal ablation performed (SVA)","Thermal ablation"};
-    static final String[] LEEP = {"LEEP","LEEP performed"};
-    static final String[] OTHER = {"Other"};
-
-    static final String POSITIVE = "Positive";
-    static final String[] PRESUMED = {"Presumed","Suspicious for Cancer"};
-
-    static final String INITIAL_VISIT = "Initial visit";
-    static final String ROUTINE_VISIT = "Routine visit";
-    static final String POST_TREATMENT_VISIT = "Post treatment visit";
+    static final int NEW_VISIT = 164180, RE_VISIT= 164142, PROGESTIN_ONLY_PILLS = 159784, COMBINED_ORAL_CONTRACEPTIVE_PILL = 159783, EMERGENCY_CONTRACEPTIVE_PILL = 160570, DMPA_IM = 907, DMPA_SC = 79494, MALE_CONDOMS = 164813, FEMALE_CONDOMS = 164814,
+    IMPLANT_1_ROD = 76022, IMPLANT_2_RODS = 162422, HORMONAL_IUCD = 165464, NON_HORMONAL_IUCD = 162794, BTL = 1472, VASECTOMY = 1489, POSTPARTUM_WITHIN_48_HRS = 162253, POSTPARTUM_3_DAYS_TO_6_WEEKS = 167722, POST_ABORTION_FP = 164820, FIRST_INSERTION = 164180, RE_INSERTION = 1000049;
+    //Disorders
+    static final int NEUROLOGICAL = 161102, PERIPHERAL_NERVE = 117569, POST_TRAUMATIC = 162045, DEGENERATIVE_ORTHOPEDIC = 142648, CARDIO_RESPIRATORY = 141964, PRENATAL_PHYSIOTHERAPY = 2002192, POSTNATAL_PHYSIOTHERAPY = 168812;
 
     @Autowired
     private CommonDimensionLibrary commonDimensions;
@@ -90,18 +81,30 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(createPNCDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(createMaternityNewbornDataSet(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(createChildHealthAndNutritionDataSet(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(createTBScreeningDataSet(), "startDate=${startDate},endDate=${endDate}")
+                ReportUtils.map(sgbvDataSet(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(createTBScreeningDataSet(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(familyPlanningDataSet(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(PsychiatryDataSet(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(PhysiologyDataSet(), "startDate=${startDate},endDate=${endDate}")
         );
     }
 
+    ColumnParameters all0_9 = new ColumnParameters(null, "0-9 years", "age=0-9");
     ColumnParameters f10_14 = new ColumnParameters(null, "10-14 years", "gender=F|age=10-14");
+    ColumnParameters all10_14 = new ColumnParameters(null, "10-14 years", "age=10-14");
+    ColumnParameters all10_17 = new ColumnParameters(null, "10-17 years", "age=10-17");
     ColumnParameters f15_19 = new ColumnParameters(null, "15-19 years", "gender=F|age=15-19");
+    ColumnParameters all15_19 = new ColumnParameters(null, "15-19 years", "age=15-19");
+    ColumnParameters all20_24 = new ColumnParameters(null, "20-24 years", "age=20-24");
+    ColumnParameters all18_49 = new ColumnParameters(null, "18-49 years", "age=18-49");
     ColumnParameters f20_24 = new ColumnParameters(null, "20-24 years", "gender=F|age=20-24");
     ColumnParameters f25AndAbove = new ColumnParameters(null, "25+ years", "gender=F|age=25+");
+    ColumnParameters all25_And_Above = new ColumnParameters(null, "25+ years", "age=25+");
 
     ColumnParameters fUnder25 = new ColumnParameters(null, "<25 years", "gender=F|age=<25");
     ColumnParameters f25_49 = new ColumnParameters(null, "25-49 years", "gender=F|age=25-49");
-    ColumnParameters f50AndAbove = new ColumnParameters(null, "50+ years", "gender=F|age=>=50");
+    ColumnParameters f50AndAbove = new ColumnParameters(null, "50+ years", "gender=F|age=50+");
+    ColumnParameters all50AndAbove = new ColumnParameters(null, "50+ years", "age=50+");
 
     ColumnParameters f0To5Months = new ColumnParameters(null, "0-5 months, Female", "gender=F|age=0-5");
     ColumnParameters m0To5Months = new ColumnParameters(null, "0-5 months, Male", "gender=M|age=0-5");
@@ -116,6 +119,13 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
     ColumnParameters f12To59Months = new ColumnParameters(null, "12-59 months, Female", "gender=F|age=12-59");
     ColumnParameters m12To59Months = new ColumnParameters(null, "12-59 months, Male", "gender=M|age=12-59");
     ColumnParameters all0To59Months = new ColumnParameters(null, "0-59 months", "age=0-59");
+
+    ColumnParameters funder35 = new ColumnParameters(null, "<35 Years", "gender=F|age=<35");
+    ColumnParameters f35To55 = new ColumnParameters(null, "35-55 Years", "gender=F|age=35-55");
+    ColumnParameters f56AndAbove = new ColumnParameters(null, "56+ Years", "gender=F|age=56+");
+    ColumnParameters allUnder40 = new ColumnParameters(null, "<40 Years", "age=<40");
+    ColumnParameters all40To75 = new ColumnParameters(null, "40-75 Years", "age=40-75");
+
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
 
     List<ColumnParameters> ancAgeDisaggregations = Arrays.asList(f10_14, f15_19, f20_24);
@@ -130,7 +140,10 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
     List<ColumnParameters> childMNPsAgeDisaggregations = Arrays.asList(f6To23Months, m6To23Months, colTotal);
     List<ColumnParameters> childDewormingAgeDisaggregations = Arrays.asList(f12To59Months, m12To59Months, colTotal);
     List<ColumnParameters> childDelayedGrowthAgeDisaggregations = Arrays.asList(all0To59Months);
-
+    List<ColumnParameters> sgbvAgeDisaggregation = Arrays.asList(all0_9, all10_17, all18_49, all50AndAbove);
+    List<ColumnParameters> familyPlanningAgeDisaggregation = Arrays.asList(all10_14, all15_19, all20_24, all25_And_Above);
+    List<ColumnParameters> breastCancerDisaggregations = Arrays.asList(funder35, f35To55, f56AndAbove);
+    List<ColumnParameters> colorectalCancerDisaggregations = Arrays.asList(allUnder40, all40To75);
 
     /**
      * A. ANC / PMCT
@@ -165,7 +178,6 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Clients issued with Combined Ferrous Folate", "", ReportUtils.map(moh711Indicators.ancClientsIssuedWithFerrousFolic(), indParams), "");
         dsd.addColumn("Pregnant women presenting in ANC FGM complications", "", ReportUtils.map(moh711Indicators.ancClientsWithFGMRelatedComplications(), indParams), "");
 
-
         return dsd;
     }
 
@@ -190,6 +202,8 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd, "Cryotherapy", "Number of clients treated using Cryotherapy", ReportUtils.map(moh711Indicators.treatedUsingCyrotherapy(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "LEEP", "Number of clients treated using LEEP", ReportUtils.map(moh711Indicators.treatedUsingLEEP(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "HIV+_CACX_Screened", "Number of HIV positive clients screened", ReportUtils.map(moh711Indicators.cacxScreenedAndHIVPositive(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Screened_for_Breast_Cancer", "Number of women screened for breast cancer", ReportUtils.map(moh711Indicators.screenedForBreastCancer(), indParams), breastCancerDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Screened_for_Colorectal_Cancer", "Number screened for colorectal cancer", ReportUtils.map(moh711Indicators.screenedForColorectalCancer(), indParams), colorectalCancerDisaggregations, Arrays.asList("01", "02"));
         return dsd;
     }
 
@@ -328,6 +342,122 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total Number of presumptive TB cases", "", ReportUtils.map(moh711Indicators.clientWithPresumptiveTb(), indParams), "");
         dsd.addColumn("Total Number already on TB treatment", "", ReportUtils.map(moh711Indicators.clientonTbTreatment(), indParams), "");
         dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientTbNotScreened(), indParams), "");
+
+        return dsd;
+    }
+    private DataSetDefinition sgbvDataSet() {
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("SGBV");
+        dsd.setDescription("Sexual and Gender Based violence");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
+        dsd.addDimension("gender", map(commonDimensions.gender()));
+
+        EmrReportingUtils.addRow(dsd, "Total SGBV survivors", "Rape, attempted rape, defilement and assault", ReportUtils.map(moh711Indicators.totalSgbvSurvivors(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors presenting within 72 hrs", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsPresentingWithin72Hrs(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors initiating PEP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsInitiatingPEP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors completed PEP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsCompletedPEP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors seroconverting 3 months after exposure", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsSeroconverting3MonthsPostExposure(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors eligible for ECP", "", ReportUtils.map(moh711Indicators.sgbvSurvivorsEligibleForECP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of eligible SGBV survivors who received ECP", "", ReportUtils.map(moh711Indicators.eligibleSgbvSurvivorsReceivedECP(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of rape or defilement Survivors Pregnant after 4 weeks", "", ReportUtils.map(moh711Indicators.rapeOrDefilementSurvivorsPregnantAfter4Weeks(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of RC or IPV clients seen", "", ReportUtils.map(moh711Indicators.ipvAndRCClientsSeen(), indParams), sgbvAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Number of SGBV survivors with disability", "", ReportUtils.map(moh711Indicators.survivorsWithDisability(), indParams), sgbvAgeDisaggregation, Arrays.asList("01", "02", "03", "04"));
+
+        return dsd;
+    }
+    private DataSetDefinition familyPlanningDataSet() {
+
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("FP");
+        dsd.setDescription("Family planning");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
+        dsd.addColumn("First ever users of contraceptive", "", ReportUtils.map(moh711Indicators.firstUsersOfContraceptives(), indParams), "");
+        dsd.addColumn("Progestin only pills (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(PROGESTIN_ONLY_PILLS, NEW_VISIT), indParams), "");
+        dsd.addColumn("Progestin only pills (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(PROGESTIN_ONLY_PILLS, RE_VISIT), indParams), "");
+        dsd.addColumn("Combined Oral Contraceptive pills (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(COMBINED_ORAL_CONTRACEPTIVE_PILL, NEW_VISIT), indParams), "");
+        dsd.addColumn("Combined Oral Contraceptive pills (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(COMBINED_ORAL_CONTRACEPTIVE_PILL,RE_VISIT), indParams), "");
+        dsd.addColumn("Emergency contraceptive pill", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(EMERGENCY_CONTRACEPTIVE_PILL, NEW_VISIT), indParams), "");
+        dsd.addColumn("DMPA-IM (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_IM, NEW_VISIT), indParams), "");
+        dsd.addColumn("DMPA-IM (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_IM,RE_VISIT), indParams), "");
+        dsd.addColumn("DMPA-SC (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_SC, NEW_VISIT), indParams), "");
+        dsd.addColumn("DMPA-SC (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_SC,RE_VISIT), indParams), "");
+        dsd.addColumn("Received Male condoms (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(MALE_CONDOMS, NEW_VISIT), indParams), "");
+        dsd.addColumn("Received Male condoms (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(MALE_CONDOMS,RE_VISIT), indParams), "");
+        dsd.addColumn("Received Female condoms (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(FEMALE_CONDOMS,NEW_VISIT), indParams), "");
+        dsd.addColumn("Received Female condoms (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(FEMALE_CONDOMS,RE_VISIT), indParams), "");
+        dsd.addColumn("Received Male And Female condoms (New)", "", ReportUtils.map(moh711Indicators.maleAndFemaleCondomsByVisitType(NEW_VISIT), indParams), "");
+        dsd.addColumn("Received Male And Female condoms (Revisit)", "", ReportUtils.map(moh711Indicators.maleAndFemaleCondomsByVisitType(RE_VISIT), indParams), "");
+        dsd.addColumn("Counselled on Natural FP", "", ReportUtils.map(moh711Indicators.counselledOnNaturalFP(), indParams), "");
+        dsd.addColumn("Given cycle beads", "", ReportUtils.map(moh711Indicators.givenCycleBeads(), indParams), "");
+        dsd.addColumn("Implant 1 Rod (1st time insertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(IMPLANT_1_ROD,FIRST_INSERTION), indParams), "");
+        dsd.addColumn("Implant 1 Rod (Reinsertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(IMPLANT_1_ROD,RE_INSERTION), indParams), "");
+        dsd.addColumn("Implant 2 Rods (1st time insertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(IMPLANT_2_RODS,FIRST_INSERTION), indParams), "");
+        dsd.addColumn("Implant 2 Rods (Reinsertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(IMPLANT_2_RODS,RE_INSERTION), indParams), "");
+        dsd.addColumn("Hormonal IUCD (1st time insertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(HORMONAL_IUCD,FIRST_INSERTION), indParams), "");
+        dsd.addColumn("Hormonal IUCD (Reinsertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(HORMONAL_IUCD,RE_INSERTION), indParams), "");
+        dsd.addColumn("Non hormonal IUCD (1st time insertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(NON_HORMONAL_IUCD,FIRST_INSERTION), indParams), "");
+        dsd.addColumn("Non hormonal IUCD (Reinsertion)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(NON_HORMONAL_IUCD,RE_INSERTION), indParams), "");
+        dsd.addColumn("BTL", "", ReportUtils.map(moh711Indicators.contraceptiveMethod(BTL), indParams), "");
+        dsd.addColumn("Vasectomy", "", ReportUtils.map(moh711Indicators.contraceptiveMethod(VASECTOMY), indParams), "");
+        //Only new
+         dsd.addColumn("IUCD Removal", "", ReportUtils.map(moh711Indicators.iucdRemoval(), indParams), "");
+        //Only new
+        dsd.addColumn("Implant Removal", "", ReportUtils.map(moh711Indicators.implantRemoval(), indParams), "");
+        EmrReportingUtils.addRow(dsd, "Receiving FP services (New)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(NEW_VISIT), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Receiving FP services (Revisit)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(RE_VISIT), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        dsd.addColumn("Receiving immediate postpartum FP (within 48 hrs)", "", ReportUtils.map(moh711Indicators.postPartumFP(POSTPARTUM_WITHIN_48_HRS), indParams), "");
+        dsd.addColumn("Receiving immediate postpartum FP (3 days to 6 weeks)", "", ReportUtils.map(moh711Indicators.postPartumFP(POSTPARTUM_3_DAYS_TO_6_WEEKS), indParams), "");
+        dsd.addColumn("Receiving post abortion FP Method", "", ReportUtils.map(moh711Indicators.postPartumFP(POST_ABORTION_FP), indParams), "");
+        return dsd;
+    }
+    private DataSetDefinition PsychiatryDataSet() {
+
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("Psychiatry");
+        dsd.setDescription("Psychiatry");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addColumn("PsychoSocial Counselling", "", ReportUtils.map(moh711Indicators.psychosocialCounselling(), indParams), "");
+        dsd.addColumn("Alcohol and Drug Abuse", "", ReportUtils.map(moh711Indicators.alcoholAndDrugAbuse(), indParams), "");
+        dsd.addColumn("Bipolar disorder", "", ReportUtils.map(moh711Indicators.bipolarDisorder(), indParams), "");
+        dsd.addColumn("Depression", "", ReportUtils.map(moh711Indicators.depression(), indParams), "");
+        dsd.addColumn("Schizophernia and psychotic disorder", "", ReportUtils.map(moh711Indicators.schizopherniaAndPsychoticDisorder(), indParams), "");
+        dsd.addColumn("Psychiatric referrals", "", ReportUtils.map(moh711Indicators.psychoReferrals(), indParams), "");
+
+        return dsd;
+    }
+    private DataSetDefinition PhysiologyDataSet() {
+
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("Physiology");
+        dsd.setDescription("Physiology");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addColumn("Neurological disorders receiving physiotherapy (New)", "", ReportUtils.map(moh711Indicators.physioDisorders(NEUROLOGICAL,NEW_VISIT), indParams), "");
+        dsd.addColumn("Neurological disorders receiving physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.physioDisorders(NEUROLOGICAL,RE_VISIT), indParams), "");
+        dsd.addColumn("Peripheral nerve disorders attending physiotherapy (New)", "", ReportUtils.map(moh711Indicators.physioDisorders(PERIPHERAL_NERVE,NEW_VISIT), indParams), "");
+        dsd.addColumn("Peripheral nerve disorders attending physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.physioDisorders(PERIPHERAL_NERVE,RE_VISIT), indParams), "");
+        dsd.addColumn("Post traumatic injuries attending physiotherapy (New)", "", ReportUtils.map(moh711Indicators.physioDisorders(POST_TRAUMATIC,NEW_VISIT), indParams), "");
+        dsd.addColumn("Post traumatic injuries attending physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.physioDisorders(POST_TRAUMATIC,RE_VISIT), indParams), "");
+        dsd.addColumn("Degenerative orthopedic disorders attending physiotherapy (New)", "", ReportUtils.map(moh711Indicators.physioDisorders(DEGENERATIVE_ORTHOPEDIC,NEW_VISIT), indParams), "");
+        dsd.addColumn("Degenerative orthopedic disorders attending physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.physioDisorders(DEGENERATIVE_ORTHOPEDIC,RE_VISIT), indParams), "");
+        dsd.addColumn("Cardio-respiratory disorders receiving physiotherapy (New)", "", ReportUtils.map(moh711Indicators.physioDisorders(CARDIO_RESPIRATORY,NEW_VISIT), indParams), "");
+        dsd.addColumn("Cardio-respiratory disorders receiving physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.physioDisorders(CARDIO_RESPIRATORY,RE_VISIT), indParams), "");
+        dsd.addColumn("Women of reproductive age attending pre and post natal physiotherapy (New)", "", ReportUtils.map(moh711Indicators.preAndPostnatal(NEW_VISIT), indParams), "");
+        dsd.addColumn("Women of reproductive age attending pre and post natal physiotherapy (Revisit)", "", ReportUtils.map(moh711Indicators.preAndPostnatal(RE_VISIT), indParams), "");
+
+        dsd.addColumn("Treated for Neurological disorders", "", ReportUtils.map(moh711Indicators.physioDisordersTx(NEUROLOGICAL), indParams), "");
+        dsd.addColumn("Treated for Peripheral nerve disorders", "", ReportUtils.map(moh711Indicators.physioDisordersTx(PERIPHERAL_NERVE), indParams), "");
+        dsd.addColumn("Treated for Post traumatic injuries", "", ReportUtils.map(moh711Indicators.physioDisordersTx(POST_TRAUMATIC), indParams), "");
+        dsd.addColumn("Treated for Degenerative orthopedic disorders", "", ReportUtils.map(moh711Indicators.physioDisordersTx(DEGENERATIVE_ORTHOPEDIC), indParams), "");
+        dsd.addColumn("Treated for Cardio-respiratory disorders", "", ReportUtils.map(moh711Indicators.physioDisordersTx(CARDIO_RESPIRATORY), indParams), "");
+        dsd.addColumn("Treated for pre and post natal physiotherapy", "", ReportUtils.map(moh711Indicators.preAndPostnatalTx(), indParams), "");
 
         return dsd;
     }
