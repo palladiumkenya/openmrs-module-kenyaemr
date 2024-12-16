@@ -37,9 +37,9 @@ public class OPDOrderingClinicianDataEvaluator implements EncounterDataEvaluator
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select le.encounter_id, concat_ws(' ', pn.family_name, pn.given_name, pn.middle_name) as creator\n" +
+        String qry = "select le.encounter_id, concat_ws(' ', d.family_name, d.given_name, d.middle_name) as creator\n" +
 			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			" inner join person_name pn on pn.person_id = le.created_by;\n";
+			" inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = le.created_by;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
