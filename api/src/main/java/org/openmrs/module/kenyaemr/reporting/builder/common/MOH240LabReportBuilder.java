@@ -120,6 +120,9 @@ public class MOH240LabReportBuilder extends AbstractReportBuilder {
 		OPDInvestigationRequiredDataDefinition opdInvestigationRequiredDataDefinition = new OPDInvestigationRequiredDataDefinition();
 		opdInvestigationRequiredDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdInvestigationRequiredDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		OPDRevisitsDataDefinition opdRevisitsDataDefinition = new OPDRevisitsDataDefinition();
+		opdRevisitsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		opdRevisitsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
@@ -136,7 +139,7 @@ public class MOH240LabReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
 
-		dsd.addColumn("Revisit", patientClinicNo, "");
+		dsd.addColumn("Revisit", opdRevisitsDataDefinition, paramMapping);
 		// dsd.addColumn("Lab Number", opdLabNumberDataDefinition, paramMapping); //TODO: missing  as Specimen ID
 		dsd.addColumn("Clinical Diagnosis",opdClinicalDiagnosisDataDefinition, paramMapping);
 		dsd.addColumn("Prior Treatment",opdPriorTreatmentsPrescribedDataDefinition, paramMapping);
