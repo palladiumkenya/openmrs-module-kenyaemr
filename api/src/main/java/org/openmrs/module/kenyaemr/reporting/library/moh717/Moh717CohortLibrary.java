@@ -218,6 +218,22 @@ public class Moh717CohortLibrary {
         sql.setQuery("select o.encounter_id from orders o where o.order_type_id = 4 and o.voided = 0 and date(o.date_activated) between date(:startDate) and date(:endDate);");
         return sql;
     }
+    public CohortDefinition specialClinic(String clinicFormUUID, int visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Special Clinic");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("");
+        return sql;
+    }
+    public CohortDefinition otherSpecialClinics(String clinicsFormUUIDS, int visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Other Special Clinics");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("");
+        return sql;
+    }
     public CohortDefinition totalAmountCollected() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Total Amount Collected");
