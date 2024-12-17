@@ -97,7 +97,19 @@ public class Moh717IndicatorLibrary {
         return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinic(clinicFormUUID,visitType), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator otherSpecialClinics(String clinicFormUUID, int visitType) {
-        return cohortIndicator("Other special clinic", ReportUtils.map(moh717CohortLibrary.otherSpecialClinics(clinicFormUUID, visitType), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("Other special clinics", ReportUtils.map(moh717CohortLibrary.otherSpecialClinics(clinicFormUUID, visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newOnTBClinic() {
+        return cohortIndicator("New on TB Clinic", ReportUtils.map(moh717CohortLibrary.newOnTBClinic(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator revisitTBClinic() {
+        return cohortIndicator("Revisiting TB Clinic", ReportUtils.map(moh717CohortLibrary.revisitTBClinic(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newOnCCClinic() {
+        return cohortIndicator("New on CCC Clinic", ReportUtils.map(moh717CohortLibrary.newOnCCClinic(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator revisitCCClinic() {
+        return cohortIndicator("Revisiting CCC Clinic", ReportUtils.map(moh717CohortLibrary.revisitCCClinic(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator totalAmountCollected() {
         return cohortIndicator("Total Amount Collected", ReportUtils.map(moh717CohortLibrary.totalAmountCollected(), "startDate=${startDate},endDate=${endDate}"));

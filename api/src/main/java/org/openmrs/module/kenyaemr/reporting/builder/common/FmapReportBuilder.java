@@ -35,7 +35,7 @@ import java.util.List;
  * FMAP MOH-729 Report
  */
 @Component
-@Builds({"kenyaemr.etl.common.report.fmap"})
+@Builds({"kenyaemr.ehrReports.report.fmap"})
 public class FmapReportBuilder extends AbstractReportBuilder {
 
 	protected static final Log log = LogFactory.getLog(FmapReportBuilder.class);

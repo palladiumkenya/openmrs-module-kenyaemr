@@ -37,7 +37,7 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
  * MOH 711 report
  */
 @Component
-@Builds({"kenyaemr.common.report.moh711"})
+@Builds({"kenyaemr.ehrReports.report.moh711"})
 public class Moh711ReportBuilder extends AbstractReportBuilder {
 
     protected static final Log log = LogFactory.getLog(Moh711ReportBuilder.class);

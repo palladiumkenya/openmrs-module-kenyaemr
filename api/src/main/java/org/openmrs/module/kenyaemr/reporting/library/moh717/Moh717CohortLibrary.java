@@ -223,7 +223,7 @@ public class Moh717CohortLibrary {
         sql.setName("Special Clinic");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("");
+        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+clinicFormUUID+"' and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition otherSpecialClinics(String clinicsFormUUIDS, int visitType) {
@@ -231,7 +231,7 @@ public class Moh717CohortLibrary {
         sql.setName("Other Special Clinics");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("");
+        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid in ("+clinicsFormUUIDS+") and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition totalAmountCollected() {
@@ -241,6 +241,53 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery("select CAST(IFNULL(sum(ifnull(r.total_sales,0)),0) AS SIGNED) as total_amount_collected from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+
+    public CohortDefinition newOnTBClinic() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("New on TB Clinic");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select e.patient_id from kenyaemr_etl.etl_tb_enrollment e where e.visit_date between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition revisitTBClinic() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Revisiting TB Clinic");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select e.patient_id\n" +
+                "from kenyaemr_etl.etl_tb_enrollment e\n" +
+                "         inner join (select f.patient_id, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
+                "                     from kenyaemr_etl.etl_tb_follow_up_visit f\n" +
+                "                     group by f.patient_id) f on e.patient_id = f.patient_id\n" +
+                "where f.latest_visit between date(:startDate) and date(:endDate)\n" +
+                "  and f.first_visit < date(:startDate)\n" +
+                "  and e.visit_date < date(:startDate);");
+        return sql;
+    }
+    public CohortDefinition newOnCCClinic() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("New on CCC Clinic");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select e.patient_id from kenyaemr_etl.etl_hiv_enrollment e where e.patient_type = 164144 and e.visit_date between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition revisitCCClinic() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Revisiting CCC Clinic");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select e.patient_id\n" +
+                "from kenyaemr_etl.etl_hiv_enrollment e\n" +
+                "         inner join (select f.patient_id, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
+                "                     from kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "                     group by f.patient_id) f on e.patient_id = f.patient_id\n" +
+                "where f.latest_visit between date(:startDate) and date(:endDate)\n" +
+                "  and f.first_visit < date(:startDate)\n" +
+                "  and e.visit_date < date(:startDate);");
         return sql;
     }
     public CohortDefinition totalAmountReceived() {

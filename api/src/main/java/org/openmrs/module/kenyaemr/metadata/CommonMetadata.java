@@ -164,6 +164,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String OCCUPATIONAL_THERAPY_CLINICAL_FORM = "062a24b5-728b-4639-8176-197e8f458490";
 		public static final String OBSTETRIC_HISTORY_FORM = "d81e8157-317c-4041-9498-9d2318a1f2ed";
 		public static final String OPHTHAMOLOGY_CLINICAL_FORM = "235900ff-4d4a-4575-9759-96f325f5e291";
+		public static final String FERTILITY_CLINICAL_FORM = "32e43fc9-6de3-48e3-aafe-3b92f167753d";
+		public static final String CARDIOLOGY_CLINICAL_FORM = "998be6de-bd13-4136-ba0d-3f772139895f";
+		public static final String GASTROENTEROLOGY_CLINICAL_FORM = "6b4fa553-f2b3-47d0-a4c5-fc11f38b0b24";
 	}
 
 	public static final class _OrderType {
@@ -385,6 +388,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Occupational Therapy Clinical Form", "Form for Occupational therapy encounter", _EncounterType.CONSULTATION, "1", _Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM));
 		install(form("Obstetric History Form", "Form for Obstetric History", _EncounterType.CONSULTATION, "1", _Form.OBSTETRIC_HISTORY_FORM));
 		install(form("Ophthamology Clinical Form", "Form for Ophthamology encounter ", _EncounterType.CONSULTATION, "1", _Form.OPHTHAMOLOGY_CLINICAL_FORM));
+		install(form("Gastroenterology Clinical Form", "Form for Gastroenterology encounter ", _EncounterType.CONSULTATION, "1", _Form.GASTROENTEROLOGY_CLINICAL_FORM));
+		install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
+		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
