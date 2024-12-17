@@ -46,7 +46,7 @@ import java.util.List;
  * MOH 745 Report
  */
 @Component
-@Builds({"kenyaemr.common.report.moh745"})
+@Builds({"kenyaemr.ehrReports.report.moh745"})
 public class Moh745ReportBuilder extends AbstractReportBuilder {
 
     protected static final Log log = LogFactory.getLog(Moh745ReportBuilder.class);

@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Miscellaneous utility methods
@@ -361,6 +362,20 @@ public class EmrUtils {
 
 
 		return appointmentDate;
+	}
+
+	/**
+	 * Helper method that receives a List of Strings and returns a String
+	 * of comma-separated and single-quoted input list elements
+	 * @param list
+	 * @return
+	 */
+	public static String formatListWithQuotes(ArrayList<String> list) {
+		StringJoiner joiner = new StringJoiner(", ");
+		for (String value : list) {
+			joiner.add("'" + value + "'");
+		}
+		return joiner.toString();
 	}
 
 }

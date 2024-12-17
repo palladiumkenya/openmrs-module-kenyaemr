@@ -13,11 +13,13 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717CohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
@@ -26,15 +28,13 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.openmrs.module.reporting.indicator.CohortIndicator;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
-import static org.openmrs.module.kenyaemr.reporting.MohReportUtils.ReportAddonUtils.getGeneralOutPatientFilters;
 
 /**
  * Report builder for MOH717
@@ -49,6 +49,20 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     private final CommonDimensionLibrary commonDimensionLibrary;
 
     private final Moh717IndicatorLibrary moh717IndicatorLibrary;
+
+    static final int NEW_VISIT = 164180, RE_ATT= 160530;
+
+    static final ArrayList<String> otherSpecialClinics = new ArrayList<>(Arrays.asList(
+            CommonMetadata._Form.NEUROLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.DERMATOLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.AUDIOLOGY_FORM,
+            CommonMetadata._Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM,
+            CommonMetadata._Form.DIABETIC_CLINICAL_FORM,
+            CommonMetadata._Form.MAXILLOFACIAL_CLINICAL_FORM,
+            CommonMetadata._Form.GASTROENTEROLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.FERTILITY_CLINICAL_FORM
+    ));
 
     ColumnParameters femaleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=F");
     ColumnParameters maleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=M");
@@ -133,6 +147,41 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
 
         dsd.addColumn( "Number of Laboratory tests", "", ReportUtils.map(moh717IndicatorLibrary.laboratoryTests(), indParams), "");
         dsd.addColumn("Number of Examinations (XRay & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(), indParams), "");
+
+        // Special Clinics
+        dsd.addColumn( "ENT Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.EAR_NOSE_THROAT_CLINICAL_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "ENT Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.EAR_NOSE_THROAT_CLINICAL_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Eye Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.OPHTHAMOLOGY_CLINICAL_FORM,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Eye Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.OPHTHAMOLOGY_CLINICAL_FORM,RE_ATT), indParams), "");
+        dsd.addColumn( "TB and Leprosy Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.newOnTBClinic(), indParams), "");
+        dsd.addColumn( "TB and Leprosy Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.revisitTBClinic(), indParams), "");
+        dsd.addColumn( "CCC Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.newOnCCClinic(), indParams), "");
+        dsd.addColumn( "CCC Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.revisitCCClinic(), indParams), "");
+        dsd.addColumn( "Psychiatry Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.PSYCHIATRIC_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Psychiatry Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.PSYCHIATRIC_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Orthopaedic Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ORTHOPAEDIC_CLINICAL_FORM,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Orthopaedic Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ORTHOPAEDIC_CLINICAL_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Occupational Therapy Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Occupational Therapy Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Physiotherapy Therapy Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.PHYSIOTHERAPY_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Physiotherapy Therapy Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.PHYSIOTHERAPY_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Medical Clinics (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.MOPC_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Medical Clinics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.MOPC_FORM,RE_ATT), indParams), "");
+        dsd.addColumn( "Surgical Clinics (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.SOPC_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Surgical Clinics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.SOPC_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Paediatrics (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.POPC_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Paediatrics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.POPC_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Obstetrics and Gynaecology (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.GOPC_FORM,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Obstetrics and Gynaecology (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.GOPC_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Nutrition Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.NUTRITION, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Nutrition Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.NUTRITION, RE_ATT), indParams), "");
+        dsd.addColumn( "Oncology Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ONCOLOGY_FORM, NEW_VISIT), indParams), "");
+        dsd.addColumn( "Oncology Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ONCOLOGY_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Renal Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.UROLOGY_CLINICAL_FORM,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Renal Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.UROLOGY_CLINICAL_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "All other special Clinics (New)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),NEW_VISIT), indParams), "");
+        dsd.addColumn( "All other special Clinics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),RE_ATT), indParams), "");
+
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){

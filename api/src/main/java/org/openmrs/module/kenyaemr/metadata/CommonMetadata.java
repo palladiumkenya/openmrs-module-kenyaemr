@@ -14,7 +14,6 @@ import org.openmrs.PatientIdentifierType.LocationBehavior;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.PersonAttributeType;
-import org.openmrs.customdatatype.CustomDatatype;
 import org.openmrs.customdatatype.datatype.DateDatatype;
 import org.openmrs.module.idgen.validator.LuhnMod25IdentifierValidator;
 import org.openmrs.module.kenyaemr.EmrConstants;
@@ -25,9 +24,6 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
-import org.openmrs.customdatatype.datatype.ConceptDatatype;
-
-import java.util.Date;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
@@ -163,6 +159,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String HEARING_SCREENING_CLINICAL_FORM = "270f388f-439f-476a-8919-8211f850d366";
 		public static final String NEUROLOGY_CLINICAL_FORM = "f97f2bf3-c26b-4adf-aacd-e09d720a14cd";
 		public static final String POST_MORTEM_CLINICAL_FORM = "016beec1-edff-4293-b3ed-817c7dddaa93";
+		public static final String EAR_NOSE_THROAT_CLINICAL_FORM = "c5055956-c3bb-45f2-956f-82e114c57aa7";
+		public static final String ORTHOPAEDIC_CLINICAL_FORM = "beec83df-6606-4019-8223-05a54a52f2b0";
+		public static final String OCCUPATIONAL_THERAPY_CLINICAL_FORM = "062a24b5-728b-4639-8176-197e8f458490";
+		public static final String OBSTETRIC_HISTORY_FORM = "d81e8157-317c-4041-9498-9d2318a1f2ed";
+		public static final String OPHTHAMOLOGY_CLINICAL_FORM = "235900ff-4d4a-4575-9759-96f325f5e291";
+		public static final String FERTILITY_CLINICAL_FORM = "32e43fc9-6de3-48e3-aafe-3b92f167753d";
+		public static final String CARDIOLOGY_CLINICAL_FORM = "998be6de-bd13-4136-ba0d-3f772139895f";
+		public static final String GASTROENTEROLOGY_CLINICAL_FORM = "6b4fa553-f2b3-47d0-a4c5-fc11f38b0b24";
 	}
 
 	public static final class _OrderType {
@@ -379,6 +383,14 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
 		install(form("Neurology Clinical Form", "Form for Neurology clinical encounter", _EncounterType.NEUROLOGY, "1", _Form.NEUROLOGY_CLINICAL_FORM));
 		install(form("Post-Mortem Clinical Form", "Form for Morgue clinical encounter", _EncounterType.POST_MORTEM, "1", _Form.POST_MORTEM_CLINICAL_FORM));
+		install(form("ENT Clinical Form", "Form for ENT clinical encounter", _EncounterType.CONSULTATION, "1", _Form.EAR_NOSE_THROAT_CLINICAL_FORM));
+		install(form("Orthopaedic Clinical Form", "Form for Orthopaedic clinical encounter", _EncounterType.CONSULTATION, "1", _Form.ORTHOPAEDIC_CLINICAL_FORM));
+		install(form("Occupational Therapy Clinical Form", "Form for Occupational therapy encounter", _EncounterType.CONSULTATION, "1", _Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM));
+		install(form("Obstetric History Form", "Form for Obstetric History", _EncounterType.CONSULTATION, "1", _Form.OBSTETRIC_HISTORY_FORM));
+		install(form("Ophthamology Clinical Form", "Form for Ophthamology encounter ", _EncounterType.CONSULTATION, "1", _Form.OPHTHAMOLOGY_CLINICAL_FORM));
+		install(form("Gastroenterology Clinical Form", "Form for Gastroenterology encounter ", _EncounterType.CONSULTATION, "1", _Form.GASTROENTEROLOGY_CLINICAL_FORM));
+		install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
+		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",

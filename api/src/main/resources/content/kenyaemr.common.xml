@@ -54,13 +54,11 @@
 	<bean id="kenyaemr.config.report" class="org.openmrs.module.kenyacore.report.ReportConfiguration">
 		<property name="commonReports">
 			<set>
-				<ref bean="kenyaemr.etl.common.report.fmap"/>
 				<ref bean="kenyaemr.common.report.artDrug" />
 				<!--<ref bean="kenyaemr.common.report.etlMissedAppointments" />-->
 				<ref bean="kenyaemr.etl.common.report.moh731"/>
 				<ref bean="kenyaemr.etl.common.report.oldmoh731"/>
 				<ref bean="kenyaemr.etl.common.report.htsprediction"/>
-				<ref bean="kenyaemr.common.report.moh745"/>
 				<ref bean="kenyaemr.etl.common.report.Moh731KDoD"/>
 				<ref bean="kenyaemr.etl.common.report.Moh731KDoD.old"/>
 				<ref bean="kenyaemr.etl.common.report.datim"/>
@@ -88,7 +86,6 @@
 				<ref bean="kenyaemr.cancer.report.cancerRegister"/>
 				<ref bean="kenyaemr.etl.common.report.publicHealthAction"/>
 				<ref bean="kenyaemr.common.report.mortalityLineList"/>
-				<ref bean="kenyaemr.common.report.moh711"/>
 				<ref bean="kenyaemr.common.report.sgbvlinelist"/>
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.duplicateNUPI"/>
@@ -106,6 +103,9 @@
 				<ref bean="kenyaemr.ehrReports.report.facility.monthly.collection" />
 				<ref bean="kenyaemr.ehrReports.706.report" />
 				<ref bean="kenyaemr.ehrReports.report.240" />
+				<ref bean="kenyaemr.ehrReports.report.moh711"/>
+				<ref bean="kenyaemr.ehrReports.report.fmap"/>
+				<ref bean="kenyaemr.ehrReports.report.moh745"/>
         <ref bean="kenyaemr.ehrReports.report.fcdrr" />
 			</set>
 		</property>
@@ -638,7 +638,7 @@
 		<property name="repeatingSection" value="sheet:1,row:8,dataset:screenedPatients" />
 	</bean>
 
-	<bean id="kenyaemr.common.report.moh745" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh745" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="a5348342-a05e-11ec-b909-0242ac120002" />
 		<property name="name" value="MOH 745" />
 		<property name="description" value="Comprehensive Cervical Cancer Facility Reporting Form - MOH" />
@@ -680,7 +680,7 @@
 	</bean>
 
 	<!--- Pharmacy FMAP -->
-	<bean id="kenyaemr.etl.common.report.fmap" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.fmap" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="dbfcf743-933f-4e1c-9d1b-b1f8afa1a6d2" />
 		<property name="name" value="FMAP MOH-729 Report" />
 		<property name="description" value="FMAP MOH-729 Report" />
@@ -960,7 +960,7 @@
 		<property name="template" value="kenyaemr:dmi/case_reports.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:illness | sheet:2,row:6,dataset:complaint | sheet:3,row:6,dataset:diagnosis | sheet:4,row:6,dataset:vitals | sheet:5,row:6,dataset:labs" />
 	</bean>
-	<bean id="kenyaemr.common.report.moh711" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+	<bean id="kenyaemr.ehrReports.report.moh711" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="3a5e754c-4e81-4450-8694-e79beb1844f0" />
 		<property name="name" value="MOH 711" />
 		<property name="description" value="Integrated Programme Summary Report Form: Reproductive and Child Health, Medical and Rehabilitation Services" />
