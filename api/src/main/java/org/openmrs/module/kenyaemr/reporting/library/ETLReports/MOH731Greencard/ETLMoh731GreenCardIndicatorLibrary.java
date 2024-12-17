@@ -61,14 +61,20 @@ public class ETLMoh731GreenCardIndicatorLibrary {
     public CohortIndicator testedHIVPositive() {
         return cohortIndicator("Tested HIV Positive", map(moh731Cohorts.testedHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator htsPositiveMales() {
-        return cohortIndicator("HTS Positive males", map(moh731Cohorts.htsPositiveMales(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator htsPositiveMales(Integer minAge, Integer maxAge) {
+        return cohortIndicator("HTS Positive males", map(moh731Cohorts.htsPositiveMales(minAge, maxAge), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator htsPositiveMales25AndAbove(Integer minAge) {
+        return cohortIndicator("HTS Positive males 25+", map(moh731Cohorts.htsPositiveMales25AndAbove(minAge), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator htsPositiveFemales() {
-        return cohortIndicator("HTS Positive females", map(moh731Cohorts.htsPositiveFemales(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator htsPositiveFemales(Integer minAge, Integer maxAge) {
+        return cohortIndicator("HTS Positive females", map(moh731Cohorts.htsPositiveFemales(minAge, maxAge), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    public CohortIndicator htsPositiveFemales25AndAbove(Integer minAge) {
+        return cohortIndicator("HTS Positive Females 25+", map(moh731Cohorts.htsPositiveFemales25AndAbove(minAge), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator htsPositiveKVP() {
         return cohortIndicator("HTS Positive KVP", map(moh731Cohorts.htsPositiveKVP(), "startDate=${startDate},endDate=${endDate}"));
     }
