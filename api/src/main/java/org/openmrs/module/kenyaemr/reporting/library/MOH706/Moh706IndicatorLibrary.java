@@ -25,53 +25,79 @@ public class Moh706IndicatorLibrary {
         this.moh706LabCohortLibrary = moh706LabCohortLibrary;
     }
 //Urine Analysis
-  public CohortIndicator getAllUrineTests(Integer testConceptId) {
+  public CohortIndicator getTotalTestsByConcept(Integer labSetConceptId) {
 	return cohortIndicator(
 		"All patients who have urinalysis glucose",
-		map(moh706LabCohortLibrary.getAllUrineTests(testConceptId),
+		map(moh706LabCohortLibrary.getTotalTestsByConcept(labSetConceptId),
 			"startDate=${startDate},endDate=${endDate}"));
 }
-    public CohortIndicator getAllUrineAnalysisGlucoseTestsPositives(Integer testConceptId) {
+    public CohortIndicator getAllUrineAnalysisGlucosePositives(Integer testConceptId) {
         return cohortIndicator(
                 "All patients who tested positive for urinalysis glucose",
-                map(moh706LabCohortLibrary.getAllUrineAnalysisGlucoseTestsPositives(testConceptId),
+                map(moh706LabCohortLibrary.getAllUrineAnalysisGlucosePositives(testConceptId),
                         "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator getAllUrineAnalysisKetonesTestsPositives() {
+    public CohortIndicator getAllUrineAnalysisKetonesPositives(Integer testConceptId) {
         return cohortIndicator(
                 "All patients who have urinalysis ketones",
-                map(moh706LabCohortLibrary.getAllUrineAnalysisKetonesTestsPositives(),
+                map(moh706LabCohortLibrary.getAllUrineAnalysisKetonesPositives(testConceptId),
                         "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator getAllUrineAnalysisProteinsTestsPositives() {
+    public CohortIndicator getAllUrineAnalysisProteinsPositives(Integer testConceptId) {
         return cohortIndicator(
                 "All patients who have urinalysis Proteins",
-                map(moh706LabCohortLibrary.getAllUrineAnalysisProteinsTestsPositives(),
+                map(moh706LabCohortLibrary.getAllUrineAnalysisProteinsPositives(testConceptId),
                         "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator getAllMalariaTests() {
-        return cohortIndicator("All patients who have malaria test done",
-                map(moh706LabCohortLibrary.getAllMalariaTests(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator getAllUrineAnalysisPusCellsPositives(Integer testConceptId) {
+        return cohortIndicator("All patients who have urinalysis Pus cells",
+                map(moh706LabCohortLibrary.getAllUrineAnalysisPusCellsPositives(testConceptId), 
+					"startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator getAllRapidMalariaTests() {
-        return cohortIndicator("All patients who have rapid malaria test done",
-                map(moh706LabCohortLibrary.getAllRapidMalariaTests(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator getAllUrineAnalysisSHaematobiumPositives(Integer testConceptId) {
+        return cohortIndicator("All patients who have urinalysis S Haematobium tests done",
+                map(moh706LabCohortLibrary.getAllUrineAnalysisSHaematobiumPositives(testConceptId), "startDate=${startDate},endDate=${endDate}"));
     }
 
-    public CohortIndicator getAllMalariaTestsPositiveCases() {
-        return cohortIndicator("All patients who have malaria test done and are positive",
-                map(moh706LabCohortLibrary.getAllMalariaTestsPositiveCases(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator getAllUrineAnalysisTVaginatisPositives(Integer testConceptId) {
+        return cohortIndicator("All patients who have urinalysis T Vaginatis tests done",
+                map(moh706LabCohortLibrary.getAllUrineAnalysisTVaginatisPositives(testConceptId), "startDate=${startDate},endDate=${endDate}"));
     }
+	public CohortIndicator getAllUrineAnalysisYeastCellsPositives(Integer testConceptId) {
+		return cohortIndicator("All patients who have urinalysis Yeasts Cells tests done",
+			map(moh706LabCohortLibrary.getAllUrineAnalysisYeastCellsPositives(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator getAllUrineAnalysisBacteriaPositives(Integer testConceptId) {
+		return cohortIndicator("All patients who have urinalysis Bacteria Cells tests done",
+			map(moh706LabCohortLibrary.getAllUrineAnalysisBacteriaPositives(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
+		return cohortIndicator("All patients who have malaria test done and are positive",
+			map(moh706LabCohortLibrary.getAllBSMalariaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
 
-    public CohortIndicator getAllRapidMalariaTestsPositiveCases() {
+   public CohortIndicator getAllRapidMalariaTestsPositiveCases(Integer testConceptId) {
         return cohortIndicator("All patients who have rapid malaria test done and are positive",
-                map(moh706LabCohortLibrary.getAllRapidMalariaTestsPositiveCases(), "startDate=${startDate},endDate=${endDate}"));
+                map(moh706LabCohortLibrary.getAllRapidMalariaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
     }
+	public CohortIndicator getAllTaeniaSPPTestsPositiveCases(Integer testConceptId) {
+		return cohortIndicator("All patients who have Taenia SPP test done and are positive",
+			map(moh706LabCohortLibrary.getAllTaeniaSPPTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator getHymenolepisnanaTestsPositiveCases(Integer testConceptId) {
+		return cohortIndicator("All patients who have Hymenolepis nana test done and are positive",
+			map(moh706LabCohortLibrary.getHymenolepisnanaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
 
+	
+	
+	
+	
+	
     public CohortIndicator getResponsesBasedOnAnswerIndicator(int q, List<Integer> ans) {
         return cohortIndicator("All patients who have tests done based on a question and answers",
                 map(moh706LabCohortLibrary.getResponsesBasedOnAnswer(q, ans), "startDate=${startDate},endDate=${endDate}"));

@@ -24,21 +24,21 @@ public class Moh706LabCohortLibrary {
 	
 	//1.2 Urine Analysis
 	
-	public CohortDefinition getAllUrineTests(Integer testConceptId) {
+	public CohortDefinition getTotalTestsByConcept(Integer labSetConceptId) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
-		sql.setName("Get urine analysis patients - glucose");
+		sql.setName("Get total tests by lab concept");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
 		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
 			"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
-			"    where le.set_member_conceptId = " + testConceptId + "\n" +
+			"    where le.set_member_conceptId = " + labSetConceptId + "\n" +
 			"  and date(le.visit_date) between :startDate and :endDate;"
 
 		);
 		return sql;
 	}
 
-    public CohortDefinition getAllUrineAnalysisGlucoseTestsPositives(Integer testConceptId) {
+    public CohortDefinition getAllUrineAnalysisGlucosePositives(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Get positive urine analysis patients - glucose");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -52,85 +52,157 @@ public class Moh706LabCohortLibrary {
         return sql;
     }
 
-    public CohortDefinition getAllUrineAnalysisKetonesTestsPositives() {
+    public CohortDefinition getAllUrineAnalysisKetonesPositives(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Get urine analysis patients - ketones");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "E    nd Date", Date.class));
-        sql.setQuery("SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-                "                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-                "                             WHERE x.lab_test = 1305 AND x.test_result = 1302 AND date(x.visit_date) BETWEEN :startDate AND :endDate\n" +
-                "                            UNION\n" +
-                "                            SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-                "                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-                "                             WHERE x.lab_test = 856 AND x.test_result IS NOT NULL AND date(x.visit_date) BETWEEN :startDate AND :endDate;"
+        sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1362,1363,1364,1365)\n" +
+			" and date(le.visit_date) between :startDate and :endDate;"
 
         );
         return sql;
     }
 
-    public CohortDefinition getAllUrineAnalysisProteinsTestsPositives() {
+    public CohortDefinition getAllUrineAnalysisProteinsPositives(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Get urine analysis patients - Proteins");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id IN (1875) AND o.value_coded IN (703,1874,1362,1363,1364,1365) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+        sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1874,1362,1363,1364)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
         );
         return sql;
     }
 
-    public CohortDefinition getAllMalariaTests() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Get patients with malaria tests");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id IN (32) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+	public CohortDefinition getAllUrineAnalysisPusCellsPositives(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - Pus cells");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (2001230,2001232,2001233,2001234)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
-        );
-        return sql;
-    }
-    public CohortDefinition getAllRapidMalariaTests() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Get patients with rapid malaria tests");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id IN (1643) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+		);
+		return sql;
+	}
 
-        );
-        return sql;
-    }
+	public CohortDefinition getAllUrineAnalysisSHaematobiumPositives(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - S haemoatobium");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1000537,164371)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
-    public CohortDefinition getAllMalariaTestsPositiveCases() {
+		);
+		return sql;
+	}
+	public CohortDefinition getAllUrineAnalysisTVaginatisPositives(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - T Vaginatis");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1000537,164371)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+
+	public CohortDefinition getAllUrineAnalysisYeastCellsPositives(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - Yeast Cells");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result in (1363,159416,1364,1362)\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+
+	public CohortDefinition getAllUrineAnalysisBacteriaPositives(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get urine analysis patients - Bacteria Cells");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"   join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + testConceptId + " and le.test_result = 1000537\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+	
+    public CohortDefinition getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Get patients with malaria tests positive cases");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id IN (32,1643) AND o.value_coded IN (703,161246,161247,161248) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+        sql.setQuery("#Malaria BS\n" +
+			"select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + testConceptId + " and le.test_result like '%seen%'\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
         );
         return sql;
     }
-    public CohortDefinition getAllRapidMalariaTestsPositiveCases() {
+    public CohortDefinition getAllRapidMalariaTestsPositiveCases(Integer testConceptId) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Get patients with rapid malaria tests positive cases");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id = e.patient_id INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-                + " WHERE p.voided=0 AND e.voided = 0 AND o.voided = 0 AND o.concept_id IN (1643) AND o.value_coded IN (703,161246,161247,161248) "
-                + " AND e.encounter_datetime BETWEEN :startDate AND :endDate "
+        sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + testConceptId + "  and le.test_result = 703\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
 
         );
         return sql;
     }
+
+	public CohortDefinition getAllTaeniaSPPTestsPositiveCases(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with  Taenia SPP tests positive cases");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + testConceptId + "  and le.test_result = 163748\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+	public CohortDefinition getHymenolepisnanaTestsPositiveCases(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with  Taenia SPP tests positive cases");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + testConceptId + "  and le.test_result = 163748\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
 
     public CohortDefinition getResponsesBasedOnAnswer(int question, List<Integer> ans) {
         SqlCohortDefinition sql = new SqlCohortDefinition();

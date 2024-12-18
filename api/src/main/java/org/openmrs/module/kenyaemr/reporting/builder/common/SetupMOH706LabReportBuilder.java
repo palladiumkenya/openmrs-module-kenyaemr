@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,18 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
     private final Moh706IndicatorLibrary moh706IndicatorLibrary;
 	//Params
 	static final int  URINE_ANALYSIS_GLUCOSE = 159734;
+	static final int  URINE_ANALYSIS_KETONES = 161442;
+	static final int  URINE_ANALYSIS_PROTEINS = 1875;
+	static final int  URINE_ANALYSIS_PUS_CELLS = 2001231;
+	static final int  URINE_ANALYSIS_T_HAEMATOBIUM = 1000540;
+	static final int  URINE_ANALYSIS_T_VAGINATIS  = 163648;
+	static final int  URINE_ANALYSIS_YEAST_CELLS  = 163686;
+	static final int  URINE_ANALYSIS_BACTERIA = 165561;
+	static final int  PARASITOLOGY_MALARIA_BS = 2001193;
+	static final int  PARASITOLOGY_MALARIA_RAPID = 1643;
+	static final int  PARASITOLOGY_TAENIA_SPP = 1000453;
+	static final int  PARASITOLOGY_HNANA = 1000454;
+
 
     @Autowired
     public SetupMOH706LabReportBuilder(Moh706LabCohortLibrary moh706CohortLibrary, Moh706IndicatorLibrary moh706IndicatorLibrary) {
@@ -67,52 +80,34 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
         cohortDsd.setDescription("MOH 706 for the lab");
         cohortDsd.addDimension("age", ReportUtils.map(ReportingUtils.getAge(), "effectiveDate=${endDate}"));
 		
-     //URINE ANALYSIS  
-		cohortDsd.addColumn("UAGL-Total", "1.2 Glucose",ReportUtils.map(moh706IndicatorLibrary.getAllUrineTests(URINE_ANALYSIS_GLUCOSE), "startDate=${startDate},endDate=${endDate}"), "");
-		//GLUCOSE		
-		cohortDsd.addColumn("UAGL-Positive", "1.2 Glucose",ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisGlucoseTestsPositives(URINE_ANALYSIS_GLUCOSE), "startDate=${startDate},endDate=${endDate}"), "");
-
-        //#MOH706.UAKET#	Urine Analysis Ketones
-        cohortDsd.addColumn("UAKET", "1.3 Ketones",
-                ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisKetonesTestsPositives(), "startDate=${startDate},endDate=${endDate}"), "");
-
-        cohortDsd.addColumn("UAPTN", "1.4 Proteins",
-                ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisProteinsTestsPositives(),
-                        indParam), "");
-
-       cohortDsd.addColumn("UAPC", "1.6 Pus Cells (<5/hpf)", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(1000538, Arrays.asList(1000537, 164371)), indParam), "");
-
-         cohortDsd.addColumn("UASH", "1.7 S. haematobium", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(1000540, Arrays.asList(1000537, 164371)), indParam), "");
-        cohortDsd.addColumn("UATV", "1.8 T. vaginatis", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(163689, Arrays.asList(1499, 1160, 1408)), indParam), "");
-
-        cohortDsd.addColumn("UAYC", "1.9 Urinalysis Yeast Cells", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(163686, Arrays.asList(1363, 1362, 1364)), indParam), "");
-        cohortDsd.addColumn("UAB", "1.10 Bacteria", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(165561, Arrays.asList(1363, 1362, 1364)), indParam), "");
+     //URINALYSIS  	
+		cohortDsd.addColumn("UAGLT", "1.2 Glucose Total",ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_GLUCOSE), indParam), "");
+	    cohortDsd.addColumn("UAGLP", "1.2 Glucose Positive",ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisGlucosePositives(URINE_ANALYSIS_GLUCOSE), indParam), "");
+        cohortDsd.addColumn("UAKETT", "1.3 Ketones Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_KETONES), indParam), "");
+        cohortDsd.addColumn("UAKETP", "1.3 Ketones Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisKetonesPositives(URINE_ANALYSIS_KETONES), indParam), "");
+		cohortDsd.addColumn("UAPT", "1.3 Proteins Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_PROTEINS), indParam), "");
+        cohortDsd.addColumn("UAPP", "1.4 Proteins Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisProteinsPositives(URINE_ANALYSIS_PROTEINS), indParam), "");
+        cohortDsd.addColumn("UAPCT", "1.6 Pus Cells (<5/hpf) Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_PUS_CELLS), indParam), "");
+        cohortDsd.addColumn("UAPCP", "1.6 Pus Cells (<5/hpf) Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisPusCellsPositives(URINE_ANALYSIS_PUS_CELLS), indParam), "");
+		cohortDsd.addColumn("UAHT", "1.7 S.haematobium Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_T_HAEMATOBIUM), indParam), "");
+		cohortDsd.addColumn("UAHP", "1.7 S.haematobium Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisSHaematobiumPositives(URINE_ANALYSIS_T_HAEMATOBIUM), indParam), "");
+        cohortDsd.addColumn("UATVT", "1.8 T. vaginatis Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_T_VAGINATIS), indParam), "");
+        cohortDsd.addColumn("UATVP", "1.8 T. vaginatis Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisTVaginatisPositives(URINE_ANALYSIS_T_VAGINATIS), indParam), "");
+        cohortDsd.addColumn("UAYCT", "1.9 Urinalysis Yeast Cells Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_YEAST_CELLS), indParam), "");
+		cohortDsd.addColumn("UAYCP", "1.9 Urinalysis Yeast Cells Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisYeastCellsPositives(URINE_ANALYSIS_YEAST_CELLS), indParam), "");
+        cohortDsd.addColumn("UABT", "1.10 Bacteria Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(URINE_ANALYSIS_BACTERIA), indParam), "");
+        cohortDsd.addColumn("UABP", "1.10 Bacteria Positive", ReportUtils.map(moh706IndicatorLibrary.getAllUrineAnalysisBacteriaPositives(URINE_ANALYSIS_BACTERIA), indParam), "");
 
         //PARASITOLOGY
-        //Malaria Test
-        ReportingUtils.addRow(cohortDsd, "BST", "Parastology - Malaria test totals",
-                ReportUtils.map(moh706IndicatorLibrary.getAllMalariaTests(), indParam), ReportAddonUtils.getAgeUnderOver5Columns());
-        ReportingUtils.addRow(cohortDsd, "BSP", "Parasitology - Malaria test positive",
-                ReportUtils.map(moh706IndicatorLibrary.getAllMalariaTestsPositiveCases(), indParam),
-                ReportAddonUtils.getAgeUnderOver5Columns());
-
-        //Rapid Malaria Test
-        cohortDsd.addColumn("BSRT", "3.3 Malaria Rapid Diagnostic Tests totals",
-                ReportUtils.map(moh706IndicatorLibrary.getAllRapidMalariaTests(), indParam), "");
-
-        cohortDsd.addColumn("BSRTP", "3.3 Malaria Rapid Diagnostic Tests positives",
-                ReportUtils.map(moh706IndicatorLibrary.getAllRapidMalariaTestsPositiveCases(), indParam), "");
-
-        cohortDsd.addColumn("TSPP", "3.4 Taenia SPP", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(1000453, Arrays.asList(163748, 164371)), indParam), "");
-
-        cohortDsd.addColumn("HNN", "3.5 Hymenolepis nana", ReportUtils.map(
-                moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(1000454, Arrays.asList(163748, 164371)), indParam), "");
+        ReportingUtils.addRow(cohortDsd, "BST", "Parastology - Malaria test totals", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_MALARIA_BS), indParam), ReportAddonUtils.getAgeUnderOver5Columns());
+        ReportingUtils.addRow(cohortDsd, "BSP", "Parasitology - Malaria test positive", ReportUtils.map(moh706IndicatorLibrary.getAllBSMalariaTestsPositiveCases(PARASITOLOGY_MALARIA_BS), indParam), ReportAddonUtils.getAgeUnderOver5Columns());
+        cohortDsd.addColumn("BSRT", "3.3 Malaria Rapid Diagnostic Tests totals", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_MALARIA_RAPID), indParam), "");
+        cohortDsd.addColumn("BSRTP", "3.3 Malaria Rapid Diagnostic Tests positives",ReportUtils.map(moh706IndicatorLibrary.getAllRapidMalariaTestsPositiveCases(PARASITOLOGY_MALARIA_RAPID), indParam), "");
+        cohortDsd.addColumn("TSPPT", "3.4 Taenia SPP Total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_TAENIA_SPP), indParam), "");
+        cohortDsd.addColumn("TSPPP", "3.4 Taenia SPP Positive", ReportUtils.map(moh706IndicatorLibrary.getAllTaeniaSPPTestsPositiveCases(PARASITOLOGY_TAENIA_SPP), indParam), "");
+        cohortDsd.addColumn("HNNT", "3.5 Hymenolepis nana", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_HNANA), indParam), "");
+        cohortDsd.addColumn("HNNP", "3.5 Hymenolepis nana", ReportUtils.map(moh706IndicatorLibrary.getHymenolepisnanaTestsPositiveCases(PARASITOLOGY_HNANA), indParam), "");
+      
         cohortDsd.addColumn("HOW", "3.6 Hookworm", ReportUtils.map(
                 moh706IndicatorLibrary.getResponsesBasedOnAnswerIndicator(1000456, Arrays.asList(163748, 164371)), indParam), "");
         cohortDsd.addColumn("RW", "3.7 Round worms", ReportUtils.map(
