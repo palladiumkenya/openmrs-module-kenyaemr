@@ -9,23 +9,27 @@
  */
 package org.openmrs.module.kenyaemr.reporting.MohReportUtils;
 
+import org.openmrs.module.reporting.cohort.definition.AgeCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
+import org.openmrs.module.reporting.indicator.dimension.CohortDefinitionDimension;
 import org.openmrs.module.reporting.query.encounter.definition.EncounterQuery;
 import org.openmrs.module.reporting.query.encounter.definition.SqlEncounterQuery;
 
 import java.util.Date;
 import java.util.List;
 
+import static org.openmrs.module.kenyacore.report.ReportUtils.map;
+
 public class ReportingUtils {
-	
+
 	public ReportingUtils() {
 	}
-	
+
 	public static CohortIndicator cohortIndicator(String name, Mapped<CohortDefinition> cohort) {
 		CohortIndicator ind = new CohortIndicator(name);
 		ind.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -33,10 +37,10 @@ public class ReportingUtils {
 		ind.setCohortDefinition(cohort);
 		return ind;
 	}
-	
+
 	/**
 	 * Adds a row to a dataset based on an indicator and a list of column parameters
-	 * 
+	 *
 	 * @param cohortDsd the dataset
 	 * @param baseName the base columm name
 	 * @param baseLabel the base column label
@@ -45,14 +49,14 @@ public class ReportingUtils {
 	 */
 	public static void addRow(CohortIndicatorDataSetDefinition cohortDsd, String baseName, String baseLabel,
 	        Mapped<CohortIndicator> indicator, List<ColumnParameters> columns) {
-		
+
 		for (ColumnParameters column : columns) {
 			String name = baseName + "-" + column.getColumn();
 			String label = baseLabel + " (" + column.getLabel() + ")";
 			cohortDsd.addColumn(name, label, indicator, column.getDimensions());
 		}
 	}
-	
+
 	public static EncounterQuery getEncounterLimitsByDate() {
 		SqlEncounterQuery query = new SqlEncounterQuery();
 		query.setName("Encounter per the given date");
@@ -96,5 +100,42 @@ public class ReportingUtils {
 		cd.setDescription("Patients who are revisit attendances");
 		return cd;
 	}
-	
+
+	/**
+	 * Get age based on the based on DOB and context date
+	 *
+	 * @return @{@link org.openmrs.module.reporting.indicator.dimension.CohortDimension}
+	 */
+	public static CohortDefinitionDimension getAge() {
+		CohortDefinitionDimension dim = new CohortDefinitionDimension();
+		dim.addParameter(new Parameter("effectiveDate", "Effective Date", Date.class));
+		dim.setName("Patient age - dim");
+		dim.addCohortDefinition("<5", map(createXtoYAgeCohort(0, 4), "effectiveDate=${effectiveDate}"));
+		dim.addCohortDefinition(">5", map(createXtoYAgeCohort(5, 59), "effectiveDate=${effectiveDate}"));
+		dim.addCohortDefinition(">60", map(createXtoYAgeCohort(60, 600), "effectiveDate=${effectiveDate}"));
+		return dim;
+	}
+
+
+	/**
+	 * Get patients dimesion age
+	 *
+	 * @param minAge
+	 * @param maxAge
+	 * @return
+	 */
+	public static CohortDefinition createXtoYAgeCohort(Integer minAge, Integer maxAge) {
+		AgeCohortDefinition xToYCohort = new AgeCohortDefinition();
+		xToYCohort.setName("age");
+		if (minAge != null) {
+			xToYCohort.setMinAge(minAge);
+		}
+		if (maxAge != null) {
+			xToYCohort.setMaxAge(maxAge);
+		}
+		xToYCohort.addParameter(new Parameter("effectiveDate", "effectiveDate", Date.class));
+		return xToYCohort;
+	}
+
+
 }
