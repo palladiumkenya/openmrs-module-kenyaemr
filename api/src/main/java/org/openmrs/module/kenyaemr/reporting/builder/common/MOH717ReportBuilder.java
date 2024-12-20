@@ -61,6 +61,18 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
             CommonMetadata._Form.MAXILLOFACIAL_CLINICAL_FORM,
             CommonMetadata._Form.GASTROENTEROLOGY_CLINICAL_FORM,
             CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.DENTAL_CLINICAL_FORM,
+            CommonMetadata._Form.FERTILITY_CLINICAL_FORM
+    ));
+    static final ArrayList<String> otherSpecialClinics = new ArrayList<>(Arrays.asList(
+            CommonMetadata._Form.NEUROLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.DERMATOLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.AUDIOLOGY_FORM,
+            CommonMetadata._Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM,
+            CommonMetadata._Form.DIABETIC_CLINICAL_FORM,
+            CommonMetadata._Form.MAXILLOFACIAL_CLINICAL_FORM,
+            CommonMetadata._Form.GASTROENTEROLOGY_CLINICAL_FORM,
+            CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
             CommonMetadata._Form.FERTILITY_CLINICAL_FORM
     ));
 
