@@ -139,12 +139,12 @@ public class DatimCohortLibrary {
                 "                          on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= date(:endDate)\n" +
                 "               left outer JOIN\n" +
                 "           (select patient_id,\n" +
-                "                   coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-                "                   max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
-                "            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "            where date(visit_date) <= date(:endDate)\n" +
-                "              and program_name = 'HIV'\n" +
-                "            group by patient_id) d on d.patient_id = fup.patient_id\n" +
+                "               date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "               NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "               from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "               where date(visit_date) <= date(:endDate)\n" +
+                "               and program_name = 'HIV'\n" +
+                "               group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "      where fup.visit_date <= date(:endDate)\n" +
                 "      group by patient_id\n" +
                 "      having (started_on_drugs is not null and started_on_drugs <> '')\n" +
@@ -4477,12 +4477,12 @@ public class DatimCohortLibrary {
                 "                                                                                date(date_started) < date(:endDate)\n" +
                 "                              left outer JOIN\n" +
                 "                          (select patient_id,\n" +
-                "                                  coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-                "                                  max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
-                "                           from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "                           where date(visit_date) < date(:startDate)\n" +
-                "                             and program_name = 'HIV'\n" +
-                "                           group by patient_id) d on d.patient_id = fup.patient_id\n" +
+                "                               date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "                               NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "                        from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                        where date(visit_date) <= date(:endDate)\n" +
+                "                          and program_name = 'HIV'\n" +
+                "                        group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "                     where fup.visit_date < date(:startDate)\n" +
                 "                     group by patient_id\n" +
                 "                     having (started_on_drugs is not null and started_on_drugs <> '')\n" +

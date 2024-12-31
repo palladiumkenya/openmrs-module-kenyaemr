@@ -359,10 +359,13 @@ public class TXCurrLinelistCohortLibrary {
                 "                         join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
                 "                         left join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(:endDate)\n" +
                 "                         left outer JOIN\n" +
-                "                           (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "                            where date(visit_date) <= date(:endDate) and program_name='HIV'\n" +
-                "                            group by patient_id\n" +
-                "                           ) d on d.patient_id = fup.patient_id\n" +
+                "                           (select patient_id,\n" +
+                "                               date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "                               NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "                            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                            where date(visit_date) <= date(:endDate)\n" +
+                "                            and program_name = 'HIV'\n" +
+                "                        group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "                  where fup.visit_date <= date(:endDate)\n" +
                 "                  group by patient_id\n" +
                 "                  having (started_on_drugs is not null and started_on_drugs <> '') and (\n" +
@@ -398,9 +401,13 @@ public class TXCurrLinelistCohortLibrary {
                 "                 join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
                 "                 left join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date_sub(DATE(:endDate), interval 3 MONTH)\n" +
                 "                 left outer JOIN\n" +
-                "             (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "              where date(visit_date) <= date_sub(DATE(:endDate), interval 3 MONTH) and program_name='HIV'\n" +
-                "              group by patient_id\n" +
+                "             (select patient_id,\n" +
+                "                               date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "                               NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "                        from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                        where date(visit_date) <= date_sub(DATE(:endDate), interval 3 MONTH)\n" +
+                "                          and program_name = 'HIV'\n" +
+                "                        group by patient_id\n" +
                 "             ) d on d.patient_id = fup.patient_id\n" +
                 "        where fup.visit_date <= date_sub(DATE(:endDate), interval 3 MONTH)\n" +
                 "        group by patient_id\n" +
@@ -756,9 +763,13 @@ public CohortDefinition patientsDied() {
                 "                 join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
                 "                 left join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(:endDate)\n" +
                 "                 left outer JOIN\n" +
-                "             (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "              where date(visit_date) <= date(:endDate) and program_name='HIV' and patient_id\n" +
-                "              group by patient_id\n" +
+                "             (select patient_id,\n" +
+                "                                 date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "                                 NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "                          from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                          where date(visit_date) <= date(:endDate)\n" +
+                "                            and program_name = 'HIV'\n" +
+                "                          group by patient_id\n" +
                 "             ) d on d.patient_id = fup.patient_id\n" +
                 "        where fup.visit_date <= date(:endDate)\n" +
                 "        group by patient_id\n" +
@@ -802,12 +813,11 @@ public CohortDefinition patientsDied() {
                 "                                                            date_sub(DATE(:endDate), interval 1 MONTH)\n" +
                 "               left outer JOIN\n" +
                 "           (select patient_id,\n" +
-                "                   coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-                "                   max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
-                "            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "            where date(visit_date) <= date_sub(DATE(:endDate), interval 1 MONTH)\n" +
-                "              and program_name = 'HIV'\n" +
-                "              and patient_id\n" +
+                "                               date(coalesce(NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31'), max(visit_date))) visit_date,\n" +
+                "                               NULLIF(LEAST(COALESCE(max(date(trf_out_verification_date)),'9999-12-31'),COALESCE(max(date(effective_discontinuation_date)),'9999-12-31')),'9999-12-31') as effective_disc_date\n" +
+                "                        from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                        where date(visit_date) <= date_sub(DATE(:endDate), interval 1 MONTH)\n" +
+                "                          and program_name = 'HIV'\n" +
                 "            group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "      where fup.visit_date <= date_sub(DATE(:endDate), interval 1 MONTH)\n" +
                 "      group by patient_id\n" +
