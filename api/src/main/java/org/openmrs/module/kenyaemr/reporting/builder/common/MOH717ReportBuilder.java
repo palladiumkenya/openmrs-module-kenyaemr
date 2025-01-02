@@ -28,11 +28,13 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.openmrs.module.kenyaemr.EmrConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 
@@ -64,17 +66,31 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
             CommonMetadata._Form.DENTAL_CLINICAL_FORM,
             CommonMetadata._Form.FERTILITY_CLINICAL_FORM
     ));
-    static final ArrayList<String> otherSpecialClinics = new ArrayList<>(Arrays.asList(
-            CommonMetadata._Form.NEUROLOGY_CLINICAL_FORM,
-            CommonMetadata._Form.DERMATOLOGY_CLINICAL_FORM,
-            CommonMetadata._Form.AUDIOLOGY_FORM,
-            CommonMetadata._Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM,
-            CommonMetadata._Form.DIABETIC_CLINICAL_FORM,
-            CommonMetadata._Form.MAXILLOFACIAL_CLINICAL_FORM,
-            CommonMetadata._Form.GASTROENTEROLOGY_CLINICAL_FORM,
-            CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
-            CommonMetadata._Form.FERTILITY_CLINICAL_FORM
-    ));
+    static final String dentalFillingList = String.join(",", new ArrayList<>(Arrays.asList(
+            EmrConstants.TEMP_FILLING_PER_TOOTH, EmrConstants.COMPOSITE_FILLING, EmrConstants.AMALGAM_FILLING, EmrConstants.GlASS_LONOMER_FILLING
+    )));
+    static final String dentalExtractionList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.SIMPLE_TOOTH_EXTRACTION, EmrConstants.SURGICAL_TOOTH_EXTRACTION, EmrConstants.DENTAL_EXTRACTION_UNDER_GA, EmrConstants.EXTRA_TOOTH_EXTRACTION
+    )));
+    static final String stitchesRemovalList = String.join(",", new ArrayList<>(Arrays.asList(
+            EmrConstants.REMOVAL_OF_CORNEAL_CONJUCTIVAL_SUTURES_LA, EmrConstants.REMOVAL_OF_CORNEAL_CONJUCTIVAL_SUTURES_GA, EmrConstants.SURGICAL_REMOVAL_OF_STICHES_MINOR_THEATRE, EmrConstants.REMOVAL_OF_CORNEAL_STITCHES,
+            EmrConstants.ENT_REMOVAL_OF_STITCHES
+    )));
+    static final String injectionsList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.INJECTION, EmrConstants.INJECTION_OF_SCLEROSING_AGENT_IN_VEIN, EmrConstants.INJECTION_OF_SUBSTANCE_INTO_VENTRICULAR_SHUNT, EmrConstants.SUB_CONJUNCTIVAL_INJECTION,
+            EmrConstants.INTRA_ARTERIAL_INJECTION,EmrConstants.SUB_CONJUCTIRAL_SUB_TENON_INJECTION
+    )));
+    static final String stitchingList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.STITCHING, EmrConstants.DENTAL_STITCHING, EmrConstants.NOSE_EARS_STITCHING, EmrConstants.STITCHING_OPD,
+            EmrConstants.STITCHING_MINOR_THEATER,EmrConstants.SATURING_ESOPHAGEAL_LACERATION_TRANSABDOMINAL_APPROACH,
+            EmrConstants.SATURING_ESOPHAGEAL_LACERATION_TRANSTHORACIC_APPROACH,EmrConstants.ENT_SURGICAL_TOILET_STITCHING_UNDER_GA
+    )));
+    static final String dressingList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.CLEAN_AND_DRESSING, EmrConstants.BURN_DRESSING, EmrConstants.ENT_DRESSING, EmrConstants.CASUALTY_DRESSING,
+            EmrConstants.ENT_CHANGE_OF_DRESSINGS,EmrConstants.DRESSING_MINOR,
+            EmrConstants.DRESSING_MINOR_OPD,EmrConstants.EYE_DRESSING,EmrConstants.EXTENSIVE_DRESSING,EmrConstants.DRESSING_LARGE_SPECIALISED,
+            EmrConstants.DRESSING_SMALL_BURN,EmrConstants.SATURE_WOUND_WITH_DRESSING,EmrConstants.WOUND_DRESSING,EmrConstants.WOUND_DRESSING_ENT
+    )));
 
     ColumnParameters femaleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=F");
     ColumnParameters maleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=M");
@@ -194,6 +210,16 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "All other special Clinics (New)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),NEW_VISIT), indParams), "");
         dsd.addColumn( "All other special Clinics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),RE_ATT), indParams), "");
 
+        dsd.addColumn( "Dental Attendances (New)", "", ReportUtils.map(moh717IndicatorLibrary.dentalAttendances(dentalExtractionList, dentalFillingList,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Dental Attendances (RE_ATT)", "", ReportUtils.map(moh717IndicatorLibrary.dentalAttendances(dentalExtractionList,dentalFillingList,RE_ATT), indParams), "");
+        dsd.addColumn( "Dental Fillings (New)", "", ReportUtils.map(moh717IndicatorLibrary.dentalFillings(dentalFillingList,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Dental Fillings (RE_ATT)", "", ReportUtils.map(moh717IndicatorLibrary.dentalFillings(dentalFillingList,RE_ATT), indParams), "");
+        dsd.addColumn( "Dental Extractions (New)", "", ReportUtils.map(moh717IndicatorLibrary.dentalExtractions(dentalExtractionList,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Dental Extractions (RE_ATT)", "", ReportUtils.map(moh717IndicatorLibrary.dentalExtractions(dentalExtractionList,RE_ATT), indParams), "");
+        dsd.addColumn( "Dressings", "", ReportUtils.map(moh717IndicatorLibrary.dressings(dressingList), indParams), "");
+        dsd.addColumn( "Removal of Stitches", "", ReportUtils.map(moh717IndicatorLibrary.removalOfStitches(stitchesRemovalList), indParams), "");
+        dsd.addColumn( "Injections", "", ReportUtils.map(moh717IndicatorLibrary.injections(injectionsList), indParams), "");
+        dsd.addColumn( "Stitching", "", ReportUtils.map(moh717IndicatorLibrary.stitching(stitchingList), indParams), "");
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){

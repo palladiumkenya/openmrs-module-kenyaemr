@@ -71,4 +71,57 @@ public class EmrConstants {
 	public static final String DEFAULT_EXTERNAL_HELP_URL = "/help";
 
 	public static final String GP_CONFIGURE_FACILITY_LIST_REFRESH_ON_STARTUP = "kenyaemr.refresh.facility.metadata";
+	//Dental filling
+	public static final String TEMP_FILLING_PER_TOOTH = "1000342";
+	public static final String COMPOSITE_FILLING = "1000306";
+	public static final String AMALGAM_FILLING = "1000300";
+	public static final String GlASS_LONOMER_FILLING = "1000317";
+
+	//Dental extraction
+	public static final String SIMPLE_TOOTH_EXTRACTION = "1000344";
+	public static final String SURGICAL_TOOTH_EXTRACTION = "166836";
+	public static final String DENTAL_EXTRACTION_UNDER_GA = "2002209";
+	public static final String EXTRA_TOOTH_EXTRACTION = "1000315";
+
+	//Removal of Stitches
+	public static final String REMOVAL_OF_CORNEAL_CONJUCTIVAL_SUTURES_LA = "2002097";
+	public static final String REMOVAL_OF_CORNEAL_CONJUCTIVAL_SUTURES_GA = "2002096";
+	public static final String SURGICAL_REMOVAL_OF_STICHES_MINOR_THEATRE = "2002265";
+	public static final String REMOVAL_OF_CORNEAL_STITCHES = "1000397";
+	public static final String ENT_REMOVAL_OF_STITCHES = "1000365";
+
+	//Injections
+	public static final String INJECTION = "1000251";
+	public static final String INJECTION_OF_SCLEROSING_AGENT_IN_VEIN = "164553";
+	public static final String INJECTION_OF_SUBSTANCE_INTO_VENTRICULAR_SHUNT = "164298";
+	public static final String SUB_CONJUNCTIVAL_INJECTION = "168190";
+	public static final String INTRA_ARTERIAL_INJECTION = "164677";
+	public static final String SUB_CONJUCTIRAL_SUB_TENON_INJECTION = "1000399";
+
+	//Stitching
+	public static final String STITCHING = "1000447";
+	public static final String DENTAL_STITCHING = "1000340";
+	public static final String NOSE_EARS_STITCHING = "2001937";
+	public static final String STITCHING_OPD = "2002263";
+	public static final String STITCHING_MINOR_THEATER = "2002266";
+	public static final String SATURING_ESOPHAGEAL_LACERATION_TRANSABDOMINAL_APPROACH = "164736";
+	public static final String SATURING_ESOPHAGEAL_LACERATION_TRANSTHORACIC_APPROACH = "164737";
+	public static final String ENT_SURGICAL_TOILET_STITCHING_UNDER_GA = "2001951";
+
+	// Dressings
+	public static final String CLEAN_AND_DRESSING = "441";
+	public static final String BURN_DRESSING = "161668";
+	public static final String ENT_DRESSING = "1000356";
+	public static final String CASUALTY_DRESSING = "1000245";
+	public static final String ENT_CHANGE_OF_DRESSINGS = "2001956";
+	public static final String DRESSING_MINOR = "2002081";
+	public static final String DRESSING_MINOR_OPD = "2002275";
+	public static final String EYE_DRESSING = "2002111";
+	public static final String EXTENSIVE_DRESSING = "2002215";
+	public static final String DRESSING_LARGE_SPECIALISED = "2002276";
+	public static final String DRESSING_SMALL_BURN = "2002278";
+	public static final String SATURE_WOUND_WITH_DRESSING = "1934";
+	public static final String WOUND_DRESSING = "1935";
+	public static final String WOUND_DRESSING_ENT = "1000368";
+
 }

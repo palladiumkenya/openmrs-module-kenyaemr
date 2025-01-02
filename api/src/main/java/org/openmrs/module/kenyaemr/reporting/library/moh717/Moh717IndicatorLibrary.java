@@ -99,6 +99,27 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator otherSpecialClinics(String clinicFormUUID, int visitType) {
         return cohortIndicator("Other special clinics", ReportUtils.map(moh717CohortLibrary.otherSpecialClinics(clinicFormUUID, visitType), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator dentalAttendances(String fillingsList, String extractionsList, int visitType) {
+        return cohortIndicator("Dental Attendances", ReportUtils.map(moh717CohortLibrary.dentalAttendances(fillingsList, extractionsList,visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dentalFillings(String dentalFillingsList, int visitType) {
+        return cohortIndicator("Dental fillings", ReportUtils.map(moh717CohortLibrary.dentalFillings(dentalFillingsList,visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dentalExtractions(String dentalExtractionsList, int visitType) {
+        return cohortIndicator("Dental extractions", ReportUtils.map(moh717CohortLibrary.dentalExtractions(dentalExtractionsList,visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator dressings(String dressingsList) {
+        return cohortIndicator("Dental extractions", ReportUtils.map(moh717CohortLibrary.dressings(dressingsList), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator removalOfStitches(String stitchesRemovalList) {
+        return cohortIndicator("Stitches removal", ReportUtils.map(moh717CohortLibrary.removalOfStitches(stitchesRemovalList), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator injections(String injectionsList) {
+        return cohortIndicator("Injections", ReportUtils.map(moh717CohortLibrary.injections(injectionsList), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator stitching(String stitchingsList) {
+        return cohortIndicator("Stitching", ReportUtils.map(moh717CohortLibrary.stitching(stitchingsList), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator newOnTBClinic() {
         return cohortIndicator("New on TB Clinic", ReportUtils.map(moh717CohortLibrary.newOnTBClinic(), "startDate=${startDate},endDate=${endDate}"));
     }
