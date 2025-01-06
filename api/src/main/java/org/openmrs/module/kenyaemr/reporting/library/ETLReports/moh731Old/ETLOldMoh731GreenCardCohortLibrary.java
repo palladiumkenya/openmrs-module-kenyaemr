@@ -2703,14 +2703,33 @@ public class ETLOldMoh731GreenCardCohortLibrary {
     }
 
     //We want to pick the first ld given prophylaxis
-    public CohortDefinition infantArvProphylaxisLabourAndDeliverySql(){
+    public CohortDefinition infantArvProphylaxisLabourAndDelivery(){
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select distinct en.patient_id from kenyaemr_etl.etl_mchs_delivery ld\n" +
-                "  inner join kenyaemr_etl.etl_mch_enrollment en on en.patient_id = ld.patient_id\n" +
-                "where ld.baby_nvp_dispensed = 1  or ld.baby_azt_dispensed = 1\n" +
-                "group by ld.patient_id\n" +
-                "having min(date(ld.visit_date)) between date(:startDate) and date(:endDate);";
+        String sqlQuery =  "select r.person_b as child\n" +
+                "from openmrs.relationship r\n" +
+                "inner join kenyaemr_etl.etl_mchs_delivery d on d.patient_id = r.person_a and r.relationship = 3\n" +
+                "and\n" +
+                "                                         (d.baby_nvp_dispensed = 1\n" +
+                "                                             or d.baby_azt_dispensed = 1)\n" +
+                "and coalesce(date(d.date_of_delivery),date(d.visit_date)) between date(:startDate) and date(:endDate)\n" +
+                "left join (select e.patient_id,\n" +
+                "            max(e.visit_date)                                                    as latest_enrollment,\n" +
+                "            v.latest_anc_with_prohylaxis,\n" +
+                "            mid(max(concat(e.visit_date, coalesce(e.lmp, e.lmp_estimated))), 11) as lmp_date,\n" +
+                "            timestampdiff(WEEK,\n" +
+                "                          mid(max(concat(e.visit_date, coalesce(e.lmp, e.lmp_estimated))), 11), date(:endDate))\n" +
+                "     from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "              inner join (select v.patient_id, max(v.visit_date) latest_anc_with_prohylaxis\n" +
+                "                          from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                          where (v.baby_nvp_dispensed = 80586\n" +
+                "                              or v.baby_azt_dispensed = 160123) and date(v.visit_date) <= date(:endDate)\n" +
+                "                          group by v.patient_id) v\n" +
+                "                         on e.patient_id = v.patient_id\n" +
+                "     group by e.patient_id\n" +
+                "     having latest_anc_with_prohylaxis >= latest_enrollment\n" +
+                "        and timestampdiff(WEEK, lmp_date, date(:endDate)) <= 42) anc on r.person_a = anc.patient_id\n" +
+                "where anc.patient_id is null;";
         cd.setName("infantArvProphylaxisLabourAndDelivery");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2721,25 +2740,17 @@ public class ETLOldMoh731GreenCardCohortLibrary {
     }
     //Infant ARV Prophylaxis L&D HV02-40
     //Exludes those given at ANC
-    public CohortDefinition infantArvProphylaxisLabourAndDelivery(){
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("infantArvProphylaxisLabourAndDeliverySql",ReportUtils.map(infantArvProphylaxisLabourAndDeliverySql(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("infantArvProphylaxisANC",ReportUtils.map(infantArvProphylaxisANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("infantArvProphylaxisLabourAndDeliverySql AND NOT infantArvProphylaxisANC");
-        return cd;
-    }
-
     public CohortDefinition infantARVProphylaxisGivenWithin8WeeksSql(){
 
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select en.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_enrollment en\n" +
-                "         inner join kenyaemr_etl.etl_mch_postnatal_visit p on en.patient_id = p.patient_id\n" +
-                "where (p.baby_nvp_dispensed = 80586 or p.baby_azt_dispensed = 160123)\n" +
-                "  and TIMESTAMPDIFF(WEEK, date(p.delivery_date), date(p.visit_date)) <=\n" +
-                "      8 and date(p.visit_date) between date(:startDate) and date(:endDate);";
+        String sqlQuery =  "select r.person_b as child\n" +
+                "from openmrs.relationship r\n" +
+                "inner join kenyaemr_etl.etl_mch_postnatal_visit p on p.patient_id = r.person_a and r.relationship = 3\n" +
+                "and\n" +
+                "            (p.baby_nvp_dispensed = 80586\n" +
+                "                or p.baby_azt_dispensed = 160123)\n" +
+                "and p.infant_prophylaxis_timing = 1065\n" +
+                "and date(p.visit_date) between date(:startDate) and date(:endDate);";
 
         cd.setName("totalARVProphylaxis");
         cd.setQuery(sqlQuery);

@@ -8,12 +8,17 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.web.controller;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.patient.PatientCalculationService;
@@ -167,7 +172,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static String VMMC_PROGRAM_UUID = "228538f4-cad9-476b-84c3-ab0086150bcc";
     public static String PREP_PROGRAM_UUID = "214cad1c-bb62-4d8e-b927-810a046daf62";
     public static String KP_PROGRAM_UUID = "7447305a-18a7-11e9-ab14-d663bd873d93";
-    public static final String KP_CLIENT_ENROLMENT = "c7f47cea-207b-11e9-ab14-d663bd873d93";
+    public static final String KP_CLIENT_ENROLMENT = "185dec84-df6f-4fc7-a370-15aa8be531ec";
     public static final String KP_CLIENT_DISCONTINUATION = "1f76643e-2495-11e9-ab14-d663bd873d93";
 
     public static final String PREP_ENROLLMENT_FORM = "d5ca78be-654e-4d23-836e-a934739be555";
@@ -204,9 +209,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static final String PEOPLE_IN_PRISON_UUID = "162277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static final String GP_COUNTY = "kenyakeypop.countyCode";
     public static final String GP_KP_IMPLEMENTING_PARTNER = "kenyakeypop.implementingPartnerCode";
-
-
-
+   
     /**
      * Gets a list of available/completed forms for a patient
      * @param request
@@ -294,6 +297,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        ProgramWorkflowService service = Context.getProgramWorkflowService();
+        List<PatientProgram> programEnrolmentHistory = service.getPatientPrograms(patient, null, null, null, null, null, false);
 
         if (patient == null) {
             return new ResponseEntity<Object>("The provided patient was not found in the system!",
@@ -302,6 +307,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         Map<String,String> patientFlagsMap = new HashMap<>();
         ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
+
+        // TODO: Consider flags categorization for a patient who is not in any program
+        if (programEnrolmentHistory.size() < 1) {
+            flagsObj.put("results", JsonNodeFactory.instance.arrayNode()); // return an empty list
+            return flagsObj.toString();
+        }
+
         CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
         Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
         List<String> patientFlagsToRefreshOnEveryRequest = Arrays.asList(
@@ -537,7 +549,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 concService.getConcept(159810),
                 concService.getConcept(154378),
                 concService.getConcept(74258),
-                concService.getConcept(164967)
+                concService.getConcept(164967),
+                concService.getConcept(168612),
+                concService.getConcept(84797)
                 );
 
         for (Concept con: arvDrugs) {
@@ -563,6 +577,28 @@ public class KenyaemrCoreRestController extends BaseRestController {
         Location facility = Context.getService(KenyaEmrService.class).getLocationByMflCode(facilityCode);
         locationResponseObj.put("name", facility.getName());
         return locationResponseObj;
+    }
+     /**
+     * Gets last hei outcome encounter
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/heiOutcomeEncounter")
+    @ResponseBody
+    public Object getHeiOutcomeEncounter(@RequestParam("patientUuid") String patientUuid) {
+        SimpleObject heiOutcomeResponseObj = new SimpleObject();
+        PatientIdentifierType heiNumber = MetadataUtils.existing(PatientIdentifierType.class, MchMetadata._PatientIdentifierType.HEI_ID_NUMBER);
+        Patient patient =  Context.getPatientService().getPatientByUuid(patientUuid);
+        PatientIdentifier pi = heiNumber != null && patient != null ? patient.getPatientIdentifier(heiNumber) : null;
+        EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
+        Form heiOutcomeForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHCS_HEI_COMPLETION);
+        Encounter lastHeiOutcomeEnc = EmrUtils.lastEncounter(patient, heiOutcomeEncType, heiOutcomeForm);
+        if(pi != null && pi.getIdentifier() != null) {
+            heiOutcomeResponseObj.put("heiNumber", pi.getIdentifier());
+        }
+        if(lastHeiOutcomeEnc != null) {
+            heiOutcomeResponseObj.put("heiOutcomeEncounterUuid", lastHeiOutcomeEnc.getUuid());
+        }
+        return heiOutcomeResponseObj;
     }
 
     /**
@@ -618,39 +654,37 @@ public class KenyaemrCoreRestController extends BaseRestController {
         ObjectNode encObj = JsonNodeFactory.instance.objectNode();
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-        String event = null;
-
         Encounter enc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, category);
-
         String ARV_TREATMENT_PLAN_EVENT = "1255AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String DATE_REGIMEN_STOPPED = "1191AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String endDate = null;
+        String event = null;
 
-        if (enc != null) {
-            Date latest = null;
-            List<Date> dates = new ArrayList<Date>();
-            for(Obs obs:enc.getObs()) {
-                dates.add(obs.getObsDatetime());
-                latest = Collections.max(dates);
-            }
+        if (enc != null && !enc.getObs().isEmpty()) {
+            // Find the latest observation date
+            Date latest = enc.getObs().stream()
+                            .map(Obs::getObsDatetime)
+                            .max(Date::compareTo)
+                            .orElse(null);
 
-            for(Obs obs:enc.getObs()) {
-				if(obs.getConcept().getUuid().equals(ARV_TREATMENT_PLAN_EVENT) && obs.getObsDatetime().equals(latest)) {
-					event =obs.getValueCoded() != null ?  obs.getValueCoded().getName().getName() : "";
-				}
-                if (obs.getConcept() != null && obs.getConcept().getUuid().equals(DATE_REGIMEN_STOPPED)) {
-                    if(obs.getValueDatetime() != null){
-                        endDate = DATE_FORMAT.format(obs.getValueDatetime());
-                    }
+            for (Obs obs : enc.getObs()) {
+                // ARV Treatment Plan Event
+                if (ARV_TREATMENT_PLAN_EVENT.equals(obs.getConcept().getUuid()) && obs.getObsDatetime().equals(latest)) {
+                    event = obs.getValueCoded() != null ? obs.getValueCoded().getName().getName() : "";
                 }
-
-			}
-
+                
+                // Date Regimen Stopped
+                if (DATE_REGIMEN_STOPPED.equals(obs.getConcept().getUuid()) && obs.getValueDatetime() != null) {
+                    endDate = DATE_FORMAT.format(obs.getValueDatetime());
+                }
+            }
         }
-        node.put("uuid", enc != null ?  enc.getUuid() : "");
-        node.put("startDate", enc != null ? DATE_FORMAT.format(enc.getEncounterDatetime()): "");
-        node.put("endDate", endDate);
-        node.put("event", event);
+
+        // Populate the response JSON node
+        node.put("uuid", enc != null ? enc.getUuid() : "");
+        node.put("startDate", enc != null ? DATE_FORMAT.format(enc.getEncounterDatetime()) : "");
+        node.put("endDate", endDate != null ? endDate : "");
+        node.put("event", event != null ? event : "");
         encObj.put("results", node);
 
         return encObj.toString();
@@ -957,13 +991,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
 
             CalculationResult tbPatientClassification = EmrCalculationUtils.evaluateForPatient(TbPatientClassificationCalculation.class, null, patient);
-            if(tbPatientClassification != null){
-                Obs obs  = (Obs) tbPatientClassification.getValue();
-                if(obs.getValueCoded().equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT))) {
-                    tbResponseObj.put("tbPatientClassification", "New tuberculosis patient");
-                }
-                else {
-                    tbResponseObj.put("tbPatientClassification", obs.getValueCoded().getName().getName());
+            if (tbPatientClassification != null) {
+                Obs obs = (Obs) tbPatientClassification.getValue();
+                if (obs != null && obs.getValueCoded() != null) {
+                    Concept valueCoded = obs.getValueCoded();
+                    String classification = valueCoded.equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT)) 
+                                            ? "New tuberculosis patient" 
+                                            : valueCoded.getName().getName();
+                    tbResponseObj.put("tbPatientClassification", classification);
                 }
             }
 
@@ -1037,7 +1072,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 //Check mch enrollment and followup forms
             } else if(hivEnrollmentStatusObs != null || hivFollowUpStatusObs != null) {
                 String regimenName = null;
-                if(hivFollowUpStatusObs != null){
+                if(hivFollowUpStatusObs != null && hivFollowUpStatusObs.getValueCoded() != null) {
                     mchMotherResponseObj.put("hivStatus", hivFollowUpStatusObs.getValueCoded().getName().getName());
                     mchMotherResponseObj.put("hivStatusDate", hivFollowUpStatusObs.getValueDatetime());
                 }else {
@@ -1166,8 +1201,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 if (milestones.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     for (Obs milestone : milestones) {
-                        sb.append(milestone.getValueCoded().getName().toString());
-                        sb.append(", ");
+                        if(milestone.getValueCoded() != null) {
+                            sb.append(milestone.getValueCoded().getName().toString());
+                            sb.append(", ");
+                        }
                     }
                     joined = sb.substring(0, sb.length() - 2);
                     mchChildResponseObj.put("milestonesAttained", joined);
@@ -1343,8 +1380,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     }
                     try {
                         // get medication patient is on
+                        CareSetting outpatient = Context.getOrderService().getCareSettingByName("OUTPATIENT"); // TODO: include all relevant care settings
                         OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
-                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, null, drugOrderType, false);
+                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, outpatient, drugOrderType, false);
                         List<DrugOrder> tptDrugOrders = new ArrayList<DrugOrder>();
                         for (Order order : allDrugOrders) {
                             if (order != null && order.getConcept() != null) {
@@ -2845,6 +2883,22 @@ else {
     }
 
     /**
+     * Generates KenyaEMR related metrics
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/getemrmetrics")
+    @ResponseBody
+    public Object getKenyaEMRDetails(HttpServletRequest request) {
+        return SimpleObject.create(
+              "EmrName", "KenyaEMR",
+                "EmrVersion", DwapiMetricsUtil.getKenyaemrVersion(),
+                "LastLoginDate", DwapiMetricsUtil.getLastLogin(),
+                "LastMoH731RunDate", DwapiMetricsUtil.getDateofLastMOH731()
+        );
+    }
+
+    /**
      * Verify NUPI exists (EndPoint)
      * @return
      */
@@ -2854,17 +2908,12 @@ else {
     public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
         String ret = "{\"status\": \"Error\"}";
         try {
-            System.out.println("NUPI verification: Country: " + country + " IdentifierType: " + identifierType + " Identifier: " + identifier);
-
-            // Create URL
-            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
             GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
             if(baseURL == null || baseURL.trim().isEmpty()) {
-                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";//TODO: we need to remove this ASAP
             }
             String completeURL = baseURL + "/"  + country + "/" + identifierType  + "/" + identifier;
-            System.out.println("NUPI verification: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
             UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
@@ -3283,167 +3332,129 @@ else {
 
         return ret;
 
-    }
-
-    /**
-     * End Point for getting Patient resource from SHA client registry
-     * @param payload
-     * @param identifier
-     * @param identifierType
-     * @return
-     */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-    @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
-    public ResponseEntity<String> getSHAPatient( @PathVariable String identifier, @PathVariable String identifierType) {
-        String strUserName = "";
-        String strPassword = "";
-
-        String errorResponse = "{\"status\": \"Error\"}";
-        try {
-            // Retrieve base URL from global properties
-            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_END_POINT);
-            String baseURL = globalGetUrl.getPropertyValue();
-            if (baseURL == null || baseURL.trim().isEmpty()) {
-                // TODO  replace base URL with the actual external default url
-                baseURL = "http://127.0.0.1:9342/api/shaPatientResource";
-            }
-
-            // Get Auth credentials
-            GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_USER);
-            strUserName = globalGetUsername.getPropertyValue();
-
-            GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_GET_API_SECRET);
-            strPassword = globalGetPassword.getPropertyValue();
-            // Prepare URL
-            String completeURL = baseURL +  "?" + identifierType  + "=" + identifier;
-            System.out.println("SHA Client registry verification: Using SHA GET URL: " + completeURL);
-            URL url = new URL(completeURL);
-
-            // Set up connection
-            String auth = strUserName + ":" + strPassword;
-            System.out.printf("Auth credentials"+auth);
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setConnectTimeout(10000); // set timeout to 10 seconds
-
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            }
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response.toString());
-        } catch (Exception ex) {
-            log.error("SHA client registry verification: ERROR: {} "+ ex.getMessage(), ex);
-        }
-        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(errorResponse);
-    }
-
-    /**
-     * End Point for getting Practitioner resource from SHA client registry
-     * @param allParams to capture the query parameters
-     * @return
-     */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-    @RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
-    public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) {
-    String strUserName = "";
-    String strPassword = "";
-    String errorResponse = "{\"status\": \"Error\"}";
-    
-    try {
-        // Retrieve base URL from global properties
-        GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT);
-        String baseURL = globalGetUrl.getPropertyValue();
-        if (baseURL == null || baseURL.trim().isEmpty()) {
-            baseURL = "https://sandbox.tiberbu.health/api/v4";
-        }
-
-        // Get Auth credentials
-        GlobalProperty globalGetUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER);
-        strUserName = globalGetUsername.getPropertyValue();
-
-        GlobalProperty globalGetPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_SECRET);
-        strPassword = globalGetPassword.getPropertyValue();
-
-        // Check if credentials are available
-        if (strUserName == null || strUserName.isEmpty() || strPassword == null || strPassword.isEmpty()) {
-            log.error("SHA practitioner search: API credentials are missing or empty");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"status\": \"Error\", \"message\": \"API credentials are missing or empty\"}");
-        }
-
-        if (allParams.size() != 1) {
-            return ResponseEntity.badRequest()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"status\": \"Error\", \"message\": \"Exactly one identifier must be provided for the search at a time\"}");
-        }
-
-        Map.Entry<String, String> entry = allParams.entrySet().iterator().next();
-        String identifier = entry.getKey();
-        String value = entry.getValue();
-
-        String completeURL = baseURL + "/Practitioner?" + 
-            URLEncoder.encode(identifier, StandardCharsets.UTF_8.toString()) + 
-            "=" + 
-            URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-
-        log.info("SHA practitioner search: Using SHA GET URL: " + completeURL);
-
-        // Set up SSL connection
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-            SSLContexts.createDefault(),
-            new String[] { "TLSv1.2" },
-            null,
-            SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-
-        try (CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build()) {
-            HttpGet request = new HttpGet(completeURL);
-
-            // Set up Basic Authentication
-            String auth = strUserName + ":" + strPassword;
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-            request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
-            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
-            request.setHeader(HttpHeaders.ACCEPT, "application/json");
-
-            // Execute the request
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                log.info("SHA practitioner search: Response Code: " + statusCode);
-
-                String responseBody = EntityUtils.toString(response.getEntity());
-
-                if (statusCode == 200) {
-                    return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(responseBody);
-                } else {
-                    log.error("SHA practitioner search: ERROR: HTTP " + statusCode + " - " + responseBody);
-                    return ResponseEntity.status(statusCode)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body("{\"status\": \"Error\", \"message\": \"HTTP " + statusCode + " - " + responseBody + "\"}");
-                }
-            }
-        }
-    } catch (Exception ex) {
-        log.error("SHA practitioner search: ERROR: " + ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("{\"status\": \"Error\", \"message\": \"" + ex.getMessage() + "\"}");
-    }
-}
+    }   
     @RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
     public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
         return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
     }
+
+	/**
+	 * End Point for getting Patient resource from SHA client registry	 
+	 * @param identifier
+	 * @param identifierType
+	 * @return
+	 */
+	@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
+	public ResponseEntity<String> getSHAPatient(@PathVariable String identifier, @PathVariable String identifierType) throws IOException {
+		String toReturn = getCrStatus(identifier, identifierType);
+
+		return ResponseEntity.ok()
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(toReturn);
+	}
+
+	/**
+	 * End Point for getting Practitioner resource from SHA client registry
+	 * @param allParams to capture the query parameters
+	 * @return
+	 */
+	@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
+	public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
+		
+		if (allParams.size() != 2) {
+			return ResponseEntity.badRequest()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
+		}
+		String identifierType = allParams.get("identifierType");
+		String identifier = allParams.get("identifierNumber");;			
+		String toReturn = getHwStatus(identifier, identifierType);
+
+		return ResponseEntity.ok()
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(toReturn);
+
+	}
+
+	public static String getAuthToken() throws IOException {
+		// Utility function to get auth token
+		OkHttpClient client = new OkHttpClient();
+		GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
+		String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
+		if (shaJwtTokenUrl == null || shaJwtTokenUrl.trim().isEmpty()) {
+			System.out.println("Jwt token url configs not updated: ");
+		}
+		GlobalProperty globalGetJwtUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
+		String shaJwtUsername = globalGetJwtUsername.getPropertyValue();
+		if (shaJwtUsername == null || shaJwtUsername.trim().isEmpty()) {
+			System.out.println("Jwt token username not updated: ");
+		}
+		GlobalProperty globalGetJwtPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
+		String shaJwtPassword = globalGetJwtPassword.getPropertyValue();
+		if (shaJwtPassword == null || shaJwtPassword.trim().isEmpty()) {
+			System.out.println("Jwt token password not updated: ");
+		}
+
+		// Encode username and password for Basic Auth
+		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
+
+		// Build the GET request
+		Request request = new Request.Builder()
+			.url(shaJwtTokenUrl)
+			.header("Authorization", "Basic " + auth)
+			.build();
+
+		// Execute the request
+		Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+//            System.out.println("Response: " + response.body().string());
+		} else {
+			System.out.println("Request failed: " + response.code() + " - " + response.message());
+		}
+
+		return response.body().string();
+	}
+	public static String getCrStatus(String identifier, String identifierType ) throws IOException {
+		GlobalProperty globalGetCRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT);
+		String baseURL = globalGetCRUrl.getPropertyValue();
+		if (baseURL == null || baseURL.trim().isEmpty()) {
+			System.out.println("CR GET endpoint configs not updated: ");
+		}
+		String token = getAuthToken();
+		OkHttpClient client = new OkHttpClient().newBuilder()
+			.build();
+		Request request = new Request.Builder()
+			.url(baseURL + "?identifierType=" + identifierType + "&identifierNumber=" + identifier)
+			.addHeader("Referer", "")
+			.addHeader("Authorization", "Bearer " + token)
+			.build();
+
+		Response response = client.newCall(request).execute();
+		String respo = response.body().string();
+		//convert response to json
+		return   respo;
+	}
+
+	public static String getHwStatus(String identifier, String identifierType ) throws IOException {
+		
+		GlobalProperty globalGetHRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
+		String baseURL = globalGetHRUrl.getPropertyValue();
+		if (baseURL == null || baseURL.trim().isEmpty()) {
+			System.out.println("HWR GET endpoint configs not updated: ");
+		}
+		String token = getAuthToken();
+		OkHttpClient client = new OkHttpClient().newBuilder()
+			.build();
+		Request request = new Request.Builder()		
+			.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier)
+			.addHeader("Referer", "")
+			.addHeader("Authorization", "Bearer " + token)
+			.build();
+		Response response = client.newCall(request).execute();	
+		String respo = response.body().string();
+		return   respo;
+	}
 
 }

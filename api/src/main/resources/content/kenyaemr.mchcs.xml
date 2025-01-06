@@ -24,7 +24,6 @@
 		<property name="patientForms">
 			<set>
 				<ref bean="kenyaemr.form.mchcsImmunization" />
-				<ref bean="kenyaemr.form.mchcsHeiExit" />
 
 			</set>
 		</property>
@@ -32,6 +31,8 @@
 			<set>
 				<ref bean="kenyaemr.form.mchcsFollowupVisit" />
 				<ref bean="kenyaemr.common.form.geneXpert" />
+				<ref bean="kenyaemr.form.mchcsHeiExit" />
+
 			</set>
 		</property>
 		<property name="reports">
@@ -146,6 +147,7 @@
 				<ref bean="kenyaemr.app.chart" />
 			</set>
 		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForHeiOutcome" />
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:mchcs/mchcsHeiOutcomes.html" />
 	</bean>

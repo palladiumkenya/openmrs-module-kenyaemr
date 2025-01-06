@@ -24,7 +24,6 @@
 		<property name="defaultCompletionForm" ref="kenyaemr.hiv.form.completion" />
 		<property name="patientForms">
 			<set>
-				<ref bean="kenyaemr.hiv.form.treatmentPreparation" />
 			</set>
 		</property>
 		<property name="visitForms">
@@ -38,6 +37,7 @@
 				<ref bean="kenyaemr.hiv.form.cccDefaulterTracing"/>
 				<ref bean="kenyaemr.hiv.form.hivHighITTIntervention" />
 				<ref bean="kenyaemr.hiv.form.homeVisitChecklist" />
+				<ref bean="kenyaemr.hiv.form.treatmentPreparation" />
 			</set>
 		</property>
 		<property name="reports">
