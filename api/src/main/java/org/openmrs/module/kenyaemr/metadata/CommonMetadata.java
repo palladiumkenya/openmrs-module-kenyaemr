@@ -107,16 +107,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POPC = "6f8e49f2-3bff-4aff-909b-20568c316625";
 		public static final String MAXILLOFACIAL = "92999f52-f352-415a-9e0d-87872e5b2c8d";
 		public static final String SPEECHANDLANGUAGE = "5d0b6d85-5b88-410c-9f0f-4dab3db7ceb2";
-		public static final String FAMILY_PLANNING = "85b019dc-18ec-4315-b661-5f7037e7ce38";
-		public static final String DIABETICCONSULTATION = "70dc0091-064d-4428-ade8-119f142a93a2";
-		public static final String ADVERSEDRUGREACTION = "7a185fe4-c56f-4195-b682-d3f5afa9d9c2";
-		public static final String DERMATOLOGY = "e6eb6328-3f24-43f8-9f75-92daccb6ac48";
-		public static final String UROLOGY = "1b1d8425-49e0-4cc6-8a66-6a598b5ac0a5";
-		public static final String HEARING_SCREENING = "9c015ff8-8c5d-42bc-8ebd-dc7ea01e19d3";
-		public static final String NEUROLOGY = "14d2b0fb-7fac-49df-bcf5-a07463fa3433";
-		public static final String POST_MORTEM = "32b61a73-4971-4fc0-b20b-9a30176317e2";
-		public static final String MORGUE_ADMISSION = "3d2df845-6f3c-45e7-b91a-d828a1f9c2e8";
-		public static final String MORGUE_DISCHARGE = "3d618f40b-b5a3-4f17-81c8-2f04e2aad58e";
 	}
 
 	public static final class _Form {
@@ -155,14 +145,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POPC_FORM = "d95e44dd-e389-42ae-a9b6-1160d8eeebc4";
 		public static final String MAXILLOFACIAL_CLINICAL_FORM = "b40d369c-31d0-4c1d-a80a-7e4b7f73bea0";
 		public static final String SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM = "67f98072-1518-4beb-8a30-aa8a319ee3df";
-		public static final String FAMILY_PLANNING = "a52c57d4-110f-4879-82ae-907b0d90add6";
-		public static final String DIABETIC_CLINICAL_FORM = "9f6543e4-0821-4f9c-9264-94e45dc35e17";
-		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
-		public static final String DERMATOLOGY_CLINICAL_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
-		public static final String UROLOGY_CLINICAL_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
-		public static final String HEARING_SCREENING_CLINICAL_FORM = "270f388f-439f-476a-8919-8211f850d366";
-		public static final String NEUROLOGY_CLINICAL_FORM = "f97f2bf3-c26b-4adf-aacd-e09d720a14cd";
-		public static final String POST_MORTEM_CLINICAL_FORM = "016beec1-edff-4293-b3ed-817c7dddaa93";
 	}
 
 	public static final class _OrderType {
@@ -301,18 +283,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("SOPC", "SOPC encounter type", _EncounterType.SOPC));
 		install(encounterType("POPC", "POPC encounter type", _EncounterType.POPC));
 		install(encounterType("MAXILLOFACIAL", "Maxillofacial encounter type", _EncounterType.MAXILLOFACIAL));
-		install(encounterType("Speech and Language", "Speech and Language encounter type",
-				_EncounterType.SPEECHANDLANGUAGE));
-		install(encounterType("Family Planning", "Family Planning encounter type", _EncounterType.FAMILY_PLANNING));
-		install(encounterType("Diabetic Clinic", "Diabetic Clinic encounter type", _EncounterType.DIABETICCONSULTATION));
-		install(encounterType("Adverse Drug Reaction", "Adverse Drug Reaction encounter type", _EncounterType.ADVERSEDRUGREACTION));
-		install(encounterType("Dermatology Clinic", "Dermatology clinical encounter type", _EncounterType.DERMATOLOGY));
-		install(encounterType("Urology Clinic", "Urology clinical encounter type", _EncounterType.UROLOGY));
-		install(encounterType("Hearing Screening Clinic", "Hearing Screening clinical encounter type", _EncounterType.HEARING_SCREENING));
-		install(encounterType("Neurology Clinic", "Neurology clinical encounter type", _EncounterType.NEUROLOGY));
-		install(encounterType("Post-Mortem", "Post-Mortem clinical encounter type", _EncounterType.POST_MORTEM));
-		install(encounterType("Morgue Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
-		install(encounterType("Morgue Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
+		install(encounterType("Speech and Language", "Speech and Language encounter type", _EncounterType.SPEECHANDLANGUAGE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -366,22 +337,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Family Planning", "Form for family planning", _EncounterType.FAMILY_PLANNING, "1",
 				_Form.FAMILY_PLANNING));
 		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
-		install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter",
-				_EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
-		install(form("Speech and Language Therapy Clinical Form",
-				"Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1",
-				_Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
-		install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
-				_Form.DIABETIC_CLINICAL_FORM));
-		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
-		install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
-		install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
-		install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
-		install(form("Neurology Clinical Form", "Form for Neurology clinical encounter", _EncounterType.NEUROLOGY, "1", _Form.NEUROLOGY_CLINICAL_FORM));
-		install(form("Post-Mortem Clinical Form", "Form for Morgue clinical encounter", _EncounterType.POST_MORTEM, "1", _Form.POST_MORTEM_CLINICAL_FORM));
+		install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter", _EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
+		install(form("Speech and Language Therapy Clinical Form", "Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1", _Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
 
-		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
-				"The facility for which this installation is configured",
+		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION, "The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
 
 		String adxMappingString = "[{\"reportName\":\"Revised MOH 731\",\"prefix\":\"Y23_\",\"datasets\":[{\"name\":\"1\",\"dhisName\":\"OaIjkmzEeNO\"},{\"name\":\"2\",\"dhisName\":\"L7hIEAumRnQ\"},{\"name\":\"3\",\"dhisName\":\"gtDFQTNBp7y\"},{\"name\":\"4\",\"dhisName\":\"SoiOUE3lOJd\"}]}]";

@@ -507,7 +507,6 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 										}
 									}
 								}
-
 						}
 					}
 					//Hiv followup encounter
