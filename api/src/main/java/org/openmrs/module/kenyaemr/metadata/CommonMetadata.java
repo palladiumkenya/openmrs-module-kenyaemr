@@ -167,6 +167,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String FERTILITY_CLINICAL_FORM = "32e43fc9-6de3-48e3-aafe-3b92f167753d";
 		public static final String CARDIOLOGY_CLINICAL_FORM = "998be6de-bd13-4136-ba0d-3f772139895f";
 		public static final String GASTROENTEROLOGY_CLINICAL_FORM = "6b4fa553-f2b3-47d0-a4c5-fc11f38b0b24";
+		public static final String DENTAL_CLINICAL_FORM = "a3c01460-c346-4f3d-a627-5c7de9494ba0";
 	}
 
 	public static final class _OrderType {
@@ -391,6 +392,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Gastroenterology Clinical Form", "Form for Gastroenterology encounter ", _EncounterType.CONSULTATION, "1", _Form.GASTROENTEROLOGY_CLINICAL_FORM));
 		install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
 		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
+		install(form("Dental Clinical Form", "Form for Dental encounter ", _EncounterType.CONSULTATION, "1", _Form.DENTAL_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",

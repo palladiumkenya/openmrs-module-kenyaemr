@@ -252,6 +252,77 @@ public class Moh717CohortLibrary {
         sql.setQuery("select e.patient_id from kenyaemr_etl.etl_tb_enrollment e where e.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
+
+    public CohortDefinition dentalVisits(int visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Dental visits");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select c.patient_id from kenyaemr_etl.etl_special_clinics c where c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+" and date(c.visit_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+
+    public CohortDefinition dentalFillings(String fillingsList, int visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Dental Fillings");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "         where concept_id in ("+fillingsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+";");
+        return sql;
+    }
+    public CohortDefinition dentalExtractions(String extractionsList,int visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Dental extractions");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "where concept_id in ("+extractionsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+";");
+        return sql;
+    }
+    public CohortDefinition dentalAttendances(String fillingsList, String extractionsList, int visitType) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("dentalVisits",ReportUtils.map(dentalVisits(visitType), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("dentalExtractions",ReportUtils.map(dentalExtractions(extractionsList, visitType), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("dentalFillings",ReportUtils.map(dentalFillings(fillingsList, visitType), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("dentalVisits AND NOT (dentalExtractions OR dentalFillings)");
+        return cd;
+    }
+
+    public CohortDefinition dressings(String dressingsList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Dressings");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+dressingsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition removalOfStitches(String removalOfStitchesList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Removal of Stitches");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+removalOfStitchesList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition injections(String injectionsList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Injections");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+injectionsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition stitching(String stitchingList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("stitching");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+stitchingList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
     public CohortDefinition revisitTBClinic() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Revisiting TB Clinic");
