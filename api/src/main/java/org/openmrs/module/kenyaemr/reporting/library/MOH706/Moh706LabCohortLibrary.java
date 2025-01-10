@@ -10,7 +10,6 @@
 package org.openmrs.module.kenyaemr.reporting.library.MOH706;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
