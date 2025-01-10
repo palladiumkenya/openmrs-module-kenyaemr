@@ -38,12 +38,12 @@ public class Moh706IndicatorLibrary {
 	}
 
 	public CohortIndicator getTotalCodedLabsByConceptAndPositiveAnswer(int q, List<Integer> ans) {
-		return cohortIndicator("All patients who have tests done coded tests based on a question and answers",
+		return cohortIndicator("All patients who have tests based on a question and answers",
 			map(moh706LabCohortLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(q, ans), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	public CohortIndicator getResultsBasedOnAlistOfQuestionsAndListOfAnswers(List<Integer> question, List<Integer> ans) {
-		return cohortIndicator("All patients who have tests done coded tests based on a question and answers",
+		return cohortIndicator("All patients who have tests based on a question and answers",
 			map(moh706LabCohortLibrary.getResultsBasedOnAlistOfQuestionsAndListOfAnswers(question, ans), "startDate=${startDate},endDate=${endDate}"));
 	}
 
