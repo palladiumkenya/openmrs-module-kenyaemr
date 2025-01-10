@@ -9,30 +9,111 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.MOH706;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class Moh706LabCohortLibrary {
 
-    public CohortDefinition getAllUrineAnalysisGlucoseTestsPositives() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Get urine analysis patients - glucose");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-			"                             WHERE x.lab_test = 1305 AND x.test_result = 1302 AND date(x.visit_date) BETWEEN :startDate AND :endDate\n" +
-			"                            UNION\n" +
-			"                            SELECT d.patient_id FROM kenyaemr_etl.etl_patient_demographics d\n" +
-			"                             INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON x.patient_id = d.patient_id\n" +
-			"                             WHERE x.lab_test = 856 AND x.test_result IS NOT NULL AND date(x.visit_date) BETWEEN :startDate AND :endDate;"
+	//1.2 Urine Analysis
 
-        );
-        return sql;
-    }
+	public CohortDefinition getTotalTestsByConcept(Integer labSetConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get total tests by lab concept");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"    where le.set_member_conceptId = " + labSetConceptId + "\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+
+	public CohortDefinition getTotalCodedLabsByConceptAndPositiveAnswer(int question, List<Integer> ans) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with tests recorded based on concept id");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + question + "\n" +
+			"  and le.test_result in  (" + StringUtils.join(ans, ',') + ")\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;");
+		return sql;
+	}
+
+	public CohortDefinition getResultsBasedOnAlistOfQuestionsAndListOfAnswers(List<Integer> question, List<Integer> ans) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with tests recorded based on concept id");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId in  (" + StringUtils.join(question, ',') + ")\n" +
+			"  and le.test_result in  (" + StringUtils.join(ans, ',') + ")\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;");
+		return sql;
+	}
+
+	public CohortDefinition getResultsBasedOnAlistOfQuestions(List<Integer> question) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with tests recorded based on concept id");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId in  (" + StringUtils.join(question, ',') + ")\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;");
+		return sql;
+	}
+
+	public CohortDefinition getResultsBasedOnValueNumericQuestionBetweenLimits(int question, double lower, double upper) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with tests recorded based on concept id within limits");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + question + "\n" +
+			"  and le.test_result between " + lower + "  and  " + upper + "\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;");
+		return sql;
+	}
+
+	public CohortDefinition getResultsBasedOnValueNumericQuestion(int question) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with tests recorded based on concept id ");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + question + "\n" +
+			"  and le.test_result is not null\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;");
+		return sql;
+	}
+
+	public CohortDefinition getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
+		SqlCohortDefinition sql = new SqlCohortDefinition();
+		sql.setName("Get patients with malaria tests positive cases");
+		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+		sql.setQuery("#Malaria BS\n" +
+			"select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
+			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
+			"where le.set_member_conceptId = " + testConceptId + " and le.test_result like '%seen%'\n" +
+			"  and date(le.visit_date) between :startDate and :endDate;"
+
+		);
+		return sql;
+	}
+
 }

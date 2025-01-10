@@ -12,21 +12,58 @@ package org.openmrs.module.kenyaemr.reporting.library.MOH706;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 import static org.openmrs.module.kenyaemr.reporting.MohReportUtils.ReportingUtils.cohortIndicator;
 
 @Component
 public class Moh706IndicatorLibrary {
-    private final Moh706LabCohortLibrary moh706LabCohortLibrary;
+	private final Moh706LabCohortLibrary moh706LabCohortLibrary;
 
-    public Moh706IndicatorLibrary(Moh706LabCohortLibrary moh706LabCohortLibrary) {
-        this.moh706LabCohortLibrary = moh706LabCohortLibrary;
-    }
+	public Moh706IndicatorLibrary(Moh706LabCohortLibrary moh706LabCohortLibrary) {
+		this.moh706LabCohortLibrary = moh706LabCohortLibrary;
+	}
 
-    public CohortIndicator getAllUrineAnalysisGlucoseTestsPositives() {
-        return cohortIndicator(
-                "All patients who have urinalysis glucose",
-                map(moh706LabCohortLibrary.getAllUrineAnalysisGlucoseTestsPositives(),
-                        "startDate=${startDate},endDate=${endDate}"));
-    }
+	public CohortIndicator getTotalTestsByConcept(Integer labSetConceptId) {
+		return cohortIndicator(
+			"All patients who have urinalysis glucose",
+			map(moh706LabCohortLibrary.getTotalTestsByConcept(labSetConceptId),
+				"startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
+		return cohortIndicator("All patients who have malaria test done and are positive",
+			map(moh706LabCohortLibrary.getAllBSMalariaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getTotalCodedLabsByConceptAndPositiveAnswer(int q, List<Integer> ans) {
+		return cohortIndicator("All patients who have tests based on a question and answers",
+			map(moh706LabCohortLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(q, ans), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getResultsBasedOnAlistOfQuestionsAndListOfAnswers(List<Integer> question, List<Integer> ans) {
+		return cohortIndicator("All patients who have tests based on a question and answers",
+			map(moh706LabCohortLibrary.getResultsBasedOnAlistOfQuestionsAndListOfAnswers(question, ans), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getResultsBasedOnAlistOfQuestions(List<Integer> q) {
+		return cohortIndicator("All patients who have tests done based on a question list",
+			map(moh706LabCohortLibrary.getResultsBasedOnAlistOfQuestions(q), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getResultsBasedOnValueNumericQuestionBetweenLimits(int question, double lower, double upper) {
+		return cohortIndicator(
+			"Get patients with results recorded based on  concept id within limits indicators",
+			map(moh706LabCohortLibrary.getResultsBasedOnValueNumericQuestionBetweenLimits(question, lower, upper),
+				"startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator getResultsBasedOnValueNumericQuestion(int question) {
+		return cohortIndicator(
+			"Get patients with tests recorded based on concept id indicators",
+			map(moh706LabCohortLibrary.getResultsBasedOnValueNumericQuestion(question),
+				"startDate=${startDate},endDate=${endDate}"));
+	}
+
 }
