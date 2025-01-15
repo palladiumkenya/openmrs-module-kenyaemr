@@ -109,6 +109,16 @@
         <ref bean="kenyaemr.ehrReports.report.fcdrr" />
 			</set>
 		</property>
+		<property name="specialClinics">
+			<set>
+				<ref bean="kenyaemr.specialClinics.report.moh416" />
+				<ref bean="kenyaemr.specialClinics.report.moh417" />
+				<ref bean="kenyaemr.specialClinics.report.moh420" />
+				<ref bean="kenyaemr.specialClinics.report.moh275" />
+				<ref bean="kenyaemr.specialClinics.report.moh407A" />
+				<ref bean="kenyaemr.specialClinics.report.moh407B" />
+			</set>
+		</property>
 	</bean>
 
 	<bean id="kenyaemr.common.report.duplicateNUPI" class="org.openmrs.module.kenyacore.report.CalculationReportDescriptor">
@@ -1044,6 +1054,73 @@
 		<property name="template" value="kenyaemr:moh204B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH204B" />
 	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh416" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="a14a39bc-3d56-4b0c-8943-9ad90c2fd46f" />
+		<property name="name" value="MOH 416 Eye Register" />
+		<property name="description" value="MOH 416 Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh416.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH416" />
+	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh420" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="7d617d4b-e825-4d15-bc9d-1569beff3edb" />
+		<property name="name" value="MOH 420 Orthopaedic Technology (Prosthetics and Orthotics) Register" />
+		<property name="description" value="MOH 420 Orthopaedic Technology (Prosthetics and Orthotics) Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh420.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH420" />
+	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh275" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="008806d6-f9d6-4ed4-9091-24fa49997edb" />
+		<property name="name" value="MOH 275 Occupational Therapy Register" />
+		<property name="description" value="MOH 275 Occupational Therapy Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh275.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH275" />
+	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh407A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="cdaceb90-a346-48e6-aa76-49d1dd6451c7" />
+		<property name="name" value="MOH 407A Nutrition Outpatient Register" />
+		<property name="description" value="MOH 407A Nutrition Outpatient Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh407A.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407A" />
+	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh407B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="ea5c0087-c734-4f14-b673-8e00cfa40675" />
+		<property name="name" value="MOH 407B Nutrition Outpatient Register" />
+		<property name="description" value="MOH 407B Nutrition Outpatient Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh407B.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407B" />
+	</bean>
+	<bean id="kenyaemr.specialClinics.report.moh417" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="bc7b3cde-7df5-4ebe-93a6-9281c834b06b" />
+		<property name="name" value="Therapeutic Play Register MOH 417" />
+		<property name="description" value="MOH 417 Therapeutic Play Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh417.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH417" />
+	</bean>
+
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
 		<property name="name" value="Monthly Collection by Facility" />
