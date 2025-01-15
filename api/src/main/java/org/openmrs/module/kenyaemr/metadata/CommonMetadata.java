@@ -239,6 +239,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LICENSE_EXPIRY_DATE = "00539959-a1c7-4848-a5ed-8941e9d5e835";
 		public static final String LICENSE_BODY = "ba18bb97-d17c-4640-80d2-58e7df90ca4c";
 		public static final String NATIONAL_ID = "3d152c97-2293-4a2b-802e-e0f1009b7b15";
+		public static final String PROVIDER_HIE_FHIR_REFERENCE = "67b94e8e-4d61-4810-b0f1-d86497f6e553";
 
 	}
 
@@ -641,6 +642,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				FreeTextDatatype.class, "", 0, 9999, _ProviderAttributeType.NATIONAL_ID));
 		install(providerAttributeType("License Body", "", FreeTextDatatype.class, "", 0, 9999,
 				_ProviderAttributeType.LICENSE_BODY));
+		install(providerAttributeType("Provider HIE FHIR Reference", "", FreeTextDatatype.class, "", 0, 9999,
+				_ProviderAttributeType.PROVIDER_HIE_FHIR_REFERENCE));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects",
 				_RelationshipType.GUARDIAN_DEPENDANT));

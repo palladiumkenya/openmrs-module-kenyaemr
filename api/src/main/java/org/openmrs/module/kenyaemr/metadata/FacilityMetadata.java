@@ -48,6 +48,8 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String SHA_ACCREDITATION = "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb";
 		public static final String SHA_CONTRACTED_FACILITY = "68d9200e-a469-482f-8cc8-9d0953a3c917";
 		public static final String SHA_FACILITY_EXPIRY_DATE = "8e1ec5d4-4810-466a-9c90-b801bae9d063";
+		public static final String FACILITY_KEPH_LEVEL = "0233ba94-22d2-4658-81c3-2cf00fca382d";
+		public static final String FACILITY_HIE_FHIR_REFERENCE = "682f0a48-a642-491b-aa6d-41084bee0ee0";
 	}
 
 	/**
@@ -79,6 +81,18 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				"Facility Expiry Date", "Expiry date for SHA contracted Facility",
 				FreeTextDatatype.class, "", 0, 1,
 				_LocationAttributeType.SHA_FACILITY_EXPIRY_DATE
+		));
+
+		install(locationAttributeType(
+				"Facility KEPH Level", "Facility KEPH Level",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.FACILITY_KEPH_LEVEL
+		));
+
+		install(locationAttributeType(
+				"Facility HIE FHIR Reference", "Facility HIE FHIR Reference",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.FACILITY_HIE_FHIR_REFERENCE
 		));
 
 	}
