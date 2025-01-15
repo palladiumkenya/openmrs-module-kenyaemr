@@ -54,7 +54,7 @@ public class FacilityStatusTask extends AbstractTask {
     private static final String BASE_URL_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_END_POINT;
     private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
     private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
-    private static final String DEFAULT_BASE_URL = "https://sandbox.tiberbu.health/api/v4";
+    private static final String DEFAULT_BASE_URL = "https://api.dha.go.ke/v1/fhir";
     private static final String DEFAULT_MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode().trim();
 
     @Override
@@ -73,17 +73,17 @@ public class FacilityStatusTask extends AbstractTask {
     }
 
     public static ResponseEntity<String> getFacilityStatus() {
-        String auth = getAuthCredentials();
+        String bearerToken = getBearerToken();
 
-        if (auth.isEmpty()) {
-            log.error("Configure authentication credentials");
+        if (bearerToken.isEmpty()) {
+            log.error("Bearer token is missing");
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
             HttpGet getRequest = new HttpGet(getBaseUrl() + "/Organization?facility-code=" + getMFLCode());
-            getRequest.setHeader("Authorization", "Basic " + auth);
+            getRequest.setHeader("Authorization", "Bearer " + bearerToken);
 
             HttpResponse response = httpClient.execute(getRequest);
 
@@ -117,58 +117,63 @@ public class FacilityStatusTask extends AbstractTask {
         return  GP_MFL_CODE != null ? GP_MFL_CODE : DEFAULT_MFL_CODE;
     }
 
-    private static String getAuthCredentials() {
+    private static String getBearerToken() {
+        String tokenUrl = administrationService.getGlobalProperty(API_TOKEN_ENDPOINT);
         String username = administrationService.getGlobalPropertyObject(API_USER_KEY).getPropertyValue();
         String password = administrationService.getGlobalPropertyObject(API_SECRET_KEY).getPropertyValue();
         return Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
     }
 
-    private static Map<String, String> extractFacilityStatus(String response) {
+    private static Map<String, String> extractFacilityStatus(String organizationResourceResponse) {
         Map<String, String> statusMap = new HashMap<>();
         statusMap.put("operationalStatus", "--");
+        statusMap.put("kephLevel", "--");
         statusMap.put("approved", "--");
         statusMap.put("shaFacilityExpiryDate", "--");
+        statusMap.put("shaFacilityReferencePayload", "--");
 
         try {
-            JSONObject jsonResponse = new JSONObject(response);
+
+            JSONObject jsonResponse = new JSONObject(organizationResourceResponse);
             log.info("JSON Response: {}", jsonResponse.toString(2));
+
+            statusMap.put("shaFacilityReferencePayload", organizationResourceResponse);
 
             JSONArray extensions = jsonResponse.optJSONArray("extension");
             if (extensions != null) {
                 for (int i = 0; i < extensions.length(); i++) {
+
                     JSONObject extension = extensions.optJSONObject(i);
-                    if (extension != null) {
-                        String url = extension.optString("url", "");
+                        String url = extension.optString("url");
                         log.debug("Processing extension URL: {}", url);
 
                         switch (url) {
-                            case "https://shr.tiberbuapps.com/fhir/StructureDefinition/operational-status":
-                                statusMap.put("operationalStatus", extension.getJSONObject("valueCoding").optString("display", "--"));
+                            case "https://fr-kenyahie/StructureDefinition/license-status":
+                                statusMap.put("operationalStatus", extension.optString("valueString"));
                                 break;
 
+                            case "https://fr-kenyahie/StructureDefinition/keph-level":
+                            statusMap.put("kephLevel", extension.optJSONObject("valueCodeableConcept").optJSONArray("coding").optJSONObject(0).optString("display"));
+                            break;
+                            //TODO: Get url for SHA accreditation.
                             case "https://shr.tiberbuapps.com/fhir/StructureDefinition/approved":
                                 statusMap.put("approved", extension.getJSONObject("valueCoding").optString("display", "--"));
                                 break;
-
-                            case "https://shr.tiberbuapps.com/fhir/StructureDefinition/facility-license-info":
-                                JSONArray licenseExtensions = extension.optJSONArray("extension");
-                                if (licenseExtensions != null) {
-                                    for (int j = 0; j < licenseExtensions.length(); j++) {
-                                        JSONObject licenseExtension = licenseExtensions.optJSONObject(j);
-                                        if (licenseExtension != null &&
-                                                "https://shr.tiberbuapps.com/fhir/StructureDefinition/last-expiry-date".equals(licenseExtension.optString("url", ""))) {
-                                            statusMap.put("shaFacilityExpiryDate", licenseExtension.optString("valueString", "--"));
-                                        }
-                                    }
-                                }
-                                break;
                         }
-                    }
                 }
             }
+            JSONArray identifiers = jsonResponse.optJSONArray("identifier");
+            if (identifiers != null) {
+                for (int i = 0; i < identifiers.length(); i++) {
+                    JSONObject identifier = identifiers.getJSONObject(i);
+                        statusMap.put("shaFacilityExpiryDate", identifier.optJSONObject("period").optString("end"));
+                    }
+                }
+            return statusMap;
+
         } catch (JSONException e) {
             log.error("Error parsing facility status JSON: {}", e.getMessage());
-            logDiagnostics(response);
+            logDiagnostics(organizationResourceResponse);
         }
 
         return statusMap;
@@ -203,19 +208,27 @@ public class FacilityStatusTask extends AbstractTask {
                 Map<String, String> facilityStatus = extractFacilityStatus(responseEntity.getBody());
 
                 String operationalStatus = facilityStatus.getOrDefault("operationalStatus", "--");
+                String kephLevel = facilityStatus.getOrDefault("kephLevel", "--");
                 String approved = facilityStatus.getOrDefault("approved", "--");
-                String facilityExpiryDate = facilityStatus.getOrDefault("facilityExpiryDate", "--");
-
-                final Location LOCATION = locationService.getLocation(LOCATION_ID);
+                String shaFacilityExpiryDate = facilityStatus.getOrDefault("shaFacilityExpiryDate", "--");
+                String shaFacilityReferencePayload = facilityStatus.getOrDefault("shaFacilityReferencePayload", "--");
+                
+                final Location location = locationService.getLocation(LOCATION_ID);
 
                 // Handle SHA Accreditation Attribute
-                handleSHAAccreditationAttribute(LOCATION, operationalStatus);
+                handleSHAAccreditationAttribute(location, operationalStatus);
+
+                // Handle KMPDC facility classification Attribute
+                handleKephLevelAttribute(location, kephLevel);
 
                 // Handle SHA Facility Attribute
-                handleSHAFacilityAttribute(LOCATION, approved);
-
+                handleSHAFacilityAttribute(location, approved);
+                
                 //Handle SHA facility expiry date
-                handleSHAFacilityExpiryDateAttribute(LOCATION, facilityExpiryDate);
+                handleSHAFacilityLicenseExpiryDateAttribute(location, shaFacilityExpiryDate);
+
+                // Handle SHA Facility reference payload attribute
+                handleFacilityReferencePayloadAttribute(location, shaFacilityReferencePayload);
             } else {
                 log.error("Failed to save facility status: {}", responseEntity.getBody());
             }
@@ -225,10 +238,64 @@ public class FacilityStatusTask extends AbstractTask {
         }
     }
 
-    public void handleSHAAccreditationAttribute(Location LOCATION, String operationalStatus) {
+    private void handleFacilityReferencePayloadAttribute(Location location, String shaFacilityReferencePayload) {
+        LocationAttributeType shaFacilityReferencePayloadType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.HIE_FACILITY_REFERENCE_PAYLOAD);
+
+        LocationAttribute shaFacilityReferencePayloadAttribute = location.getActiveAttributes(shaFacilityReferencePayloadType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(shaFacilityReferencePayloadType))
+                .findFirst()
+                .orElse(null);
+
+        if (shaFacilityReferencePayloadAttribute == null) {
+            shaFacilityReferencePayloadAttribute = new LocationAttribute();
+            shaFacilityReferencePayloadAttribute.setAttributeType(shaFacilityReferencePayloadType);
+            shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
+            location.addAttribute(shaFacilityReferencePayloadAttribute);
+            log.info("New Facility reference payload attribute created: {}", shaFacilityReferencePayload);
+        } else {
+            if (!shaFacilityReferencePayload.equals(shaFacilityReferencePayloadAttribute.getValue())) {
+                shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
+                log.info("SHA Facility reference payload attribute updated to new value: {}", shaFacilityReferencePayload);
+            } else {
+                log.info("No update needed. Facility reference payload attribute value is the same: {}", shaFacilityReferencePayload);
+            }
+        }
+        locationService.saveLocation(location);
+        log.info("Facility status for MFL Code {} saved successfully: Facility reference payload: {}", getMFLCode(), shaFacilityReferencePayload);
+    }
+
+    private void handleKephLevelAttribute(Location location, String kephLevel) {
+        LocationAttributeType shaKephLevelType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.KMPDC_CLASSFICATION);
+
+        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(shaKephLevelType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(shaKephLevelType))
+                .findFirst()
+                .orElse(null);
+
+        if (shaKephLevelAttribute == null) {
+            shaKephLevelAttribute = new LocationAttribute();
+            shaKephLevelAttribute.setAttributeType(shaKephLevelType);
+            shaKephLevelAttribute.setValue(kephLevel);
+            location.addAttribute(shaKephLevelAttribute);
+            log.info("New Keph Level attribute created: {}", kephLevel);
+        } else {
+            if (!kephLevel.equals(shaKephLevelAttribute.getValue())) {
+                shaKephLevelAttribute.setValue(kephLevel);
+                log.info("SHA Keph Level attribute updated to new value: {}", kephLevel);
+            } else {
+                log.info("No update needed. Keph Level value is the same: {}", kephLevel);
+            }
+        }
+        locationService.saveLocation(location);
+        log.info("Keph Level for MFL Code {} saved successfully: Keph Level: {}", getMFLCode(), kephLevel);
+    }
+
+    public void handleSHAAccreditationAttribute(Location location, String operationalStatus) {
         LocationAttributeType shaAccreditationType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION);
 
-        LocationAttribute shaAccreditationAttribute = LOCATION.getActiveAttributes(shaAccreditationType)
+        LocationAttribute shaAccreditationAttribute = location.getActiveAttributes(shaAccreditationType)
                 .stream()
                 .filter(attr -> attr.getAttributeType().equals(shaAccreditationType))
                 .findFirst()
@@ -238,7 +305,7 @@ public class FacilityStatusTask extends AbstractTask {
             shaAccreditationAttribute = new LocationAttribute();
             shaAccreditationAttribute.setAttributeType(shaAccreditationType);
             shaAccreditationAttribute.setValue(operationalStatus);
-            LOCATION.addAttribute(shaAccreditationAttribute);
+            location.addAttribute(shaAccreditationAttribute);
             log.info("New SHA Accreditation attribute created and set: {}", operationalStatus);
         } else {
             if (!operationalStatus.equals(shaAccreditationAttribute.getValue())) {
@@ -248,14 +315,14 @@ public class FacilityStatusTask extends AbstractTask {
                 log.info("No update needed. SHA Accreditation attribute value is the same: {}", operationalStatus);
             }
         }
-        locationService.saveLocation(LOCATION);
+        locationService.saveLocation(location);
         log.info("Facility status for MFL Code {} saved successfully: Operational Status: {}", getMFLCode(), operationalStatus);
     }
 
-    public void handleSHAFacilityAttribute(Location LOCATION, String approved) {
+    public void handleSHAFacilityAttribute(Location location, String approved) {
         LocationAttributeType isSHAFacility = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY);
 
-        LocationAttribute isSHAFacilityAttribute = LOCATION.getActiveAttributes(isSHAFacility)
+        LocationAttribute isSHAFacilityAttribute = location.getActiveAttributes(isSHAFacility)
                 .stream()
                 .filter(attr -> attr.getAttributeType().equals(isSHAFacility))
                 .findFirst()
@@ -265,7 +332,7 @@ public class FacilityStatusTask extends AbstractTask {
             isSHAFacilityAttribute = new LocationAttribute();
             isSHAFacilityAttribute.setAttributeType(isSHAFacility);
             isSHAFacilityAttribute.setValue(approved);
-            LOCATION.addAttribute(isSHAFacilityAttribute);
+            location.addAttribute(isSHAFacilityAttribute);
             log.info("New SHA Facility attribute created and set: {}", approved);
         } else {
             if (!approved.equals(isSHAFacilityAttribute.getValue())) {
@@ -275,14 +342,14 @@ public class FacilityStatusTask extends AbstractTask {
                 log.info("No update needed. SHA Facility attribute value is the same: {}", approved);
             }
         }
-        locationService.saveLocation(LOCATION);
+        locationService.saveLocation(location);
         log.info("Facility status for MFL Code {} saved successfully: , Approved: {}", getMFLCode(), approved);
     }
 
-    public void handleSHAFacilityExpiryDateAttribute(Location LOCATION, String facilityExpiryDate) {
+    public void handleSHAFacilityLicenseExpiryDateAttribute(Location location, String facilityExpiryDate) {
         LocationAttributeType facilityExpiryDateAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE);
 
-        LocationAttribute facilityExpiryDateAttribute = LOCATION.getActiveAttributes(facilityExpiryDateAttributeType)
+        LocationAttribute facilityExpiryDateAttribute = location.getActiveAttributes(facilityExpiryDateAttributeType)
                 .stream()
                 .filter(attr -> attr.getAttributeType().equals(facilityExpiryDateAttributeType))
                 .findFirst()
@@ -292,7 +359,7 @@ public class FacilityStatusTask extends AbstractTask {
             facilityExpiryDateAttribute = new LocationAttribute();
             facilityExpiryDateAttribute.setAttributeType(facilityExpiryDateAttributeType);
             facilityExpiryDateAttribute.setValue(facilityExpiryDate);
-            LOCATION.addAttribute(facilityExpiryDateAttribute);
+            location.addAttribute(facilityExpiryDateAttribute);
             log.info("SHA License expiry date attribute updated to new value: {}", facilityExpiryDate);
         } else {
             if (!facilityExpiryDate.equals(facilityExpiryDateAttribute.getValue())) {
@@ -302,7 +369,7 @@ public class FacilityStatusTask extends AbstractTask {
                 log.info("No update needed.SHA Facility License expiry date attribute value is the same: {}", facilityExpiryDate);
             }
         }
-        locationService.saveLocation(LOCATION);
+        locationService.saveLocation(location);
         log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", getMFLCode(), facilityExpiryDate);
     }
 }

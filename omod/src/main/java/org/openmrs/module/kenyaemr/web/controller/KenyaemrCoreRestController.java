@@ -506,6 +506,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE)))
                 .findFirst()
                 .orElse(null);
+        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.KMPDC_CLASSFICATION))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.KMPDC_CLASSFICATION)))
+                .findFirst()
+                .orElse(null);
 
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
 
@@ -513,7 +518,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
         locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
-        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
+        locationNode.put("shaKephLevel", shaKephLevelAttribute != null ? shaKephLevelAttribute.getValue().toString() : "--");
         locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
         locationNode.put("shaFacilityExpiryDate", shaFacilityExpiryDate != null ? shaFacilityExpiryDate.getValue().toString() : "--" );
 
