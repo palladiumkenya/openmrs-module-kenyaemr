@@ -510,9 +510,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE)))
                 .findFirst()
                 .orElse(null);
-        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.KMPDC_CLASSFICATION))
+        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL))
                 .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.KMPDC_CLASSFICATION)))
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL)))
                 .findFirst()
                 .orElse(null);
 
