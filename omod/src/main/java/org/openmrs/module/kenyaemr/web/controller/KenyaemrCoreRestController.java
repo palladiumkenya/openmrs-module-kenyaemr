@@ -26,6 +26,7 @@ import org.openmrs.calculation.result.CalculationResult;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.ListResult;
 import org.openmrs.module.kenyaemr.metadata.*;
+import org.openmrs.module.kenyaemr.task.FacilityStatusTask;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.kenyaemrorderentry.util.Utils;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
@@ -481,6 +482,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
     public Object getDefaultConfiguredFacility() {
+
+        FacilityStatusTask.saveFacilityStatus();
+
         GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
         if (gp == null) {
