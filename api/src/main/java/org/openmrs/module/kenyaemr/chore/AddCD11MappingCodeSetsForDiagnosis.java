@@ -76,10 +76,10 @@ public class AddCD11MappingCodeSetsForDiagnosis extends AbstractChore {
 				}
 			}
 		} catch (IOException e) {
-			out.println("Failed to add ICD 11 codes");
+			out.println("Failed to update ICD 11 codes");
 			throw new RuntimeException(e);
 		}
-		out.println("Successfully updating ICD 11 codes");
+		out.println("Successfully updated ICD 11 codes");
 	}
 
 	private static String icd11DiagnosisCodeJson() {
