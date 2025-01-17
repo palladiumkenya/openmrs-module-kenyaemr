@@ -469,18 +469,18 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
-    public Object getDefaultConfiguredFacility(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+    public Object getDefaultConfiguredFacility(/*@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize*/) {
         boolean syncSuccess = false;
-
+        syncSuccess = FacilityDetailsDataExchange.saveFacilityStatus();
         // Execute saveFacilityStatus if synchronize is true
-        if (isSynchronize) {
+       /* if (isSynchronize) {
             try {
             syncSuccess = FacilityDetailsDataExchange.saveFacilityStatus();
             } catch (Exception e) {
                 log.error("Error during synchronization: {}", e);
                 return new ResponseEntity<>("Synchronization failed", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
+        }*/
 
         GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
