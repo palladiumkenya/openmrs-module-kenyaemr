@@ -3,11 +3,11 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- * <p>
+ *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.task;
+package org.openmrs.module.kenyaemr.dataExchange;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,14 +20,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
@@ -43,25 +40,24 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openmrs.module.kenyaemr.util.EmrUtils.*;
+import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
+
 /**
  * A scheduled task that automatically updates the facility status.
  */
-public class FacilityStatusTask {
-    private static final Logger log = LoggerFactory.getLogger(FacilityStatusTask.class);
-    private static final AdministrationService administrationService = Context.getAdministrationService();
-    private static final LocationService locationService = Context.getLocationService();
-    private static final Integer LOCATION_ID = Integer.parseInt(administrationService.getGlobalProperty("kenyaemr.defaultLocation"));
-    private static final String GP_MFL_CODE = administrationService.getGlobalProperty("facility.mflcode").trim();
-    private static final String BASE_URL_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_END_POINT;
-    private static final String API_USER_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_USER;
-    private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
-    private static final String DEFAULT_BASE_URL = "https://api.dha.go.ke/v1/";
-    private static final String DEFAULT_MFL_CODE = Context.getService(KenyaEmrService.class).getDefaultLocationMflCode().trim();
+public class FacilityDetailsDataExchange {
+    private static final Logger log = LoggerFactory.getLogger(FacilityDetailsDataExchange.class);
 
+    private static final LocationService locationService = Context.getLocationService();
+
+    private static final String BASE_URL_KEY = CommonMetadata.GP_HIE_BASE_END_POINT_URL;
+    private static final String API_USER_KEY = CommonMetadata.GP_HIE_API_USER;
+    private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
 
     public static ResponseEntity<String> getFacilityStatus() {
-        String bearerToken = getBearerToken();
 
+        String bearerToken = getBearerToken();
         if (bearerToken.isEmpty()) {
             log.error("Bearer token is missing");
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
@@ -69,9 +65,7 @@ public class FacilityStatusTask {
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
-            HttpGet getRequest = new HttpGet(getBaseUrl() + "fhir/Organization?identifierType=mfl-code&identifier=" + getMFLCode());
-
-            log.warn("----Facility data url {} ", getBaseUrl() + "fhir/Organization?identifierType=mfl-code&identifier=" + getMFLCode());
+            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(BASE_URL_KEY) + "fhir/Organization?identifierType=mfl-code&identifier=" + getMFLCode());
 
             getRequest.setHeader("Authorization", "Bearer " + bearerToken);
 
@@ -99,43 +93,18 @@ public class FacilityStatusTask {
         );
     }
 
-    private static String getBaseUrl() {
-        GlobalProperty globalGetUrl = administrationService.getGlobalPropertyObject(BASE_URL_KEY);
-        return globalGetUrl.getPropertyValue() != null ? globalGetUrl.getPropertyValue().trim() : DEFAULT_BASE_URL.trim();
-    }
-
-    private static String getAPIUserKey() {
-        GlobalProperty apiUser = administrationService.getGlobalPropertyObject(API_USER_KEY);
-        return apiUser.getPropertyValue() != null ? apiUser.getPropertyValue().trim() : "";
-    }
-
-    private static String getAPISecret() {
-        GlobalProperty apiSecret = administrationService.getGlobalPropertyObject(API_SECRET_KEY);
-        return apiSecret.getPropertyValue() != null ? apiSecret.getPropertyValue().trim() : "";
-    }
-
-    private static String getMFLCode() {
-        return GP_MFL_CODE != null ? GP_MFL_CODE : DEFAULT_MFL_CODE;
-    }
-
     private static String getBearerToken() {
-
+        String username = getGlobalPropertyValue(API_USER_KEY);
+        String secret = getGlobalPropertyValue(API_SECRET_KEY);
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpGet getRequest = new HttpGet(getBaseUrl() + "hie-auth?key=" + getAPIUserKey());
+            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(BASE_URL_KEY) + "hie-auth?key=" + username);
             getRequest.setHeader("Content-Type", "application/x-www-form-urlencoded");
-            getRequest.setHeader("Authorization", createBasicAuthHeader(getAPIUserKey(), getAPISecret()));
-
-            log.warn("Authorization Header:-> " + createBasicAuthHeader(getAPIUserKey(), getAPISecret()));
-
-            log.warn("URL:-> " + getBaseUrl() + "hie-auth?key=" + getAPIUserKey());
+            getRequest.setHeader("Authorization", createBasicAuthHeader(username, secret));
 
             try (CloseableHttpResponse response = httpClient.execute(getRequest)) {
-                log.warn("Response code:-> " + response.getStatusLine().getStatusCode());
 
                 if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK) {
                     String responseString = EntityUtils.toString(response.getEntity()).trim();
-                    log.warn("Response string:-> {} ", responseString);
-
                     log.info("Bearer token retrieved successfully...");
                     return responseString;
                 } else {
@@ -159,6 +128,8 @@ public class FacilityStatusTask {
         statusMap.put("kephLevel", "--");
         statusMap.put("approved", "--");
         statusMap.put("shaFacilityExpiryDate", "--");
+        statusMap.put("shaFacilityId", "--");
+        statusMap.put("shaFacilityLicenseNumber", "--");
         statusMap.put("shaFacilityReferencePayload", "--");
 
         try {
@@ -171,13 +142,16 @@ public class FacilityStatusTask {
             if (entries != null && !entries.isEmpty()) {
                 JSONObject resource = entries.getJSONObject(0).optJSONObject("resource");
                 if (resource != null && "Organization".equals(resource.optString("resourceType"))) {
+                    // Extract "id"
+                    String resourceId = resource.optString("id", "--");
+                    statusMap.put("shaFacilityId", resourceId);
+
                     JSONArray extensions = resource.optJSONArray("extension");
                     if (extensions != null) {
                         for (int i = 0; i < extensions.length(); i++) {
 
                             JSONObject extension = extensions.optJSONObject(i);
                             String url = extension.optString("url");
-                            log.debug("Processing extension URL: {}", url);
 
                             switch (url) {
                                 case "https://fr-kenyahie/StructureDefinition/license-status":
@@ -207,6 +181,21 @@ public class FacilityStatusTask {
                     if (identifiers != null) {
                         for (int i = 0; i < identifiers.length(); i++) {
                             JSONObject identifier = identifiers.getJSONObject(i);
+
+                            // Check for "license-number"
+                            JSONArray codingArray = identifier.optJSONObject("type")
+                                    .optJSONArray("coding");
+                            if (codingArray != null) {
+                                for (int j = 0; j < codingArray.length(); j++) {
+                                    JSONObject coding = codingArray.getJSONObject(j);
+                                    String code = coding.optString("code");
+
+                                    if ("license-number".equals(code)) {
+                                        statusMap.put("shaFacilityLicenseNumber", identifier.optString("value", "--"));
+                                    }
+                                }
+                            }
+                            // Check for "end" in "period"
                             JSONObject period = identifier.optJSONObject("period");
                             if (period != null) {
                                 String end = period.optString("end", "--");
@@ -216,9 +205,6 @@ public class FacilityStatusTask {
                         }
                     }
                 }
-            }
-            for (Map.Entry<String, String> entry : statusMap.entrySet()) {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
             }
             return statusMap;
 
@@ -261,6 +247,8 @@ public class FacilityStatusTask {
                 String kephLevel = facilityStatus.getOrDefault("kephLevel", "--");
                 String approved = facilityStatus.getOrDefault("approved", "--");
                 String shaFacilityExpiryDate = facilityStatus.getOrDefault("shaFacilityExpiryDate", "--");
+                String shaFacilityLicenseNumber = facilityStatus.getOrDefault("shaFacilityLicenseNumber", "--");
+                String shaFacilityId = facilityStatus.getOrDefault("shaFacilityId", "--");
                 String shaFacilityReferencePayload = facilityStatus.getOrDefault("shaFacilityReferencePayload", "--");
 
                 final Location location = locationService.getLocation(LOCATION_ID);
@@ -276,6 +264,12 @@ public class FacilityStatusTask {
 
                 //Handle SHA facility expiry date
                 handleSHAFacilityLicenseExpiryDateAttribute(location, shaFacilityExpiryDate);
+
+                //Handle SHA facility License number
+                handleSHAFacilityLicenseNumberAttribute(location, shaFacilityLicenseNumber);
+
+                //Handle SHA facility id
+                handleSHAFacilityIdAttribute(location, shaFacilityId);
 
                 // Handle SHA Facility reference payload attribute
                 handleFacilityReferencePayloadAttribute(location, shaFacilityReferencePayload);
@@ -421,5 +415,59 @@ public class FacilityStatusTask {
         }
         locationService.saveLocation(location);
         log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", getMFLCode(), facilityExpiryDate);
+    }
+
+    public static void handleSHAFacilityIdAttribute(Location location, String facilityId) {
+        LocationAttributeType facilityIdAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE);
+
+        LocationAttribute facilityIdAttribute = location.getActiveAttributes(facilityIdAttributeType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(facilityIdAttributeType))
+                .findFirst()
+                .orElse(null);
+
+        if (facilityIdAttribute == null) {
+            facilityIdAttribute = new LocationAttribute();
+            facilityIdAttribute.setAttributeType(facilityIdAttributeType);
+            facilityIdAttribute.setValue(facilityId);
+            location.addAttribute(facilityIdAttribute);
+            log.info("Facility Id attribute updated to new value: {}", facilityId);
+        } else {
+            if (!facilityId.equals(facilityIdAttribute.getValue())) {
+                facilityIdAttribute.setValue(facilityId);
+                log.info("Facility Id updated to new value: {}", facilityId);
+            } else {
+                log.info("No update needed. Facility Id is the same: {}", facilityId);
+            }
+        }
+        locationService.saveLocation(location);
+        log.info("Facility Id for MFL Code {} saved successfully: , Facility Id: {}", getMFLCode(), facilityId);
+    }
+
+    public static void handleSHAFacilityLicenseNumberAttribute(Location location, String facilityLicenseNumber) {
+        LocationAttributeType facilityLicenseNumberAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER);
+
+        LocationAttribute facilityLicenseNumberAttribute = location.getActiveAttributes(facilityLicenseNumberAttributeType)
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(facilityLicenseNumberAttributeType))
+                .findFirst()
+                .orElse(null);
+
+        if (facilityLicenseNumberAttribute == null) {
+            facilityLicenseNumberAttribute = new LocationAttribute();
+            facilityLicenseNumberAttribute.setAttributeType(facilityLicenseNumberAttributeType);
+            facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
+            location.addAttribute(facilityLicenseNumberAttribute);
+            log.info("License number attribute updated to new value: {}", facilityLicenseNumber);
+        } else {
+            if (!facilityLicenseNumber.equals(facilityLicenseNumberAttribute.getValue())) {
+                facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
+                log.info("Facility license number updated to new value: {}", facilityLicenseNumber);
+            } else {
+                log.info("No update needed.SHA Facility License number is the same: {}", facilityLicenseNumber);
+            }
+        }
+        locationService.saveLocation(location);
+        log.info("Facility License number for MFL Code {} saved successfully: , License number: {}", getMFLCode(), facilityLicenseNumber);
     }
 }

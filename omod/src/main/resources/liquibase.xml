@@ -277,43 +277,6 @@
 		</comment>
 		<sqlFile splitStatements="true" path="AlignCaseManagerCaseRelationships.sql"/>
 	</changeSet>
-	<changeSet id="${project.parent.artifactId}-20240815-1645" author="schege">
-		<preConditions onFail="MARK_RAN">
-			<sqlCheck expectedResult="0">
-				SELECT COUNT(*) FROM scheduler_task_config
-				WHERE schedulable_class = 'org.openmrs.module.kenyaemr.task.FacilityStatusTask'
-				And name = 'Get Facility status from the Registry'
-			</sqlCheck>
-		</preConditions>
-		<comment>Inserting Facility status Task into 'schedule_task_config' table</comment>
-		<insert tableName="scheduler_task_config">
-			<column name="name" value="Get Facility status from the Registry" />
-			<column name="description" value="Periodically gets Facility Status from Facility registry" />
-			<column name="schedulable_class" value="org.openmrs.module.kenyaemr.task.FacilityStatusTask" />
-			<column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
-			<column name="start_time" valueDate="2024-08-15T17:00:59" />
-			<column name="repeat_interval" value="120" />
-			<column name="start_on_startup" value="1" />
-			<column name="started" value="0" />
-			<column name="date_created" valueDate="CURRENT_TIMESTAMP" />
-			<column name="created_by" value="1" />
-			<column name="uuid" value="566c425b-0ab7-4e13-a625-dc5e0b3a5e45" />
-		</insert>
-	</changeSet>
-	<!--Removing scheduled Facility status Task -->
-	<changeSet id="${project.parent.artifactId}-20240903-1320" author="pwangoo">
-		<preConditions onFail="MARK_RAN">
-			<sqlCheck expectedResult="1">
-				SELECT COUNT(*) FROM scheduler_task_config
-				WHERE schedulable_class = 'org.openmrs.module.kenyaemr.task.FacilityStatusTask'
-				And name = 'Get Facility status from the Registry'
-			</sqlCheck>
-		</preConditions>
-		<comment>Deleting Facility status Task from 'schedule_task_config' table</comment>
-		<delete tableName="scheduler_task_config">
-			<where>schedulable_class='org.openmrs.module.kenyaemr.task.FacilityStatusTask'</where>
-		</delete>
-	</changeSet>
 	<!--Removing Muzima Queue Data Processor Task -->
 	<changeSet id="${project.parent.artifactId}-20240909-1357" author="pwangoo">
 		<preConditions onFail="MARK_RAN">

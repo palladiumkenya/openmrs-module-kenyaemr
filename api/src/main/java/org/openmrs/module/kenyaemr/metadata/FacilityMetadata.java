@@ -50,6 +50,8 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String SHA_FACILITY_EXPIRY_DATE = "8e1ec5d4-4810-466a-9c90-b801bae9d063";
 		public static final String FACILITY_KEPH_LEVEL = "0233ba94-22d2-4658-81c3-2cf00fca382d";
 		public static final String FACILITY_HIE_FHIR_REFERENCE = "682f0a48-a642-491b-aa6d-41084bee0ee0";
+		public static final String FACILITY_REGISTRY_CODE = "1d1e2531-6a4a-4ed9-ab0a-02663e82379c";
+		public static final String FACILITY_LICENSE_NUMBER = "5f719dc5-3a70-48e5-8404-90bbcc35b36e";
 	}
 
 	/**
@@ -95,6 +97,17 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				_LocationAttributeType.FACILITY_HIE_FHIR_REFERENCE
 		));
 
+		install(locationAttributeType(
+				"Facility License Number", "Facility License Number",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.FACILITY_LICENSE_NUMBER
+		));
+
+		install(locationAttributeType(
+				"Facility Registry Code", "Facility Registry Code",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.FACILITY_REGISTRY_CODE
+		));
 	}
 
 	/**
