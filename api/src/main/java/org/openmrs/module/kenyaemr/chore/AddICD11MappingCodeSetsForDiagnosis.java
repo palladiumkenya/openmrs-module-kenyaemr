@@ -25,8 +25,8 @@ import java.util.Iterator;
  * Update ICD 11 Mappings for Diagnosis
  * Uses DiagnosisICD10ToICD11Mapper
  */
-@Component("kenyaemr.chore.AddCD11MappingCodeSetsForDiagnosis")
-public class AddCD11MappingCodeSetsForDiagnosis extends AbstractChore {
+@Component("kenyaemr.chore.AddICD11MappingCodeSetsForDiagnosis")
+public class AddICD11MappingCodeSetsForDiagnosis extends AbstractChore {
 
 	/**
 	 * @see AbstractChore#perform(PrintWriter)
@@ -86,32 +86,27 @@ public class AddCD11MappingCodeSetsForDiagnosis extends AbstractChore {
 		String json = "[\n" +
 			"    {\n" +
 			"        \"DiagnosisName\": \"Headache, not elsewhere classified\",\n" +
-			"        \"ConceptId\": \"139084\",\n" +
-			"        \"ICD10Code\": \"R51\",\n" +
+			"        \"ConceptId\": \"139084\",\n" +			
 			"        \"ICD11Code\": \"8A8Z\"\n" +
 			"    },\n" +
 			"    {\n" +
 			"        \"DiagnosisName\": \"Malaria due to Plasmodium falciparum\",\n" +
-			"        \"ConceptId\": \"116128\",\n" +
-			"        \"ICD10Code\": \"B54\",\n" +
+			"        \"ConceptId\": \"116128\",\n" +		
 			"        \"ICD11Code\": \"1F40\"\n" +
 			"    },\n" +
 			"    {\n" +
 			"        \"DiagnosisName\": \"Typhoid fever\",\n" +
-			"        \"ConceptId\": \"141\",\n" +
-			"        \"ICD10Code\": \"A01.0\",\n" +
+			"        \"ConceptId\": \"141\",\n" +			
 			"        \"ICD11Code\": \"1A07.Z\"\n" +
 			"    },\n" +
 			"    {\n" +
 			"        \"DiagnosisName\": \"Pneumonia, organism unspecified\",\n" +
-			"        \"ConceptId\": \"114100\",\n" +
-			"        \"ICD10Code\": \"J18.9\",\n" +
+			"        \"ConceptId\": \"114100\",\n" +			
 			"        \"ICD11Code\": \"CA40.Z\"\n" +
 			"    },\n" +
 			"    {\n" +
 			"        \"DiagnosisName\": \"Fever of other or unknown origin\",\n" +
-			"        \"ConceptId\": \"140238\",\n" +
-			"        \"ICD10Code\": \"R50.9\",\n" +
+			"        \"ConceptId\": \"140238\",\n" +		
 			"        \"ICD11Code\": \"MG26\"\n" +
 			"    }\n" +
 			"]";
