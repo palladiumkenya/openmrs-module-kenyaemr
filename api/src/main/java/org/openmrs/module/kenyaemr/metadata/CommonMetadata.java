@@ -240,6 +240,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LICENSE_BODY = "ba18bb97-d17c-4640-80d2-58e7df90ca4c";
 		public static final String NATIONAL_ID = "3d152c97-2293-4a2b-802e-e0f1009b7b15";
 		public static final String PROVIDER_HIE_FHIR_REFERENCE = "67b94e8e-4d61-4810-b0f1-d86497f6e553";
+		public static final String PROVIDER_QUALIFICATION = "43f99413-6e7f-4812-bc60-066bb1d43f94";
+		public static final String PROVIDER_ADDRESS = "033ff604-ecf7-464f-b623-5b77c733667f";
+		public static final String PROVIDER_TELEPHONE = "37daed7f-1f4e-4e62-8e83-6048ade18a87";
 
 	}
 
@@ -644,6 +647,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				_ProviderAttributeType.LICENSE_BODY));
 		install(providerAttributeType("Provider HIE FHIR Reference", "", FreeTextDatatype.class, "", 0, 9999,
 				_ProviderAttributeType.PROVIDER_HIE_FHIR_REFERENCE));
+		install(providerAttributeType("Provider Qualification", "", FreeTextDatatype.class, "", 0, 9999,
+			_ProviderAttributeType.PROVIDER_QUALIFICATION));
+		install(providerAttributeType("Provider Address", "", FreeTextDatatype.class, "", 0, 9999,
+			_ProviderAttributeType.PROVIDER_ADDRESS));
+		install(providerAttributeType("Provider Telephone", "", FreeTextDatatype.class, "", 0, 9999,
+			_ProviderAttributeType.PROVIDER_TELEPHONE));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects",
 				_RelationshipType.GUARDIAN_DEPENDANT));
