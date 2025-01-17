@@ -8,8 +8,6 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.web.controller;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -26,6 +24,7 @@ import org.openmrs.calculation.result.CalculationResult;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.ListResult;
 import org.openmrs.module.kenyaemr.metadata.*;
+import org.openmrs.module.kenyaemr.dataExchange.FacilityDetailsDataExchange;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.kenyaemrorderentry.util.Utils;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
@@ -107,13 +106,6 @@ import org.w3c.dom.NodeList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
@@ -132,8 +124,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -142,7 +132,6 @@ import org.joda.time.Weeks;
 import org.joda.time.Years;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Comparator;
@@ -481,6 +470,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
     public Object getDefaultConfiguredFacility() {
+
+        FacilityDetailsDataExchange.saveFacilityStatus();
+
         GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
         if (gp == null) {
@@ -507,14 +499,33 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .findFirst()
                 .orElse(null);
 
+        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL)))
+                .findFirst()
+                .orElse(null);
+
+        LocationAttribute shaFacilityIdAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE)))
+                .findFirst()
+                .orElse(null);
+
+        LocationAttribute shaFacilityLicenseNumberAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER))
+                .stream()
+                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER)))
+                .findFirst()
+                .orElse(null);
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
 
         locationNode.put("locationId", location.getLocationId());
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
         locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
-        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
+        locationNode.put("shaKephLevel", shaKephLevelAttribute != null ? shaKephLevelAttribute.getValue().toString() : "--");
         locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
+        locationNode.put("shaFacilityId", shaFacilityIdAttribute != null ? shaFacilityIdAttribute.getValue().toString() : "--" );
+        locationNode.put("shaFacilityLicenseNumber", shaFacilityLicenseNumberAttribute != null ? shaFacilityLicenseNumberAttribute.getValue().toString() : "--" );
         locationNode.put("shaFacilityExpiryDate", shaFacilityExpiryDate != null ? shaFacilityExpiryDate.getValue().toString() : "--" );
 
         return locationNode.toString();

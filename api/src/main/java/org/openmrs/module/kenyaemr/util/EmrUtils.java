@@ -27,14 +27,13 @@ import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Person;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
 import org.openmrs.Provider;
 import org.openmrs.User;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.Dictionary;
-import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.util.PrivilegeConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,7 +59,9 @@ import java.util.StringJoiner;
 public class EmrUtils {
 	protected static final Log log = LogFactory.getLog(EmrUtils.class);
 	public static String GP_2X_FORMS_WHITELIST = "kenyaemr.2.x.forms.whitelist";
-
+	private static final String DEFAULT_GLOBAL_PROPERTY_KEY = "facility.mflcode";
+	private static final AdministrationService administrationService = Context.getAdministrationService();
+	public static final Integer LOCATION_ID = Integer.parseInt(administrationService.getGlobalProperty("kenyaemr.defaultLocation"));
 	/**
 	 * Checks whether a date has any time value
 	 * @param date the date
@@ -378,4 +379,38 @@ public class EmrUtils {
 		return joiner.toString();
 	}
 
+	/**
+	 * Helper method for getting mfl code for a facility
+	 * @return
+	 */
+	public static String getMFLCode() {
+
+		KenyaEmrService kenyaEmrService = Context.getService(KenyaEmrService.class);
+		String defaultMflCode = null;
+		String globalPropertyMflCode = null;
+
+		try {
+			// Fetch the default MFL code from the KenyaEmrService
+			defaultMflCode = kenyaEmrService != null ? kenyaEmrService.getDefaultLocationMflCode() : null;
+			if (defaultMflCode != null) {
+				defaultMflCode = defaultMflCode.trim();
+			}
+
+			// Fetch the global property for the MFL code
+			globalPropertyMflCode = Context.getAdministrationService().getGlobalProperty(DEFAULT_GLOBAL_PROPERTY_KEY);
+			if (globalPropertyMflCode != null) {
+				globalPropertyMflCode = globalPropertyMflCode.trim();
+			}
+		} catch (Exception e) {
+			log.error("Error retrieving MFL Code: {}", e);
+		}
+
+		// Return the global property MFL code if available, otherwise fallback to default
+		return globalPropertyMflCode != null ? globalPropertyMflCode : defaultMflCode;
+	}
+
+	public static String getGlobalPropertyValue(String value) {
+		GlobalProperty result = administrationService.getGlobalPropertyObject(value);
+		return result.getPropertyValue() != null ? result.getPropertyValue().trim() : "";
+	}
 }
