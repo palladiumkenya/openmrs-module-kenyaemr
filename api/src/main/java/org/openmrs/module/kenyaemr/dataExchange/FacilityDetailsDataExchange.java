@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -237,7 +238,7 @@ public class FacilityDetailsDataExchange {
         }
     }
 
-    public static void saveFacilityStatus() {
+    public static boolean saveFacilityStatus() {
         try {
             ResponseEntity<String> responseEntity = getFacilityStatus();
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -273,12 +274,15 @@ public class FacilityDetailsDataExchange {
 
                 // Handle SHA Facility reference payload attribute
                 handleFacilityReferencePayloadAttribute(location, shaFacilityReferencePayload);
+
+                return true;
             } else {
                 log.error("Failed to save facility status: {}", responseEntity.getBody());
+                return false;
             }
         } catch (Exception e) {
             log.error("Error in saving Facility Status: ", e);
-            throw e;
+            return false;
         }
     }
 

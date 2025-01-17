@@ -469,69 +469,53 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
-    public Object getDefaultConfiguredFacility() {
+    public Object getDefaultConfiguredFacility(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        boolean syncSuccess = false;
 
-        FacilityDetailsDataExchange.saveFacilityStatus();
+        // Execute saveFacilityStatus if synchronize is true
+        if (isSynchronize) {
+            try {
+            syncSuccess = FacilityDetailsDataExchange.saveFacilityStatus();
+            } catch (Exception e) {
+                log.error("Error during synchronization: {}", e);
+                return new ResponseEntity<>("Synchronization failed", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
 
         GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
-        if (gp == null) {
+        if (gp == null || gp.getValue() == null) {
             return new ResponseEntity<Object>("Default facility not configured!", new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
 
         Location location = (Location) gp.getValue();
 
-        LocationAttribute operationalStatusAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION)))
-                .findFirst()
-                .orElse(null);
-
-        LocationAttribute isSHAFacilityAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY)))
-                .findFirst()
-                .orElse(null);
-
-        LocationAttribute shaFacilityExpiryDate = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE)))
-                .findFirst()
-                .orElse(null);
-
-        LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL)))
-                .findFirst()
-                .orElse(null);
-
-        LocationAttribute shaFacilityIdAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE)))
-                .findFirst()
-                .orElse(null);
-
-        LocationAttribute shaFacilityLicenseNumberAttribute = location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER))
-                .stream()
-                .filter(attr -> attr.getAttributeType().equals(MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER)))
-                .findFirst()
-                .orElse(null);
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
 
+        // Retrieve attributes safely
         locationNode.put("locationId", location.getLocationId());
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
-        locationNode.put("operationalStatus", operationalStatusAttribute != null ? operationalStatusAttribute.getValue().toString() : "--");
-        locationNode.put("shaKephLevel", shaKephLevelAttribute != null ? shaKephLevelAttribute.getValue().toString() : "--");
-        locationNode.put("shaContracted", isSHAFacilityAttribute != null ? isSHAFacilityAttribute.getValue().toString() : "--" );
-        locationNode.put("shaFacilityId", shaFacilityIdAttribute != null ? shaFacilityIdAttribute.getValue().toString() : "--" );
-        locationNode.put("shaFacilityLicenseNumber", shaFacilityLicenseNumberAttribute != null ? shaFacilityLicenseNumberAttribute.getValue().toString() : "--" );
-        locationNode.put("shaFacilityExpiryDate", shaFacilityExpiryDate != null ? shaFacilityExpiryDate.getValue().toString() : "--" );
+        locationNode.put("operationalStatus", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION));
+        locationNode.put("shaKephLevel", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL));
+        locationNode.put("shaContracted", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY));
+        locationNode.put("shaFacilityId", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE));
+        locationNode.put("shaFacilityLicenseNumber", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER));
+        locationNode.put("shaFacilityExpiryDate", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE));
+        locationNode.put("mflCode", EmrUtils.getMFLCode());
+        locationNode.put("syncSuccess", syncSuccess);
 
-        return locationNode.toString();
-
+        System.out.println("-----------"+ResponseEntity.ok(locationNode.toString()));
+        return ResponseEntity.ok(locationNode.toString());
     }
-
+    // Helper method for attribute retrieval
+    private String getLocationAttributeValue(Location location, String attributeTypeUuid) {
+        return location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, attributeTypeUuid))
+                .stream()
+                .map(attr -> attr.getValue() != null ? attr.getValue().toString() : "--")
+                .findFirst()
+                .orElse("--");
+    }
     /**
      * ARV drugs
      *
