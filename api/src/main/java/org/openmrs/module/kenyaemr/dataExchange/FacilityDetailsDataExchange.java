@@ -23,26 +23,28 @@ import org.json.JSONObject;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
+import org.openmrs.User;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.util.PrivilegeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openmrs.api.context.Context.authenticate;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.*;
-import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
  * A scheduled task that automatically updates the facility status.
@@ -252,8 +254,11 @@ public class FacilityDetailsDataExchange {
                 String shaFacilityId = facilityStatus.getOrDefault("shaFacilityId", "--");
                 String shaFacilityReferencePayload = facilityStatus.getOrDefault("shaFacilityReferencePayload", "--");
 
-                final Location location = locationService.getLocation(LOCATION_ID);
+                final Location location = getDefaultLocation();
 
+                if (Context.getAuthenticatedUser() == null) {
+                    Context.authenticate("admin", "Ny3ri@10903");
+                }
                 // Handle SHA Accreditation Attribute
                 handleSHAAccreditationAttribute(location, operationalStatus);
 
@@ -299,11 +304,15 @@ public class FacilityDetailsDataExchange {
             shaFacilityReferencePayloadAttribute = new LocationAttribute();
             shaFacilityReferencePayloadAttribute.setAttributeType(shaFacilityReferencePayloadType);
             shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
+            shaFacilityReferencePayloadAttribute.setCreator(Context.getAuthenticatedUser());
+            shaFacilityReferencePayloadAttribute.setDateCreated(new Date());
             location.addAttribute(shaFacilityReferencePayloadAttribute);
             log.info("New Facility reference payload attribute created: {}", shaFacilityReferencePayload);
         } else {
             if (!shaFacilityReferencePayload.equals(shaFacilityReferencePayloadAttribute.getValue())) {
                 shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
+                shaFacilityReferencePayloadAttribute.setCreator(Context.getAuthenticatedUser());
+                shaFacilityReferencePayloadAttribute.setDateCreated(new Date());
                 log.info("SHA Facility reference payload attribute updated to new value: {}", shaFacilityReferencePayload);
             } else {
                 log.info("No update needed. Facility reference payload attribute value is the same: {}", shaFacilityReferencePayload);
@@ -326,11 +335,15 @@ public class FacilityDetailsDataExchange {
             shaKephLevelAttribute = new LocationAttribute();
             shaKephLevelAttribute.setAttributeType(shaKephLevelType);
             shaKephLevelAttribute.setValue(kephLevel);
+            shaKephLevelAttribute.setCreator(Context.getAuthenticatedUser());
+            shaKephLevelAttribute.setDateCreated(new Date());
             location.addAttribute(shaKephLevelAttribute);
             log.info("New Keph Level attribute created: {}", kephLevel);
         } else {
             if (!kephLevel.equals(shaKephLevelAttribute.getValue())) {
                 shaKephLevelAttribute.setValue(kephLevel);
+                shaKephLevelAttribute.setCreator(Context.getAuthenticatedUser());
+                shaKephLevelAttribute.setDateCreated(new Date());
                 log.info("SHA Keph Level attribute updated to new value: {}", kephLevel);
             } else {
                 log.info("No update needed. Keph Level value is the same: {}", kephLevel);
@@ -353,11 +366,15 @@ public class FacilityDetailsDataExchange {
             shaAccreditationAttribute = new LocationAttribute();
             shaAccreditationAttribute.setAttributeType(shaAccreditationType);
             shaAccreditationAttribute.setValue(operationalStatus);
+            shaAccreditationAttribute.setCreator(Context.getAuthenticatedUser());
+            shaAccreditationAttribute.setDateCreated(new Date());
             location.addAttribute(shaAccreditationAttribute);
             log.info("New SHA Accreditation attribute created and set: {}", operationalStatus);
         } else {
             if (!operationalStatus.equals(shaAccreditationAttribute.getValue())) {
                 shaAccreditationAttribute.setValue(operationalStatus);
+                shaAccreditationAttribute.setCreator(Context.getAuthenticatedUser());
+                shaAccreditationAttribute.setDateCreated(new Date());
                 log.info("SHA Accreditation attribute updated to new value: {}", operationalStatus);
             } else {
                 log.info("No update needed. SHA Accreditation attribute value is the same: {}", operationalStatus);
@@ -380,11 +397,15 @@ public class FacilityDetailsDataExchange {
             isSHAFacilityAttribute = new LocationAttribute();
             isSHAFacilityAttribute.setAttributeType(isSHAFacility);
             isSHAFacilityAttribute.setValue(approved);
+            isSHAFacilityAttribute.setCreator(Context.getAuthenticatedUser());
+            isSHAFacilityAttribute.setDateCreated(new Date());
             location.addAttribute(isSHAFacilityAttribute);
             log.info("New SHA Facility attribute created and set: {}", approved);
         } else {
             if (!approved.equals(isSHAFacilityAttribute.getValue())) {
                 isSHAFacilityAttribute.setValue(approved);
+                isSHAFacilityAttribute.setCreator(Context.getAuthenticatedUser());
+                isSHAFacilityAttribute.setDateCreated(new Date());
                 log.info("SHA Facility attribute updated to new value: {}", approved);
             } else {
                 log.info("No update needed. SHA Facility attribute value is the same: {}", approved);
@@ -407,11 +428,15 @@ public class FacilityDetailsDataExchange {
             facilityExpiryDateAttribute = new LocationAttribute();
             facilityExpiryDateAttribute.setAttributeType(facilityExpiryDateAttributeType);
             facilityExpiryDateAttribute.setValue(facilityExpiryDate);
+            facilityExpiryDateAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityExpiryDateAttribute.setDateCreated(new Date());
             location.addAttribute(facilityExpiryDateAttribute);
             log.info("SHA License expiry date attribute updated to new value: {}", facilityExpiryDate);
         } else {
             if (!facilityExpiryDate.equals(facilityExpiryDateAttribute.getValue())) {
                 facilityExpiryDateAttribute.setValue(facilityExpiryDate);
+                facilityExpiryDateAttribute.setCreator(Context.getAuthenticatedUser());
+                facilityExpiryDateAttribute.setDateCreated(new Date());
                 log.info("SHA Facility attribute updated to new value: {}", facilityExpiryDate);
             } else {
                 log.info("No update needed.SHA Facility License expiry date attribute value is the same: {}", facilityExpiryDate);
@@ -434,11 +459,15 @@ public class FacilityDetailsDataExchange {
             facilityIdAttribute = new LocationAttribute();
             facilityIdAttribute.setAttributeType(facilityIdAttributeType);
             facilityIdAttribute.setValue(facilityId);
+            facilityIdAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityIdAttribute.setDateCreated(new Date());
             location.addAttribute(facilityIdAttribute);
             log.info("Facility Id attribute updated to new value: {}", facilityId);
         } else {
             if (!facilityId.equals(facilityIdAttribute.getValue())) {
                 facilityIdAttribute.setValue(facilityId);
+                facilityIdAttribute.setCreator(Context.getAuthenticatedUser());
+                facilityIdAttribute.setDateCreated(new Date());
                 log.info("Facility Id updated to new value: {}", facilityId);
             } else {
                 log.info("No update needed. Facility Id is the same: {}", facilityId);
@@ -461,11 +490,15 @@ public class FacilityDetailsDataExchange {
             facilityLicenseNumberAttribute = new LocationAttribute();
             facilityLicenseNumberAttribute.setAttributeType(facilityLicenseNumberAttributeType);
             facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
+            facilityLicenseNumberAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityLicenseNumberAttribute.setDateCreated(new Date());
             location.addAttribute(facilityLicenseNumberAttribute);
             log.info("License number attribute updated to new value: {}", facilityLicenseNumber);
         } else {
             if (!facilityLicenseNumber.equals(facilityLicenseNumberAttribute.getValue())) {
                 facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
+                facilityLicenseNumberAttribute.setCreator(Context.getAuthenticatedUser());
+                facilityLicenseNumberAttribute.setDateCreated(new Date());
                 log.info("Facility license number updated to new value: {}", facilityLicenseNumber);
             } else {
                 log.info("No update needed.SHA Facility License number is the same: {}", facilityLicenseNumber);
