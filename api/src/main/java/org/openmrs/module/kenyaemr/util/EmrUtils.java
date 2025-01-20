@@ -22,6 +22,8 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
@@ -34,6 +36,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
+import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.util.PrivilegeConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -412,5 +415,47 @@ public class EmrUtils {
 	public static String getGlobalPropertyValue(String value) {
 		GlobalProperty result = administrationService.getGlobalPropertyObject(value);
 		return result.getPropertyValue() != null ? result.getPropertyValue().trim() : "";
+	}
+
+	/**
+	 * Get the current location
+	 *
+	 * @return
+	 */
+	public static Location getDefaultLocation() {
+		Location var2;
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
+			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
+			Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
+			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
+			String GP_DEFAULT_LOCATION = "kenyaemr.defaultLocation";
+			GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(GP_DEFAULT_LOCATION);
+			var2 = gp != null ? (Location) gp.getValue() : null;
+		} finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
+			Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
+			Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
+		}
+		return var2;
+	}
+
+	public static LocationAttributeType getLocationAttributeType(String locationAttributeType) {
+		if (locationAttributeType == null || locationAttributeType.trim().isEmpty()) {
+			throw new IllegalArgumentException("LocationAttributeType identifier cannot be null or empty.");
+		}
+		try {
+			// Add privilege to fetch location attribute types
+			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+
+			// Retrieve the LocationAttributeType
+			return MetadataUtils.existing(LocationAttributeType.class, locationAttributeType);
+		} catch (Exception e) {
+			System.err.println("Error retrieving LocationAttributeType for identifier: {}" + locationAttributeType + " " + e);
+			throw new RuntimeException("Failed to retrieve LocationAttributeType for identifier: " + locationAttributeType, e);
+		} finally {
+			// Ensure privilege is removed
+			Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+		}
 	}
 }
