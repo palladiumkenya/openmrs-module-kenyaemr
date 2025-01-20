@@ -8,115 +8,139 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.web.controller;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.openmrs.*;
-import org.openmrs.api.context.Context;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.ConceptService;
-import org.openmrs.api.PatientService;
-import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
-import org.openmrs.module.kenyaemr.api.KenyaEmrService;
-import org.openmrs.calculation.result.CalculationResultMap;
-import org.openmrs.calculation.patient.PatientCalculationService;
-import org.openmrs.calculation.result.CalculationResult;
-import org.openmrs.calculation.patient.PatientCalculationContext;
-import org.openmrs.calculation.result.ListResult;
-import org.openmrs.module.kenyaemr.metadata.*;
-import org.openmrs.module.kenyaemr.dataExchange.FacilityDetailsDataExchange;
-import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.kenyaemrorderentry.util.Utils;
-import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.tb.TbPatientClassificationCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.tb.TbTreatmentNumberCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.tb.PatientInTbProgramCalculation;
-import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.LastCd4CountDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.WhoStageAtArtStartCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.InitialArtStartDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.LastCd4PercentageCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.LastWhoStageCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.HIVEnrollment;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadAndLdlCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.BMICalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferInDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsDischargeCalculation;
-import org.openmrs.module.kenyaemr.EmrConstants;
-import org.openmrs.module.kenyaemr.util.ZScoreUtil;
-import org.openmrs.module.kenyaemr.util.EmrUtils;
-import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
-import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
-import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
-import org.openmrs.module.kenyaemr.Dictionary;
-import org.openmrs.module.kenyaemr.util.EncounterBasedRegimenUtils;
-import org.openmrs.module.kenyaemr.wrapper.PatientWrapper;
-import org.openmrs.module.kenyaemr.wrapper.Enrollment;
-import org.openmrs.module.kenyacore.CoreContext;
-import org.openmrs.module.kenyacore.calculation.CalculationManager;
-import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
-import org.openmrs.module.kenyacore.form.FormDescriptor;
-import org.openmrs.module.kenyacore.form.FormManager;
-import org.openmrs.module.kenyacore.program.ProgramDescriptor;
-import org.openmrs.module.kenyacore.program.ProgramManager;
-import org.openmrs.module.kenyacore.calculation.Calculations;
-import org.openmrs.module.kenyacore.calculation.CalculationUtils;
-import org.openmrs.module.kenyacore.CoreUtils;
-import org.openmrs.module.kenyacore.CoreConstants;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.CD4AtARTInitiationCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.AllVlCountCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientProgramEnrollmentCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferOutDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.LastReturnVisitDateCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfDeathCalculation;
-import org.openmrs.ui.framework.SimpleObject;
-import org.openmrs.module.webservices.rest.web.RestConstants;
-import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
-import org.openmrs.ui.framework.annotation.SpringBean;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.xml.sax.SAXException;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.openmrs.util.PrivilegeConstants;
-import org.openmrs.api.PersonService;
-import org.openmrs.api.ProgramWorkflowService;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
+import org.joda.time.Years;
+import org.openmrs.CareSetting;
+import org.openmrs.Concept;
+import org.openmrs.ConceptName;
+import org.openmrs.DrugOrder;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Form;
+import org.openmrs.GlobalProperty;
+import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
+import org.openmrs.Obs;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
+import org.openmrs.PatientProgram;
+import org.openmrs.Person;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.Program;
+import org.openmrs.Relationship;
+import org.openmrs.Visit;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
+import org.openmrs.api.ProgramWorkflowService;
+import org.openmrs.api.context.Context;
+import org.openmrs.calculation.patient.PatientCalculationContext;
+import org.openmrs.calculation.patient.PatientCalculationService;
+import org.openmrs.calculation.result.CalculationResult;
+import org.openmrs.calculation.result.CalculationResultMap;
+import org.openmrs.calculation.result.ListResult;
+import org.openmrs.module.kenyacore.CoreConstants;
+import org.openmrs.module.kenyacore.CoreContext;
+import org.openmrs.module.kenyacore.CoreUtils;
+import org.openmrs.module.kenyacore.calculation.CalculationManager;
+import org.openmrs.module.kenyacore.calculation.CalculationUtils;
+import org.openmrs.module.kenyacore.calculation.Calculations;
+import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
+import org.openmrs.module.kenyacore.form.FormDescriptor;
+import org.openmrs.module.kenyacore.form.FormManager;
+import org.openmrs.module.kenyacore.program.ProgramDescriptor;
+import org.openmrs.module.kenyacore.program.ProgramManager;
+import org.openmrs.module.kenyaemr.Dictionary;
+import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
+import org.openmrs.module.kenyaemr.api.KenyaEmrService;
+import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.AllVlCountCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.HIVEnrollment;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.LastCd4PercentageCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.LastReturnVisitDateCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.LastWhoStageCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.BMICalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.CD4AtARTInitiationCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.InitialArtStartDateCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.LastCd4CountDateCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferInDateCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.TransferOutDateCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.ViralLoadAndLdlCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.WhoStageAtArtStartCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsDischargeCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.rdqa.DateOfDeathCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.rdqa.PatientProgramEnrollmentCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.tb.PatientInTbProgramCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.tb.TbPatientClassificationCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.tb.TbTreatmentNumberCalculation;
+import org.openmrs.module.kenyaemr.dataExchange.FacilityDetailsDataExchange;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.metadata.IPTMetadata;
+import org.openmrs.module.kenyaemr.metadata.MchMetadata;
+import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
+import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
+import org.openmrs.module.kenyaemr.metadata.TbMetadata;
+import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
+import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
+import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
+import org.openmrs.module.kenyaemr.util.EmrUtils;
+import org.openmrs.module.kenyaemr.util.EncounterBasedRegimenUtils;
+import org.openmrs.module.kenyaemr.util.ZScoreUtil;
+import org.openmrs.module.kenyaemr.wrapper.EncounterWrapper;
+import org.openmrs.module.kenyaemr.wrapper.Enrollment;
+import org.openmrs.module.kenyaemr.wrapper.PatientWrapper;
+import org.openmrs.module.kenyaemrorderentry.util.Utils;
+import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
+import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.annotation.SpringBean;
+import org.openmrs.util.PrivilegeConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
-import java.util.Calendar;
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,19 +149,21 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.time.Instant;
 import java.util.ArrayList;
-import org.joda.time.DateTime;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Comparator;
-
-import org.springframework.http.MediaType;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The rest controller for exposing resources through kenyacore and kenyaemr modules
@@ -470,12 +496,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
     public Object getDefaultConfiguredFacility(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-        ObjectNode locationNode;
+        ObjectNode locationNode = null;
 
         Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
         Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
         Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
         Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+
         try {
             if (isSynchronize && getRemoteFacilityDetails()) {
                 locationNode = getSavedFacilityDetails();
@@ -483,13 +510,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     locationNode.put("source", "HIE");
                 }
             } else {
-                // Fallback to local details
                 locationNode = getSavedFacilityDetails();
                 if (locationNode != null && isValuesEmptyOrDefault(locationNode, "operationalStatus", "shaKephLevel",
                         "shaContracted", "shaFacilityId", "shaFacilityLicenseNumber", "shaFacilityExpiryDate")) {
-                    // Attempt synchronization if local data is incomplete
 
-                    System.out.println("Local data incomplete. Syncing with HIE...");
                     if (getRemoteFacilityDetails()) {
                         locationNode = getSavedFacilityDetails();
                         if (locationNode != null) {
@@ -497,29 +521,24 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         }
                     } else {
                         locationNode.put("source", "Error synchronizing with HIE and no local data found");
-                        System.out.println("Could not get facility data");
                     }
-
-                } else if(locationNode != null) {
+                } else if (locationNode != null) {
                     locationNode.put("source", "Local");
                 }
             }
         } catch (Exception e) {
             System.err.println("Error in fetching facility details: " + e.getMessage());
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving facility details.");
+        } finally {
+            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
+            Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
+            Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
+            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
         }
 
         if (locationNode == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facility details not found.");
         }
-        Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-        Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-        Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-        Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-System.out.println(ResponseEntity.ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(locationNode));
         return ResponseEntity.ok(locationNode.toString());
     }
 

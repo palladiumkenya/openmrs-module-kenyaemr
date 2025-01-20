@@ -427,10 +427,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			install(globalProperty(GP_SHA_CLIENT_VERIFICATION_GET_END_POINT, "A GET API for getting SHA client information from the client registry", "http://127.0.0.1:9342/api/shaPatientResource"));
 		}
 		if(administrationService.getGlobalPropertyObject(CommonMetadata.GP_HIE_BASE_END_POINT_URL) == null) {
-			install(globalProperty(GP_HIE_BASE_END_POINT_URL, "A GET API for HIE registry", "https://api.dha.go.ke/v1/"));
+			install(globalProperty(GP_HIE_BASE_END_POINT_URL, "A GET API for HIE registry", ""));
 		}
 		if(administrationService.getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT) == null) {
-			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Health Worker information from Healthcare Worker registry", "https://api.dha.go.ke/v1/"));
+			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_END_POINT, "A GET API for getting SHA Health Worker information from Healthcare Worker registry", ""));
 		}
 		if(administrationService.getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER) == null) {
 			install(globalProperty(GP_SHA_HEALTH_WORKER_VERIFICATION_GET_API_USER, "API user for for connecting to the SHA provider registry", ""));
