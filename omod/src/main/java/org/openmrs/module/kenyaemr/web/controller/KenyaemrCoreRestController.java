@@ -488,22 +488,24 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 if (locationNode != null && isValuesEmptyOrDefault(locationNode, "operationalStatus", "shaKephLevel",
                         "shaContracted", "shaFacilityId", "shaFacilityLicenseNumber", "shaFacilityExpiryDate")) {
                     // Attempt synchronization if local data is incomplete
-                    System.out.println("-----"+locationNode);
-                    System.out.println("Local data incomplete: " + locationNode);
+
+                    System.out.println("Local data incomplete. Syncing with HIE...");
                     if (getRemoteFacilityDetails()) {
                         locationNode = getSavedFacilityDetails();
                         if (locationNode != null) {
                             locationNode.put("source", "HIE");
                         }
                     } else {
-                        System.out.println("----Could not get facility data");
+                        locationNode.put("source", "Error synchronizing with HIE and no local data found");
+                        System.out.println("Could not get facility data");
                     }
+
                 } else if(locationNode != null) {
                     locationNode.put("source", "Local");
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error in fetching facility details: " + e.getMessage());
+            System.err.println("Error in fetching facility details: " + e.getMessage());
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving facility details.");
         }
@@ -515,7 +517,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
         Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
         Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
         Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-
+System.out.println(ResponseEntity.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(locationNode));
         return ResponseEntity.ok(locationNode.toString());
     }
 
@@ -524,7 +528,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         try {
             syncSuccess = FacilityDetailsDataExchange.saveFacilityStatus();
         } catch (Exception e) {
-            System.out.println("Error during synchronization: {}" + e);
+            System.err.println("Error during synchronization: " + e);
         }
         return syncSuccess;
     }
@@ -549,7 +553,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationNode.put("shaFacilityExpiryDate", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE));
         locationNode.put("mflCode", EmrUtils.getMFLCode());
         return locationNode;
-        // return ResponseEntity.ok(locationNode);
     }
     private boolean isValuesEmptyOrDefault(ObjectNode node, String... keys) {
         // Return true only if all specified keys have empty or default values

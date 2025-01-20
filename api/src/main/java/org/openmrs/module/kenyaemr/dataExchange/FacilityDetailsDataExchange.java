@@ -62,7 +62,7 @@ public class FacilityDetailsDataExchange {
 
         String bearerToken = getBearerToken();
         if (bearerToken.isEmpty()) {
-            log.error("Bearer token is missing");
+            System.err.println("Bearer token is missing");
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
 
@@ -78,11 +78,11 @@ public class FacilityDetailsDataExchange {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createSuccessResponse(response));
             } else {
-                log.error("Error: failed to connect: {}", responseCode);
+                System.err.println("Error: failed to connect: "+ responseCode);
                 return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
             }
         } catch (Exception ex) {
-            log.error("Error fetching facility status: {}", ex.getMessage());
+            System.err.println("Error fetching facility status: "+ ex.getMessage());
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
     }
@@ -111,11 +111,11 @@ public class FacilityDetailsDataExchange {
                     log.info("Bearer token retrieved successfully...");
                     return responseString;
                 } else {
-                    log.error("Failed to fetch Bearer Token. HTTP Status: {}", response.getStatusLine().getStatusCode());
+                    System.err.println("Failed to fetch Bearer Token. HTTP Status:"+ response.getStatusLine().getStatusCode());
                 }
             }
         } catch (Exception e) {
-            log.error("Error retrieving Bearer Token: {}", e.getMessage());
+            System.err.println("Error retrieving Bearer Token: "+ e.getMessage());
         }
         return "";
     }
@@ -256,42 +256,43 @@ public class FacilityDetailsDataExchange {
 
                 final Location location = getDefaultLocation();
 
-                if (Context.getAuthenticatedUser() == null) {
-                    Context.authenticate("admin", "Ny3ri@10903");
+                User authenticatedUser = Context.getAuthenticatedUser();
+                if (authenticatedUser == null) {
+                    throw new IllegalStateException("No authenticated user in context");
                 }
                 // Handle SHA Accreditation Attribute
-                handleSHAAccreditationAttribute(location, operationalStatus);
+                handleSHAAccreditationAttribute(location, operationalStatus, authenticatedUser);
 
                 // Handle KMPDC facility classification Attribute
-                handleKephLevelAttribute(location, kephLevel);
+                handleKephLevelAttribute(location, kephLevel, authenticatedUser);
 
                 // Handle SHA Facility Attribute
-                handleSHAFacilityAttribute(location, approved);
+                handleSHAFacilityAttribute(location, approved, authenticatedUser);
 
                 //Handle SHA facility expiry date
-                handleSHAFacilityLicenseExpiryDateAttribute(location, shaFacilityExpiryDate);
+                handleSHAFacilityLicenseExpiryDateAttribute(location, shaFacilityExpiryDate, authenticatedUser);
 
                 //Handle SHA facility License number
-                handleSHAFacilityLicenseNumberAttribute(location, shaFacilityLicenseNumber);
+                handleSHAFacilityLicenseNumberAttribute(location, shaFacilityLicenseNumber, authenticatedUser);
 
                 //Handle SHA facility id
-                handleSHAFacilityIdAttribute(location, shaFacilityId);
+                handleSHAFacilityIdAttribute(location, shaFacilityId, authenticatedUser);
 
                 // Handle SHA Facility reference payload attribute
-                handleFacilityReferencePayloadAttribute(location, shaFacilityReferencePayload);
+                handleFacilityReferencePayloadAttribute(location, shaFacilityReferencePayload, authenticatedUser);
 
                 return true;
             } else {
-                log.error("Failed to save facility status: {}", responseEntity.getBody());
+                System.err.println("Failed to save facility status: "+ responseEntity.getBody());
                 return false;
             }
         } catch (Exception e) {
-            log.error("Error in saving Facility Status: ", e);
+            System.err.println("Error in saving Facility Status: "+ e);
             return false;
         }
     }
 
-    private static void handleFacilityReferencePayloadAttribute(Location location, String shaFacilityReferencePayload) {
+    private static void handleFacilityReferencePayloadAttribute(Location location, String shaFacilityReferencePayload, User authenticatedUser) {
         LocationAttributeType shaFacilityReferencePayloadType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_HIE_FHIR_REFERENCE);
 
         LocationAttribute shaFacilityReferencePayloadAttribute = location.getActiveAttributes(shaFacilityReferencePayloadType)
@@ -304,15 +305,13 @@ public class FacilityDetailsDataExchange {
             shaFacilityReferencePayloadAttribute = new LocationAttribute();
             shaFacilityReferencePayloadAttribute.setAttributeType(shaFacilityReferencePayloadType);
             shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
-            shaFacilityReferencePayloadAttribute.setCreator(Context.getAuthenticatedUser());
+            shaFacilityReferencePayloadAttribute.setCreator(authenticatedUser);
             shaFacilityReferencePayloadAttribute.setDateCreated(new Date());
             location.addAttribute(shaFacilityReferencePayloadAttribute);
             log.info("New Facility reference payload attribute created: {}", shaFacilityReferencePayload);
         } else {
             if (!shaFacilityReferencePayload.equals(shaFacilityReferencePayloadAttribute.getValue())) {
                 shaFacilityReferencePayloadAttribute.setValue(shaFacilityReferencePayload);
-                shaFacilityReferencePayloadAttribute.setCreator(Context.getAuthenticatedUser());
-                shaFacilityReferencePayloadAttribute.setDateCreated(new Date());
                 log.info("SHA Facility reference payload attribute updated to new value: {}", shaFacilityReferencePayload);
             } else {
                 log.info("No update needed. Facility reference payload attribute value is the same: {}", shaFacilityReferencePayload);
@@ -322,7 +321,7 @@ public class FacilityDetailsDataExchange {
         log.info("Facility status for MFL Code {} saved successfully: Facility reference payload: {}", getMFLCode(), shaFacilityReferencePayload);
     }
 
-    private static void handleKephLevelAttribute(Location location, String kephLevel) {
+    private static void handleKephLevelAttribute(Location location, String kephLevel, User authenticatedUser) {
         LocationAttributeType shaKephLevelType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL);
 
         LocationAttribute shaKephLevelAttribute = location.getActiveAttributes(shaKephLevelType)
@@ -335,15 +334,13 @@ public class FacilityDetailsDataExchange {
             shaKephLevelAttribute = new LocationAttribute();
             shaKephLevelAttribute.setAttributeType(shaKephLevelType);
             shaKephLevelAttribute.setValue(kephLevel);
-            shaKephLevelAttribute.setCreator(Context.getAuthenticatedUser());
+            shaKephLevelAttribute.setCreator(authenticatedUser);
             shaKephLevelAttribute.setDateCreated(new Date());
             location.addAttribute(shaKephLevelAttribute);
             log.info("New Keph Level attribute created: {}", kephLevel);
         } else {
             if (!kephLevel.equals(shaKephLevelAttribute.getValue())) {
                 shaKephLevelAttribute.setValue(kephLevel);
-                shaKephLevelAttribute.setCreator(Context.getAuthenticatedUser());
-                shaKephLevelAttribute.setDateCreated(new Date());
                 log.info("SHA Keph Level attribute updated to new value: {}", kephLevel);
             } else {
                 log.info("No update needed. Keph Level value is the same: {}", kephLevel);
@@ -353,7 +350,7 @@ public class FacilityDetailsDataExchange {
         log.info("Keph Level for MFL Code {} saved successfully: Keph Level: {}", getMFLCode(), kephLevel);
     }
 
-    public static void handleSHAAccreditationAttribute(Location location, String operationalStatus) {
+    public static void handleSHAAccreditationAttribute(Location location, String operationalStatus, User authenticatedUser) {
         LocationAttributeType shaAccreditationType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION);
 
         LocationAttribute shaAccreditationAttribute = location.getActiveAttributes(shaAccreditationType)
@@ -366,15 +363,13 @@ public class FacilityDetailsDataExchange {
             shaAccreditationAttribute = new LocationAttribute();
             shaAccreditationAttribute.setAttributeType(shaAccreditationType);
             shaAccreditationAttribute.setValue(operationalStatus);
-            shaAccreditationAttribute.setCreator(Context.getAuthenticatedUser());
+            shaAccreditationAttribute.setCreator(authenticatedUser);
             shaAccreditationAttribute.setDateCreated(new Date());
             location.addAttribute(shaAccreditationAttribute);
             log.info("New SHA Accreditation attribute created and set: {}", operationalStatus);
         } else {
             if (!operationalStatus.equals(shaAccreditationAttribute.getValue())) {
                 shaAccreditationAttribute.setValue(operationalStatus);
-                shaAccreditationAttribute.setCreator(Context.getAuthenticatedUser());
-                shaAccreditationAttribute.setDateCreated(new Date());
                 log.info("SHA Accreditation attribute updated to new value: {}", operationalStatus);
             } else {
                 log.info("No update needed. SHA Accreditation attribute value is the same: {}", operationalStatus);
@@ -384,7 +379,7 @@ public class FacilityDetailsDataExchange {
         log.info("Facility status for MFL Code {} saved successfully: Operational Status: {}", getMFLCode(), operationalStatus);
     }
 
-    public static void handleSHAFacilityAttribute(Location location, String approved) {
+    public static void handleSHAFacilityAttribute(Location location, String approved, User authenticatedUser) {
         LocationAttributeType isSHAFacility = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY);
 
         LocationAttribute isSHAFacilityAttribute = location.getActiveAttributes(isSHAFacility)
@@ -397,15 +392,13 @@ public class FacilityDetailsDataExchange {
             isSHAFacilityAttribute = new LocationAttribute();
             isSHAFacilityAttribute.setAttributeType(isSHAFacility);
             isSHAFacilityAttribute.setValue(approved);
-            isSHAFacilityAttribute.setCreator(Context.getAuthenticatedUser());
+            isSHAFacilityAttribute.setCreator(authenticatedUser);
             isSHAFacilityAttribute.setDateCreated(new Date());
             location.addAttribute(isSHAFacilityAttribute);
             log.info("New SHA Facility attribute created and set: {}", approved);
         } else {
             if (!approved.equals(isSHAFacilityAttribute.getValue())) {
                 isSHAFacilityAttribute.setValue(approved);
-                isSHAFacilityAttribute.setCreator(Context.getAuthenticatedUser());
-                isSHAFacilityAttribute.setDateCreated(new Date());
                 log.info("SHA Facility attribute updated to new value: {}", approved);
             } else {
                 log.info("No update needed. SHA Facility attribute value is the same: {}", approved);
@@ -415,7 +408,7 @@ public class FacilityDetailsDataExchange {
         log.info("Facility status for MFL Code {} saved successfully: , Approved: {}", getMFLCode(), approved);
     }
 
-    public static void handleSHAFacilityLicenseExpiryDateAttribute(Location location, String facilityExpiryDate) {
+    public static void handleSHAFacilityLicenseExpiryDateAttribute(Location location, String facilityExpiryDate, User authenticatedUser) {
         LocationAttributeType facilityExpiryDateAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE);
 
         LocationAttribute facilityExpiryDateAttribute = location.getActiveAttributes(facilityExpiryDateAttributeType)
@@ -428,15 +421,13 @@ public class FacilityDetailsDataExchange {
             facilityExpiryDateAttribute = new LocationAttribute();
             facilityExpiryDateAttribute.setAttributeType(facilityExpiryDateAttributeType);
             facilityExpiryDateAttribute.setValue(facilityExpiryDate);
-            facilityExpiryDateAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityExpiryDateAttribute.setCreator(authenticatedUser);
             facilityExpiryDateAttribute.setDateCreated(new Date());
             location.addAttribute(facilityExpiryDateAttribute);
             log.info("SHA License expiry date attribute updated to new value: {}", facilityExpiryDate);
         } else {
             if (!facilityExpiryDate.equals(facilityExpiryDateAttribute.getValue())) {
                 facilityExpiryDateAttribute.setValue(facilityExpiryDate);
-                facilityExpiryDateAttribute.setCreator(Context.getAuthenticatedUser());
-                facilityExpiryDateAttribute.setDateCreated(new Date());
                 log.info("SHA Facility attribute updated to new value: {}", facilityExpiryDate);
             } else {
                 log.info("No update needed.SHA Facility License expiry date attribute value is the same: {}", facilityExpiryDate);
@@ -446,7 +437,7 @@ public class FacilityDetailsDataExchange {
         log.info("Facility SHA License expiry date for MFL Code {} saved successfully: , License expiry date: {}", getMFLCode(), facilityExpiryDate);
     }
 
-    public static void handleSHAFacilityIdAttribute(Location location, String facilityId) {
+    public static void handleSHAFacilityIdAttribute(Location location, String facilityId, User authenticatedUser) {
         LocationAttributeType facilityIdAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE);
 
         LocationAttribute facilityIdAttribute = location.getActiveAttributes(facilityIdAttributeType)
@@ -459,15 +450,13 @@ public class FacilityDetailsDataExchange {
             facilityIdAttribute = new LocationAttribute();
             facilityIdAttribute.setAttributeType(facilityIdAttributeType);
             facilityIdAttribute.setValue(facilityId);
-            facilityIdAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityIdAttribute.setCreator(authenticatedUser);
             facilityIdAttribute.setDateCreated(new Date());
             location.addAttribute(facilityIdAttribute);
             log.info("Facility Id attribute updated to new value: {}", facilityId);
         } else {
             if (!facilityId.equals(facilityIdAttribute.getValue())) {
                 facilityIdAttribute.setValue(facilityId);
-                facilityIdAttribute.setCreator(Context.getAuthenticatedUser());
-                facilityIdAttribute.setDateCreated(new Date());
                 log.info("Facility Id updated to new value: {}", facilityId);
             } else {
                 log.info("No update needed. Facility Id is the same: {}", facilityId);
@@ -477,7 +466,7 @@ public class FacilityDetailsDataExchange {
         log.info("Facility Id for MFL Code {} saved successfully: , Facility Id: {}", getMFLCode(), facilityId);
     }
 
-    public static void handleSHAFacilityLicenseNumberAttribute(Location location, String facilityLicenseNumber) {
+    public static void handleSHAFacilityLicenseNumberAttribute(Location location, String facilityLicenseNumber, User authenticatedUser) {
         LocationAttributeType facilityLicenseNumberAttributeType = MetadataUtils.existing(LocationAttributeType.class, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER);
 
         LocationAttribute facilityLicenseNumberAttribute = location.getActiveAttributes(facilityLicenseNumberAttributeType)
@@ -490,15 +479,13 @@ public class FacilityDetailsDataExchange {
             facilityLicenseNumberAttribute = new LocationAttribute();
             facilityLicenseNumberAttribute.setAttributeType(facilityLicenseNumberAttributeType);
             facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
-            facilityLicenseNumberAttribute.setCreator(Context.getAuthenticatedUser());
+            facilityLicenseNumberAttribute.setCreator(authenticatedUser);
             facilityLicenseNumberAttribute.setDateCreated(new Date());
             location.addAttribute(facilityLicenseNumberAttribute);
             log.info("License number attribute updated to new value: {}", facilityLicenseNumber);
         } else {
             if (!facilityLicenseNumber.equals(facilityLicenseNumberAttribute.getValue())) {
                 facilityLicenseNumberAttribute.setValue(facilityLicenseNumber);
-                facilityLicenseNumberAttribute.setCreator(Context.getAuthenticatedUser());
-                facilityLicenseNumberAttribute.setDateCreated(new Date());
                 log.info("Facility license number updated to new value: {}", facilityLicenseNumber);
             } else {
                 log.info("No update needed.SHA Facility License number is the same: {}", facilityLicenseNumber);
