@@ -65,7 +65,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
             CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
             CommonMetadata._Form.DENTAL_CLINICAL_FORM,
             CommonMetadata._Form.FERTILITY_CLINICAL_FORM,
-            CommonMetadata._Form.RENAL_CLINICAL_FORM
+            CommonMetadata._Form.UROLOGY_CLINICAL_FORM
     ));
     static final String dentalFillingList = String.join(",", new ArrayList<>(Arrays.asList(
             EmrConstants.TEMP_FILLING_PER_TOOTH, EmrConstants.COMPOSITE_FILLING, EmrConstants.AMALGAM_FILLING, EmrConstants.GlASS_LONOMER_FILLING
