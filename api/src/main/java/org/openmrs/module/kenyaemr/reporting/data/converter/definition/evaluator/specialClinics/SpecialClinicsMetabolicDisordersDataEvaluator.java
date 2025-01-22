@@ -40,7 +40,7 @@ public class SpecialClinicsMetabolicDisordersDataEvaluator implements EncounterD
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.metabolic_disorders when 1107 then 'None' when 135761 then 'Lypodystrophy' when 141623 then 'Dyslipidemia' when 142473 then 'Type II Diabetes'  else '' end) as metabolic_disorders\n" +
+                "v.metabolic_disorders\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
 

@@ -40,7 +40,7 @@ public class SpecialClinicsTherapeuticFoodsDataEvaluator implements EncounterDat
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.therapeutic_food when 1107 then 'None' when 163394 then  'RUTF' when 163404 then 'F-75' when 167247 then 'F-100' when 159854 then 'Fiesmol' when 159364 then 'Exercise' when 5622 then 'Others' else '' end) as therapeutic_food" +
+                "v.therapeutic_food\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
 

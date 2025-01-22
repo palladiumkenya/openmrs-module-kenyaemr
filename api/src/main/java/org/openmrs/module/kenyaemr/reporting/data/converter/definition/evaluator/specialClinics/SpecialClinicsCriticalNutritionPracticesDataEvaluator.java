@@ -41,9 +41,7 @@ public class SpecialClinicsCriticalNutritionPracticesDataEvaluator implements En
 
 
         String qry = "select v.encounter_id, \n" +
-                "(case v.critical_nutrition_practices when 1107 then 'None' when 163300 then 'Nutrition status assessment' when 161648 then 'Dietary/Energy needs' \n" +
-                "  when 1906 then 'Sanitation' when 135797 then 'Positive living behaviour' when  159364 then 'Exercise' when 154358 then 'Safe drinking water' \n" +
-                "when 1611 then 'Prompt treatment for Opportunistic Infections' when 164377 then 'Drug food interactions side effects' else '' end) as critical_nutrition_practices\n"+
+                "v.critical_nutrition_practices\n"+
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

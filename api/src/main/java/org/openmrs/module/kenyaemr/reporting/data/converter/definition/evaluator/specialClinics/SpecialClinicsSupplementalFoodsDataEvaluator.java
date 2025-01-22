@@ -40,7 +40,7 @@ public class SpecialClinicsSupplementalFoodsDataEvaluator implements EncounterDa
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.supplemental_food when 1107 then 'None' when 159597 then 'FBF' when 162758 then 'CSB' when 166382 then 'RUSF' when 165577 then 'Liquid nutrition supplements' when 5622 then 'Others' else '' end) as supplemental_food\n" +
+                "v.supplemental_food\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
 

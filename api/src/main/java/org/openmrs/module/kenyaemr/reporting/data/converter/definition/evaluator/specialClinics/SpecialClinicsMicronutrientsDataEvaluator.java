@@ -40,8 +40,7 @@ public class SpecialClinicsMicronutrientsDataEvaluator implements EncounterDataE
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.micronutrients when 1107 then 'None' when 86339 then 'Vitamin A' when 86343 then 'B6' when 461 then 'Multi-vitamins' when 104677 then 'Iron-folate' when 86672 then 'Zinc'\n" +
-                "when 161649 then 'Multiple Micronutrients' when 5622 then 'Others' else '' end) as micronutrients" +
+                "v.micronutrients\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
 
