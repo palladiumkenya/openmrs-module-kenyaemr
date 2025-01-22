@@ -170,6 +170,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String GASTROENTEROLOGY_CLINICAL_FORM = "6b4fa553-f2b3-47d0-a4c5-fc11f38b0b24";
 		public static final String DENTAL_CLINICAL_FORM = "a3c01460-c346-4f3d-a627-5c7de9494ba0";
 		public static final String INFECTIOUS_DISEASE_CLINICAL_FORM = "8f2fbcca-126f-439b-95b5-bcbc62647328";
+		public static final String RENAL_CLINICAL_FORM = "6d0be8bd-5320-45a0-9463-60c9ee2b1338";
 	}
 
 	public static final class _OrderType {
