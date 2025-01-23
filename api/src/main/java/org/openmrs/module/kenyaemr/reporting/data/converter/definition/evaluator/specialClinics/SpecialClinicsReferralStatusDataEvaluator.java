@@ -42,7 +42,7 @@ public class SpecialClinicsReferralStatusDataEvaluator implements EncounterDataE
         String qry = "select v.encounter_id,\n" +
                 "(case v.referral_status when 5485 then 'Refer for admission' when 164407 then 'Referral for other clinics' when 163316 then 'Referral for livelihood support' when 159492 then 'Transferred Out' else '' end) as referral_status\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = :specialClinic;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

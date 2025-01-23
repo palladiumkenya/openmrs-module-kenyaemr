@@ -55,12 +55,9 @@ import java.util.List;
 public class MOH407BReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-	private static final String SPECIAL_CLINIC = "Nutrition";
-	private static final String COMPARATIVE_OPERATION = "<=";
+	private static final String SPECIAL_CLINIC = CommonMetadata._Form.NUTRITION;
+	private static final String COMPARATIVE_OPERATION = "<";
 	private static final Integer AGE = 15;
-
-
-
 
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
@@ -93,8 +90,6 @@ public class MOH407BReportBuilder extends AbstractReportBuilder {
         PatientIdentifierType pcn = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.PATIENT_CLINIC_NUMBER);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
         DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
-
-
 
 		SpecialClinicsDiagnosisDataDefinition diagnosisDataDefinition = new SpecialClinicsDiagnosisDataDefinition();
 		diagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));

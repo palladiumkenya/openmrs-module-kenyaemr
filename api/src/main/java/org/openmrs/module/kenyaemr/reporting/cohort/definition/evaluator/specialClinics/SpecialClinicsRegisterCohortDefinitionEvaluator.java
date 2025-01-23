@@ -46,13 +46,14 @@ public class SpecialClinicsRegisterCohortDefinitionEvaluator implements Encounte
 		String comparisonOperator = cohortDefinition.getComparisonOperator();
 		Integer age = cohortDefinition.getAge();
 		String qry = "SELECT ce.encounter_id \n" +
-				"FROM kenyaemr_etl.etl_special_clinics ce\n" +
-				"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
-				"    ON p.patient_id = ce.patient_id \n" +
-				"    AND p.voided = 0\n" +
-				"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
-				"    AND ce.special_clinic = :specialClinic\n" +
-				"    AND timestampdiff(YEAR, date(p.DOB), (SELECT MAX(ce.visit_date) FROM kenyaemr_etl.etl_special_clinics ce)) "+comparisonOperator+":age;";
+		"FROM kenyaemr_etl.etl_special_clinics ce\n" +
+		"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
+		"    ON p.patient_id = ce.patient_id \n" +
+		"    AND p.voided = 0\n" +
+		"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
+		"    AND ce.special_clinic_form_uuid = :specialClinic\n" +
+		"    AND timestampdiff(YEAR, date(p.DOB), (SELECT MAX(ce.visit_date) FROM kenyaemr_etl.etl_special_clinics ce)) " + comparisonOperator + " :age \n" +
+		"group by ce.patient_id";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);

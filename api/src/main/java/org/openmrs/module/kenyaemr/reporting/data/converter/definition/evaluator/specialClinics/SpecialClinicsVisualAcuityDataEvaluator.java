@@ -42,7 +42,7 @@ public class SpecialClinicsVisualAcuityDataEvaluator implements EncounterDataEva
         String qry = "select v.encounter_id,\n" +
                 "(case v.acuity_finding when 163345 then 'Normal vision(6/6-3/18)' when 137723 then 'Low vision(6/18-6/30)' when 147215 then 'Blind (<3/60-NPL)' when 135566 then 'Hand Movement(HMS)' when 135791 then 'Light perception(LP)' when 158461 then 'No Light Perception(NLP)' else '' end) as acuity_finding\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = :specialClinic;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

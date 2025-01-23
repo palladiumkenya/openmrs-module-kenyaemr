@@ -47,7 +47,7 @@ public class SpecialClinicsDiagnosisDataEvaluator implements EncounterDataEvalua
                 "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 ") con ON v.patient_id = con.patient_id\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic = :specialClinic;";
+                "AND v.special_clinic_form_uuid = :specialClinic;";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

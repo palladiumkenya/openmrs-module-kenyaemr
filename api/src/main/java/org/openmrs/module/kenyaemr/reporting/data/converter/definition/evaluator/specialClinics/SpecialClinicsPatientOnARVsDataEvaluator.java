@@ -42,7 +42,7 @@ public class SpecialClinicsPatientOnARVsDataEvaluator implements EncounterDataEv
         String qry = "select v.encounter_id,\n" +
                 "(case v.patient_on_arv when 1065 then 'Yes' when 1066 then 'No' else '' end) as patient_on_arv\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = :specialClinic;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

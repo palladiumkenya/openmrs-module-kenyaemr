@@ -53,7 +53,7 @@ import java.util.List;
 public class MOH416ReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-	private static final String SPECIAL_CLINIC = "Ophthamology";
+	private static final String SPECIAL_CLINIC = CommonMetadata._Form.OPHTHAMOLOGY_CLINICAL_FORM;
 	private static final String COMPARATIVE_OPERATION = ">=";
 	private static final Integer AGE = 0;
 

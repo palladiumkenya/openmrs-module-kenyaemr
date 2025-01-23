@@ -42,7 +42,7 @@ public class SpecialClinicsPatientInSchoolDataEvaluator implements EncounterData
         String qry = "select v.encounter_id,\n" +
                 "(case v.enrolled_in_school when 5629 then 'In School' when 164212 then 'Out of school' else '' end) as enrolled_in_school\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic = :specialClinic;";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = :specialClinic;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

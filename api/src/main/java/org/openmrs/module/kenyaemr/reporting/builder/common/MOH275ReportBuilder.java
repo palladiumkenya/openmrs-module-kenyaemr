@@ -51,7 +51,7 @@ import java.util.List;
 public class MOH275ReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-	private static final String SPECIAL_CLINIC = "Occupational Therapy";
+	private static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
 	private static final String COMPARATIVE_OPERATION = ">=";
     private static final Integer AGE = 0;
 
@@ -131,7 +131,7 @@ public class MOH275ReportBuilder extends AbstractReportBuilder {
 		SpecialClinicsDiagnosisDataDefinition diagnosisDataDefinition = new SpecialClinicsDiagnosisDataDefinition();
 		diagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		diagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		
+        diagnosisDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
         dsd.addColumn("Name", nameDef, "");

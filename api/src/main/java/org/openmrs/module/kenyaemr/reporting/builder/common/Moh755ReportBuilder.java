@@ -15,6 +15,7 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.moh711.Moh711IndicatorLibrary;
@@ -48,7 +49,7 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
 
     static final int NEW_VISIT = 164180,
             RE_VISIT= 160530,REFERALS= 160563, INTERVENTION = 165001, REFERRAL_IN =160563, REFERRAL_OUT = 159492;
-    static final String SPECIAL_CLINIC = "Occupational Therapy";
+    static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
 
