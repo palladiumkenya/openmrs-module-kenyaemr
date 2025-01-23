@@ -12,9 +12,12 @@ package org.openmrs.module.kenyaemr.web.controller;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
@@ -23,7 +26,11 @@ import org.joda.time.Weeks;
 import org.joda.time.Years;
 import org.openmrs.CareSetting;
 import org.openmrs.Concept;
+import org.openmrs.ConceptMap;
+import org.openmrs.ConceptMapType;
 import org.openmrs.ConceptName;
+import org.openmrs.ConceptReferenceTerm;
+import org.openmrs.ConceptSource;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -115,6 +122,7 @@ import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.annotation.SpringBean;
+import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.PrivilegeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -142,6 +150,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -160,6 +169,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -3541,5 +3551,90 @@ public class KenyaemrCoreRestController extends BaseRestController {
         String respo = response.body().string();
         return   respo;
     }
+
+    /**
+     * Processes mapping of a locally managed concept mapping.
+     * It reads the mapping file from the OpenMRS app directory.
+     * The file must be a json file named local_concept_mapping.
+     * The file content is a JSON array of mappings
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/processicd11mapping")
+    @ResponseBody
+    public Object processICD11ConceptMapping() throws IOException {
+        ObjectNode responseObject = JsonNodeFactory.instance.objectNode();
+        ObjectMapper mapper = new ObjectMapper();
+        ConceptService conceptService = Context.getConceptService();
+        ArrayNode mappingEntries = null;
+
+        File conceptMappingFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "local_concept_mapping.json");
+        if (!conceptMappingFile.exists()) {
+            responseObject.put("status", "Error");
+            responseObject.put("message", "Concept mapping file not found!");
+            return responseObject;
+        }
+        /**
+         * Sample conceptMappingFile content
+         * ----------------------
+         * [
+         *   {
+         *       "DiagnosisName": "Headache, not elsewhere classified",
+         *       "ConceptId": "139084",
+         *       "ICD11Code": "8A8Z"
+         *   }
+         * ]
+         */
+        String conceptMapping = FileUtils.readFileToString(conceptMappingFile, "UTF-8");
+
+        try {
+            System.out.println("Starting the concept mapping task");
+            mappingEntries = (ArrayNode) mapper.readTree(conceptMapping);
+            if (mappingEntries != null) {
+                System.out.println("Concept mapping file found");
+                ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
+                ConceptSource icd11Who = conceptService.getConceptSourceByName("ICD-11-WHO");
+                int counter = 0;
+                for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext(); ) {
+                    ObjectNode node = (ObjectNode) it.next();
+
+                    Integer conceptId = node.get("ConceptId").asInt();
+                    String icd11Code = node.get("ICD11Code").asText();
+                    String icd11Name = "";// TODO: add reference name
+
+                    Concept concept = conceptService.getConcept(conceptId);
+                    if (concept == null) {
+                        continue; // just skip
+                    }
+                    ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who) : new ConceptReferenceTerm(icd11Who, icd11Code, icd11Name);
+                    ConceptMap conceptMap = new ConceptMap();
+                    conceptMap.setConceptMapType(sameAs);
+                    conceptMap.setConceptReferenceTerm(referenceTerm);
+                    if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code) && cMap.getConceptReferenceTerm().getConceptSource().equals(icd11Who))) {
+                        continue; // skip existing mappings
+                    }
+                    concept.addConceptMapping(conceptMap);
+                    conceptService.saveConcept(concept);
+                    counter++;
+                    if ((counter % 200) == 0) {
+                        Context.flushSession();
+                        Context.clearSession();
+                        counter = 0;
+                        System.out.println("Concept mapping: Flushing session....");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to update concept mappings");
+            throw new RuntimeException(e);
+        }
+        responseObject.put("status", "Success");
+        responseObject.put("message", "Successfully updated concept mappings");
+        System.out.println("Successfully updated concept mappings");
+
+        return responseObject.toString();
+
+    }
+
 
 }
