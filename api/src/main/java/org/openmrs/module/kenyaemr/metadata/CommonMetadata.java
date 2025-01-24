@@ -113,6 +113,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POST_MORTEM = "32b61a73-4971-4fc0-b20b-9a30176317e2";
 		public static final String MORGUE_ADMISSION = "3d2df845-6f3c-45e7-b91a-d828a1f9c2e8";
 		public static final String MORGUE_DISCHARGE = "3d618f40b-b5a3-4f17-81c8-2f04e2aad58e";
+		public static final String INFECTIOUS_DISEASE = "a2cac281-81a8-4f35-9bc5-62493c8ee7df";
 	}
 
 	public static final class _Form {
@@ -168,6 +169,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String CARDIOLOGY_CLINICAL_FORM = "998be6de-bd13-4136-ba0d-3f772139895f";
 		public static final String GASTROENTEROLOGY_CLINICAL_FORM = "6b4fa553-f2b3-47d0-a4c5-fc11f38b0b24";
 		public static final String DENTAL_CLINICAL_FORM = "a3c01460-c346-4f3d-a627-5c7de9494ba0";
+		public static final String INFECTIOUS_DISEASE_CLINICAL_FORM = "8f2fbcca-126f-439b-95b5-bcbc62647328";
 	}
 
 	public static final class _OrderType {
@@ -322,6 +324,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Post-Mortem", "Post-Mortem clinical encounter type", _EncounterType.POST_MORTEM));
 		install(encounterType("Morgue Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
 		install(encounterType("Morgue Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
+		install(encounterType("Infectious Disease", "Infectious disease clinical encounter type", _EncounterType.INFECTIOUS_DISEASE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -397,6 +400,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
 		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
 		install(form("Dental Clinical Form", "Form for Dental encounter ", _EncounterType.CONSULTATION, "1", _Form.DENTAL_CLINICAL_FORM));
+		install(form("Infectious Disease Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.INFECTIOUS_DISEASE, "1", _Form.INFECTIOUS_DISEASE_CLINICAL_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
