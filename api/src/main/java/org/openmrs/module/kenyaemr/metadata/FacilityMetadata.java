@@ -52,6 +52,8 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String FACILITY_HIE_FHIR_REFERENCE = "682f0a48-a642-491b-aa6d-41084bee0ee0";
 		public static final String FACILITY_REGISTRY_CODE = "1d1e2531-6a4a-4ed9-ab0a-02663e82379c";
 		public static final String FACILITY_LICENSE_NUMBER = "5f719dc5-3a70-48e5-8404-90bbcc35b36e";
+		public static final String SHA_BENEFITS_PACKAGE = "db1cf31e-8b06-4c36-94bf-3a932fadd2d7";
+		public static final String SHA_INTERVENTIONS = "cbe19f79-dcda-4532-a9c9-6f62c7a25b39";
 	}
 
 	/**
@@ -107,6 +109,18 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				"Facility Registry Code", "Facility Registry Code",
 				FreeTextDatatype.class, "", 0, 1,
 				_LocationAttributeType.FACILITY_REGISTRY_CODE
+		));
+
+		install(locationAttributeType(
+				"SHA Benefits Package", "SHA benefits package",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_BENEFITS_PACKAGE
+		));
+
+		install(locationAttributeType(
+				"SHA Interventions", "SHA interventions",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.SHA_INTERVENTIONS
 		));
 	}
 

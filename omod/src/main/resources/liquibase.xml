@@ -487,6 +487,14 @@
 			<where>schedulable_class='org.openmrs.module.kenyaemrIL.MLabViralLoadResultsPullTask'</where>
 		</delete>
 	</changeSet>
+	<!--Modify value_reference column data type to MEDIUMTEXT in location_attribute table-->
+	<changeSet id="${project.parent.artifactId}-20250126-1300" author="schege">
+		<comment>Modify value_reference column data type to MEDIUMTEXT in location_attribute table</comment>
+		<sql>
+			ALTER TABLE location_attribute MODIFY COLUMN value_reference MEDIUMTEXT;
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>
 
 
