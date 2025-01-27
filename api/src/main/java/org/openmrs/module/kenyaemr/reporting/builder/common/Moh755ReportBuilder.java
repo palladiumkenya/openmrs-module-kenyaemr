@@ -39,7 +39,7 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
  * MOH 755 report
  */
 @Component
-@Builds({"kenyaemr.specialClinics.report.moh755"})
+@Builds({"kenyaemr.ehrReports.report.moh755"})
 public class Moh755ReportBuilder extends AbstractReportBuilder {
 
     protected static final Log log = LogFactory.getLog(Moh755ReportBuilder.class);

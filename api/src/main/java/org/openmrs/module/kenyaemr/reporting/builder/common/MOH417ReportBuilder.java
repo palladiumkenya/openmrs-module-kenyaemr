@@ -47,7 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@Builds({"kenyaemr.specialClinics.report.moh417"})
+@Builds({"kenyaemr.ehrReports.report.moh417"})
 public class MOH417ReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
