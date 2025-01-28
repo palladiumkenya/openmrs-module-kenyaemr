@@ -64,7 +64,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
             CommonMetadata._Form.GASTROENTEROLOGY_CLINICAL_FORM,
             CommonMetadata._Form.CARDIOLOGY_CLINICAL_FORM,
             CommonMetadata._Form.DENTAL_CLINICAL_FORM,
-            CommonMetadata._Form.FERTILITY_CLINICAL_FORM
+            CommonMetadata._Form.FERTILITY_CLINICAL_FORM,
+            CommonMetadata._Form.UROLOGY_CLINICAL_FORM
     ));
     static final String dentalFillingList = String.join(",", new ArrayList<>(Arrays.asList(
             EmrConstants.TEMP_FILLING_PER_TOOTH, EmrConstants.COMPOSITE_FILLING, EmrConstants.AMALGAM_FILLING, EmrConstants.GlASS_LONOMER_FILLING
@@ -205,8 +206,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Nutrition Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.NUTRITION, RE_ATT), indParams), "");
         dsd.addColumn( "Oncology Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ONCOLOGY_FORM, NEW_VISIT), indParams), "");
         dsd.addColumn( "Oncology Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.ONCOLOGY_FORM, RE_ATT), indParams), "");
-        dsd.addColumn( "Renal Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.UROLOGY_CLINICAL_FORM,NEW_VISIT), indParams), "");
-        dsd.addColumn( "Renal Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.UROLOGY_CLINICAL_FORM, RE_ATT), indParams), "");
+        dsd.addColumn( "Renal Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.RENAL_CLINICAL_FORM,NEW_VISIT), indParams), "");
+        dsd.addColumn( "Renal Clinic (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.RENAL_CLINICAL_FORM, RE_ATT), indParams), "");
         dsd.addColumn( "All other special Clinics (New)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),NEW_VISIT), indParams), "");
         dsd.addColumn( "All other special Clinics (Re_Att)", "", ReportUtils.map(moh717IndicatorLibrary.otherSpecialClinics(EmrUtils.formatListWithQuotes(otherSpecialClinics),RE_ATT), indParams), "");
 
