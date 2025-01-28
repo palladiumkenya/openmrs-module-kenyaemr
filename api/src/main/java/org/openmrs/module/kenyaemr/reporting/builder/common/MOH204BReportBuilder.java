@@ -82,9 +82,14 @@ public class MOH204BReportBuilder extends AbstractReportBuilder {
 
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
-        PatientIdentifierType pcn = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.PATIENT_CLINIC_NUMBER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
+
+		OPDNumber5AndAboveNewVisitDataDefinition opdNumber5AndAboveNewVisitDataDefinition =new OPDNumber5AndAboveNewVisitDataDefinition();
+		opdNumber5AndAboveNewVisitDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		opdNumber5AndAboveNewVisitDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+		OPDNumber5AndAboveRevisitDataDefinition opdNumber5AndAboveRevisitDataDefinition = new OPDNumber5AndAboveRevisitDataDefinition();
+		opdNumber5AndAboveRevisitDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		opdNumber5AndAboveRevisitDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 		OPDHeightDataDefinition  opdHeightDataDefinition = new OPDHeightDataDefinition();
 		opdHeightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -132,8 +137,8 @@ public class MOH204BReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
 		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));         
-		dsd.addColumn("OPD Number (New)", patientClinicNo, "");
-		//dsd.addColumn("OPD Number (Revisit)", patientClinicNo, "");   //TODO:Determine revisit vs new visit
+		dsd.addColumn("OPD Number (New)", opdNumber5AndAboveNewVisitDataDefinition, paramMapping);
+		dsd.addColumn("OPD Number (Revisit)", opdNumber5AndAboveRevisitDataDefinition, paramMapping);   //TODO:Determine revisit vs new visit
         dsd.addColumn("Referred From", opdReferredFromDataDefinition, paramMapping);
 		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());

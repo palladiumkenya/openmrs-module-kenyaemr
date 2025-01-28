@@ -42,7 +42,7 @@ public class MOH204ARegisterCohortDefinitionEvaluator implements EncounterQueryE
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
 		String qry = "SELECT ce.encounter_id from kenyaemr_etl.etl_clinical_encounter ce\n" +
-			"                             inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = ce.patient_id and  p.voided = 0 and TIMESTAMPDIFF(YEAR, date(p.DOB), date(:startDate)) < 5\n" +
+			"                             inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = ce.patient_id and  p.voided = 0 and TIMESTAMPDIFF(YEAR, date(p.DOB), ce.visit_date) < 5\n" +
 			"where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)and ce.voided = 0;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
