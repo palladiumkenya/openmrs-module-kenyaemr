@@ -10,10 +10,10 @@
 package org.openmrs.module.kenyaemr.dataExchange;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.codehaus.jackson.JsonNode;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,20 +21,35 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 
-import static org.openmrs.module.kenyaemr.dataExchange.DataHandler.*;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
-/**
- * A scheduled task that automatically updates the facility status.
- */
-public class InterventionsDataExchange {
-    private static final Logger log = LoggerFactory.getLogger(InterventionsDataExchange.class);
+public class SHABenefitsPackageHandler extends DataHandler{
+    private static final String LOCAL_FILE_PATH = "/var/lib/OpenMRS/sha/sha_benefits_package.json";
 
-    private static final String SHA_INTERVENTIONS = CommonMetadata.GP_SHA_INTERVENTIONS;
-/*
-    public static ResponseEntity<String> getInterventions() {
+    private static final Logger log = LoggerFactory.getLogger(SHABenefitsPackageHandler.class);
+
+    private static final String BASE_URL_KEY = CommonMetadata.GP_HIE_BASE_END_POINT_URL;
+
+    public SHABenefitsPackageHandler() {
+        super(LOCAL_FILE_PATH);
+    }
+
+    @Override
+    protected JsonNode fetchRemoteData() {
+        try {
+            String response = getBenefitsPackage().getBody();
+            if (response != null) {
+                JsonNode jsonNode = objectMapper.readTree(response);
+                return jsonNode;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ResponseEntity<String> getBenefitsPackage() {
 
         String bearerToken = getBearerToken();
         if (bearerToken.isEmpty()) {
@@ -44,25 +59,21 @@ public class InterventionsDataExchange {
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
-            HttpPost postRequest = new HttpPost(getGlobalPropertyValue(SHA_INTERVENTIONS) + "/query");
-            postRequest.setHeader("Authorization", "Bearer " + bearerToken);
-            postRequest.setHeader("Content-Type", "application/json");
+            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(BASE_URL_KEY) + "benefit-package");
+            getRequest.setHeader("Authorization", "Bearer " + bearerToken);
 
-            String jsonPayload = "{\"searchKeyAndValues\": {}}"; // Adjust if additional parameters are needed
-            postRequest.setEntity(new StringEntity(jsonPayload, StandardCharsets.UTF_8));
+            HttpResponse response = httpClient.execute(getRequest);
 
-            HttpResponse response = httpClient.execute(postRequest);
             int responseCode = response.getStatusLine().getStatusCode();
-
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(createSuccessResponse(response));
             } else {
-                System.err.println("Error: failed to connect: "+ responseCode);
+                System.err.println("Error: failed to connect: " + responseCode);
                 return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
             }
         } catch (Exception ex) {
-            System.err.println("Error fetching interventions: "+ ex.getMessage());
+            System.err.println("Error fetching benefits package: " + ex.getMessage());
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
-    }*/
+    }
 }

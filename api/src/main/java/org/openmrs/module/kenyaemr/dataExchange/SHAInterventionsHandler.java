@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.codehaus.jackson.JsonNode;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +24,32 @@ import org.springframework.http.ResponseEntity;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
-import static org.openmrs.module.kenyaemr.dataExchange.DataHandler.*;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
-/**
- * A scheduled task that automatically updates the facility status.
- */
-public class InterventionsDataExchange {
-    private static final Logger log = LoggerFactory.getLogger(InterventionsDataExchange.class);
+public class SHAInterventionsHandler extends DataHandler {
+    private static final String LOCAL_FILE_PATH = "/var/lib/OpenMRS/sha/sha_interventions.json";
+    private static final Logger log = LoggerFactory.getLogger(SHAInterventionsHandler.class);
 
     private static final String SHA_INTERVENTIONS = CommonMetadata.GP_SHA_INTERVENTIONS;
-/*
+
+    public SHAInterventionsHandler() {
+        super(LOCAL_FILE_PATH);
+    }
+
+    @Override
+    protected JsonNode fetchRemoteData() {
+        try {
+            String response = getInterventions().getBody();
+            if (response != null) {
+                JsonNode jsonNode = objectMapper.readTree(response);
+                return jsonNode;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ResponseEntity<String> getInterventions() {
 
         String bearerToken = getBearerToken();
@@ -64,5 +80,5 @@ public class InterventionsDataExchange {
             System.err.println("Error fetching interventions: "+ ex.getMessage());
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
-    }*/
+    }
 }

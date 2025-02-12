@@ -440,22 +440,4 @@ public class EmrUtils {
 		return var2;
 	}
 
-	public static LocationAttributeType getLocationAttributeType(String locationAttributeType) {
-		if (locationAttributeType == null || locationAttributeType.trim().isEmpty()) {
-			throw new IllegalArgumentException("LocationAttributeType identifier cannot be null or empty.");
-		}
-		try {
-			// Add privilege to fetch location attribute types
-			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-
-			// Retrieve the LocationAttributeType
-			return MetadataUtils.existing(LocationAttributeType.class, locationAttributeType);
-		} catch (Exception e) {
-			System.err.println("Error retrieving LocationAttributeType for identifier: {}" + locationAttributeType + " " + e);
-			throw new RuntimeException("Failed to retrieve LocationAttributeType for identifier: " + locationAttributeType, e);
-		} finally {
-			// Ensure privilege is removed
-			Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-		}
-	}
 }

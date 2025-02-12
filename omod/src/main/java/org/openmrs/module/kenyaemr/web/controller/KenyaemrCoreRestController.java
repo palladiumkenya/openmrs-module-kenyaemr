@@ -98,9 +98,11 @@ import org.openmrs.module.kenyaemr.calculation.library.tb.PatientInTbProgramCalc
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbPatientClassificationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbTreatmentNumberCalculation;
-import org.openmrs.module.kenyaemr.dataExchange.BenefitsPackageDataExchange;
+import org.openmrs.module.kenyaemr.dataExchange.DataHandler;
 import org.openmrs.module.kenyaemr.dataExchange.FacilityDetailsDataExchange;
+import org.openmrs.module.kenyaemr.dataExchange.SHABenefitsPackageHandler;
 import org.openmrs.module.kenyaemr.dataExchange.InterventionsDataExchange;
+import org.openmrs.module.kenyaemr.dataExchange.SHAInterventionsHandler;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
@@ -601,87 +603,94 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
         return allEmptyOrDefault;
     }
-    /**
+    @RequestMapping(method = RequestMethod.GET, value = "/sha-benefits-package")
+    @ResponseBody
+    public ResponseEntity<String> getShaBenefitsPackage(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        SHABenefitsPackageHandler shaBenefitsPackageHandler = new SHABenefitsPackageHandler();
+        return fetchData(shaBenefitsPackageHandler, isSynchronize);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sha-interventions")
+    @ResponseBody
+    public ResponseEntity<String> getShaInterventions(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        SHAInterventionsHandler shaInterventionsHandler = new SHAInterventionsHandler();
+        return fetchData(shaInterventionsHandler, isSynchronize);
+    }
+
+    private ResponseEntity<String> fetchData(DataHandler handler, boolean isSynchronize) {
+        JsonNode data;
+
+        if (isSynchronize) {
+            data = handler.fetchAndSaveFromRemote();
+            // Wrap the array in an ObjectNode
+            if (data.isArray()) {
+                ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
+                responseWrapper.put("data", data);  // Embed the array under the "data" field
+                responseWrapper.put("source", "HIE");  // or "HIE" if synchronized
+
+                return ResponseEntity.ok(responseWrapper.toString());
+            }
+
+            // If data is already an ObjectNode, add the source property directly
+            if (data instanceof ObjectNode) {
+                ((ObjectNode) data).put("source", "HIE");  // or "HIE"
+            }
+        } else {
+            data = handler.readFromLocalFile();
+            // Wrap the array in an ObjectNode
+            if (data.isArray()) {
+                ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
+                responseWrapper.put("data", data);  // Embed the array under the "data" field
+                responseWrapper.put("source", "Local");  // or "HIE" if synchronized
+
+                return ResponseEntity.ok(responseWrapper.toString());
+            }
+
+            // If data is already an ObjectNode, add the source property directly
+            if (data instanceof ObjectNode) {
+                ((ObjectNode) data).put("source", "Local");  // or "HIE"
+            }
+        }
+        if (data == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
+        }
+
+        return ResponseEntity.ok(data.toString());
+    }
+
+    /*
+    */
+/**
      * Fetches SHA benefits package
      *
      * @return custom location object
-     */
+     *//*
+
     @RequestMapping(method = RequestMethod.GET, value = "/sha-benefits-package")
     @ResponseBody
     public Object getShaBenefitsPackage(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-        ObjectNode locationNode = null;
+        SHABenefitsPackageHandler shaBenefitsHandler = new SHABenefitsPackageHandler();
+        JsonNode data;
 
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-        Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-
-        try {
-            if (isSynchronize && getRemoteBenefitsPackage()) {
-                locationNode = getSavedBenefitsPackage();
-                if (locationNode != null) {
-                    locationNode.put("source", "HIE");
-                }
-            } else {
-                locationNode = getSavedBenefitsPackage();
-                if (locationNode != null && isValuesEmptyOrDefault(locationNode, "shaBenefitsPackage")) {
-
-                    if (getRemoteBenefitsPackage()) {
-                        locationNode = getSavedBenefitsPackage();
-                        if (locationNode != null) {
-                            locationNode.put("source", "HIE");
-                        }
-                    } else {
-                        locationNode.put("source", "Error synchronizing with HIE and no local data found");
-                    }
-                } else if (locationNode != null) {
-                    locationNode.put("source", "Local");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error in fetching SHA benefits package: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving SHA benefits details.");
-        } finally {
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-            Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+        if (isSynchronize) {
+            data = shaBenefitsHandler.fetchAndSaveFromRemote();
+        } else {
+            data = shaBenefitsHandler.readFromLocalFile();
         }
 
-        if (locationNode == null) {
+        if (data == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Benefits package details not found.");
         }
-        return ResponseEntity.ok(locationNode.toString());
+        return ResponseEntity.ok(data.toString());
     }
 
-    private boolean getRemoteBenefitsPackage() {
-        boolean syncSuccess = false;
-        try {
-            syncSuccess = BenefitsPackageDataExchange.saveBenefitsPackage();
-        } catch (Exception e) {
-            System.err.println("Error during synchronization: " + e);
-        }
-        return syncSuccess;
-    }
-
-    private ObjectNode getSavedBenefitsPackage() {
-        Location location = EmrUtils.getDefaultLocation();
-
-        if (location == null) {
-            System.out.println("Default location not configured.");
-            return null;
-        }
-        ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
-        // Retrieve attributes
-        locationNode.put("shaBenefitsPackage", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_BENEFITS_PACKAGE));
-        return locationNode;
-    }
-
-    /**
+    */
+/**
      * Fetches SHA interventions
      *
      * @return custom location object
-     */
+     *//*
+
     @RequestMapping(method = RequestMethod.GET, value = "/sha-interventions")
     @ResponseBody
     public Object getShaInterventions(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
@@ -752,6 +761,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationNode.put("shaInterventions", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_INTERVENTIONS));
         return locationNode;
     }
+*/
 
     // Helper method for attribute retrieval
     private String getLocationAttributeValue(Location location, String attributeTypeUuid) {
