@@ -20,9 +20,13 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -161,6 +165,19 @@ public abstract class DataHandler {
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
             throw new RuntimeException("Error parsing response", e);
+        }
+    }
+    public static void logDiagnostics(ResponseEntity<String> response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray issueArray = jsonObject.optJSONArray("issue");
+
+            if (issueArray != null && !issueArray.isEmpty()) {
+                String diagnostics = issueArray.getJSONObject(0).optString("diagnostics", "mlf code not found");
+                log.error("Diagnostics: {}", diagnostics);
+            }
+        } catch (JSONException e) {
+            log.error("Failed to parse JSON diagnostics: {}", e.getMessage());
         }
     }
 }

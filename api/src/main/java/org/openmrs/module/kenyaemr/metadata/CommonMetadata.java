@@ -75,6 +75,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_JWT_TOKEN_USERNAME = "kenyaemr.sha.jwt.token.username";
 	public static final String GP_SHA_JWT_TOKEN_PASSWORD = "kenyaemr.sha.jwt.token.password";
 	public static final String GP_SHA_INTERVENTIONS = "kenyaemr.sha.interventions";
+	public static final String GP_SHA_FACILITY_REGISTRATION_NUMBER = "kenyaemr.sha.registration.number";
 
 
 	public static final class _EncounterType {
@@ -507,6 +508,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_INTERVENTIONS) == null) {
 			install(globalProperty(GP_SHA_INTERVENTIONS, "SHA Interventions url", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_FACILITY_REGISTRATION_NUMBER) == null) {
+			install(globalProperty(GP_SHA_FACILITY_REGISTRATION_NUMBER, "SHA facility registration number", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",
