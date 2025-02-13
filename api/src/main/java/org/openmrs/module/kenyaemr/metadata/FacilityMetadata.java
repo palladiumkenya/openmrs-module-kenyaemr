@@ -69,38 +69,6 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		} else {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
-	}
-
-	/**
-	 * Provides an install method we can use from unit tests when we don't want to sync the entire facility list
-	 * @param full whether or not to run the facility sync
-	 * @throws Exception
-	 */
-	public void install(boolean full) throws Exception {
-		install(locationAttributeType(
-				"Master Facility Code", "Unique facility code allocated by the Ministry of Health",
-				RegexValidatedTextDatatype.class, "\\d{5}", 0, 1,
-				_LocationAttributeType.MASTER_FACILITY_CODE
-		));
-
-		install(locationAttributeType(
-				"Official Landline", "Landline telephone contact number",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_LANDLINE
-		));
-
-		install(locationAttributeType(
-				"Official Mobile", "Mobile telephone contact number",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_MOBILE
-		));
-
-		install(locationAttributeType(
-				"Official Fax", "Fax telephone number",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_FAX
-		));
-
 		install(locationAttributeType(
 				"SHA Facility Operational Status", "SHA accredited verification status",
 				FreeTextDatatype.class, "", 0, 1,
@@ -143,9 +111,37 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 				_LocationAttributeType.FACILITY_REGISTRY_CODE
 		));
 
-		// Retiring Location attributes for SHA benefits package and SHA Interventions
-		uninstall(possible(LocationAttributeType.class, "db1cf31e-8b06-4c36-94bf-3a932fadd2d7"), "Replaced location attribute with a file");
-		uninstall(possible(LocationAttributeType.class, "cbe19f79-dcda-4532-a9c9-6f62c7a25b39"), "Replaced location attribute with a file");
+	}
+
+	/**
+	 * Provides an install method we can use from unit tests when we don't want to sync the entire facility list
+	 * @param full whether or not to run the facility sync
+	 * @throws Exception
+	 */
+	public void install(boolean full) throws Exception {
+		install(locationAttributeType(
+				"Master Facility Code", "Unique facility code allocated by the Ministry of Health",
+				RegexValidatedTextDatatype.class, "\\d{5}", 0, 1,
+				_LocationAttributeType.MASTER_FACILITY_CODE
+		));
+
+		install(locationAttributeType(
+				"Official Landline", "Landline telephone contact number",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.TELEPHONE_LANDLINE
+		));
+
+		install(locationAttributeType(
+				"Official Mobile", "Mobile telephone contact number",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.TELEPHONE_MOBILE
+		));
+
+		install(locationAttributeType(
+				"Official Fax", "Fax telephone number",
+				FreeTextDatatype.class, "", 0, 1,
+				_LocationAttributeType.TELEPHONE_FAX
+		));
 
 		if (full) {
 			ObjectSource<Location> source = new LocationMflCsvSource("metadata/mfl_2014-05-12.csv");

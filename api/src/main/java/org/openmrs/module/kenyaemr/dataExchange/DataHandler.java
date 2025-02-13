@@ -38,7 +38,7 @@ import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 public abstract class DataHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(InterventionsDataExchange.class);
+    private static final Logger log = LoggerFactory.getLogger(DataHandler.class);
 
     private static final String BASE_JWT_URL_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_JWT_GET_END_POINT;
     private static final String API_USER_KEY = CommonMetadata.GP_HIE_API_USER;
