@@ -37,7 +37,6 @@ import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
-import org.openmrs.LocationAttributeType;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
@@ -75,6 +74,7 @@ import org.openmrs.module.kenyacore.program.ProgramDescriptor;
 import org.openmrs.module.kenyacore.program.ProgramManager;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
+import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
@@ -98,11 +98,11 @@ import org.openmrs.module.kenyaemr.calculation.library.tb.PatientInTbProgramCalc
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbDiseaseClassificationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbPatientClassificationCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.tb.TbTreatmentNumberCalculation;
-import org.openmrs.module.kenyaemr.dataExchange.BenefitsPackageDataExchange;
-import org.openmrs.module.kenyaemr.dataExchange.FacilityDetailsDataExchange;
-import org.openmrs.module.kenyaemr.dataExchange.InterventionsDataExchange;
+import org.openmrs.module.kenyaemr.dataExchange.DataHandler;
+import org.openmrs.module.kenyaemr.dataExchange.FacilityStatusHandler;
+import org.openmrs.module.kenyaemr.dataExchange.SHABenefitsPackageHandler;
+import org.openmrs.module.kenyaemr.dataExchange.SHAInterventionsHandler;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.metadata.FacilityMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.metadata.IPTMetadata;
 import org.openmrs.module.kenyaemr.metadata.MchMetadata;
@@ -507,267 +507,82 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
-    public Object getDefaultConfiguredFacility(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-        ObjectNode locationNode = null;
+    public Object getDefaultConfiguredFacility() {
+        GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-        Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-
-        try {
-            if (isSynchronize && getRemoteFacilityDetails()) {
-                locationNode = getSavedFacilityDetails();
-                if (locationNode != null) {
-                    locationNode.put("source", "HIE");
-                }
-            } else {
-                locationNode = getSavedFacilityDetails();
-                if (locationNode != null && isValuesEmptyOrDefault(locationNode, "operationalStatus", "shaKephLevel",
-                        "shaContracted", "shaFacilityId", "shaFacilityLicenseNumber", "shaFacilityExpiryDate")) {
-
-                    if (getRemoteFacilityDetails()) {
-                        locationNode = getSavedFacilityDetails();
-                        if (locationNode != null) {
-                            locationNode.put("source", "HIE");
-                        }
-                    } else {
-                        locationNode.put("source", "Error synchronizing with HIE and no local data found");
-                    }
-                } else if (locationNode != null) {
-                    locationNode.put("source", "Local");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error in fetching facility details: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving facility details.");
-        } finally {
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-            Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+        if (gp == null) {
+            return new ResponseEntity<Object>("Default facility not configured!", new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
 
-        if (locationNode == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facility details not found.");
-        }
-        return ResponseEntity.ok(locationNode.toString());
-    }
-
-    private boolean getRemoteFacilityDetails() {
-        boolean syncSuccess = false;
-        try {
-            syncSuccess = FacilityDetailsDataExchange.saveFacilityStatus();
-        } catch (Exception e) {
-            System.err.println("Error during synchronization: " + e);
-        }
-        return syncSuccess;
-    }
-
-    private ObjectNode getSavedFacilityDetails() {
-        Location location = EmrUtils.getDefaultLocation();
-
-        if (location == null) {
-            System.out.println("Default location not configured.");
-            return null;
-        }
+        Location location = (Location) gp.getValue();
         ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
-        // Retrieve attributes
+
         locationNode.put("locationId", location.getLocationId());
         locationNode.put("uuid", location.getUuid());
         locationNode.put("display", location.getName());
-        locationNode.put("operationalStatus", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_ACCREDITATION));
-        locationNode.put("shaKephLevel", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_KEPH_LEVEL));
-        locationNode.put("shaContracted", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_CONTRACTED_FACILITY));
-        locationNode.put("shaFacilityId", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_REGISTRY_CODE));
-        locationNode.put("shaFacilityLicenseNumber", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.FACILITY_LICENSE_NUMBER));
-        locationNode.put("shaFacilityExpiryDate", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_FACILITY_EXPIRY_DATE));
-        locationNode.put("mflCode", EmrUtils.getMFLCode());
-        return locationNode;
-    }
-    private boolean isValuesEmptyOrDefault(ObjectNode node, String... keys) {
-        // Return true only if all specified keys have empty or default values
-        boolean allEmptyOrDefault = true;
 
-        for (String key : keys) {
-            if (node.has(key)) {
-                String value = node.path(key).asText().trim();
-                // If any key has a value that is neither empty nor default, set to false
-                if (!value.isEmpty() && !value.equals("--")) {
-                    allEmptyOrDefault = false;
-                    break;
-                }
-            }
-        }
-        return allEmptyOrDefault;
+        return locationNode.toString();
     }
-    /**
-     * Fetches SHA benefits package
-     *
-     * @return custom location object
-     */
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sha-facility-status")
+    @ResponseBody
+    public ResponseEntity<String> getShaFacilityStatus(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        FacilityStatusHandler facilityStatusHandler = new FacilityStatusHandler();
+        return fetchData(facilityStatusHandler, isSynchronize);
+    }
     @RequestMapping(method = RequestMethod.GET, value = "/sha-benefits-package")
     @ResponseBody
-    public Object getShaBenefitsPackage(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-        ObjectNode locationNode = null;
-
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-        Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-
-        try {
-            if (isSynchronize && getRemoteBenefitsPackage()) {
-                locationNode = getSavedBenefitsPackage();
-                if (locationNode != null) {
-                    locationNode.put("source", "HIE");
-                }
-            } else {
-                locationNode = getSavedBenefitsPackage();
-                if (locationNode != null && isValuesEmptyOrDefault(locationNode, "shaBenefitsPackage")) {
-
-                    if (getRemoteBenefitsPackage()) {
-                        locationNode = getSavedBenefitsPackage();
-                        if (locationNode != null) {
-                            locationNode.put("source", "HIE");
-                        }
-                    } else {
-                        locationNode.put("source", "Error synchronizing with HIE and no local data found");
-                    }
-                } else if (locationNode != null) {
-                    locationNode.put("source", "Local");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error in fetching SHA benefits package: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving SHA benefits details.");
-        } finally {
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-            Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
-        }
-
-        if (locationNode == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Benefits package details not found.");
-        }
-        return ResponseEntity.ok(locationNode.toString());
+    public ResponseEntity<String> getShaBenefitsPackage(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        SHABenefitsPackageHandler shaBenefitsPackageHandler = new SHABenefitsPackageHandler();
+        return fetchData(shaBenefitsPackageHandler, isSynchronize);
     }
 
-    private boolean getRemoteBenefitsPackage() {
-        boolean syncSuccess = false;
-        try {
-            syncSuccess = BenefitsPackageDataExchange.saveBenefitsPackage();
-        } catch (Exception e) {
-            System.err.println("Error during synchronization: " + e);
-        }
-        return syncSuccess;
-    }
-
-    private ObjectNode getSavedBenefitsPackage() {
-        Location location = EmrUtils.getDefaultLocation();
-
-        if (location == null) {
-            System.out.println("Default location not configured.");
-            return null;
-        }
-        ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
-        // Retrieve attributes
-        locationNode.put("shaBenefitsPackage", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_BENEFITS_PACKAGE));
-        return locationNode;
-    }
-
-    /**
-     * Fetches SHA interventions
-     *
-     * @return custom location object
-     */
     @RequestMapping(method = RequestMethod.GET, value = "/sha-interventions")
     @ResponseBody
-    public Object getShaInterventions(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-        ObjectNode locationNode = null;
+    public ResponseEntity<String> getShaInterventions(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+        SHAInterventionsHandler shaInterventionsHandler = new SHAInterventionsHandler();
+        return fetchData(shaInterventionsHandler, isSynchronize);
+    }
 
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-        Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-        Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+    private ResponseEntity<String> fetchData(DataHandler handler, boolean isSynchronize) {
+        JsonNode data;
 
-        try {
-            if (isSynchronize && getRemoteInterventions()) {
-                locationNode = getSavedInterventions();
-                if (locationNode != null) {
-                    locationNode.put("source", "HIE");
-                }
-            } else {
-                locationNode = getSavedInterventions();
-                if (locationNode != null && isValuesEmptyOrDefault(locationNode, "shaInterventions")) {
+        if (isSynchronize) {
+            data = handler.fetchAndSaveFromRemote();
+            // Wrap the array in an ObjectNode
+            if (data.isArray()) {
+                ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
+                responseWrapper.put("data", data);  // Embed the array under the "data" field
+                responseWrapper.put("source", "HIE");  // or "HIE" if synchronized
 
-                    if (getRemoteInterventions()) {
-                        locationNode = getSavedInterventions();
-                        if (locationNode != null) {
-                            locationNode.put("source", "HIE");
-                        }
-                    } else {
-                        locationNode.put("source", "Error synchronizing with HIE and no local data found");
-                    }
-                } else if (locationNode != null) {
-                    locationNode.put("source", "Local");
-                }
+                return ResponseEntity.ok(responseWrapper.toString());
             }
-        } catch (Exception e) {
-            System.err.println("Error in fetching SHA interventions: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving SHA interventions.");
-        } finally {
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-            Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-            Context.removeProxyPrivilege(PrivilegeConstants.GET_LOCATION_ATTRIBUTE_TYPES);
+
+            // If data is already an ObjectNode, add the source property directly
+            if (data instanceof ObjectNode) {
+                ((ObjectNode) data).put("source", "HIE");  // or "HIE"
+            }
+        } else {
+            data = handler.readFromLocalFile();
+            // Wrap the array in an ObjectNode
+            if (data.isArray()) {
+                ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
+                responseWrapper.put("data", data);  // Embed the array under the "data" field
+                responseWrapper.put("source", "Local");  // or "HIE" if synchronized
+
+                return ResponseEntity.ok(responseWrapper.toString());
+            }
+
+            // If data is already an ObjectNode, add the source property directly
+            if (data instanceof ObjectNode) {
+                ((ObjectNode) data).put("source", "Local");  // or "HIE"
+            }
+        }
+        if (data == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
         }
 
-        if (locationNode == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("SHA interventions details not found.");
-        }
-        return ResponseEntity.ok(locationNode.toString());
-    }
-
-    private boolean getRemoteInterventions() {
-        boolean syncSuccess = false;
-        try {
-            syncSuccess = InterventionsDataExchange.saveInterventions();
-        } catch (Exception e) {
-            System.err.println("Error during synchronization: " + e);
-        }
-        return syncSuccess;
-    }
-
-    private ObjectNode getSavedInterventions() {
-        Location location = EmrUtils.getDefaultLocation();
-
-        if (location == null) {
-            System.out.println("Default location not configured.");
-            return null;
-        }
-        ObjectNode locationNode = JsonNodeFactory.instance.objectNode();
-        // Retrieve attributes
-        locationNode.put("shaInterventions", getLocationAttributeValue(location, FacilityMetadata._LocationAttributeType.SHA_INTERVENTIONS));
-        return locationNode;
-    }
-
-    // Helper method for attribute retrieval
-    private String getLocationAttributeValue(Location location, String attributeTypeUuid) {
-        if (location == null || attributeTypeUuid == null) {
-            return "--";
-        }
-        try {
-            return location.getActiveAttributes(MetadataUtils.existing(LocationAttributeType.class, attributeTypeUuid))
-                    .stream()
-                    .map(attr -> attr.getValue() != null ? attr.getValue().toString() : "--")
-                    .findFirst()
-                    .orElse("--");
-        } catch (Exception e) {
-            System.out.println("Error retrieving attribute value for UUID " + attributeTypeUuid + ": " + e.getMessage());
-            return "--";
-        }
+        return ResponseEntity.ok(data.toString());
     }
     /**
      * ARV drugs

@@ -10,7 +10,9 @@
 package org.openmrs.module.kenyaemr.metadata;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openmrs.Form;
 import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
@@ -45,15 +47,6 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		public static final String TELEPHONE_LANDLINE = "4ecb5b3f-1518-4056-a266-c4da1def45f5";
 		public static final String TELEPHONE_MOBILE = "8760f471-b2bb-4ded-8970-badf95d3bb44";
 		public static final String TELEPHONE_FAX = "29e1e758-d03e-4e84-a55e-288fa63d533a";
-		public static final String SHA_ACCREDITATION = "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb";
-		public static final String SHA_CONTRACTED_FACILITY = "68d9200e-a469-482f-8cc8-9d0953a3c917";
-		public static final String SHA_FACILITY_EXPIRY_DATE = "8e1ec5d4-4810-466a-9c90-b801bae9d063";
-		public static final String FACILITY_KEPH_LEVEL = "0233ba94-22d2-4658-81c3-2cf00fca382d";
-		public static final String FACILITY_HIE_FHIR_REFERENCE = "682f0a48-a642-491b-aa6d-41084bee0ee0";
-		public static final String FACILITY_REGISTRY_CODE = "1d1e2531-6a4a-4ed9-ab0a-02663e82379c";
-		public static final String FACILITY_LICENSE_NUMBER = "5f719dc5-3a70-48e5-8404-90bbcc35b36e";
-		public static final String SHA_BENEFITS_PACKAGE = "db1cf31e-8b06-4c36-94bf-3a932fadd2d7";
-		public static final String SHA_INTERVENTIONS = "cbe19f79-dcda-4532-a9c9-6f62c7a25b39";
 	}
 
 	/**
@@ -69,59 +62,9 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		} else {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
-		install(locationAttributeType(
-				"SHA Facility Operational Status", "SHA accredited verification status",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_ACCREDITATION
-		));
-
-		install(locationAttributeType(
-				"Contracted by SHA", "Facility contracted by SHA",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_CONTRACTED_FACILITY
-		));
-
-		install(locationAttributeType(
-				"Facility Expiry Date", "Expiry date for SHA contracted Facility",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_FACILITY_EXPIRY_DATE
-		));
-
-		install(locationAttributeType(
-				"Facility KEPH Level", "Facility KEPH Level",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.FACILITY_KEPH_LEVEL
-		));
-
-		install(locationAttributeType(
-				"Facility HIE FHIR Reference", "Facility HIE FHIR Reference",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.FACILITY_HIE_FHIR_REFERENCE
-		));
-
-		install(locationAttributeType(
-				"Facility License Number", "Facility License Number",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.FACILITY_LICENSE_NUMBER
-		));
-
-		install(locationAttributeType(
-				"Facility Registry Code", "Facility Registry Code",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.FACILITY_REGISTRY_CODE
-		));
-
-		install(locationAttributeType(
-				"SHA Benefits Package", "SHA benefits package",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_BENEFITS_PACKAGE
-		));
-
-		install(locationAttributeType(
-				"SHA Interventions", "SHA interventions",
-				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.SHA_INTERVENTIONS
-		));
+		uninstall(possible(Form.class, "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb"), "Operational Status Attribute type deprecated. Now saving in a file");
+		uninstall(possible(Form.class, "68d9200e-a469-482f-8cc8-9d0953a3c917"), "SHA accredited Attribute type deprecated. Now saving in a file");
+		uninstall(possible(Form.class, "8e1ec5d4-4810-466a-9c90-b801bae9d063"), "SHA Facility expiry date Attribute type deprecated. Now saving in a file");
 	}
 
 	/**
