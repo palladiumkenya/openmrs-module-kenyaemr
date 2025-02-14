@@ -60,7 +60,17 @@ public class SHAInterventionsHandler extends DataHandler {
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
-            HttpPost postRequest = new HttpPost(getGlobalPropertyValue(SHA_INTERVENTIONS) + "/query");
+
+
+            String url = getGlobalPropertyValue(SHA_INTERVENTIONS);
+
+            if (url.trim().isEmpty()) {
+                System.err.println("SHA_INTERVENTIONS URL is missing");
+                return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON)
+                        .body("{\"status\": \"Error\", \"message\": \"URL is missing\"}");
+            }
+            HttpPost postRequest = new HttpPost(url);
+
             postRequest.setHeader("Authorization", "Bearer " + bearerToken);
             postRequest.setHeader("Content-Type", "application/json");
 
@@ -78,6 +88,7 @@ public class SHAInterventionsHandler extends DataHandler {
             }
         } catch (Exception ex) {
             System.err.println("Error fetching interventions: "+ ex.getMessage());
+
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("{\"status\": \"Error\"}");
         }
     }
