@@ -45,6 +45,10 @@
 				<ref bean="kenyaemr.common.form.sariSurveillance"/>
 				<ref bean="kenyaemr.common.form.nutrition"/>
 				<ref bean="kenyaemr.common.form.familyPlanning"/>
+				<ref bean="kenyaemr.common.form.cardexNursing"/>
+				<ref bean="kenyaemr.common.form.IPDProcedure"/>
+				<ref bean="kenyaemr.common.form.postProcedure"/>
+				<ref bean="kenyaemr.common.form.preOperative"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
 			</set>
@@ -590,6 +594,82 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
 		<property name="order" value="200010" />
+	</bean>
+
+	<!-- Cardex Nursing Plan Form -->
+	<bean id="kenyaemr.common.form.cardexNursing" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="1f81d5e2-3569-40cf-bbb9-361a53ba409b" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200012" />
+	</bean>
+
+
+	<!-- IPD Procedure Form -->
+	<bean id="kenyaemr.common.form.IPDProcedure" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="2b9c2b94-0b03-416a-b312-eef49b42f72c" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200013" />
+	</bean>
+
+	<!-- Post Procedure Form -->
+	<bean id="kenyaemr.common.form.postProcedure" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="ac043326-c5f0-4d11-9e6f-f7266b3f3859" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200014" />
+	</bean>
+	<!-- PreOperative Checklist Form -->
+	<bean id="kenyaemr.common.form.preOperative" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="a14824ca-29af-4d37-b9da-6bdee39f8808" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="201015" />
 	</bean>
 
 	<!-- ===================== Reports ===================== -->
