@@ -425,6 +425,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
 		install(form("Dental Clinical Form", "Form for Dental encounter ", _EncounterType.CONSULTATION, "1", _Form.DENTAL_CLINICAL_FORM));
 		install(form("Infectious Disease Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.INFECTIOUS_DISEASE, "1", _Form.INFECTIOUS_DISEASE_CLINICAL_FORM));
+		install(form("IPD Procedure Clinical Form", "Form for Inpatient procedure clinical encounter", _EncounterType.IPD_PROCEDURE, "1", _Form.IPD_PROCEDURE_FORM));
+		install(form("Doctor's Note Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.DOCTORS_NOTE, "1", _Form.DOCTORS_NOTE_FORM));
+		install(form("Nursing Cardex Clinical Form", "Form for Cardex plan clinical encounter", _EncounterType.NURSING_CARDEX, "1", _Form.NURSING_CARDEX_FORM));
+		install(form("Pre-Operation Checklist Clinical Form", "Form for Pre-procedure checklist clinical encounter", _EncounterType.PRE_OPERATION_CHECKLIST, "1", _Form.PRE_OPERATION_CHECKLIST_FORM));
+		install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
+		install(form("Newbord Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
+		install(form("Partograph Clinical Form", "Form for Partograph clinical encounter", _EncounterType.PARTOGRAPH, "1", _Form.PARTOGRAPH_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
