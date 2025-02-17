@@ -116,6 +116,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MORGUE_ADMISSION = "3d2df845-6f3c-45e7-b91a-d828a1f9c2e8";
 		public static final String MORGUE_DISCHARGE = "3d618f40b-b5a3-4f17-81c8-2f04e2aad58e";
 		public static final String INFECTIOUS_DISEASE = "a2cac281-81a8-4f35-9bc5-62493c8ee7df";
+		public static final String IPD_PROCEDURE = "68634d60-86de-485e-99f9-76622fc5856b";
+		public static final String NURSING_CARDEX = "b6569074-3b8c-43ba-bd4a-98c445405035";
+		public static final String DOCTORS_NOTE = "14b36860-5033-4765-b91b-ace856ab64c2";
+		public static final String POST_OPERATION = "13beea61-7d3d-4860-abe3-d5b874f736fb";
+		public static final String PRE_OPERATION_CHECKLIST = "9023e0cd-78ef-44af-ba54-47f30f739b4a";
+		public static final String NEW_BORN_ADMISSION = "454db697-7bc4-49e7-a9fa-097c19f1c9ec";
+		public static final String PARTOGRAPH = "bff104e5-e229-4672-b81e-14ddc2c12dac";
 	}
 
 	public static final class _Form {
@@ -173,6 +180,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String DENTAL_CLINICAL_FORM = "a3c01460-c346-4f3d-a627-5c7de9494ba0";
 		public static final String INFECTIOUS_DISEASE_CLINICAL_FORM = "8f2fbcca-126f-439b-95b5-bcbc62647328";
 		public static final String RENAL_CLINICAL_FORM = "6d0be8bd-5320-45a0-9463-60c9ee2b1338";
+		public static final String IPD_PROCEDURE_FORM = "2b9c2b94-0b03-416a-b312-eef49b42f72c";
+		public static final String NURSING_CARDEX_FORM = "1f81d5e2-3569-40cf-bbb9-361a53ba409b";
+		public static final String DOCTORS_NOTE_FORM = "87379b0a-738b-4799-9736-cdac614cee2a";
+		public static final String POST_OPERATION_FORM = "ac043326-c5f0-4d11-9e6f-f7266b3f3859";
+		public static final String PRE_OPERATION_CHECKLIST_FORM = "a14824ca-29af-4d37-b9da-6bdee39f8808";
+		public static final String NEW_BORN_ADMISSION_FORM = "5b0a08f5-87c1-40cc-8c09-09c33b44523d";
+		public static final String PARTOGRAPH_FORM = "f4cdab20-161b-452a-927b-34390bb2ada4";
 	}
 
 	public static final class _OrderType {
@@ -328,6 +342,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Morgue Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
 		install(encounterType("Morgue Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
 		install(encounterType("Infectious Disease", "Infectious disease clinical encounter type", _EncounterType.INFECTIOUS_DISEASE));
+		install(encounterType("IPD Procedure", "Inpatient procedure clinical encounter type", _EncounterType.IPD_PROCEDURE));
+		install(encounterType("Nursing Cardex", "Nursing cardex clinical encounter type", _EncounterType.NURSING_CARDEX));
+		install(encounterType("Doctor's Note", "Doctor's note clinical encounter type", _EncounterType.DOCTORS_NOTE));
+		install(encounterType("Post Operation", "Post operation clinical encounter type", _EncounterType.POST_OPERATION));
+		install(encounterType("Pre-Operation Checklist", "Pre-Operation checklist clinical encounter type", _EncounterType.PRE_OPERATION_CHECKLIST));
+		install(encounterType("Partograph", "Partograph clinical encounter type", _EncounterType.PARTOGRAPH));
+		install(encounterType("New born admission", "New born admission clinical encounter type", _EncounterType.NEW_BORN_ADMISSION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
