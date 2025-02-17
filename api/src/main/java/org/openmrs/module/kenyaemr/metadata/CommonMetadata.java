@@ -122,7 +122,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POST_OPERATION = "13beea61-7d3d-4860-abe3-d5b874f736fb";
 		public static final String PRE_OPERATION_CHECKLIST = "9023e0cd-78ef-44af-ba54-47f30f739b4a";
 		public static final String NEW_BORN_ADMISSION = "454db697-7bc4-49e7-a9fa-097c19f1c9ec";
-		public static final String PARTOGRAPH = "bff104e5-e229-4672-b81e-14ddc2c12dac";
 	}
 
 	public static final class _Form {
@@ -186,7 +185,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String POST_OPERATION_FORM = "ac043326-c5f0-4d11-9e6f-f7266b3f3859";
 		public static final String PRE_OPERATION_CHECKLIST_FORM = "a14824ca-29af-4d37-b9da-6bdee39f8808";
 		public static final String NEW_BORN_ADMISSION_FORM = "5b0a08f5-87c1-40cc-8c09-09c33b44523d";
-		public static final String PARTOGRAPH_FORM = "f4cdab20-161b-452a-927b-34390bb2ada4";
 	}
 
 	public static final class _OrderType {
@@ -347,7 +345,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Doctor's Note", "Doctor's note clinical encounter type", _EncounterType.DOCTORS_NOTE));
 		install(encounterType("Post Operation", "Post operation clinical encounter type", _EncounterType.POST_OPERATION));
 		install(encounterType("Pre-Operation Checklist", "Pre-Operation checklist clinical encounter type", _EncounterType.PRE_OPERATION_CHECKLIST));
-		install(encounterType("Partograph", "Partograph clinical encounter type", _EncounterType.PARTOGRAPH));
 		install(encounterType("New born admission", "New born admission clinical encounter type", _EncounterType.NEW_BORN_ADMISSION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
@@ -431,7 +428,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Pre-Operation Checklist Clinical Form", "Form for Pre-procedure checklist clinical encounter", _EncounterType.PRE_OPERATION_CHECKLIST, "1", _Form.PRE_OPERATION_CHECKLIST_FORM));
 		install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
 		install(form("Newbord Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
-		install(form("Partograph Clinical Form", "Form for Partograph clinical encounter", _EncounterType.PARTOGRAPH, "1", _Form.PARTOGRAPH_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
