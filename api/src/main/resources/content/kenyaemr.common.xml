@@ -107,6 +107,7 @@
 				<ref bean="kenyaemr.ehrReports.report.fmap"/>
 				<ref bean="kenyaemr.ehrReports.report.moh745"/>
         <ref bean="kenyaemr.ehrReports.report.fcdrr" />
+				<ref bean="kenyaemr.ehrReports.report.assistiveTechnologyFcdrr" />
 			</set>
 		</property>
 	</bean>
@@ -1098,5 +1099,15 @@
 			</set></property>
 		<property name="template" value="kenyaemr:fcdrr.xls" />
 	</bean>
-	
+	<bean id="kenyaemr.ehrReports.report.assistiveTechnologyFcdrr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="9f2768cc-abfd-4fb3-a89b-de9ec6e1e488" />
+		<property name="name" value="F-CDRR for Assistive Technology Devices MOH 744B" />
+		<property name="description" value="F-CDRR for Assistive Technology Devices MOH 744B" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:assistive_technology_fcdrr.xls" />
+	</bean>
+
 </beans>
