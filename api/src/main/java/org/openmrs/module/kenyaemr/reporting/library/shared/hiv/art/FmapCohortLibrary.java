@@ -60,36 +60,26 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition patientOnSpecificRegimenAndRegimenLine(String regimenName,String regimenLine,String ageGroup,String pmtct){
 		String sqlQuery = "SELECT regimeData.patient_id\n" +
-			" FROM\n" +
-			"   (SELECT\n" +
-			"      de.patient_id as patient_id,\n" +
-			"      CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
-			"        THEN 'adult'\n" +
-			"      ELSE 'child' END AS agegroup,\n" +			
-			"          CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
-			"               ELSE 'False' END AS pmtct,\n" +
-			"      de.program       AS program,\n" +
-			"      de.date_started AS date_started,\n" +
-			"      de.regimen AS regimen,\n" +
-			"      de.regimen_name,\n" +
-			"      de.regimen_line AS regimen_line,\n" +
-			"      de.discontinued,\n" +
-			"      de.regimen_discontinued,\n" +
-			"      de.date_discontinued,\n" +
-			"      de.reason_discontinued,\n" +
-			"      de.reason_discontinued_other\n" +
-			"    FROM kenyaemr_etl.etl_drug_event de\n" +
-			"      INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
-			"      INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
-			"      GROUP BY de.encounter_id\n" +
-			"   ) regimeData\n" +
-			"       WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH')\n" +
-			"            AND  date_started <= :endDate\n" +
-			"    AND regimen = ':regimenName'\n" +
-			"        AND  regimen_line = ':regimenLine'\n" +
-			"        AND  patient_id IS NOT NULL\n" +
-			"        AND agegroup = ':ageGroup'\n" +			
-			"        AND pmtct = ':pmtct';";
+				"FROM (SELECT de.patient_id                                          as patient_id,\n" +
+				"             CASE\n" +
+				"                 WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
+				"                     THEN 'adult'\n" +
+				"                 ELSE 'child' END                                   AS agegroup,\n" +
+				"             CASE\n" +
+				"                 WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
+				"                 ELSE 'False' END                                   AS pmtct,\n" +
+				"             mid(max(concat(de.date_started, de.regimen)), 11)      AS regimen,\n" +
+				"             mid(max(concat(de.date_started, de.regimen_line)), 11) AS regimen_line\n" +
+				"      FROM kenyaemr_etl.etl_drug_event de\n" +
+				"               INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
+				"               INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
+				"      where de.date_started <= :endDate\n" +
+				"      GROUP BY de.patient_id) regimeData\n" +
+				"WHERE regimen NOT IN ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH')\n" +
+				"  AND regimen = ':regimenName'\n" +
+				"  AND regimen_line = ':regimenLine'\n" +
+				"  AND agegroup = ':ageGroup'\n" +
+				"  AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);		
@@ -114,37 +104,29 @@ public class FmapCohortLibrary {
 	}
 
 	public CohortDefinition patientOnAnyOtherRegimenandRegimenLine(String regimenName,String regimenLine,String ageGroup, String pmtct){
-		String sqlQuery = "SELECT regimeData.patient_id\n" +
-			"FROM\n" +
-			"  (SELECT\n" +
-			"     de.patient_id as patient_id,\n" +
-			"     CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
-			"       THEN 'adult'\n" +
-			"     ELSE 'child' END AS agegroup,\n" +
-			"     de.program       AS program,\n" +
-			"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
-			"          ELSE 'False' END AS pmtct,\n" +
-			"     de.date_started AS date_started,\n" +
-			"     de.regimen AS regimen,\n" +
-			"     de.regimen_name,\n" +
-			"     de.regimen_line AS regimen_line,\n" +
-			"     de.discontinued,\n" +
-			"     de.regimen_discontinued,\n" +
-			"     de.date_discontinued,\n" +
-			"     de.reason_discontinued,\n" +
-			"     de.reason_discontinued_other\n" +
-			"   FROM kenyaemr_etl.etl_drug_event de\n" +
-			"     INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
-			"     INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
-			"   GROUP BY de.encounter_id\n" +
-			"  ) regimeData\n" +
-			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
-			"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
-			"      AND  date_started <= :endDate AND regimen = ':regimenName'\n" +
-			"      AND  regimen_line = ':regimenLine'\n" +
-			"      AND  patient_id IS NOT NULL\n" +
-			"      AND agegroup = ':ageGroup'\n" +			
-			"      AND pmtct = ':pmtct';";
+		String sqlQuery = "SELECT regimenData.patient_id\n" +
+				"FROM\n" +
+				"  (SELECT\n" +
+				"     de.patient_id as patient_id,\n" +
+				"     CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
+				"       THEN 'adult'\n" +
+				"     ELSE 'child' END AS agegroup,\n" +
+				"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
+				"          ELSE 'False' END AS pmtct,\n" +
+				"             mid(max(concat(de.date_started, de.regimen)), 11) AS regimen,\n" +
+				"             mid(max(concat(de.date_started, de.regimen_line)), 11) AS regimen_line\n" +
+				"   FROM kenyaemr_etl.etl_drug_event de\n" +
+				"     INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
+				"     INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
+				"           WHERE date_started <= :endDate\n" +
+				"   GROUP BY de.patient_id\n" +
+				"  ) regimenData\n" +
+				"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
+				"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
+				"      AND regimen = ':regimenName'\n" +
+				"      AND  regimen_line = ':regimenLine'\n" +
+				"      AND agegroup = ':ageGroup'\n" +
+				"      AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":ageGroup", ageGroup);		
@@ -169,33 +151,24 @@ public class FmapCohortLibrary {
 	}
 
 	public CohortDefinition pmtctPatientOnSpecificRegimen(String regimenName, String regimenLine, String pmtct){
-		String sqlQuery = "SELECT regimeData.patient_id\n" +
-			"FROM\n" +
-			"    (SELECT\n" +
-			"         de.patient_id as patient_id,\n" +		
-			"         CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
-			"              ELSE 'False' END AS pmtct,\n" +
-			"         de.program       AS program,\n" +
-			"         de.date_started AS date_started,\n" +
-			"         de.regimen AS regimen,\n" +
-			"         de.regimen_name,\n" +
-			"         de.regimen_line AS regimen_line,\n" +
-			"         de.discontinued,\n" +
-			"         de.regimen_discontinued,\n" +
-			"         de.date_discontinued,\n" +
-			"         de.reason_discontinued,\n" +
-			"         de.reason_discontinued_other\n" +
-			"     FROM kenyaemr_etl.etl_drug_event de\n" +
-			"              INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
-			"              INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
-			"     GROUP BY de.encounter_id\n" +
-			"    ) regimeData\n" +
-			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH')\n" +
-			"  AND  date_started <= :endDate\n" +
-			"  AND  regimen = ':regimenName'\n" +
-			"  AND  regimen_line = ':regimenLine'\n" +			
-			"  AND  patient_id IS NOT NULL\n" +		
-			"  AND pmtct = ':pmtct';";
+		String sqlQuery = "SELECT regimenData.patient_id\n" +
+				"FROM\n" +
+				"    (SELECT\n" +
+				"         de.patient_id as patient_id,\n" +
+				"         CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
+				"              ELSE 'False' END AS pmtct,\n" +
+				"                 mid(max(concat(de.date_started, de.regimen)), 11) AS regimen,\n" +
+				"                 mid(max(concat(de.date_started, de.regimen_line)), 11) AS regimen_line\n" +
+				"     FROM kenyaemr_etl.etl_drug_event de\n" +
+				"              INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
+				"              INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
+				"     where de.date_started <= :endDate\n" +
+				"     GROUP BY de.patient_id\n" +
+				"    ) regimenData\n" +
+				"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH')\n" +
+				"  AND  regimen = ':regimenName'\n" +
+				"  AND  regimen_line = ':regimenLine'\n" +
+				"  AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
@@ -219,36 +192,25 @@ public class FmapCohortLibrary {
 	}
 	
 	public CohortDefinition pmtctPatientOnAnyOtherRegimen(String regimenName, String regimenLine, String pmtct){
-		String sqlQuery = "SELECT regimeData.patient_id\n" +
-			"FROM\n" +
-			"  (SELECT\n" +
-			"     de.patient_id as patient_id,\n" +
-			"     CASE WHEN timestampdiff(YEAR, date(d.DOB), max(fup.visit_date)) >= 15\n" +
-			"       THEN 'adult'\n" +
-			"     ELSE 'child' END AS agegroup,\n" +
-			"     de.program       AS program,\n" +			
-			"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
-			"          ELSE 'False' END AS pmtct,\n" +
-			"     de.date_started AS date_started,\n" +
-			"     de.regimen AS regimen,\n" +
-			"     de.regimen_name,\n" +
-			"     de.regimen_line AS regimen_line,\n" +
-			"     de.discontinued,\n" +
-			"     de.regimen_discontinued,\n" +
-			"     de.date_discontinued,\n" +
-			"     de.reason_discontinued,\n" +
-			"     de.reason_discontinued_other\n" +
-			"   FROM kenyaemr_etl.etl_drug_event de\n" +
-			"     INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
-			"     INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
-			"   GROUP BY de.encounter_id\n" +
-			"  ) regimeData\n" +
-			"WHERE regimen NOT IN  ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
-			"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
-			"      AND  date_started <= :endDate AND regimen = ':regimenName'\n" +
-			"      AND  patient_id IS NOT NULL\n" +
-			"      AND  regimen_line = ':regimenLine'\n" +
-			"      AND pmtct = ':pmtct';";
+		String sqlQuery = "SELECT regimenData.patient_id\n" +
+				"FROM\n" +
+				"  (SELECT\n" +
+				"     de.patient_id as patient_id,\n" +
+				"     CASE WHEN (fup.pregnancy_status = 1065 OR fup.breastfeeding = 1065) THEN 'True'\n" +
+				"          ELSE 'False' END AS pmtct,\n" +
+				"             mid(max(concat(de.date_started, de.regimen)), 11) AS regimen,\n" +
+				"             mid(max(concat(de.date_started, de.regimen_line)), 11) AS regimen_line\n" +
+				"   FROM kenyaemr_etl.etl_drug_event de\n" +
+				"     INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = de.patient_id\n" +
+				"     INNER JOIN kenyaemr_etl.etl_patient_hiv_followup fup ON de.patient_id = fup.patient_id\n" +
+				"               WHERE date_started <= :endDate\n" +
+				"   GROUP BY de.encounter_id\n" +
+				"  ) regimenData\n" +
+				"WHERE regimen NOT IN ('RHZE', 'RHZ', 'SRHZE', 'RfbHZE', 'RfbHZ', 'SRfbHZE', 'S (1 gm vial)', 'E', 'RHE', 'EH',\n" +
+				"                               'AZT/3TC/DTG','AZT/3TC/LPV/r','AZT/3TC/ATV/R','TDF/3TC/EFV','TDF/3TC/ATV/r','TDF/3TC/DTG','TDF/3TC/LPV/r','ABC/3TC/DTG','ABC/3TC/LPV/r','ABC/3TC/ATV/r','AZT/3TC/DTG/DRV/RTV')\n" +
+				"      AND regimen = ':regimenName'\n" +
+				"      AND  regimen_line = ':regimenLine'\n" +
+				"      AND pmtct = ':pmtct';";
 		sqlQuery = sqlQuery.replaceAll(":regimenName", regimenName);
 		sqlQuery = sqlQuery.replaceAll(":regimenLine", regimenLine);
 		sqlQuery = sqlQuery.replaceAll(":pmtct", pmtct);
@@ -346,20 +308,20 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition prepTdfFtcRegimen() {
 		String sqlQuery = "select d.patient_id\n" +
-			"     from kenyaemr_etl.etl_patient_demographics d\n" +
-			"      left join(select pf.patient_id,\n" +
-			"                        max(pf.visit_date)    as latest_pf_visit_date\n" +
-			"                 from kenyaemr_etl.etl_prep_followup pf\n" +
-			"                where pf.regimen_prescribed = 'TDF/FTC(Preferred)'\n" +
-			"                 and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                 group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
-			"       left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
-			"                 from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
-			"                 where pm.prescribed_regimen = 'TDF/FTC(Preferred)'\n" +
-			"                 and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                 group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
-			"    where pf.patient_id is not null or pm.patient_id is not null\n" +
-			"group by d.patient_id;";
+				"from kenyaemr_etl.etl_patient_demographics d\n" +
+				"         left join(select pf.patient_id,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.regimen_prescribed)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+				"                   where date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+				"         left join(select pm.patient_id,\n" +
+				"                          mid(max(concat(pm.visit_date, pm.prescribed_regimen)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+				"                   where date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+				"where (pf.patient_id is not null and pf.regimen_prescribed = 'TDF/FTC(Preferred)')\n" +
+				"   or (pm.patient_id is not null and pm.regimen_prescribed = 'TDF/FTC(Preferred)')\n" +
+				"group by d.patient_id;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("prepTdfFtcRegimen");
 		cd.setQuery(sqlQuery);
@@ -370,20 +332,20 @@ public class FmapCohortLibrary {
 	}
 	public CohortDefinition prepTdf3tcRegimen() {
 		String sqlQuery = "select d.patient_id\n" +
-			"from kenyaemr_etl.etl_patient_demographics d\n" +
-			"         left join(select pf.patient_id,\n" +
-			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
-			"                   where pf.regimen_prescribed = 'TDF/3TC'\n" +
-			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
-			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
-			"                   where pm.prescribed_regimen = 'TDF/3TC'\n" +
-			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
-			"where pf.patient_id is not null or pm.patient_id is not null\n" +
-			"group by d.patient_id;";
+				"from kenyaemr_etl.etl_patient_demographics d\n" +
+				"         left join(select pf.patient_id,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.regimen_prescribed)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+				"                   where date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+				"         left join(select pm.patient_id,\n" +
+				"                          mid(max(concat(pm.visit_date, pm.prescribed_regimen)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+				"                   where date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+				"where (pf.patient_id is not null and pf.regimen_prescribed = 'TDF/3TC')\n" +
+				"   or (pm.patient_id is not null and pm.regimen_prescribed = 'TDF/3TC')\n" +
+				"group by d.patient_id;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("prepTdf3tcRegimen");
 		cd.setQuery(sqlQuery);
@@ -395,20 +357,19 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition dapivirinePrepType() {
 		String sqlQuery = "select d.patient_id\n" +
-			"from kenyaemr_etl.etl_patient_demographics d\n" +
-			"         left join(select pf.patient_id,\n" +
-			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
-			"                   where pf.prep_type = 'Dapivirine ring'\n" +
-			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
-			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
-			"                   where pm.prep_type = 'Dapivirine ring'\n" +
-			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
-			"where pf.patient_id is not null or pm.patient_id is not null\n" +
-			"group by d.patient_id;";
+				"from kenyaemr_etl.etl_patient_demographics d\n" +
+				"         left join(select pf.patient_id,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.prep_type)), 11) as prep_type\n" +
+				"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+				"                   where date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+				"         left join(select pm.patient_id, mid(max(concat(pm.visit_date, pm.prep_type)), 11) as prep_type\n" +
+				"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+				"                   where date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+				"where (pf.patient_id is not null and pf.prep_type = 'Dapivirine ring')\n" +
+				"   or (pm.patient_id is not null and pm.prep_type = 'Dapivirine ring')\n" +
+				"group by d.patient_id;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("dapivirinePrepType");
 		cd.setQuery(sqlQuery);
@@ -420,20 +381,19 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition cabotegravirPrepType() {
 		String sqlQuery = "select d.patient_id\n" +
-			"from kenyaemr_etl.etl_patient_demographics d\n" +
-			"         left join(select pf.patient_id,\n" +
-			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
-			"                   where pf.prep_type = 'CAB-LA'\n" +
-			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
-			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
-			"                   where pm.prep_type = 'CAB-LA'\n" +
-			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
-			"where pf.patient_id is not null or pm.patient_id is not null\n" +
-			"group by d.patient_id;";
+				"from kenyaemr_etl.etl_patient_demographics d\n" +
+				"         left join(select pf.patient_id,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.prep_type)), 11) as prep_type\n" +
+				"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+				"                   where date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+				"         left join(select pm.patient_id, mid(max(concat(pm.visit_date, pm.prep_type)), 11) as prep_type\n" +
+				"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+				"                   where date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+				"where (pf.patient_id is not null and pf.prep_type = 'CAB-LA')\n" +
+				"   or (pm.patient_id is not null and pm.prep_type = 'CAB-LA')\n" +
+				"group by d.patient_id;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("cabotegravirPrepType");
 		cd.setQuery(sqlQuery);
@@ -445,20 +405,21 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition otherPrepRegimenPrepType() {
 		String sqlQuery = "select d.patient_id\n" +
-			"from kenyaemr_etl.etl_patient_demographics d\n" +
-			"         left join(select pf.patient_id,\n" +
-			"                          max(pf.visit_date)    as latest_pf_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_followup pf\n" +
-			"                   where(pf.regimen_prescribed not in ('TDF/3TC', 'TDF/FTC(Preferred)')) OR (pf.prep_type not in ('CAB-LA','Dapivirine ring'))\n" +
-			"                     and date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
-			"         left join(select pm.patient_id, max(pm.visit_date) as latest_pm_visit_date\n" +
-			"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
-			"                   where (pm.prescribed_regimen not in ('TDF/3TC', 'TDF/FTC(Preferred)')) OR (pm.prep_type not in ('CAB-LA','Dapivirine ring'))\n" +
-			"                     and date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
-			"where pf.patient_id is not null and pm.patient_id is not null\n" +
-			"group by d.patient_id;";
+				"from kenyaemr_etl.etl_patient_demographics d\n" +
+				"         left join(select pf.patient_id,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.prep_type)), 11) as prep_type,\n" +
+				"                          mid(max(concat(pf.visit_date, pf.regimen_prescribed)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_followup pf\n" +
+				"                   where date(pf.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pf.patient_id) pf on d.patient_id = pf.patient_id\n" +
+				"         left join(select pm.patient_id, mid(max(concat(pm.visit_date, pm.prep_type)), 11) as prep_type,\n" +
+				"                          mid(max(concat(pm.visit_date, pm.prescribed_regimen)), 11) as regimen_prescribed\n" +
+				"                   from kenyaemr_etl.etl_prep_monthly_refill pm\n" +
+				"                   where date(pm.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"                   group by pm.patient_id) pm on d.patient_id = pm.patient_id\n" +
+				"where (pf.patient_id is not null and pf.regimen_prescribed not in ('','TDF/3TC', 'TDF/FTC(Preferred)') and pf.prep_type not in ('CAB-LA', 'Dapivirine ring'))\n" +
+				"   or (pm.patient_id is not null and pm.regimen_prescribed not in ('','TDF/3TC', 'TDF/FTC(Preferred)') and pm.prep_type not in ('CAB-LA', 'Dapivirine ring'))\n" +
+				"group by d.patient_id;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("otherPrepRegimenPrepType");
 		cd.setQuery(sqlQuery);
