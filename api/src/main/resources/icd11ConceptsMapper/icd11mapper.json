@@ -1,0 +1,6337 @@
+[
+ {
+  "DiagnosisName": "Cholera",
+  "ConceptId": "2002391",
+  "ICD11Code": "1A00"
+ },
+ {
+  "DiagnosisName": "Intestinal infection due to other Vibrio",
+  "ConceptId": "122604",
+  "ICD11Code": "1A01"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Shigella",
+  "ConceptId": "137326",
+  "ICD11Code": "1A02"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Escherichia coli",
+  "ConceptId": "117132",
+  "ICD11Code": "1A03"
+ },
+ {
+  "DiagnosisName": "Enteropathogenic Escherichia coli infection",
+  "ConceptId": "141210",
+  "ICD11Code": "1A03.0"
+ },
+ {
+  "DiagnosisName": "Enterotoxigenic Escherichia coli infection",
+  "ConceptId": "168581",
+  "ICD11Code": "1A03.1"
+ },
+ {
+  "DiagnosisName": "Enteroinvasive Escherichia coli infection",
+  "ConceptId": "168582",
+  "ICD11Code": "1A03.2"
+ },
+ {
+  "DiagnosisName": "Enterohaemorrhagic Escherichia coli infection",
+  "ConceptId": "156141",
+  "ICD11Code": "1A03.3"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to other specified Escherichia coli",
+  "ConceptId": "2002392",
+  "ICD11Code": "1A03.Y"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Escherichia coli, unspecified",
+  "ConceptId": "2002393",
+  "ICD11Code": "1A03.Z"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Clostridioides difficile",
+  "ConceptId": "144685",
+  "ICD11Code": "1A04"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Yersinia enterocolitica",
+  "ConceptId": "137338",
+  "ICD11Code": "1A05"
+ },
+ {
+  "DiagnosisName": "Gastroenteritis due to Campylobacter",
+  "ConceptId": "118608",
+  "ICD11Code": "1A06"
+ },
+ {
+  "DiagnosisName": "Typhoid fever",
+  "ConceptId": "141",
+  "ICD11Code": "1A07"
+ },
+ {
+  "DiagnosisName": "Typhoid peritonitis",
+  "ConceptId": "2002394",
+  "ICD11Code": "1A07.0"
+ },
+ {
+  "DiagnosisName": "Other specified typhoid fever",
+  "ConceptId": "2002395",
+  "ICD11Code": "1A07.Y"
+ },
+ {
+  "DiagnosisName": "Typhoid fever, unspecified",
+  "ConceptId": "2002396",
+  "ICD11Code": "1A07.Z"
+ },
+ {
+  "DiagnosisName": "Paratyphoid fever",
+  "ConceptId": "130811",
+  "ICD11Code": "1A08"
+ },
+ {
+  "DiagnosisName": "Infections due to other Salmonella",
+  "ConceptId": "2002397",
+  "ICD11Code": "1A09"
+ },
+ {
+  "DiagnosisName": "Salmonella enteritis",
+  "ConceptId": "113175",
+  "ICD11Code": "1A09.0"
+ },
+ {
+  "DiagnosisName": "Infections due to other Salmonella in other organs",
+  "ConceptId": "2002398",
+  "ICD11Code": "1A09.Y"
+ },
+ {
+  "DiagnosisName": "Salmonella infection, unspecified",
+  "ConceptId": "113169",
+  "ICD11Code": "1A09.Z"
+ },
+ {
+  "DiagnosisName": "Other specified bacterial intestinal infections",
+  "ConceptId": "2002399",
+  "ICD11Code": "1A0Y"
+ },
+ {
+  "DiagnosisName": "Bacterial intestinal infections, unspecified",
+  "ConceptId": "155234",
+  "ICD11Code": "1A0Z"
+ },
+ {
+  "DiagnosisName": "Foodborne staphylococcal intoxication",
+  "ConceptId": "156350",
+  "ICD11Code": "1A10"
+ },
+ {
+  "DiagnosisName": "Botulism",
+  "ConceptId": "147048",
+  "ICD11Code": "1A11"
+ },
+ {
+  "DiagnosisName": "Foodborne intoxication by botulinum toxin",
+  "ConceptId": "2002400",
+  "ICD11Code": "1A11.0"
+ },
+ {
+  "DiagnosisName": "Other forms of botulism",
+  "ConceptId": "2002401",
+  "ICD11Code": "1A11.1"
+ },
+ {
+  "DiagnosisName": "Botulism, unspecified",
+  "ConceptId": "139988",
+  "ICD11Code": "1A11.Z"
+ },
+ {
+  "DiagnosisName": "Foodborne Clostridium perfringens intoxication",
+  "ConceptId": "156349",
+  "ICD11Code": "1A12"
+ },
+ {
+  "DiagnosisName": "Foodborne Bacillus cereus intoxication",
+  "ConceptId": "156348",
+  "ICD11Code": "1A13"
+ },
+ {
+  "DiagnosisName": "Other specified bacterial foodborne intoxications",
+  "ConceptId": "2002402",
+  "ICD11Code": "1A1Y"
+ },
+ {
+  "DiagnosisName": "Bacterial foodborne intoxications, unspecified",
+  "ConceptId": "155232",
+  "ICD11Code": "1A1Z"
+ },
+ {
+  "DiagnosisName": "Enteritis due to Adenovirus",
+  "ConceptId": "119381",
+  "ICD11Code": "1A20"
+ },
+ {
+  "DiagnosisName": "Gastroenteritis due to Astrovirus",
+  "ConceptId": "2002403",
+  "ICD11Code": "1A21"
+ },
+ {
+  "DiagnosisName": "Gastroenteritis due to Rotavirus",
+  "ConceptId": "123113",
+  "ICD11Code": "1A22"
+ },
+ {
+  "DiagnosisName": "Enteritis due to Norovirus",
+  "ConceptId": "2002404",
+  "ICD11Code": "1A23"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Cytomegalovirus",
+  "ConceptId": "142963",
+  "ICD11Code": "1A24"
+ },
+ {
+  "DiagnosisName": "Other specified viral intestinal infections",
+  "ConceptId": "160157",
+  "ICD11Code": "1A2Y"
+ },
+ {
+  "DiagnosisName": "Viral intestinal infections, unspecified",
+  "ConceptId": "2002405",
+  "ICD11Code": "1A2Z"
+ },
+ {
+  "DiagnosisName": "Infections due to Balantidium coli",
+  "ConceptId": "137494",
+  "ICD11Code": "1A30"
+ },
+ {
+  "DiagnosisName": "Giardiasis",
+  "ConceptId": "139457",
+  "ICD11Code": "1A31"
+ },
+ {
+  "DiagnosisName": "Cryptosporidiosis",
+  "ConceptId": "143110",
+  "ICD11Code": "1A32"
+ },
+ {
+  "DiagnosisName": "Cystoisosporiasis",
+  "ConceptId": "2002407",
+  "ICD11Code": "1A33"
+ },
+ {
+  "DiagnosisName": "Cystoisosporiasis of small intestine",
+  "ConceptId": "2002408",
+  "ICD11Code": "1A33.0"
+ },
+ {
+  "DiagnosisName": "Cystoisosporiasis of colon",
+  "ConceptId": "2002410",
+  "ICD11Code": "1A33.1"
+ },
+ {
+  "DiagnosisName": "Other specified cystoisosporiasis",
+  "ConceptId": "2002411",
+  "ICD11Code": "1A33.Y"
+ },
+ {
+  "DiagnosisName": "Cystoisosporiasis, unspecified",
+  "ConceptId": "2002412",
+  "ICD11Code": "1A33.Z"
+ },
+ {
+  "DiagnosisName": "Sarcocystosis",
+  "ConceptId": "137364",
+  "ICD11Code": "1A34"
+ },
+ {
+  "DiagnosisName": "Blastocystosis",
+  "ConceptId": "155306",
+  "ICD11Code": "1A35"
+ },
+ {
+  "DiagnosisName": "Amoebiasis",
+  "ConceptId": "124",
+  "ICD11Code": "1A36"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Entamoeba",
+  "ConceptId": "137450",
+  "ICD11Code": "1A36.0"
+ },
+ {
+  "DiagnosisName": "Acute amoebiasis",
+  "ConceptId": "122594",
+  "ICD11Code": "1A36.00"
+ },
+ {
+  "DiagnosisName": "Amoeboma of intestine",
+  "ConceptId": "169524",
+  "ICD11Code": "1A36.01"
+ },
+ {
+  "DiagnosisName": "Intestinal infections due to Entamoeba, unspecified",
+  "ConceptId": "2002422",
+  "ICD11Code": "1A36.0Z"
+ },
+ {
+  "DiagnosisName": "Extraintestinal infections due to Entamoeba",
+  "ConceptId": "2002423",
+  "ICD11Code": "1A36.1"
+ },
+ {
+  "DiagnosisName": "Amoebic liver abscess",
+  "ConceptId": "149001",
+  "ICD11Code": "1A36.10"
+ },
+ {
+  "DiagnosisName": "Amoebic lung abscess",
+  "ConceptId": "149000",
+  "ICD11Code": "1A36.11"
+ },
+ {
+  "DiagnosisName": "Cutaneous amoebiasis",
+  "ConceptId": "149009",
+  "ICD11Code": "1A36.12"
+ },
+ {
+  "DiagnosisName": "Amoebiasis of other specified sites",
+  "ConceptId": "2002426",
+  "ICD11Code": "1A36.1Y"
+ },
+ {
+  "DiagnosisName": "Other specified protozoal intestinal infections",
+  "ConceptId": "124",
+  "ICD11Code": "1A36.Z"
+ },
+ {
+  "DiagnosisName": "Other specified protozoal intestinal infections",
+  "ConceptId": "160166",
+  "ICD11Code": "1A3Y"
+ },
+ {
+  "DiagnosisName": "Protozoal intestinal infections, unspecified",
+  "ConceptId": "113585",
+  "ICD11Code": "1A3Z"
+ },
+ {
+  "DiagnosisName": "Gastroenteritis or colitis without specification of infectious agent",
+  "ConceptId": "117889",
+  "ICD11Code": "1A40"
+ },
+ {
+  "DiagnosisName": "Gastroenteritis or colitis without specification of origin",
+  "ConceptId": "139591",
+  "ICD11Code": "1A40.0"
+ },
+ {
+  "DiagnosisName": "Infectious gastroenteritis or colitis without specification of infectious agent",
+  "ConceptId": "137284",
+  "ICD11Code": "1A40.Z"
+ },
+ {
+  "DiagnosisName": "Congenital syphilis",
+  "ConceptId": "143672",
+  "ICD11Code": "1A60"
+ },
+ {
+  "DiagnosisName": "Early congenital syphilis, symptomatic",
+  "ConceptId": "141580",
+  "ICD11Code": "1A60.0"
+ },
+ {
+  "DiagnosisName": "Early congenital syphilis, latent",
+  "ConceptId": "141581",
+  "ICD11Code": "1A60.1"
+ },
+ {
+  "DiagnosisName": "Late congenital syphilitic oculopathy",
+  "ConceptId": "152222",
+  "ICD11Code": "1A60.2"
+ },
+ {
+  "DiagnosisName": "Late congenital neurosyphilis",
+  "ConceptId": "157457",
+  "ICD11Code": "1A60.3"
+ },
+ {
+  "DiagnosisName": "Other late congenital syphilis, symptomatic",
+  "ConceptId": "116386",
+  "ICD11Code": "1A60.4"
+ },
+ {
+  "DiagnosisName": "Late congenital syphilis, latent",
+  "ConceptId": "136112",
+  "ICD11Code": "1A60.5"
+ },
+ {
+  "DiagnosisName": "Congenital syphilis, unspecified",
+  "ConceptId": "143671",
+  "ICD11Code": "1A60.Z"
+ },
+ {
+  "DiagnosisName": "Early syphilis",
+  "ConceptId": "113655",
+  "ICD11Code": "1A61"
+ },
+ {
+  "DiagnosisName": "Primary genital syphilis",
+  "ConceptId": "129119",
+  "ICD11Code": "1A61.0"
+ },
+ {
+  "DiagnosisName": "Primary anal syphilis",
+  "ConceptId": "129165",
+  "ICD11Code": "1A61.1"
+ },
+ {
+  "DiagnosisName": "Primary syphilis of other sites",
+  "ConceptId": "128482",
+  "ICD11Code": "1A61.2"
+ },
+ {
+  "DiagnosisName": "Secondary syphilis of skin or mucous membranes",
+  "ConceptId": "126861",
+  "ICD11Code": "1A61.3"
+ },
+ {
+  "DiagnosisName": "Secondary syphilis of other sites",
+  "ConceptId": "123595",
+  "ICD11Code": "1A61.4"
+ },
+ {
+  "DiagnosisName": "Latent early syphilis",
+  "ConceptId": "136020",
+  "ICD11Code": "1A61.5"
+ },
+ {
+  "DiagnosisName": "Other specified early syphilis",
+  "ConceptId": "113068",
+  "ICD11Code": "1A61.Y"
+ },
+ {
+  "DiagnosisName": "Early syphilis, unspecified",
+  "ConceptId": "113069",
+  "ICD11Code": "1A61.Z"
+ },
+ {
+  "DiagnosisName": "Late syphilis",
+  "ConceptId": "116369",
+  "ICD11Code": "1A62"
+ },
+ {
+  "DiagnosisName": "Neurosyphilis",
+  "ConceptId": "115257",
+  "ICD11Code": "1A62.0"
+ },
+ {
+  "DiagnosisName": "Asymptomatic neurosyphilis",
+  "ConceptId": "148257",
+  "ICD11Code": "1A62.00"
+ },
+ {
+  "DiagnosisName": "Symptomatic late neurosyphilis",
+  "ConceptId": "126894",
+  "ICD11Code": "1A62.01"
+ },
+ {
+  "DiagnosisName": "Cardiovascular late syphilis",
+  "ConceptId": "157457",
+  "ICD11Code": "1A62.0Z"
+ },
+ {
+  "DiagnosisName": "Cardiovascular late syphilis",
+  "ConceptId": "120874",
+  "ICD11Code": "1A62.1"
+ },
+ {
+  "DiagnosisName": "Symptomatic late syphilis of other sites",
+  "ConceptId": "2002442",
+  "ICD11Code": "1A62.2"
+ },
+ {
+  "DiagnosisName": "Ocular late syphilis",
+  "ConceptId": "2002445",
+  "ICD11Code": "1A62.20"
+ },
+ {
+  "DiagnosisName": "Late syphilis involving the musculoskeletal system",
+  "ConceptId": "125135",
+  "ICD11Code": "1A62.21"
+ },
+ {
+  "DiagnosisName": "Late syphilis of skin or mucous membranes",
+  "ConceptId": "126864",
+  "ICD11Code": "1A62.22"
+ },
+ {
+  "DiagnosisName": "Symptomatic late syphilis of other specified sites",
+  "ConceptId": "2002450",
+  "ICD11Code": "1A62.2Y"
+ },
+ {
+  "DiagnosisName": "Symptomatic late syphilis of unspecified site",
+  "ConceptId": "2002452",
+  "ICD11Code": "1A62.2Z"
+ },
+ {
+  "DiagnosisName": "Other specified late syphilis",
+  "ConceptId": "2002454",
+  "ICD11Code": "1A62.Y"
+ },
+ {
+  "DiagnosisName": "Late syphilis, unspecified",
+  "ConceptId": "2002457",
+  "ICD11Code": "1A62.Z"
+ },
+ {
+  "DiagnosisName": "Latent syphilis, unspecified as early or late",
+  "ConceptId": "2002459",
+  "ICD11Code": "1A63"
+ },
+ {
+  "DiagnosisName": "Syphilis, unspecified",
+  "ConceptId": "2002461",
+  "ICD11Code": "1A6Z"
+ },
+ {
+  "DiagnosisName": "Gonococcal genitourinary infection",
+  "ConceptId": "2002762",
+  "ICD11Code": "1A70"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of lower genitourinary tract without periurethral or accessory gland abscess",
+  "ConceptId": "2002763",
+  "ICD11Code": "1A70.0"
+ },
+ {
+  "DiagnosisName": "Gonorrhoea of penis",
+  "ConceptId": "2002764",
+  "ICD11Code": "1A70.00"
+ },
+ {
+  "DiagnosisName": "Other specified gonococcal infection of lower genitourinary tract without periurethral or accessory gland abscess",
+  "ConceptId": "2002765",
+  "ICD11Code": "1A70.0Y"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of lower genitourinary tract without periurethral or accessory gland abscess, unspecified",
+  "ConceptId": "2002766",
+  "ICD11Code": "1A70.0Z"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of lower genitourinary tract with periurethral or accessory gland abscess",
+  "ConceptId": "2002767",
+  "ICD11Code": "1A70.1"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of other specified genitourinary organ",
+  "ConceptId": "2002768",
+  "ICD11Code": "1A70.Y"
+ },
+ {
+  "DiagnosisName": "Gonococcal genitourinary infection, unspecified",
+  "ConceptId": "2002769",
+  "ICD11Code": "1A70.Z"
+ },
+ {
+  "DiagnosisName": "Gonococcal pelviperitonitis",
+  "ConceptId": "2002770",
+  "ICD11Code": "1A71"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of other sites",
+  "ConceptId": "2002771",
+  "ICD11Code": "1A72"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of musculoskeletal system",
+  "ConceptId": "2002772",
+  "ICD11Code": "1A72.0"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of rectum",
+  "ConceptId": "2002773",
+  "ICD11Code": "1A72.1"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of anus",
+  "ConceptId": "139342",
+  "ICD11Code": "1A72.2"
+ },
+ {
+  "DiagnosisName": "Gonococcal pharyngitis",
+  "ConceptId": "2002774",
+  "ICD11Code": "1A72.3"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of eye",
+  "ConceptId": "117770",
+  "ICD11Code": "1A72.4"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection of other specified sites",
+  "ConceptId": "2002775",
+  "ICD11Code": "1A72.Y"
+ },
+ {
+  "DiagnosisName": "Disseminated gonococcal infection",
+  "ConceptId": "2002776",
+  "ICD11Code": "1A73"
+ },
+ {
+  "DiagnosisName": "Gonococcal infection, unspecified",
+  "ConceptId": "2002777",
+  "ICD11Code": "1A7Z"
+ },
+ {
+  "DiagnosisName": "Chlamydial lymphogranuloma",
+  "ConceptId": "2002829",
+  "ICD11Code": "1A80"
+ },
+ {
+  "DiagnosisName": "Non ulcerative sexually transmitted chlamydial infection",
+  "ConceptId": "2002830",
+  "ICD11Code": "1A81"
+ },
+ {
+  "DiagnosisName": "Chlamydial infection of lower genitourinary tract",
+  "ConceptId": "145665",
+  "ICD11Code": "1A81.0"
+ },
+ {
+  "DiagnosisName": "Chlamydial infection of internal reproductive organs",
+  "ConceptId": "2002831",
+  "ICD11Code": "1A81.1"
+ },
+ {
+  "DiagnosisName": "Non ulcerative sexually transmitted chlamydial infection of other specified site",
+  "ConceptId": "2002832",
+  "ICD11Code": "1A81.Y"
+ },
+ {
+  "DiagnosisName": "Non ulcerative sexually transmitted chlamydial infection of unspecified site",
+  "ConceptId": "2002833",
+  "ICD11Code": "1A81.Z"
+ },
+ {
+  "DiagnosisName": "Other specified sexually transmissible infections due to chlamydia",
+  "ConceptId": "2002834",
+  "ICD11Code": "1A8Y"
+ },
+ {
+  "DiagnosisName": "Sexually transmissible infections due to chlamydia, unspecified",
+  "ConceptId": "2002835",
+  "ICD11Code": "1A8Z"
+ },
+ {
+  "DiagnosisName": "Chancroid",
+  "ConceptId": "145762",
+  "ICD11Code": "1A90"
+ },
+ {
+  "DiagnosisName": "Granuloma inguinale",
+  "ConceptId": "139277",
+  "ICD11Code": "1A91"
+ },
+ {
+  "DiagnosisName": "Trichomoniasis",
+  "ConceptId": "117146",
+  "ICD11Code": "1A92"
+ },
+ {
+  "DiagnosisName": "Sexually transmissible infestations",
+  "ConceptId": "112992",
+  "ICD11Code": "1A93"
+ },
+ {
+  "DiagnosisName": "Anogenital herpes simplex infection",
+  "ConceptId": "155117",
+  "ICD11Code": "1A94"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of genitalia or urogenital tract",
+  "ConceptId": "2002845",
+  "ICD11Code": "1A94.0"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of perianal skin or rectum",
+  "ConceptId": "2002847",
+  "ICD11Code": "1A94.1"
+ },
+ {
+  "DiagnosisName": "Anogenital herpes simplex infection without further specification",
+  "ConceptId": "2002849",
+  "ICD11Code": "1A94.Z"
+ },
+ {
+  "DiagnosisName": "Anogenital warts",
+  "ConceptId": "2002851",
+  "ICD11Code": "1A95"
+ },
+ {
+  "DiagnosisName": "Anal warts",
+  "ConceptId": "155080",
+  "ICD11Code": "1A95.0"
+ },
+ {
+  "DiagnosisName": "Genital warts",
+  "ConceptId": "139505",
+  "ICD11Code": "1A95.1"
+ },
+ {
+  "DiagnosisName": "Extragenital condylomata acuminata",
+  "ConceptId": "2002853",
+  "ICD11Code": "1A95.2"
+ },
+ {
+  "DiagnosisName": "Anogenital warts, unspecified",
+  "ConceptId": "2002854",
+  "ICD11Code": "1A95.Z"
+ },
+ {
+  "DiagnosisName": "Other specified predominantly sexually transmitted infections",
+  "ConceptId": "2002856",
+  "ICD11Code": "1A9Y"
+ },
+ {
+  "DiagnosisName": "Predominantly sexually transmitted infections, unspecified",
+  "ConceptId": "2002857",
+  "ICD11Code": "1A9Z"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the respiratory system",
+  "ConceptId": "113303",
+  "ICD11Code": "1B10"
+ },
+ {
+  "DiagnosisName": "Respiratory tuberculosis, confirmed",
+  "ConceptId": "2002858",
+  "ICD11Code": "1B10.0"
+ },
+ {
+  "DiagnosisName": "Respiratory tuberculosis, not confirmed",
+  "ConceptId": "2002859",
+  "ICD11Code": "1B10.1"
+ },
+ {
+  "DiagnosisName": "Respiratory tuberculosis, without mention of bacteriological or histological confirmation",
+  "ConceptId": "2002861",
+  "ICD11Code": "1B10.Z"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the nervous system",
+  "ConceptId": "2002862",
+  "ICD11Code": "1B11"
+ },
+ {
+  "DiagnosisName": "Tuberculous meningitis",
+  "ConceptId": "111967",
+  "ICD11Code": "1B11.0"
+ },
+ {
+  "DiagnosisName": "Tuberculous meningoencephalitis",
+  "ConceptId": "124002",
+  "ICD11Code": "1B11.1"
+ },
+ {
+  "DiagnosisName": "Meningeal tuberculoma",
+  "ConceptId": "2002872",
+  "ICD11Code": "1B11.2"
+ },
+ {
+  "DiagnosisName": "Tuberculous granuloma of brain",
+  "ConceptId": "2002874",
+  "ICD11Code": "1B11.3"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of other specified part of nervous system",
+  "ConceptId": "2002876",
+  "ICD11Code": "1B11.Y"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the nervous system, unspecified",
+  "ConceptId": "2002879",
+  "ICD11Code": "1B11.Z"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of other systems and organs",
+  "ConceptId": "2002881",
+  "ICD11Code": "1B12"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of heart",
+  "ConceptId": "2002883",
+  "ICD11Code": "1B12.0"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of eye",
+  "ConceptId": "112066",
+  "ICD11Code": "1B12.1"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of ear",
+  "ConceptId": "112087",
+  "ICD11Code": "1B12.2"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of endocrine glands",
+  "ConceptId": "2002884",
+  "ICD11Code": "1B12.3"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the musculoskeletal system",
+  "ConceptId": "2002885",
+  "ICD11Code": "1B12.4"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of bones or joints",
+  "ConceptId": "154164",
+  "ICD11Code": "1B12.40"
+ },
+ {
+  "DiagnosisName": "Tuberculous myositis",
+  "ConceptId": "2002886",
+  "ICD11Code": "1B12.41"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of other specified part of the musculoskeletal system",
+  "ConceptId": "2002887",
+  "ICD11Code": "1B12.4Y"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the musculoskeletal system, unspecified",
+  "ConceptId": "2002888",
+  "ICD11Code": "1B12.4Z"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the genitourinary system",
+  "ConceptId": "2002889",
+  "ICD11Code": "1B12.5"
+ },
+ {
+  "DiagnosisName": "Tuberculous peripheral lymphadenopathy",
+  "ConceptId": "159174",
+  "ICD11Code": "1B12.6"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of the digestive system",
+  "ConceptId": "2002890",
+  "ICD11Code": "1B12.7"
+ },
+ {
+  "DiagnosisName": "Cutaneous tuberculosis",
+  "ConceptId": "143064",
+  "ICD11Code": "1B12.8"
+ },
+ {
+  "DiagnosisName": "Tuberculosis of other specified organ or site",
+  "ConceptId": "2002892",
+  "ICD11Code": "1B12.Y"
+ },
+ {
+  "DiagnosisName": "Miliary tuberculosis",
+  "ConceptId": "115753",
+  "ICD11Code": "1B13"
+ },
+ {
+  "DiagnosisName": "Acute miliary tuberculosis of a single specified site",
+  "ConceptId": "2002894",
+  "ICD11Code": "1B13.0"
+ },
+ {
+  "DiagnosisName": "Acute miliary tuberculosis of multiple sites",
+  "ConceptId": "152012",
+  "ICD11Code": "1B13.1"
+ },
+ {
+  "DiagnosisName": "Acute miliary tuberculosis, unspecified site",
+  "ConceptId": "2002900",
+  "ICD11Code": "1B13.2"
+ },
+ {
+  "DiagnosisName": "Other specified miliary tuberculosis",
+  "ConceptId": "2002902",
+  "ICD11Code": "1B13.Y"
+ },
+ {
+  "DiagnosisName": "Miliary tuberculosis, unspecified",
+  "ConceptId": "2002904",
+  "ICD11Code": "1B13.Z"
+ },
+ {
+  "DiagnosisName": "Latent tuberculosis",
+  "ConceptId": "2002906",
+  "ICD11Code": "1B14"
+ },
+ {
+  "DiagnosisName": "Other specified tuberculosis",
+  "ConceptId": "2002912",
+  "ICD11Code": "1B1Y"
+ },
+ {
+  "DiagnosisName": "Tuberculosis, unspecified",
+  "ConceptId": "2002913",
+  "ICD11Code": "1B1Z"
+ },
+ {
+  "DiagnosisName": "Leprosy",
+  "ConceptId": "116344",
+  "ICD11Code": "1B20"
+ },
+ {
+  "DiagnosisName": "Paucibacillary leprosy",
+  "ConceptId": "164354",
+  "ICD11Code": "1B20.0"
+ },
+ {
+  "DiagnosisName": "Multibacillary leprosy",
+  "ConceptId": "164353",
+  "ICD11Code": "1B20.1"
+ },
+ {
+  "DiagnosisName": "Leprosy reactions",
+  "ConceptId": "2002914",
+  "ICD11Code": "1B20.2"
+ },
+ {
+  "DiagnosisName": "Type I leprosy reaction",
+  "ConceptId": "2002915",
+  "ICD11Code": "1B20.20"
+ },
+ {
+  "DiagnosisName": "Type II leprosy reaction",
+  "ConceptId": "2002916",
+  "ICD11Code": "1B20.21"
+ },
+ {
+  "DiagnosisName": "Complications of leprosy",
+  "ConceptId": "2002918",
+  "ICD11Code": "1B20.3"
+ },
+ {
+  "DiagnosisName": "Leprosy, unspecified",
+  "ConceptId": "2002920",
+  "ICD11Code": "1B20.Z"
+ },
+ {
+  "DiagnosisName": "Infections due to non tuberculous mycobacteria",
+  "ConceptId": "2002921",
+  "ICD11Code": "1B21"
+ },
+ {
+  "DiagnosisName": "Pulmonary infection due to non tuberculous mycobacterium",
+  "ConceptId": "2002922",
+  "ICD11Code": "1B21.0"
+ },
+ {
+  "DiagnosisName": "Non tuberculous mycobacterial lymphadenitis",
+  "ConceptId": "2002923",
+  "ICD11Code": "1B21.1"
+ },
+ {
+  "DiagnosisName": "Cutaneous non tuberculous mycobacterial infection",
+  "ConceptId": "2002924",
+  "ICD11Code": "1B21.2"
+ },
+ {
+  "DiagnosisName": "Mycobacterium ulcerans infection",
+  "ConceptId": "2002925",
+  "ICD11Code": "1B21.20"
+ },
+ {
+  "DiagnosisName": "Cutaneous infection due to other specified non tuberculous mycobacteria",
+  "ConceptId": "2002926",
+  "ICD11Code": "1B21.2Y"
+ },
+ {
+  "DiagnosisName": "Cutaneous infection due to unspecified non tuberculous mycobacteria",
+  "ConceptId": "2002927",
+  "ICD11Code": "1B21.2Z"
+ },
+ {
+  "DiagnosisName": "Disseminated non tuberculous mycobacterial infection",
+  "ConceptId": "2002928",
+  "ICD11Code": "1B21.3"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal non tuberculous mycobacterial infection",
+  "ConceptId": "2002929",
+  "ICD11Code": "1B21.4"
+ },
+ {
+  "DiagnosisName": "Non tuberculous mycobacterial infection of other specified site",
+  "ConceptId": "2002757",
+  "ICD11Code": "1B21.Y"
+ },
+ {
+  "DiagnosisName": "Non tuberculous mycobacterial infection of unspecified site",
+  "ConceptId": "2002758",
+  "ICD11Code": "1B21.Z"
+ },
+ {
+  "DiagnosisName": "Other specified mycobacterial diseases",
+  "ConceptId": "2002759",
+  "ICD11Code": "1B2Y"
+ },
+ {
+  "DiagnosisName": "Mycobacterial diseases, unspecified",
+  "ConceptId": "2002760",
+  "ICD11Code": "1B2Z"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic fever without mention of heart involvement",
+  "ConceptId": "113229",
+  "ICD11Code": "1B40"
+ },
+ {
+  "DiagnosisName": "Rheumatic arthritis, acute or subacute",
+  "ConceptId": "149534",
+  "ICD11Code": "1B40.0"
+ },
+ {
+  "DiagnosisName": "Other specified acute rheumatic fever without mention of heart involvement",
+  "ConceptId": "113230",
+  "ICD11Code": "1B40.Y"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic fever without mention of heart involvement, unspecified",
+  "ConceptId": "2002814",
+  "ICD11Code": "1B40.Z"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic fever with heart involvement",
+  "ConceptId": "121843",
+  "ICD11Code": "1B41"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic pericarditis",
+  "ConceptId": "149530",
+  "ICD11Code": "1B41.0"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic endocarditis",
+  "ConceptId": "121845",
+  "ICD11Code": "1B41.1"
+ },
+ {
+  "DiagnosisName": "Rheumatic aortitis",
+  "ConceptId": "2003073",
+  "ICD11Code": "1B41.10"
+ },
+ {
+  "DiagnosisName": "Other specified acute rheumatic endocarditis",
+  "ConceptId": "145183",
+  "ICD11Code": "1B41.1Y"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic endocarditis, unspecified",
+  "ConceptId": "2003074",
+  "ICD11Code": "1B41.1Z"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic myocarditis",
+  "ConceptId": "149532",
+  "ICD11Code": "1B41.2"
+ },
+ {
+  "DiagnosisName": "Other acute rheumatic heart disease",
+  "ConceptId": "127787",
+  "ICD11Code": "1B41.Y"
+ },
+ {
+  "DiagnosisName": "Acute rheumatic heart disease, unspecified",
+  "ConceptId": "113237",
+  "ICD11Code": "1B41.Z"
+ },
+ {
+  "DiagnosisName": "Rheumatic chorea",
+  "ConceptId": "127453",
+  "ICD11Code": "1B42"
+ },
+ {
+  "DiagnosisName": "Scarlet fever",
+  "ConceptId": "127144",
+  "ICD11Code": "1B50"
+ },
+ {
+  "DiagnosisName": "Streptococcal pharyngitis",
+  "ConceptId": "125821",
+  "ICD11Code": "1B51"
+ },
+ {
+  "DiagnosisName": "Meningitis due to Streptococcus",
+  "ConceptId": "125820",
+  "ICD11Code": "1B53"
+ },
+ {
+  "DiagnosisName": "Meningitis due to Staphylococcus",
+  "ConceptId": "125958",
+  "ICD11Code": "1B54"
+ },
+ {
+  "DiagnosisName": "Other specified staphylococcal or streptococcal diseases",
+  "ConceptId": "2003075",
+  "ICD11Code": "1B5Y"
+ },
+ {
+  "DiagnosisName": "Staphylococcal or streptococcal diseases, unspecified",
+  "ConceptId": "2003076",
+  "ICD11Code": "1B5Z"
+ },
+ {
+  "DiagnosisName": "Bacterial cellulitis, erysipelas or lymphangitis",
+  "ConceptId": "155231",
+  "ICD11Code": "1B70"
+ },
+ {
+  "DiagnosisName": "Erysipelas",
+  "ConceptId": "141064",
+  "ICD11Code": "1B70.0"
+ },
+ {
+  "DiagnosisName": "Erysipelas of face",
+  "ConceptId": "140823",
+  "ICD11Code": "1B70.00"
+ },
+ {
+  "DiagnosisName": "Erysipelas of external ear",
+  "ConceptId": "2003077",
+  "ICD11Code": "1B70.01"
+ },
+ {
+  "DiagnosisName": "Erysipelas of lower limb",
+  "ConceptId": "2003078",
+  "ICD11Code": "1B70.02"
+ },
+ {
+  "DiagnosisName": "Erysipelas of other specified site",
+  "ConceptId": "2003079",
+  "ICD11Code": "1B70.0Y"
+ },
+ {
+  "DiagnosisName": "Erysipelas, unspecified",
+  "ConceptId": "2003080",
+  "ICD11Code": "1B70.0Z"
+ },
+ {
+  "DiagnosisName": "Streptococcal cellulitis of skin",
+  "ConceptId": "125822",
+  "ICD11Code": "1B70.1"
+ },
+ {
+  "DiagnosisName": "Staphylococcal cellulitis of skin",
+  "ConceptId": "155460",
+  "ICD11Code": "1B70.2"
+ },
+ {
+  "DiagnosisName": "Ascending bacterial lymphangitis",
+  "ConceptId": "2003081",
+  "ICD11Code": "1B70.3"
+ },
+ {
+  "DiagnosisName": "Bacterial cellulitis or lymphangitis due to other specified bacterium",
+  "ConceptId": "2003082",
+  "ICD11Code": "1B70.Y"
+ },
+ {
+  "DiagnosisName": "Bacterial cellulitis or lymphangitis due to unspecified bacterium",
+  "ConceptId": "2003083",
+  "ICD11Code": "1B70.Z"
+ },
+ {
+  "DiagnosisName": "Necrotising fasciitis",
+  "ConceptId": "133443",
+  "ICD11Code": "1B71"
+ },
+ {
+  "DiagnosisName": "Streptococcal necrotising fasciitis",
+  "ConceptId": "2003084",
+  "ICD11Code": "1B71.0"
+ },
+ {
+  "DiagnosisName": "Polymicrobial necrotising fasciitis",
+  "ConceptId": "2003085",
+  "ICD11Code": "1B71.1"
+ },
+ {
+  "DiagnosisName": "Neonatal necrotising fasciitis",
+  "ConceptId": "2003086",
+  "ICD11Code": "1B71.2"
+ },
+ {
+  "DiagnosisName": "Necrotising fasciitis due to other specified bacterial infection",
+  "ConceptId": "2003087",
+  "ICD11Code": "1B71.Y"
+ },
+ {
+  "DiagnosisName": "Necrotising fasciitis, unspecified",
+  "ConceptId": "2003088",
+  "ICD11Code": "1B71.Z"
+ },
+ {
+  "DiagnosisName": "Impetigo",
+  "ConceptId": "137693",
+  "ICD11Code": "1B72"
+ },
+ {
+  "DiagnosisName": "Bullous impetigo",
+  "ConceptId": "137692",
+  "ICD11Code": "1B72.0"
+ },
+ {
+  "DiagnosisName": "Non bullous impetigo",
+  "ConceptId": "2003089",
+  "ICD11Code": "1B72.1"
+ },
+ {
+  "DiagnosisName": "Secondary impetiginisation of the skin",
+  "ConceptId": "2003090",
+  "ICD11Code": "1B72.2"
+ },
+ {
+  "DiagnosisName": "Other specified impetigo",
+  "ConceptId": "137686",
+  "ICD11Code": "1B72.Y"
+ },
+ {
+  "DiagnosisName": "Impetigo, unspecified",
+  "ConceptId": "156760",
+  "ICD11Code": "1B72.Z"
+ },
+ {
+  "DiagnosisName": "Ecthyma",
+  "ConceptId": "141535",
+  "ICD11Code": "1B73"
+ },
+ {
+  "DiagnosisName": "Streptococcal ecthyma",
+  "ConceptId": "2003091",
+  "ICD11Code": "1B73.0"
+ },
+ {
+  "DiagnosisName": "Staphylococcal ecthyma",
+  "ConceptId": "2003092",
+  "ICD11Code": "1B73.1"
+ },
+ {
+  "DiagnosisName": "Ecthyma gangrenosum",
+  "ConceptId": "141534",
+  "ICD11Code": "1B73.2"
+ },
+ {
+  "DiagnosisName": "Other specified ecthyma",
+  "ConceptId": "2003093",
+  "ICD11Code": "1B73.Y"
+ },
+ {
+  "DiagnosisName": "Ecthyma, unspecified",
+  "ConceptId": "2003094",
+  "ICD11Code": "1B73.Z"
+ },
+ {
+  "DiagnosisName": "Superficial bacterial folliculitis",
+  "ConceptId": "148024",
+  "ICD11Code": "1B74"
+ },
+ {
+  "DiagnosisName": "Staphylococcus aureus superficial folliculitis",
+  "ConceptId": "110062",
+  "ICD11Code": "1B74.0"
+ },
+ {
+  "DiagnosisName": "Superficial bacterial folliculitis due to other specified organism",
+  "ConceptId": "2003095",
+  "ICD11Code": "1B74.Y"
+ },
+ {
+  "DiagnosisName": "Superficial bacterial folliculitis due to unspecified organism",
+  "ConceptId": "2003096",
+  "ICD11Code": "1B74.Z"
+ },
+ {
+  "DiagnosisName": "Deep bacterial folliculitis or pyogenic abscess of the skin",
+  "ConceptId": "2003097",
+  "ICD11Code": "1B75"
+ },
+ {
+  "DiagnosisName": "Furuncle",
+  "ConceptId": "2003098",
+  "ICD11Code": "1B75.0"
+ },
+ {
+  "DiagnosisName": "Carbuncle",
+  "ConceptId": "2003099",
+  "ICD11Code": "1B75.1"
+ },
+ {
+  "DiagnosisName": "Furunculosis",
+  "ConceptId": "113",
+  "ICD11Code": "1B75.2"
+ },
+ {
+  "DiagnosisName": "Pyogenic abscess of the skin",
+  "ConceptId": "2003100",
+  "ICD11Code": "1B75.3"
+ },
+ {
+  "DiagnosisName": "Chronic deep bacterial folliculitis",
+  "ConceptId": "2003101",
+  "ICD11Code": "1B75.4"
+ },
+ {
+  "DiagnosisName": "Deep bacterial folliculitis or pyogenic abscess of the skin, unspecified",
+  "ConceptId": "2003102",
+  "ICD11Code": "1B75.Z"
+ },
+ {
+  "DiagnosisName": "Other specified pyogenic bacterial infection of skin or subcutaneous tissue",
+  "ConceptId": "2003103",
+  "ICD11Code": "1B7Y"
+ },
+ {
+  "DiagnosisName": "Pyogenic bacterial infection of skin or subcutaneous tissue, unspecified",
+  "ConceptId": "2003104",
+  "ICD11Code": "1B7Z"
+ },
+ {
+  "DiagnosisName": "Rat bite fevers",
+  "ConceptId": "127902",
+  "ICD11Code": "1B90"
+ },
+ {
+  "DiagnosisName": "Spirillosis",
+  "ConceptId": "2003105",
+  "ICD11Code": "1B90.0"
+ },
+ {
+  "DiagnosisName": "Streptobacillosis",
+  "ConceptId": "2003106",
+  "ICD11Code": "1B90.1"
+ },
+ {
+  "DiagnosisName": "Leptospirosis",
+  "ConceptId": "116341",
+  "ICD11Code": "1B91"
+ },
+ {
+  "DiagnosisName": "Glanders",
+  "ConceptId": "139436",
+  "ICD11Code": "1B92"
+ },
+ {
+  "DiagnosisName": "Plague",
+  "ConceptId": "114120",
+  "ICD11Code": "1B93"
+ },
+ {
+  "DiagnosisName": "Bubonic plague",
+  "ConceptId": "146858",
+  "ICD11Code": "1B93.0"
+ },
+ {
+  "DiagnosisName": "Cellulocutaneous plague",
+  "ConceptId": "145971",
+  "ICD11Code": "1B93.1"
+ },
+ {
+  "DiagnosisName": "Pneumonic plague",
+  "ConceptId": "114093",
+  "ICD11Code": "1B93.2"
+ },
+ {
+  "DiagnosisName": "Plague meningitis",
+  "ConceptId": "130095",
+  "ICD11Code": "1B93.3"
+ },
+ {
+  "DiagnosisName": "Other specified plague",
+  "ConceptId": "2003107",
+  "ICD11Code": "1B93.Y"
+ },
+ {
+  "DiagnosisName": "Plague, unspecified",
+  "ConceptId": "2003108",
+  "ICD11Code": "1B93.Z"
+ },
+ {
+  "DiagnosisName": "Tularaemia",
+  "ConceptId": "111783",
+  "ICD11Code": "1B94"
+ },
+ {
+  "DiagnosisName": "Ulceroglandular tularaemia",
+  "ConceptId": "123862",
+  "ICD11Code": "1B94.0"
+ },
+ {
+  "DiagnosisName": "Other specified tularaemia",
+  "ConceptId": "2003109",
+  "ICD11Code": "1B94.Y"
+ },
+ {
+  "DiagnosisName": "Tularaemia, unspecified",
+  "ConceptId": "139518",
+  "ICD11Code": "1B94.Z"
+ },
+ {
+  "DiagnosisName": "Brucellosis",
+  "ConceptId": "121005",
+  "ICD11Code": "1B95"
+ },
+ {
+  "DiagnosisName": "Erysipeloid",
+  "ConceptId": "141063",
+  "ICD11Code": "1B96"
+ },
+ {
+  "DiagnosisName": "Anthrax",
+  "ConceptId": "121555",
+  "ICD11Code": "1B97"
+ },
+ {
+  "DiagnosisName": "Cat scratch disease",
+  "ConceptId": "120868",
+  "ICD11Code": "1B98"
+ },
+ {
+  "DiagnosisName": "Pasteurellosis",
+  "ConceptId": "114316",
+  "ICD11Code": "1B99"
+ },
+ {
+  "DiagnosisName": "Extraintestinal yersiniosis",
+  "ConceptId": "152172",
+  "ICD11Code": "1B9A"
+ },
+ {
+  "DiagnosisName": "Unspecified zoonotic bacterial disease",
+  "ConceptId": "2003110",
+  "ICD11Code": "1B9Z"
+ },
+ {
+  "DiagnosisName": "Actinomycosis",
+  "ConceptId": "149946",
+  "ICD11Code": "1C10"
+ },
+ {
+  "DiagnosisName": "Pulmonary actinomycosis",
+  "ConceptId": "128160",
+  "ICD11Code": "1C10.0"
+ },
+ {
+  "DiagnosisName": "Abdominal actinomycosis",
+  "ConceptId": "150922",
+  "ICD11Code": "1C10.1"
+ },
+ {
+  "DiagnosisName": "Cervicofacial actinomycosis",
+  "ConceptId": "145780",
+  "ICD11Code": "1C10.2"
+ },
+ {
+  "DiagnosisName": "Primary cutaneous actinomycosis",
+  "ConceptId": "143088",
+  "ICD11Code": "1C10.3"
+ },
+ {
+  "DiagnosisName": "Other specified forms of actinomycosis",
+  "ConceptId": "2003111",
+  "ICD11Code": "1C10.Y"
+ },
+ {
+  "DiagnosisName": "Actinomycosis, unspecified",
+  "ConceptId": "111111",
+  "ICD11Code": "1C10.Z"
+ },
+ {
+  "DiagnosisName": "Bartonellosis",
+  "ConceptId": "147966",
+  "ICD11Code": "1C11"
+ },
+ {
+  "DiagnosisName": "Carrion disease",
+  "ConceptId": "146122",
+  "ICD11Code": "1C11.0"
+ },
+ {
+  "DiagnosisName": "Oroya fever",
+  "ConceptId": "131690",
+  "ICD11Code": "1C11.00"
+ },
+ {
+  "DiagnosisName": "Verruga peruana",
+  "ConceptId": "123223",
+  "ICD11Code": "1C11.01"
+ },
+ {
+  "DiagnosisName": "Trench fever",
+  "ConceptId": "124151",
+  "ICD11Code": "1C11.1"
+ },
+ {
+  "DiagnosisName": "Other forms of bartonellosis",
+  "ConceptId": "2002689",
+  "ICD11Code": "1C11.Y"
+ },
+ {
+  "DiagnosisName": "Bartonellosis, unspecified",
+  "ConceptId": "2002690",
+  "ICD11Code": "1C11.Z"
+ },
+ {
+  "DiagnosisName": "Whooping cough",
+  "ConceptId": "114190",
+  "ICD11Code": "1C12"
+ },
+ {
+  "DiagnosisName": "Whooping cough due to Bordetella pertussis",
+  "ConceptId": "114192",
+  "ICD11Code": "1C12.0"
+ },
+ {
+  "DiagnosisName": "Whooping cough due to Bordetella parapertussis",
+  "ConceptId": "2002691",
+  "ICD11Code": "1C12.1"
+ },
+ {
+  "DiagnosisName": "Other specified whooping cough",
+  "ConceptId": "2002692",
+  "ICD11Code": "1C12.Y"
+ },
+ {
+  "DiagnosisName": "Whooping cough, unspecified",
+  "ConceptId": "2002693",
+  "ICD11Code": "1C12.Z"
+ },
+ {
+  "DiagnosisName": "Tetanus",
+  "ConceptId": "124957",
+  "ICD11Code": "1C13"
+ },
+ {
+  "DiagnosisName": "Obstetrical tetanus",
+  "ConceptId": "152276",
+  "ICD11Code": "1C14"
+ },
+ {
+  "DiagnosisName": "Tetanus neonatorum",
+  "ConceptId": "124954",
+  "ICD11Code": "1C15"
+ },
+ {
+  "DiagnosisName": "Gas gangrene",
+  "ConceptId": "139631",
+  "ICD11Code": "1C16"
+ },
+ {
+  "DiagnosisName": "Diphtheria",
+  "ConceptId": "119399",
+  "ICD11Code": "1C17"
+ },
+ {
+  "DiagnosisName": "Pharyngeal or tonsillar diphtheria",
+  "ConceptId": "2002694",
+  "ICD11Code": "1C17.0"
+ },
+ {
+  "DiagnosisName": "Postdiphtheritic paralysis of uvula",
+  "ConceptId": "2002695",
+  "ICD11Code": "1C17.00"
+ },
+ {
+  "DiagnosisName": "Other specified pharyngeal or tonsillar diphtheria",
+  "ConceptId": "2002696",
+  "ICD11Code": "1C17.0Y"
+ },
+ {
+  "DiagnosisName": "Pharyngeal or tonsillar diphtheria, unspecified",
+  "ConceptId": "2002697",
+  "ICD11Code": "1C17.0Z"
+ },
+ {
+  "DiagnosisName": "Nasal diphtheria",
+  "ConceptId": "148616",
+  "ICD11Code": "1C17.1"
+ },
+ {
+  "DiagnosisName": "Laryngeal diphtheria",
+  "ConceptId": "136126",
+  "ICD11Code": "1C17.2"
+ },
+ {
+  "DiagnosisName": "Cutaneous diphtheria",
+  "ConceptId": "143082",
+  "ICD11Code": "1C17.3"
+ },
+ {
+  "DiagnosisName": "Other specified diphtheria",
+  "ConceptId": "2002698",
+  "ICD11Code": "1C17.Y"
+ },
+ {
+  "DiagnosisName": "Diphtheria, unspecified",
+  "ConceptId": "2002699",
+  "ICD11Code": "1C17.Z"
+ },
+ {
+  "DiagnosisName": "Brazilian purpuric fever",
+  "ConceptId": "146943",
+  "ICD11Code": "1C18"
+ },
+ {
+  "DiagnosisName": "Legionellosis",
+  "ConceptId": "135913",
+  "ICD11Code": "1C19"
+ },
+ {
+  "DiagnosisName": "Nonpneumonic Legionnaires' disease",
+  "ConceptId": "158019",
+  "ICD11Code": "1C19.0"
+ },
+ {
+  "DiagnosisName": "Legionnaires disease",
+  "ConceptId": "135912",
+  "ICD11Code": "1C19.1"
+ },
+ {
+  "DiagnosisName": "Legionellosis, unspecified",
+  "ConceptId": "2002700",
+  "ICD11Code": "1C19.Z"
+ },
+ {
+  "DiagnosisName": "Listeriosis",
+  "ConceptId": "135728",
+  "ICD11Code": "1C1A"
+ },
+ {
+  "DiagnosisName": "Cutaneous listeriosis",
+  "ConceptId": "155815",
+  "ICD11Code": "1C1A.0"
+ },
+ {
+  "DiagnosisName": "Listerial meningitis or meningoencephalitis",
+  "ConceptId": "134359",
+  "ICD11Code": "1C1A.1"
+ },
+ {
+  "DiagnosisName": "Other specified listeriosis",
+  "ConceptId": "2002701",
+  "ICD11Code": "1C1A.Y"
+ },
+ {
+  "DiagnosisName": "Listeriosis, unspecified",
+  "ConceptId": "2002702",
+  "ICD11Code": "1C1A.Z"
+ },
+ {
+  "DiagnosisName": "Nocardiosis",
+  "ConceptId": "133007",
+  "ICD11Code": "1C1B"
+ },
+ {
+  "DiagnosisName": "Pulmonary nocardiosis",
+  "ConceptId": "158597",
+  "ICD11Code": "1C1B.0"
+ },
+ {
+  "DiagnosisName": "Cutaneous nocardiosis",
+  "ConceptId": "155818",
+  "ICD11Code": "1C1B.1"
+ },
+ {
+  "DiagnosisName": "Other specified forms of nocardiosis",
+  "ConceptId": "2002703",
+  "ICD11Code": "1C1B.Y"
+ },
+ {
+  "DiagnosisName": "Nocardiosis, unspecified",
+  "ConceptId": "2002704",
+  "ICD11Code": "1C1B.Z"
+ },
+ {
+  "DiagnosisName": "Meningococcal disease",
+  "ConceptId": "115829",
+  "ICD11Code": "1C1C"
+ },
+ {
+  "DiagnosisName": "Meningococcal meningitis",
+  "ConceptId": "134369",
+  "ICD11Code": "1C1C.0"
+ },
+ {
+  "DiagnosisName": "Waterhouse Friderichsen syndrome",
+  "ConceptId": "122907",
+  "ICD11Code": "1C1C.1"
+ },
+ {
+  "DiagnosisName": "Meningococcaemia",
+  "ConceptId": "155570",
+  "ICD11Code": "1C1C.2"
+ },
+ {
+  "DiagnosisName": "Acute meningococcaemia",
+  "ConceptId": "154961",
+  "ICD11Code": "1C1C.20"
+ },
+ {
+  "DiagnosisName": "Other specified meningococcaemia",
+  "ConceptId": "2002705",
+  "ICD11Code": "1C1C.2Y"
+ },
+ {
+  "DiagnosisName": "Meningococcaemia, unspecified",
+  "ConceptId": "2002706",
+  "ICD11Code": "1C1C.2Z"
+ },
+ {
+  "DiagnosisName": "Other specified meningococcal disease",
+  "ConceptId": "2002707",
+  "ICD11Code": "1C1C.Y"
+ },
+ {
+  "DiagnosisName": "Meningococcal disease, unspecified",
+  "ConceptId": "2002708",
+  "ICD11Code": "1C1C.Z"
+ },
+ {
+  "DiagnosisName": "Yaws",
+  "ConceptId": "122766",
+  "ICD11Code": "1C1D"
+ },
+ {
+  "DiagnosisName": "Primary yaws",
+  "ConceptId": "2002709",
+  "ICD11Code": "1C1D.0"
+ },
+ {
+  "DiagnosisName": "Secondary yaws",
+  "ConceptId": "126870",
+  "ICD11Code": "1C1D.1"
+ },
+ {
+  "DiagnosisName": "Tertiary yaws",
+  "ConceptId": "124969",
+  "ICD11Code": "1C1D.2"
+ },
+ {
+  "DiagnosisName": "Latent yaws",
+  "ConceptId": "136012",
+  "ICD11Code": "1C1D.3"
+ },
+ {
+  "DiagnosisName": "Yaws, unspecified",
+  "ConceptId": "2002710",
+  "ICD11Code": "1C1D.Z"
+ },
+ {
+  "DiagnosisName": "Pinta",
+  "ConceptId": "130181",
+  "ICD11Code": "1C1E"
+ },
+ {
+  "DiagnosisName": "Primary lesions of pinta",
+  "ConceptId": "130178",
+  "ICD11Code": "1C1E.0"
+ },
+ {
+  "DiagnosisName": "Intermediate lesions of pinta",
+  "ConceptId": "130180",
+  "ICD11Code": "1C1E.1"
+ },
+ {
+  "DiagnosisName": "Late lesions of pinta",
+  "ConceptId": "130179",
+  "ICD11Code": "1C1E.2"
+ },
+ {
+  "DiagnosisName": "Mixed lesions of pinta",
+  "ConceptId": "134036",
+  "ICD11Code": "1C1E.3"
+ },
+ {
+  "DiagnosisName": "Pinta, unspecified",
+  "ConceptId": "2002711",
+  "ICD11Code": "1C1E.Z"
+ },
+ {
+  "DiagnosisName": "Endemic non venereal syphilis",
+  "ConceptId": "132764",
+  "ICD11Code": "1C1F"
+ },
+ {
+  "DiagnosisName": "Lyme borreliosis",
+  "ConceptId": "147052",
+  "ICD11Code": "1C1G"
+ },
+ {
+  "DiagnosisName": "Early cutaneous Lyme borreliosis",
+  "ConceptId": "2002712",
+  "ICD11Code": "1C1G.0"
+ },
+ {
+  "DiagnosisName": "Disseminated Lyme borreliosis",
+  "ConceptId": "169526",
+  "ICD11Code": "1C1G.1"
+ },
+ {
+  "DiagnosisName": "Lyme neuroborreliosis",
+  "ConceptId": "2002713",
+  "ICD11Code": "1C1G.10"
+ },
+ {
+  "DiagnosisName": "Lyme carditis",
+  "ConceptId": "135497",
+  "ICD11Code": "1C1G.11"
+ },
+ {
+  "DiagnosisName": "Ophthalmic Lyme borreliosis",
+  "ConceptId": "2002714",
+  "ICD11Code": "1C1G.12"
+ },
+ {
+  "DiagnosisName": "Lyme arthritis",
+  "ConceptId": "116194",
+  "ICD11Code": "1C1G.13"
+ },
+ {
+  "DiagnosisName": "Late cutaneous Lyme borreliosis",
+  "ConceptId": "2002715",
+  "ICD11Code": "1C1G.14"
+ },
+ {
+  "DiagnosisName": "Other specified disseminated Lyme borreliosis",
+  "ConceptId": "2002716",
+  "ICD11Code": "1C1G.1Y"
+ },
+ {
+  "DiagnosisName": "Disseminated Lyme borreliosis, unspecified",
+  "ConceptId": "2002717",
+  "ICD11Code": "1C1G.1Z"
+ },
+ {
+  "DiagnosisName": "Other specified Lyme borreliosis",
+  "ConceptId": "2002718",
+  "ICD11Code": "1C1G.Y"
+ },
+ {
+  "DiagnosisName": "Lyme borreliosis, unspecified",
+  "ConceptId": "2002719",
+  "ICD11Code": "1C1G.Z"
+ },
+ {
+  "DiagnosisName": "Necrotising ulcerative gingivitis",
+  "ConceptId": "168111",
+  "ICD11Code": "1C1H"
+ },
+ {
+  "DiagnosisName": "Other Vincent infections",
+  "ConceptId": "2002720",
+  "ICD11Code": "1C1H.0"
+ },
+ {
+  "DiagnosisName": "Other specified necrotising ulcerative gingivitis",
+  "ConceptId": "2002721",
+  "ICD11Code": "1C1H.Y"
+ },
+ {
+  "DiagnosisName": "Necrotising ulcerative gingivitis, unspecified",
+  "ConceptId": "2002722",
+  "ICD11Code": "1C1H.Z"
+ },
+ {
+  "DiagnosisName": "Relapsing fever",
+  "ConceptId": "127740",
+  "ICD11Code": "1C1J"
+ },
+ {
+  "DiagnosisName": "Tick borne relapsing fever",
+  "ConceptId": "112372",
+  "ICD11Code": "1C1J.0"
+ },
+ {
+  "DiagnosisName": "Louse borne relapsing fever",
+  "ConceptId": "135579",
+  "ICD11Code": "1C1J.1"
+ },
+ {
+  "DiagnosisName": "Relapsing fever, unspecified",
+  "ConceptId": "2002723",
+  "ICD11Code": "1C1J.Z"
+ },
+ {
+  "DiagnosisName": "Chlamydial conjunctivitis",
+  "ConceptId": "145667",
+  "ICD11Code": "1C20"
+ },
+ {
+  "DiagnosisName": "Chlamydial peritonitis",
+  "ConceptId": "145662",
+  "ICD11Code": "1C21"
+ },
+ {
+  "DiagnosisName": "Infections due to Chlamydia psittaci",
+  "ConceptId": "145669",
+  "ICD11Code": "1C22"
+ },
+ {
+  "DiagnosisName": "Trachoma",
+  "ConceptId": "112287",
+  "ICD11Code": "1C23"
+ },
+ {
+  "DiagnosisName": "Initial stage of trachoma",
+  "ConceptId": "124393",
+  "ICD11Code": "1C23.0"
+ },
+ {
+  "DiagnosisName": "Active stage of trachoma",
+  "ConceptId": "124394",
+  "ICD11Code": "1C23.1"
+ },
+ {
+  "DiagnosisName": "Other specified trachoma",
+  "ConceptId": "120731",
+  "ICD11Code": "1C23.Y"
+ },
+ {
+  "DiagnosisName": "Trachoma, unspecified",
+  "ConceptId": "2002724",
+  "ICD11Code": "1C23.Z"
+ },
+ {
+  "DiagnosisName": "Other specified diseases due to chlamydiae",
+  "ConceptId": "2002725",
+  "ICD11Code": "1C2Y"
+ },
+ {
+  "DiagnosisName": "Diseases due to chlamydiae, unspecified",
+  "ConceptId": "120730",
+  "ICD11Code": "1C2Z"
+ },
+ {
+  "DiagnosisName": "Typhus fever",
+  "ConceptId": "2002726",
+  "ICD11Code": "1C30"
+ },
+ {
+  "DiagnosisName": "Epidemic louse borne typhus fever due to Rickettsia prowazekii",
+  "ConceptId": "2002727",
+  "ICD11Code": "1C30.0"
+ },
+ {
+  "DiagnosisName": "Recrudescent typhus",
+  "ConceptId": "2002728",
+  "ICD11Code": "1C30.1"
+ },
+ {
+  "DiagnosisName": "Typhus fever due to Rickettsia typhi",
+  "ConceptId": "2002729",
+  "ICD11Code": "1C30.2"
+ },
+ {
+  "DiagnosisName": "Typhus fever due to Orientia tsutsugamushi",
+  "ConceptId": "2002730",
+  "ICD11Code": "1C30.3"
+ },
+ {
+  "DiagnosisName": "Other specified typhus fever",
+  "ConceptId": "2002731",
+  "ICD11Code": "1C30.Y"
+ },
+ {
+  "DiagnosisName": "Typhus fever, unspecified",
+  "ConceptId": "2002406",
+  "ICD11Code": "1C30.Z"
+ },
+ {
+  "DiagnosisName": "Spotted fever",
+  "ConceptId": "126057",
+  "ICD11Code": "1C31"
+ },
+ {
+  "DiagnosisName": "Spotted fever due to Rickettsia rickettsii",
+  "ConceptId": "2002409",
+  "ICD11Code": "1C31.0"
+ },
+ {
+  "DiagnosisName": "Spotted fever due to Rickettsia conorii",
+  "ConceptId": "158867",
+  "ICD11Code": "1C31.1"
+ },
+ {
+  "DiagnosisName": "Spotted fever due to Rickettsia sibirica",
+  "ConceptId": "2002413",
+  "ICD11Code": "1C31.2"
+ },
+ {
+  "DiagnosisName": "Spotted fever due to Rickettsia australis",
+  "ConceptId": "2002414",
+  "ICD11Code": "1C31.3"
+ },
+ {
+  "DiagnosisName": "Other specified Spotted fever",
+  "ConceptId": "2002415",
+  "ICD11Code": "1C31.Y"
+ },
+ {
+  "DiagnosisName": "Spotted fever, unspecified",
+  "ConceptId": "2002416",
+  "ICD11Code": "1C31.Z"
+ },
+ {
+  "DiagnosisName": "Rickettsialpox",
+  "ConceptId": "127393",
+  "ICD11Code": "1C32"
+ },
+ {
+  "DiagnosisName": "Q fever",
+  "ConceptId": "127981",
+  "ICD11Code": "1C33"
+ },
+ {
+  "DiagnosisName": "Other specified rickettsioses",
+  "ConceptId": "119384",
+  "ICD11Code": "1C3Y"
+ },
+ {
+  "DiagnosisName": "Rickettsioses, unspecified",
+  "ConceptId": "2002417",
+  "ICD11Code": "1C3Z"
+ },
+ {
+  "DiagnosisName": "Campylobacteriosis",
+  "ConceptId": "146531",
+  "ICD11Code": "1C40"
+ },
+ {
+  "DiagnosisName": "Bacterial infection of unspecified site",
+  "ConceptId": "160145",
+  "ICD11Code": "1C41"
+ },
+ {
+  "DiagnosisName": "Melioidosis",
+  "ConceptId": "2002418",
+  "ICD11Code": "1C42"
+ },
+ {
+  "DiagnosisName": "Actinomycetoma",
+  "ConceptId": "2002419",
+  "ICD11Code": "1C43"
+ },
+ {
+  "DiagnosisName": "Non pyogenic bacterial infections of the skin",
+  "ConceptId": "2002420",
+  "ICD11Code": "1C44"
+ },
+ {
+  "DiagnosisName": "Toxic shock syndrome",
+  "ConceptId": "124419",
+  "ICD11Code": "1C45"
+ },
+ {
+  "DiagnosisName": "Streptococcal toxic shock syndrome",
+  "ConceptId": "125814",
+  "ICD11Code": "1C45.0"
+ },
+ {
+  "DiagnosisName": "Staphylococcal toxic shock syndrome",
+  "ConceptId": "158894",
+  "ICD11Code": "1C45.1"
+ },
+ {
+  "DiagnosisName": "Toxic shock syndrome due to other specified infectious agent",
+  "ConceptId": "2002421",
+  "ICD11Code": "1C45.Y"
+ },
+ {
+  "DiagnosisName": "Toxic shock syndrome without specified infectious agent",
+  "ConceptId": "2002424",
+  "ICD11Code": "1C45.Z"
+ },
+ {
+  "DiagnosisName": "Other specified bacterial diseases",
+  "ConceptId": "160144",
+  "ICD11Code": "1C4Y"
+ },
+ {
+  "DiagnosisName": "Unspecified bacterial disease",
+  "ConceptId": "2002425",
+  "ICD11Code": "1C4Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease associated with tuberculosis",
+  "ConceptId": "2002427",
+  "ICD11Code": "1C60"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 1 associated with tuberculosis",
+  "ConceptId": "2002428",
+  "ICD11Code": "1C60.0"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 2 associated with tuberculosis",
+  "ConceptId": "2002429",
+  "ICD11Code": "1C60.1"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 3 associated with tuberculosis",
+  "ConceptId": "2002430",
+  "ICD11Code": "1C60.2"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 associated with tuberculosis",
+  "ConceptId": "2002431",
+  "ICD11Code": "1C60.3"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma associated with human immunodeficiency virus disease associated with tuberculosis",
+  "ConceptId": "2002432",
+  "ICD11Code": "1C60.30"
+ },
+ {
+  "DiagnosisName": "Other specified HIV disease clinical stage 4 associated with tuberculosis",
+  "ConceptId": "2002433",
+  "ICD11Code": "1C60.3Y"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 associated with tuberculosis, unspecified",
+  "ConceptId": "2002434",
+  "ICD11Code": "1C60.3Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease associated with tuberculosis, clinical stage unspecified",
+  "ConceptId": "2002435",
+  "ICD11Code": "1C60.Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease associated with malaria",
+  "ConceptId": "2002436",
+  "ICD11Code": "1C61"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 1 associated with malaria",
+  "ConceptId": "2002437",
+  "ICD11Code": "1C61.0"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 2 associated with malaria",
+  "ConceptId": "2002438",
+  "ICD11Code": "1C61.1"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 3 associated with malaria",
+  "ConceptId": "2002439",
+  "ICD11Code": "1C61.2"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 associated with malaria",
+  "ConceptId": "2002440",
+  "ICD11Code": "1C61.3"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma associated with human immunodeficiency virus disease associated with malaria",
+  "ConceptId": "2002441",
+  "ICD11Code": "1C61.30"
+ },
+ {
+  "DiagnosisName": "Other specified HIV disease clinical stage 4 associated with malaria",
+  "ConceptId": "2002443",
+  "ICD11Code": "1C61.3Y"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 associated with malaria, unspecified",
+  "ConceptId": "2002444",
+  "ICD11Code": "1C61.3Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease associated with malaria, clinical stage unspecified",
+  "ConceptId": "2002446",
+  "ICD11Code": "1C61.Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease without mention of tuberculosis or malaria",
+  "ConceptId": "2002447",
+  "ICD11Code": "1C62"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 1 without mention of tuberculosis or malaria",
+  "ConceptId": "2002448",
+  "ICD11Code": "1C62.0"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 2 without mention of tuberculosis or malaria",
+  "ConceptId": "2002449",
+  "ICD11Code": "1C62.1"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 3 without mention of tuberculosis or malaria",
+  "ConceptId": "2002451",
+  "ICD11Code": "1C62.2"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 without mention of tuberculosis or malaria",
+  "ConceptId": "2002453",
+  "ICD11Code": "1C62.3"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma associated with human immunodeficiency virus disease without mention of tuberculosis or malaria",
+  "ConceptId": "2002455",
+  "ICD11Code": "1C62.30"
+ },
+ {
+  "DiagnosisName": "Other specified HIV disease clinical stage 4 without mention of tuberculosis or malaria",
+  "ConceptId": "2002456",
+  "ICD11Code": "1C62.3Y"
+ },
+ {
+  "DiagnosisName": "HIV disease clinical stage 4 without mention of tuberculosis or malaria, unspecified",
+  "ConceptId": "2002458",
+  "ICD11Code": "1C62.3Z"
+ },
+ {
+  "DiagnosisName": "Human immunodeficiency virus disease without mention of associated disease or condition, clinical stage unspecified",
+  "ConceptId": "2002460",
+  "ICD11Code": "1C62.Z"
+ },
+ {
+  "DiagnosisName": "Viral encephalitis, not elsewhere classified",
+  "ConceptId": "2002519",
+  "ICD11Code": "1C80"
+ },
+ {
+  "DiagnosisName": "Acute poliomyelitis",
+  "ConceptId": "2002520",
+  "ICD11Code": "1C81"
+ },
+ {
+  "DiagnosisName": "Rabies",
+  "ConceptId": "160146",
+  "ICD11Code": "1C82"
+ },
+ {
+  "DiagnosisName": "Western equine encephalitis",
+  "ConceptId": "122870",
+  "ICD11Code": "1C83"
+ },
+ {
+  "DiagnosisName": "Eastern equine encephalitis",
+  "ConceptId": "118765",
+  "ICD11Code": "1C84"
+ },
+ {
+  "DiagnosisName": "Japanese encephalitis",
+  "ConceptId": "2002521",
+  "ICD11Code": "1C85"
+ },
+ {
+  "DiagnosisName": "St Louis encephalitis",
+  "ConceptId": "125973",
+  "ICD11Code": "1C86"
+ },
+ {
+  "DiagnosisName": "Rocio viral encephalitis",
+  "ConceptId": "2002522",
+  "ICD11Code": "1C87"
+ },
+ {
+  "DiagnosisName": "Murray Valley encephalitis",
+  "ConceptId": "133644",
+  "ICD11Code": "1C88"
+ },
+ {
+  "DiagnosisName": "California encephalitis",
+  "ConceptId": "146537",
+  "ICD11Code": "1C8B"
+ },
+ {
+  "DiagnosisName": "Venezuelan equine encephalitis",
+  "ConceptId": "123273",
+  "ICD11Code": "1C8C"
+ },
+ {
+  "DiagnosisName": "La Crosse encephalitis",
+  "ConceptId": "136209",
+  "ICD11Code": "1C8D"
+ },
+ {
+  "DiagnosisName": "Viral meningitis, not elsewhere classified",
+  "ConceptId": "2002523",
+  "ICD11Code": "1C8E"
+ },
+ {
+  "DiagnosisName": "Enteroviral meningitis",
+  "ConceptId": "141201",
+  "ICD11Code": "1C8E.1"
+ },
+ {
+  "DiagnosisName": "Meningitis due to adenovirus",
+  "ConceptId": "2002524",
+  "ICD11Code": "1C8E.2"
+ },
+ {
+  "DiagnosisName": "Other specified viral meningitis, not elsewhere classified",
+  "ConceptId": "2002525",
+  "ICD11Code": "1C8E.Y"
+ },
+ {
+  "DiagnosisName": "Viral meningitis, unspecified",
+  "ConceptId": "2002526",
+  "ICD11Code": "1C8E.Z"
+ },
+ {
+  "DiagnosisName": "Lymphocytic choriomeningitis",
+  "ConceptId": "135474",
+  "ICD11Code": "1C8F"
+ },
+ {
+  "DiagnosisName": "Tick borne encephalitis",
+  "ConceptId": "2002527",
+  "ICD11Code": "1C8G"
+ },
+ {
+  "DiagnosisName": "Far Eastern tick borne encephalitis",
+  "ConceptId": "2002528",
+  "ICD11Code": "1C8G.0"
+ },
+ {
+  "DiagnosisName": "Central European tick borne encephalitis",
+  "ConceptId": "2002529",
+  "ICD11Code": "1C8G.1"
+ },
+ {
+  "DiagnosisName": "Siberian tick borne encephalitis",
+  "ConceptId": "2002530",
+  "ICD11Code": "1C8G.2"
+ },
+ {
+  "DiagnosisName": "Tick borne encephalitis, unspecified",
+  "ConceptId": "2002531",
+  "ICD11Code": "1C8G.Z"
+ },
+ {
+  "DiagnosisName": "Other specified viral infections of the central nervous system",
+  "ConceptId": "2002532",
+  "ICD11Code": "1C8Y"
+ },
+ {
+  "DiagnosisName": "Viral infections of the central nervous system, unspecified",
+  "ConceptId": "2002533",
+  "ICD11Code": "1C8Z"
+ },
+ {
+  "DiagnosisName": "Infectious encephalitis, not elsewhere classified",
+  "ConceptId": "2002534",
+  "ICD11Code": "1D00"
+ },
+ {
+  "DiagnosisName": "Bacterial encephalitis",
+  "ConceptId": "2002535",
+  "ICD11Code": "1D00.0"
+ },
+ {
+  "DiagnosisName": "Fungal encephalitis",
+  "ConceptId": "2002536",
+  "ICD11Code": "1D00.1"
+ },
+ {
+  "DiagnosisName": "Parasitic or protozoal encephalitis",
+  "ConceptId": "2002537",
+  "ICD11Code": "1D00.2"
+ },
+ {
+  "DiagnosisName": "Other specified infectious encephalitis, not elsewhere classified",
+  "ConceptId": "2002538",
+  "ICD11Code": "1D00.Y"
+ },
+ {
+  "DiagnosisName": "Infectious encephalitis, unspecified",
+  "ConceptId": "2002539",
+  "ICD11Code": "1D00.Z"
+ },
+ {
+  "DiagnosisName": "Infectious meningitis, not elsewhere classified",
+  "ConceptId": "2002540",
+  "ICD11Code": "1D01"
+ },
+ {
+  "DiagnosisName": "Bacterial meningitis",
+  "ConceptId": "121255",
+  "ICD11Code": "1D01.0"
+ },
+ {
+  "DiagnosisName": "Meningitis due to Haemophilus influenzae",
+  "ConceptId": "2002541",
+  "ICD11Code": "1D01.00"
+ },
+ {
+  "DiagnosisName": "Other specified bacterial meningitis",
+  "ConceptId": "2002542",
+  "ICD11Code": "1D01.0Y"
+ },
+ {
+  "DiagnosisName": "Bacterial meningitis, unspecified",
+  "ConceptId": "2002543",
+  "ICD11Code": "1D01.0Z"
+ },
+ {
+  "DiagnosisName": "Fungal meningitis",
+  "ConceptId": "139736",
+  "ICD11Code": "1D01.1"
+ },
+ {
+  "DiagnosisName": "Parasitic or protozoal meningitis",
+  "ConceptId": "2002544",
+  "ICD11Code": "1D01.2"
+ },
+ {
+  "DiagnosisName": "Benign recurrent meningitis",
+  "ConceptId": "121211",
+  "ICD11Code": "1D01.3"
+ },
+ {
+  "DiagnosisName": "Other specified infectious meningitis, not elsewhere classified",
+  "ConceptId": "2002545",
+  "ICD11Code": "1D01.Y"
+ },
+ {
+  "DiagnosisName": "Infectious meningitis, unspecified",
+  "ConceptId": "2002546",
+  "ICD11Code": "1D01.Z"
+ },
+ {
+  "DiagnosisName": "Infectious myelitis, not elsewhere classified",
+  "ConceptId": "2002547",
+  "ICD11Code": "1D02"
+ },
+ {
+  "DiagnosisName": "Bacterial myelitis",
+  "ConceptId": "2002548",
+  "ICD11Code": "1D02.0"
+ },
+ {
+  "DiagnosisName": "Viral myelitis",
+  "ConceptId": "2002549",
+  "ICD11Code": "1D02.1"
+ },
+ {
+  "DiagnosisName": "Fungal myelitis",
+  "ConceptId": "2002550",
+  "ICD11Code": "1D02.2"
+ },
+ {
+  "DiagnosisName": "Parasitic myelitis",
+  "ConceptId": "2002551",
+  "ICD11Code": "1D02.3"
+ },
+ {
+  "DiagnosisName": "Other specified infectious myelitis, not elsewhere classified",
+  "ConceptId": "2002552",
+  "ICD11Code": "1D02.Y"
+ },
+ {
+  "DiagnosisName": "Infectious myelitis, unspecified",
+  "ConceptId": "110605",
+  "ICD11Code": "1D02.Z"
+ },
+ {
+  "DiagnosisName": "Infectious abscess of the central nervous system",
+  "ConceptId": "155324",
+  "ICD11Code": "1D03"
+ },
+ {
+  "DiagnosisName": "Intraspinal intramedullary abscess",
+  "ConceptId": "2002462",
+  "ICD11Code": "1D03.0"
+ },
+ {
+  "DiagnosisName": "Intraspinal subdural abscess",
+  "ConceptId": "2002463",
+  "ICD11Code": "1D03.1"
+ },
+ {
+  "DiagnosisName": "Intraspinal extradural abscess",
+  "ConceptId": "2002464",
+  "ICD11Code": "1D03.2"
+ },
+ {
+  "DiagnosisName": "Intracranial abscess",
+  "ConceptId": "136662",
+  "ICD11Code": "1D03.3"
+ },
+ {
+  "DiagnosisName": "Deep cerebral hemispheric abscess",
+  "ConceptId": "2002465",
+  "ICD11Code": "1D03.30"
+ },
+ {
+  "DiagnosisName": "Abscess of the corpus callosum",
+  "ConceptId": "2002466",
+  "ICD11Code": "1D03.31"
+ },
+ {
+  "DiagnosisName": "Pituitary abscess",
+  "ConceptId": "150564",
+  "ICD11Code": "1D03.32"
+ },
+ {
+  "DiagnosisName": "Multiple or widespread intracranial abscess",
+  "ConceptId": "133725",
+  "ICD11Code": "1D03.33"
+ },
+ {
+  "DiagnosisName": "Other specified intracranial abscess",
+  "ConceptId": "2002467",
+  "ICD11Code": "1D03.3Y"
+ },
+ {
+  "DiagnosisName": "Intracranial abscess, unspecified",
+  "ConceptId": "2002468",
+  "ICD11Code": "1D03.3Z"
+ },
+ {
+  "DiagnosisName": "Intraspinal epidural abscess",
+  "ConceptId": "2002469",
+  "ICD11Code": "1D03.4"
+ },
+ {
+  "DiagnosisName": "Spinal cord abscess",
+  "ConceptId": "126198",
+  "ICD11Code": "1D03.5"
+ },
+ {
+  "DiagnosisName": "Other specified site of infectious abscess of the central nervous system",
+  "ConceptId": "2002470",
+  "ICD11Code": "1D03.Y"
+ },
+ {
+  "DiagnosisName": "Infectious abscess of the central nervous system, site unspecified",
+  "ConceptId": "2002471",
+  "ICD11Code": "1D03.Z"
+ },
+ {
+  "DiagnosisName": "Infectious granulomas of the central nervous system",
+  "ConceptId": "2002472",
+  "ICD11Code": "1D04"
+ },
+ {
+  "DiagnosisName": "Parasitic intracerebral granuloma",
+  "ConceptId": "2002473",
+  "ICD11Code": "1D04.0"
+ },
+ {
+  "DiagnosisName": "Intracranial granuloma",
+  "ConceptId": "2002474",
+  "ICD11Code": "1D04.1"
+ },
+ {
+  "DiagnosisName": "Fungal intracranial granuloma",
+  "ConceptId": "2002475",
+  "ICD11Code": "1D04.10"
+ },
+ {
+  "DiagnosisName": "Other specified intracranial granuloma",
+  "ConceptId": "2002476",
+  "ICD11Code": "1D04.1Y"
+ },
+ {
+  "DiagnosisName": "Intracranial granuloma, unspecified",
+  "ConceptId": "2002477",
+  "ICD11Code": "1D04.1Z"
+ },
+ {
+  "DiagnosisName": "Intraspinal intramedullary granuloma",
+  "ConceptId": "2002478",
+  "ICD11Code": "1D04.2"
+ },
+ {
+  "DiagnosisName": "Intraspinal subdural granuloma",
+  "ConceptId": "2002479",
+  "ICD11Code": "1D04.3"
+ },
+ {
+  "DiagnosisName": "Intraspinal extradural granuloma",
+  "ConceptId": "2002480",
+  "ICD11Code": "1D04.4"
+ },
+ {
+  "DiagnosisName": "Intraspinal epidural granuloma",
+  "ConceptId": "2002481",
+  "ICD11Code": "1D04.5"
+ },
+ {
+  "DiagnosisName": "Other specified site of infectious granulomas of the central nervous system",
+  "ConceptId": "2002482",
+  "ICD11Code": "1D04.Y"
+ },
+ {
+  "DiagnosisName": "Infectious granulomas of the central nervous system, site unspecified",
+  "ConceptId": "2002483",
+  "ICD11Code": "1D04.Z"
+ },
+ {
+  "DiagnosisName": "Infectious cysts of the central nervous system",
+  "ConceptId": "2002484",
+  "ICD11Code": "1D05"
+ },
+ {
+  "DiagnosisName": "Epidural infectious cyst",
+  "ConceptId": "2002485",
+  "ICD11Code": "1D05.0"
+ },
+ {
+  "DiagnosisName": "Subdural infectious cyst",
+  "ConceptId": "2002486",
+  "ICD11Code": "1D05.1"
+ },
+ {
+  "DiagnosisName": "Other specified infectious cysts of the central nervous system",
+  "ConceptId": "2002487",
+  "ICD11Code": "1D05.Y"
+ },
+ {
+  "DiagnosisName": "Infectious cysts of the central nervous system, unspecified",
+  "ConceptId": "2002488",
+  "ICD11Code": "1D05.Z"
+ },
+ {
+  "DiagnosisName": "Other specified non viral and unspecified infections of the central nervous system",
+  "ConceptId": "2002489",
+  "ICD11Code": "1D0Y"
+ },
+ {
+  "DiagnosisName": "Non viral and unspecified infections of the central nervous system, unspecified",
+  "ConceptId": "2002490",
+  "ICD11Code": "1D0Z"
+ },
+ {
+  "DiagnosisName": "Dengue without warning signs",
+  "ConceptId": "2002491",
+  "ICD11Code": "1D20"
+ },
+ {
+  "DiagnosisName": "Dengue with warning signs",
+  "ConceptId": "2002492",
+  "ICD11Code": "1D21"
+ },
+ {
+  "DiagnosisName": "Severe dengue",
+  "ConceptId": "142590",
+  "ICD11Code": "1D22"
+ },
+ {
+  "DiagnosisName": "Dengue fever, unspecified",
+  "ConceptId": "142592",
+  "ICD11Code": "1D2Z"
+ },
+ {
+  "DiagnosisName": "Chikungunya virus disease",
+  "ConceptId": "120742",
+  "ICD11Code": "1D40"
+ },
+ {
+  "DiagnosisName": "Colorado tick fever",
+  "ConceptId": "144579",
+  "ICD11Code": "1D41"
+ },
+ {
+  "DiagnosisName": "O'nyong nyong fever",
+  "ConceptId": "132381",
+  "ICD11Code": "1D42"
+ },
+ {
+  "DiagnosisName": "Oropouche virus disease",
+  "ConceptId": "131692",
+  "ICD11Code": "1D43"
+ },
+ {
+  "DiagnosisName": "Rift Valley fever",
+  "ConceptId": "113217",
+  "ICD11Code": "1D44"
+ },
+ {
+  "DiagnosisName": "Sandfly fever",
+  "ConceptId": "127189",
+  "ICD11Code": "1D45"
+ },
+ {
+  "DiagnosisName": "West Nile virus infection",
+  "ConceptId": "119353",
+  "ICD11Code": "1D46"
+ },
+ {
+  "DiagnosisName": "Yellow fever",
+  "ConceptId": "122759",
+  "ICD11Code": "1D47"
+ },
+ {
+  "DiagnosisName": "Zika virus disease",
+  "ConceptId": "122746",
+  "ICD11Code": "1D48"
+ },
+ {
+  "DiagnosisName": "Crimean Congo haemorrhagic fever",
+  "ConceptId": "143621",
+  "ICD11Code": "1D49"
+ },
+ {
+  "DiagnosisName": "Omsk haemorrhagic fever",
+  "ConceptId": "132400",
+  "ICD11Code": "1D4A"
+ },
+ {
+  "DiagnosisName": "Kyasanur Forest disease",
+  "ConceptId": "136218",
+  "ICD11Code": "1D4B"
+ },
+ {
+  "DiagnosisName": "Alkhurma haemorrhagic fever",
+  "ConceptId": "2002493",
+  "ICD11Code": "1D4C"
+ },
+ {
+  "DiagnosisName": "Ross River disease",
+  "ConceptId": "127328",
+  "ICD11Code": "1D4D"
+ },
+ {
+  "DiagnosisName": "Severe fever with thrombocytopenia syndrome",
+  "ConceptId": "2002494",
+  "ICD11Code": "1D4E"
+ },
+ {
+  "DiagnosisName": "Other specified arthropod borne viral fevers",
+  "ConceptId": "2002495",
+  "ICD11Code": "1D4Y"
+ },
+ {
+  "DiagnosisName": "Arthropod borne viral fever, virus unspecified",
+  "ConceptId": "2002496",
+  "ICD11Code": "1D4Z"
+ },
+ {
+  "DiagnosisName": "Filovirus disease",
+  "ConceptId": "2002497",
+  "ICD11Code": "1D60"
+ },
+ {
+  "DiagnosisName": "Ebola disease",
+  "ConceptId": "167576",
+  "ICD11Code": "1D60.0"
+ },
+ {
+  "DiagnosisName": "Bundibugyo virus disease",
+  "ConceptId": "2002498",
+  "ICD11Code": "1D60.00"
+ },
+ {
+  "DiagnosisName": "Ebola virus disease",
+  "ConceptId": "2002499",
+  "ICD11Code": "1D60.01"
+ },
+ {
+  "DiagnosisName": "Sudan virus disease",
+  "ConceptId": "2002500",
+  "ICD11Code": "1D60.02"
+ },
+ {
+  "DiagnosisName": "Atypical Ebola disease",
+  "ConceptId": "2002501",
+  "ICD11Code": "1D60.03"
+ },
+ {
+  "DiagnosisName": "Other specified Ebola disease",
+  "ConceptId": "2002502",
+  "ICD11Code": "1D60.0Y"
+ },
+ {
+  "DiagnosisName": "Ebola disease, virus unspecified",
+  "ConceptId": "2002503",
+  "ICD11Code": "1D60.0Z"
+ },
+ {
+  "DiagnosisName": "Marburg disease",
+  "ConceptId": "2002504",
+  "ICD11Code": "1D60.1"
+ },
+ {
+  "DiagnosisName": "Marburg virus disease",
+  "ConceptId": "134678",
+  "ICD11Code": "1D60.10"
+ },
+ {
+  "DiagnosisName": "Atypical Marburg disease",
+  "ConceptId": "2002505",
+  "ICD11Code": "1D60.11"
+ },
+ {
+  "DiagnosisName": "Other specified Marburg disease",
+  "ConceptId": "2002506",
+  "ICD11Code": "1D60.1Y"
+ },
+ {
+  "DiagnosisName": "Marburg disease, virus unspecified",
+  "ConceptId": "2002507",
+  "ICD11Code": "1D60.1Z"
+ },
+ {
+  "DiagnosisName": "Other specified filovirus disease",
+  "ConceptId": "2002508",
+  "ICD11Code": "1D60.Y"
+ },
+ {
+  "DiagnosisName": "Filovirus disease, virus unspecified",
+  "ConceptId": "2002509",
+  "ICD11Code": "1D60.Z"
+ },
+ {
+  "DiagnosisName": "Arenavirus disease",
+  "ConceptId": "142228",
+  "ICD11Code": "1D61"
+ },
+ {
+  "DiagnosisName": "Argentinian haemorrhagic fever",
+  "ConceptId": "148481",
+  "ICD11Code": "1D61.0"
+ },
+ {
+  "DiagnosisName": "Bolivian haemorrhagic fever",
+  "ConceptId": "147079",
+  "ICD11Code": "1D61.1"
+ },
+ {
+  "DiagnosisName": "Lassa fever",
+  "ConceptId": "136116",
+  "ICD11Code": "1D61.2"
+ },
+ {
+  "DiagnosisName": "Venezuelan haemorrhagic fever",
+  "ConceptId": "123272",
+  "ICD11Code": "1D61.3"
+ },
+ {
+  "DiagnosisName": "Other specified arenavirus disease",
+  "ConceptId": "2002510",
+  "ICD11Code": "1D61.Y"
+ },
+ {
+  "DiagnosisName": "Arenavirus disease, unspecified",
+  "ConceptId": "2002511",
+  "ICD11Code": "1D61.Z"
+ },
+ {
+  "DiagnosisName": "Hantavirus disease",
+  "ConceptId": "142210",
+  "ICD11Code": "1D62"
+ },
+ {
+  "DiagnosisName": "Haemorrhagic fever with renal syndrome",
+  "ConceptId": "2002512",
+  "ICD11Code": "1D62.0"
+ },
+ {
+  "DiagnosisName": "Hantavirus pulmonary syndrome",
+  "ConceptId": "110519",
+  "ICD11Code": "1D62.1"
+ },
+ {
+  "DiagnosisName": "Atypical hantavirus disease",
+  "ConceptId": "2002513",
+  "ICD11Code": "1D62.2"
+ },
+ {
+  "DiagnosisName": "Other specified hantavirus disease",
+  "ConceptId": "2002514",
+  "ICD11Code": "1D62.Y"
+ },
+ {
+  "DiagnosisName": "Henipavirus encephalitis",
+  "ConceptId": "2002515",
+  "ICD11Code": "1D63"
+ },
+ {
+  "DiagnosisName": "Middle East respiratory syndrome",
+  "ConceptId": "165934",
+  "ICD11Code": "1D64"
+ },
+ {
+  "DiagnosisName": "Severe acute respiratory syndrome",
+  "ConceptId": "165933",
+  "ICD11Code": "1D65"
+ },
+ {
+  "DiagnosisName": "Other specified zoonotic viral diseases",
+  "ConceptId": "2002516",
+  "ICD11Code": "1D6Y"
+ },
+ {
+  "DiagnosisName": "Zoonotic viral disease, virus unspecified",
+  "ConceptId": "2002517",
+  "ICD11Code": "1D6Z"
+ },
+ {
+  "DiagnosisName": "Mumps",
+  "ConceptId": "133671",
+  "ICD11Code": "1D80"
+ },
+ {
+  "DiagnosisName": "Mumps without complication",
+  "ConceptId": "152238",
+  "ICD11Code": "1D80.0"
+ },
+ {
+  "DiagnosisName": "Orchitis due to mumps virus",
+  "ConceptId": "133662",
+  "ICD11Code": "1D80.1"
+ },
+ {
+  "DiagnosisName": "Meningitis due to mumps virus",
+  "ConceptId": "133667",
+  "ICD11Code": "1D80.2"
+ },
+ {
+  "DiagnosisName": "Encephalitis due to mumps virus",
+  "ConceptId": "133669",
+  "ICD11Code": "1D80.3"
+ },
+ {
+  "DiagnosisName": "Pancreatitis due to mumps virus",
+  "ConceptId": "133661",
+  "ICD11Code": "1D80.4"
+ },
+ {
+  "DiagnosisName": "Other specified mumps",
+  "ConceptId": "2002518",
+  "ICD11Code": "1D80.Y"
+ },
+ {
+  "DiagnosisName": "Infectious mononucleosis",
+  "ConceptId": "137275",
+  "ICD11Code": "1D81"
+ },
+ {
+  "DiagnosisName": "Mononucleosis due to Epstein Barr virus",
+  "ConceptId": "2002554",
+  "ICD11Code": "1D81.0"
+ },
+ {
+  "DiagnosisName": "Mononucleosis due to cytomegalovirus",
+  "ConceptId": "2002555",
+  "ICD11Code": "1D81.1"
+ },
+ {
+  "DiagnosisName": "Other specified infectious mononucleosis",
+  "ConceptId": "2002556",
+  "ICD11Code": "1D81.Y"
+ },
+ {
+  "DiagnosisName": "Infectious mononucleosis, unspecified",
+  "ConceptId": "2002557",
+  "ICD11Code": "1D81.Z"
+ },
+ {
+  "DiagnosisName": "Cytomegaloviral disease",
+  "ConceptId": "2002558",
+  "ICD11Code": "1D82"
+ },
+ {
+  "DiagnosisName": "Cytomegaloviral hepatitis",
+  "ConceptId": "142964",
+  "ICD11Code": "1D82.0"
+ },
+ {
+  "DiagnosisName": "Cytomegaloviral pancreatitis",
+  "ConceptId": "155844",
+  "ICD11Code": "1D82.1"
+ },
+ {
+  "DiagnosisName": "Other specified cytomegaloviral disease",
+  "ConceptId": "2002559",
+  "ICD11Code": "1D82.Y"
+ },
+ {
+  "DiagnosisName": "Cytomegaloviral disease, unspecified",
+  "ConceptId": "2002560",
+  "ICD11Code": "1D82.Z"
+ },
+ {
+  "DiagnosisName": "Epidemic myalgia",
+  "ConceptId": "141159",
+  "ICD11Code": "1D83"
+ },
+ {
+  "DiagnosisName": "Viral conjunctivitis",
+  "ConceptId": "123123",
+  "ICD11Code": "1D84"
+ },
+ {
+  "DiagnosisName": "Conjunctivitis due to adenovirus",
+  "ConceptId": "143595",
+  "ICD11Code": "1D84.0"
+ },
+ {
+  "DiagnosisName": "Acute epidemic haemorrhagic conjunctivitis",
+  "ConceptId": "2002632",
+  "ICD11Code": "1D84.1"
+ },
+ {
+  "DiagnosisName": "Other specified viral conjunctivitis",
+  "ConceptId": "2002633",
+  "ICD11Code": "1D84.Y"
+ },
+ {
+  "DiagnosisName": "Viral conjunctivitis, unspecified",
+  "ConceptId": "2002635",
+  "ICD11Code": "1D84.Z"
+ },
+ {
+  "DiagnosisName": "Viral carditis",
+  "ConceptId": "152254",
+  "ICD11Code": "1D85"
+ },
+ {
+  "DiagnosisName": "Dilated cardiomyopathy secondary to viral myocarditis",
+  "ConceptId": "142284",
+  "ICD11Code": "1D85.0"
+ },
+ {
+  "DiagnosisName": "Acute viral carditis",
+  "ConceptId": "2002638",
+  "ICD11Code": "1D85.1"
+ },
+ {
+  "DiagnosisName": "Chronic viral carditis",
+  "ConceptId": "2002640",
+  "ICD11Code": "1D85.2"
+ },
+ {
+  "DiagnosisName": "Aseptic myocarditis of newborn",
+  "ConceptId": "148341",
+  "ICD11Code": "1D85.3"
+ },
+ {
+  "DiagnosisName": "Coxsackie carditis",
+  "ConceptId": "143247",
+  "ICD11Code": "1D85.4"
+ },
+ {
+  "DiagnosisName": "Other specified viral carditis",
+  "ConceptId": "2002643",
+  "ICD11Code": "1D85.Y"
+ },
+ {
+  "DiagnosisName": "Viral carditis, unspecified",
+  "ConceptId": "2002645",
+  "ICD11Code": "1D85.Z"
+ },
+ {
+  "DiagnosisName": "Viral haemorrhagic fever, not elsewhere classified",
+  "ConceptId": "2002647",
+  "ICD11Code": "1D86"
+ },
+ {
+  "DiagnosisName": "Adenovirus infection of unspecified site",
+  "ConceptId": "2002651",
+  "ICD11Code": "1D90"
+ },
+ {
+  "DiagnosisName": "Enterovirus infection of unspecified site",
+  "ConceptId": "2002653",
+  "ICD11Code": "1D91"
+ },
+ {
+  "DiagnosisName": "Coronavirus infection, unspecified site",
+  "ConceptId": "2002654",
+  "ICD11Code": "1D92"
+ },
+ {
+  "DiagnosisName": "Parvovirus infection of unspecified site",
+  "ConceptId": "2002655",
+  "ICD11Code": "1D93"
+ },
+ {
+  "DiagnosisName": "Other viral infections of unspecified site",
+  "ConceptId": "2002657",
+  "ICD11Code": "1D9Y"
+ },
+ {
+  "DiagnosisName": "Unspecified viral infection of unspecified site",
+  "ConceptId": "2002659",
+  "ICD11Code": "1D9Z"
+ },
+ {
+  "DiagnosisName": "Other specified viral diseases",
+  "ConceptId": "2002661",
+  "ICD11Code": "1E1Y"
+ },
+ {
+  "DiagnosisName": "Unspecified viral disease",
+  "ConceptId": "2002663",
+  "ICD11Code": "1E1Z"
+ },
+ {
+  "DiagnosisName": "Influenza due to identified seasonal influenza virus",
+  "ConceptId": "2002665",
+  "ICD11Code": "1e+30"
+ },
+ {
+  "DiagnosisName": "Influenza due to identified zoonotic or pandemic influenza virus",
+  "ConceptId": "2002666",
+  "ICD11Code": "1e+31"
+ },
+ {
+  "DiagnosisName": "Influenza, virus not identified",
+  "ConceptId": "2002667",
+  "ICD11Code": "1e+32"
+ },
+ {
+  "DiagnosisName": "Acute viral hepatitis",
+  "ConceptId": "149471",
+  "ICD11Code": "1e+50"
+ },
+ {
+  "DiagnosisName": "Acute hepatitis A",
+  "ConceptId": "2002670",
+  "ICD11Code": "1E50.0"
+ },
+ {
+  "DiagnosisName": "Acute hepatitis B",
+  "ConceptId": "2002673",
+  "ICD11Code": "1E50.1"
+ },
+ {
+  "DiagnosisName": "Acute hepatitis C",
+  "ConceptId": "149743",
+  "ICD11Code": "1E50.2"
+ },
+ {
+  "DiagnosisName": "Acute hepatitis D",
+  "ConceptId": "2002675",
+  "ICD11Code": "1E50.3"
+ },
+ {
+  "DiagnosisName": "Acute hepatitis E",
+  "ConceptId": "152665",
+  "ICD11Code": "1E50.4"
+ },
+ {
+  "DiagnosisName": "Other specified acute viral hepatitis",
+  "ConceptId": "2002839",
+  "ICD11Code": "1E50.Y"
+ },
+ {
+  "DiagnosisName": "Acute viral hepatitis, unspecified",
+  "ConceptId": "2002841",
+  "ICD11Code": "1E50.Z"
+ },
+ {
+  "DiagnosisName": "Chronic viral hepatitis",
+  "ConceptId": "145131",
+  "ICD11Code": "1e+51"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis B",
+  "ConceptId": "2002843",
+  "ICD11Code": "1E51.0"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis B with human immunodeficiency virus co infection",
+  "ConceptId": "2002844",
+  "ICD11Code": "1E51.00"
+ },
+ {
+  "DiagnosisName": "Other specified chronic hepatitis B",
+  "ConceptId": "2002846",
+  "ICD11Code": "1E51.0Y"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis B, unspecified",
+  "ConceptId": "2002850",
+  "ICD11Code": "1E51.0Z"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis C",
+  "ConceptId": "145347",
+  "ICD11Code": "1E51.1"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis D",
+  "ConceptId": "2002852",
+  "ICD11Code": "1E51.2"
+ },
+ {
+  "DiagnosisName": "Chronic hepatitis E",
+  "ConceptId": "2002867",
+  "ICD11Code": "1E51.3"
+ },
+ {
+  "DiagnosisName": "Other specified chronic viral hepatitis",
+  "ConceptId": "2002868",
+  "ICD11Code": "1E51.Y"
+ },
+ {
+  "DiagnosisName": "Chronic viral hepatitis, unspecified",
+  "ConceptId": "2002870",
+  "ICD11Code": "1E51.Z"
+ },
+ {
+  "DiagnosisName": "Viral hepatitis, unspecified",
+  "ConceptId": "2002871",
+  "ICD11Code": "1E5Z"
+ },
+ {
+  "DiagnosisName": "Smallpox",
+  "ConceptId": "126339",
+  "ICD11Code": "1e+70"
+ },
+ {
+  "DiagnosisName": "Mpox",
+  "ConceptId": "169240",
+  "ICD11Code": "1e+71"
+ },
+ {
+  "DiagnosisName": "Cowpox",
+  "ConceptId": "143254",
+  "ICD11Code": "1e+72"
+ },
+ {
+  "DiagnosisName": "Vaccinia",
+  "ConceptId": "123407",
+  "ICD11Code": "1e+73"
+ },
+ {
+  "DiagnosisName": "Buffalopox",
+  "ConceptId": "2002932",
+  "ICD11Code": "1e+74"
+ },
+ {
+  "DiagnosisName": "Orf",
+  "ConceptId": "131720",
+  "ICD11Code": "1e+75"
+ },
+ {
+  "DiagnosisName": "Molluscum contagiosum",
+  "ConceptId": "1212",
+  "ICD11Code": "1e+76"
+ },
+ {
+  "DiagnosisName": "Other specified infections due to poxvirus",
+  "ConceptId": "2002933",
+  "ICD11Code": "1E7Y"
+ },
+ {
+  "DiagnosisName": "Infections due to poxvirus, unspecified",
+  "ConceptId": "2002934",
+  "ICD11Code": "1E7Z"
+ },
+ {
+  "DiagnosisName": "Common warts",
+  "ConceptId": "2002935",
+  "ICD11Code": "1e+80"
+ },
+ {
+  "DiagnosisName": "Digital or periungual warts",
+  "ConceptId": "2002936",
+  "ICD11Code": "1E80.0"
+ },
+ {
+  "DiagnosisName": "Plantar warts",
+  "ConceptId": "2002937",
+  "ICD11Code": "1E80.1"
+ },
+ {
+  "DiagnosisName": "Other specified common warts",
+  "ConceptId": "2002938",
+  "ICD11Code": "1E80.Y"
+ },
+ {
+  "DiagnosisName": "Common warts, unspecified",
+  "ConceptId": "2002939",
+  "ICD11Code": "1E80.Z"
+ },
+ {
+  "DiagnosisName": "Plane warts",
+  "ConceptId": "2002940",
+  "ICD11Code": "1e+81"
+ },
+ {
+  "DiagnosisName": "Warts of lips or oral cavity",
+  "ConceptId": "2002941",
+  "ICD11Code": "1e+82"
+ },
+ {
+  "DiagnosisName": "Focal epithelial hyperplasia of oral mucous membranes",
+  "ConceptId": "2002942",
+  "ICD11Code": "1E82.0"
+ },
+ {
+  "DiagnosisName": "Wart virus proliferation in immune deficient states",
+  "ConceptId": "2002943",
+  "ICD11Code": "1e+83"
+ },
+ {
+  "DiagnosisName": "Viral warts, not elsewhere classified",
+  "ConceptId": "2002944",
+  "ICD11Code": "1E8Z"
+ },
+ {
+  "DiagnosisName": "Varicella",
+  "ConceptId": "892",
+  "ICD11Code": "1e+90"
+ },
+ {
+  "DiagnosisName": "Varicella without complication",
+  "ConceptId": "2002945",
+  "ICD11Code": "1E90.0"
+ },
+ {
+  "DiagnosisName": "Varicella meningitis",
+  "ConceptId": "2002946",
+  "ICD11Code": "1E90.1"
+ },
+ {
+  "DiagnosisName": "Varicella encephalitis",
+  "ConceptId": "2002947",
+  "ICD11Code": "1E90.2"
+ },
+ {
+  "DiagnosisName": "Varicella with other specified complication",
+  "ConceptId": "2002948",
+  "ICD11Code": "1E90.Y"
+ },
+ {
+  "DiagnosisName": "Varicella, unspecified",
+  "ConceptId": "2002949",
+  "ICD11Code": "1E90.Z"
+ },
+ {
+  "DiagnosisName": "Zoster",
+  "ConceptId": "2002950",
+  "ICD11Code": "1e+91"
+ },
+ {
+  "DiagnosisName": "Zoster without complications",
+  "ConceptId": "2002951",
+  "ICD11Code": "1E91.0"
+ },
+ {
+  "DiagnosisName": "Ophthalmic zoster",
+  "ConceptId": "2002952",
+  "ICD11Code": "1E91.1"
+ },
+ {
+  "DiagnosisName": "Disseminated zoster",
+  "ConceptId": "2002953",
+  "ICD11Code": "1E91.2"
+ },
+ {
+  "DiagnosisName": "Zoster with central nervous system involvement",
+  "ConceptId": "2002954",
+  "ICD11Code": "1E91.3"
+ },
+ {
+  "DiagnosisName": "Acute neuropathy of cranial nerve due to zoster",
+  "ConceptId": "2002955",
+  "ICD11Code": "1E91.4"
+ },
+ {
+  "DiagnosisName": "Acute trigeminal zoster neuropathy",
+  "ConceptId": "2002956",
+  "ICD11Code": "1E91.40"
+ },
+ {
+  "DiagnosisName": "Acute herpetic geniculate ganglionitis",
+  "ConceptId": "2002957",
+  "ICD11Code": "1E91.41"
+ },
+ {
+  "DiagnosisName": "Other specified acute neuropathy of cranial nerve due to zoster",
+  "ConceptId": "2002958",
+  "ICD11Code": "1E91.4Y"
+ },
+ {
+  "DiagnosisName": "Acute neuropathy of cranial nerve due to zoster, unspecified",
+  "ConceptId": "2002959",
+  "ICD11Code": "1E91.4Z"
+ },
+ {
+  "DiagnosisName": "Postherpetic polyneuropathy",
+  "ConceptId": "2002960",
+  "ICD11Code": "1E91.5"
+ },
+ {
+  "DiagnosisName": "Zoster with other specified complications",
+  "ConceptId": "2002961",
+  "ICD11Code": "1E91.Y"
+ },
+ {
+  "DiagnosisName": "Zoster, unspecified",
+  "ConceptId": "2002962",
+  "ICD11Code": "1E91.Z"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infections",
+  "ConceptId": "2002963",
+  "ICD11Code": "1F00"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of skin or mucous membrane",
+  "ConceptId": "2002964",
+  "ICD11Code": "1F00.0"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of skin",
+  "ConceptId": "2002561",
+  "ICD11Code": "1F00.00"
+ },
+ {
+  "DiagnosisName": "Herpes simplex labialis",
+  "ConceptId": "2002562",
+  "ICD11Code": "1F00.01"
+ },
+ {
+  "DiagnosisName": "Herpes simplex gingivostomatitis",
+  "ConceptId": "2002563",
+  "ICD11Code": "1F00.02"
+ },
+ {
+  "DiagnosisName": "Disseminated cutaneous herpes simplex infection complicating other skin diseases",
+  "ConceptId": "2002564",
+  "ICD11Code": "1F00.03"
+ },
+ {
+  "DiagnosisName": "Other specified herpes simplex infection of skin or mucous membrane",
+  "ConceptId": "2002566",
+  "ICD11Code": "1F00.0Y"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of the eye",
+  "ConceptId": "2002565",
+  "ICD11Code": "1F00.1"
+ },
+ {
+  "DiagnosisName": "Herpes simplex keratitis",
+  "ConceptId": "138700",
+  "ICD11Code": "1F00.10"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of eyelid",
+  "ConceptId": "138703",
+  "ICD11Code": "1F00.11"
+ },
+ {
+  "DiagnosisName": "Other specified herpes simplex infection of the eye",
+  "ConceptId": "2002567",
+  "ICD11Code": "1F00.1Y"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of the eye, unspecified",
+  "ConceptId": "2002568",
+  "ICD11Code": "1F00.1Z"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infection of central nervous system",
+  "ConceptId": "2002569",
+  "ICD11Code": "1F00.2"
+ },
+ {
+  "DiagnosisName": "Herpes simplex meningitis",
+  "ConceptId": "138698",
+  "ICD11Code": "1F00.20"
+ },
+ {
+  "DiagnosisName": "Encephalitis due to herpes simplex virus",
+  "ConceptId": "156129",
+  "ICD11Code": "1F00.21"
+ },
+ {
+  "DiagnosisName": "Other specified herpes simplex infection of central nervous system",
+  "ConceptId": "2002570",
+  "ICD11Code": "1F00.2Y"
+ },
+ {
+  "DiagnosisName": "Disseminated herpes simplex infection",
+  "ConceptId": "156024",
+  "ICD11Code": "1F00.3"
+ },
+ {
+  "DiagnosisName": "Other specified herpes simplex infections",
+  "ConceptId": "2002571",
+  "ICD11Code": "1F00.Y"
+ },
+ {
+  "DiagnosisName": "Herpes simplex infections, unspecified",
+  "ConceptId": "129118",
+  "ICD11Code": "1F00.Z"
+ },
+ {
+  "DiagnosisName": "Roseola infantum",
+  "ConceptId": "153095",
+  "ICD11Code": "1F01"
+ },
+ {
+  "DiagnosisName": "Rubella",
+  "ConceptId": "113205",
+  "ICD11Code": "1F02"
+ },
+ {
+  "DiagnosisName": "Rubella with neurological complications",
+  "ConceptId": "127308",
+  "ICD11Code": "1F02.0"
+ },
+ {
+  "DiagnosisName": "Rubella arthritis",
+  "ConceptId": "127315",
+  "ICD11Code": "1F02.1"
+ },
+ {
+  "DiagnosisName": "Rubella without complication",
+  "ConceptId": "113199",
+  "ICD11Code": "1F02.2"
+ },
+ {
+  "DiagnosisName": "Rubella with other specified complication",
+  "ConceptId": "113198",
+  "ICD11Code": "1F02.Y"
+ },
+ {
+  "DiagnosisName": "Measles",
+  "ConceptId": "134561",
+  "ICD11Code": "1F03"
+ },
+ {
+  "DiagnosisName": "Measles without complication",
+  "ConceptId": "152209",
+  "ICD11Code": "1F03.0"
+ },
+ {
+  "DiagnosisName": "Measles complicated by encephalitis",
+  "ConceptId": "129469",
+  "ICD11Code": "1F03.1"
+ },
+ {
+  "DiagnosisName": "Measles complicated by meningitis",
+  "ConceptId": "152206",
+  "ICD11Code": "1F03.2"
+ },
+ {
+  "DiagnosisName": "Measles with other complications",
+  "ConceptId": "115885",
+  "ICD11Code": "1F03.Y"
+ },
+ {
+  "DiagnosisName": "Erythema infectiosum",
+  "ConceptId": "141056",
+  "ICD11Code": "1F04"
+ },
+ {
+  "DiagnosisName": "Picornavirus infections presenting in the skin or mucous membranes",
+  "ConceptId": "2002572",
+  "ICD11Code": "1F05"
+ },
+ {
+  "DiagnosisName": "Enteroviral vesicular stomatitis",
+  "ConceptId": "141204",
+  "ICD11Code": "1F05.0"
+ },
+ {
+  "DiagnosisName": "Enteroviral vesicular pharyngitis",
+  "ConceptId": "118599",
+  "ICD11Code": "1F05.1"
+ },
+ {
+  "DiagnosisName": "Enteroviral exanthematous fever",
+  "ConceptId": "141205",
+  "ICD11Code": "1F05.2"
+ },
+ {
+  "DiagnosisName": "Foot and mouth disease",
+  "ConceptId": "139982",
+  "ICD11Code": "1F05.3"
+ },
+ {
+  "DiagnosisName": "Other specified picornavirus infections presenting in the skin or mucous membranes",
+  "ConceptId": "2002573",
+  "ICD11Code": "1F05.Y"
+ },
+ {
+  "DiagnosisName": "Other specified viral infections characterised by skin or mucous membrane lesions",
+  "ConceptId": "2002574",
+  "ICD11Code": "1F0Y"
+ },
+ {
+  "DiagnosisName": "Viral infections characterised by skin or mucous membrane lesions, unspecified",
+  "ConceptId": "2002575",
+  "ICD11Code": "1F0Z"
+ },
+ {
+  "DiagnosisName": "Aspergillosis",
+  "ConceptId": "148324",
+  "ICD11Code": "1F20"
+ },
+ {
+  "DiagnosisName": "Invasive aspergillosis",
+  "ConceptId": "136568",
+  "ICD11Code": "1F20.0"
+ },
+ {
+  "DiagnosisName": "Invasive aspergillosis of the digestive tract",
+  "ConceptId": "2002576",
+  "ICD11Code": "1F20.00"
+ },
+ {
+  "DiagnosisName": "Invasive cerebral aspergillosis",
+  "ConceptId": "2002577",
+  "ICD11Code": "1F20.01"
+ },
+ {
+  "DiagnosisName": "Disseminated aspergillosis",
+  "ConceptId": "141912",
+  "ICD11Code": "1F20.02"
+ },
+ {
+  "DiagnosisName": "Invasive aspergillosis of other specified site",
+  "ConceptId": "2002578",
+  "ICD11Code": "1F20.0Y"
+ },
+ {
+  "DiagnosisName": "Invasive aspergillosis, unspecified",
+  "ConceptId": "2002579",
+  "ICD11Code": "1F20.0Z"
+ },
+ {
+  "DiagnosisName": "Non invasive aspergillosis",
+  "ConceptId": "2002580",
+  "ICD11Code": "1F20.1"
+ },
+ {
+  "DiagnosisName": "Aspergillus otomycosis",
+  "ConceptId": "2002581",
+  "ICD11Code": "1F20.10"
+ },
+ {
+  "DiagnosisName": "Chronic aspergillosis of the paranasal sinuses",
+  "ConceptId": "2002582",
+  "ICD11Code": "1F20.11"
+ },
+ {
+  "DiagnosisName": "Chronic pulmonary aspergillosis",
+  "ConceptId": "128146",
+  "ICD11Code": "1F20.12"
+ },
+ {
+  "DiagnosisName": "Tonsillar aspergillosis",
+  "ConceptId": "159095",
+  "ICD11Code": "1F20.13"
+ },
+ {
+  "DiagnosisName": "Aspergillus bronchitis",
+  "ConceptId": "2002583",
+  "ICD11Code": "1F20.14"
+ },
+ {
+  "DiagnosisName": "Obstructing aspergillus tracheobronchitis",
+  "ConceptId": "2002584",
+  "ICD11Code": "1F20.15"
+ },
+ {
+  "DiagnosisName": "Other specified non invasive aspergillosis",
+  "ConceptId": "2002585",
+  "ICD11Code": "1F20.1Y"
+ },
+ {
+  "DiagnosisName": "Non invasive aspergillosis, unspecified",
+  "ConceptId": "2002586",
+  "ICD11Code": "1F20.1Z"
+ },
+ {
+  "DiagnosisName": "Aspergillosis, unspecified",
+  "ConceptId": "2002587",
+  "ICD11Code": "1F20.Z"
+ },
+ {
+  "DiagnosisName": "Basidiobolomycosis",
+  "ConceptId": "2002588",
+  "ICD11Code": "1F21"
+ },
+ {
+  "DiagnosisName": "Blastomycosis",
+  "ConceptId": "147243",
+  "ICD11Code": "1F22"
+ },
+ {
+  "DiagnosisName": "Candidosis",
+  "ConceptId": "120939",
+  "ICD11Code": "1F23"
+ },
+ {
+  "DiagnosisName": "Candidosis of lips or oral mucous membranes",
+  "ConceptId": "146517",
+  "ICD11Code": "1F23.0"
+ },
+ {
+  "DiagnosisName": "Candidosis of skin or mucous membranes",
+  "ConceptId": "146515",
+  "ICD11Code": "1F23.1"
+ },
+ {
+  "DiagnosisName": "Vulvovaginal candidosis",
+  "ConceptId": "298",
+  "ICD11Code": "1F23.10"
+ },
+ {
+  "DiagnosisName": "Candida balanoposthitis",
+  "ConceptId": "2002589",
+  "ICD11Code": "1F23.11"
+ },
+ {
+  "DiagnosisName": "Flexural or intertriginous candidosis",
+  "ConceptId": "2002590",
+  "ICD11Code": "1F23.12"
+ },
+ {
+  "DiagnosisName": "Candidosis of nail or paronychium",
+  "ConceptId": "146516",
+  "ICD11Code": "1F23.13"
+ },
+ {
+  "DiagnosisName": "Chronic mucocutaneous candidosis",
+  "ConceptId": "133822",
+  "ICD11Code": "1F23.14"
+ },
+ {
+  "DiagnosisName": "Disseminated cutaneous candidosis",
+  "ConceptId": "2002591",
+  "ICD11Code": "1F23.15"
+ },
+ {
+  "DiagnosisName": "Candida otomycosis",
+  "ConceptId": "2002592",
+  "ICD11Code": "1F23.16"
+ },
+ {
+  "DiagnosisName": "Candidosis of skin or mucous membrane of other specified site",
+  "ConceptId": "2002593",
+  "ICD11Code": "1F23.1Y"
+ },
+ {
+  "DiagnosisName": "Candidosis of skin or mucous membranes, unspecified",
+  "ConceptId": "2002594",
+  "ICD11Code": "1F23.1Z"
+ },
+ {
+  "DiagnosisName": "Candidosis of gastrointestinal tract",
+  "ConceptId": "139587",
+  "ICD11Code": "1F23.2"
+ },
+ {
+  "DiagnosisName": "Systemic or invasive candidosis",
+  "ConceptId": "2002595",
+  "ICD11Code": "1F23.3"
+ },
+ {
+  "DiagnosisName": "Candida meningitis",
+  "ConceptId": "146525",
+  "ICD11Code": "1F23.30"
+ },
+ {
+  "DiagnosisName": "Pulmonary candidosis",
+  "ConceptId": "146518",
+  "ICD11Code": "1F23.31"
+ },
+ {
+  "DiagnosisName": "Other specified systemic or invasive candidosis",
+  "ConceptId": "2002596",
+  "ICD11Code": "1F23.3Y"
+ },
+ {
+  "DiagnosisName": "Systemic or invasive candidosis, unspecified",
+  "ConceptId": "2002597",
+  "ICD11Code": "1F23.3Z"
+ },
+ {
+  "DiagnosisName": "Other specified candidosis",
+  "ConceptId": "2002598",
+  "ICD11Code": "1F23.Y"
+ },
+ {
+  "DiagnosisName": "Candidosis, unspecified",
+  "ConceptId": "2002599",
+  "ICD11Code": "1F23.Z"
+ },
+ {
+  "DiagnosisName": "Chromoblastomycosis",
+  "ConceptId": "145524",
+  "ICD11Code": "1F24"
+ },
+ {
+  "DiagnosisName": "Coccidioidomycosis",
+  "ConceptId": "120330",
+  "ICD11Code": "1F25"
+ },
+ {
+  "DiagnosisName": "Pulmonary coccidioidomycosis",
+  "ConceptId": "121857",
+  "ICD11Code": "1F25.0"
+ },
+ {
+  "DiagnosisName": "Acute pulmonary coccidioidomycosis",
+  "ConceptId": "121858",
+  "ICD11Code": "1F25.00"
+ },
+ {
+  "DiagnosisName": "Chronic pulmonary coccidioidomycosis",
+  "ConceptId": "145203",
+  "ICD11Code": "1F25.01"
+ },
+ {
+  "DiagnosisName": "Extrathoracic coccidioidomycosis",
+  "ConceptId": "2002600",
+  "ICD11Code": "1F25.1"
+ },
+ {
+  "DiagnosisName": "Disseminated coccidioidomycosis",
+  "ConceptId": "141906",
+  "ICD11Code": "1F25.10"
+ },
+ {
+  "DiagnosisName": "Primary cutaneous coccidioidomycosis",
+  "ConceptId": "129148",
+  "ICD11Code": "1F25.11"
+ },
+ {
+  "DiagnosisName": "Coccidioides meningitis",
+  "ConceptId": "144646",
+  "ICD11Code": "1F25.12"
+ },
+ {
+  "DiagnosisName": "Other specified extrathoracic coccidioidomycosis",
+  "ConceptId": "2002601",
+  "ICD11Code": "1F25.1Y"
+ },
+ {
+  "DiagnosisName": "Extrathoracic coccidioidomycosis, unspecified",
+  "ConceptId": "2002602",
+  "ICD11Code": "1F25.1Z"
+ },
+ {
+  "DiagnosisName": "Coccidioidomycosis, unspecified",
+  "ConceptId": "2002603",
+  "ICD11Code": "1F25.Z"
+ },
+ {
+  "DiagnosisName": "Conidiobolomycosis",
+  "ConceptId": "2002604",
+  "ICD11Code": "1F26"
+ },
+ {
+  "DiagnosisName": "Cryptococcosis",
+  "ConceptId": "1219",
+  "ICD11Code": "1F27"
+ },
+ {
+  "DiagnosisName": "Pulmonary cryptococcosis",
+  "ConceptId": "128139",
+  "ICD11Code": "1F27.0"
+ },
+ {
+  "DiagnosisName": "Cerebral cryptococcosis",
+  "ConceptId": "145872",
+  "ICD11Code": "1F27.1"
+ },
+ {
+  "DiagnosisName": "Meningitis due to Cryptococcus neoformans",
+  "ConceptId": "1294",
+  "ICD11Code": "1F27.10"
+ },
+ {
+  "DiagnosisName": "Disseminated cryptococcosis",
+  "ConceptId": "141905",
+  "ICD11Code": "1F27.2"
+ },
+ {
+  "DiagnosisName": "Other specified cryptococcosis",
+  "ConceptId": "2002605",
+  "ICD11Code": "1F27.Y"
+ },
+ {
+  "DiagnosisName": "Cryptococcosis, unspecified",
+  "ConceptId": "2002606",
+  "ICD11Code": "1F27.Z"
+ },
+ {
+  "DiagnosisName": "Dermatophytosis",
+  "ConceptId": "119508",
+  "ICD11Code": "1F28"
+ },
+ {
+  "DiagnosisName": "Dermatophytosis of scalp",
+  "ConceptId": "124654",
+  "ICD11Code": "1F28.0"
+ },
+ {
+  "DiagnosisName": "Dermatophytosis of nail",
+  "ConceptId": "2002607",
+  "ICD11Code": "1F28.1"
+ },
+ {
+  "DiagnosisName": "Dermatophytosis of foot",
+  "ConceptId": "2002608",
+  "ICD11Code": "1F28.2"
+ },
+ {
+  "DiagnosisName": "Genitocrural dermatophytosis",
+  "ConceptId": "2002609",
+  "ICD11Code": "1F28.3"
+ },
+ {
+  "DiagnosisName": "Kerion",
+  "ConceptId": "124641",
+  "ICD11Code": "1F28.4"
+ },
+ {
+  "DiagnosisName": "Disseminated dermatophytosis",
+  "ConceptId": "141904",
+  "ICD11Code": "1F28.5"
+ },
+ {
+  "DiagnosisName": "Other specified dermatophytosis",
+  "ConceptId": "2002610",
+  "ICD11Code": "1F28.Y"
+ },
+ {
+  "DiagnosisName": "Dermatophytosis, unspecified",
+  "ConceptId": "2002611",
+  "ICD11Code": "1F28.Z"
+ },
+ {
+  "DiagnosisName": "Eumycetoma",
+  "ConceptId": "2002612",
+  "ICD11Code": "1F29"
+ },
+ {
+  "DiagnosisName": "Histoplasmosis",
+  "ConceptId": "117514",
+  "ICD11Code": "1F2A"
+ },
+ {
+  "DiagnosisName": "Pulmonary histoplasmosis capsulati",
+  "ConceptId": "128158",
+  "ICD11Code": "1F2A.0"
+ },
+ {
+  "DiagnosisName": "Histoplasmosis due to Histoplasma duboisii",
+  "ConceptId": "2002613",
+  "ICD11Code": "1F2A.1"
+ },
+ {
+  "DiagnosisName": "Other specified histoplasmosis",
+  "ConceptId": "2002614",
+  "ICD11Code": "1F2A.Y"
+ },
+ {
+  "DiagnosisName": "Histoplasmosis, unspecified",
+  "ConceptId": "2002615",
+  "ICD11Code": "1F2A.Z"
+ },
+ {
+  "DiagnosisName": "Lobomycosis",
+  "ConceptId": "135697",
+  "ICD11Code": "1F2B"
+ },
+ {
+  "DiagnosisName": "Mucormycosis",
+  "ConceptId": "133802",
+  "ICD11Code": "1F2C"
+ },
+ {
+  "DiagnosisName": "Non dermatophyte superficial dermatomycoses",
+  "ConceptId": "2002616",
+  "ICD11Code": "1F2D"
+ },
+ {
+  "DiagnosisName": "Pityriasis versicolor",
+  "ConceptId": "992",
+  "ICD11Code": "1F2D.0"
+ },
+ {
+  "DiagnosisName": "Malassezia folliculitis",
+  "ConceptId": "2002617",
+  "ICD11Code": "1F2D.1"
+ },
+ {
+  "DiagnosisName": "White piedra",
+  "ConceptId": "122857",
+  "ICD11Code": "1F2D.2"
+ },
+ {
+  "DiagnosisName": "Black piedra",
+  "ConceptId": "147261",
+  "ICD11Code": "1F2D.3"
+ },
+ {
+  "DiagnosisName": "Tinea nigra",
+  "ConceptId": "124639",
+  "ICD11Code": "1F2D.4"
+ },
+ {
+  "DiagnosisName": "Onychomycosis due to non dermatophyte mould",
+  "ConceptId": "132386",
+  "ICD11Code": "1F2D.5"
+ },
+ {
+  "DiagnosisName": "Other specified non dermatophyte superficial dermatomycoses",
+  "ConceptId": "2002618",
+  "ICD11Code": "1F2D.Y"
+ },
+ {
+  "DiagnosisName": "Non dermatophyte superficial dermatomycoses, unspecified",
+  "ConceptId": "2002619",
+  "ICD11Code": "1F2D.Z"
+ },
+ {
+  "DiagnosisName": "Paracoccidioidomycosis",
+  "ConceptId": "130903",
+  "ICD11Code": "1F2E"
+ },
+ {
+  "DiagnosisName": "Pulmonary paracoccidioidomycosis",
+  "ConceptId": "128113",
+  "ICD11Code": "1F2E.0"
+ },
+ {
+  "DiagnosisName": "Disseminated paracoccidioidomycosis",
+  "ConceptId": "141895",
+  "ICD11Code": "1F2E.1"
+ },
+ {
+  "DiagnosisName": "Other specified paracoccidioidomycosis",
+  "ConceptId": "2002620",
+  "ICD11Code": "1F2E.Y"
+ },
+ {
+  "DiagnosisName": "Paracoccidioidomycosis, unspecified",
+  "ConceptId": "2002621",
+  "ICD11Code": "1F2E.Z"
+ },
+ {
+  "DiagnosisName": "Phaeohyphomycosis",
+  "ConceptId": "130315",
+  "ICD11Code": "1F2F"
+ },
+ {
+  "DiagnosisName": "Pneumocystosis",
+  "ConceptId": "130022",
+  "ICD11Code": "1F2G"
+ },
+ {
+  "DiagnosisName": "Pulmonary pneumocystosis",
+  "ConceptId": "130021",
+  "ICD11Code": "1F2G.0"
+ },
+ {
+  "DiagnosisName": "Pneumocystosis, unspecified",
+  "ConceptId": "2002622",
+  "ICD11Code": "1F2G.Z"
+ },
+ {
+  "DiagnosisName": "Scedosporiosis",
+  "ConceptId": "2002623",
+  "ICD11Code": "1F2H"
+ },
+ {
+  "DiagnosisName": "Sporotrichosis",
+  "ConceptId": "126061",
+  "ICD11Code": "1F2J"
+ },
+ {
+  "DiagnosisName": "Lymphocutaneous sporotrichosis",
+  "ConceptId": "135476",
+  "ICD11Code": "1F2J.0"
+ },
+ {
+  "DiagnosisName": "Fixed cutaneous sporotrichosis",
+  "ConceptId": "143065",
+  "ICD11Code": "1F2J.1"
+ },
+ {
+  "DiagnosisName": "Pulmonary sporotrichosis",
+  "ConceptId": "128109",
+  "ICD11Code": "1F2J.2"
+ },
+ {
+  "DiagnosisName": "Disseminated sporotrichosis",
+  "ConceptId": "141892",
+  "ICD11Code": "1F2J.3"
+ },
+ {
+  "DiagnosisName": "Other specified sporotrichosis",
+  "ConceptId": "2002624",
+  "ICD11Code": "1F2J.Y"
+ },
+ {
+  "DiagnosisName": "Sporotrichosis, unspecified",
+  "ConceptId": "2002625",
+  "ICD11Code": "1F2J.Z"
+ },
+ {
+  "DiagnosisName": "Talaromycosis",
+  "ConceptId": "2002626",
+  "ICD11Code": "1F2K"
+ },
+ {
+  "DiagnosisName": "Emmonsiosis",
+  "ConceptId": "2002627",
+  "ICD11Code": "1F2L"
+ },
+ {
+  "DiagnosisName": "Disseminated adiaspiromycosis",
+  "ConceptId": "149387",
+  "ICD11Code": "1F2L.0"
+ },
+ {
+  "DiagnosisName": "Pulmonary adiaspiromycosis",
+  "ConceptId": "128159",
+  "ICD11Code": "1F2L.1"
+ },
+ {
+  "DiagnosisName": "Other specified emmonsiosis",
+  "ConceptId": "2002628",
+  "ICD11Code": "1F2L.Y"
+ },
+ {
+  "DiagnosisName": "Emmonsiosis, unspecified",
+  "ConceptId": "2002629",
+  "ICD11Code": "1F2L.Z"
+ },
+ {
+  "DiagnosisName": "Other specified mycoses",
+  "ConceptId": "2002630",
+  "ICD11Code": "1F2Y"
+ },
+ {
+  "DiagnosisName": "Mycoses, unspecified",
+  "ConceptId": "131357",
+  "ICD11Code": "1F2Z"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium falciparum",
+  "ConceptId": "2002631",
+  "ICD11Code": "1F40"
+ },
+ {
+  "DiagnosisName": "Plasmodium falciparum malaria with cerebral complications",
+  "ConceptId": "152295",
+  "ICD11Code": "1F40.0"
+ },
+ {
+  "DiagnosisName": "Other severe and complicated Plasmodium falciparum malaria",
+  "ConceptId": "2002634",
+  "ICD11Code": "1F40.Y"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium falciparum, unspecified",
+  "ConceptId": "2002636",
+  "ICD11Code": "1F40.Z"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium vivax",
+  "ConceptId": "2002637",
+  "ICD11Code": "1F41"
+ },
+ {
+  "DiagnosisName": "Plasmodium vivax malaria with rupture of spleen",
+  "ConceptId": "158379",
+  "ICD11Code": "1F41.0"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium vivax with other complications",
+  "ConceptId": "2002639",
+  "ICD11Code": "1F41.Y"
+ },
+ {
+  "DiagnosisName": "Plasmodium vivax malaria without complication",
+  "ConceptId": "2002641",
+  "ICD11Code": "1F41.Z"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium malariae",
+  "ConceptId": "2002642",
+  "ICD11Code": "1F42"
+ },
+ {
+  "DiagnosisName": "Plasmodium malariae malaria with nephropathy",
+  "ConceptId": "152296",
+  "ICD11Code": "1F42.0"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium malariae with other complications",
+  "ConceptId": "2002644",
+  "ICD11Code": "1F42.Y"
+ },
+ {
+  "DiagnosisName": "Plasmodium malariae malaria without complication",
+  "ConceptId": "2002646",
+  "ICD11Code": "1F42.Z"
+ },
+ {
+  "DiagnosisName": "Malaria due to Plasmodium ovale",
+  "ConceptId": "2002649",
+  "ICD11Code": "1F43"
+ },
+ {
+  "DiagnosisName": "Other parasitologically confirmed malaria",
+  "ConceptId": "2002650",
+  "ICD11Code": "1F44"
+ },
+ {
+  "DiagnosisName": "Malaria without parasitological confirmation",
+  "ConceptId": "2002652",
+  "ICD11Code": "1F45"
+ },
+ {
+  "DiagnosisName": "Malaria, unspecified",
+  "ConceptId": "116128",
+  "ICD11Code": "1F4Z"
+ },
+ {
+  "DiagnosisName": "Acanthamoebiasis",
+  "ConceptId": "2002656",
+  "ICD11Code": "1F50"
+ },
+ {
+  "DiagnosisName": "African trypanosomiasis",
+  "ConceptId": "149241",
+  "ICD11Code": "1F51"
+ },
+ {
+  "DiagnosisName": "Gambiense trypanosomiasis",
+  "ConceptId": "2002658",
+  "ICD11Code": "1F51.0"
+ },
+ {
+  "DiagnosisName": "Meningitis in Gambiense trypanosomiasis",
+  "ConceptId": "2002660",
+  "ICD11Code": "1F51.00"
+ },
+ {
+  "DiagnosisName": "Other specified gambiense trypanosomiasis",
+  "ConceptId": "2002662",
+  "ICD11Code": "1F51.0Y"
+ },
+ {
+  "DiagnosisName": "Gambiense trypanosomiasis, unspecified",
+  "ConceptId": "2002664",
+  "ICD11Code": "1F51.0Z"
+ },
+ {
+  "DiagnosisName": "Rhodesiense trypanosomiasis",
+  "ConceptId": "137342",
+  "ICD11Code": "1F51.1"
+ },
+ {
+  "DiagnosisName": "Meningitis in Rhodesiense trypanosomiasis",
+  "ConceptId": "124076",
+  "ICD11Code": "1F51.10"
+ },
+ {
+  "DiagnosisName": "Other specified rhodesiense trypanosomiasis",
+  "ConceptId": "2002668",
+  "ICD11Code": "1F51.1Y"
+ },
+ {
+  "DiagnosisName": "Rhodesiense trypanosomiasis, unspecified",
+  "ConceptId": "2002669",
+  "ICD11Code": "1F51.1Z"
+ },
+ {
+  "DiagnosisName": "Other specified african trypanosomiasis",
+  "ConceptId": "2002671",
+  "ICD11Code": "1F51.Y"
+ },
+ {
+  "DiagnosisName": "African trypanosomiasis, unspecified",
+  "ConceptId": "2002672",
+  "ICD11Code": "1F51.Z"
+ },
+ {
+  "DiagnosisName": "Babesiosis",
+  "ConceptId": "148042",
+  "ICD11Code": "1F52"
+ },
+ {
+  "DiagnosisName": "Chagas disease",
+  "ConceptId": "2002674",
+  "ICD11Code": "1F53"
+ },
+ {
+  "DiagnosisName": "Acute Chagas disease without heart involvement",
+  "ConceptId": "154947",
+  "ICD11Code": "1F53.1"
+ },
+ {
+  "DiagnosisName": "Chronic Chagas disease with heart involvement",
+  "ConceptId": "145772",
+  "ICD11Code": "1F53.2"
+ },
+ {
+  "DiagnosisName": "Chagas disease with digestive system involvement",
+  "ConceptId": "152210",
+  "ICD11Code": "1F53.3"
+ },
+ {
+  "DiagnosisName": "Meningitis in Chagas disease",
+  "ConceptId": "2002676",
+  "ICD11Code": "1F53.4"
+ },
+ {
+  "DiagnosisName": "Other specified Chagas disease",
+  "ConceptId": "145771",
+  "ICD11Code": "1F53.Y"
+ },
+ {
+  "DiagnosisName": "Chagas disease, unspecified",
+  "ConceptId": "152211",
+  "ICD11Code": "1F53.Z"
+ },
+ {
+  "DiagnosisName": "Leishmaniasis",
+  "ConceptId": "116350",
+  "ICD11Code": "1F54"
+ },
+ {
+  "DiagnosisName": "Visceral leishmaniasis",
+  "ConceptId": "123084",
+  "ICD11Code": "1F54.0"
+ },
+ {
+  "DiagnosisName": "Cutaneous leishmaniasis",
+  "ConceptId": "143074",
+  "ICD11Code": "1F54.1"
+ },
+ {
+  "DiagnosisName": "Mucocutaneous leishmaniasis",
+  "ConceptId": "148988",
+  "ICD11Code": "1F54.2"
+ },
+ {
+  "DiagnosisName": "Leishmaniasis, unspecified",
+  "ConceptId": "2002677",
+  "ICD11Code": "1F54.Z"
+ },
+ {
+  "DiagnosisName": "Naegleriasis",
+  "ConceptId": "2002678",
+  "ICD11Code": "1F55"
+ },
+ {
+  "DiagnosisName": "Rhinosporidiosis",
+  "ConceptId": "127401",
+  "ICD11Code": "1F56"
+ },
+ {
+  "DiagnosisName": "Toxoplasmosis",
+  "ConceptId": "5355",
+  "ICD11Code": "1F57"
+ },
+ {
+  "DiagnosisName": "Hepatitis due to Toxoplasma gondii",
+  "ConceptId": "124412",
+  "ICD11Code": "1F57.0"
+ },
+ {
+  "DiagnosisName": "Meningoencephalitis due to Toxoplasma gondii",
+  "ConceptId": "134358",
+  "ICD11Code": "1F57.1"
+ },
+ {
+  "DiagnosisName": "Pulmonary toxoplasmosis due to Toxoplasma gondii",
+  "ConceptId": "130001",
+  "ICD11Code": "1F57.2"
+ },
+ {
+  "DiagnosisName": "Eye disease due to Toxoplasma gondii",
+  "ConceptId": "143596",
+  "ICD11Code": "1F57.3"
+ },
+ {
+  "DiagnosisName": "Other specified toxoplasmosis",
+  "ConceptId": "2002679",
+  "ICD11Code": "1F57.Y"
+ },
+ {
+  "DiagnosisName": "Toxoplasmosis, unspecified",
+  "ConceptId": "124408",
+  "ICD11Code": "1F57.Z"
+ },
+ {
+  "DiagnosisName": "Microsporidiosis",
+  "ConceptId": "2002680",
+  "ICD11Code": "1F58"
+ },
+ {
+  "DiagnosisName": "Unspecified protozoal disease",
+  "ConceptId": "2002681",
+  "ICD11Code": "1F5Z"
+ },
+ {
+  "DiagnosisName": "Angiostrongyliasis",
+  "ConceptId": "2002732",
+  "ICD11Code": "1F60"
+ },
+ {
+  "DiagnosisName": "Eosinophilic meningitis due to Angiostrongylus cantonensis",
+  "ConceptId": "2002733",
+  "ICD11Code": "1F60.0"
+ },
+ {
+  "DiagnosisName": "Intestinal angiostrongyliasis",
+  "ConceptId": "151976",
+  "ICD11Code": "1F60.1"
+ },
+ {
+  "DiagnosisName": "Other specified angiostrongyliasis",
+  "ConceptId": "2002734",
+  "ICD11Code": "1F60.Y"
+ },
+ {
+  "DiagnosisName": "Angiostrongyliasis, unspecified",
+  "ConceptId": "2002735",
+  "ICD11Code": "1F60.Z"
+ },
+ {
+  "DiagnosisName": "Anisakiasis",
+  "ConceptId": "2002736",
+  "ICD11Code": "1F61"
+ },
+ {
+  "DiagnosisName": "Ascariasis",
+  "ConceptId": "148353",
+  "ICD11Code": "1F62"
+ },
+ {
+  "DiagnosisName": "Capillariasis",
+  "ConceptId": "146487",
+  "ICD11Code": "1F63"
+ },
+ {
+  "DiagnosisName": "Capillariasis of the intestine",
+  "ConceptId": "2002737",
+  "ICD11Code": "1F63.0"
+ },
+ {
+  "DiagnosisName": "Other specified capillariasis",
+  "ConceptId": "2002738",
+  "ICD11Code": "1F63.Y"
+ },
+ {
+  "DiagnosisName": "Capillariasis, unspecified",
+  "ConceptId": "2002739",
+  "ICD11Code": "1F63.Z"
+ },
+ {
+  "DiagnosisName": "Dracunculiasis",
+  "ConceptId": "137458",
+  "ICD11Code": "1F64"
+ },
+ {
+  "DiagnosisName": "Enterobiasis",
+  "ConceptId": "141216",
+  "ICD11Code": "1F65"
+ },
+ {
+  "DiagnosisName": "Filariasis",
+  "ConceptId": "119354",
+  "ICD11Code": "1F66"
+ },
+ {
+  "DiagnosisName": "Loiasis",
+  "ConceptId": "2002740",
+  "ICD11Code": "1F66.0"
+ },
+ {
+  "DiagnosisName": "Mansonelliasis",
+  "ConceptId": "134689",
+  "ICD11Code": "1F66.1"
+ },
+ {
+  "DiagnosisName": "Filariasis due to Brugia species",
+  "ConceptId": "2002741",
+  "ICD11Code": "1F66.2"
+ },
+ {
+  "DiagnosisName": "Lymphatic filariasis",
+  "ConceptId": "157560",
+  "ICD11Code": "1F66.3"
+ },
+ {
+  "DiagnosisName": "Filariasis due to Wuchereria bancrofti",
+  "ConceptId": "161565",
+  "ICD11Code": "1F66.30"
+ },
+ {
+  "DiagnosisName": "Filariasis due to Brugia malayi",
+  "ConceptId": "2002742",
+  "ICD11Code": "1F66.31"
+ },
+ {
+  "DiagnosisName": "Filariasis due to Brugia timori",
+  "ConceptId": "156305",
+  "ICD11Code": "1F66.32"
+ },
+ {
+  "DiagnosisName": "Lymphatic filariasis, unspecified",
+  "ConceptId": "2002743",
+  "ICD11Code": "1F66.3Z"
+ },
+ {
+  "DiagnosisName": "Subcutaneous dirofilariasis",
+  "ConceptId": "125662",
+  "ICD11Code": "1F66.4"
+ },
+ {
+  "DiagnosisName": "Other specified filariasis",
+  "ConceptId": "2002744",
+  "ICD11Code": "1F66.Y"
+ },
+ {
+  "DiagnosisName": "Filariasis, unspecified",
+  "ConceptId": "2002745",
+  "ICD11Code": "1F66.Z"
+ },
+ {
+  "DiagnosisName": "Gnathostomiasis",
+  "ConceptId": "2002746",
+  "ICD11Code": "1F67"
+ },
+ {
+  "DiagnosisName": "Hookworm diseases",
+  "ConceptId": "119356",
+  "ICD11Code": "1F68"
+ },
+ {
+  "DiagnosisName": "Ancylostomiasis",
+  "ConceptId": "121636",
+  "ICD11Code": "1F68.0"
+ },
+ {
+  "DiagnosisName": "Necatoriasis",
+  "ConceptId": "133471",
+  "ICD11Code": "1F68.1"
+ },
+ {
+  "DiagnosisName": "Cutaneous larva migrans",
+  "ConceptId": "143077",
+  "ICD11Code": "1F68.2"
+ },
+ {
+  "DiagnosisName": "Oesophagostomiasis",
+  "ConceptId": "140993",
+  "ICD11Code": "1F69"
+ },
+ {
+  "DiagnosisName": "Onchocerciasis",
+  "ConceptId": "137393",
+  "ICD11Code": "1F6A"
+ },
+ {
+  "DiagnosisName": "Onchocerciasis of the eye",
+  "ConceptId": "2002747",
+  "ICD11Code": "1F6A.0"
+ },
+ {
+  "DiagnosisName": "Onchocerciasis of the skin",
+  "ConceptId": "2002748",
+  "ICD11Code": "1F6A.1"
+ },
+ {
+  "DiagnosisName": "Other specified onchocerciasis",
+  "ConceptId": "2002749",
+  "ICD11Code": "1F6A.Y"
+ },
+ {
+  "DiagnosisName": "Onchocerciasis, unspecified",
+  "ConceptId": "2002750",
+  "ICD11Code": "1F6A.Z"
+ },
+ {
+  "DiagnosisName": "Strongyloidiasis",
+  "ConceptId": "2002751",
+  "ICD11Code": "1F6B"
+ },
+ {
+  "DiagnosisName": "Syngamosis",
+  "ConceptId": "2002752",
+  "ICD11Code": "1F6C"
+ },
+ {
+  "DiagnosisName": "Toxocariasis",
+  "ConceptId": "132466",
+  "ICD11Code": "1F6D"
+ },
+ {
+  "DiagnosisName": "Trichinosis",
+  "ConceptId": "2002753",
+  "ICD11Code": "1F6E"
+ },
+ {
+  "DiagnosisName": "Trichostrongyliasis",
+  "ConceptId": "124130",
+  "ICD11Code": "1F6F"
+ },
+ {
+  "DiagnosisName": "Trichuriasis",
+  "ConceptId": "124129",
+  "ICD11Code": "1F6G"
+ },
+ {
+  "DiagnosisName": "Uncinariosis",
+  "ConceptId": "2002754",
+  "ICD11Code": "1F6H"
+ },
+ {
+  "DiagnosisName": "Other specified diseases due to nematodes",
+  "ConceptId": "2002755",
+  "ICD11Code": "1F6Y"
+ },
+ {
+  "DiagnosisName": "Diseases due to nematodes, unspecified",
+  "ConceptId": "2002756",
+  "ICD11Code": "1F6Z"
+ },
+ {
+  "DiagnosisName": "Cysticercosis",
+  "ConceptId": "142986",
+  "ICD11Code": "1F70"
+ },
+ {
+  "DiagnosisName": "Cysticercosis of central nervous system",
+  "ConceptId": "155838",
+  "ICD11Code": "1F70.0"
+ },
+ {
+  "DiagnosisName": "Meningitis due to Cysticercosis",
+  "ConceptId": "2002778",
+  "ICD11Code": "1F70.00"
+ },
+ {
+  "DiagnosisName": "Other specified cysticercosis of central nervous system",
+  "ConceptId": "2002779",
+  "ICD11Code": "1F70.0Y"
+ },
+ {
+  "DiagnosisName": "Cysticercosis of eye",
+  "ConceptId": "155839",
+  "ICD11Code": "1F70.1"
+ },
+ {
+  "DiagnosisName": "Other specified cysticercosis",
+  "ConceptId": "2002780",
+  "ICD11Code": "1F70.Y"
+ },
+ {
+  "DiagnosisName": "Cysticercosis, unspecified",
+  "ConceptId": "2002781",
+  "ICD11Code": "1F70.Z"
+ },
+ {
+  "DiagnosisName": "Diphyllobothriasis",
+  "ConceptId": "142267",
+  "ICD11Code": "1F71"
+ },
+ {
+  "DiagnosisName": "Dipylidiasis",
+  "ConceptId": "2002782",
+  "ICD11Code": "1F72"
+ },
+ {
+  "DiagnosisName": "Echinococcosis",
+  "ConceptId": "118754",
+  "ICD11Code": "1F73"
+ },
+ {
+  "DiagnosisName": "Echinococcus infection of liver",
+  "ConceptId": "2002783",
+  "ICD11Code": "1F73.0"
+ },
+ {
+  "DiagnosisName": "Echinococcus infection of lung",
+  "ConceptId": "2002784",
+  "ICD11Code": "1F73.1"
+ },
+ {
+  "DiagnosisName": "Echinococcus infection of bone",
+  "ConceptId": "2002785",
+  "ICD11Code": "1F73.2"
+ },
+ {
+  "DiagnosisName": "Echinococcus infection of central nervous system",
+  "ConceptId": "2002786",
+  "ICD11Code": "1F73.3"
+ },
+ {
+  "DiagnosisName": "Other specified echinococcosis",
+  "ConceptId": "2002787",
+  "ICD11Code": "1F73.Y"
+ },
+ {
+  "DiagnosisName": "Echinococcosis, unspecified",
+  "ConceptId": "2002788",
+  "ICD11Code": "1F73.Z"
+ },
+ {
+  "DiagnosisName": "Hymenolepiasis",
+  "ConceptId": "138346",
+  "ICD11Code": "1F74"
+ },
+ {
+  "DiagnosisName": "Sparganosis",
+  "ConceptId": "117148",
+  "ICD11Code": "1F75"
+ },
+ {
+  "DiagnosisName": "Taeniasis",
+  "ConceptId": "137352",
+  "ICD11Code": "1F76"
+ },
+ {
+  "DiagnosisName": "Taeniasis due to Taenia solium",
+  "ConceptId": "2002789",
+  "ICD11Code": "1F76.0"
+ },
+ {
+  "DiagnosisName": "Taeniasis due to Taenia saginata",
+  "ConceptId": "2002790",
+  "ICD11Code": "1F76.1"
+ },
+ {
+  "DiagnosisName": "Other specified taeniasis",
+  "ConceptId": "2002791",
+  "ICD11Code": "1F76.Y"
+ },
+ {
+  "DiagnosisName": "Taeniasis, unspecified",
+  "ConceptId": "2002792",
+  "ICD11Code": "1F76.Z"
+ },
+ {
+  "DiagnosisName": "Other specified diseases due to cestodes",
+  "ConceptId": "2002793",
+  "ICD11Code": "1F7Y"
+ },
+ {
+  "DiagnosisName": "Diseases due to cestodes, unspecified",
+  "ConceptId": "2002794",
+  "ICD11Code": "1F7Z"
+ },
+ {
+  "DiagnosisName": "Clonorchiasis",
+  "ConceptId": "145042",
+  "ICD11Code": "1F80"
+ },
+ {
+  "DiagnosisName": "Dicrocoeliasis",
+  "ConceptId": "142388",
+  "ICD11Code": "1F81"
+ },
+ {
+  "DiagnosisName": "Fascioliasis",
+  "ConceptId": "2002795",
+  "ICD11Code": "1F82"
+ },
+ {
+  "DiagnosisName": "Fasciolopsiasis",
+  "ConceptId": "2002796",
+  "ICD11Code": "1F83"
+ },
+ {
+  "DiagnosisName": "Opisthorchiasis",
+  "ConceptId": "131773",
+  "ICD11Code": "1F84"
+ },
+ {
+  "DiagnosisName": "Paragonimiasis",
+  "ConceptId": "2002797",
+  "ICD11Code": "1F85"
+ },
+ {
+  "DiagnosisName": "Schistosomiasis",
+  "ConceptId": "117152",
+  "ICD11Code": "1F86"
+ },
+ {
+  "DiagnosisName": "Schistosomiasis due to Schistosoma haematobium",
+  "ConceptId": "2002798",
+  "ICD11Code": "1F86.0"
+ },
+ {
+  "DiagnosisName": "Schistosomiasis due to Schistosoma mansoni",
+  "ConceptId": "2002799",
+  "ICD11Code": "1F86.1"
+ },
+ {
+  "DiagnosisName": "Schistosomiasis due to Schistosoma japonicum",
+  "ConceptId": "2002800",
+  "ICD11Code": "1F86.2"
+ },
+ {
+  "DiagnosisName": "Other schistosomiases",
+  "ConceptId": "2002801",
+  "ICD11Code": "1F86.3"
+ },
+ {
+  "DiagnosisName": "Cercarial dermatitis",
+  "ConceptId": "2002802",
+  "ICD11Code": "1F86.4"
+ },
+ {
+  "DiagnosisName": "Schistosomal pneumonitis",
+  "ConceptId": "2002803",
+  "ICD11Code": "1F86.5"
+ },
+ {
+  "DiagnosisName": "Schistosomiasis due to unspecified or unknown Schistosoma species",
+  "ConceptId": "2002804",
+  "ICD11Code": "1F86.Z"
+ },
+ {
+  "DiagnosisName": "Other specified diseases due to trematodes",
+  "ConceptId": "2002805",
+  "ICD11Code": "1F8Y"
+ },
+ {
+  "DiagnosisName": "Diseases due to trematodes, unspecified",
+  "ConceptId": "2002806",
+  "ICD11Code": "1F8Z"
+ },
+ {
+  "DiagnosisName": "Other and unspecified infestation by parasitic worms",
+  "ConceptId": "2002807",
+  "ICD11Code": "1F90"
+ },
+ {
+  "DiagnosisName": "Mixed intestinal helminthiases",
+  "ConceptId": "134042",
+  "ICD11Code": "1F90.0"
+ },
+ {
+  "DiagnosisName": "Intestinal parasitic infestation not otherwise specified",
+  "ConceptId": "2002808",
+  "ICD11Code": "1F90.1"
+ },
+ {
+  "DiagnosisName": "Intestinal helminthiasis, unspecified",
+  "ConceptId": "2002809",
+  "ICD11Code": "1F90.2"
+ },
+ {
+  "DiagnosisName": "Other specified other and unspecified infestation by parasitic worms",
+  "ConceptId": "2002810",
+  "ICD11Code": "1F90.Y"
+ },
+ {
+  "DiagnosisName": "Other and unspecified infestation by parasitic worms, unspecified",
+  "ConceptId": "2002811",
+  "ICD11Code": "1F90.Z"
+ },
+ {
+  "DiagnosisName": "Diphyllobothriasis and sparganosis",
+  "ConceptId": "2002812",
+  "ICD11Code": "1F91"
+ },
+ {
+  "DiagnosisName": "Helminthiases, unspecified",
+  "ConceptId": "2002813",
+  "ICD11Code": "1F9Z"
+ },
+ {
+  "DiagnosisName": "Pediculosis",
+  "ConceptId": "2002682",
+  "ICD11Code": "1G00"
+ },
+ {
+  "DiagnosisName": "Pediculosis capitis",
+  "ConceptId": "130667",
+  "ICD11Code": "1G00.0"
+ },
+ {
+  "DiagnosisName": "Pediculosis corporis",
+  "ConceptId": "130666",
+  "ICD11Code": "1G00.1"
+ },
+ {
+  "DiagnosisName": "Pediculosis of unspecified site or type",
+  "ConceptId": "2002683",
+  "ICD11Code": "1G00.Z"
+ },
+ {
+  "DiagnosisName": "Myiasis",
+  "ConceptId": "137225",
+  "ICD11Code": "1G01"
+ },
+ {
+  "DiagnosisName": "Ocular myiasis",
+  "ConceptId": "152282",
+  "ICD11Code": "1G01.0"
+ },
+ {
+  "DiagnosisName": "Nasopharyngeal myiasis",
+  "ConceptId": "152267",
+  "ICD11Code": "1G01.1"
+ },
+ {
+  "DiagnosisName": "Laryngeal myiasis",
+  "ConceptId": "2002684",
+  "ICD11Code": "1G01.2"
+ },
+ {
+  "DiagnosisName": "Cutaneous myiasis",
+  "ConceptId": "143070",
+  "ICD11Code": "1G01.3"
+ },
+ {
+  "DiagnosisName": "Other specified myiasis",
+  "ConceptId": "2002685",
+  "ICD11Code": "1G01.Y"
+ },
+ {
+  "DiagnosisName": "Myiasis, unspecified",
+  "ConceptId": "2002686",
+  "ICD11Code": "1G01.Z"
+ },
+ {
+  "DiagnosisName": "External hirudiniasis",
+  "ConceptId": "2002687",
+  "ICD11Code": "1G02"
+ },
+ {
+  "DiagnosisName": "Pthiriasis",
+  "ConceptId": "2002688",
+  "ICD11Code": "1G03"
+ },
+ {
+  "DiagnosisName": "Scabies",
+  "ConceptId": "140",
+  "ICD11Code": "1G04"
+ },
+ {
+  "DiagnosisName": "Classical scabies",
+  "ConceptId": "2002815",
+  "ICD11Code": "1G04.0"
+ },
+ {
+  "DiagnosisName": "Crusted scabies",
+  "ConceptId": "143131",
+  "ICD11Code": "1G04.1"
+ },
+ {
+  "DiagnosisName": "Other and unspecified scabies",
+  "ConceptId": "2002816",
+  "ICD11Code": "1G04.Y"
+ },
+ {
+  "DiagnosisName": "Tungiasis",
+  "ConceptId": "166567",
+  "ICD11Code": "1G05"
+ },
+ {
+  "DiagnosisName": "Cimicosis",
+  "ConceptId": "2002817",
+  "ICD11Code": "1G06"
+ },
+ {
+  "DiagnosisName": "Infestation by mites",
+  "ConceptId": "2002818",
+  "ICD11Code": "1G07"
+ },
+ {
+  "DiagnosisName": "Infestation by Demodex",
+  "ConceptId": "137231",
+  "ICD11Code": "1G07.0"
+ },
+ {
+  "DiagnosisName": "Infestation of the skin by other specified parasitic mites",
+  "ConceptId": "130825",
+  "ICD11Code": "1G07.Y"
+ },
+ {
+  "DiagnosisName": "Infestation by other specified ectoparasite",
+  "ConceptId": "2002819",
+  "ICD11Code": "1G0Y"
+ },
+ {
+  "DiagnosisName": "Infestation by unknown or unspecified ectoparasite",
+  "ConceptId": "2002820",
+  "ICD11Code": "1G0Z"
+ },
+ {
+  "DiagnosisName": "Other specified parasitic diseases",
+  "ConceptId": "2002821",
+  "ICD11Code": "1G2Y"
+ },
+ {
+  "DiagnosisName": "Unspecified parasitic diseases",
+  "ConceptId": "2002822",
+  "ICD11Code": "1G2Z"
+ },
+ {
+  "DiagnosisName": "Sepsis without septic shock",
+  "ConceptId": "2002823",
+  "ICD11Code": "1G40"
+ },
+ {
+  "DiagnosisName": "Sepsis with septic shock",
+  "ConceptId": "2002824",
+  "ICD11Code": "1G41"
+ },
+ {
+  "DiagnosisName": "Certain other disorders of infectious origin",
+  "ConceptId": "2002825",
+  "ICD11Code": "1G60"
+ },
+ {
+  "DiagnosisName": "Mycetoma of unknown or unspecified type",
+  "ConceptId": "2002826",
+  "ICD11Code": "1G60.0"
+ },
+ {
+  "DiagnosisName": "Pythiosis",
+  "ConceptId": "2002827",
+  "ICD11Code": "1G60.1"
+ },
+ {
+  "DiagnosisName": "Protothecosis",
+  "ConceptId": "128330",
+  "ICD11Code": "1G60.2"
+ },
+ {
+  "DiagnosisName": "Other specified disorders of infectious origin not elsewhere classified",
+  "ConceptId": "2002836",
+  "ICD11Code": "1G60.Y"
+ },
+ {
+  "DiagnosisName": "Sequelae of tuberculosis",
+  "ConceptId": "2002837",
+  "ICD11Code": "1G80"
+ },
+ {
+  "DiagnosisName": "Sequelae of trachoma",
+  "ConceptId": "158787",
+  "ICD11Code": "1G81"
+ },
+ {
+  "DiagnosisName": "Sequelae of leprosy",
+  "ConceptId": "152343",
+  "ICD11Code": "1G82"
+ },
+ {
+  "DiagnosisName": "Sequelae of poliomyelitis",
+  "ConceptId": "158786",
+  "ICD11Code": "1G83"
+ },
+ {
+  "DiagnosisName": "Sequelae of viral encephalitis",
+  "ConceptId": "2002838",
+  "ICD11Code": "1G84"
+ },
+ {
+  "DiagnosisName": "Sequelae of diphtheria",
+  "ConceptId": "2002842",
+  "ICD11Code": "1G85"
+ },
+ {
+  "DiagnosisName": "Sequelae of other specified infectious diseases",
+  "ConceptId": "2002840",
+  "ICD11Code": "1G8Y"
+ },
+ {
+  "DiagnosisName": "Infection, unspecified",
+  "ConceptId": "2002848",
+  "ICD11Code": "1H0Z"
+ },
+ {
+  "DiagnosisName": "Primary neoplasms of brain",
+  "ConceptId": "115359",
+  "ICD11Code": "2A00"
+ },
+ {
+  "DiagnosisName": "Gliomas of brain",
+  "ConceptId": "156509",
+  "ICD11Code": "2A00.0"
+ },
+ {
+  "DiagnosisName": "Glioblastoma of brain",
+  "ConceptId": "139418",
+  "ICD11Code": "2A00.00"
+ },
+ {
+  "DiagnosisName": "Other specified gliomas of brain",
+  "ConceptId": "2002855",
+  "ICD11Code": "2A00.0Y"
+ },
+ {
+  "DiagnosisName": "Gliomas of brain, unspecified",
+  "ConceptId": "163849",
+  "ICD11Code": "2A00.0Z"
+ },
+ {
+  "DiagnosisName": "Embryonal tumours of brain",
+  "ConceptId": "2002860",
+  "ICD11Code": "2A00.1"
+ },
+ {
+  "DiagnosisName": "Medulloblastoma of brain",
+  "ConceptId": "163822",
+  "ICD11Code": "2A00.10"
+ },
+ {
+  "DiagnosisName": "Central primitive neuroectodermal tumour",
+  "ConceptId": "2002863",
+  "ICD11Code": "2A00.11"
+ },
+ {
+  "DiagnosisName": "Other specified embryonal tumours of brain",
+  "ConceptId": "2002864",
+  "ICD11Code": "2A00.1Y"
+ },
+ {
+  "DiagnosisName": "Embryonal tumours of brain, unspecified",
+  "ConceptId": "2002865",
+  "ICD11Code": "2A00.1Z"
+ },
+ {
+  "DiagnosisName": "Tumours of neuroepithelial tissue of brain",
+  "ConceptId": "2002866",
+  "ICD11Code": "2A00.2"
+ },
+ {
+  "DiagnosisName": "Tumours of the pineal gland or pineal region",
+  "ConceptId": "133313",
+  "ICD11Code": "2A00.20"
+ },
+ {
+  "DiagnosisName": "Mixed neuronal glial tumours",
+  "ConceptId": "2002869",
+  "ICD11Code": "2A00.21"
+ },
+ {
+  "DiagnosisName": "Choroid plexus tumours",
+  "ConceptId": "134872",
+  "ICD11Code": "2A00.22"
+ },
+ {
+  "DiagnosisName": "Other specified tumours of neuroepithelial tissue of brain",
+  "ConceptId": "2002873",
+  "ICD11Code": "2A00.2Y"
+ },
+ {
+  "DiagnosisName": "Tumours of neuroepithelial tissue of brain, unspecified",
+  "ConceptId": "2002877",
+  "ICD11Code": "2A00.2Z"
+ },
+ {
+  "DiagnosisName": "Central neurocytoma of brain",
+  "ConceptId": "2002878",
+  "ICD11Code": "2A00.3"
+ },
+ {
+  "DiagnosisName": "Astroblastoma of the brain",
+  "ConceptId": "2002880",
+  "ICD11Code": "2A00.4"
+ },
+ {
+  "DiagnosisName": "Primary neoplasm of brain of unknown or unspecified type",
+  "ConceptId": "2002882",
+  "ICD11Code": "2A00.5"
+ },
+ {
+  "DiagnosisName": "Primary neoplasms of meninges",
+  "ConceptId": "128877",
+  "ICD11Code": "2A01"
+ },
+ {
+  "DiagnosisName": "Meningiomas",
+  "ConceptId": "2002891",
+  "ICD11Code": "2A01.0"
+ },
+ {
+  "DiagnosisName": "Primary malignant meningioma",
+  "ConceptId": "121197",
+  "ICD11Code": "2A01.00"
+ },
+ {
+  "DiagnosisName": "Other specified meningiomas",
+  "ConceptId": "2002893",
+  "ICD11Code": "2A01.0Y"
+ },
+ {
+  "DiagnosisName": "Meningiomas, unspecified",
+  "ConceptId": "2002895",
+  "ICD11Code": "2A01.0Z"
+ },
+ {
+  "DiagnosisName": "Mesenchymal tumours of meninges",
+  "ConceptId": "2002896",
+  "ICD11Code": "2A01.1"
+ },
+ {
+  "DiagnosisName": "Primary neoplasm of meninges of unknown or unspecified type",
+  "ConceptId": "2002897",
+  "ICD11Code": "2A01.2"
+ },
+ {
+  "DiagnosisName": "Primary neoplasm of spinal cord, cranial nerves or remaining parts of central nervous system",
+  "ConceptId": "2002898",
+  "ICD11Code": "2A02"
+ },
+ {
+  "DiagnosisName": "Gliomas of spinal cord, cranial nerves or other parts of the central nervous system",
+  "ConceptId": "2002899",
+  "ICD11Code": "2A02.0"
+ },
+ {
+  "DiagnosisName": "Glioblastoma of spinal cord, cranial nerves or other parts of central nervous system",
+  "ConceptId": "2002901",
+  "ICD11Code": "2A02.00"
+ },
+ {
+  "DiagnosisName": "Other specified gliomas of spinal cord, cranial nerves or other parts of the central nervous system",
+  "ConceptId": "2002903",
+  "ICD11Code": "2A02.0Y"
+ },
+ {
+  "DiagnosisName": "Gliomas of spinal cord, cranial nerves or other parts of the central nervous system, unspecified",
+  "ConceptId": "2002905",
+  "ICD11Code": "2A02.0Z"
+ },
+ {
+  "DiagnosisName": "Tumours of cranial or paraspinal nerves",
+  "ConceptId": "2002907",
+  "ICD11Code": "2A02.1"
+ },
+ {
+  "DiagnosisName": "Malignant peripheral nerve sheath tumour of cranial or paraspinal nerves",
+  "ConceptId": "2002908",
+  "ICD11Code": "2A02.10"
+ },
+ {
+  "DiagnosisName": "Paraspinal neuroblastoma",
+  "ConceptId": "2002909",
+  "ICD11Code": "2A02.11"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasm of the optic nerve",
+  "ConceptId": "128850",
+  "ICD11Code": "2A02.12"
+ },
+ {
+  "DiagnosisName": "Other specified tumours of cranial or paraspinal nerves",
+  "ConceptId": "2002910",
+  "ICD11Code": "2A02.1Y"
+ },
+ {
+  "DiagnosisName": "Tumours of cranial or paraspinal nerves, unspecified",
+  "ConceptId": "2002911",
+  "ICD11Code": "2A02.1Z"
+ },
+ {
+  "DiagnosisName": "Primary neoplasm of spinal cord of unknown or unspecified type",
+  "ConceptId": "164666",
+  "ICD11Code": "2A02.2"
+ },
+ {
+  "DiagnosisName": "Benign neoplasm of cranial nerves",
+  "ConceptId": "147812",
+  "ICD11Code": "2A02.3"
+ },
+ {
+  "DiagnosisName": "Benign neoplasm of spinal cord",
+  "ConceptId": "147623",
+  "ICD11Code": "2A02.4"
+ },
+ {
+  "DiagnosisName": "Other and unspecified neoplasms of brain or central nervous system",
+  "ConceptId": "2002917",
+  "ICD11Code": "2A0Z"
+ },
+ {
+  "DiagnosisName": "Non mast cell myeloproliferative neoplasms",
+  "ConceptId": "2002919",
+  "ICD11Code": "2A20"
+ },
+ {
+  "DiagnosisName": "Chronic myelogenous leukaemia, BCR ABL1 positive",
+  "ConceptId": "2003007",
+  "ICD11Code": "2A20.0"
+ },
+ {
+  "DiagnosisName": "Chronic myelogenous leukaemia with blast crisis",
+  "ConceptId": "2003008",
+  "ICD11Code": "2A20.00"
+ },
+ {
+  "DiagnosisName": "Chronic myelogenous leukaemia, Philadelphia chromosome (Ph1) positive",
+  "ConceptId": "2003009",
+  "ICD11Code": "2A20.01"
+ },
+ {
+  "DiagnosisName": "Chronic myelogenous leukaemia, t(9:22)(q34; q11)",
+  "ConceptId": "2003010",
+  "ICD11Code": "2A20.02"
+ },
+ {
+  "DiagnosisName": "Naegeli type monocytic leukaemia",
+  "ConceptId": "121978",
+  "ICD11Code": "2A20.03"
+ },
+ {
+  "DiagnosisName": "Other specified chronic myelogenous leukaemia, BCR ABL1 positive",
+  "ConceptId": "2003011",
+  "ICD11Code": "2A20.0Y"
+ },
+ {
+  "DiagnosisName": "Chronic myelogenous leukaemia, BCR ABL1 positive, unspecified",
+  "ConceptId": "2003012",
+  "ICD11Code": "2A20.0Z"
+ },
+ {
+  "DiagnosisName": "Chronic neutrophilic leukaemia",
+  "ConceptId": "155576",
+  "ICD11Code": "2A20.1"
+ },
+ {
+  "DiagnosisName": "Primary myelofibrosis",
+  "ConceptId": "110627",
+  "ICD11Code": "2A20.2"
+ },
+ {
+  "DiagnosisName": "Chronic eosinophilic leukaemia, not elsewhere classified",
+  "ConceptId": "2003013",
+  "ICD11Code": "2A20.3"
+ },
+ {
+  "DiagnosisName": "Polycythaemia vera",
+  "ConceptId": "113987",
+  "ICD11Code": "2A20.4"
+ },
+ {
+  "DiagnosisName": "Non mast cell myeloproliferative neoplasm, unclassifiable",
+  "ConceptId": "2003014",
+  "ICD11Code": "2A20.5"
+ },
+ {
+  "DiagnosisName": "Other specified non mast cell myeloproliferative neoplasms",
+  "ConceptId": "2003015",
+  "ICD11Code": "2A20.Y"
+ },
+ {
+  "DiagnosisName": "Non mast cell myeloproliferative neoplasms, unspecified",
+  "ConceptId": "2003016",
+  "ICD11Code": "2A20.Z"
+ },
+ {
+  "DiagnosisName": "Other specified diffuse large B cell lymphomas",
+  "ConceptId": "2002930",
+  "ICD11Code": "2A81.Y"
+ },
+ {
+  "DiagnosisName": "Reactive plasmacytic hyperplasia",
+  "ConceptId": "2002931",
+  "ICD11Code": "2B32.1"
+ },
+ {
+  "DiagnosisName": "Post transplant lymphoproliferative disorder, Infectious mononucleosis like",
+  "ConceptId": "2002965",
+  "ICD11Code": "2B32.2"
+ },
+ {
+  "DiagnosisName": "Polymorphic post transplant lymphoproliferative disorder",
+  "ConceptId": "2002966",
+  "ICD11Code": "2B32.3"
+ },
+ {
+  "DiagnosisName": "Other specified immunodeficiency associated lymphoproliferative disorders",
+  "ConceptId": "2002967",
+  "ICD11Code": "2B32.Y"
+ },
+ {
+  "DiagnosisName": "Immunodeficiency associated lymphoproliferative disorders, unspecified",
+  "ConceptId": "2002968",
+  "ICD11Code": "2B32.Z"
+ },
+ {
+  "DiagnosisName": "Malignant haematopoietic neoplasms without further specification",
+  "ConceptId": "2002969",
+  "ICD11Code": "2B33"
+ },
+ {
+  "DiagnosisName": "Acute leukaemia, not elsewhere classified",
+  "ConceptId": "2002970",
+  "ICD11Code": "2B33.0"
+ },
+ {
+  "DiagnosisName": "Myeloid leukaemia",
+  "ConceptId": "115438",
+  "ICD11Code": "2B33.1"
+ },
+ {
+  "DiagnosisName": "Chronic myeloid leukaemia, not elsewhere classified",
+  "ConceptId": "2002971",
+  "ICD11Code": "2B33.2"
+ },
+ {
+  "DiagnosisName": "Lymphoid leukaemia, not elsewhere classified",
+  "ConceptId": "2002972",
+  "ICD11Code": "2B33.3"
+ },
+ {
+  "DiagnosisName": "Leukaemia, unspecified",
+  "ConceptId": "2002973",
+  "ICD11Code": "2B33.4"
+ },
+ {
+  "DiagnosisName": "Malignant lymphoma, not elsewhere classified",
+  "ConceptId": "2002974",
+  "ICD11Code": "2B33.5"
+ },
+ {
+  "DiagnosisName": "Other malignant haematopoietic neoplasms without further specification",
+  "ConceptId": "2002975",
+  "ICD11Code": "2B33.Y"
+ },
+ {
+  "DiagnosisName": "Neoplasms of haematopoietic or lymphoid tissues, unspecified",
+  "ConceptId": "2002976",
+  "ICD11Code": "2B3Z"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma, primary site",
+  "ConceptId": "2002977",
+  "ICD11Code": "2B50"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma of bone or articular cartilage of limbs",
+  "ConceptId": "2002978",
+  "ICD11Code": "2B50.0"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma of bone or articular cartilage of pelvis",
+  "ConceptId": "2002979",
+  "ICD11Code": "2B50.1"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma of bone or articular cartilage of ribs, sternum or clavicle",
+  "ConceptId": "2002980",
+  "ICD11Code": "2B50.2"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma of bone or articular cartilage of other specified sites",
+  "ConceptId": "2002981",
+  "ICD11Code": "2B50.Y"
+ },
+ {
+  "DiagnosisName": "Chondrosarcoma of bone or articular cartilage of unspecified sites",
+  "ConceptId": "2002982",
+  "ICD11Code": "2B50.Z"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma, primary site",
+  "ConceptId": "2002983",
+  "ICD11Code": "2B51"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma of bone or articular cartilage of jaw",
+  "ConceptId": "2002984",
+  "ICD11Code": "2B51.0"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma of bone or articular cartilage of limbs",
+  "ConceptId": "2002985",
+  "ICD11Code": "2B51.1"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma of bone or articular cartilage of pelvis",
+  "ConceptId": "2002986",
+  "ICD11Code": "2B51.2"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma of bone and articular cartilage of other specified sites",
+  "ConceptId": "2002987",
+  "ICD11Code": "2B51.Y"
+ },
+ {
+  "DiagnosisName": "Osteosarcoma of bone and articular cartilage of unspecified sites",
+  "ConceptId": "2002988",
+  "ICD11Code": "2B51.Z"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma, primary site",
+  "ConceptId": "2002989",
+  "ICD11Code": "2B52"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of bone or articular cartilage of limbs",
+  "ConceptId": "2002990",
+  "ICD11Code": "2B52.0"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of bone or articular cartilage of pelvis",
+  "ConceptId": "2002991",
+  "ICD11Code": "2B52.1"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of bone or articular cartilage of ribs",
+  "ConceptId": "2002992",
+  "ICD11Code": "2B52.2"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of soft tissue",
+  "ConceptId": "2002993",
+  "ICD11Code": "2B52.3"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of bone and articular cartilage of other specified sites",
+  "ConceptId": "2002994",
+  "ICD11Code": "2B52.Y"
+ },
+ {
+  "DiagnosisName": "Ewing sarcoma of bone and articular cartilage of unspecified sites",
+  "ConceptId": "2002995",
+  "ICD11Code": "2B52.Z"
+ },
+ {
+  "DiagnosisName": "Fibroblastic or myofibroblastic tumour, primary site",
+  "ConceptId": "2002996",
+  "ICD11Code": "2B53"
+ },
+ {
+  "DiagnosisName": "Myxofibrosarcoma, primary site",
+  "ConceptId": "2002997",
+  "ICD11Code": "2B53.0"
+ },
+ {
+  "DiagnosisName": "Fibroblastic or myofibroblastic tumour of skin",
+  "ConceptId": "2002998",
+  "ICD11Code": "2B53.1"
+ },
+ {
+  "DiagnosisName": "Other specified fibroblastic or myofibroblastic tumour, primary site",
+  "ConceptId": "2002999",
+  "ICD11Code": "2B53.Y"
+ },
+ {
+  "DiagnosisName": "Fibroblastic or myofibroblastic tumour, primary site, unspecified",
+  "ConceptId": "2003000",
+  "ICD11Code": "2B53.Z"
+ },
+ {
+  "DiagnosisName": "Unclassified pleomorphic sarcoma, primary site",
+  "ConceptId": "2003001",
+  "ICD11Code": "2B54"
+ },
+ {
+  "DiagnosisName": "Unclassified pleomorphic sarcoma of skin",
+  "ConceptId": "2003002",
+  "ICD11Code": "2B54.0"
+ },
+ {
+  "DiagnosisName": "Unclassified pleomorphic sarcoma of retroperitoneum or peritoneum",
+  "ConceptId": "2003003",
+  "ICD11Code": "2B54.1"
+ },
+ {
+  "DiagnosisName": "Unclassified pleomorphic sarcoma, primary site, other specified site",
+  "ConceptId": "2003004",
+  "ICD11Code": "2B54.Y"
+ },
+ {
+  "DiagnosisName": "Unclassified pleomorphic sarcoma, primary site, unspecified site",
+  "ConceptId": "2003005",
+  "ICD11Code": "2B54.Z"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma, primary site",
+  "ConceptId": "2003006",
+  "ICD11Code": "2B55"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma of the oral cavity or pharynx",
+  "ConceptId": "2003041",
+  "ICD11Code": "2B55.0"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma of respiratory or intrathoracic organs",
+  "ConceptId": "2003042",
+  "ICD11Code": "2B55.1"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma of male genital organs",
+  "ConceptId": "2003043",
+  "ICD11Code": "2B55.2"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma, other specified primary site",
+  "ConceptId": "2003044",
+  "ICD11Code": "2B55.Y"
+ },
+ {
+  "DiagnosisName": "Rhabdomyosarcoma, unspecified primary site",
+  "ConceptId": "2003045",
+  "ICD11Code": "2B55.Z"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma, primary site",
+  "ConceptId": "2003046",
+  "ICD11Code": "2B56"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma of heart",
+  "ConceptId": "2003047",
+  "ICD11Code": "2B56.0"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma of skin",
+  "ConceptId": "155111",
+  "ICD11Code": "2B56.1"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma of breast",
+  "ConceptId": "2003048",
+  "ICD11Code": "2B56.2"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma of liver",
+  "ConceptId": "148772",
+  "ICD11Code": "2B56.3"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma, other specified primary site",
+  "ConceptId": "2003049",
+  "ICD11Code": "2B56.Y"
+ },
+ {
+  "DiagnosisName": "Angiosarcoma, unspecified primary site",
+  "ConceptId": "2003050",
+  "ICD11Code": "2B56.Z"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma, primary site",
+  "ConceptId": "2003051",
+  "ICD11Code": "2B57"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma of lung",
+  "ConceptId": "136328",
+  "ICD11Code": "2B57.0"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma of skin",
+  "ConceptId": "507",
+  "ICD11Code": "2B57.1"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma of gastrointestinal sites",
+  "ConceptId": "2003052",
+  "ICD11Code": "2B57.2"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma of other specified primary sites",
+  "ConceptId": "2003053",
+  "ICD11Code": "2B57.Y"
+ },
+ {
+  "DiagnosisName": "Kaposi sarcoma of unspecified primary site",
+  "ConceptId": "2003054",
+  "ICD11Code": "2B57.Z"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma, primary site",
+  "ConceptId": "2003055",
+  "ICD11Code": "2B58"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma of retroperitoneum or peritoneum",
+  "ConceptId": "2003056",
+  "ICD11Code": "2B58.0"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma of uterus",
+  "ConceptId": "2003057",
+  "ICD11Code": "2B58.1"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma of stomach",
+  "ConceptId": "2003058",
+  "ICD11Code": "2B58.2"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma, other specified primary site",
+  "ConceptId": "2003059",
+  "ICD11Code": "2B58.Y"
+ },
+ {
+  "DiagnosisName": "Leiomyosarcoma, unspecified primary site",
+  "ConceptId": "2003060",
+  "ICD11Code": "2B58.Z"
+ },
+ {
+  "DiagnosisName": "Liposarcoma, primary site",
+  "ConceptId": "2003061",
+  "ICD11Code": "2B59"
+ },
+ {
+  "DiagnosisName": "Liposarcoma of soft tissue of limb",
+  "ConceptId": "2003062",
+  "ICD11Code": "2B59.0"
+ },
+ {
+  "DiagnosisName": "Liposarcoma of retroperitoneum or peritoneum",
+  "ConceptId": "2003063",
+  "ICD11Code": "2B59.1"
+ },
+ {
+  "DiagnosisName": "Liposarcoma of male genital organs",
+  "ConceptId": "2003064",
+  "ICD11Code": "2B59.2"
+ },
+ {
+  "DiagnosisName": "Liposarcoma, other specified primary site",
+  "ConceptId": "2003065",
+  "ICD11Code": "2B59.Y"
+ },
+ {
+  "DiagnosisName": "Liposarcoma, unspecified primary site",
+  "ConceptId": "2003066",
+  "ICD11Code": "2B59.Z"
+ },
+ {
+  "DiagnosisName": "Synovial sarcoma, primary site",
+  "ConceptId": "2003067",
+  "ICD11Code": "2B5A"
+ },
+ {
+  "DiagnosisName": "Synovial sarcoma of soft tissues of limb",
+  "ConceptId": "2003068",
+  "ICD11Code": "2B5A.0"
+ },
+ {
+  "DiagnosisName": "Synovial sarcoma of respiratory or intra thoracic organs",
+  "ConceptId": "2003069",
+  "ICD11Code": "2B5A.1"
+ },
+ {
+  "DiagnosisName": "Synovial sarcoma, other specified primary site",
+  "ConceptId": "2003070",
+  "ICD11Code": "2B5A.Y"
+ },
+ {
+  "DiagnosisName": "Synovial sarcoma, unspecified primary site",
+  "ConceptId": "2003071",
+  "ICD11Code": "2B5A.Z"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal stromal tumour, primary site",
+  "ConceptId": "2003072",
+  "ICD11Code": "2B5B"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal stromal tumour of stomach",
+  "ConceptId": "2003112",
+  "ICD11Code": "2B5B.0"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal stromal tumour of small intestine",
+  "ConceptId": "2003113",
+  "ICD11Code": "2B5B.1"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal stromal tumour of other gastrointestinal sites",
+  "ConceptId": "2003114",
+  "ICD11Code": "2B5B.Y"
+ },
+ {
+  "DiagnosisName": "Gastrointestinal stromal tumour of unspecified gastrointestinal sites",
+  "ConceptId": "2003115",
+  "ICD11Code": "2B5B.Z"
+ },
+ {
+  "DiagnosisName": "Endometrial stromal sarcoma, primary site",
+  "ConceptId": "2003116",
+  "ICD11Code": "2B5C"
+ },
+ {
+  "DiagnosisName": "Malignant mixed epithelial mesenchymal tumour, primary site",
+  "ConceptId": "2003117",
+  "ICD11Code": "2B5D"
+ },
+ {
+  "DiagnosisName": "Malignant mixed epithelial mesenchymal tumour of ovary",
+  "ConceptId": "2003118",
+  "ICD11Code": "2B5D.0"
+ },
+ {
+  "DiagnosisName": "Malignant mixed epithelial and mesenchymal tumour of corpus uteri",
+  "ConceptId": "2003119",
+  "ICD11Code": "2B5D.1"
+ },
+ {
+  "DiagnosisName": "Malignant mixed epithelial mesenchymal tumour, other specified primary site",
+  "ConceptId": "2003120",
+  "ICD11Code": "2B5D.Y"
+ },
+ {
+  "DiagnosisName": "Malignant mixed epithelial mesenchymal tumour, unspecified primary site",
+  "ConceptId": "2003121",
+  "ICD11Code": "2B5D.Z"
+ },
+ {
+  "DiagnosisName": "Malignant nerve sheath tumour of peripheral nerves or autonomic nervous system, primary site",
+  "ConceptId": "2003122",
+  "ICD11Code": "2B5E"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified, primary site",
+  "ConceptId": "2003123",
+  "ICD11Code": "2B5F"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified of uterus",
+  "ConceptId": "2003124",
+  "ICD11Code": "2B5F.0"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified of retroperitoneum or peritoneum",
+  "ConceptId": "2003125",
+  "ICD11Code": "2B5F.1"
+ },
+ {
+  "DiagnosisName": "Myosarcomas of omentum",
+  "ConceptId": "2003126",
+  "ICD11Code": "2B5F.10"
+ },
+ {
+  "DiagnosisName": "Other specified sarcoma, not elsewhere classified of retroperitoneum or peritoneum",
+  "ConceptId": "2003127",
+  "ICD11Code": "2B5F.1Y"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified of retroperitoneum or peritoneum, unspecified",
+  "ConceptId": "2003128",
+  "ICD11Code": "2B5F.1Z"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified of other specified sites",
+  "ConceptId": "2003129",
+  "ICD11Code": "2B5F.2"
+ },
+ {
+  "DiagnosisName": "Sarcoma, not elsewhere classified, primary site unknown",
+  "ConceptId": "2003130",
+  "ICD11Code": "2B5F.3"
+ },
+ {
+  "DiagnosisName": "Myosarcoma of uterus, part not specified",
+  "ConceptId": "2003017",
+  "ICD11Code": "2B5G"
+ },
+ {
+  "DiagnosisName": "Well differentiated lipomatous tumour, primary site",
+  "ConceptId": "2003018",
+  "ICD11Code": "2B5H"
+ },
+ {
+  "DiagnosisName": "Malignant miscellaneous tumours of bone or articular cartilage of other or unspecified sites",
+  "ConceptId": "2003019",
+  "ICD11Code": "2B5J"
+ },
+ {
+  "DiagnosisName": "Unspecified malignant soft tissue tumours or sarcomas of bone or articular cartilage of other or unspecified sites",
+  "ConceptId": "2003020",
+  "ICD11Code": "2B5K"
+ },
+ {
+  "DiagnosisName": "Other specified malignant mesenchymal neoplasms",
+  "ConceptId": "2003021",
+  "ICD11Code": "2B5Y"
+ },
+ {
+  "DiagnosisName": "Malignant mesenchymal neoplasm of unspecified type",
+  "ConceptId": "2003022",
+  "ICD11Code": "2B5Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of lip",
+  "ConceptId": "116004",
+  "ICD11Code": "2B60"
+ },
+ {
+  "DiagnosisName": "Basal cell carcinoma of lip",
+  "ConceptId": "147960",
+  "ICD11Code": "2B60.0"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of lip",
+  "ConceptId": "125987",
+  "ICD11Code": "2B60.1"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasms of lip",
+  "ConceptId": "2003023",
+  "ICD11Code": "2B60.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of lip, unspecified",
+  "ConceptId": "2003024",
+  "ICD11Code": "2B60.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of base of tongue",
+  "ConceptId": "129063",
+  "ICD11Code": "2B61"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of the base of the tongue",
+  "ConceptId": "2003025",
+  "ICD11Code": "2B61.0"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasms of base of tongue",
+  "ConceptId": "2003026",
+  "ICD11Code": "2B61.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of base of tongue, unspecified",
+  "ConceptId": "135220",
+  "ICD11Code": "2B61.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of other or unspecified parts of tongue",
+  "ConceptId": "2003027",
+  "ICD11Code": "2B62"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of other or unspecified parts of tongue",
+  "ConceptId": "125985",
+  "ICD11Code": "2B62.0"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of lingual tonsil",
+  "ConceptId": "128898",
+  "ICD11Code": "2B62.1"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of lingual tonsil",
+  "ConceptId": "2003028",
+  "ICD11Code": "2B62.10"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of lingual tonsil, unspecified",
+  "ConceptId": "2003029",
+  "ICD11Code": "2B62.1Z"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasms of other and unspecified parts of tongue",
+  "ConceptId": "2003030",
+  "ICD11Code": "2B62.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of other or unspecified parts of tongue, unspecified",
+  "ConceptId": "2003031",
+  "ICD11Code": "2B62.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of gum",
+  "ConceptId": "128653",
+  "ICD11Code": "2B63"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of gum",
+  "ConceptId": "2003032",
+  "ICD11Code": "2B63.0"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasm of gum",
+  "ConceptId": "128895",
+  "ICD11Code": "2B63.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of gum, unspecified",
+  "ConceptId": "2003033",
+  "ICD11Code": "2B63.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of floor of mouth",
+  "ConceptId": "113746",
+  "ICD11Code": "2B64"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of floor of mouth",
+  "ConceptId": "125988",
+  "ICD11Code": "2B64.0"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasm of floor of mouth",
+  "ConceptId": "2003034",
+  "ICD11Code": "2B64.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of floor of mouth, unspecified",
+  "ConceptId": "2003035",
+  "ICD11Code": "2B64.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of palate",
+  "ConceptId": "128938",
+  "ICD11Code": "2B65"
+ },
+ {
+  "DiagnosisName": "Adenocarcinoma of palate",
+  "ConceptId": "2003036",
+  "ICD11Code": "2B65.0"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of palate",
+  "ConceptId": "2003037",
+  "ICD11Code": "2B65.1"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasm of palate",
+  "ConceptId": "128737",
+  "ICD11Code": "2B65.Y"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of palate, unspecified",
+  "ConceptId": "135067",
+  "ICD11Code": "2B65.Z"
+ },
+ {
+  "DiagnosisName": "Malignant neoplasms of other or unspecified parts of mouth",
+  "ConceptId": "2003038",
+  "ICD11Code": "2B66"
+ },
+ {
+  "DiagnosisName": "Squamous cell carcinoma of other or unspecified parts of mouth",
+  "ConceptId": "2003039",
+  "ICD11Code": "2B66.0"
+ },
+ {
+  "DiagnosisName": "Other specified malignant neoplasms of other and unspecified parts of mouth",
+  "ConceptId": "2003040",
+  "ICD11Code": "2B66.Y"
+ },
+ {
+  "DiagnosisName": "Adenocarcinoma of sigmoid colon",
+  "ConceptId": "169385",
+  "ICD11Code": "2B90.30"
+ },
+ {
+  "DiagnosisName": "Iron deficiency anaemia",
+  "ConceptId": "1226",
+  "ICD11Code": "3A00"
+ },
+ {
+  "DiagnosisName": "Iron deficiency anaemia, unspecified",
+  "ConceptId": "123664",
+  "ICD11Code": "3A00.Z"
+ },
+ {
+  "DiagnosisName": "Haemolytic anaemias, unspecified",
+  "ConceptId": "2",
+  "ICD11Code": "3A4Z"
+ },
+ {
+  "DiagnosisName": "Hereditary deficiency of factor I",
+  "ConceptId": "138778",
+  "ICD11Code": "3B14.0"
+ },
+ {
+  "DiagnosisName": "Vitamin C deficiency",
+  "ConceptId": "889",
+  "ICD11Code": "5B56"
+ },
+ {
+  "DiagnosisName": "Essential fatty acid deficiency",
+  "ConceptId": "156179",
+  "ICD11Code": "5B70"
+ },
+ {
+  "DiagnosisName": "Catatonia associated with another mental disorder",
+  "ConceptId": "169250",
+  "ICD11Code": "6A40"
+ },
+ {
+  "DiagnosisName": "Hoarding disorder",
+  "ConceptId": "169259",
+  "ICD11Code": "6B24"
+ },
+ {
+  "DiagnosisName": "Binge eating disorder",
+  "ConceptId": "169453",
+  "ICD11Code": "6B82"
+ },
+ {
+  "DiagnosisName": "Cannabis withdrawal",
+  "ConceptId": "169528",
+  "ICD11Code": "6C41.4"
+ },
+ {
+  "DiagnosisName": "Postural orthostatic tachycardia syndrome",
+  "ConceptId": "169352",
+  "ICD11Code": "8D89.2"
+ },
+ {
+  "DiagnosisName": "Impacted cerumen",
+  "ConceptId": "530",
+  "ICD11Code": "AA42"
+ },
+ {
+  "DiagnosisName": "Deep vein thrombosis",
+  "ConceptId": "1292",
+  "ICD11Code": "BD71"
+ },
+ {
+  "DiagnosisName": "Lymphadenitis",
+  "ConceptId": "116190",
+  "ICD11Code": "BD90"
+ },
+ {
+  "DiagnosisName": "Acute nasopharyngitis",
+  "ConceptId": "106",
+  "ICD11Code": "CA00"
+ },
+ {
+  "DiagnosisName": "Chronic obstructive pulmonary disease",
+  "ConceptId": "1295",
+  "ICD11Code": "CA22"
+ },
+ {
+  "DiagnosisName": "Allergic asthma with exacerbation",
+  "ConceptId": "4",
+  "ICD11Code": "CA23.00"
+ },
+ {
+  "DiagnosisName": "Pneumonia due to pneumocystis",
+  "ConceptId": "882",
+  "ICD11Code": "CA40.20"
+ },
+ {
+  "DiagnosisName": "Acute bronchitis",
+  "ConceptId": "10",
+  "ICD11Code": "CA42"
+ },
+ {
+  "DiagnosisName": "Gastro oesophageal reflux disease",
+  "ConceptId": "1293",
+  "ICD11Code": "DA22"
+ },
+ {
+  "DiagnosisName": "Biliary disease, unspecified",
+  "ConceptId": "8",
+  "ICD11Code": "DC14.Z"
+ },
+ {
+  "DiagnosisName": "Palmoplantar keratodermas",
+  "ConceptId": "169452",
+  "ICD11Code": "ED55"
+ },
+ {
+  "DiagnosisName": "Allergic contact dermatitis",
+  "ConceptId": "155023",
+  "ICD11Code": "EK00"
+ },
+ {
+  "DiagnosisName": "Abscess of Bartholin gland",
+  "ConceptId": "494",
+  "ICD11Code": "GA03.0"
+ },
+ {
+  "DiagnosisName": "Female pelvic inflammatory diseases",
+  "ConceptId": "902",
+  "ICD11Code": "GA05"
+ },
+ {
+  "DiagnosisName": "Vesicovaginal fistula",
+  "ConceptId": "49",
+  "ICD11Code": "GC04.10"
+ },
+ {
+  "DiagnosisName": "Fistula of small intestine to vagina",
+  "ConceptId": "156316",
+  "ICD11Code": "GC04.11"
+ },
+ {
+  "DiagnosisName": "Fistula of large intestine to vagina",
+  "ConceptId": "156315",
+  "ICD11Code": "GC04.12"
+ },
+ {
+  "DiagnosisName": "Urinary tract infection, site not specified, due to Escherichia coli",
+  "ConceptId": "156175",
+  "ICD11Code": "GC08.0"
+ },
+ {
+  "DiagnosisName": "Male delayed ejaculation",
+  "ConceptId": "169226",
+  "ICD11Code": "HA03.1"
+ },
+ {
+  "DiagnosisName": "Abortion",
+  "ConceptId": "50",
+  "ICD11Code": "JA00"
+ },
+ {
+  "DiagnosisName": "Failed medical abortion, complicated by genital tract or pelvic infection",
+  "ConceptId": "156220",
+  "ICD11Code": "JA00.30"
+ },
+ {
+  "DiagnosisName": "Failed medical abortion, complicated by delayed or excessive haemorrhage",
+  "ConceptId": "156218",
+  "ICD11Code": "JA00.31"
+ },
+ {
+  "DiagnosisName": "Failed medical abortion, complicated by embolism",
+  "ConceptId": "156219",
+  "ICD11Code": "JA00.32"
+ },
+ {
+  "DiagnosisName": "Ectopic pregnancy",
+  "ConceptId": "46",
+  "ICD11Code": "JA01"
+ },
+ {
+  "DiagnosisName": "Pre eclampsia",
+  "ConceptId": "47",
+  "ICD11Code": "JA24"
+ },
+ {
+  "DiagnosisName": "Excessive vomiting in pregnancy",
+  "ConceptId": "490",
+  "ICD11Code": "JA60"
+ },
+ {
+  "DiagnosisName": "Diabetes mellitus in pregnancy",
+  "ConceptId": "119477",
+  "ICD11Code": "JA63"
+ },
+ {
+  "DiagnosisName": "Diabetes mellitus arising in pregnancy",
+  "ConceptId": "1449",
+  "ICD11Code": "JA63.2"
+ },
+ {
+  "DiagnosisName": "Failed or difficult intubation during pregnancy",
+  "ConceptId": "156223",
+  "ICD11Code": "JA67.5"
+ },
+ {
+  "DiagnosisName": "Failed or difficult intubation during labour or delivery",
+  "ConceptId": "156222",
+  "ICD11Code": "JB0C.7"
+ },
+ {
+  "DiagnosisName": "Puerperal sepsis",
+  "ConceptId": "130",
+  "ICD11Code": "JB40.0"
+ },
+ {
+  "DiagnosisName": "Failed or difficult intubation during the puerperium",
+  "ConceptId": "156224",
+  "ICD11Code": "JB43.5"
+ },
+ {
+  "DiagnosisName": "Low birth weight of newborn",
+  "ConceptId": "1431",
+  "ICD11Code": "KA21.2"
+ },
+ {
+  "DiagnosisName": "Extreme prematurity of newborn, gestational age 27 completed weeks",
+  "ConceptId": "169444",
+  "ICD11Code": "KA21.36"
+ },
+ {
+  "DiagnosisName": "Failure to thrive in newborn",
+  "ConceptId": "156228",
+  "ICD11Code": "KD32.4"
+ },
+ {
+  "DiagnosisName": "Finding of abnormal level of heavy metals in blood",
+  "ConceptId": "156306",
+  "ICD11Code": "MA13.0"
+ },
+ {
+  "DiagnosisName": "Constipation",
+  "ConceptId": "996",
+  "ICD11Code": "ME05.0"
+ },
+ {
+  "DiagnosisName": "Fracture of thoracic vertebra",
+  "ConceptId": "156410",
+  "ICD11Code": "NA82.0"
+ },
+ {
+  "DiagnosisName": "Abrasion of lower back or pelvis",
+  "ConceptId": "169520",
+  "ICD11Code": "NB50.0"
+ },
+ {
+  "DiagnosisName": "Fracture of shaft of ulna",
+  "ConceptId": "156406",
+  "ICD11Code": "NC32.2"
+ },
+ {
+  "DiagnosisName": "Abrasion of knee",
+  "ConceptId": "169519",
+  "ICD11Code": "NC90.0"
+ },
+ {
+  "DiagnosisName": "Foreign body in unspecified part of respiratory tract",
+  "ConceptId": "156355",
+  "ICD11Code": "ND72.Z"
+ },
+ {
+  "DiagnosisName": "Foreign body in urethra",
+  "ConceptId": "156356",
+  "ICD11Code": "ND74.0"
+ },
+ {
+  "DiagnosisName": "Foreign body in bladder",
+  "ConceptId": "156353",
+  "ICD11Code": "ND74.1"
+ },
+ {
+  "DiagnosisName": "Burn of ankle or foot",
+  "ConceptId": "146703",
+  "ICD11Code": "ND97"
+ },
+ {
+  "DiagnosisName": "Failed or difficult intubation",
+  "ConceptId": "156221",
+  "ICD11Code": "NE87"
+ },
+ {
+  "DiagnosisName": "Examination for participation in sport",
+  "ConceptId": "156195",
+  "ICD11Code": "QA01.5"
+ },
+ {
+  "DiagnosisName": "Examination for insurance purposes",
+  "ConceptId": "156194",
+  "ICD11Code": "QA01.6"
+ },
+ {
+  "DiagnosisName": "Presence of artificial limb",
+  "ConceptId": "158497",
+  "ICD11Code": "QB51.9"
+ },
+ {
+  "DiagnosisName": "Family history of malignant neoplasm of breast",
+  "ConceptId": "140532",
+  "ICD11Code": "QC61.3"
+ },
+ {
+  "DiagnosisName": "Uncomplicated bereavement",
+  "ConceptId": "169365",
+  "ICD11Code": "QE62"
+ }
+]
