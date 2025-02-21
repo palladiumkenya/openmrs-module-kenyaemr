@@ -42,7 +42,7 @@ public class SpecialClinicsCadreDataEvaluator implements EncounterDataEvaluator 
         String qry = "select v.encounter_id,\n" +
                 "(case v.cadre when 900009 then 'Nutritionist' when 1577 then 'Nurse' when 162591 then 'Doctor' when 1574 then 'Clinical Officer' when 5622 then 'Others' else '' end) as cadre\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = :specialClinic;";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -37,20 +37,21 @@ public class SpecialClinicsAmountPaidDataEvaluator implements EncounterDataEvalu
         SpecialClinicsAmountPaidDataDefinition cohortDefinition = (SpecialClinicsAmountPaidDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "SELECT v.encounter_id,tp.amount AS amount\n" +
+
+        String qry = "SELECT v.encounter_id, GROUP_CONCAT(DISTINCT t.receipt_number SEPARATOR ', ') AS receipt_number\n" +
                 "FROM kenyaemr_etl.etl_special_clinics v\n" +
-                "LEFT JOIN openmrs.cashier_bill t\n" +
-                "ON v.patient_id = t.patient_id \n" +
-                "AND DATE(t.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "LEFT JOIN openmrs.cashier_bill t \n" +
+                "    ON v.patient_id = t.patient_id \n" +
+                "    AND DATE(t.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "LEFT JOIN openmrs.cashier_bill_payment tp \n" +
-                "ON t.bill_id = tp.bill_id \n" +
-                "AND DATE(tp.date_created)BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "    ON t.bill_id = tp.bill_id \n" +
+                "    AND DATE(tp.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "LEFT JOIN openmrs.cashier_payment_mode m \n" +
-                "ON tp.payment_mode_id = m.payment_mode_id \n" +
-                "AND DATE(m.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "    ON tp.payment_mode_id = m.payment_mode_id \n" +
+                "    AND m.name IS NOT NULL \n" +
+                "    AND DATE(m.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic_form_uuid = :specialClinic\n" +
-                "AND tp.amount IS NOT NULL\n" +
+                "AND v.special_clinic_form_uuid =  '" + specialClinic + "'\n" +
                 "GROUP BY v.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

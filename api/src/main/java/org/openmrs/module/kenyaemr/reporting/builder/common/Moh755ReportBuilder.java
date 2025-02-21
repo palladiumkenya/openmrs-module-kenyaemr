@@ -43,10 +43,6 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 public class Moh755ReportBuilder extends AbstractReportBuilder {
 
     protected static final Log log = LogFactory.getLog(Moh755ReportBuilder.class);
-
-    static final String[] HPV_TEST_SCREENING = {"HPV Test","HPV"};
-    static final String[] PAP_SMEAR_SCREENING = {"Pap Smear"};
-
     static final int NEW_VISIT = 164180,
             RE_VISIT= 160530,REFERALS= 160563, INTERVENTION = 165001, REFERRAL_IN =160563, REFERRAL_OUT = 159492;
     static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;

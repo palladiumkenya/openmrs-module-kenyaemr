@@ -46,7 +46,7 @@ public class SpecialClinicsPaymentMethodsDataEvaluator implements EncounterDataE
                 "LEFT JOIN openmrs.cashier_payment_mode m \n" +
                 "    ON tp.payment_mode_id = m.payment_mode_id\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic_form_uuid = :specialClinic\n" +
+                "AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
                 "AND m.name IS NOT NULL\n" +
                 "GROUP BY v.encounter_id;";
 

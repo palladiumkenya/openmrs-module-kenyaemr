@@ -49,7 +49,7 @@ public class SpecialClinicsReceiptNumberDataEvaluator implements EncounterDataEv
                 "    ON tp.payment_mode_id = m.payment_mode_id \n" +
                 "    AND DATE(m.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic_form_uuid = :specialClinic\n" +
+                "AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
                 "AND m.name IS NOT NULL GROUP BY v.encounter_id;";
 
 

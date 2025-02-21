@@ -40,7 +40,7 @@ public class SpecialClinicsOTInterventionDataEvaluator implements EncounterDataE
         String qry = "        select v.encounter_id,\n" +
                " v.ot_intervention\n" +
                 "                from kenyaemr_etl.etl_special_clinics v\n" +
-                "                where date(v.visit_date) between date(:startDate) and date(:endDate)  and special_clinic_form_uuid = :specialClinic;";
+                "                where date(v.visit_date) between date(:startDate) and date(:endDate)  and special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

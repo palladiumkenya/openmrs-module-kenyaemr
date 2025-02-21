@@ -45,15 +45,23 @@ public class SpecialClinicsRegisterCohortDefinitionEvaluator implements Encounte
 		String specialClinic = cohortDefinition.getSpecialClinic();
 		String comparisonOperator = cohortDefinition.getComparisonOperator();
 		Integer age = cohortDefinition.getAge();
-		String qry = "SELECT ce.encounter_id \n" +
-		"FROM kenyaemr_etl.etl_special_clinics ce\n" +
-		"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
-		"    ON p.patient_id = ce.patient_id \n" +
-		"    AND p.voided = 0\n" +
-		"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
-		"    AND ce.special_clinic_form_uuid = :specialClinic\n" +
-		"    AND timestampdiff(YEAR, date(p.DOB), (SELECT MAX(ce.visit_date) FROM kenyaemr_etl.etl_special_clinics ce)) " + comparisonOperator + " :age \n" +
-		"group by ce.patient_id";
+//		String qry = "SELECT ce.encounter_id \n" +
+//		"FROM kenyaemr_etl.etl_special_clinics ce\n" +
+//		"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
+//		"    ON p.patient_id = ce.patient_id \n" +
+//		"    AND p.voided = 0\n" +
+//		"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) \n" +
+//		"    AND ce.special_clinic_form_uuid = '" + specialClinic + "'\n" +
+//		"    AND timestampdiff(YEAR, date(p.DOB), (SELECT MAX(ce.visit_date) FROM kenyaemr_etl.etl_special_clinics ce)) " + comparisonOperator + " :age \n" +
+//		"group by ce.patient_id";
+
+		String qry = "select a.encounter_id from (SELECT ce.encounter_id , max(ce.visit_date) as visit_date, p.DOB\n" +
+				"FROM kenyaemr_etl.etl_special_clinics ce\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics p \n" +
+				"ON p.patient_id = ce.patient_id AND p.voided = 0\n" +
+				"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+				"AND ce.special_clinic_form_uuid = '" + specialClinic + "' group by ce.encounter_id) a\n" +
+				"WHERE timestampdiff(YEAR, date(a.DOB), visit_date)  " + comparisonOperator + " :age ;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
