@@ -11,33 +11,27 @@ package org.openmrs.module.kenyaemr.calculation.library.hiv;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.joda.time.Months;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.Patient;
-import org.openmrs.Program;
 import org.openmrs.api.ConceptService;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.AbstractPatientCalculation;
 import org.openmrs.module.kenyacore.calculation.BooleanResult;
-import org.openmrs.module.kenyacore.calculation.Calculations;
+import org.openmrs.module.kenyacore.calculation.CalculationUtils;
 import org.openmrs.module.kenyacore.calculation.Filters;
 import org.openmrs.module.kenyacore.calculation.PatientFlagCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.IsPregnantCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +74,8 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
         PatientService patientService = Context.getPatientService();
         Set<Integer> aliveAndFemale = Filters.female(Filters.alive(cohort, context), context);
+        Set<Integer> pregnantWomen = CalculationUtils.patientsThatPass(calculate(new IsPregnantCalculation(), cohort, context));
+
 
         CalculationResultMap ret = new CalculationResultMap();
 
@@ -92,7 +88,7 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
                         null, null, Arrays.asList(cacxScreeningForm, oncologyScreeningForm), null, null, null, null, false);
 
                 // Without prior cervical cancer test
-                if (cacxScreeningEncounters.size() == 0) {
+                if (cacxScreeningEncounters.size() == 0 && !pregnantWomen.contains(ptId)) {
                     // no cervical cancer screening done
                     needsCacxTest = true;
                 } else {
@@ -126,26 +122,26 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
                     boolean patientScreenedUsingHPV = lastCacxScreeningEnc != null ? EmrUtils.encounterThatPassCodedAnswer(lastCacxScreeningEnc, cacxScreeningMethodQuestion, cacxHpvScreeningMethod) : false;
 
                     // cacx flag should be 24 months after last cacx screening using HPV method and result is negative
-                    if (lastCacxScreeningEnc != null && patientScreenedUsingHPV && patientHasNegativeTestResult && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 730)) {
+                    if (lastCacxScreeningEnc != null && !pregnantWomen.contains(ptId) && patientScreenedUsingHPV && patientHasNegativeTestResult && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 730)) {
                         needsCacxTest = true;
                     }
                     // cacx flag should be 12 months after last cacx if negative or normal and cacx method is not HPV
-                    if (lastCacxScreeningEnc != null && !patientScreenedUsingHPV && (patientHasNegativeTestResult || patientHasNormalTestResult) && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 365)) {
+                    if (lastCacxScreeningEnc != null && !pregnantWomen.contains(ptId) && !patientScreenedUsingHPV && (patientHasNegativeTestResult || patientHasNormalTestResult) && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 365)) {
                         needsCacxTest = true;
                     }
 
                     // cacx flag should be 6 months after last cacx if positive
-                    if (lastCacxScreeningEnc != null && patientHasPositiveTestResult && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 183)) {
+                    if (lastCacxScreeningEnc != null && !pregnantWomen.contains(ptId) && patientHasPositiveTestResult && (daysSince(lastCacxScreeningEnc.getEncounterDatetime(), context) >= 183)) {
                         needsCacxTest = true;
                     }
 
                     // cacx flag should remain if there is any suspicion
-                    if (lastCacxScreeningEnc != null && (patientHasSuspiciousTestResult || patientHasOtherTestResult || patientHasLowGradeLesionTestResult || patientHasHighGradeLesionTestResult || patientHasInvasiveCancerTestResult || patientHasPresumedCancerTestResult || patientHasAbnormalTestResult)) {
+                    if (lastCacxScreeningEnc != null && !pregnantWomen.contains(ptId) && (patientHasSuspiciousTestResult || patientHasOtherTestResult || patientHasLowGradeLesionTestResult || patientHasHighGradeLesionTestResult || patientHasInvasiveCancerTestResult || patientHasPresumedCancerTestResult || patientHasAbnormalTestResult)) {
                         needsCacxTest = true;
                     }
 
                     // cacx flag should remain if there are no results added
-                    if (lastCacxScreeningEnc != null && (!patientHasPositiveTestResult && !patientHasNegativeTestResult && !patientHasNormalTestResult && !patientHasSuspiciousTestResult && !patientHasOtherTestResult && !patientHasLowGradeLesionTestResult && !patientHasHighGradeLesionTestResult && !patientHasInvasiveCancerTestResult && !patientHasPresumedCancerTestResult && !patientHasAbnormalTestResult)) {
+                    if (lastCacxScreeningEnc != null && !pregnantWomen.contains(ptId) && (!patientHasPositiveTestResult && !patientHasNegativeTestResult && !patientHasNormalTestResult && !patientHasSuspiciousTestResult && !patientHasOtherTestResult && !patientHasLowGradeLesionTestResult && !patientHasHighGradeLesionTestResult && !patientHasInvasiveCancerTestResult && !patientHasPresumedCancerTestResult && !patientHasAbnormalTestResult)) {
                         needsCacxTest = true;
                     }
 
