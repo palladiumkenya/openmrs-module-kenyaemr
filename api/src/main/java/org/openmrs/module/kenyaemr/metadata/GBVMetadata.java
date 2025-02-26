@@ -85,9 +85,9 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		install(encounterType("PEP Management Non OCN Encounter", "PEP Management Non OCN Encounter", _EncounterType.PEP_MANAGEMENT_NON_OCN_ENCOUNTER));
 		install(encounterType("PEP Management OCN Encounter", "PEP Management OCN Encounter", _EncounterType.PEP_MANAGEMENT_OCN_ENCOUNTER));
 		install(encounterType("PEP Management Survivor Encounter", "PEP Management Survivor Encounter", _EncounterType.PEP_MANAGEMENT_SURVIVOR_ENCOUNTER));
-		install(encounterType("Sexual violence Post Rape Care 363A Encounter", "Sexual violence Post Rape Care 363A Encounter", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER));
-		install(encounterType("Sexual violence PRC Psychological Assessment 363B Encounter", "Sexual violence PRC Psychological Assessment 363B Encounter", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER));
-		install(encounterType("ViolencePhysical and Emotional Abuse Encounter", "Violence Physical and Emotional Abuse Encounter", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER));
+		install(encounterType("Sexual violence Post Rape Care 363A", "Sexual violence Post Rape Care 363A Encounter", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER));
+		install(encounterType("Sexual violence PRC Psychological Assessment 363B", "Sexual violence PRC Psychological Assessment 363B Encounter", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER));
+		install(encounterType("Violence Physical and Emotional Abuse", "Violence Physical and Emotional Abuse Encounter", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER));
 		install(encounterType("Violence PEP Follow up Encounter", "Violence PEP Follow up Encounter", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER));
 
 		install(form("Violence Enrollment Form", "Gender Based Violence Enrollment Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_ENROLLMENT_FORM));
