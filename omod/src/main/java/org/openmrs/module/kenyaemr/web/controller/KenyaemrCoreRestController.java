@@ -52,6 +52,7 @@ import org.openmrs.Relationship;
 import org.openmrs.Visit;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProgramWorkflowService;
@@ -1725,6 +1726,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         KenyaEmrService kenyaEmrService = Context.getService(KenyaEmrService.class);
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         SimpleObject patientSummary = new SimpleObject();
+        LocationService locationService = Context.getLocationService();
 
         patientSummary.put("reportDate", formatDate(new Date()));
         patientSummary.put("clinicName", kenyaEmrService.getDefaultLocation().getName());
@@ -1979,7 +1981,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 context);
         Obs faciltyObs = EmrCalculationUtils.obsResultForPatient(transferInFacilty, patient.getPatientId());
         if (faciltyObs != null) {
-            patientSummary.put("transferInFacility", faciltyObs.getValueText());
+            patientSummary.put("transferInFacility", faciltyObs.getValueText() != null ? locationService.getLocationByUuid(faciltyObs.getValueText()).getName() : "");
         } else {
             patientSummary.put("transferInFacility", "N/A");
         }
@@ -2379,7 +2381,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         CalculationResultMap transferOutFacilty = Calculations.lastObs(Dictionary.getConcept(Dictionary.TRANSFER_OUT_FACILITY), Arrays.asList(patient.getPatientId()), context);
         Obs transferOutFacilityObs = EmrCalculationUtils.obsResultForPatient(transferOutFacilty, patient.getPatientId());
         if(transferOutFacilityObs != null){
-            patientSummary.put("transferOutFacility", transferOutFacilityObs.getValueText());
+            patientSummary.put("transferOutFacility", transferOutFacilityObs.getValueText() != null ? locationService.getLocationByUuid(transferOutFacilityObs.getValueText()).getName() : "");
         }
         else {
             patientSummary.put("transferOutFacility", "N/A");
