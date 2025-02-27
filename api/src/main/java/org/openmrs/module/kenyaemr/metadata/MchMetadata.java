@@ -55,6 +55,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_PREVENTIVE_SERVICES = "d3ea25c7-a3e8-4f57-a6a9-e802c3565a30";
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
 		public static final String MCHMS_PARTOGRAPH = "3791e5b7-2cdc-44fc-982b-a81135367c96";
+		public static final String MCHCS_POSTNATAL_NEWBORN_EXAMINATION = "503cc2df-1ea9-4a6e-bda1-195fc7783e59";
 	}
 
 	public static final class _PatientIdentifierType {
