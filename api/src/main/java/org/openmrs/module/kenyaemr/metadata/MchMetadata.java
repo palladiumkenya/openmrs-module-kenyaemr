@@ -86,6 +86,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("CWC Follow Up", "CWC-CS follow up form", _EncounterType.MCHCS_CONSULTATION, "2.0", _Form.MCHCS_FOLLOW_UP));
 		install(form("Immunization", "CWC-CS immunization form", _EncounterType.MCHCS_IMMUNIZATION, "2.0", _Form.MCHCS_IMMUNIZATION));
 		install(form("Child HEI outcomes", "MCH-CS HEI exit form", _EncounterType.MCHCS_HEI_COMPLETION, "1.0", _Form.MCHCS_HEI_COMPLETION));
+		install(form("Postnatal Newborn Examination Form", "Form for examining a newborn baby", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHCS_POSTNATAL_NEWBORN_EXAMINATION));
 
 		install(patientIdentifierType("HEI ID Number", "Assigned to a child patient when enrolling into HEI",
 				null, null, null,
