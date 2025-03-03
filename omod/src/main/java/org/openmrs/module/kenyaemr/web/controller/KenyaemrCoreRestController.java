@@ -76,6 +76,7 @@ import org.openmrs.module.kenyacore.program.ProgramManager;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
 import org.openmrs.module.kenyaemr.EmrConstants;
+import org.openmrs.module.kenyaemr.FacilityDashboardUtil;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
@@ -3605,6 +3606,24 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return responseObject.toString();
 
     }
-
-
+	/**
+	 * Generates Facility Dashboard
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/facility-dashboard")
+	@ResponseBody
+	public Object getFacilityDashboard(HttpServletRequest request) {	
+		return SimpleObject.create(
+			"getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(),
+			"getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
+			"getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
+			"getEligibleForVlSampleNotTaken", FacilityDashboardUtil.getEligibleForVlSampleNotTaken(),
+			"getVirallySuppressedWithoutEAC", FacilityDashboardUtil.getVirallySuppressedWithoutEAC(),
+			"getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
+			"getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
+			"fivePercentThreshhold",0.05,
+			"onePercentThreshhold",0.01				
+		);
+	}
 }
