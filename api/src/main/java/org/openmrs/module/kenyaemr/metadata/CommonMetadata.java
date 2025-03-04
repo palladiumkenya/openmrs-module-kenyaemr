@@ -76,6 +76,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_JWT_TOKEN_PASSWORD = "kenyaemr.sha.jwt.token.password";
 	public static final String GP_SHA_INTERVENTIONS = "kenyaemr.sha.interventions";
 	public static final String GP_SHA_FACILITY_REGISTRATION_NUMBER = "kenyaemr.sha.registration.number";
+	public static final String GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD = "kenyaemr.clinical.action.percentage.threshold";
+	public static final String GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD = "kenyaemr.clinical.action.hei.absolute.threshold";
 
 
 	public static final class _EncounterType {
@@ -539,6 +541,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_FACILITY_REGISTRATION_NUMBER) == null) {
 			install(globalProperty(GP_SHA_FACILITY_REGISTRATION_NUMBER, "SHA facility registration number", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD) == null) {
+			install(globalProperty(GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD, "General percentage threshold for clinical action", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD) == null) {
+			install(globalProperty(GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD, "Absolute threshold for clinical action for HEI", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",
