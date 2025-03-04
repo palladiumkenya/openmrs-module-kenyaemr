@@ -179,6 +179,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
+
 /**
  * The rest controller for exposing resources through kenyacore and kenyaemr modules
  */
@@ -3613,17 +3615,41 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/facility-dashboard")
 	@ResponseBody
-	public Object getFacilityDashboard(HttpServletRequest request) {	
+	public Object getFacilityDashboard(HttpServletRequest request) {
+        double PERCENT_DIVISOR = 100.0;
+        final String clinicalActionPercentageThreshold = getGlobalPropertyValue(CommonMetadata.GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD);
+        final String clinicalActionHEIAbsoluteThreshold = getGlobalPropertyValue(CommonMetadata.GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD);
+
+        double clinicalActionThreshold = 0.0;
+        double heiClinicalActionThreshold;
+
+        if (!clinicalActionPercentageThreshold.isEmpty()) {
+            clinicalActionThreshold = Double.parseDouble(clinicalActionPercentageThreshold) / PERCENT_DIVISOR;
+        } else {
+            System.err.println("Clinical action threshold is not configured correctly.");
+        }
+
+        if (!clinicalActionHEIAbsoluteThreshold.isEmpty()) {
+            heiClinicalActionThreshold = Double.parseDouble(clinicalActionHEIAbsoluteThreshold);
+        } else {
+            throw new IllegalArgumentException("Clinical action hei absolute threshold is not configured correctly.");
+        }
+
 		return SimpleObject.create(
 			"getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(),
 			"getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
+            "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(),
 			"getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
-			"getEligibleForVlSampleNotTaken", FacilityDashboardUtil.getEligibleForVlSampleNotTaken(),
-			"getVirallySuppressedWithoutEAC", FacilityDashboardUtil.getVirallySuppressedWithoutEAC(),
+			"getEligibleForVl", 0,
+			"getEligibleForVlSampleNotTaken", 0,
+			"getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(),
+			"getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(),
+			"getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(),
 			"getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
+			"getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(),
 			"getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
-			"fivePercentThreshhold",0.05,
-			"onePercentThreshhold",0.01				
+			"clinicalActionThreshold",clinicalActionThreshold,
+			"heiClinicalActionThreshold",heiClinicalActionThreshold
 		);
 	}
 }

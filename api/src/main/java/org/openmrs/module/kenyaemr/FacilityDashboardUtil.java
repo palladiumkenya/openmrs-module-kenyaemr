@@ -59,9 +59,7 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long hivPositiveNotLinkedTotal = (Long) Context.getAdministrationService().executeSQL(hivPositiveNotLinkedQuery, true).get(0).get(0);			
-			return hivPositiveNotLinkedTotal;
-			
+			return (Long) Context.getAdministrationService().executeSQL(hivPositiveNotLinkedQuery, true).get(0).get(0);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -101,9 +99,38 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long hivTestedPositiveTotal = (Long) Context.getAdministrationService().executeSQL(hivTestedPositiveQuery, true).get(0).get(0);
-			return hivTestedPositiveTotal;
+			return (Long) Context.getAdministrationService().executeSQL(hivTestedPositiveQuery, true).get(0).get(0);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
 
+	/**
+	 * Base query for pregnant or postpartum women
+	 * @return
+	 */
+	public static Long getPregnantOrPostpartumClients() {
+		String pregnantOrPostpartumQuery = "SELECT COUNT(s.patient_id) high_risk_preg_postpartum\n" +
+				"FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
+				"         INNER JOIN (SELECT t.patient_id,\n" +
+				"                            max(t.visit_date)                                           AS hts_date,\n" +
+				"                            mid(max(concat(date(visit_date), t.final_test_result)), 11) AS hiv_test_results,\n" +
+				"                            mid(max(concat(date(visit_date), t.hts_entry_point)), 11)   AS entry_point,\n" +
+				"                            t.visit_date\n" +
+				"                     FROM kenyaemr_etl.etl_hts_test t\n" +
+				"                     GROUP BY t.patient_id\n" +
+				"                     HAVING hts_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE\n" +
+				"                        AND hiv_test_results = 'Negative'\n" +
+				"                        AND entry_point in (160538, 160456, 1623)) t\n" +
+				"                    ON s.patient_id = t.patient_id\n" +
+				"WHERE s.hts_risk_category IN ('High', 'Very high')\n" +
+				"  AND s.currently_on_prep in ('NO', 'Declined to answer')\n" +
+				"  AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE;";
+
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			return (Long) Context.getAdministrationService().executeSQL(pregnantOrPostpartumQuery, true).get(0).get(0);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -175,9 +202,7 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long pregnantPostPartumNotPrepLinkedTotal = (Long) Context.getAdministrationService().executeSQL(pregnantPostPartumNotPrepLinkedQuery, true).get(0).get(0);			
-			return pregnantPostPartumNotPrepLinkedTotal;
-
+			return (Long) Context.getAdministrationService().executeSQL(pregnantPostPartumNotPrepLinkedQuery, true).get(0).get(0);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -199,9 +224,26 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long eligibleForVlSampleNotTakenTotal = (Long) Context.getAdministrationService().executeSQL(eligibleForVlSampleNotTakenQuery, true).get(0).get(0);			
-			return eligibleForVlSampleNotTakenTotal;
-
+			return (Long) Context.getAdministrationService().executeSQL(eligibleForVlSampleNotTakenQuery, true).get(0).get(0);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
+	/**
+	 * Surveillance dashboards
+	 * 4. Count of Virally unsuppressed clients
+	 * @return long value
+	 */
+	public static Long getVirallyUnsuppressed(){
+		String getVirallyUnsuppressedQuery = "SELECT count(x.patient_id) as vl_unsuppressed\n" +
+				"FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+				"WHERE x.lab_test = 856\n" +
+				"  AND test_result >= 200\n" +
+				"  AND x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY) AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY);";
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			return (Long) Context.getAdministrationService().executeSQL(getVirallyUnsuppressedQuery, true).get(0).get(0);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -212,8 +254,8 @@ public class FacilityDashboardUtil {
 	 * 4. Count of Virally suppressed clients with +2 weeks without EAC
 	 * @return long value
 	 */
-	public static Long getVirallySuppressedWithoutEAC(){		
-		String getVirallySuppressedWithoutEACQuery = "select count(b.patient_id) as unsuppressed_no_eac\n" +
+	public static Long getVirallyUnsuppressedWithoutEAC(){
+		String getVirallyUnsuppressedWithoutEACQuery = "select count(b.patient_id) as unsuppressed_no_eac\n" +
 			"from (select x.patient_id as patient_id,DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
 			"      from kenyaemr_etl.etl_laboratory_extract x\n" +
 			"      where x.lab_test = 856\n" +
@@ -227,9 +269,26 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long virallySuppressedWithoutEACQueryTotal = (Long) Context.getAdministrationService().executeSQL(getVirallySuppressedWithoutEACQuery, true).get(0).get(0);			
-			return virallySuppressedWithoutEACQueryTotal;
+			return (Long) Context.getAdministrationService().executeSQL(getVirallyUnsuppressedWithoutEACQuery, true).get(0).get(0);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
+	/**
+	 * Surveillance dashboards
+	 * 4. Count of HEIs turning 6-8 weeks old
+	 * @return long value
+	 */
+	public static Long getHeiSixToEightWeeksOld(){
+		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(e.patient_id)\n" +
+				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+				"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) BETWEEN 6 AND 8;";
 
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			return (Long) Context.getAdministrationService().executeSQL(getHeiSixToEightWeeksOldQuery, true).get(0).get(0);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -255,11 +314,28 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long heiSixToEightWeeksWithoutPCRResultsTotal = (Long) Context.getAdministrationService().executeSQL(heiSixToEightWeeksWithoutPCRResultsQuery, true).get(0).get(0);
-			return heiSixToEightWeeksWithoutPCRResultsTotal;
+			return (Long) Context.getAdministrationService().executeSQL(heiSixToEightWeeksWithoutPCRResultsQuery, true).get(0).get(0);
 
 		}
 		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
+
+	/**
+	 * HEIs turning 24 months old
+	 * @return long value
+	 */
+	public static Long getHei24MonthsOld() {
+		String hei24MonthsOldQuery = "SELECT COUNT(e.patient_id)\n" +
+				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
+				"WHERE TIMESTAMPDIFF(MONTH, d.dob, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) = 24;";
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			return (Long) Context.getAdministrationService().executeSQL(hei24MonthsOldQuery, true).get(0).get(0);
+
+		} finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
 	}
@@ -289,14 +365,11 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			Long hei24MonthsWithoutDocumentedOutcomeTotal = (Long) Context.getAdministrationService().executeSQL(hei24MonthsWithoutDocumentedOutcomeQuery, true).get(0).get(0);
-			return hei24MonthsWithoutDocumentedOutcomeTotal;
+	 		return (Long) Context.getAdministrationService().executeSQL(hei24MonthsWithoutDocumentedOutcomeQuery, true).get(0).get(0);
 
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
 	}
-	
-	
 }
