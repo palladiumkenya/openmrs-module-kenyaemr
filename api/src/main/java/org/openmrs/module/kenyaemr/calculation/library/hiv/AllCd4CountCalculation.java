@@ -30,26 +30,30 @@ import java.util.*;
  */
 public class AllCd4CountCalculation extends AbstractPatientCalculation {
 
-	@Override
-	public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
+    @Override
+    public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
+        ObsService obsService = Context.getObsService();
+        PersonService patientService = Context.getPersonService();
+        DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		ObsService obsService = Context.getObsService();
-		PersonService patientService = Context.getPersonService();
-		List<SimpleObject> cd4ret = new ArrayList<SimpleObject>();
-		CalculationResultMap ret = new CalculationResultMap();
-		DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        CalculationResultMap resultMap = new CalculationResultMap();
 
-		for (Integer ptId : cohort) {
+        for (Integer patientId : cohort) {
+            List<Obs> cd4Observations = obsService.getObservationsByPersonAndConcept(
+                patientService.getPerson(patientId), Dictionary.getConcept(Dictionary.CD4_COUNT)
+            );
 
-			List<Obs> cd4List = obsService.getObservationsByPersonAndConcept(patientService.getPerson(ptId),Dictionary.getConcept(Dictionary.CD4_COUNT));
-			for (int i = 0; i < cd4List.size(); ++i) {
-				cd4ret.add(SimpleObject.create(
-						"cd4Count", cd4List.get(i).getValueNumeric(),
-						"cd4CountDate", dateFormatter.format(cd4List.get(i).getObsDatetime())
-				));
-			}
-			ret.put(ptId, new SimpleResult(cd4ret, this, context));
-		}
-		return  ret;
-	}
+            if (!cd4Observations.isEmpty()) {
+                List<SimpleObject> cd4Results = new ArrayList<>();
+                for (Obs obs : cd4Observations) {
+                    cd4Results.add(SimpleObject.create(
+                        "cd4Count", obs.getValueNumeric(),
+                        "cd4CountDate", dateFormatter.format(obs.getObsDatetime())
+                    ));
+                }
+                resultMap.put(patientId, new SimpleResult(cd4Results, this, context));
+            }
+        }
+        return resultMap;
+    }
 }
