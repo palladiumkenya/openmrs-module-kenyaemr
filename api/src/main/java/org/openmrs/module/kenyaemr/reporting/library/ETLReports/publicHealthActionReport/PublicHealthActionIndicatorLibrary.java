@@ -71,7 +71,20 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator unsuppressedWithoutValidVL() {
         return cohortIndicator("Unsuppressed VL result", ReportUtils.map(cohortLibrary.unsuppressedWithoutValidVL(), "startDate=${startDate},endDate=${endDate}"));
     }
-
+	/**
+	 * Number of patients with unsuppressed VL result without Enhanced Adherence Counseling
+	 * @return the indicator
+	 */
+	public CohortIndicator txCUrrUnsuppressedWithoutValidVL() {
+		return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutValidVL(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	/**
+	 * Number of patients who visited facility were eligible for vl but sample not taken
+	 * @return the indicator
+	 */
+	public CohortIndicator delayedVLTesting() {
+		return cohortIndicator("Eligible but sample not taken", ReportUtils.map(cohortLibrary.delayedVLTesting(), "startDate=${startDate},endDate=${endDate}"));
+	}
     /**
      * Number of undocumented LTFU patients
      * @return the indicator
@@ -95,10 +108,34 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator unlinkedHEI() {
         return cohortIndicator("HEIs not linked to Mothers", ReportUtils.map(cohortLibrary.unlinkedHEI(), "startDate=${startDate},endDate=${endDate}"));
     }
-
+	/**
+	 * Number of HEIs missing HIV Tests
+	 * @return the indicator
+	 */
     public CohortIndicator heiMissedHIVTests() {
         return cohortIndicator("HEIs Missed HIV tests", ReportUtils.map(cohortLibrary.heiMissedHIVTests(), "startDate=${startDate},endDate=${endDate}"));
     }
+	/**
+	 * Number of HEIs  6-8 weeks missing HIV DNA PCR
+	 * @return the indicator
+	 */
+	public CohortIndicator heiSixToEightWeeksMissingPCRTests() {
+		return cohortIndicator("HEIs 6-8 weeks Missing DNA PCR HIV tests", ReportUtils.map(cohortLibrary.heiSixToEightWeeksMissingPCRTests(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	/**
+	 * Number of HEIs  24 Months with undocumented Outcome
+	 * @return the indicator
+	 */
+	public CohortIndicator hei24MonthsUndocumentedOutcome() {
+		return cohortIndicator("HEIs 24 Months with undocumented Outcome", ReportUtils.map(cohortLibrary.hei24MonthsUndocumentedOutcome(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	/**
+	 * Number of Pregnant and postpartum women at high risk (ML-based) not linked to PrEP
+	 * @return the indicator
+	 */
+	public CohortIndicator pregnantPostPartumNotLinkedToPrep() {
+		return cohortIndicator("Pregnant and postpartum women at high risk (ML-based) not linked to PrEP", ReportUtils.map(cohortLibrary.pregnantPostPartumNotLinkedToPrep(), "startDate=${startDate},endDate=${endDate}"));
+	}
     /**
      * Number of adolescents not in OTZ
      * @return the indicator
