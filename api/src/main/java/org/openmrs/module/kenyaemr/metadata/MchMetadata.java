@@ -55,6 +55,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String MCHMS_PREVENTIVE_SERVICES = "d3ea25c7-a3e8-4f57-a6a9-e802c3565a30";
 		public static final String MCHMS_DISCONTINUATION = "25935b9f-68ad-4e0c-9663-d2cacda82bbf";
 		public static final String MCHMS_PARTOGRAPH = "3791e5b7-2cdc-44fc-982b-a81135367c96";
+		public static final String MCHCS_POSTNATAL_NEWBORN_EXAMINATION = "503cc2df-1ea9-4a6e-bda1-195fc7783e59";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -85,6 +86,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("CWC Follow Up", "CWC-CS follow up form", _EncounterType.MCHCS_CONSULTATION, "2.0", _Form.MCHCS_FOLLOW_UP));
 		install(form("Immunization", "CWC-CS immunization form", _EncounterType.MCHCS_IMMUNIZATION, "2.0", _Form.MCHCS_IMMUNIZATION));
 		install(form("Child HEI outcomes", "MCH-CS HEI exit form", _EncounterType.MCHCS_HEI_COMPLETION, "1.0", _Form.MCHCS_HEI_COMPLETION));
+		install(form("Postnatal Newborn Examination Form", "Form for examining a newborn baby", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHCS_POSTNATAL_NEWBORN_EXAMINATION));
 
 		install(patientIdentifierType("HEI ID Number", "Assigned to a child patient when enrolling into HEI",
 				null, null, null,
