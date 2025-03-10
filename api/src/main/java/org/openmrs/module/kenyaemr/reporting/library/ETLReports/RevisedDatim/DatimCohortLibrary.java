@@ -2114,40 +2114,6 @@ public class DatimCohortLibrary {
         return cd;
     }
 
-    public CohortDefinition tgTestedNegative() {
-
-        String sqlQuery = "select hts.patient_id from kenyaemr_etl.etl_hts_test hts where hts.final_test_result =\"Negative\"\n" +
-                "       and hts.patient_given_result =\"Yes\"\n" +
-                "       and hts.key_population_type =5622\n" +
-                "       and hts.test_type =1\n" +
-                "       and hts.voided =0 and hts.visit_date between date(:startDate) and date(:endDate) group by hts.patient_id;";
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("HTS_TST_KP_TG_NEG");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("TG Tested Negative");
-        return cd;
-    }
-
-    public CohortDefinition tgTestedPositive() {
-
-        String sqlQuery = "select hts.patient_id from kenyaemr_etl.etl_hts_test hts where hts.final_test_result =\"Positive\"\n" +
-                "       and hts.patient_given_result =\"Yes\"\n" +
-                "       and hts.key_population_type =5622\n" +
-                "       and hts.test_type =1\n" +
-                "       and hts.voided =0 and hts.visit_date between date(:startDate) and date(:endDate) group by hts.patient_id;";
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("HTS_TST_KP_TG_POS");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("TG Tested Positive");
-        return cd;
-    }
-
     public CohortDefinition prisonersTestedNegative() {
 
         String sqlQuery = "select hts.patient_id from kenyaemr_etl.etl_hts_test hts where hts.final_test_result =\"Negative\"\n" +
@@ -6257,7 +6223,7 @@ public class DatimCohortLibrary {
     }
 
     /**
-     * KP_PREV by KPs known positive by MSM, TG, FSW, PWID, people in prisons and other closed settings
+     * KP_PREV by KPs known positive by MSM, FSW, PWID, people in prisons and other closed settings
      * @param kpType
      * @return
      */
@@ -6272,7 +6238,7 @@ public class DatimCohortLibrary {
     }
 
     /**
-     *KP_PREV by KPs newly tested and/or referred for testing by MSM, TG, FSW, PWID
+     *KP_PREV by KPs newly tested and/or referred for testing by MSM, FSW, PWID
      * @param kpType
      * @return
      */
@@ -6287,7 +6253,7 @@ public class DatimCohortLibrary {
     }
 
     /**
-     * KP_PREV by KPs declined testing and/or referral by MSM, TG, FSW, PWID, people in prisons and other closed settings
+     * KP_PREV by KPs declined testing and/or referral by MSM, FSW, PWID, people in prisons and other closed settings
      * @param kpType
      * @return
      */

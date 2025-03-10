@@ -775,22 +775,7 @@ public class DatimIndicatorLibrary {
         return cohortIndicator("FSW Tested Negative", ReportUtils.<CohortDefinition>map(datimCohorts.fswTestedNegative(),
                 "startDate=${startDate},endDate=${endDate}"));
     }
-    /**
-     * TG Tested Negative
-     * @return the indicator
-     */
-    public CohortIndicator tgTestedNegative() {
-        return cohortIndicator("TG Tested Negative", ReportUtils.<CohortDefinition>map(datimCohorts.tgTestedNegative(),
-                "startDate=${startDate},endDate=${endDate}"));
-    }
-    /**
-     * TG Tested Negative
-     * @return the indicator
-     */
-    public CohortIndicator tgTestedPositive() {
-        return cohortIndicator("TG Tested Negative", ReportUtils.<CohortDefinition>map(datimCohorts.tgTestedPositive(),
-                "startDate=${startDate},endDate=${endDate}"));
-    }
+
     /**
      * Prisoners Tested Negative
      * @return the indicator

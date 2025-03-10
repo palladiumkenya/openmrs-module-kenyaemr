@@ -42,7 +42,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
     static final int FSW_CONCEPT = 160579;
     static final int MSM_CONCEPT = 160578;
     static final int PWID_CONCEPT = 105;
-    static final int TG_CONCEPT = 165100;
     static final int PRISONERS_CLOSED_SETTINGS_CONCEPT = 162277;
     static final int HIV_DISEASE_RESULTING_IN_TB_CONCEPT = 163324;
     static final int HIV_DISEASE_RESULTING_IN_CANCER = 116030;
@@ -281,7 +280,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         // Number of KPs newly enrolled on PrEP
         cohortDsd.addColumn( "PrEP_NEW_PWID", "Number of PWIDs newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledInPrEPKP(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn( "PrEP_NEW_MSM", "Number of MSMs newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledInPrEPKP(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn("PrEP_NEW_TG", "Number of Transgenders newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledInPrEPKP(TG_CONCEPT), indParams),"");
         cohortDsd.addColumn("PrEP_NEW_FSW", "Number of FSWs newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledInPrEPKP(FSW_CONCEPT), indParams),"");
         cohortDsd.addColumn("PrEP_NEW_PRISONS_CLOSED_SETTINGS", "Number of prisoners and people in closed settings newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledInPrEPKP(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams), "");
         cohortDsd.addColumn("PrEP_NEW_PREGNANT", "Number of pregnant women newly enrolled on PrEP", ReportUtils.map(datimIndicators.newlyEnrolledOnPrEPPregnant(), indParams), "");
@@ -305,8 +303,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("PrEP_CT_PWID", "PWID KPs who Returned for PrEP", ReportUtils.map(datimIndicators.prepCTKP(PWID_CONCEPT), indParams), "");
         //MSM KPs who Returned for PrEP
         cohortDsd.addColumn("PrEP_CT_MSM", "MSM KPs who Returned for PrEP", ReportUtils.map(datimIndicators.prepCTKP(MSM_CONCEPT), indParams), "");
-        //Transgender KPs who Returned for PrEP
-        cohortDsd.addColumn("PrEP_CT_TG", "TG KPs who Returned for PrEP", ReportUtils.map(datimIndicators.prepCTKP(TG_CONCEPT), indParams), "");
         //FSW KPs who Returned for PrEP
         cohortDsd.addColumn("PrEP_CT_FSW", "FSW KPs who Returned for PrEP", ReportUtils.map(datimIndicators.prepCTKP(FSW_CONCEPT), indParams), "");
         //Prisoners and people in closed settings KPs who Returned for PrEP
@@ -324,7 +320,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
 
         //KP_PREV by KP type
         cohortDsd.addColumn("KP_PREV_MSM", "Reached with individual and/or small group-level HIV prevention interventions designed for the target population",ReportUtils.map(datimIndicators.kpPrev("MSM"), indParams),"");
-        cohortDsd.addColumn("KP_PREV_TG", "Reached with individual and/or small group-level HIV prevention interventions designed for the target population",ReportUtils.map(datimIndicators.kpPrev("Transgender"), indParams), "");
         cohortDsd.addColumn("KP_PREV_FSW", "Reached with individual and/or small group-level HIV prevention interventions designed for the target population",ReportUtils.map(datimIndicators.kpPrev("FSW"), indParams), "");
         cohortDsd.addColumn("KP_PREV_PWID", "Reached with individual and/or small group-level HIV prevention interventions designed for the target population",ReportUtils.map(datimIndicators.kpPrev("PWID"), indParams),"");
         cohortDsd.addColumn("KP_PREV_PRISONS_CLOSED_SETTINGS", "Reached with individual and/or small group-level HIV prevention interventions designed for the target population",ReportUtils.map(datimIndicators.kpPrev("People in prison and other closed settings"), indParams), "");
@@ -333,20 +328,17 @@ public class DatimReportBuilder extends AbstractReportBuilder {
 
         //Known Positive
         cohortDsd.addColumn("KP_PREV_MSM_KNOWN_POSITVE", "Known Positive",ReportUtils.map(datimIndicators.kpPrevKnownPositive("MSM"), indParams),"");
-        cohortDsd.addColumn("KP_PREV_TG_KNOWN_POSITVE", "Known Positive",ReportUtils.map(datimIndicators.kpPrevKnownPositive("Transgender"), indParams), "");
         cohortDsd.addColumn("KP_PREV_FSW_KNOWN_POSITVE", "Known Positive",ReportUtils.map(datimIndicators.kpPrevKnownPositive("FSW"), indParams), "");
         cohortDsd.addColumn("KP_PREV_PWID_KNOWN_POSITVE", "Known Positive",ReportUtils.map(datimIndicators.kpPrevKnownPositive("PWID"), indParams),"");
         cohortDsd.addColumn("KP_PREV_PRISONS_CLOSED_SETTINGS_KNOWN_POSITVE", "Known Positive",ReportUtils.map(datimIndicators.kpPrevKnownPositive("People in prison and other closed settings"), indParams), "");
 
         //Newly tested and/or referred for HTS
         cohortDsd.addColumn("KP_PREV_MSM_NEWLY_TESTED_REFERRED", "Newly tested and/or referred for HTS",ReportUtils.map(datimIndicators.kpPrevNewlyTestedOrReferred("MSM"), indParams),"");
-        cohortDsd.addColumn("KP_PREV_TG_NEWLY_TESTED_REFERRED", "Newly tested and/or referred for HTS",ReportUtils.map(datimIndicators.kpPrevNewlyTestedOrReferred("Transgender"), indParams), "");
         cohortDsd.addColumn("KP_PREV_FSW_NEWLY_TESTED_REFERRED", "Newly tested and/or referred for HTS",ReportUtils.map(datimIndicators.kpPrevNewlyTestedOrReferred("FSW"), indParams), "");
         cohortDsd.addColumn("KP_PREV_PWID_NEWLY_TESTED_REFERRED", "Newly tested and/or referred for HTS",ReportUtils.map(datimIndicators.kpPrevNewlyTestedOrReferred("PWID"), indParams),"");
         cohortDsd.addColumn("KP_PREV_PRISONS_CLOSED_SETTINGS_NEWLY_TESTED_REFERRED", "Newly tested and/or referred for HTS",ReportUtils.map(datimIndicators.kpPrevNewlyTestedOrReferred("People in prison and other closed settings"), indParams), "");
         //Declined testing and/or referral
         cohortDsd.addColumn("KP_PREV_MSM_DECLINED_HTS", "Declined testing and/or referral",ReportUtils.map(datimIndicators.kpPrevDeclinedTesting("MSM"), indParams),"");
-        cohortDsd.addColumn("KP_PREV_TG_DECLINED_HTS", "Declined testing and/or referral",ReportUtils.map(datimIndicators.kpPrevDeclinedTesting("Transgender"), indParams), "");
         cohortDsd.addColumn("KP_PREV_FSW_DECLINED_HTS", "Declined testing and/or referral",ReportUtils.map(datimIndicators.kpPrevDeclinedTesting("FSW"), indParams), "");
         cohortDsd.addColumn("KP_PREV_PWID_DECLINED_HTS", "Declined testing and/or referral",ReportUtils.map(datimIndicators.kpPrevDeclinedTesting("PWID"), indParams),"");
         cohortDsd.addColumn("KP_PREV_PRISONS_CLOSED_SETTINGS_DECLINED_HTS", "Declined testing and/or referral",ReportUtils.map(datimIndicators.kpPrevDeclinedTesting("People in prison and other closed settings"), indParams), "");
@@ -515,12 +507,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         //FSW Negative
         cohortDsd.addColumn( "HTS_TST_KP_FSW_NEG", "FSW Tested Negative", ReportUtils.map(datimIndicators.fswTestedNegative(), indParams), "");
 
-        //TG Negative
-        cohortDsd.addColumn( "HTS_TST_KP_TG_NEG", "TG Tested Negative", ReportUtils.map(datimIndicators.tgTestedNegative(), indParams), "");
-
-        //TG Positive
-        cohortDsd.addColumn( "HTS_TST_KP_TG_POS", "TG Tested Positive", ReportUtils.map(datimIndicators.tgTestedPositive(), indParams), "");
-
         //PRISONERS_CLOSED_SETTINGS_Negative
         cohortDsd.addColumn( "HTS_TST_KP_PRISONERS_CLOSED_SETTINGS_NEG", "People in prisons and other closed settings Tested Negative", ReportUtils.map(datimIndicators.prisonersTestedNegative(), indParams), "");
 
@@ -678,9 +664,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - MSM
         cohortDsd.addColumn("TX_NEW_MSM", "MSM with HIV new on ART", ReportUtils.map(datimIndicators.kpNewlyStartedART(MSM_CONCEPT), indParams), "");
 
-        //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - TG
-        cohortDsd.addColumn("TX_NEW_TG", "Transgenders with HIV new on ART", ReportUtils.map(datimIndicators.kpNewlyStartedART( TG_CONCEPT), indParams), "");
-
         //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - FSW
         cohortDsd.addColumn("TX_NEW_FSW", "FSW with HIV new on ART", ReportUtils.map(datimIndicators.kpNewlyStartedART(FSW_CONCEPT), indParams), "");
 
@@ -696,9 +679,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
 
         //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - MSM
         cohortDsd.addColumn("TX_CURR_MSM", "MSM with HIV receiving ART", ReportUtils.map(datimIndicators.kpCurrentlyOnART(MSM_CONCEPT), indParams), "");
-
-        //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - TG
-        cohortDsd.addColumn("TX_CURR_TG", "Transgenders with HIV receiving ART", ReportUtils.map(datimIndicators.kpCurrentlyOnART(TG_CONCEPT), indParams), "");
 
         //Number of Adults with HIV infection receiving ART By KP Type Disagreggation - FSW
         cohortDsd.addColumn("TX_CURR_FSW", "FSW with HIV receiving ART", ReportUtils.map(datimIndicators.kpCurrentlyOnART(FSW_CONCEPT), indParams), "");
@@ -789,41 +769,35 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         //TX_ML_KPs who died
         cohortDsd.addColumn( "TX_ML_PWID_DIED", "PWID KPs who died", ReportUtils.map(datimIndicators.txmlKPPatientDied(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_DIED", "MSM KPs TXML who died", ReportUtils.map(datimIndicators.txmlKPPatientDied(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_DIED", "TG KPs TXML who died", ReportUtils.map(datimIndicators.txmlKPPatientDied(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_DIED", "FSW KPs TXML who died", ReportUtils.map(datimIndicators.txmlKPPatientDied(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_PRISONS_CLOSED_SETTINGS_DIED", "Prisoners KPs TXML who died", ReportUtils.map(datimIndicators.txmlKPPatientDied(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
         //TX_ML  KPs IIT < 3 MONTHS
         cohortDsd.addColumn( "TX_ML_PWID_IIT_UNDER_3_MONTHS", "IIT After being on Treatment for <3 months", ReportUtils.map(datimIndicators.txMLIITKpUnder3MonthsInTx(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_IIT_UNDER_3_MONTHS", "IIT After being on Treatment for <3 months", ReportUtils.map(datimIndicators.txMLIITKpUnder3MonthsInTx(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_IIT_UNDER_3_MONTHS", "IIT After being on Treatment for <3 months", ReportUtils.map(datimIndicators.txMLIITKpUnder3MonthsInTx(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_IIT_UNDER_3_MONTHS", "IIT After being on Treatment for <3 months", ReportUtils.map(datimIndicators.txMLIITKpUnder3MonthsInTx(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_PRISONS_CLOSED_SETTINGS_IIT_UNDER_3_MONTHS", "IIT After being on Treatment for <3 months", ReportUtils.map(datimIndicators.txMLIITKpUnder3MonthsInTx(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
 
         //TX_ML  KPs IIT 3-5 MONTHS
         cohortDsd.addColumn( "TX_ML_PWID_IIT_3_TO_5_MONTHS", "IIT After being on Treatment for 3-5 months", ReportUtils.map(datimIndicators.txMLIITKp3To5MonthsInTx(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_IIT_3_TO_5_MONTHS", "IIT After being on Treatment for 3-5 months", ReportUtils.map(datimIndicators.txMLIITKp3To5MonthsInTx(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_IIT_3_TO_5_MONTHS", "IIT After being on Treatment for 3-5 months", ReportUtils.map(datimIndicators.txMLIITKp3To5MonthsInTx(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_IIT_3_TO_5_MONTHS", "IIT After being on Treatment for 3-5 months", ReportUtils.map(datimIndicators.txMLIITKp3To5MonthsInTx(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_PRISONS_CLOSED_SETTINGS_IIT_3_TO_5_MONTHS", "IIT After being on Treatment for 3-5 months", ReportUtils.map(datimIndicators.txMLIITKp3To5MonthsInTx(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
 
         //TX_ML  KPs IIT 6+ MONTHS
         cohortDsd.addColumn( "TX_ML_PWID_IIT_6_MONTHS_AND_ABOVE", "IIT After being on Treatment for 6+ months", ReportUtils.map(datimIndicators.txMLIITKpAtleast6Months(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_IIT_6_MONTHS_AND_ABOVE", "IIT After being on Treatment for 6+ months", ReportUtils.map(datimIndicators.txMLIITKpAtleast6Months(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_IIT_6_MONTHS_AND_ABOVE", "IIT After being on Treatment for 6+ months", ReportUtils.map(datimIndicators.txMLIITKpAtleast6Months(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_IIT_6_MONTHS_AND_ABOVE", "IIT After being on Treatment for 6+ months", ReportUtils.map(datimIndicators.txMLIITKpAtleast6Months(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_PRISONS_CLOSED_SETTINGS_IIT_6_MONTHS_AND_ABOVE", "IIT After being on Treatment for 6+ months", ReportUtils.map(datimIndicators.txMLIITKpAtleast6Months(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
 
         //TX_ML  KPs Transferred out
         cohortDsd.addColumn( "TX_ML_PWID_IIT_TOUT", "Transferred Out", ReportUtils.map(datimIndicators.txmlKPsTransferredOut(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_IIT_TOUT", "Transferred Out", ReportUtils.map(datimIndicators.txmlKPsTransferredOut(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_IIT_TOUT", "Transferred Out", ReportUtils.map(datimIndicators.txmlKPsTransferredOut(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_IIT_TOUT", "Transferred Out", ReportUtils.map(datimIndicators.txmlKPsTransferredOut(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_PRISONS_CLOSED_SETTINGS_IIT_TOUT", "Transferred Out", ReportUtils.map(datimIndicators.txmlKPsTransferredOut(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
 
         //TX_ML KPs stopped Tx
         cohortDsd.addColumn( "TX_ML_PWID_IIT_STOPPED_TX", "Refused (Stopped) Treatment", ReportUtils.map(datimIndicators.txmlKPStopReason(PWID_CONCEPT), indParams),"");
         cohortDsd.addColumn("TX_ML_MSM_IIT_STOPPED_TX", "Refused (Stopped) Treatment", ReportUtils.map(datimIndicators.txmlKPStopReason(MSM_CONCEPT), indParams), "");
-        cohortDsd.addColumn( "TX_ML_TG_IIT_STOPPED_TX", "Refused (Stopped) Treatment", ReportUtils.map(datimIndicators.txmlKPStopReason(TG_CONCEPT), indParams), "");
         cohortDsd.addColumn("TX_ML_FSW_IIT_STOPPED_TX", "Refused (Stopped) Treatment", ReportUtils.map(datimIndicators.txmlKPStopReason(FSW_CONCEPT), indParams), "");
         cohortDsd.addColumn( "TX_ML_IIT_PRISONS_CLOSED_SETTINGS_STOPPED_TX", "Refused (Stopped) Treatment", ReportUtils.map(datimIndicators.txmlKPStopReason(PRISONERS_CLOSED_SETTINGS_CONCEPT), indParams),"");
 
@@ -852,10 +826,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
          * Number of MSM ART patients who experienced IIT during any previous reporting period, who successfully restarted ARVs within the reporting period and remained on treatment until the end of the reporting period
          */
         cohortDsd.addColumn("TX_RTT_MSM", "MSM with HIV receiving ART", ReportUtils.map(datimIndicators.txRTTKP(MSM_CONCEPT), indParams), "");
-        /**
-         * Number of TG ART patients who experienced IIT during any previous reporting period, who successfully restarted ARVs within the reporting period and remained on treatment until the end of the reporting period
-         */
-        cohortDsd.addColumn("TX_RTT_TG", "Transgenders with HIV receiving ART", ReportUtils.map(datimIndicators.txRTTKP(TG_CONCEPT), indParams), "");
         /**
          * Number of FSW ART patients who experienced IIT during any previous reporting period, who successfully restarted ARVs within the reporting period and remained on treatment until the end of the reporting period
          */
@@ -892,9 +862,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
         //TX_PVLS_DENOMINATOR_MSM Number of MSM KPs on ART with viral load results  within the past 12 months
         cohortDsd.addColumn("TX_PVLS_DENOMINATOR_MSM", "MSM on ART with current VL results ", ReportUtils.map(datimIndicators.kpOnARTWithVLLast12Months(MSM_CONCEPT), indParams), "");
 
-        //TX_PVLS_DENOMINATOR_TG Number of Transgender KPs on ART with viral load results  within the past 12 months
-        cohortDsd.addColumn("TX_PVLS_DENOMINATOR_TG", "Transgender on ART with current VL results ", ReportUtils.map(datimIndicators.kpOnARTWithVLLast12Months(TG_CONCEPT), indParams), "");
-
         //TX_PVLS_DENOMINATOR_FSW Number of FSW KPs on ART with viral load results  within the past 12 months
         cohortDsd.addColumn("TX_PVLS_DENOMINATOR_FSW", "FSW on ART with current VL results ", ReportUtils.map(datimIndicators.kpOnARTWithVLLast12Months(FSW_CONCEPT), indParams), "");
 
@@ -915,9 +882,6 @@ public class DatimReportBuilder extends AbstractReportBuilder {
 
         //TX_PVLS Number of MSM KPs on ART with suppressed viral load results (<1,000 copies/ml) within the past 12 months
         cohortDsd.addColumn("TX_PVLS_SUPP_KP_MSM", "MSM on ART with current suppressed VL results (<1,000 copies/ml)", ReportUtils.map(datimIndicators.kpOnARTSuppVLLast12Months(MSM_CONCEPT), indParams), "");
-
-        //TX_PVLS Number of Transgender KPs on ART with suppressed viral load results (<1,000 copies/ml) within the past 12 months
-        cohortDsd.addColumn("TX_PVLS_SUPP_KP_TG", "Transgender on ART with current suppressed VL results (<1,000 copies/ml)", ReportUtils.map(datimIndicators.kpOnARTSuppVLLast12Months(TG_CONCEPT), indParams), "");
 
         //TX_PVLS Number of FSW KPs on ART with suppressed viral load results (<1,000 copies/ml) within the past 12 months
         cohortDsd.addColumn("TX_PVLS_SUPP_KP_FSW", "FSW on ART with current suppressed VL results (<1,000 copies/ml)", ReportUtils.map(datimIndicators.kpOnARTSuppVLLast12Months(FSW_CONCEPT), indParams), "");
