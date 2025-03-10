@@ -182,7 +182,8 @@ import java.util.Set;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
- * The rest controller for exposing resources through kenyacore and kenyaemr modules
+ * The rest controller for exposing resources through kenyacore and kenyaemr
+ * modules
  */
 @Controller
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/kenyaemr")
@@ -231,7 +232,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     public static final String PWID_UUID = "105AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-    public static final String PWUD_UUID = "642945a8-045a-4010-b3f3-bc50aaaab386" ;
+    public static final String PWUD_UUID = "642945a8-045a-4010-b3f3-bc50aaaab386";
 
     public static final String TRANSGENDER_UUID = "bd370cad-06fe-4950-a36f-ed991b280ce6";
 
@@ -243,13 +244,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Gets a list of available/completed forms for a patient
+     * 
      * @param request
      * @param patientUuid
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/forms") // gets all visit forms for a patient
     @ResponseBody
-    public Object getAllAvailableFormsForVisit(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid) {
+    public Object getAllAvailableFormsForVisit(HttpServletRequest request,
+            @RequestParam("patientUuid") String patientUuid) {
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
                     new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -275,15 +278,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
             if (!uncompletedFormDescriptors.isEmpty()) {
 
                 for (FormDescriptor descriptor : uncompletedFormDescriptors) {
-                    if(!descriptor.getTarget().getRetired()) {
+                    if (!descriptor.getTarget().getRetired()) {
                         ObjectNode formObj = generateFormDescriptorPayload(descriptor);
                         formObj.put("formCategory", "available");
                         formList.add(formObj);
                     }
                 }
                 PatientWrapper patientWrapper = new PatientWrapper(patient);
-                Encounter lastMchEnrollment = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT));
-                if(lastMchEnrollment != null) {
+                Encounter lastMchEnrollment = patientWrapper.lastEncounter(
+                        MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT));
+                if (lastMchEnrollment != null) {
                     ObjectNode delivery = JsonNodeFactory.instance.objectNode();
                     delivery.put("uuid", MCH_DELIVERY_FORM_UUID);
                     delivery.put("name", "Delivery");
@@ -293,8 +297,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     delivery.put("retired", false);
                     formList.add(delivery);
                 }
-                CalculationResult eligibleForDischarge = EmrCalculationUtils.evaluateForPatient(EligibleForMchmsDischargeCalculation.class, null, patient);
-                if((Boolean) eligibleForDischarge.getValue() == true) {
+                CalculationResult eligibleForDischarge = EmrCalculationUtils
+                        .evaluateForPatient(EligibleForMchmsDischargeCalculation.class, null, patient);
+                if ((Boolean) eligibleForDischarge.getValue() == true) {
                     ObjectNode discharge = JsonNodeFactory.instance.objectNode();
                     discharge.put("uuid", MCH_DISCHARGE_FORM_UUID);
                     discharge.put("name", "Discharge");
@@ -314,6 +319,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Gets a list of flags for a patient
+     * 
      * @param request
      * @param patientUuid
      * @return
@@ -321,7 +327,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
     @ResponseBody
     @Cacheable(value = "patientFlagCache", key = "#patientUuid")
-    public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid, @SpringBean CalculationManager calculationManager) {
+    public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid,
+            @SpringBean CalculationManager calculationManager) {
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
                     new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -329,14 +336,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
         ProgramWorkflowService service = Context.getProgramWorkflowService();
-        List<PatientProgram> programEnrolmentHistory = service.getPatientPrograms(patient, null, null, null, null, null, false);
+        List<PatientProgram> programEnrolmentHistory = service.getPatientPrograms(patient, null, null, null, null, null,
+                false);
 
         if (patient == null) {
             return new ResponseEntity<Object>("The provided patient was not found in the system!",
                     new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
 
-        Map<String,String> patientFlagsMap = new HashMap<>();
+        Map<String, String> patientFlagsMap = new HashMap<>();
         ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
 
         // TODO: Consider flags categorization for a patient who is not in any program
@@ -348,32 +356,35 @@ public class KenyaemrCoreRestController extends BaseRestController {
         CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
         Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
         List<String> patientFlagsToRefreshOnEveryRequest = Arrays.asList(
-                "EligibleForIDSRFlagsCalculation"
-        );
+                "EligibleForIDSRFlagsCalculation");
         calculationManager.refresh();
 
         /**
          * The patientFlagCache is implemented using a map of property and value pair.
-         * For flags, the property (the key), is the simple name of the flags calculation
-         * We append a special property of lastUpdated to keep track of the last updated time.
+         * For flags, the property (the key), is the simple name of the flags
+         * calculation
+         * We append a special property of lastUpdated to keep track of the last updated
+         * time.
          * We can use the property to check if certain flags need refresh or not
          * We only want to refresh flags which can change in the course of a visit
          */
         if (patientFlagCache != null && patientFlagCache.get(patientUuid) != null) {
-            patientFlagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid).get();
+            patientFlagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid)
+                    .get();
             for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
 
-                if (!(calc instanceof PatientFlagCalculation) || !patientFlagsToRefreshOnEveryRequest.contains(calc.getClass().getSimpleName())) {
+                if (!(calc instanceof PatientFlagCalculation)
+                        || !patientFlagsToRefreshOnEveryRequest.contains(calc.getClass().getSimpleName())) {
                     continue;
                 }
 
                 try {
-                    CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(), calc);
+                    CalculationResult result = Context.getService(PatientCalculationService.class)
+                            .evaluate(patient.getId(), calc);
                     if (result != null && (Boolean) result.getValue()) {
                         patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     System.out.println("Error evaluating " + ex.getMessage());
                     log.error("Error evaluating " + calc.getClass(), ex);
                 }
@@ -385,7 +396,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
             return flagsObj.toString();
         }
 
-        // define a hashmap of flag name and value for ease of update in other parts of the code
+        // define a hashmap of flag name and value for ease of update in other parts of
+        // the code
         for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
 
             if (!(calc instanceof PatientFlagCalculation)) { // we are only interested in flags calculation
@@ -393,12 +405,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
 
             try {
-                CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(), calc);
+                CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(),
+                        calc);
                 if (result != null && (Boolean) result.getValue()) {
                     patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 System.out.println("Error evaluating " + ex.getMessage());
                 log.error("Error evaluating " + calc.getClass(), ex);
             }
@@ -416,15 +428,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Prepares an array of flags from Patient flags map
+     * 
      * @param flagsMap
      * @return
      */
-    private ArrayNode composePatientFlagsFromMap(Map<String,String> flagsMap) {
+    private ArrayNode composePatientFlagsFromMap(Map<String, String> flagsMap) {
         ArrayNode flags = JsonNodeFactory.instance.arrayNode();
         if (flagsMap.isEmpty()) {
             return flags;
         }
-        for (Map.Entry<String,String> entry : flagsMap.entrySet()) {
+        for (Map.Entry<String, String> entry : flagsMap.entrySet()) {
             if (entry.getKey().equalsIgnoreCase("lastUpdated")) {
                 continue;
             }
@@ -432,8 +445,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
         return flags;
     }
+
     /**
      * Returns custom patient object
+     * 
      * @param patientUuid
      * @return
      */
@@ -465,13 +480,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Returns regimen history for a patient
-     * @param category // ARV or TB
+     * 
+     * @param category    // ARV or TB
      * @param patientUuid
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/regimenHistory")
     @ResponseBody
-    public Object getRegimenHistory(@RequestParam("patientUuid") String patientUuid, @RequestParam("category") String category) {
+    public Object getRegimenHistory(@RequestParam("patientUuid") String patientUuid,
+            @RequestParam("category") String category) {
         ObjectNode regimenObj = JsonNodeFactory.instance.objectNode();
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify patientUuid in the request!",
@@ -487,7 +504,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         ArrayNode regimenNode = JsonNodeFactory.instance.arrayNode();
         List<SimpleObject> obshistory = EncounterBasedRegimenUtils.getRegimenHistoryFromObservations(patient, category);
         for (SimpleObject obj : obshistory) {
-            ObjectNode node = JsonNodeFactory.instance.objectNode();;
+            ObjectNode node = JsonNodeFactory.instance.objectNode();
+            ;
             node.put("startDate", obj.get("startDate").toString());
             node.put("endDate", obj.get("endDate").toString());
             node.put("regimenShortDisplay", obj.get("regimenShortDisplay").toString());
@@ -512,10 +530,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/default-facility")
     @ResponseBody
     public Object getDefaultConfiguredFacility() {
-        GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
+        GlobalProperty gp = Context.getAdministrationService()
+                .getGlobalPropertyObject(EmrConstants.GP_DEFAULT_LOCATION);
 
         if (gp == null) {
-            return new ResponseEntity<Object>("Default facility not configured!", new HttpHeaders(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>("Default facility not configured!", new HttpHeaders(),
+                    HttpStatus.NOT_FOUND);
         }
 
         Location location = (Location) gp.getValue();
@@ -530,20 +550,24 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sha-facility-status")
     @ResponseBody
-    public ResponseEntity<String> getShaFacilityStatus(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+    public ResponseEntity<String> getShaFacilityStatus(
+            @RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
         FacilityStatusHandler facilityStatusHandler = new FacilityStatusHandler();
         return fetchData(facilityStatusHandler, isSynchronize);
     }
+
     @RequestMapping(method = RequestMethod.GET, value = "/sha-benefits-package")
     @ResponseBody
-    public ResponseEntity<String> getShaBenefitsPackage(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+    public ResponseEntity<String> getShaBenefitsPackage(
+            @RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
         SHABenefitsPackageHandler shaBenefitsPackageHandler = new SHABenefitsPackageHandler();
         return fetchData(shaBenefitsPackageHandler, isSynchronize);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/sha-interventions")
     @ResponseBody
-    public ResponseEntity<String> getShaInterventions(@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
+    public ResponseEntity<String> getShaInterventions(
+            @RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
         SHAInterventionsHandler shaInterventionsHandler = new SHAInterventionsHandler();
         return fetchData(shaInterventionsHandler, isSynchronize);
     }
@@ -556,30 +580,30 @@ public class KenyaemrCoreRestController extends BaseRestController {
             // Wrap the array in an ObjectNode
             if (data.isArray()) {
                 ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
-                responseWrapper.put("data", data);  // Embed the array under the "data" field
-                responseWrapper.put("source", "HIE");  // or "HIE" if synchronized
+                responseWrapper.put("data", data); // Embed the array under the "data" field
+                responseWrapper.put("source", "HIE"); // or "HIE" if synchronized
 
                 return ResponseEntity.ok(responseWrapper.toString());
             }
 
             // If data is already an ObjectNode, add the source property directly
             if (data instanceof ObjectNode) {
-                ((ObjectNode) data).put("source", "HIE");  // or "HIE"
+                ((ObjectNode) data).put("source", "HIE"); // or "HIE"
             }
         } else {
             data = handler.readFromLocalFile();
             // Wrap the array in an ObjectNode
             if (data.isArray()) {
                 ObjectNode responseWrapper = handler.getObjectMapper().createObjectNode();
-                responseWrapper.put("data", data);  // Embed the array under the "data" field
-                responseWrapper.put("source", "Local");  // or "HIE" if synchronized
+                responseWrapper.put("data", data); // Embed the array under the "data" field
+                responseWrapper.put("source", "Local"); // or "HIE" if synchronized
 
                 return ResponseEntity.ok(responseWrapper.toString());
             }
 
             // If data is already an ObjectNode, add the source property directly
             if (data instanceof ObjectNode) {
-                ((ObjectNode) data).put("source", "Local");  // or "HIE"
+                ((ObjectNode) data).put("source", "Local"); // or "HIE"
             }
         }
         if (data == null) {
@@ -588,6 +612,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         return ResponseEntity.ok(data.toString());
     }
+
     /**
      * ARV drugs
      *
@@ -618,10 +643,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 concService.getConcept(74258),
                 concService.getConcept(164967),
                 concService.getConcept(168612),
-                concService.getConcept(84797)
-        );
+                concService.getConcept(84797));
 
-        for (Concept con: arvDrugs) {
+        for (Concept con : arvDrugs) {
             ObjectNode node = JsonNodeFactory.instance.objectNode();
             node.put("name", con.getName() != null ? con.getName().toString() : "");
             node.put("uuid", con.getUuid() != null ? con.getUuid().toString() : "");
@@ -635,6 +659,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Gets the facility name given the facility code
+     * 
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/facilityName")
@@ -645,24 +670,28 @@ public class KenyaemrCoreRestController extends BaseRestController {
         locationResponseObj.put("name", facility.getName());
         return locationResponseObj;
     }
+
     /**
      * Gets last hei outcome encounter
+     * 
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/heiOutcomeEncounter")
     @ResponseBody
     public Object getHeiOutcomeEncounter(@RequestParam("patientUuid") String patientUuid) {
         SimpleObject heiOutcomeResponseObj = new SimpleObject();
-        PatientIdentifierType heiNumber = MetadataUtils.existing(PatientIdentifierType.class, MchMetadata._PatientIdentifierType.HEI_ID_NUMBER);
-        Patient patient =  Context.getPatientService().getPatientByUuid(patientUuid);
+        PatientIdentifierType heiNumber = MetadataUtils.existing(PatientIdentifierType.class,
+                MchMetadata._PatientIdentifierType.HEI_ID_NUMBER);
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
         PatientIdentifier pi = heiNumber != null && patient != null ? patient.getPatientIdentifier(heiNumber) : null;
-        EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
+        EncounterType heiOutcomeEncType = MetadataUtils.existing(EncounterType.class,
+                MchMetadata._EncounterType.MCHCS_HEI_COMPLETION);
         Form heiOutcomeForm = MetadataUtils.existing(Form.class, MchMetadata._Form.MCHCS_HEI_COMPLETION);
         Encounter lastHeiOutcomeEnc = EmrUtils.lastEncounter(patient, heiOutcomeEncType, heiOutcomeForm);
-        if(pi != null && pi.getIdentifier() != null) {
+        if (pi != null && pi.getIdentifier() != null) {
             heiOutcomeResponseObj.put("heiNumber", pi.getIdentifier());
         }
-        if(lastHeiOutcomeEnc != null) {
+        if (lastHeiOutcomeEnc != null) {
             heiOutcomeResponseObj.put("heiOutcomeEncounterUuid", lastHeiOutcomeEnc.getUuid());
         }
         return heiOutcomeResponseObj;
@@ -670,11 +699,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Get a list of programs a patient is eligible for
+     * 
      * @param request
      * @param patientUuid
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/eligiblePrograms") // gets all programs a patient is eligible for
+    @RequestMapping(method = RequestMethod.GET, value = "/eligiblePrograms") // gets all programs a patient is eligible
+                                                                             // for
     @ResponseBody
     public Object getEligiblePrograms(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid) {
         if (StringUtils.isBlank(patientUuid)) {
@@ -700,7 +731,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 programObj.put("uuid", descriptor.getTargetUuid());
                 programObj.put("display", descriptor.getTarget().getName());
                 programObj.put("enrollmentFormUuid", descriptor.getDefaultEnrollmentForm().getTargetUuid());
-                if(descriptor.getDefaultCompletionForm() != null && descriptor.getDefaultCompletionForm().getTargetUuid() != null) {
+                if (descriptor.getDefaultCompletionForm() != null
+                        && descriptor.getDefaultCompletionForm().getTargetUuid() != null) {
                     programObj.put("discontinuationFormUuid", descriptor.getDefaultCompletionForm().getTargetUuid());
 
                 }
@@ -711,13 +743,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         return programList.toString();
     }
+
     /**
      * Gets the last regimen encounter uuid by category
+     * 
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/lastRegimenEncounter")
     @ResponseBody
-    public Object getLastRegimenEncounterUuid(@RequestParam("category") String category, @RequestParam("patientUuid") String patientUuid) {
+    public Object getLastRegimenEncounterUuid(@RequestParam("category") String category,
+            @RequestParam("patientUuid") String patientUuid) {
         ObjectNode encObj = JsonNodeFactory.instance.objectNode();
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
@@ -736,7 +771,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             for (Obs obs : enc.getObs()) {
                 // ARV Treatment Plan Event
-                if (ARV_TREATMENT_PLAN_EVENT.equals(obs.getConcept().getUuid()) && obs.getObsDatetime().equals(latest)) {
+                if (ARV_TREATMENT_PLAN_EVENT.equals(obs.getConcept().getUuid())
+                        && obs.getObsDatetime().equals(latest)) {
                     event = obs.getValueCoded() != null ? obs.getValueCoded().getName().getName() : "";
                 }
 
@@ -757,9 +793,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return encObj.toString();
     }
 
-
     /**
      * Get a list of standard regimen
+     * 
      * @param
      * @return
      * @throws IOException
@@ -794,7 +830,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     String categoryCode = categoryElement.getAttribute("code");
                     categoryObj.put("categoryCode", categoryCode);
 
-
                     NodeList groupNodes = categoryElement.getElementsByTagName("group");
                     ArrayNode standardRegimen = JsonNodeFactory.instance.arrayNode();
 
@@ -806,26 +841,23 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                         if (groupName.equalsIgnoreCase("Adult (first line)")) {
                             regimenLineValue = "AF";
-                        }else if (groupName.equalsIgnoreCase("Adult (second line)")) {
+                        } else if (groupName.equalsIgnoreCase("Adult (second line)")) {
                             regimenLineValue = "AS";
-                        }else if (groupName.equalsIgnoreCase("Adult (third line)")) {
+                        } else if (groupName.equalsIgnoreCase("Adult (third line)")) {
                             regimenLineValue = "AT";
-                        }else if (groupName.equalsIgnoreCase("Child (First Line)")) {
+                        } else if (groupName.equalsIgnoreCase("Child (First Line)")) {
                             regimenLineValue = "CF";
-                        }else if (groupName.equalsIgnoreCase("Child (Second Line)")) {
+                        } else if (groupName.equalsIgnoreCase("Child (Second Line)")) {
                             regimenLineValue = "CS";
-                        }else if (groupName.equalsIgnoreCase("Child (Third Line)")) {
+                        } else if (groupName.equalsIgnoreCase("Child (Third Line)")) {
                             regimenLineValue = "CT";
-                        }else if (groupName.equalsIgnoreCase("Intensive Phase (Adult)")) {
+                        } else if (groupName.equalsIgnoreCase("Intensive Phase (Adult)")) {
                             regimenLineValue = "Intensive Phase (Adult)";
-                        }else if (groupName.equalsIgnoreCase("Intensive Phase (Child)")) {
+                        } else if (groupName.equalsIgnoreCase("Intensive Phase (Child)")) {
                             regimenLineValue = "Intensive Phase (Child)";
-                        }else if (groupName.equalsIgnoreCase("Continuation Phase (Adult)")) {
+                        } else if (groupName.equalsIgnoreCase("Continuation Phase (Adult)")) {
                             regimenLineValue = "Continuation Phase (Adult)";
                         }
-
-
-
 
                         standardRegimenObj.put("regimenline", groupName);
                         standardRegimenObj.put("regimenLineValue", regimenLineValue);
@@ -851,7 +883,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Unable to load " + configuration.getModuleId() + ":" + configuration.getDefinitionsPath(), e);
+                throw new RuntimeException(
+                        "Unable to load " + configuration.getModuleId() + ":" + configuration.getDefinitionsPath(), e);
             } finally {
                 try {
                     if (stream != null) {
@@ -863,15 +896,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
         }
 
-
         resultsObj.put("results", standardRegimenCategories);
 
         return resultsObj.toString();
     }
 
-
     /**
      * Returns regimen change/stop reasons
+     * 
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/regimenReason")
@@ -923,7 +955,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
         tbReasonOptionsMap.put("Drug formulation changed", "1258AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         tbReasonOptionsMap.put("Patient lacks finance", "819AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
-
         ArrayNode tbReasons = JsonNodeFactory.instance.arrayNode();
         for (Map.Entry<String, String> entry : tbReasonOptionsMap.entrySet()) {
             ObjectNode tbCategoryReasonObj = JsonNodeFactory.instance.objectNode();
@@ -941,6 +972,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Calculate z-score based on a client's sex, weight, and height
+     * 
      * @param sex
      * @param weight
      * @param height
@@ -948,11 +980,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/zscore")
     @ResponseBody
-    public Object calculateZScore(@RequestParam("sex") String sex, @RequestParam("weight") Double weight, @RequestParam("height") Double height) {
+    public Object calculateZScore(@RequestParam("sex") String sex, @RequestParam("weight") Double weight,
+            @RequestParam("height") Double height) {
         ObjectNode resultNode = JsonNodeFactory.instance.objectNode();
-        Integer result =  ZScoreUtil.calculateZScore(height, weight, sex);
+        Integer result = ZScoreUtil.calculateZScore(height, weight, sex);
 
-        if (result < -4) { // this is an indication of an error. We can break it down further for appropriate messages
+        if (result < -4) { // this is an indication of an error. We can break it down further for
+                           // appropriate messages
             return new ResponseEntity<Object>("Could not compute the zscore for the patient!",
                     new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
@@ -978,25 +1012,28 @@ public class KenyaemrCoreRestController extends BaseRestController {
         SimpleObject tbResponseObj = new SimpleObject();
         CalculationResult enrolledInHiv = EmrCalculationUtils.evaluateForPatient(HIVEnrollment.class, null, patient);
 
-        if((Boolean) enrolledInHiv.getValue() == false) {
-            CalculationResult lastWhoStage = EmrCalculationUtils.evaluateForPatient(LastWhoStageCalculation.class, null, patient);
-            if(lastWhoStage != null && lastWhoStage.getValue() != null) {
+        if ((Boolean) enrolledInHiv.getValue() == false) {
+            CalculationResult lastWhoStage = EmrCalculationUtils.evaluateForPatient(LastWhoStageCalculation.class, null,
+                    patient);
+            if (lastWhoStage != null && lastWhoStage.getValue() != null) {
                 hivResponseObj.put("whoStage", EmrUtils.whoStage(((Obs) lastWhoStage.getValue()).getValueCoded()));
                 hivResponseObj.put("whoStageDate", formatDate(((Obs) lastWhoStage.getValue()).getObsDatetime()));
             } else {
                 hivResponseObj.put("whoStage", "");
                 hivResponseObj.put("whoStageDate", "");
             }
-            CalculationResult lastCd4 = EmrCalculationUtils.evaluateForPatient(LastCd4CountDateCalculation.class, null, patient);
-            if(lastCd4 != null  && lastCd4.getValue() != null) {
+            CalculationResult lastCd4 = EmrCalculationUtils.evaluateForPatient(LastCd4CountDateCalculation.class, null,
+                    patient);
+            if (lastCd4 != null && lastCd4.getValue() != null) {
                 hivResponseObj.put("cd4", ((Obs) lastCd4.getValue()).getValueNumeric().toString());
                 hivResponseObj.put("cd4Date", formatDate(((Obs) lastCd4.getValue()).getObsDatetime()));
             } else {
                 hivResponseObj.put("cd4", "None");
                 hivResponseObj.put("cd4Date", "");
             }
-            CalculationResult lastCd4Percent = EmrCalculationUtils.evaluateForPatient(LastCd4PercentageCalculation.class, null, patient);
-            if(lastCd4Percent != null && lastCd4Percent.getValue() != null) {
+            CalculationResult lastCd4Percent = EmrCalculationUtils
+                    .evaluateForPatient(LastCd4PercentageCalculation.class, null, patient);
+            if (lastCd4Percent != null && lastCd4Percent.getValue() != null) {
                 hivResponseObj.put("cd4Percent", ((Obs) lastCd4Percent.getValue()).getValueNumeric().toString());
                 hivResponseObj.put("cd4PercentDate", formatDate(((Obs) lastCd4Percent.getValue()).getObsDatetime()));
             } else {
@@ -1004,18 +1041,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 hivResponseObj.put("cd4PercentDate", "");
             }
 
-            CalculationResult lastViralLoad = EmrCalculationUtils.evaluateForPatient(ViralLoadAndLdlCalculation.class, null, patient);
+            CalculationResult lastViralLoad = EmrCalculationUtils.evaluateForPatient(ViralLoadAndLdlCalculation.class,
+                    null, patient);
             String valuesRequired = "None";
             Date datesRequired = null;
-            if(!lastViralLoad.isEmpty()){
+            if (!lastViralLoad.isEmpty()) {
                 String values = lastViralLoad.getValue().toString();
-                //split by brace
-                String value = values.replaceAll("\\{", "").replaceAll("\\}","");
-                //split by equal sign
-                if(!value.isEmpty()) {
+                // split by brace
+                String value = values.replaceAll("\\{", "").replaceAll("\\}", "");
+                // split by equal sign
+                if (!value.isEmpty()) {
                     String[] splitByEqualSign = value.split("=");
                     valuesRequired = splitByEqualSign[0];
-                    //for a date from a string
+                    // for a date from a string
                     String dateSplitedBySpace = splitByEqualSign[1].split(" ")[0].trim();
                     String yearPart = dateSplitedBySpace.split("-")[0].trim();
                     String monthPart = dateSplitedBySpace.split("-")[1].trim();
@@ -1046,31 +1084,38 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         // tb details
-        CalculationResult patientEnrolledInTbProgram = EmrCalculationUtils.evaluateForPatient(PatientInTbProgramCalculation.class, null,patient);
-        if((Boolean) patientEnrolledInTbProgram.getValue() == true) {
-            CalculationResult tbDiseaseClassification = EmrCalculationUtils.evaluateForPatient(TbDiseaseClassificationCalculation.class, null, patient);
-            if(tbDiseaseClassification != null && tbDiseaseClassification.getValue() != null) {
-                tbResponseObj.put("tbDiseaseClassification", ((Obs) tbDiseaseClassification.getValue()).getValueCoded().getName().getName());
-                tbResponseObj.put("tbDiseaseClassificationDate", formatDate(((Obs) tbDiseaseClassification.getValue()).getObsDatetime()));
+        CalculationResult patientEnrolledInTbProgram = EmrCalculationUtils
+                .evaluateForPatient(PatientInTbProgramCalculation.class, null, patient);
+        if ((Boolean) patientEnrolledInTbProgram.getValue() == true) {
+            CalculationResult tbDiseaseClassification = EmrCalculationUtils
+                    .evaluateForPatient(TbDiseaseClassificationCalculation.class, null, patient);
+            if (tbDiseaseClassification != null && tbDiseaseClassification.getValue() != null) {
+                tbResponseObj.put("tbDiseaseClassification",
+                        ((Obs) tbDiseaseClassification.getValue()).getValueCoded().getName().getName());
+                tbResponseObj.put("tbDiseaseClassificationDate",
+                        formatDate(((Obs) tbDiseaseClassification.getValue()).getObsDatetime()));
             } else {
                 tbResponseObj.put("tbDiseaseClassification", "None");
                 tbResponseObj.put("tbDiseaseClassificationDate", "");
             }
 
-            CalculationResult tbPatientClassification = EmrCalculationUtils.evaluateForPatient(TbPatientClassificationCalculation.class, null, patient);
+            CalculationResult tbPatientClassification = EmrCalculationUtils
+                    .evaluateForPatient(TbPatientClassificationCalculation.class, null, patient);
             if (tbPatientClassification != null) {
                 Obs obs = (Obs) tbPatientClassification.getValue();
                 if (obs != null && obs.getValueCoded() != null) {
                     Concept valueCoded = obs.getValueCoded();
-                    String classification = valueCoded.equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT))
-                            ? "New tuberculosis patient"
-                            : valueCoded.getName().getName();
+                    String classification = valueCoded
+                            .equals(Dictionary.getConcept(Dictionary.SMEAR_POSITIVE_NEW_TUBERCULOSIS_PATIENT))
+                                    ? "New tuberculosis patient"
+                                    : valueCoded.getName().getName();
                     tbResponseObj.put("tbPatientClassification", classification);
                 }
             }
 
-            CalculationResult tbTreatmentNo = EmrCalculationUtils.evaluateForPatient(TbTreatmentNumberCalculation.class, null, patient);
-            if(tbTreatmentNo != null && tbTreatmentNo.getValue() != null) {
+            CalculationResult tbTreatmentNo = EmrCalculationUtils.evaluateForPatient(TbTreatmentNumberCalculation.class,
+                    null, patient);
+            if (tbTreatmentNo != null && tbTreatmentNo.getValue() != null) {
                 tbResponseObj.put("tbTreatmentNumber", ((Obs) tbTreatmentNo.getValue()));
             } else {
                 tbResponseObj.put("tbTreatmentNumber", "None");
@@ -1084,19 +1129,23 @@ public class KenyaemrCoreRestController extends BaseRestController {
             carePanelObj.put("TB", tbResponseObj);
         }
 
-        //mch mother details
-        PatientCalculationContext context = Context.getService(PatientCalculationService.class).createCalculationContext();
+        // mch mother details
+        PatientCalculationContext context = Context.getService(PatientCalculationService.class)
+                .createCalculationContext();
         Program hivProgram = MetadataUtils.existing(Program.class, HivMetadata._Program.HIV);
         PatientWrapper patientWrapper = new PatientWrapper(patient);
 
-        Encounter lastMchEnrollment = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT));
-        Encounter lastMchFollowup = patientWrapper.lastEncounter(MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_CONSULTATION));
+        Encounter lastMchEnrollment = patientWrapper.lastEncounter(
+                MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_ENROLLMENT));
+        Encounter lastMchFollowup = patientWrapper.lastEncounter(
+                MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHMS_CONSULTATION));
 
-        if(lastMchEnrollment != null ) {
+        if (lastMchEnrollment != null) {
             EncounterWrapper lastMchEnrollmentWrapped = null;
             EncounterWrapper lastMchFollowUpWrapped = null;
-            //Check whether already in hiv program
-            CalculationResultMap enrolled = Calculations.firstEnrollments(hivProgram, Arrays.asList(patient.getPatientId()), context);
+            // Check whether already in hiv program
+            CalculationResultMap enrolled = Calculations.firstEnrollments(hivProgram,
+                    Arrays.asList(patient.getPatientId()), context);
             PatientProgram program = EmrCalculationUtils.resultForPatient(enrolled, patient.getPatientId());
 
             if (lastMchEnrollment != null) {
@@ -1110,18 +1159,21 @@ public class KenyaemrCoreRestController extends BaseRestController {
             Obs hivFollowUpStatusObs = null;
 
             if (lastMchEnrollmentWrapped != null) {
-                hivEnrollmentStatusObs = lastMchEnrollmentWrapped.firstObs(Dictionary.getConcept(Dictionary.HIV_STATUS));
+                hivEnrollmentStatusObs = lastMchEnrollmentWrapped
+                        .firstObs(Dictionary.getConcept(Dictionary.HIV_STATUS));
             }
             if (lastMchFollowUpWrapped != null) {
                 hivFollowUpStatusObs = lastMchFollowUpWrapped.firstObs(Dictionary.getConcept(Dictionary.HIV_STATUS));
             }
-            //Check if already enrolled in HIV, add regimen
-            if(program != null) {
+            // Check if already enrolled in HIV, add regimen
+            if (program != null) {
                 String regimenName = null;
                 String regimenStartDate = null;
-                Encounter lastDrugRegimenEditorEncounter = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");   //last DRUG_REGIMEN_EDITOR encounter
+                Encounter lastDrugRegimenEditorEncounter = EncounterBasedRegimenUtils
+                        .getLastEncounterForCategory(patient, "ARV"); // last DRUG_REGIMEN_EDITOR encounter
                 if (lastDrugRegimenEditorEncounter != null) {
-                    SimpleObject o = EncounterBasedRegimenUtils.buildRegimenChangeObject(lastDrugRegimenEditorEncounter.getAllObs(), lastDrugRegimenEditorEncounter);
+                    SimpleObject o = EncounterBasedRegimenUtils.buildRegimenChangeObject(
+                            lastDrugRegimenEditorEncounter.getAllObs(), lastDrugRegimenEditorEncounter);
                     regimenName = o.get("regimenShortDisplay").toString();
                     regimenStartDate = o.get("startDate").toString();
                     if (regimenName != null) {
@@ -1136,20 +1188,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
                         mchMotherResponseObj.put("onHaartDate", regimenStartDate);
                     }
                 }
-                //Check mch enrollment and followup forms
-            } else if(hivEnrollmentStatusObs != null || hivFollowUpStatusObs != null) {
+                // Check mch enrollment and followup forms
+            } else if (hivEnrollmentStatusObs != null || hivFollowUpStatusObs != null) {
                 String regimenName = null;
-                if(hivFollowUpStatusObs != null && hivFollowUpStatusObs.getValueCoded() != null) {
+                if (hivFollowUpStatusObs != null && hivFollowUpStatusObs.getValueCoded() != null) {
                     mchMotherResponseObj.put("hivStatus", hivFollowUpStatusObs.getValueCoded().getName().getName());
                     mchMotherResponseObj.put("hivStatusDate", hivFollowUpStatusObs.getValueDatetime());
-                }else {
+                } else {
                     mchMotherResponseObj.put("hivStatus", hivEnrollmentStatusObs.getValueCoded().getName().getName());
                     mchMotherResponseObj.put("hivStatusDate", hivEnrollmentStatusObs.getValueDatetime());
                 }
-                Encounter lastDrugRegimenEditorEncounter = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");   //last DRUG_REGIMEN_EDITOR encounter
+                Encounter lastDrugRegimenEditorEncounter = EncounterBasedRegimenUtils
+                        .getLastEncounterForCategory(patient, "ARV"); // last DRUG_REGIMEN_EDITOR encounter
                 mchMotherResponseObj.put("onHaart", hivEnrollmentStatusObs.getValueDatetime());
                 if (lastDrugRegimenEditorEncounter != null) {
-                    SimpleObject o = EncounterBasedRegimenUtils.buildRegimenChangeObject(lastDrugRegimenEditorEncounter.getAllObs(), lastDrugRegimenEditorEncounter);
+                    SimpleObject o = EncounterBasedRegimenUtils.buildRegimenChangeObject(
+                            lastDrugRegimenEditorEncounter.getAllObs(), lastDrugRegimenEditorEncounter);
                     regimenName = o.get("regimenShortDisplay").toString();
                     if (regimenName != null) {
                         if (hivEnrollmentStatusObs.getValueCoded().getName().getName().equalsIgnoreCase("positive")) {
@@ -1177,10 +1231,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         }
 
-        //mch child details
-        Encounter lastHeiEnrollmentEncounter = Utils.lastEncounter(patient, Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_ENROLLMENT));
+        // mch child details
+        Encounter lastHeiEnrollmentEncounter = Utils.lastEncounter(patient,
+                Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_ENROLLMENT));
 
-        if(lastHeiEnrollmentEncounter != null) {
+        if (lastHeiEnrollmentEncounter != null) {
             List<Obs> milestones = new ArrayList<Obs>();
             String prophylaxis;
             String feeding;
@@ -1189,14 +1244,17 @@ public class KenyaemrCoreRestController extends BaseRestController {
             Integer feedingMethodQuestion = 1151;
             Integer heiOutcomesQuestion = 159427;
 
-            EncounterType mchcs_consultation_encounterType = MetadataUtils.existing(EncounterType.class, MchMetadata._EncounterType.MCHCS_CONSULTATION);
+            EncounterType mchcs_consultation_encounterType = MetadataUtils.existing(EncounterType.class,
+                    MchMetadata._EncounterType.MCHCS_CONSULTATION);
             Encounter lastMchcsConsultation = patientWrapper.lastEncounter(mchcs_consultation_encounterType);
 
-            Encounter lastHeiCWCFollowupEncounter = Utils.lastEncounter(patient, Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_CONSULTATION));
-            Encounter lastHeiOutComeEncounter = Utils.lastEncounter(patient, Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_HEI_COMPLETION));
+            Encounter lastHeiCWCFollowupEncounter = Utils.lastEncounter(patient, Context.getEncounterService()
+                    .getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_CONSULTATION));
+            Encounter lastHeiOutComeEncounter = Utils.lastEncounter(patient, Context.getEncounterService()
+                    .getEncounterTypeByUuid(MchMetadata._EncounterType.MCHCS_HEI_COMPLETION));
 
-            if(lastHeiOutComeEncounter !=null){
-                for (Obs obs : lastHeiOutComeEncounter.getAllObs() ){
+            if (lastHeiOutComeEncounter != null) {
+                for (Obs obs : lastHeiOutComeEncounter.getAllObs()) {
                     if (obs.getConcept().getConceptId().equals(heiOutcomesQuestion)) {
                         heiOutcomes = obs.getValueCoded().getName().toString();
                         mchChildResponseObj.put("heiOutcome", heiOutcomes);
@@ -1214,19 +1272,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
                             mchChildResponseObj.put("currentProphylaxisUsed", prophylaxis);
                             mchChildResponseObj.put("currentProphylaxisUsedDate", obs.getValueDatetime());
                         } else if (heiProphylaxisObsAnswer.equals(80586)) {
-                            prophylaxis =  obs.getValueCoded().getName().toString();
+                            prophylaxis = obs.getValueCoded().getName().toString();
                             mchChildResponseObj.put("currentProphylaxisUsed", prophylaxis);
                             mchChildResponseObj.put("currentProphylaxisUsedDate", obs.getValueDatetime());
                         } else if (heiProphylaxisObsAnswer.equals(1652)) {
-                            prophylaxis =  obs.getValueCoded().getName().toString();
+                            prophylaxis = obs.getValueCoded().getName().toString();
                             mchChildResponseObj.put("currentProphylaxisUsed", prophylaxis);
                             mchChildResponseObj.put("currentProphylaxisUsedDate", obs.getValueDatetime());
                         } else if (heiProphylaxisObsAnswer.equals(1149)) {
-                            prophylaxis =  obs.getValueCoded().getName().toString();
+                            prophylaxis = obs.getValueCoded().getName().toString();
                             mchChildResponseObj.put("currentProphylaxisUsed", prophylaxis);
                             mchChildResponseObj.put("currentProphylaxisUsedDate", obs.getValueDatetime());
                         } else if (heiProphylaxisObsAnswer.equals(1107)) {
-                            prophylaxis =  obs.getValueCoded().getName().toString();
+                            prophylaxis = obs.getValueCoded().getName().toString();
                             mchChildResponseObj.put("currentProphylaxisUsed", prophylaxis);
                             mchChildResponseObj.put("currentProphylaxisUsedDate", obs.getValueDatetime());
                         } else {
@@ -1263,12 +1321,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
             if (lastMchcsConsultation != null) {
                 EncounterWrapper mchcsConsultationWrapper = new EncounterWrapper(lastMchcsConsultation);
 
-                milestones.addAll(mchcsConsultationWrapper.allObs(Dictionary.getConcept(Dictionary.DEVELOPMENTAL_MILESTONES)));
+                milestones.addAll(
+                        mchcsConsultationWrapper.allObs(Dictionary.getConcept(Dictionary.DEVELOPMENTAL_MILESTONES)));
                 String joined = "";
                 if (milestones.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     for (Obs milestone : milestones) {
-                        if(milestone.getValueCoded() != null) {
+                        if (milestone.getValueCoded() != null) {
                             sb.append(milestone.getValueCoded().getName().toString());
                             sb.append(", ");
                         }
@@ -1288,7 +1347,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
     }
 
     /**
-     * Generate payload for a form descriptor. Required when serving forms to the frontend
+     * Generate payload for a form descriptor. Required when serving forms to the
+     * frontend
+     * 
      * @param descriptor
      * @return
      */
@@ -1334,7 +1395,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
             // Display active programs on top
             programs.addAll(activePrograms);
 
-            // Don't add duplicates for programs for which patient is both active and eligible
+            // Don't add duplicates for programs for which patient is both active and
+            // eligible
             for (ProgramDescriptor descriptor : eligiblePrograms) {
                 if (!programs.contains(descriptor)) {
                     programs.add(descriptor);
@@ -1342,11 +1404,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
         }
         ArrayList enrollmentDetails = new ArrayList<SimpleObject>();
-        for(ProgramDescriptor descriptor: programs) {
+        for (ProgramDescriptor descriptor : programs) {
             Program program = descriptor.getTarget();
-            Form defaultCompletionForm = null ;
+            Form defaultCompletionForm = null;
             Form defaultEnrollmentForm = descriptor.getDefaultEnrollmentForm().getTarget();
-            if(descriptor.getDefaultCompletionForm()!= null) {
+            if (descriptor.getDefaultCompletionForm() != null) {
                 defaultCompletionForm = descriptor.getDefaultCompletionForm().getTarget();
             }
 
@@ -1424,103 +1486,110 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("enrollmentFormUuid", HivMetadata._Form.HIV_ENROLLMENT);
                     programDetails.put("enrollmentFormName", "HIV Enrollment");
                 } else
-                    // tpt program
-                    if (patientProgramEnrollment.getProgram().getUuid().equals(TPT_PROGRAM_UUID)) {
-                        Enrollment tptEnrollment = new Enrollment(patientProgramEnrollment);
-                        Encounter tptEnrollmentEncounter = tptEnrollment
-                                .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                        Encounter tptDiscontinuationEncounter = tptEnrollment
-                                .lastEncounter(defaultCompletionForm.getEncounterType());
+                // tpt program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(TPT_PROGRAM_UUID)) {
+                    Enrollment tptEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter tptEnrollmentEncounter = tptEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter tptDiscontinuationEncounter = tptEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                        if (tptEnrollmentEncounter != null) {
-                            for (Obs obs : tptEnrollmentEncounter.getAllObs(true)) {
-                                if (obs.getConcept()
-                                        .equals(Dictionary.getConcept(Dictionary.INDICATION_FOR_TB_PROPHYLAXIS))) {
-                                    programDetails.put("tptIndication", obs.getValueCoded().getName().getName());
-                                    break;
+                    if (tptEnrollmentEncounter != null) {
+                        for (Obs obs : tptEnrollmentEncounter.getAllObs(true)) {
+                            if (obs.getConcept()
+                                    .equals(Dictionary.getConcept(Dictionary.INDICATION_FOR_TB_PROPHYLAXIS))) {
+                                programDetails.put("tptIndication", obs.getValueCoded().getName().getName());
+                                break;
+                            }
+                        }
+                        programDetails.put("enrollmentEncounterUuid", tptEnrollmentEncounter.getUuid());
+                    }
+                    if (tptDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", tptDiscontinuationEncounter.getUuid());
+                    }
+                    try {
+                        // get medication patient is on
+                        CareSetting outpatient = Context.getOrderService().getCareSettingByName("OUTPATIENT"); // TODO:
+                                                                                                               // include
+                                                                                                               // all
+                                                                                                               // relevant
+                                                                                                               // care
+                                                                                                               // settings
+                        OrderType drugOrderType = Context.getOrderService()
+                                .getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+                        List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, outpatient,
+                                drugOrderType, false);
+                        List<DrugOrder> tptDrugOrders = new ArrayList<DrugOrder>();
+                        for (Order order : allDrugOrders) {
+                            if (order != null && order.getConcept() != null) {
+                                ConceptName cn = order.getConcept().getName(CoreConstants.LOCALE);
+                                if (cn != null && (cn.getUuid().equals(ISONIAZID_DRUG_UUID)
+                                        || cn.getUuid().equals(RIFAMPIN_ISONIAZID_DRUG_UUID))) {
+                                    tptDrugOrders.add((DrugOrder) order);
                                 }
                             }
-                            programDetails.put("enrollmentEncounterUuid", tptEnrollmentEncounter.getUuid());
                         }
-                        if (tptDiscontinuationEncounter != null) {
-                            programDetails.put("discontinuationEncounterUuid", tptDiscontinuationEncounter.getUuid());
-                        }
-                        try {
-                            // get medication patient is on
-                            CareSetting outpatient = Context.getOrderService().getCareSettingByName("OUTPATIENT"); // TODO: include all relevant care settings
-                            OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
-                            List<Order> allDrugOrders = Context.getOrderService().getOrders(patient, outpatient, drugOrderType, false);
-                            List<DrugOrder> tptDrugOrders = new ArrayList<DrugOrder>();
-                            for (Order order : allDrugOrders) {
-                                if (order != null && order.getConcept() != null) {
-                                    ConceptName cn = order.getConcept().getName(CoreConstants.LOCALE);
-                                    if (cn != null && (cn.getUuid().equals(ISONIAZID_DRUG_UUID)
-                                            || cn.getUuid().equals(RIFAMPIN_ISONIAZID_DRUG_UUID))) {
-                                        tptDrugOrders.add((DrugOrder) order);
-                                    }
+                        if (!tptDrugOrders.isEmpty()) {
+
+                            Collections.sort(tptDrugOrders, new Comparator<DrugOrder>() {
+                                @Override
+                                public int compare(DrugOrder order1, DrugOrder order2) {
+                                    return order2.getDateCreated().compareTo(order1.getDateCreated());
                                 }
-                            }
-                            if (!tptDrugOrders.isEmpty()) {
+                            });
+                            DrugOrder drugOrder = (DrugOrder) tptDrugOrders.get(0).cloneForRevision();
+                            // Now you can use the latestDrugOrder as needed
+                            programDetails.put("tptDrugName",
+                                    drugOrder.getDrug() != null ? drugOrder.getDrug().getFullName(LOCALE) : "");
+                            programDetails.put("tptDrugStartDate", formatDate(drugOrder.getEffectiveStartDate()));
+                        }
+                    } catch (NullPointerException e) {
+                        // Handle null pointer exception
+                        e.printStackTrace();
 
-                                Collections.sort(tptDrugOrders, new Comparator<DrugOrder>() {
-                                    @Override
-                                    public int compare(DrugOrder order1, DrugOrder order2) {
-                                        return order2.getDateCreated().compareTo(order1.getDateCreated());
-                                    }
-                                });
-                                DrugOrder drugOrder = (DrugOrder) tptDrugOrders.get(0).cloneForRevision();
-                                // Now you can use the latestDrugOrder as needed
-                                programDetails.put("tptDrugName",
-                                        drugOrder.getDrug() != null ? drugOrder.getDrug().getFullName(LOCALE) : "");
-                                programDetails.put("tptDrugStartDate", formatDate(drugOrder.getEffectiveStartDate()));
-                            }
-                        } catch (NullPointerException e) {
-                            // Handle null pointer exception
-                            e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    programDetails.put("enrollmentFormUuid", IPTMetadata._Form.IPT_INITIATION);
+                    programDetails.put("enrollmentFormName", "IPT Initiation");
+                    programDetails.put("discontinuationFormUuid", IPTMetadata._Form.IPT_OUTCOME);
+                    programDetails.put("discontinuationFormName", "IPT Outcome");
+                } else
+                // tb program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(TB_PROGRAM_UUID)) {
+                    Enrollment tbEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter tbEnrollmentEncounter = tbEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter tbDiscontinuationEncounter = tbEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
+
+                    if (tbEnrollmentEncounter != null) {
+                        for (Obs obs : tbEnrollmentEncounter.getAllObs(true)) {
+                            if (obs.getConcept()
+                                    .equals(Dictionary.getConcept(Dictionary.REFERRING_CLINIC_OR_HOSPITAL))) {
+                                programDetails.put("referredFrom", obs.getValueCoded().getName().getName());
+                                break;
+                            }
                         }
 
-                        programDetails.put("enrollmentFormUuid", IPTMetadata._Form.IPT_INITIATION);
-                        programDetails.put("enrollmentFormName", "IPT Initiation");
-                        programDetails.put("discontinuationFormUuid", IPTMetadata._Form.IPT_OUTCOME);
-                        programDetails.put("discontinuationFormName", "IPT Outcome");
-                    } else
-                        // tb program
-                        if (patientProgramEnrollment.getProgram().getUuid().equals(TB_PROGRAM_UUID)) {
-                            Enrollment tbEnrollment = new Enrollment(patientProgramEnrollment);
-                            Encounter tbEnrollmentEncounter = tbEnrollment
-                                    .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                            Encounter tbDiscontinuationEncounter = tbEnrollment
-                                    .lastEncounter(defaultCompletionForm.getEncounterType());
-
-                            if (tbEnrollmentEncounter != null) {
-                                for (Obs obs : tbEnrollmentEncounter.getAllObs(true)) {
-                                    if (obs.getConcept()
-                                            .equals(Dictionary.getConcept(Dictionary.REFERRING_CLINIC_OR_HOSPITAL))) {
-                                        programDetails.put("referredFrom", obs.getValueCoded().getName().getName());
-                                        break;
-                                    }
-                                }
-
-                                programDetails.put("enrollmentEncounterUuid", tbEnrollmentEncounter.getUuid());
-                                Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "TB");
-                                SimpleObject firstEncDetails = null;
-                                if (firstEnc != null) {
-                                    firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
-                                            firstEnc);
-                                }
-                                programDetails.put("firstEncounter", firstEncDetails);
-                            }
-                            if (tbDiscontinuationEncounter != null) {
-                                programDetails.put("discontinuationEncounterUuid", tbDiscontinuationEncounter.getUuid());
-                            }
-                            programDetails.put("enrollmentFormUuid", TbMetadata._Form.TB_ENROLLMENT);
-                            programDetails.put("enrollmentFormName", "TB Enrollment");
-                            programDetails.put("discontinuationFormUuid", TbMetadata._Form.TB_COMPLETION);
-                            programDetails.put("discontinuationFormName", "TB Discontinuation");
+                        programDetails.put("enrollmentEncounterUuid", tbEnrollmentEncounter.getUuid());
+                        Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "TB");
+                        SimpleObject firstEncDetails = null;
+                        if (firstEnc != null) {
+                            firstEncDetails = EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(),
+                                    firstEnc);
                         }
+                        programDetails.put("firstEncounter", firstEncDetails);
+                    }
+                    if (tbDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", tbDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", TbMetadata._Form.TB_ENROLLMENT);
+                    programDetails.put("enrollmentFormName", "TB Enrollment");
+                    programDetails.put("discontinuationFormUuid", TbMetadata._Form.TB_COMPLETION);
+                    programDetails.put("discontinuationFormName", "TB Discontinuation");
+                }
 
                 // mch mother program
                 if (patientProgramEnrollment.getProgram().getUuid().equals(MCH_MOTHER_PROGRAM_UUID)) {
@@ -1553,7 +1622,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                                     programDetails.put("lmp", "N/A");
                                     programDetails.put("eddLmp", "N/A");
                                 }
-                            } else if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.EXPECTED_DATE_OF_DELIVERY))) {
+                            } else if (obs.getConcept()
+                                    .equals(Dictionary.getConcept(Dictionary.EXPECTED_DATE_OF_DELIVERY))) {
                                 if (deliveryEncounter == null) {
                                     programDetails.put("eddUltrasound", formatDate(obs.getValueDate()));
                                 }
@@ -1580,126 +1650,126 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     programDetails.put("discontinuationFormName", "MCH-MS Discontinuation");
                 } else
 
-                    // mch child program
-                    if (patientProgramEnrollment.getProgram().getUuid().equals(MCH_CHILD_PROGRAM_UUID)) {
-                        Enrollment mchcEnrollment = new Enrollment(patientProgramEnrollment);
-                        Encounter mchcEnrollmentEncounter = mchcEnrollment
-                                .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                        Encounter mchcDiscontinuationEncounter = mchcEnrollment
-                                .lastEncounter(defaultCompletionForm.getEncounterType());
+                // mch child program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(MCH_CHILD_PROGRAM_UUID)) {
+                    Enrollment mchcEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter mchcEnrollmentEncounter = mchcEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter mchcDiscontinuationEncounter = mchcEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                        if (mchcEnrollmentEncounter != null) {
-                            for (Obs obs : mchcEnrollmentEncounter.getAllObs(true)) {
-                                if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.METHOD_OF_ENROLLMENT))) {
-                                    programDetails.put("entryPoint", entryPointAbbriviations(obs.getValueCoded()));
-                                    break;
-                                }
+                    if (mchcEnrollmentEncounter != null) {
+                        for (Obs obs : mchcEnrollmentEncounter.getAllObs(true)) {
+                            if (obs.getConcept().equals(Dictionary.getConcept(Dictionary.METHOD_OF_ENROLLMENT))) {
+                                programDetails.put("entryPoint", entryPointAbbriviations(obs.getValueCoded()));
+                                break;
                             }
-                            programDetails.put("enrollmentEncounterUuid", mchcEnrollmentEncounter.getUuid());
                         }
-                        if (mchcDiscontinuationEncounter != null) {
-                            programDetails.put("discontinuationEncounterUuid", mchcDiscontinuationEncounter.getUuid());
-                        }
-                        programDetails.put("enrollmentFormUuid", MchMetadata._Form.MCHCS_ENROLLMENT);
-                        programDetails.put("enrollmentFormName", "Mch Child Enrolment Form");
-                        programDetails.put("discontinuationFormUuid", MchMetadata._Form.MCHCS_DISCONTINUATION);
-                        programDetails.put("discontinuationFormName", "Child Welfare Services Discontinuation");
-                    } else
-                        // otz program
-                        if (patientProgramEnrollment.getProgram().getUuid().equals(OTZ_PROGRAM_UUID)) {
-                            Enrollment otzEnrollment = new Enrollment(patientProgramEnrollment);
-                            Encounter otzEnrollmentEncounter = otzEnrollment
-                                    .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                            Encounter otzDiscontinuationEncounter = otzEnrollment
-                                    .lastEncounter(defaultCompletionForm.getEncounterType());
+                        programDetails.put("enrollmentEncounterUuid", mchcEnrollmentEncounter.getUuid());
+                    }
+                    if (mchcDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", mchcDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", MchMetadata._Form.MCHCS_ENROLLMENT);
+                    programDetails.put("enrollmentFormName", "Mch Child Enrolment Form");
+                    programDetails.put("discontinuationFormUuid", MchMetadata._Form.MCHCS_DISCONTINUATION);
+                    programDetails.put("discontinuationFormName", "Child Welfare Services Discontinuation");
+                } else
+                // otz program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(OTZ_PROGRAM_UUID)) {
+                    Enrollment otzEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter otzEnrollmentEncounter = otzEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter otzDiscontinuationEncounter = otzEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                            if (otzEnrollmentEncounter != null) {
-                                programDetails.put("enrollmentEncounterUuid", otzEnrollmentEncounter.getUuid());
-                            }
-                            if (otzDiscontinuationEncounter != null) {
-                                programDetails.put("discontinuationEncounterUuid", otzDiscontinuationEncounter.getUuid());
-                            }
-                            programDetails.put("enrollmentFormUuid", OTZMetadata._Form.OTZ_ENROLLMENT_FORM);
-                            programDetails.put("enrollmentFormName", "OTZ Enrollment Form");
-                            programDetails.put("discontinuationFormUuid", OTZMetadata._Form.OTZ_DISCONTINUATION_FORM);
-                            programDetails.put("discontinuationFormName", "OTZ Discontinuation Form");
-                        } else
-                            // ovc program
-                            if (patientProgramEnrollment.getProgram().getUuid().equals(OVC_PROGRAM_UUID)) {
-                                Enrollment ovcEnrollment = new Enrollment(patientProgramEnrollment);
-                                Encounter ovcEnrollmentEncounter = ovcEnrollment
-                                        .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                                Encounter ovcDiscontinuationEncounter = ovcEnrollment
-                                        .lastEncounter(defaultCompletionForm.getEncounterType());
+                    if (otzEnrollmentEncounter != null) {
+                        programDetails.put("enrollmentEncounterUuid", otzEnrollmentEncounter.getUuid());
+                    }
+                    if (otzDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", otzDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", OTZMetadata._Form.OTZ_ENROLLMENT_FORM);
+                    programDetails.put("enrollmentFormName", "OTZ Enrollment Form");
+                    programDetails.put("discontinuationFormUuid", OTZMetadata._Form.OTZ_DISCONTINUATION_FORM);
+                    programDetails.put("discontinuationFormName", "OTZ Discontinuation Form");
+                } else
+                // ovc program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(OVC_PROGRAM_UUID)) {
+                    Enrollment ovcEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter ovcEnrollmentEncounter = ovcEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter ovcDiscontinuationEncounter = ovcEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                                if (ovcEnrollmentEncounter != null) {
-                                    programDetails.put("enrollmentEncounterUuid", ovcEnrollmentEncounter.getUuid());
-                                }
-                                if (ovcDiscontinuationEncounter != null) {
-                                    programDetails.put("discontinuationEncounterUuid", ovcDiscontinuationEncounter.getUuid());
-                                }
-                                programDetails.put("enrollmentFormUuid", OVCMetadata._Form.OVC_ENROLLMENT_FORM);
-                                programDetails.put("enrollmentFormName", "OVC Enrollment Form");
-                                programDetails.put("discontinuationFormUuid", OVCMetadata._Form.OVC_DISCONTINUATION_FORM);
-                                programDetails.put("discontinuationFormName", "OVC Discontinuation Form");
-                            } else
-                                // vmmc program
-                                if (patientProgramEnrollment.getProgram().getUuid().equals(VMMC_PROGRAM_UUID)) {
-                                    Enrollment vmmcEnrollment = new Enrollment(patientProgramEnrollment);
-                                    Encounter vmmcEnrollmentEncounter = vmmcEnrollment
-                                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                                    Encounter vmmcDiscontinuationEncounter = vmmcEnrollment
-                                            .lastEncounter(defaultCompletionForm.getEncounterType());
+                    if (ovcEnrollmentEncounter != null) {
+                        programDetails.put("enrollmentEncounterUuid", ovcEnrollmentEncounter.getUuid());
+                    }
+                    if (ovcDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", ovcDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", OVCMetadata._Form.OVC_ENROLLMENT_FORM);
+                    programDetails.put("enrollmentFormName", "OVC Enrollment Form");
+                    programDetails.put("discontinuationFormUuid", OVCMetadata._Form.OVC_DISCONTINUATION_FORM);
+                    programDetails.put("discontinuationFormName", "OVC Discontinuation Form");
+                } else
+                // vmmc program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(VMMC_PROGRAM_UUID)) {
+                    Enrollment vmmcEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter vmmcEnrollmentEncounter = vmmcEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter vmmcDiscontinuationEncounter = vmmcEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                                    if (vmmcEnrollmentEncounter != null) {
-                                        programDetails.put("enrollmentEncounterUuid", vmmcEnrollmentEncounter.getUuid());
-                                    }
-                                    if (vmmcDiscontinuationEncounter != null) {
-                                        programDetails.put("discontinuationEncounterUuid", vmmcDiscontinuationEncounter.getUuid());
-                                    }
-                                    programDetails.put("enrollmentFormUuid", VMMCMetadata._Form.VMMC_ENROLLMENT_FORM);
-                                    programDetails.put("enrollmentFormName", "VMMC Enrollment Form");
-                                    programDetails.put("discontinuationFormUuid", VMMCMetadata._Form.VMMC_DISCONTINUATION_FORM);
-                                    programDetails.put("discontinuationFormName", "VMMC Discontinuation Form");
-                                } else
-                                    // prep program
-                                    if (patientProgramEnrollment.getProgram().getUuid().equals(PREP_PROGRAM_UUID)) {
-                                        Enrollment prepEnrollment = new Enrollment(patientProgramEnrollment);
-                                        Encounter prepEnrollmentEncounter = prepEnrollment
-                                                .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                                        Encounter prepDiscontinuationEncounter = prepEnrollment
-                                                .lastEncounter(defaultCompletionForm.getEncounterType());
+                    if (vmmcEnrollmentEncounter != null) {
+                        programDetails.put("enrollmentEncounterUuid", vmmcEnrollmentEncounter.getUuid());
+                    }
+                    if (vmmcDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", vmmcDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", VMMCMetadata._Form.VMMC_ENROLLMENT_FORM);
+                    programDetails.put("enrollmentFormName", "VMMC Enrollment Form");
+                    programDetails.put("discontinuationFormUuid", VMMCMetadata._Form.VMMC_DISCONTINUATION_FORM);
+                    programDetails.put("discontinuationFormName", "VMMC Discontinuation Form");
+                } else
+                // prep program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(PREP_PROGRAM_UUID)) {
+                    Enrollment prepEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter prepEnrollmentEncounter = prepEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter prepDiscontinuationEncounter = prepEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                                        if (prepEnrollmentEncounter != null) {
-                                            programDetails.put("enrollmentEncounterUuid", prepEnrollmentEncounter.getUuid());
-                                        }
-                                        if (prepDiscontinuationEncounter != null) {
-                                            programDetails.put("discontinuationEncounterUuid", prepDiscontinuationEncounter.getUuid());
-                                        }
-                                        programDetails.put("enrollmentFormUuid", PREP_ENROLLMENT_FORM);
-                                        programDetails.put("enrollmentFormName", "PrEP Enrollment");
-                                        programDetails.put("discontinuationFormUuid", PREP_DISCONTINUATION_FORM);
-                                        programDetails.put("discontinuationFormName", "PrEP Client Discontinuation");
-                                    } else
-                                        // kp program
-                                        if (patientProgramEnrollment.getProgram().getUuid().equals(KP_PROGRAM_UUID)) {
-                                            Enrollment kpEnrollment = new Enrollment(patientProgramEnrollment);
-                                            Encounter kpEnrollmentEncounter = kpEnrollment
-                                                    .lastEncounter(defaultEnrollmentForm.getEncounterType());
-                                            Encounter kpDiscontinuationEncounter = kpEnrollment
-                                                    .lastEncounter(defaultCompletionForm.getEncounterType());
+                    if (prepEnrollmentEncounter != null) {
+                        programDetails.put("enrollmentEncounterUuid", prepEnrollmentEncounter.getUuid());
+                    }
+                    if (prepDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", prepDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", PREP_ENROLLMENT_FORM);
+                    programDetails.put("enrollmentFormName", "PrEP Enrollment");
+                    programDetails.put("discontinuationFormUuid", PREP_DISCONTINUATION_FORM);
+                    programDetails.put("discontinuationFormName", "PrEP Client Discontinuation");
+                } else
+                // kp program
+                if (patientProgramEnrollment.getProgram().getUuid().equals(KP_PROGRAM_UUID)) {
+                    Enrollment kpEnrollment = new Enrollment(patientProgramEnrollment);
+                    Encounter kpEnrollmentEncounter = kpEnrollment
+                            .lastEncounter(defaultEnrollmentForm.getEncounterType());
+                    Encounter kpDiscontinuationEncounter = kpEnrollment
+                            .lastEncounter(defaultCompletionForm.getEncounterType());
 
-                                            if (kpEnrollmentEncounter != null) {
-                                                programDetails.put("enrollmentEncounterUuid", kpEnrollmentEncounter.getUuid());
-                                            }
-                                            if (kpDiscontinuationEncounter != null) {
-                                                programDetails.put("discontinuationEncounterUuid", kpDiscontinuationEncounter.getUuid());
-                                            }
-                                            programDetails.put("enrollmentFormUuid", KP_CLIENT_ENROLMENT);
-                                            programDetails.put("enrollmentFormName", "KP Enrollment");
-                                            programDetails.put("discontinuationFormUuid", KP_CLIENT_DISCONTINUATION);
-                                            programDetails.put("discontinuationFormName", "KP Discontinuation");
-                                        }
+                    if (kpEnrollmentEncounter != null) {
+                        programDetails.put("enrollmentEncounterUuid", kpEnrollmentEncounter.getUuid());
+                    }
+                    if (kpDiscontinuationEncounter != null) {
+                        programDetails.put("discontinuationEncounterUuid", kpDiscontinuationEncounter.getUuid());
+                    }
+                    programDetails.put("enrollmentFormUuid", KP_CLIENT_ENROLMENT);
+                    programDetails.put("enrollmentFormName", "KP Enrollment");
+                    programDetails.put("discontinuationFormUuid", KP_CLIENT_DISCONTINUATION);
+                    programDetails.put("discontinuationFormName", "KP Discontinuation");
+                }
 
                 programDetails.put("programName", patientProgramEnrollment.getProgram().getName());
                 programDetails.put("active", patientProgramEnrollment.getActive());
@@ -1979,12 +2049,26 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         // facility transferred form
-        CalculationResultMap transferInFacilty = Calculations.lastObs(
-                Dictionary.getConcept(Dictionary.TRANSFER_FROM_FACILITY), Arrays.asList(patient.getPatientId()),
+        CalculationResultMap transferInFacility = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.TRANSFER_FROM_FACILITY),
+                Arrays.asList(patient.getPatientId()),
                 context);
-        Obs faciltyObs = EmrCalculationUtils.obsResultForPatient(transferInFacilty, patient.getPatientId());
-        if (faciltyObs != null) {
-            patientSummary.put("transferInFacility", faciltyObs.getValueText() != null ? locationService.getLocationByUuid(faciltyObs.getValueText()).getName() : "");
+
+        if (transferInFacility != null) {
+            Obs facilityObs = EmrCalculationUtils.obsResultForPatient(transferInFacility, patient.getPatientId());
+
+            if (facilityObs != null) {
+                String facilityUuid = facilityObs.getValueText();
+                if (facilityUuid != null && !facilityUuid.isEmpty()) {
+                    Location location = locationService.getLocationByUuid(facilityUuid);
+                    patientSummary.put("transferInFacility",
+                            location != null ? location.getName() : facilityUuid);
+                } else {
+                    patientSummary.put("transferInFacility", "");
+                }
+            } else {
+                patientSummary.put("transferInFacility", "N/A");
+            }
         } else {
             patientSummary.put("transferInFacility", "N/A");
         }
@@ -2101,120 +2185,140 @@ public class KenyaemrCoreRestController extends BaseRestController {
         } else {
             for (Obs obs : listOfAllergies) {
                 if (obs != null) {
-                    allergies += obs.getValueCoded().getName().getName()+" ";
+                    allergies += obs.getValueCoded().getName().getName() + " ";
                 }
             }
             patientSummary.put("allergies", allergies);
         }
 
-        //previous art details
-        CalculationResultMap previousArt = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART), Arrays.asList(patient.getPatientId()), context);
-        Obs previousArtObs = EmrCalculationUtils.obsResultForPatient(previousArt,patient.getPatientId());
-        if (previousArtObs != null && previousArtObs.getValueCoded() != null &&  previousArtObs.getValueCoded().getConceptId() == 1 &&  previousArtObs.getVoided().equals(false)) {
-            patientSummary.put("previousArtStatus","Yes");
-        } else if (previousArtObs != null && previousArtObs.getValueCoded() != null &&  previousArtObs.getValueCoded().getConceptId() == 2 &&  previousArtObs.getVoided().equals(false)) {
+        // previous art details
+        CalculationResultMap previousArt = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART),
+                Arrays.asList(patient.getPatientId()), context);
+        Obs previousArtObs = EmrCalculationUtils.obsResultForPatient(previousArt, patient.getPatientId());
+        if (previousArtObs != null && previousArtObs.getValueCoded() != null
+                && previousArtObs.getValueCoded().getConceptId() == 1 && previousArtObs.getVoided().equals(false)) {
+            patientSummary.put("previousArtStatus", "Yes");
+        } else if (previousArtObs != null && previousArtObs.getValueCoded() != null
+                && previousArtObs.getValueCoded().getConceptId() == 2 && previousArtObs.getVoided().equals(false)) {
             patientSummary.put("previousArtStatus", "No");
         } else {
             patientSummary.put("previousArtStatus", "None");
         }
 
-        //set the purpose for previous art
-        CalculationResultMap previousArtPurposePmtct = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_PMTCT), Arrays.asList(patient.getPatientId()), context);
-        CalculationResultMap previousArtPurposePep = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_PEP), Arrays.asList(patient.getPatientId()), context);
-        CalculationResultMap previousArtPurposeHaart = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_HAART), Arrays.asList(patient.getPatientId()), context);
-        Obs previousArtPurposePmtctObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePmtct, patient.getPatientId());
-        Obs previousArtPurposePepObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePep, patient.getPatientId());
-        Obs previousArtPurposeHaartObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposeHaart, patient.getPatientId());
+        // set the purpose for previous art
+        CalculationResultMap previousArtPurposePmtct = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_PMTCT), Arrays.asList(patient.getPatientId()),
+                context);
+        CalculationResultMap previousArtPurposePep = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_PEP), Arrays.asList(patient.getPatientId()),
+                context);
+        CalculationResultMap previousArtPurposeHaart = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_HAART), Arrays.asList(patient.getPatientId()),
+                context);
+        Obs previousArtPurposePmtctObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePmtct,
+                patient.getPatientId());
+        Obs previousArtPurposePepObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePep,
+                patient.getPatientId());
+        Obs previousArtPurposeHaartObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposeHaart,
+                patient.getPatientId());
         String purposeString = "";
-        if(patientSummary.get("previousArtStatus").equals("None") || patientSummary.get("previousArtStatus").equals("No")){
-            purposeString ="None";
+        if (patientSummary.get("previousArtStatus").equals("None")
+                || patientSummary.get("previousArtStatus").equals("No")) {
+            purposeString = "None";
         }
-        if(previousArtPurposePmtctObs != null && previousArtPurposePmtctObs.getValueCoded() != null) {
-            purposeString +=previousArtReason(previousArtPurposePmtctObs.getConcept());
+        if (previousArtPurposePmtctObs != null && previousArtPurposePmtctObs.getValueCoded() != null) {
+            purposeString += previousArtReason(previousArtPurposePmtctObs.getConcept());
         }
-        if(previousArtPurposePepObs != null && previousArtPurposePepObs.getValueCoded() != null){
-            purposeString += " "+previousArtReason(previousArtPurposePepObs.getConcept());
+        if (previousArtPurposePepObs != null && previousArtPurposePepObs.getValueCoded() != null) {
+            purposeString += " " + previousArtReason(previousArtPurposePepObs.getConcept());
         }
-        if(previousArtPurposeHaartObs != null && previousArtPurposeHaartObs.getValueCoded() != null){
-            purposeString +=" "+ previousArtReason(previousArtPurposeHaartObs.getConcept());
+        if (previousArtPurposeHaartObs != null && previousArtPurposeHaartObs.getValueCoded() != null) {
+            purposeString += " " + previousArtReason(previousArtPurposeHaartObs.getConcept());
         }
 
         patientSummary.put("artPurpose", purposeString);
 
-        //art start date
-        CalculationResult artStartDateResults = EmrCalculationUtils.evaluateForPatient(InitialArtStartDateCalculation.class, null, patient);
-        if(artStartDateResults != null) {
+        // art start date
+        CalculationResult artStartDateResults = EmrCalculationUtils
+                .evaluateForPatient(InitialArtStartDateCalculation.class, null, patient);
+        if (artStartDateResults != null) {
             patientSummary.put("dateStartedArt", formatDate((Date) artStartDateResults.getValue()));
-        }
-        else {
+        } else {
             patientSummary.put("dateStartedArt", "");
         }
 
-        //Clinical stage at art start
-        CalculationResult whoStageAtArtStartResults = EmrCalculationUtils.evaluateForPatient(WhoStageAtArtStartCalculation.class, null,patient);
-        if(whoStageAtArtStartResults != null){
+        // Clinical stage at art start
+        CalculationResult whoStageAtArtStartResults = EmrCalculationUtils
+                .evaluateForPatient(WhoStageAtArtStartCalculation.class, null, patient);
+        if (whoStageAtArtStartResults != null) {
             patientSummary.put("whoStageAtArtStart", intergerToRoman(whoStageAtArtStartResults.getValue().toString()));
-        }
-        else {
+        } else {
             patientSummary.put("whoStageAtArtStart", "");
         }
 
-        //cd4 at art initiation
-        CalculationResult cd4AtArtStartResults = EmrCalculationUtils.evaluateForPatient(CD4AtARTInitiationCalculation.class, null,patient);
-        if(cd4AtArtStartResults != null){
+        // cd4 at art initiation
+        CalculationResult cd4AtArtStartResults = EmrCalculationUtils
+                .evaluateForPatient(CD4AtARTInitiationCalculation.class, null, patient);
+        if (cd4AtArtStartResults != null) {
             patientSummary.put("cd4AtArtStart", cd4AtArtStartResults.getValue().toString());
-        }
-        else {
+        } else {
             patientSummary.put("cd4AtArtStart", "");
         }
 
-        //bmi
-        CalculationResult bmiResults = EmrCalculationUtils.evaluateForPatient(BMICalculation.class, null,patient);
-        if(bmiResults != null){
+        // bmi
+        CalculationResult bmiResults = EmrCalculationUtils.evaluateForPatient(BMICalculation.class, null, patient);
+        if (bmiResults != null) {
             patientSummary.put("bmi", bmiResults.getValue().toString());
-        }
-        else {
+        } else {
             patientSummary.put("bmi", "");
         }
 
-        //first regimen for the patient
+        // first regimen for the patient
         Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "ARV");
-        if(firstEnc != null) {
-            patientSummary.put("firstRegimen", EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(), firstEnc));
+        if (firstEnc != null) {
+            patientSummary.put("firstRegimen",
+                    EncounterBasedRegimenUtils.buildRegimenChangeObject(firstEnc.getObs(), firstEnc));
         }
 
-        //previous drugs/regimens and dates
+        // previous drugs/regimens and dates
         String regimens = "";
         String regimenDates = "";
-        CalculationResultMap pmtctRegimenHivEnroll = Calculations.lastObs(Dictionary.getConcept(Dictionary.PMTCT_REGIMEN_HIV_ENROLL), Arrays.asList(patient.getPatientId()), context);
-        CalculationResultMap pepAndHaartRegimenHivEnroll = Calculations.allObs(Dictionary.getConcept(Dictionary.PEP_REGIMEN_HIV_ENROLL), Arrays.asList(patient.getPatientId()), context);
+        CalculationResultMap pmtctRegimenHivEnroll = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.PMTCT_REGIMEN_HIV_ENROLL), Arrays.asList(patient.getPatientId()),
+                context);
+        CalculationResultMap pepAndHaartRegimenHivEnroll = Calculations.allObs(
+                Dictionary.getConcept(Dictionary.PEP_REGIMEN_HIV_ENROLL), Arrays.asList(patient.getPatientId()),
+                context);
 
         Obs obsPmtctHivEnroll = EmrCalculationUtils.obsResultForPatient(pmtctRegimenHivEnroll, patient.getPatientId());
 
         ListResult listResults = (ListResult) pepAndHaartRegimenHivEnroll.get(patient.getPatientId());
         List<Obs> pepAndHaartRegimenObsList = CalculationUtils.extractResultValues(listResults);
-        if(patientSummary.get("previousArtStatus").equals("None") || patientSummary.get("previousArtStatus").equals("No")){
+        if (patientSummary.get("previousArtStatus").equals("None")
+                || patientSummary.get("previousArtStatus").equals("No")) {
             regimens = "None";
             regimenDates += "None";
         }
-        if(obsPmtctHivEnroll != null){
+        if (obsPmtctHivEnroll != null) {
 
             regimens = getCorrectDrugCode(obsPmtctHivEnroll.getValueCoded());
             regimenDates = formatDate(obsPmtctHivEnroll.getObsDatetime());
         }
-        if(pepAndHaartRegimenObsList != null && !pepAndHaartRegimenObsList.isEmpty() && pepAndHaartRegimenObsList.size() == 1){
-            regimens =getCorrectDrugCode(pepAndHaartRegimenObsList.get(0).getValueCoded());
-            regimenDates =formatDate(pepAndHaartRegimenObsList.get(0).getObsDatetime());
-        }
-        else if(pepAndHaartRegimenObsList != null && !pepAndHaartRegimenObsList.isEmpty() && pepAndHaartRegimenObsList.size() > 1){
-            for(Obs obs:pepAndHaartRegimenObsList) {
-                regimens +=getCorrectDrugCode(obs.getValueCoded())+",";
-                regimenDates =formatDate(obs.getObsDatetime());
+        if (pepAndHaartRegimenObsList != null && !pepAndHaartRegimenObsList.isEmpty()
+                && pepAndHaartRegimenObsList.size() == 1) {
+            regimens = getCorrectDrugCode(pepAndHaartRegimenObsList.get(0).getValueCoded());
+            regimenDates = formatDate(pepAndHaartRegimenObsList.get(0).getObsDatetime());
+        } else if (pepAndHaartRegimenObsList != null && !pepAndHaartRegimenObsList.isEmpty()
+                && pepAndHaartRegimenObsList.size() > 1) {
+            for (Obs obs : pepAndHaartRegimenObsList) {
+                regimens += getCorrectDrugCode(obs.getValueCoded()) + ",";
+                regimenDates = formatDate(obs.getObsDatetime());
             }
         }
 
-        //past or current oisg
-        CalculationResultMap problemsAdded = Calculations.allObs(Dictionary.getConcept(Dictionary.PROBLEM_ADDED), Arrays.asList(patient.getPatientId()), context);
+        // past or current oisg
+        CalculationResultMap problemsAdded = Calculations.allObs(Dictionary.getConcept(Dictionary.PROBLEM_ADDED),
+                Arrays.asList(patient.getPatientId()), context);
         ListResult problemsAddedList = (ListResult) problemsAdded.get(patient.getPatientId());
         List<Obs> problemsAddedListObs = CalculationUtils.extractResultValues(problemsAddedList);
 
@@ -2236,176 +2340,205 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
         patientSummary.put("iosResults", iosResults);
 
-        //current art regimen
+        // current art regimen
         Encounter lastEnc = EncounterBasedRegimenUtils.getLastEncounterForCategory(patient, "ARV");
-        if(lastEnc != null) {
-            patientSummary.put("currentArtRegimen", EncounterBasedRegimenUtils.buildRegimenChangeObject(lastEnc.getObs(), lastEnc));
+        if (lastEnc != null) {
+            patientSummary.put("currentArtRegimen",
+                    EncounterBasedRegimenUtils.buildRegimenChangeObject(lastEnc.getObs(), lastEnc));
         }
 
-        //current who staging
-        CalculationResult currentWhoStaging = EmrCalculationUtils.evaluateForPatient(LastWhoStageCalculation.class, null, patient);
-        if(currentWhoStaging != null){
+        // current who staging
+        CalculationResult currentWhoStaging = EmrCalculationUtils.evaluateForPatient(LastWhoStageCalculation.class,
+                null, patient);
+        if (currentWhoStaging != null) {
             patientSummary.put("currentWhoStaging", whoStaging(((Obs) currentWhoStaging.getValue()).getValueCoded()));
-        }
-        else {
+        } else {
             patientSummary.put("currentWhoStaging", "");
         }
 
-        //find whether this patient has been in CTX
-        CalculationResultMap medOrdersMapCtx = Calculations.allObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS), Arrays.asList(patient.getPatientId()), context);
-        CalculationResultMap medicationDispensedCtx = Calculations.lastObs(Dictionary.getConcept(Dictionary.COTRIMOXAZOLE_DISPENSED), Arrays.asList(patient.getPatientId()), context);
+        // find whether this patient has been in CTX
+        CalculationResultMap medOrdersMapCtx = Calculations.allObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS),
+                Arrays.asList(patient.getPatientId()), context);
+        CalculationResultMap medicationDispensedCtx = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.COTRIMOXAZOLE_DISPENSED), Arrays.asList(patient.getPatientId()),
+                context);
 
         ListResult medOrdersMapListResults = (ListResult) medOrdersMapCtx.get(patient.getPatientId());
         List<Obs> listOfObsCtx = CalculationUtils.extractResultValues(medOrdersMapListResults);
 
-        Obs medicationDispensedCtxObs = EmrCalculationUtils.obsResultForPatient(medicationDispensedCtx, patient.getPatientId());
+        Obs medicationDispensedCtxObs = EmrCalculationUtils.obsResultForPatient(medicationDispensedCtx,
+                patient.getPatientId());
         String ctxValue = "";
-        if(listOfObsCtx.size() > 0){
+        if (listOfObsCtx.size() > 0) {
             Collections.reverse(listOfObsCtx);
-            for(Obs obs:listOfObsCtx){
-                if(obs.getValueCoded().equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM))){
+            for (Obs obs : listOfObsCtx) {
+                if (obs.getValueCoded().equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM))) {
                     ctxValue = "Yes";
                     break;
                 }
             }
             patientSummary.put("ctxValue", ctxValue);
-        }
-        else if(medicationDispensedCtxObs != null && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))){
+        } else if (medicationDispensedCtxObs != null
+                && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
             patientSummary.put("ctxValue", "Yes");
-        }
-        else if(medicationDispensedCtxObs != null && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NO))){
+        } else if (medicationDispensedCtxObs != null
+                && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NO))) {
             patientSummary.put("ctxValue", "No");
-        }
-        else if(medicationDispensedCtxObs != null && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))){
+        } else if (medicationDispensedCtxObs != null
+                && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
             patientSummary.put("ctxValue", "N/A");
-        }
-        else {
+        } else {
             patientSummary.put("ctxValue", "No");
         }
 
-        //Find if a patient is on dapsone
-        CalculationResultMap medOrdersMapDapsone = Calculations.lastObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS), Arrays.asList(patient.getPatientId()), context);
-        Obs medOrdersMapObsDapsone = EmrCalculationUtils.obsResultForPatient(medOrdersMapDapsone, patient.getPatientId());
-        if(medOrdersMapObsDapsone != null && medOrdersMapObsDapsone.getValueCoded().equals(Dictionary.getConcept(Dictionary.DAPSONE))){
+        // Find if a patient is on dapsone
+        CalculationResultMap medOrdersMapDapsone = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.MEDICATION_ORDERS), Arrays.asList(patient.getPatientId()), context);
+        Obs medOrdersMapObsDapsone = EmrCalculationUtils.obsResultForPatient(medOrdersMapDapsone,
+                patient.getPatientId());
+        if (medOrdersMapObsDapsone != null
+                && medOrdersMapObsDapsone.getValueCoded().equals(Dictionary.getConcept(Dictionary.DAPSONE))) {
             patientSummary.put("dapsone", "Yes");
-        }
-        else if(medOrdersMapObsDapsone != null && medOrdersMapObsDapsone.getValueCoded().equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM)) || medicationDispensedCtxObs != null && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))){
+        } else if (medOrdersMapObsDapsone != null
+                && medOrdersMapObsDapsone.getValueCoded()
+                        .equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM))
+                || medicationDispensedCtxObs != null
+                        && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
             patientSummary.put("dapsone", "No");
-        }
-        else {
+        } else {
             patientSummary.put("dapsone", "No");
         }
 
-        //on IPT
-        CalculationResultMap medOrdersMapInh = Calculations.lastObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS), Arrays.asList(patient.getPatientId()), context);
+        // on IPT
+        CalculationResultMap medOrdersMapInh = Calculations.lastObs(Dictionary.getConcept(Dictionary.MEDICATION_ORDERS),
+                Arrays.asList(patient.getPatientId()), context);
         Obs medOrdersMapObsInh = EmrCalculationUtils.obsResultForPatient(medOrdersMapInh, patient.getPatientId());
-        CalculationResultMap medicationDispensedIpt = Calculations.lastObs(Dictionary.getConcept(Dictionary.ISONIAZID_DISPENSED), Arrays.asList(patient.getPatientId()), context);
-        Obs medicationDispensedIptObs = EmrCalculationUtils.obsResultForPatient(medicationDispensedIpt, patient.getPatientId());
-        if(medOrdersMapObsInh != null && medOrdersMapObsInh.getValueCoded().equals(Dictionary.getConcept(Dictionary.ISONIAZID))){
+        CalculationResultMap medicationDispensedIpt = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.ISONIAZID_DISPENSED), Arrays.asList(patient.getPatientId()), context);
+        Obs medicationDispensedIptObs = EmrCalculationUtils.obsResultForPatient(medicationDispensedIpt,
+                patient.getPatientId());
+        if (medOrdersMapObsInh != null
+                && medOrdersMapObsInh.getValueCoded().equals(Dictionary.getConcept(Dictionary.ISONIAZID))) {
             patientSummary.put("onIpt", "Yes");
-        }
-        else if(medicationDispensedIptObs != null && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))){
+        } else if (medicationDispensedIptObs != null
+                && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
             patientSummary.put("onIpt", "Yes");
-        }
-        else if(medicationDispensedIptObs != null && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NO))){
+        } else if (medicationDispensedIptObs != null
+                && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NO))) {
             patientSummary.put("onIpt", "No");
-        }
-        else if(medicationDispensedIptObs != null && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))){
+        } else if (medicationDispensedIptObs != null
+                && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
             patientSummary.put("onIpt", "N/A");
-        }
-        else {
+        } else {
             patientSummary.put("onIpt", "No");
         }
 
-        //find clinics enrolled
-        CalculationResult clinicsEnrolledResult = EmrCalculationUtils.evaluateForPatient(PatientProgramEnrollmentCalculation.class, null, patient);
-        Set<String> patientProgramList= new HashSet<String>();
+        // find clinics enrolled
+        CalculationResult clinicsEnrolledResult = EmrCalculationUtils
+                .evaluateForPatient(PatientProgramEnrollmentCalculation.class, null, patient);
+        Set<String> patientProgramList = new HashSet<String>();
         List<String> setToList = new ArrayList<String>();
-        if(clinicsEnrolledResult != null){
+        if (clinicsEnrolledResult != null) {
             List<PatientProgram> patientPrograms = (List<PatientProgram>) clinicsEnrolledResult.getValue();
-            for(PatientProgram p: patientPrograms) {
+            for (PatientProgram p : patientPrograms) {
 
                 patientProgramList.add(programs(p.getProgram().getConcept().getConceptId()));
             }
         }
         setToList.addAll(patientProgramList);
         String clinicValues = "";
-        if(setToList.size() == 1){
+        if (setToList.size() == 1) {
             clinicValues = setToList.get(0);
-        }
-        else {
-            for(String val:setToList) {
-                clinicValues += val+",";
+        } else {
+            for (String val : setToList) {
+                clinicValues += val + ",";
             }
         }
         patientSummary.put("clinicsEnrolled", clinicValues);
 
-        //most recent cd4
-        CalculationResult cd4Results = EmrCalculationUtils.evaluateForPatient(LastCd4CountDateCalculation.class, null, patient);
-        if(cd4Results != null && cd4Results.getValue() != null){
-            patientSummary.put("mostRecentCd4",((Obs) cd4Results.getValue()).getValueNumeric().toString());
+        // most recent cd4
+        CalculationResult cd4Results = EmrCalculationUtils.evaluateForPatient(LastCd4CountDateCalculation.class, null,
+                patient);
+        if (cd4Results != null && cd4Results.getValue() != null) {
+            patientSummary.put("mostRecentCd4", ((Obs) cd4Results.getValue()).getValueNumeric().toString());
             patientSummary.put("mostRecentCd4Date", formatDate(((Obs) cd4Results.getValue()).getObsDatetime()));
-        }
-        else{
+        } else {
             patientSummary.put("mostRecentCd4", "");
             patientSummary.put("mostRecentCd4Date", "");
         }
 
-
-
         // find deceased date
-        CalculationResult deadResults = EmrCalculationUtils.evaluateForPatient(DateOfDeathCalculation.class, null, patient);
-        if(deadResults.isEmpty()){
+        CalculationResult deadResults = EmrCalculationUtils.evaluateForPatient(DateOfDeathCalculation.class, null,
+                patient);
+        if (deadResults.isEmpty()) {
             patientSummary.put("deathDate", "N/A");
-        }
-        else {
+        } else {
             patientSummary.put("deathDate", formatDate((Date) deadResults.getValue()));
         }
 
         // next appointment date
-        CalculationResult returnVisitResults = EmrCalculationUtils.evaluateForPatient(LastReturnVisitDateCalculation.class, null, patient);
-        if(returnVisitResults != null){
+        CalculationResult returnVisitResults = EmrCalculationUtils
+                .evaluateForPatient(LastReturnVisitDateCalculation.class, null, patient);
+        if (returnVisitResults != null) {
             patientSummary.put("nextAppointmentDate", formatDate((Date) returnVisitResults.getValue()));
-        }
-        else {
+        } else {
             patientSummary.put("nextAppointmentDate", "");
         }
 
         // transfer out date
-        CalculationResult totResults = EmrCalculationUtils.evaluateForPatient(TransferOutDateCalculation.class, null, patient);
-        if(totResults.isEmpty()){
+        CalculationResult totResults = EmrCalculationUtils.evaluateForPatient(TransferOutDateCalculation.class, null,
+                patient);
+        if (totResults.isEmpty()) {
             patientSummary.put("transferOutDate", "N/A");
-        }
-        else {
+        } else {
             patientSummary.put("transferOutDate", formatDate((Date) totResults.getValue()));
         }
 
-        //transfer out to facility
-        CalculationResultMap transferOutFacilty = Calculations.lastObs(Dictionary.getConcept(Dictionary.TRANSFER_OUT_FACILITY), Arrays.asList(patient.getPatientId()), context);
-        Obs transferOutFacilityObs = EmrCalculationUtils.obsResultForPatient(transferOutFacilty, patient.getPatientId());
-        if(transferOutFacilityObs != null){
-            patientSummary.put("transferOutFacility", transferOutFacilityObs.getValueText() != null ? locationService.getLocationByUuid(transferOutFacilityObs.getValueText()).getName() : "");
-        }
-        else {
-            patientSummary.put("transferOutFacility", "N/A");
+        // transfer out to facility
+        CalculationResultMap transferOutFacilityMap = Calculations.lastObs(
+                Dictionary.getConcept(Dictionary.TRANSFER_OUT_FACILITY),
+                Arrays.asList(patient.getPatientId()),
+                context);
+
+        String transferOutFacilityName = "N/A"; // Default value
+
+        if (transferOutFacilityMap != null) {
+            Obs transferOutFacilityObs = EmrCalculationUtils.obsResultForPatient(transferOutFacilityMap,
+                    patient.getPatientId());
+
+            if (transferOutFacilityObs != null) {
+                String facilityUuid = transferOutFacilityObs.getValueText();
+
+                if (facilityUuid != null && !facilityUuid.isEmpty()) {
+                    Location location = locationService.getLocationByUuid(facilityUuid);
+                    transferOutFacilityName = (location != null) ? location.getName() : facilityUuid;
+                } else {
+                    transferOutFacilityName = "";
+                }
+            }
+        } else {
+            patientSummary.put("transferOutFacility", transferOutFacilityName);
+
         }
 
-        //All  Vl
-        CalculationResult allVlResults = EmrCalculationUtils.evaluateForPatient(AllVlCountCalculation.class, null, patient);
+        // All Vl
+        CalculationResult allVlResults = EmrCalculationUtils.evaluateForPatient(AllVlCountCalculation.class, null,
+                patient);
         patientSummary.put("allVlResults", allVlResults);
-        //most recent viral load
-        CalculationResult vlResults = EmrCalculationUtils.evaluateForPatient(ViralLoadAndLdlCalculation.class, null, patient);
+        // most recent viral load
+        CalculationResult vlResults = EmrCalculationUtils.evaluateForPatient(ViralLoadAndLdlCalculation.class, null,
+                patient);
         String viralLoadValue = "None";
         String viralLoadDate = "None";
-        if(!vlResults.isEmpty()) {
+        if (!vlResults.isEmpty()) {
             String values = vlResults.getValue().toString();
-            //split by brace
-            String value = values.replaceAll("\\{", "").replaceAll("\\}","");
-            if(!value.isEmpty()) {
+            // split by brace
+            String value = values.replaceAll("\\{", "").replaceAll("\\}", "");
+            if (!value.isEmpty()) {
                 String[] splitByEqualSign = value.split("=");
                 patientSummary.put("viralLoadValue", splitByEqualSign[0]);
 
-                //for a date from a string
+                // for a date from a string
                 String dateSplitedBySpace = splitByEqualSign[1].split(" ")[0].trim();
                 String yearPart = dateSplitedBySpace.split("-")[0].trim();
                 String monthPart = dateSplitedBySpace.split("-")[1].trim();
@@ -2420,9 +2553,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
         }
 
-        //All CD4 Count
-        CalculationResult allCd4CountResults = EmrCalculationUtils.evaluateForPatient(AllCd4CountCalculation.class, null, patient);
-        patientSummary.put("allCd4CountResults", allCd4CountResults.getValue());
+        // All CD4 Count
+        CalculationResult allCd4CountResults = EmrCalculationUtils.evaluateForPatient(AllCd4CountCalculation.class,
+                null, patient);
+        System.out.println(
+                "allCd4CountResults============================================================================================================"
+                        + allCd4CountResults);
+        patientSummary.put("allCd4CountResults",
+                !allCd4CountResults.isEmpty() && allCd4CountResults.getValue() != null ? allCd4CountResults.getValue()
+                        : "");
 
         return patientSummary;
 
@@ -2430,7 +2569,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/relationship")
     @ResponseBody
-    public String getRelationship(@RequestParam("patientUuid") String patientUuid, @RequestParam("relationshipType") String relationshipType) {
+    public String getRelationship(@RequestParam("patientUuid") String patientUuid,
+            @RequestParam("relationshipType") String relationshipType) {
         String personRelationshipName = "";
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
         List<Person> people = new ArrayList<Person>();
@@ -2449,16 +2589,17 @@ public class KenyaemrCoreRestController extends BaseRestController {
             }
         }
 
-        if(people.size() > 0) {
+        if (people.size() > 0) {
             personRelationshipName = people.get(0).getPersonName().getFullName();
         }
-        return  personRelationshipName;
+        return personRelationshipName;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/kpIdentifier")
     @ResponseBody
-    public Object getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid, @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
-                                           @RequestParam("ward") String ward, @RequestParam("hotspotCode") String hotSpotCodeVal) {
+    public Object getGeneratedKPIdentifier(@RequestParam("patientUuid") String patientUuid,
+            @RequestParam("kpType") String kpTypeVal, @RequestParam("subCounty") String subCounty,
+            @RequestParam("ward") String ward, @RequestParam("hotspotCode") String hotSpotCodeVal) {
         PersonService personService = Context.getPersonService();
         Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
         Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -2477,7 +2618,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         String implementingPartnerCode = null;
         StringBuilder identifier = new StringBuilder();
         GlobalProperty globalCountyCode = Context.getAdministrationService().getGlobalPropertyObject(GP_COUNTY);
-        GlobalProperty globalImplementingPartnerCode = Context.getAdministrationService().getGlobalPropertyObject(GP_KP_IMPLEMENTING_PARTNER);
+        GlobalProperty globalImplementingPartnerCode = Context.getAdministrationService()
+                .getGlobalPropertyObject(GP_KP_IMPLEMENTING_PARTNER);
         String strCountyCode = globalCountyCode.getPropertyValue();
         String strImplementingPartner = globalImplementingPartnerCode.getPropertyValue();
         SimpleObject kpIdentifier = new SimpleObject();
@@ -2523,11 +2665,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
         identifier.append(serialNumber);
 
         ProgramWorkflowService service = Context.getProgramWorkflowService();
-        List<PatientProgram> programs = service.getPatientPrograms(Context.getPatientService().getPatient(patient.getId()),
+        List<PatientProgram> programs = service.getPatientPrograms(
+                Context.getPatientService().getPatient(patient.getId()),
                 kpProgram, null, null, null, null, true);
 
         if (programs.size() > 0) {
-            PatientIdentifierType pit = MetadataUtils.existing(PatientIdentifierType.class, KP_UNIQUE_PATIENT_NUMBER_UUID);
+            PatientIdentifierType pit = MetadataUtils.existing(PatientIdentifierType.class,
+                    KP_UNIQUE_PATIENT_NUMBER_UUID);
             PatientIdentifier pObject = patient.getPatientIdentifier(pit);
             sb.append(pObject.getIdentifier());
         } else {
@@ -2540,7 +2684,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     String entryPointAbbriviations(Concept concept) {
         String value = "Other";
-        if(concept != null) {
+        if (concept != null) {
             if (concept.equals(Dictionary.getConcept(Dictionary.VCT_PROGRAM))) {
                 value = "VCT";
             } else if (concept.equals(Dictionary.getConcept(Dictionary.PMTCT_PROGRAM))) {
@@ -2585,26 +2729,20 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     String cacxScreeningOutcome(Concept concept) {
         String value = "";
-        if(concept != null) {
+        if (concept != null) {
             if (concept.equals(Dictionary.getConcept(Dictionary.POSITIVE))) {
                 value = "Positive";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NEGATIVE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NEGATIVE))) {
                 value = "Negative";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.YES))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.YES))) {
                 value = "Yes";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NO))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NO))) {
                 value = "No";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.UNKNOWN))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.UNKNOWN))) {
                 value = "Unknown";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_DONE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_DONE))) {
                 value = "Not Done";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
                 value = "N/A";
             }
         }
@@ -2613,7 +2751,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     String familyPlanningMethods(Concept concept) {
         String value = "Other";
-        if(concept != null) {
+        if (concept != null) {
             if (concept.equals(Dictionary.getConcept(Dictionary.INJECTABLE_HORMONES))) {
                 value = "INJECTABLE HORMONES";
             } else if (concept.equals(Dictionary.getConcept(Dictionary.CERVICAL_CAP))) {
@@ -2645,32 +2783,23 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             } else if (concept.equals(Dictionary.getConcept(Dictionary.NONE))) {
                 value = "None";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.IUD_CONTRACEPTION))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.IUD_CONTRACEPTION))) {
                 value = "IUD Contraception";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.HYSTERECTOMY))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.HYSTERECTOMY))) {
                 value = "Hysterectomy";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.EMERGENCY_CONTRACEPTIVE_PILLS))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.EMERGENCY_CONTRACEPTIVE_PILLS))) {
                 value = "Emergency contraceptive pills";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.LACTATIONAL_AMENORRHEA))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.LACTATIONAL_AMENORRHEA))) {
                 value = "Lactational amenorrhea";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.UNKNOWN))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.UNKNOWN))) {
                 value = "Unknown";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.CONTRACEPTION_METHOD_UNDECIDED))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.CONTRACEPTION_METHOD_UNDECIDED))) {
                 value = "Contraception method undecided";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.FEMALE_CONDOM))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.FEMALE_CONDOM))) {
                 value = "Female condom";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.MALE_CONDOM))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.MALE_CONDOM))) {
                 value = "Male condom";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.IMPLANTABLE_CONTRACEPTIVE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.IMPLANTABLE_CONTRACEPTIVE))) {
                 value = "Implantable contraceptive (unspecified type)";
             }
 
@@ -2681,62 +2810,47 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     String stiScreeningOutcome(Concept concept) {
         String value = "";
-        if(concept != null) {
+        if (concept != null) {
             if (concept.equals(Dictionary.getConcept(Dictionary.POSITIVE))) {
                 value = "Positive";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NEGATIVE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NEGATIVE))) {
                 value = "Negative";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_DONE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_DONE))) {
                 value = "Not Done";
-            }
-            else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
+            } else if (concept.equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
                 value = "N/A";
             }
         }
         return value;
     }
 
-    String getCorrectDrugCode(Concept concept){
+    String getCorrectDrugCode(Concept concept) {
         String defaultString = "";
-        if(concept.equals(Dictionary.getConcept("794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        if (concept.equals(Dictionary.getConcept("794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "LPV/r";
-        }
-        else if(concept.equals(Dictionary.getConcept("84309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("84309AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "d4T";
-        }
-        else if(concept.equals(Dictionary.getConcept("74807AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("74807AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "DDI";
-        }
-        else if(concept.equals(Dictionary.getConcept("70056AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("70056AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "ABC";
-        }
-        else if(concept.equals(Dictionary.getConcept("80487AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("80487AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "NFV";
-        }
-        else if(concept.equals(Dictionary.getConcept("80586AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("80586AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "NVP";
-        }
-        else if(concept.equals(Dictionary.getConcept("75523AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("75523AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "EFV";
-        }
-        else if(concept.equals(Dictionary.getConcept("78643AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("78643AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "3TC";
-        }
-        else if(concept.equals(Dictionary.getConcept("84795AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("84795AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "TDF";
-        }
-        else if(concept.equals(Dictionary.getConcept("86663AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("86663AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "AZT";
-        }
-        else if(concept.equals(Dictionary.getConcept("83412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("83412AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "RTV";
-        }
-        else if(concept.equals(Dictionary.getConcept("71647AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        } else if (concept.equals(Dictionary.getConcept("71647AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             defaultString = "ATV";
-        }
-        else {
+        } else {
             defaultString = concept.getName().getName();
         }
 
@@ -2744,66 +2858,48 @@ public class KenyaemrCoreRestController extends BaseRestController {
     }
 
     String ios(Integer concept) {
-        String value ;
-        if(concept.equals(123358)){
+        String value;
+        if (concept.equals(123358)) {
             value = "Zoster";
-        }
-        else if(concept.equals(5334)){
+        } else if (concept.equals(5334)) {
             value = "Thrush - oral";
-        }
-        else if(concept.equals(298)){
+        } else if (concept.equals(298)) {
             value = "Thrush - vaginal";
-        }
-        else if(concept.equals(143264)){
+        } else if (concept.equals(143264)) {
             value = "Cough";
-        }
-        else if(concept.equals(122496)){
+        } else if (concept.equals(122496)) {
             value = "Difficult breathing";
-        }
-        else if(concept.equals(140238)){
+        } else if (concept.equals(140238)) {
             value = "Fever";
-        }
-        else if(concept.equals(487)){
+        } else if (concept.equals(487)) {
             value = "Dementia/Enceph";
-        }
-        else if(concept.equals(150796)){
+        } else if (concept.equals(150796)) {
             value = "Weight loss";
-        }
-        else if(concept.equals(114100)){
+        } else if (concept.equals(114100)) {
             value = "Pneumonia";
-        }
-        else if(concept.equals(123529)){
+        } else if (concept.equals(123529)) {
             value = "Urethral discharge";
-        }
-        else if(concept.equals(902)){
+        } else if (concept.equals(902)) {
             value = "Pelvic inflammatory disease";
-        }
-        else if(concept.equals(111721)){
+        } else if (concept.equals(111721)) {
             value = "Ulcers - mouth";
-        }
-        else if(concept.equals(120939)){
+        } else if (concept.equals(120939)) {
             value = "Ulcers - other";
-        }
-        else if(concept.equals(145762)){
+        } else if (concept.equals(145762)) {
             value = "Genital ulcer disease";
-        }
-        else if(concept.equals(140707)){
+        } else if (concept.equals(140707)) {
             value = "Poor weight gain";
-        }
-        else if(concept.equals(112141)){
+        } else if (concept.equals(112141)) {
             value = "Tuberculosis";
-        }
-        else if(concept.equals(160028)){
+        } else if (concept.equals(160028)) {
             value = "Immune reconstitution inflammatory syndrome";
-        }
-        else if(concept.equals(162330)){
+        } else if (concept.equals(162330)) {
             value = "Severe uncomplicated malnutrition";
-        }
-        else if(concept.equals(162331)){
+        } else if (concept.equals(162331)) {
             value = "Severe complicated malnutrition";
         }
 
-        else if(concept.equals(1107)){
+        else if (concept.equals(1107)) {
             value = "None";
         }
 
@@ -2813,77 +2909,74 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return value;
     }
 
-    String whoStaging(Concept concept){
+    String whoStaging(Concept concept) {
         String stage = "";
-        if(concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_ADULT)) || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_PEDS))){
+        if (concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_ADULT))
+                || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_PEDS))) {
 
             stage = "I";
-        }
-        else if(concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_ADULT)) || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_PEDS))){
+        } else if (concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_ADULT))
+                || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_PEDS))) {
 
             stage = "II";
-        }
-        else if(concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_ADULT)) || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_PEDS))){
+        } else if (concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_ADULT))
+                || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_PEDS))) {
 
             stage = "III";
-        }
-        else if(concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_ADULT)) || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_PEDS))){
+        } else if (concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_ADULT))
+                || concept.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_PEDS))) {
 
             stage = "IV";
         }
         return stage;
     }
 
-    String intergerToRoman(String integer){
+    String intergerToRoman(String integer) {
         String value = "";
-        if(integer.equals("1")){
+        if (integer.equals("1")) {
             value = "I";
-        }
-        else if(integer.equals("2")){
+        } else if (integer.equals("2")) {
             value = "II";
-        }
-        else if(integer.equals("3")){
+        } else if (integer.equals("3")) {
             value = "III";
-        }
-        else if(integer.equals("4")){
+        } else if (integer.equals("4")) {
             value = "IV";
         }
         return value;
     }
 
-    String programs(int value){
-        String prog="";
-        if(value == 160541){
-            prog ="TB";
+    String programs(int value) {
+        String prog = "";
+        if (value == 160541) {
+            prog = "TB";
         }
 
-        if(value == 160631){
-            prog ="HIV";
+        if (value == 160631) {
+            prog = "HIV";
         }
 
-        if(value == 159937){
-            prog ="MCH";
+        if (value == 159937) {
+            prog = "MCH";
         }
 
         return prog;
     }
 
-    String previousArtReason(Concept concept){
+    String previousArtReason(Concept concept) {
         String value = "";
-        if(concept.equals(Dictionary.getConcept("1148AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
-            value ="PMTCT";
-        }
-        else if(concept.equals(Dictionary.getConcept("1691AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        if (concept.equals(Dictionary.getConcept("1148AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
+            value = "PMTCT";
+        } else if (concept.equals(Dictionary.getConcept("1691AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             value = "PEP";
         }
 
-        else if(concept.equals(Dictionary.getConcept("1181AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))){
+        else if (concept.equals(Dictionary.getConcept("1181AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))) {
             value = "HAART";
         }
-        return  value;
+        return value;
     }
 
-    private int age(Date d1, Date d2){
+    private int age(Date d1, Date d2) {
         DateTime birthDate = new DateTime(d1.getTime());
         DateTime today = new DateTime(d2.getTime());
 
@@ -2945,13 +3038,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/sql")
     @ResponseBody
-    public List<org.openmrs.module.webservices.rest.SimpleObject> search(@RequestParam("q") String query, HttpServletRequest request) throws Exception {
+    public List<org.openmrs.module.webservices.rest.SimpleObject> search(@RequestParam("q") String query,
+            HttpServletRequest request) throws Exception {
         return Context.getService(KenyaEmrService.class).search(query, request.getParameterMap());
 
     }
 
     /**
      * Generates KenyaEMR related metrics
+     * 
      * @param request
      * @return
      */
@@ -2962,32 +3057,35 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 "EmrName", "KenyaEMR",
                 "EmrVersion", DwapiMetricsUtil.getKenyaemrVersion(),
                 "LastLoginDate", DwapiMetricsUtil.getLastLogin(),
-                "LastMoH731RunDate", DwapiMetricsUtil.getDateofLastMOH731()
-        );
+                "LastMoH731RunDate", DwapiMetricsUtil.getDateofLastMOH731());
     }
 
     /**
      * Verify NUPI exists (EndPoint)
+     * 
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.GET, value = "/verifynupi/{country}/{identifierType}/{identifier}")
     @ResponseBody
-    public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType, @PathVariable String identifier) {
+    public Object verifyNUPI(@PathVariable String country, @PathVariable String identifierType,
+            @PathVariable String identifier) {
         String ret = "{\"status\": \"Error\"}";
         try {
-            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
+            GlobalProperty globalGetUrl = Context.getAdministrationService()
+                    .getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
-            if(baseURL == null || baseURL.trim().isEmpty()) {
-                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";//TODO: we need to remove this ASAP
+            if (baseURL == null || baseURL.trim().isEmpty()) {
+                baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";// TODO: we need to remove this
+                                                                                       // ASAP
             }
-            String completeURL = baseURL + "/"  + country + "/" + identifierType  + "/" + identifier;
+            String completeURL = baseURL + "/" + country + "/" + identifierType + "/" + identifier;
             URL url = new URL(completeURL);
 
             UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
-            HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
             con.setRequestProperty("Authorization", "Bearer " + authToken);
@@ -2997,7 +3095,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 // Read the response
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
@@ -3038,7 +3136,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 HttpHeaders headers = new HttpHeaders();
                 String contentType = con.getHeaderField("Content-Type");
-                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                if (contentType != null && contentType.toLowerCase().contains("json")) {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
@@ -3046,7 +3144,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("NUPI verification: ERROR: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -3056,9 +3154,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Search for NUPI (EndPoint)
+     * 
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.GET, value = "/searchnupi/{searchkey}/{searchvalue}")
     @ResponseBody
     public Object searchNUPI(@PathVariable String searchkey, @PathVariable String searchvalue) {
@@ -3067,20 +3166,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
             System.out.println("NUPI search: SearchKey: " + searchkey + " SearchValue: " + searchvalue);
 
             // Create URL
-            // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
-            GlobalProperty globalGetUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
+            // String baseURL =
+            // "https://afyakenyaapi.health.go.ke/partners/registry/search";
+            GlobalProperty globalGetUrl = Context.getAdministrationService()
+                    .getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_GET_END_POINT);
             String baseURL = globalGetUrl.getPropertyValue();
-            if(baseURL == null || baseURL.trim().isEmpty()) {
+            if (baseURL == null || baseURL.trim().isEmpty()) {
                 baseURL = "https://afyakenyaapi.health.go.ke/partners/registry/search";
             }
-            String completeURL = baseURL + "/"  + searchkey + "/" + searchvalue;
+            String completeURL = baseURL + "/" + searchkey + "/" + searchvalue;
             System.out.println("NUPI search: Using NUPI GET URL: " + completeURL);
             URL url = new URL(completeURL);
 
             UpiUtilsDataExchange upiUtilsDataExchange = new UpiUtilsDataExchange();
             String authToken = upiUtilsDataExchange.getToken();
 
-            HttpsURLConnection con =(HttpsURLConnection) url.openConnection();
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
             con.setRequestProperty("Authorization", "Bearer " + authToken);
@@ -3090,7 +3191,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 // Read the response
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
@@ -3130,7 +3231,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 HttpHeaders headers = new HttpHeaders();
                 String contentType = con.getHeaderField("Content-Type");
-                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                if (contentType != null && contentType.toLowerCase().contains("json")) {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
@@ -3138,7 +3239,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("NUPI search: ERROR: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -3148,10 +3249,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Get a new NUPI (EndPoint)
+     * 
      * @param request
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.POST, value = "/newnupi")
     @ResponseBody
     public Object newNUPI(HttpServletRequest request) {
@@ -3164,9 +3266,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             // Create URL
             // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
-            GlobalProperty globalPostUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_POST_END_POINT);
+            GlobalProperty globalPostUrl = Context.getAdministrationService()
+                    .getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_POST_END_POINT);
             String baseURL = globalPostUrl.getPropertyValue();
-            if(baseURL == null || baseURL.trim().isEmpty()) {
+            if (baseURL == null || baseURL.trim().isEmpty()) {
                 baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
             }
             String completeURL = baseURL;
@@ -3177,7 +3280,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
             String authToken = upiUtilsDataExchange.getToken();
 
             // Make the Connection
-            con =(HttpsURLConnection) url.openConnection();
+            con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setDoOutput(true);
             con.setRequestProperty("Authorization", "Bearer " + authToken);
@@ -3189,7 +3292,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
             String requestBody = "";
             BufferedReader requestReader = request.getReader();
 
-            for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
+            for (String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {
+            }
             System.out.println("New NUPI: Sending to remote: " + requestBody);
             PrintStream os = new PrintStream(con.getOutputStream());
             os.print(requestBody);
@@ -3197,7 +3301,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
 
                 // Read the response
                 BufferedReader in = null;
@@ -3213,7 +3317,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 String returnResponse = response.toString();
                 System.out.println("New NUPI: Got the Response as: " + returnResponse);
-
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
@@ -3240,7 +3343,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 HttpHeaders headers = new HttpHeaders();
                 String contentType = con.getHeaderField("Content-Type");
-                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                if (contentType != null && contentType.toLowerCase().contains("json")) {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
@@ -3248,7 +3351,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("New NUPI: ERROR: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -3258,13 +3361,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * Modify NUPI patient data e.g CCC Number (EndPoint)
+     * 
      * @param request
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.PUT, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.PUT, value = "/modifynupi/{nupinumber}/{searchtype}")
     @ResponseBody
-    public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber, @PathVariable String searchtype) {
+    public Object modifyNUPI(HttpServletRequest request, @PathVariable String nupinumber,
+            @PathVariable String searchtype) {
         String ret = "{\"status\": \"Error\"}";
 
         // InputStream errorStream = null;
@@ -3275,9 +3380,10 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             // Create URL
             // String baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
-            GlobalProperty globalPostUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_UPDATE_END_POINT);
+            GlobalProperty globalPostUrl = Context.getAdministrationService()
+                    .getGlobalPropertyObject(CommonMetadata.GP_CLIENT_VERIFICATION_UPDATE_END_POINT);
             String baseURL = globalPostUrl.getPropertyValue();
-            if(baseURL == null || baseURL.trim().isEmpty()) {
+            if (baseURL == null || baseURL.trim().isEmpty()) {
                 baseURL = "https://afyakenyaapi.health.go.ke/partners/registry";
             }
             String completeURL = baseURL + "/" + nupinumber + "/" + searchtype;
@@ -3288,7 +3394,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
             String authToken = upiUtilsDataExchange.getToken();
 
             // Make the Connection
-            con =(HttpsURLConnection) url.openConnection();
+            con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
             con.setRequestProperty("Authorization", "Bearer " + authToken);
@@ -3300,7 +3406,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
             String requestBody = "";
             BufferedReader requestReader = request.getReader();
 
-            for(String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {}
+            for (String output = ""; (output = requestReader.readLine()) != null; requestBody = requestBody + output) {
+            }
             System.out.println("Modify NUPI: Sending to remote: " + requestBody);
             PrintStream os = new PrintStream(con.getOutputStream());
             os.print(requestBody);
@@ -3308,7 +3415,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
 
                 // Read the response
                 BufferedReader in = null;
@@ -3324,7 +3431,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 String returnResponse = response.toString();
                 System.out.println("Modify NUPI: Got the Response as: " + returnResponse);
-
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
@@ -3351,7 +3457,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 HttpHeaders headers = new HttpHeaders();
                 String contentType = con.getHeaderField("Content-Type");
-                if(contentType != null && contentType.toLowerCase().contains("json")) {
+                if (contentType != null && contentType.toLowerCase().contains("json")) {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 } else {
                     headers.setContentType(MediaType.TEXT_PLAIN);
@@ -3359,7 +3465,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
                 return ResponseEntity.status(responseCode).headers(headers).body(errorBody);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Modify NUPI: ERROR: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -3368,14 +3474,17 @@ public class KenyaemrCoreRestController extends BaseRestController {
     }
 
     /**
-     * Returns the latest patient Obs value coded concept ID and UUID given the patient UUID and Concept UUID
+     * Returns the latest patient Obs value coded concept ID and UUID given the
+     * patient UUID and Concept UUID
+     * 
      * @param patientUuid
      * @return value coded concept id and uuid
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.GET, value = "/latestobs")
     @ResponseBody
-    public Object getLatestObs(@RequestParam("patientUuid") String patientUuid, @RequestParam("concept") String conceptIdentifier) {
+    public Object getLatestObs(@RequestParam("patientUuid") String patientUuid,
+            @RequestParam("concept") String conceptIdentifier) {
         SimpleObject ret = SimpleObject.create("conceptId", 0, "conceptUuid", "");
         if (StringUtils.isBlank(patientUuid)) {
             return new ResponseEntity<Object>("You must specify a patientUuid in the request!",
@@ -3401,6 +3510,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return ret;
 
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
     public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
         return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
@@ -3408,13 +3518,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * End Point for getting Patient resource from SHA client registry
+     * 
      * @param identifier
      * @param identifierType
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.GET, value = "/getSHAPatient/{identifier}/{identifierType}")
-    public ResponseEntity<String> getSHAPatient(@PathVariable String identifier, @PathVariable String identifierType) throws IOException {
+    public ResponseEntity<String> getSHAPatient(@PathVariable String identifier, @PathVariable String identifierType)
+            throws IOException {
         String toReturn = getCrStatus(identifier, identifierType);
 
         return ResponseEntity.ok()
@@ -3424,10 +3536,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
     /**
      * End Point for getting Practitioner resource from SHA client registry
+     * 
      * @param allParams to capture the query parameters
      * @return
      */
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.OPTIONS })
     @RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
     public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
 
@@ -3437,7 +3550,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     .body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
         }
         String identifierType = allParams.get("identifierType");
-        String identifier = allParams.get("identifierNumber");;
+        String identifier = allParams.get("identifierNumber");
+        ;
         String toReturn = getHwStatus(identifier, identifierType);
 
         return ResponseEntity.ok()
@@ -3449,17 +3563,20 @@ public class KenyaemrCoreRestController extends BaseRestController {
     public static String getAuthToken() throws IOException {
         // Utility function to get auth token
         OkHttpClient client = new OkHttpClient();
-        GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
+        GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService()
+                .getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
         String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
         if (shaJwtTokenUrl == null || shaJwtTokenUrl.trim().isEmpty()) {
             System.out.println("Jwt token url configs not updated: ");
         }
-        GlobalProperty globalGetJwtUsername = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
+        GlobalProperty globalGetJwtUsername = Context.getAdministrationService()
+                .getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
         String shaJwtUsername = globalGetJwtUsername.getPropertyValue();
         if (shaJwtUsername == null || shaJwtUsername.trim().isEmpty()) {
             System.out.println("Jwt token username not updated: ");
         }
-        GlobalProperty globalGetJwtPassword = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
+        GlobalProperty globalGetJwtPassword = Context.getAdministrationService()
+                .getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
         String shaJwtPassword = globalGetJwtPassword.getPropertyValue();
         if (shaJwtPassword == null || shaJwtPassword.trim().isEmpty()) {
             System.out.println("Jwt token password not updated: ");
@@ -3477,15 +3594,17 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // Execute the request
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
-//            System.out.println("Response: " + response.body().string());
+            // System.out.println("Response: " + response.body().string());
         } else {
             System.out.println("Request failed: " + response.code() + " - " + response.message());
         }
 
         return response.body().string();
     }
-    public static String getCrStatus(String identifier, String identifierType ) throws IOException {
-        GlobalProperty globalGetCRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT);
+
+    public static String getCrStatus(String identifier, String identifierType) throws IOException {
+        GlobalProperty globalGetCRUrl = Context.getAdministrationService()
+                .getGlobalPropertyObject(CommonMetadata.GP_SHA_CLIENT_VERIFICATION_JWT_GET_END_POINT);
         String baseURL = globalGetCRUrl.getPropertyValue();
         if (baseURL == null || baseURL.trim().isEmpty()) {
             System.out.println("CR GET endpoint configs not updated: ");
@@ -3501,13 +3620,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         Response response = client.newCall(request).execute();
         String respo = response.body().string();
-        //convert response to json
-        return   respo;
+        // convert response to json
+        return respo;
     }
 
-    public static String getHwStatus(String identifier, String identifierType ) throws IOException {
+    public static String getHwStatus(String identifier, String identifierType) throws IOException {
 
-        GlobalProperty globalGetHRUrl = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
+        GlobalProperty globalGetHRUrl = Context.getAdministrationService()
+                .getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
         String baseURL = globalGetHRUrl.getPropertyValue();
         if (baseURL == null || baseURL.trim().isEmpty()) {
             System.out.println("HWR GET endpoint configs not updated: ");
@@ -3522,7 +3642,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .build();
         Response response = client.newCall(request).execute();
         String respo = response.body().string();
-        return   respo;
+        return respo;
     }
 
     /**
@@ -3530,6 +3650,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
      * It reads the mapping file from the OpenMRS app directory.
      * The file must be a json file named local_concept_mapping.
      * The file content is a JSON array of mappings
+     * 
      * @return
      * @throws IOException
      */
@@ -3551,11 +3672,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
          * Sample conceptMappingFile content
          * ----------------------
          * [
-         *   {
-         *       "DiagnosisName": "Headache, not elsewhere classified",
-         *       "ConceptId": "139084",
-         *       "ICD11Code": "8A8Z"
-         *   }
+         * {
+         * "DiagnosisName": "Headache, not elsewhere classified",
+         * "ConceptId": "139084",
+         * "ICD11Code": "8A8Z"
+         * }
          * ]
          */
         String conceptMapping = FileUtils.readFileToString(conceptMappingFile, "UTF-8");
@@ -3568,7 +3689,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
                 ConceptSource icd11Who = conceptService.getConceptSourceByName("ICD-11-WHO");
                 int counter = 0;
-                for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext(); ) {
+                for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext();) {
                     ObjectNode node = (ObjectNode) it.next();
 
                     Integer conceptId = node.get("ConceptId").asInt();
@@ -3579,11 +3700,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
                     if (concept == null) {
                         continue; // just skip
                     }
-                    ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who) : new ConceptReferenceTerm(icd11Who, icd11Code, icd11Name);
+                    ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code,
+                            icd11Who) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who)
+                                    : new ConceptReferenceTerm(icd11Who, icd11Code, icd11Name);
                     ConceptMap conceptMap = new ConceptMap();
                     conceptMap.setConceptMapType(sameAs);
                     conceptMap.setConceptReferenceTerm(referenceTerm);
-                    if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code) && cMap.getConceptReferenceTerm().getConceptSource().equals(icd11Who))) {
+                    if (concept.getConceptMappings().stream()
+                            .anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code)
+                                    && cMap.getConceptReferenceTerm().getConceptSource().equals(icd11Who))) {
                         continue; // skip existing mappings
                     }
                     concept.addConceptMapping(conceptMap);
@@ -3608,17 +3733,21 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return responseObject.toString();
 
     }
-	/**
-	 * Generates Facility Dashboard
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/facility-dashboard")
-	@ResponseBody
-	public Object getFacilityDashboard(HttpServletRequest request) {
+
+    /**
+     * Generates Facility Dashboard
+     * 
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/facility-dashboard")
+    @ResponseBody
+    public Object getFacilityDashboard(HttpServletRequest request) {
         double PERCENT_DIVISOR = 100.0;
-        final String clinicalActionPercentageThreshold = getGlobalPropertyValue(CommonMetadata.GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD);
-        final String clinicalActionHEIAbsoluteThreshold = getGlobalPropertyValue(CommonMetadata.GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD);
+        final String clinicalActionPercentageThreshold = getGlobalPropertyValue(
+                CommonMetadata.GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD);
+        final String clinicalActionHEIAbsoluteThreshold = getGlobalPropertyValue(
+                CommonMetadata.GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD);
 
         double clinicalActionThreshold = 0.0;
         double heiClinicalActionThreshold;
@@ -3635,21 +3764,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
             throw new IllegalArgumentException("Clinical action hei absolute threshold is not configured correctly.");
         }
 
-		return SimpleObject.create(
-			"getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(),
-			"getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
-            "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(),
-			"getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
-			"getEligibleForVl", 0,
-			"getEligibleForVlSampleNotTaken", 0,
-			"getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(),
-			"getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(),
-			"getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(),
-			"getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
-			"getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(),
-			"getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
-			"clinicalActionThreshold",clinicalActionThreshold,
-			"heiClinicalActionThreshold",heiClinicalActionThreshold
-		);
-	}
+        return SimpleObject.create(
+                "getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(),
+                "getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
+                "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(),
+                "getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
+                "getEligibleForVl", 0,
+                "getEligibleForVlSampleNotTaken", 0,
+                "getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(),
+                "getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(),
+                "getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(),
+                "getHeiSixToEightWeeksWithoutPCRResults",
+                FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
+                "getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(),
+                "getHei24MonthsWithoutDocumentedOutcome",
+                FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
+                "clinicalActionThreshold", clinicalActionThreshold,
+                "heiClinicalActionThreshold", heiClinicalActionThreshold);
+    }
 }
