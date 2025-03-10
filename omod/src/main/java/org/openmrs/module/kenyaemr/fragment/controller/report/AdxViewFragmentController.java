@@ -364,7 +364,7 @@ public class AdxViewFragmentController {
 
                         }
                     }
-                    document.appendChild(eDataset);
+                    root.appendChild(eDataset);
                 }
             }
         }
@@ -547,17 +547,26 @@ public class AdxViewFragmentController {
         return list;
 
     }
+
     String getMflCode() {
-        String mfl= "";
+        String mfl = "";
         Integer locationId;
         String locationProperty = administrationService.getGlobalProperty("kenyaemr.defaultLocation");
-        String GP_MFL_CODE = Context.getAdministrationService().getGlobalProperty("facility.mflcode").trim();
-        if (!GP_MFL_CODE.isEmpty()) {
+        String GP_MFL_CODE = Context.getAdministrationService().getGlobalProperty("facility.mflcode");
+        if (GP_MFL_CODE != null && !GP_MFL_CODE.isEmpty()) {
             mfl = GP_MFL_CODE;
         } else if (locationProperty != null && !locationProperty.isEmpty()) {
-            locationId = Integer.parseInt(locationProperty);
-            Location location = locationService.getLocation(locationId);
-            mfl = new Facility(location).getMflCode();
+            try {
+                locationId = Integer.parseInt(locationProperty);
+                Location location = locationService.getLocation(locationId);
+                if (location != null) {
+                    mfl = new Facility(location).getMflCode();
+                } else {
+                    System.err.println("Location with id: " + locationId + " was not found");
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid Location ID format: " + locationProperty);
+            }
         } else {
             System.err.println("Missing mflcode and location properties");
         }
