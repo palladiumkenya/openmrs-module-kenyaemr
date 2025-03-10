@@ -78,6 +78,10 @@ public class PublicHealthActionIndicatorLibrary {
 	public CohortIndicator txCUrrUnsuppressedWithoutEAC() {
 		return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEAC(), "startDate=${startDate},endDate=${endDate}"));
 	}
+
+    public CohortIndicator delayedVLTesting() {
+        return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.delayedVLTesting(), "startDate=${startDate},endDate=${endDate}"));
+    }
     /**
      * Number of undocumented LTFU patients
      * @return the indicator

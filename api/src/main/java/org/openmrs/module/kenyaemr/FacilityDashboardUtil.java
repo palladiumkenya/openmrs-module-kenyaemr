@@ -208,19 +208,163 @@ public class FacilityDashboardUtil {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
 	}
+
+	/**
+	 * Surveillance dashboards
+	 * 3. Delayed viral load testing. Eligible without VL test taken
+	 * @return long value
+	 */
+	public static Long getEligibleForVl() {
+		String eligibleForVlQuery = "select count(b.patient_id) as eligible_for_vl\n" +
+				"from (select fup.visit_date,\n" +
+				"             fup.patient_id,\n" +
+				"             min(e.visit_date)                                               as enroll_date,\n" +
+				"             max(fup.visit_date)                                             as latest_vis_date,\n" +
+				"             mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11) as latest_tca,\n" +
+				"             max(d.visit_date)                                               as date_discontinued,\n" +
+				"             d.patient_id                                                    as disc_patient,\n" +
+				"             de.patient_id                                                   as started_on_drugs\n" +
+				"      from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"               join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"               left outer join kenyaemr_etl.etl_drug_event de\n" +
+				"                               on e.patient_id = de.patient_id and date(date_started) <= CURRENT_DATE\n" +
+				"               left outer JOIN\n" +
+				"           (select patient_id, visit_date\n" +
+				"            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"            where date(visit_date) <= CURRENT_DATE\n" +
+				"              and program_name = 'HIV'\n" +
+				"            group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"      where fup.visit_date <= CURRENT_DATE\n" +
+				"      group by patient_id\n" +
+				"      having (started_on_drugs is not null and started_on_drugs <> \"\")\n" +
+				"         and (\n" +
+				"          (date(latest_tca) > CURRENT_DATE and\n" +
+				"           (date(latest_tca) > date(date_discontinued) or disc_patient is null)) or\n" +
+				"          (((date(latest_tca) between date_sub(CURRENT_DATE, interval 3 MONTH) and CURRENT_DATE) and\n" +
+				"            (date(latest_vis_date) >= date(latest_tca)))) and\n" +
+				"          (date(latest_tca) > date(date_discontinued) or disc_patient is null))) e\n" +
+				"         INNER JOIN (select v.patient_id\n" +
+				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
+				"                     where (TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"                            v.base_viral_load_test_result is null)                              -- First VL new on ART\n" +
+				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"                            (v.vl_result is not null and\n" +
+				"                             v.date_test_requested < v.latest_hiv_followup_visit))              -- immediate for PG & BF\n" +
+				"                        OR (v.vl_result >= 200 AND\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                            3)                                                                  -- Unsuppressed VL\n" +
+				"                        OR (v.vl_result < 200 AND\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 6 and\n" +
+				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+				"                        OR (v.vl_result < 200 AND\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                            12 and\n" +
+				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24)             -- > 24 with last suppressed vl\n" +
+				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3\n" +
+				"                         and (v.order_reason in (159882, 1434) and\n" +
+				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                              12) and\n" +
+				"                            v.vl_result < 200) -- PG & BF after PG/BF baseline < 200\n" +
+				") b on e.patient_id = b.patient_id;\n" +
+				"\n" +
+				"-- Eligible for VL sample not taken\n" +
+				"select count(v.patient_id) as eligible_for_vl\n" +
+				"from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+				"         inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
+				"where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"        v.base_viral_load_test_result is null) -- First VL new on ART\n" +
+				"    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"        (v.vl_result is not null and v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
+				"    OR (v.vl_result >= 200 AND\n" +
+				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3) -- Unsuppressed VL\n" +
+				"    OR (v.vl_result < 200 AND\n" +
+				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 6 and\n" +
+				"        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+				"    OR (v.vl_result < 200 AND\n" +
+				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 12 and\n" +
+				"        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
+				"    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3\n" +
+				"        and (v.order_reason in (159882, 1434) and\n" +
+				"             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 12) and\n" +
+				"        v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
+				"  and v.latest_hiv_followup_visit != v.date_test_requested;";
+
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			return (Long) Context.getAdministrationService().executeSQL(eligibleForVlQuery, true).get(0).get(0);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
 	/**
 	 * Surveillance dashboards
 	 * 3. Delayed viral load testing. Eligible without VL test taken
 	 * @return long value
 	 */
 	public static Long getEligibleForVlSampleNotTaken() {		
-		String eligibleForVlSampleNotTakenQuery = "select count(t.patient_id) from kenyaemr_etl.etl_hts_test t left join\n" +
-			"         (select l.patient_id, l.ccc_number from kenyaemr_etl.etl_hts_referral_and_linkage l \n" +
-			"                  where date(l.visit_date) <= date('2020-01-01') group by l.patient_id) l on t.patient_id = l.patient_id\n" +
-			"                    left join (select e.patient_id from kenyaemr_etl.etl_hiv_enrollment e \n" +
-			"                               where date(e.visit_date) <= date('2020-01-01'))e on e.patient_id = t.patient_id\n" +
-			"                                 where t.final_test_result='Positive' and t.test_type = 2 \n" +
-			"                                 and date(t.visit_date) between date('2020-01-01') and date('2025-01-01') and l.ccc_number is null and e.patient_id is null;";
+		String eligibleForVlSampleNotTakenQuery = "select count(b.patient_id) as eligible_for_vl_sample_not_taken\n" +
+				"from (select fup.visit_date,\n" +
+				"             fup.patient_id,\n" +
+				"             min(e.visit_date)                                               as enroll_date,\n" +
+				"             max(fup.visit_date)                                             as latest_vis_date,\n" +
+				"             mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11) as latest_tca,\n" +
+				"             max(d.visit_date)                                               as date_discontinued,\n" +
+				"             d.patient_id                                                    as disc_patient,\n" +
+				"             de.patient_id                                                   as started_on_drugs\n" +
+				"      from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"               join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"               left outer join kenyaemr_etl.etl_drug_event de\n" +
+				"                               on e.patient_id = de.patient_id and date(date_started) <= CURRENT_DATE\n" +
+				"               left outer JOIN\n" +
+				"           (select patient_id, visit_date\n" +
+				"            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"            where date(visit_date) <= CURRENT_DATE\n" +
+				"              and program_name = 'HIV'\n" +
+				"            group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"      where fup.visit_date <= CURRENT_DATE\n" +
+				"      group by patient_id\n" +
+				"      having (started_on_drugs is not null and started_on_drugs <> \"\")\n" +
+				"         and (\n" +
+				"          (date(latest_tca) > CURRENT_DATE and\n" +
+				"           (date(latest_tca) > date(date_discontinued) or disc_patient is null)) or\n" +
+				"          (((date(latest_tca) between date_sub(CURRENT_DATE, interval 3 MONTH) and CURRENT_DATE) and\n" +
+				"            (date(latest_vis_date) >= date(latest_tca)))) and\n" +
+				"          (date(latest_tca) > date(date_discontinued) or disc_patient is null))) e\n" +
+				"         INNER JOIN (select v.patient_id\n" +
+				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
+				"                     where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"                             v.base_viral_load_test_result is null) -- First VL new on ART\n" +
+				"                         OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"                             TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+				"                             (v.vl_result is not null and\n" +
+				"                              v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
+				"                         OR (v.vl_result >= 200 AND\n" +
+				"                             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                             3) -- Unsuppressed VL\n" +
+				"                         OR (v.vl_result < 200 AND\n" +
+				"                             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                             6 and\n" +
+				"                             TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+				"                         OR (v.vl_result < 200 AND\n" +
+				"                             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                             12 and\n" +
+				"                             TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
+				"                         OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+				"                             TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3\n" +
+				"                             and (v.order_reason in (159882, 1434) and\n" +
+				"                                  TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+				"                                  12) and\n" +
+				"                             v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
+				"                       and v.latest_hiv_followup_visit > v.date_test_requested) b on e.patient_id = b.patient_id;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
