@@ -211,7 +211,7 @@ public class FacilityDashboardUtil {
 
 	/**
 	 * Surveillance dashboards
-	 * 3. Delayed viral load testing. Eligible without VL test taken
+	 * Clients eligible for VL test
 	 * @return long value
 	 */
 	public static Long getEligibleForVl() {
@@ -269,31 +269,7 @@ public class FacilityDashboardUtil {
 				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
 				"                              12) and\n" +
 				"                            v.vl_result < 200) -- PG & BF after PG/BF baseline < 200\n" +
-				") b on e.patient_id = b.patient_id;\n" +
-				"\n" +
-				"-- Eligible for VL sample not taken\n" +
-				"select count(v.patient_id) as eligible_for_vl\n" +
-				"from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
-				"         inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-				"where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
-				"        v.base_viral_load_test_result is null) -- First VL new on ART\n" +
-				"    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
-				"        (v.vl_result is not null and v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
-				"    OR (v.vl_result >= 200 AND\n" +
-				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3) -- Unsuppressed VL\n" +
-				"    OR (v.vl_result < 200 AND\n" +
-				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 6 and\n" +
-				"        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
-				"    OR (v.vl_result < 200 AND\n" +
-				"        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 12 and\n" +
-				"        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
-				"    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3\n" +
-				"        and (v.order_reason in (159882, 1434) and\n" +
-				"             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 12) and\n" +
-				"        v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
-				"  and v.latest_hiv_followup_visit != v.date_test_requested;";
+				") b on e.patient_id = b.patient_id;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
