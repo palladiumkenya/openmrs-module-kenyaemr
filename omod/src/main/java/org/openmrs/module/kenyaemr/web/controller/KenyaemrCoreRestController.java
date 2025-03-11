@@ -2418,6 +2418,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 if (facilityUuid != null && !facilityUuid.isEmpty()) {
                     Location location = locationService.getLocationByUuid(facilityUuid);
                     transferOutFacilityName = (location != null) ? location.getName() : facilityUuid;
+                    patientSummary.put("transferOutFacility", transferOutFacilityName);
                 } else {
                     transferOutFacilityName = "";
                 }
