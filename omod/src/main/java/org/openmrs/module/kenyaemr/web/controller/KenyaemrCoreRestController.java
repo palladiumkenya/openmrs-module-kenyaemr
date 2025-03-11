@@ -1966,7 +1966,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
             CalculationResultMap cacxMap = Calculations.firstObs(Dictionary.getConcept(Dictionary.CACX_SCREENING),
                     Arrays.asList(patient.getPatientId()), context);
             Obs cacxObs = (cacxMap != null) ? EmrCalculationUtils.obsResultForPatient(cacxMap, patient.getPatientId()) : null;
-            String caxcScreeningOutcome  = (cacxObs != null && cacxObs.getValueCoded() != null ) ? cacxObs.getValueCoded().toString(): "None";
+            String caxcScreeningOutcome  = (cacxObs != null && cacxObs.getValueCoded() != null && cacxObs.getValueCoded().getName() != null ) ? cacxObs.getValueCoded().getName().getName(): "None";
             patientSummary.put("caxcScreeningOutcome", caxcScreeningOutcome);
         }
 
@@ -1974,7 +1974,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
         CalculationResultMap stiScreen = Calculations.firstObs(Dictionary.getConcept(Dictionary.STI_SCREENING),
                 Arrays.asList(patient.getPatientId()), context);
         Obs stiObs = (stiScreen != null) ? EmrCalculationUtils.obsResultForPatient(stiScreen, patient.getPatientId()) : null;
-        String stiScreeningOutcome  = (stiObs != null && stiObs.getValueCoded() != null ) ? stiObs.getValueCoded().toString(): "None";
+        String stiScreeningOutcome  = (stiObs != null && stiObs.getValueCoded() != null && stiObs.getValueCoded().getName() != null ) ? stiObs.getValueCoded().getName().getName() : "None";
         patientSummary.put("stiScreeningOutcome", stiScreeningOutcome);
 
         // Fp protection
