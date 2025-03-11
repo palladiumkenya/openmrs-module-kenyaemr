@@ -3769,17 +3769,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 "getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
                 "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(),
                 "getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
-                "getEligibleForVl", 0,
-                "getEligibleForVlSampleNotTaken", 0,
+                "getEligibleForVl", FacilityDashboardUtil.getEligibleForVl(),
+                "getEligibleForVlSampleNotTaken", FacilityDashboardUtil.getEligibleForVlSampleNotTaken(),
                 "getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(),
                 "getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(),
                 "getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(),
-                "getHeiSixToEightWeeksWithoutPCRResults",
-                FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
+                "getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
                 "getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(),
-                "getHei24MonthsWithoutDocumentedOutcome",
-                FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
-                "clinicalActionThreshold", clinicalActionThreshold,
-                "heiClinicalActionThreshold", heiClinicalActionThreshold);
+                "getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
+                "clinicalActionThreshold",clinicalActionThreshold,
+                "heiClinicalActionThreshold",heiClinicalActionThreshold
+        );
     }
 }

@@ -883,6 +883,61 @@ public class PublicHealthActionCohortLibrary {
 		cd.setCompositionString("txcurr and unsuppressedWithoutEAC");
 		return cd;
 	}
+
+    /**
+     * Eligible for VL samlple not taken
+     * @return
+     */
+    public CohortDefinition eligibleForVLSampleNotTaken() {
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
+                "where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+                "        v.base_viral_load_test_result is null) -- First VL new on ART\n" +
+                "    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3 and\n" +
+                "        (v.vl_result is not null and\n" +
+                "         v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
+                "    OR (v.vl_result >= 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+                "        3) -- Unsuppressed VL\n" +
+                "    OR (v.vl_result < 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+                "        6 and\n" +
+                "        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+                "    OR (v.vl_result < 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+                "        12 and\n" +
+                "        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
+                "    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >= 3\n" +
+                "        and (v.order_reason in (159882, 1434) and\n" +
+                "             TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) >=\n" +
+                "             12) and\n" +
+                "        v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
+                "  and v.latest_hiv_followup_visit > v.date_test_requested;\n";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("allSuppressedWithoutEAC");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
+        return cd;
+    }
+
+    /**
+     * Current on ART eligible for VL, sample not taken during visit
+     * @return
+     */
+    public CohortDefinition delayedVLTesting() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("eligibleForVLSampleNotTaken", ReportUtils.map(eligibleForVLSampleNotTaken(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("txcurr and eligibleForVLSampleNotTaken");
+        return cd;
+    }
 	/**
 	 * HEIs 6-8 weeks missing HIV DNA PCR
 	 * @return
