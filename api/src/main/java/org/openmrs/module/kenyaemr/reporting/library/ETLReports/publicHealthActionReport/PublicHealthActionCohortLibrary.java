@@ -917,11 +917,11 @@ public class PublicHealthActionCohortLibrary {
                 "        v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
                 "  and v.latest_hiv_followup_visit > v.date_test_requested;\n";
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("allSuppressedWithoutEAC");
+        cd.setName("eligibleForVLSampleNotTaken");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
+        cd.setDescription("Patients Eligible for VL, no sample taken during last visit");
         return cd;
     }
 
