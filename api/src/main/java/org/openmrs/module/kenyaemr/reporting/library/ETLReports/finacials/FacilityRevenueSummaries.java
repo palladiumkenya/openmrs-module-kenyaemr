@@ -11,11 +11,6 @@ package org.openmrs.module.kenyaemr.reporting.library.ETLReports.finacials;
 
 public class FacilityRevenueSummaries {
     public static final String getMonthlySummaryQueryM1() {
-        return "" +
-				"";
-    }
-
-    public static final String getMonthlySummaryQueryM2() {
         return "SELECT transaction_date,\n" +
 			"          total_sales,\n" +
 			"          ipd_cash,\n" +
