@@ -581,6 +581,11 @@ public class EncounterBasedRegimenUtils {
 				"    \"name\": \"TAF\",\n" +
 				"    \"conceptRef\": \"c0854602-6e51-422e-a4e5-45e263e9d3e0\",\n" +
 				"    \"regimenLine\": \"Adult (first line)\"\n" +
+				"  },\n" +
+				"  {\n" +
+				"    \"name\": \"TDF/3TC/DTG\",\n" +
+				"    \"conceptRef\": \"9fb85385-b4fb-468c-b7c1-22f75834b4b0\",\n" +
+				"    \"regimenLine\": \"Child (second line)\"\n" +
 				"  }\n" +
                 "]";
         return json;
