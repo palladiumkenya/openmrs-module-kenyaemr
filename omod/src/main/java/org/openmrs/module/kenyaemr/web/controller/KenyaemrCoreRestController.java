@@ -2556,12 +2556,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // All CD4 Count
         CalculationResult allCd4CountResults = EmrCalculationUtils.evaluateForPatient(AllCd4CountCalculation.class,
                 null, patient);
-        System.out.println(
-                "allCd4CountResults============================================================================================================"
-                        + allCd4CountResults);
-        patientSummary.put("allCd4CountResults",
-                !allCd4CountResults.isEmpty() && allCd4CountResults.getValue() != null ? allCd4CountResults.getValue()
-                        : "");
+                if (allCd4CountResults != null && allCd4CountResults.getValue() != null) {
+                    patientSummary.put("allCd4CountResults", allCd4CountResults.getValue());
+                } else {
+                    patientSummary.put("allCd4CountResults", "");
+                }
 
         return patientSummary;
 
