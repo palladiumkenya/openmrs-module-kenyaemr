@@ -1876,177 +1876,118 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // get marital status
         CalculationResultMap civilStatus = Calculations.lastObs(Dictionary.getConcept(Dictionary.CIVIL_STATUS),
                 Arrays.asList(patient.getId()), context);
-        Concept status = EmrCalculationUtils.codedObsResultForPatient(civilStatus, patient.getPatientId());
-        if (status != null) {
-            patientSummary.put("maritalStatus", status.getName().getName());
-        } else {
-            patientSummary.put("maritalStatus", "");
-        }
+        Concept status =  (civilStatus != null) ? EmrCalculationUtils.codedObsResultForPatient(civilStatus, patient.getPatientId()): null;
+        String maritalStatus = (status != null && status.getName() != null) ? status.getName().getName() : "";
+        patientSummary.put("maritalStatus", maritalStatus);
 
         // height
         CalculationResultMap latestHeight = Calculations.lastObs(Dictionary.getConcept(Dictionary.HEIGHT_CM),
                 Arrays.asList(patient.getId()), context);
-        Obs heightValue = EmrCalculationUtils.obsResultForPatient(latestHeight, patient.getPatientId());
-        if (heightValue != null) {
-            patientSummary.put("height", heightValue.getValueNumeric().toString());
-        } else {
-            patientSummary.put("height", "");
-        }
+        Obs heightValue = (latestHeight != null) ? EmrCalculationUtils.obsResultForPatient(latestHeight, patient.getPatientId()): null;
+        String height = (heightValue != null && heightValue.getValueNumeric() != null) ? heightValue.getValueNumeric().toString() : "";
+        patientSummary.put("height", height);
         // weight
         CalculationResultMap latestWeight = Calculations.lastObs(Dictionary.getConcept(Dictionary.WEIGHT_KG),
                 Arrays.asList(patient.getId()), context);
-        Obs weightValue = EmrCalculationUtils.obsResultForPatient(latestWeight, patient.getPatientId());
-        if (weightValue != null) {
-            patientSummary.put("weight", weightValue.getValueNumeric().toString());
-        } else {
-            patientSummary.put("weight", "");
-        }
+        Obs weightValue = (latestWeight != null )? EmrCalculationUtils.obsResultForPatient(latestWeight, patient.getPatientId()): null;
+        String weight = (weightValue != null && weightValue.getValueNumeric() != null ) ? weightValue.getValueNumeric().toString(): "";
+        patientSummary.put("weight", weight);
 
         // Oxygen Saturation/
         CalculationResultMap latestOxygen = Calculations.lastObs(Dictionary.getConcept(Dictionary.OXYGEN_SATURATION),
                 Arrays.asList(patient.getId()), context);
-        Obs latestOxygenValue = EmrCalculationUtils.obsResultForPatient(latestOxygen, patient.getPatientId());
-        if (latestOxygenValue != null) {
-            patientSummary.put("oxygenSaturation", latestOxygenValue.getValueNumeric().toString());
-        } else {
-            patientSummary.put("oxygenSaturation", "");
-        }
-
+        Obs latestOxygenValue = (latestOxygen != null) ? EmrCalculationUtils.obsResultForPatient(latestOxygen, patient.getPatientId()) : null;
+        String oxygenSaturation = (latestOxygenValue != null && latestOxygenValue.getValueNumeric() != null ) ? latestOxygenValue.getValueNumeric().toString(): "";
+        patientSummary.put("oxygenSaturation", oxygenSaturation);
         // pulse rate
         CalculationResultMap latestPulseRate = Calculations.lastObs(Dictionary.getConcept(Dictionary.PULSE_RATE),
                 Arrays.asList(patient.getId()), context);
-        Obs latestPulseRates = EmrCalculationUtils.obsResultForPatient(latestPulseRate, patient.getPatientId());
-        if (latestPulseRates != null) {
-            patientSummary.put("pulseRate", latestPulseRates.getValueNumeric().toString());
-        } else {
-            patientSummary.put("pulseRate", "");
-        }
+        Obs latestPulseRates = (latestPulseRate != null) ? EmrCalculationUtils.obsResultForPatient(latestPulseRate, patient.getPatientId()): null;
+        String pulseRate = (latestPulseRates != null && latestPulseRates.getValueNumeric() != null ) ? latestPulseRates.getValueNumeric().toString(): "";
+        patientSummary.put("pulseRate", pulseRate);
 
         // Blood Pressure
         CalculationResultMap bloodPressure = Calculations.lastObs(Dictionary.getConcept(Dictionary.BLOOD_PRESSURE),
                 Arrays.asList(patient.getId()), context);
-        Obs latestBloodPressure = EmrCalculationUtils.obsResultForPatient(bloodPressure, patient.getPatientId());
-        if (latestBloodPressure != null) {
-            patientSummary.put("bloodPressure", latestBloodPressure.getValueNumeric().toString());
-        } else {
-            patientSummary.put("bloodPressure", "");
-        }
+        Obs latestBloodPressure = (bloodPressure != null) ? EmrCalculationUtils.obsResultForPatient(bloodPressure, patient.getPatientId()): null;
+        String bp = (latestBloodPressure != null && latestBloodPressure.getValueNumeric() != null ) ? latestBloodPressure.getValueNumeric().toString(): "";
+        patientSummary.put("bloodPressure", bp);
 
         // BP_DIASTOLIC
         CalculationResultMap bpDiastolic = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.BLOOD_PRESSURE_DIASTOLIC), Arrays.asList(patient.getId()), context);
-        Obs latestBpDiastolic = EmrCalculationUtils.obsResultForPatient(bpDiastolic, patient.getPatientId());
-        if (latestBpDiastolic != null) {
-            patientSummary.put("bpDiastolic", latestBpDiastolic.getValueNumeric().toString());
-        } else {
-            patientSummary.put("bpDiastolic", "");
-        }
-
+        Obs latestBpDiastolic =(bpDiastolic != null) ? EmrCalculationUtils.obsResultForPatient(bpDiastolic, patient.getPatientId()): null;
+        String diastolic = (latestBpDiastolic != null && latestBpDiastolic.getValueNumeric() != null ) ? latestBpDiastolic.getValueNumeric().toString(): "";
+        patientSummary.put("bpDiastolic", diastolic);
         // LMP
         if (patient.getGender().equals("F")) {
             CalculationResultMap latestLmp = Calculations.lastObs(Dictionary.getConcept(Dictionary.LMP),
                     Arrays.asList(patient.getId()), context);
-            Obs latestLmpResults = EmrCalculationUtils.obsResultForPatient(latestLmp, patient.getPatientId());
-            if (latestLmpResults != null) {
-                patientSummary.put("lmp", formatDate(latestLmpResults.getObsDatetime()));
-            } else {
-                patientSummary.put("lmp", "");
-            }
+            Obs latestLmpResults =(latestLmp != null) ? EmrCalculationUtils.obsResultForPatient(latestLmp, patient.getPatientId()): null;
+            patientSummary.put("lmp",(latestLmpResults != null && latestLmpResults.getObsDatetime() != null) ? formatDate(latestLmpResults.getObsDatetime()): "");
         }
 
         // respitatory Rate/
         CalculationResultMap respiratoryRate = Calculations.lastObs(Dictionary.getConcept(Dictionary.RESPIRATORY_RATE),
                 Arrays.asList(patient.getId()), context);
-        Obs latestRespiratoryRate = EmrCalculationUtils.obsResultForPatient(respiratoryRate, patient.getPatientId());
-        if (latestRespiratoryRate != null) {
-            patientSummary.put("respiratoryRate", latestRespiratoryRate.getValueNumeric().toString());
-        } else {
-            patientSummary.put("respiratoryRate", "");
-        }
+        Obs latestRespiratoryRate = (respiratoryRate != null) ? EmrCalculationUtils.obsResultForPatient(respiratoryRate, patient.getPatientId()): null;
+        String respiratoryRt = (latestRespiratoryRate != null && latestRespiratoryRate.getValueNumeric() != null ) ? latestRespiratoryRate.getValueNumeric().toString(): "";
+        patientSummary.put("respiratoryRate", respiratoryRt);
 
         // date confirmed hiv positive
         CalculationResultMap hivConfirmation = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.DATE_OF_HIV_DIAGNOSIS), Arrays.asList(patient.getId()), context);
-        Date dateConfirmed = EmrCalculationUtils.datetimeObsResultForPatient(hivConfirmation, patient.getPatientId());
-        if (dateConfirmed != null) {
-            patientSummary.put("dateConfirmedHIVPositive", formatDate(dateConfirmed));
-        } else {
-            patientSummary.put("dateConfirmedHIVPositive", "");
-        }
+        Date dateConfirmed = (hivConfirmation != null) ? EmrCalculationUtils.datetimeObsResultForPatient(hivConfirmation, patient.getPatientId()): null;
+        patientSummary.put("dateConfirmedHIVPositive",(dateConfirmed != null) ? formatDate(dateConfirmed): "");
 
         // first cd4 count
         CalculationResultMap firstCd4CountMap = Calculations.firstObs(Dictionary.getConcept(Dictionary.CD4_COUNT),
                 Arrays.asList(patient.getId()), context);
-        Obs cd4Value = EmrCalculationUtils.obsResultForPatient(firstCd4CountMap, patient.getPatientId());
-        if (cd4Value != null) {
-            patientSummary.put("firstCd4", cd4Value.getValueNumeric().toString());
-            patientSummary.put("firstCd4Date", formatDate(cd4Value.getObsDatetime()));
-        } else {
-            patientSummary.put("firstCd4", "");
-            patientSummary.put("firstCd4Date", "N/A");
-        }
+        Obs cd4Value = (firstCd4CountMap != null) ? EmrCalculationUtils.obsResultForPatient(firstCd4CountMap, patient.getPatientId()): null;
+        String firstCd4 = (cd4Value != null && cd4Value.getValueNumeric() != null ) ? cd4Value.getValueNumeric().toString(): "";
+        patientSummary.put("firstCd4", firstCd4);
+        patientSummary.put("firstCd4Date", (cd4Value != null && cd4Value.getObsDatetime() != null) ? formatDate(cd4Value.getObsDatetime()) : "N/A");
 
         // date enrolled into care
         CalculationResultMap enrolled = Calculations.firstEnrollments(hivProgram, Arrays.asList(patient.getPatientId()),
                 context);
-        PatientProgram program = EmrCalculationUtils.resultForPatient(enrolled, patient.getPatientId());
-        if (program != null) {
-            patientSummary.put("dateEnrolledIntoCare", formatDate(program.getDateEnrolled()));
-        } else {
-            patientSummary.put("dateEnrolledIntoCare", "");
-        }
+        PatientProgram program = (enrolled != null) ? EmrCalculationUtils.resultForPatient(enrolled, patient.getPatientId()) : null;
+        patientSummary.put("dateEnrolledIntoCare",(program !=null && program.getDateEnrolled() != null) ? formatDate(program.getDateEnrolled()) : "");
 
         // who staging
         CalculationResultMap whoStage = Calculations.firstObs(Dictionary.getConcept(Dictionary.CURRENT_WHO_STAGE),
                 Arrays.asList(patient.getPatientId()), context);
-        Obs firstWhoStageObs = EmrCalculationUtils.obsResultForPatient(whoStage, patient.getPatientId());
-        if (firstWhoStageObs != null) {
-            patientSummary.put("whoStagingAtEnrollment", firstWhoStageObs.getValueCoded().getName().getName());
-        } else {
-            patientSummary.put("whoStagingAtEnrollment", "");
-        }
+        Obs firstWhoStageObs = (whoStage != null) ? EmrCalculationUtils.obsResultForPatient(whoStage, patient.getPatientId()) : null;
+        String whoStagingAtEnrollment = (firstWhoStageObs != null && firstWhoStageObs.getValueCoded() != null && firstWhoStageObs.getValueCoded().getName() != null ) ? firstWhoStageObs.getValueCoded().getName().getName(): "";
+        patientSummary.put("whoStagingAtEnrollment", whoStagingAtEnrollment);
 
         if (patient.getGender().equals("F")) {
             // CaCx
             CalculationResultMap cacxMap = Calculations.firstObs(Dictionary.getConcept(Dictionary.CACX_SCREENING),
                     Arrays.asList(patient.getPatientId()), context);
-            Obs cacxObs = EmrCalculationUtils.obsResultForPatient(cacxMap, patient.getPatientId());
-            if (cacxObs != null) {
-                patientSummary.put("caxcScreeningOutcome", cacxScreeningOutcome(cacxObs.getValueCoded()));
-            } else {
-                patientSummary.put("caxcScreeningOutcome", "None");
-            }
+            Obs cacxObs = (cacxMap != null) ? EmrCalculationUtils.obsResultForPatient(cacxMap, patient.getPatientId()) : null;
+            String caxcScreeningOutcome  = (cacxObs != null && cacxObs.getValueCoded() != null ) ? cacxObs.getValueCoded().toString(): "None";
+            patientSummary.put("caxcScreeningOutcome", caxcScreeningOutcome);
         }
 
         // STI SCREENING
         CalculationResultMap stiScreen = Calculations.firstObs(Dictionary.getConcept(Dictionary.STI_SCREENING),
                 Arrays.asList(patient.getPatientId()), context);
-        Obs stiObs = EmrCalculationUtils.obsResultForPatient(stiScreen, patient.getPatientId());
-        if (stiObs != null) {
-            patientSummary.put("stiScreeningOutcome", stiScreeningOutcome(stiObs.getValueCoded()));
-        } else {
-            patientSummary.put("stiScreeningOutcome", "None");
-        }
+        Obs stiObs = (stiScreen != null) ? EmrCalculationUtils.obsResultForPatient(stiScreen, patient.getPatientId()) : null;
+        String stiScreeningOutcome  = (stiObs != null && stiObs.getValueCoded() != null ) ? stiObs.getValueCoded().toString(): "None";
+        patientSummary.put("stiScreeningOutcome", stiScreeningOutcome);
 
         // Fp protection
         CalculationResultMap fplanning = Calculations.firstObs(
                 Dictionary.getConcept(Dictionary.FAMILY_PLANNING_METHODS), Arrays.asList(patient.getPatientId()),
                 context);
-        Obs fmObs = EmrCalculationUtils.obsResultForPatient(fplanning, patient.getPatientId());
-        if (fmObs != null) {
-            patientSummary.put("familyProtection", familyPlanningMethods(fmObs.getValueCoded()));
-        } else {
-            patientSummary.put("familyProtection", "");
-        }
+        Obs fmObs = (fplanning != null) ? EmrCalculationUtils.obsResultForPatient(fplanning, patient.getPatientId()) : null;
+        patientSummary.put("familyProtection",(fmObs != null && fmObs.getValueCoded() != null) ? familyPlanningMethods(fmObs.getValueCoded()) : "");
 
         // transfer in date
         CalculationResult transferInResults = EmrCalculationUtils.evaluateForPatient(TransferInDateCalculation.class,
                 null, patient);
-        if (transferInResults.isEmpty()) {
-            patientSummary.put("transferInDate", "N/A");
-        } else {
-            patientSummary.put("transferInDate", formatDate((Date) transferInResults.getValue()));
-        }
+                patientSummary.put("transferInDate",(transferInResults != null && !transferInResults.isEmpty() && transferInResults.getValue() != null) ? formatDate((Date) transferInResults.getValue()) : "N/A");
 
         // facility transferred form
         CalculationResultMap transferInFacility = Calculations.lastObs(
@@ -2076,125 +2017,106 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // patient entry point
         CalculationResultMap entryPointMap = Calculations.firstObs(
                 Dictionary.getConcept(Dictionary.METHOD_OF_ENROLLMENT), Arrays.asList(patient.getPatientId()), context);
-        Obs entryPointObs = EmrCalculationUtils.obsResultForPatient(entryPointMap, patient.getPatientId());
-        if (entryPointObs != null) {
-            patientSummary.put("patientEntryPoint", entryPointAbbriviations(entryPointObs.getValueCoded()));
-            patientSummary.put("patientEntryPointDate", formatDate(entryPointObs.getObsDatetime()));
-        } else {
-            patientSummary.put("patientEntryPoint", "");
-            patientSummary.put("patientEntryPointDate", "");
-        }
+        Obs entryPointObs = (entryPointMap != null) ? EmrCalculationUtils.obsResultForPatient(entryPointMap, patient.getPatientId()) : null;
+        patientSummary.put("patientEntryPoint", (entryPointObs != null && entryPointObs.getValueCoded() != null ) ? entryPointAbbriviations(entryPointObs.getValueCoded()) : "");
+        patientSummary.put("patientEntryPointDate", (entryPointObs != null && entryPointObs.getObsDatetime() != null ) ? formatDate(entryPointObs.getObsDatetime()) : "");
 
         // treatment suppoter details
         CalculationResultMap treatmentSupporterName = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.TREATMENT_SUPPORTER_NAME), Arrays.asList(patient.getPatientId()),
                 context);
+                Obs treatmentSupporterNameObs = (treatmentSupporterName != null) ? EmrCalculationUtils.obsResultForPatient(treatmentSupporterName,
+                patient.getPatientId()) : null;
+                String treatSupportName  = (treatmentSupporterNameObs != null && treatmentSupporterNameObs.getValueText() != null ) ? treatmentSupporterNameObs.getValueText(): "N/A";
+                patientSummary.put("nameOfTreatmentSupporter", treatSupportName);
         CalculationResultMap treatmentSupporterRelation = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.TREATMENT_SUPPORTER_RELATION), Arrays.asList(patient.getPatientId()),
                 context);
+                Obs treatmentSupporterRelationObs = (treatmentSupporterRelation != null) ? EmrCalculationUtils.obsResultForPatient(treatmentSupporterRelation,
+                patient.getPatientId()) : null;
+                String treatSupportRel  = (treatmentSupporterRelationObs != null && treatmentSupporterRelationObs.getValueCoded() != null && treatmentSupporterRelationObs.getValueCoded().getName() != null ) ? treatmentSupporterRelationObs.getValueCoded().getName().getName(): "N/A";
+                patientSummary.put("relationshipToTreatmentSupporter", treatSupportRel);
+
         CalculationResultMap treatmentSupporterContacts = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.TREATMENT_SUPPORTER_CONTACTS), Arrays.asList(patient.getPatientId()),
                 context);
-
-        Obs treatmentSupporterNameObs = EmrCalculationUtils.obsResultForPatient(treatmentSupporterName,
-                patient.getPatientId());
-        Obs treatmentSupporterRelationObs = EmrCalculationUtils.obsResultForPatient(treatmentSupporterRelation,
-                patient.getPatientId());
-        Obs treatmentSupporterContactsObs = EmrCalculationUtils.obsResultForPatient(treatmentSupporterContacts,
-                patient.getPatientId());
-        if (treatmentSupporterNameObs != null) {
-            patientSummary.put("nameOfTreatmentSupporter", treatmentSupporterNameObs.getValueText());
-        } else {
-            patientSummary.put("nameOfTreatmentSupporter", "N/A");
-        }
-
-        if (treatmentSupporterRelationObs != null) {
-            patientSummary.put("relationshipToTreatmentSupporter",
-                    treatmentSupporterRelationObs.getValueCoded().getName().getName());
-        } else {
-            patientSummary.put("relationshipToTreatmentSupporter", "N/A");
-        }
-
-        if (treatmentSupporterContactsObs != null) {
-            patientSummary.put("contactOfTreatmentSupporter", treatmentSupporterContactsObs.getValueText());
-        } else {
-            patientSummary.put("contactOfTreatmentSupporter", "N/A");
-        }
+        Obs treatmentSupporterContactsObs = (treatmentSupporterContacts != null) ? EmrCalculationUtils.obsResultForPatient(treatmentSupporterContacts,
+                patient.getPatientId()) : null;
+                String treatSupportContact  = (treatmentSupporterContactsObs != null && treatmentSupporterContactsObs.getValueText() != null ) ? treatmentSupporterContactsObs.getValueText(): "N/A";
+                patientSummary.put("contactOfTreatmentSupporter", treatSupportContact);
 
         // TB Start date
         CalculationResultMap tbConfirmation = Calculations.firstObs(
                 Dictionary.getConcept(Dictionary.TUBERCULOSIS_DRUG_TREATMENT_START_DATE),
                 Arrays.asList(patient.getPatientId()), context);
-        Obs tbDateConfirmed = EmrCalculationUtils.obsResultForPatient(tbConfirmation, patient.getPatientId());
-        if (tbDateConfirmed != null) {
-            patientSummary.put("dateEnrolledInTb", formatDate(tbDateConfirmed.getObsDatetime()));
-        } else {
-            patientSummary.put("dateEnrolledInTb", "None");
-        }
+        Obs tbDateConfirmed = (tbConfirmation != null) ? EmrCalculationUtils.obsResultForPatient(tbConfirmation, patient.getPatientId()): null;
+        patientSummary.put("dateEnrolledInTb", (tbDateConfirmed != null && tbDateConfirmed.getObsDatetime() != null) ? formatDate(tbDateConfirmed.getObsDatetime()) : "None");
 
         // TB completion
         CalculationResultMap tbEndDate = Calculations.firstObs(Dictionary.getConcept(Dictionary.TB_END_DATE),
                 Arrays.asList(patient.getId()), context);
-        Obs tbEndDateValue = EmrCalculationUtils.obsResultForPatient(tbEndDate, patient.getPatientId());
-        if (tbEndDateValue != null) {
-            patientSummary.put("dateCompletedInTb", formatDate(tbEndDateValue.getObsDatetime()));
-        } else {
-            patientSummary.put("dateCompletedInTb", "None");
-        }
+        Obs tbEndDateValue = (tbEndDate != null) ? EmrCalculationUtils.obsResultForPatient(tbEndDate, patient.getPatientId()) : null;
+        patientSummary.put("dateCompletedInTb", (tbEndDateValue != null && tbEndDateValue.getObsDatetime() != null) ? formatDate(tbEndDateValue.getObsDatetime()) : "None");
 
         /// TB Screening
         CalculationResultMap tbMap = Calculations.lastObs(Dictionary.getConcept(Dictionary.TB_SCREENING),
                 Arrays.asList(patient.getPatientId()), context);
-        Obs tbObs = EmrCalculationUtils.obsResultForPatient(tbMap, patient.getPatientId());
-        if (tbObs != null) {
-            patientSummary.put("tbScreeningOutcome", tbObs.getValueCoded().getName().getName());
-        } else {
-            patientSummary.put("tbScreeningOutcome", "N/A");
+        Obs tbObs = (tbMap != null) ? EmrCalculationUtils.obsResultForPatient(tbMap, patient.getPatientId()) : null;
+        String tbScreeningOutcome  = (tbObs != null && tbObs.getValueCoded() != null && tbObs.getValueCoded().getName() != null ) ? tbObs.getValueCoded().getName().getName(): "N/A";
+        patientSummary.put("tbScreeningOutcome", tbScreeningOutcome);
 
-        }
-
-        // chronicDisease
-        CalculationResultMap chronicIllness = Calculations.allObs(Dictionary.getConcept(Dictionary.CHRONIC_ILLNESS),
-                Arrays.asList(patient.getPatientId()), context);
-        ListResult chronicIllnessResults = (ListResult) chronicIllness.get(patient.getPatientId());
-        List<Obs> listOfChronicIllness = CalculationUtils.extractResultValues(chronicIllnessResults);
-        String chronicDisease = "";
-        if (listOfChronicIllness.size() == 0) {
-            patientSummary.put("chronicDisease", "None");
-        } else if (listOfChronicIllness.size() == 1) {
-            patientSummary.put("chronicDisease", listOfChronicIllness.get(0).getValueCoded().getName().getName());
-        } else {
+        // Chronic Disease
+        CalculationResultMap chronicIllness = Calculations.allObs(
+            Dictionary.getConcept(Dictionary.CHRONIC_ILLNESS),
+            Arrays.asList(patient.getPatientId()), 
+            context
+        );
+        ListResult chronicIllnessResults = (chronicIllness != null) 
+            ? (ListResult) chronicIllness.get(patient.getPatientId()) 
+            : null;
+        List<Obs> listOfChronicIllness = (chronicIllnessResults != null) 
+            ? CalculationUtils.extractResultValues(chronicIllnessResults) 
+            : new ArrayList<>();
+        String chronicDisease = "None";
+        if (!listOfChronicIllness.isEmpty()) {
+            List<String> diseaseNames = new ArrayList<>();
             for (Obs obs : listOfChronicIllness) {
-                if (obs != null) {
-                    chronicDisease += obs.getValueCoded().getName().getName() + " ";
+                if (obs != null && obs.getValueCoded() != null && obs.getValueCoded().getName() != null) {
+                    diseaseNames.add(obs.getValueCoded().getName().getName());
                 }
+            }    
+            if (!diseaseNames.isEmpty()) {
+                chronicDisease = String.join(" ", diseaseNames);
             }
-            patientSummary.put("chronicDisease", chronicDisease);
         }
-
-        // allergies
-        CalculationResultMap alergies = Calculations.allObs(Dictionary.getConcept(Dictionary.ALLERGIES),
-                Arrays.asList(patient.getPatientId()), context);
-        ListResult allergyResults = (ListResult) alergies.get(patient.getPatientId());
-        List<Obs> listOfAllergies = CalculationUtils.extractResultValues(allergyResults);
-        String allergies = "";
-        if (listOfAllergies.size() == 0) {
-            patientSummary.put("allergies", "None");
-        } else if (listOfAllergies.size() == 1) {
-            patientSummary.put("allergies", listOfAllergies.get(0).getValueCoded().getName().getName());
-        } else {
+        patientSummary.put("chronicDisease", chronicDisease);
+        // Allergies
+        CalculationResultMap alergies = Calculations.allObs(Dictionary.getConcept(Dictionary.ALLERGIES),Arrays.asList(patient.getPatientId()), 
+            context
+        );
+        ListResult allergyResults = (alergies != null)  ? (ListResult) alergies.get(patient.getPatientId()) : null;
+        List<Obs> listOfAllergies = (allergyResults != null) 
+            ? CalculationUtils.extractResultValues(allergyResults) 
+            : new ArrayList<>();
+        String allergies = "None";
+        if (!listOfAllergies.isEmpty()) {
+            List<String> allergyNames = new ArrayList<>();
             for (Obs obs : listOfAllergies) {
-                if (obs != null) {
-                    allergies += obs.getValueCoded().getName().getName() + " ";
+                if (obs != null && obs.getValueCoded() != null && obs.getValueCoded().getName() != null) {
+                    allergyNames.add(obs.getValueCoded().getName().getName());
                 }
             }
-            patientSummary.put("allergies", allergies);
+            if (!allergyNames.isEmpty()) {
+                allergies = String.join(" ", allergyNames);
+            }
         }
+        patientSummary.put("allergies", allergies);
+
 
         // previous art details
         CalculationResultMap previousArt = Calculations.lastObs(Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART),
                 Arrays.asList(patient.getPatientId()), context);
-        Obs previousArtObs = EmrCalculationUtils.obsResultForPatient(previousArt, patient.getPatientId());
+        Obs previousArtObs = (previousArt != null) ?  EmrCalculationUtils.obsResultForPatient(previousArt, patient.getPatientId()) : null;
         if (previousArtObs != null && previousArtObs.getValueCoded() != null
                 && previousArtObs.getValueCoded().getConceptId() == 1 && previousArtObs.getVoided().equals(false)) {
             patientSummary.put("previousArtStatus", "Yes");
@@ -2215,12 +2137,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
         CalculationResultMap previousArtPurposeHaart = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.PREVIOUS_ON_ART_PURPOSE_HAART), Arrays.asList(patient.getPatientId()),
                 context);
-        Obs previousArtPurposePmtctObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePmtct,
-                patient.getPatientId());
-        Obs previousArtPurposePepObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposePep,
-                patient.getPatientId());
-        Obs previousArtPurposeHaartObs = EmrCalculationUtils.obsResultForPatient(previousArtPurposeHaart,
-                patient.getPatientId());
+        Obs previousArtPurposePmtctObs = (previousArtPurposePmtct != null) ? EmrCalculationUtils.obsResultForPatient(previousArtPurposePmtct,
+                patient.getPatientId()) : null;
+        Obs previousArtPurposePepObs = ( previousArtPurposePep != null) ? EmrCalculationUtils.obsResultForPatient(previousArtPurposePep,
+                patient.getPatientId()) : null;
+        Obs previousArtPurposeHaartObs = (previousArtPurposeHaart != null) ? EmrCalculationUtils.obsResultForPatient(previousArtPurposeHaart,
+                patient.getPatientId()) : null;
         String purposeString = "";
         if (patientSummary.get("previousArtStatus").equals("None")
                 || patientSummary.get("previousArtStatus").equals("No")) {
@@ -2241,37 +2163,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // art start date
         CalculationResult artStartDateResults = EmrCalculationUtils
                 .evaluateForPatient(InitialArtStartDateCalculation.class, null, patient);
-        if (artStartDateResults != null) {
-            patientSummary.put("dateStartedArt", formatDate((Date) artStartDateResults.getValue()));
-        } else {
-            patientSummary.put("dateStartedArt", "");
-        }
+                patientSummary.put("dateStartedArt",(artStartDateResults != null && artStartDateResults.getValue() != null) ? formatDate((Date) artStartDateResults.getValue()) : "");
 
         // Clinical stage at art start
         CalculationResult whoStageAtArtStartResults = EmrCalculationUtils
                 .evaluateForPatient(WhoStageAtArtStartCalculation.class, null, patient);
-        if (whoStageAtArtStartResults != null) {
-            patientSummary.put("whoStageAtArtStart", intergerToRoman(whoStageAtArtStartResults.getValue().toString()));
-        } else {
-            patientSummary.put("whoStageAtArtStart", "");
-        }
+                patientSummary.put("whoStageAtArtStart", (whoStageAtArtStartResults != null && whoStageAtArtStartResults.getValue() != null ) ? intergerToRoman(whoStageAtArtStartResults.getValue().toString()) : "");
 
         // cd4 at art initiation
         CalculationResult cd4AtArtStartResults = EmrCalculationUtils
                 .evaluateForPatient(CD4AtARTInitiationCalculation.class, null, patient);
-        if (cd4AtArtStartResults != null) {
-            patientSummary.put("cd4AtArtStart", cd4AtArtStartResults.getValue().toString());
-        } else {
-            patientSummary.put("cd4AtArtStart", "");
-        }
+                patientSummary.put("cd4AtArtStart",(cd4AtArtStartResults != null && cd4AtArtStartResults.getValue() != null) ? cd4AtArtStartResults.getValue().toString() : "");
+
 
         // bmi
         CalculationResult bmiResults = EmrCalculationUtils.evaluateForPatient(BMICalculation.class, null, patient);
-        if (bmiResults != null) {
-            patientSummary.put("bmi", bmiResults.getValue().toString());
-        } else {
-            patientSummary.put("bmi", "");
-        }
+        patientSummary.put("bmi", (bmiResults != null && bmiResults.getValue() != null) ? bmiResults.getValue().toString() : "");
 
         // first regimen for the patient
         Encounter firstEnc = EncounterBasedRegimenUtils.getFirstEncounterForCategory(patient, "ARV");
@@ -2325,9 +2232,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
         Set<Integer> ios = new HashSet<Integer>();
         String iosResults = "";
         List<Integer> iosIntoList = new ArrayList<Integer>();
-        for (Obs obs : problemsAddedListObs) {
-            ios.add(obs.getValueCoded().getConceptId());
+        if(problemsAddedListObs.size() > 0) {
+            for (Obs obs : problemsAddedListObs) {
+                if(obs.getValueCoded() != null) {
+                    ios.add(obs.getValueCoded().getConceptId());
+                }
+            }
         }
+        
         iosIntoList.addAll(ios);
         if (iosIntoList.size() == 1) {
             iosResults = ios(iosIntoList.get(0));
@@ -2396,13 +2308,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 Dictionary.getConcept(Dictionary.MEDICATION_ORDERS), Arrays.asList(patient.getPatientId()), context);
         Obs medOrdersMapObsDapsone = EmrCalculationUtils.obsResultForPatient(medOrdersMapDapsone,
                 patient.getPatientId());
-        if (medOrdersMapObsDapsone != null
+        if (medOrdersMapObsDapsone != null && medOrdersMapObsDapsone.getValueCoded() != null
                 && medOrdersMapObsDapsone.getValueCoded().equals(Dictionary.getConcept(Dictionary.DAPSONE))) {
             patientSummary.put("dapsone", "Yes");
-        } else if (medOrdersMapObsDapsone != null
+        } else if (medOrdersMapObsDapsone != null  && medOrdersMapObsDapsone.getValueCoded() != null
                 && medOrdersMapObsDapsone.getValueCoded()
                         .equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM))
-                || medicationDispensedCtxObs != null
+                || medicationDispensedCtxObs != null  && medOrdersMapObsDapsone.getValueCoded() != null
                         && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
             patientSummary.put("dapsone", "No");
         } else {
@@ -2415,18 +2327,18 @@ public class KenyaemrCoreRestController extends BaseRestController {
         Obs medOrdersMapObsInh = EmrCalculationUtils.obsResultForPatient(medOrdersMapInh, patient.getPatientId());
         CalculationResultMap medicationDispensedIpt = Calculations.lastObs(
                 Dictionary.getConcept(Dictionary.ISONIAZID_DISPENSED), Arrays.asList(patient.getPatientId()), context);
-        Obs medicationDispensedIptObs = EmrCalculationUtils.obsResultForPatient(medicationDispensedIpt,
-                patient.getPatientId());
-        if (medOrdersMapObsInh != null
+        Obs medicationDispensedIptObs = (medicationDispensedIpt != null) ? EmrCalculationUtils.obsResultForPatient(medicationDispensedIpt,
+                patient.getPatientId()) : null;
+        if (medOrdersMapObsInh != null && medOrdersMapObsInh.getValueCoded() != null
                 && medOrdersMapObsInh.getValueCoded().equals(Dictionary.getConcept(Dictionary.ISONIAZID))) {
             patientSummary.put("onIpt", "Yes");
-        } else if (medicationDispensedIptObs != null
+        } else if (medicationDispensedIptObs != null && medOrdersMapObsInh.getValueCoded() != null
                 && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
             patientSummary.put("onIpt", "Yes");
-        } else if (medicationDispensedIptObs != null
+        } else if (medicationDispensedIptObs != null && medOrdersMapObsInh.getValueCoded() != null
                 && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NO))) {
             patientSummary.put("onIpt", "No");
-        } else if (medicationDispensedIptObs != null
+        } else if (medicationDispensedIptObs != null && medOrdersMapObsInh.getValueCoded() != null
                 && medicationDispensedIptObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.NOT_APPLICABLE))) {
             patientSummary.put("onIpt", "N/A");
         } else {
@@ -2438,11 +2350,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 .evaluateForPatient(PatientProgramEnrollmentCalculation.class, null, patient);
         Set<String> patientProgramList = new HashSet<String>();
         List<String> setToList = new ArrayList<String>();
-        if (clinicsEnrolledResult != null) {
+        if (clinicsEnrolledResult != null && clinicsEnrolledResult.getValue() != null) {
             List<PatientProgram> patientPrograms = (List<PatientProgram>) clinicsEnrolledResult.getValue();
             for (PatientProgram p : patientPrograms) {
-
-                patientProgramList.add(programs(p.getProgram().getConcept().getConceptId()));
+                if(p.getProgram().getConcept() != null) {
+                    patientProgramList.add(programs(p.getProgram().getConcept().getConceptId()));
+                }
             }
         }
         setToList.addAll(patientProgramList);
@@ -2470,16 +2383,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // find deceased date
         CalculationResult deadResults = EmrCalculationUtils.evaluateForPatient(DateOfDeathCalculation.class, null,
                 patient);
-        if (deadResults.isEmpty()) {
-            patientSummary.put("deathDate", "N/A");
-        } else {
-            patientSummary.put("deathDate", formatDate((Date) deadResults.getValue()));
-        }
+                patientSummary.put("deathDate",(!deadResults.isEmpty() && deadResults.getValue() != null && deadResults != null) ? formatDate((Date) deadResults.getValue()) : "N/A");
 
         // next appointment date
         CalculationResult returnVisitResults = EmrCalculationUtils
                 .evaluateForPatient(LastReturnVisitDateCalculation.class, null, patient);
-        if (returnVisitResults != null) {
+        if (returnVisitResults != null && returnVisitResults.getValue() != null) {
             patientSummary.put("nextAppointmentDate", formatDate((Date) returnVisitResults.getValue()));
         } else {
             patientSummary.put("nextAppointmentDate", "");
@@ -2488,11 +2397,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         // transfer out date
         CalculationResult totResults = EmrCalculationUtils.evaluateForPatient(TransferOutDateCalculation.class, null,
                 patient);
-        if (totResults.isEmpty()) {
-            patientSummary.put("transferOutDate", "N/A");
-        } else {
-            patientSummary.put("transferOutDate", formatDate((Date) totResults.getValue()));
-        }
+                patientSummary.put("transferOutDate", (!totResults.isEmpty() && totResults != null && totResults.getValue() != null) ? formatDate((Date) totResults.getValue()) : "N/A");
+
 
         // transfer out to facility
         CalculationResultMap transferOutFacilityMap = Calculations.lastObs(
@@ -2530,11 +2436,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 patient);
         String viralLoadValue = "None";
         String viralLoadDate = "None";
-        if (!vlResults.isEmpty()) {
+        if (!vlResults.isEmpty() && vlResults != null) {
             String values = vlResults.getValue().toString();
             // split by brace
             String value = values.replaceAll("\\{", "").replaceAll("\\}", "");
-            if (!value.isEmpty()) {
+            if (!value.isEmpty() && value != null) {
                 String[] splitByEqualSign = value.split("=");
                 patientSummary.put("viralLoadValue", splitByEqualSign[0]);
 
