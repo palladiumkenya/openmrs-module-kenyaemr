@@ -211,6 +211,11 @@
                 <component drugCode="3TC" />
                 <component drugCode="DTG" />
             </regimen>
+			<regimen name="TAF/3TC/DTG" conceptRef="a7c25c03-3fe6-41b5-97a1-5b2abaae84fa" orderSetRef="9cbdad88-c867-4a67-859e-60172733085d">
+				<component drugCode="TAF" />
+				<component drugCode="3TC" />
+				<component drugCode="DTG" />
+			</regimen>
         </group>
 
 
@@ -424,6 +429,11 @@
                 <component drugCode="3TC" />
                 <component drugCode="DTG" />
             </regimen>
+			<regimen name="TDF/3TC/DTG" conceptRef="9fb85385-b4fb-468c-b7c1-22f75834b4b0" orderSetRef="fcc936c7-ff55-4f40-bb05-007796192bc2">
+				<component drugCode="TDF" />
+				<component drugCode="3TC" />
+				<component drugCode="DTG" />
+			</regimen>
 
         </group>
 
