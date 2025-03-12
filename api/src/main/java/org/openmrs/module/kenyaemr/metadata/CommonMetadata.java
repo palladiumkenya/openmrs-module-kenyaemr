@@ -125,6 +125,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PRE_OPERATION_CHECKLIST = "9023e0cd-78ef-44af-ba54-47f30f739b4a";
 		public static final String NEW_BORN_ADMISSION = "454db697-7bc4-49e7-a9fa-097c19f1c9ec";
 		public static final String PLASTIC_SURGERY = "5748bd8a-06bf-41a0-88df-16eed290db21";
+		public static final String IIT_SCORE = "1dab4593-b09d-4c5b-83fe-f041092145d3";
 	}
 
 	public static final class _Form {
@@ -351,6 +352,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Pre-Operation Checklist", "Pre-Operation checklist clinical encounter type", _EncounterType.PRE_OPERATION_CHECKLIST));
 		install(encounterType("New born admission", "New born admission clinical encounter type", _EncounterType.NEW_BORN_ADMISSION));
 		install(encounterType("Plastic Surgery Clinic", "Plastic surgery clinical encounter type", _EncounterType.PLASTIC_SURGERY));
+		install(encounterType("IIT Score", "IIT Score clinical encounter type", _EncounterType.IIT_SCORE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
