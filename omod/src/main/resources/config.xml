@@ -236,4 +236,124 @@
 			Billing exemption config
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.userRole.config</property>
+		<defaultValue>
+		[
+			{
+				"category": "Admin Roles",
+				"roles": [
+				"o3: System Administrator",
+				"System Administrator",
+				"System Developer",
+				"ETL Administration",
+				"IL Administration",
+				"ML Administration",
+				"API Privileges",
+				"API Privileges (View and Edit)",
+				"Edit Settings Role",
+				"Upi Verification",
+				"Ushauri Administration",
+				"nimeCONFIRM app administration",
+				"Privilege Level: Full",
+				"Privilege Level: High",
+				"Manager",
+				"Administration"
+				]
+			},
+			{
+				"category": "Billing Roles",
+				"roles": [
+				"o3: Cashier/Accountant",
+				"o3: Finance Administrator",
+				"o3 Cashier",
+				"Billing Manager",
+				"Finance Administrator"
+				]
+			},
+			{
+				"category": "Clinician Roles",
+				"roles": [
+				"o3: Nurse",
+				"o3: Doctors/Clinicians/Specialists",
+				"o3: Adherence Counsellor",
+				"o3: HTS Counsellor",
+				"Adherence Counselor",
+				"o3 Clinician",
+				"Provider",
+				"o3: Physiotherapist",
+				"o3: Occupational Therapist",
+				"o3: Nutritionist",
+				"o3: Orthopedics",
+				"Peer Educator",
+				"o3: Peer Educator/Mentor Mother",
+				"o3: Triage Nurse",
+				"Key Population Module"
+				]
+			},
+			{
+				"category": "Records Roles",
+				"roles": [
+				"o3: Receptionist/Registration",
+				"Registration",
+				"Data Clerk",
+				"Health Record Officer",
+				"Registration Officer",
+				"Lab Manifest",
+				"Lab Manifest Administration",
+				"Referral Administration",
+				"Intake",
+				"AIR",
+				"Anonymous",
+				"Authenticated"
+				]
+			},
+			{
+				"category": "Investigation Roles",
+				"roles": [
+				"o3: Laboratory Technician",
+				"o3: Radiologist",
+				"Investigation Roles",
+				"ML pull risk scores from NDWH"
+				]
+			},
+			{
+				"category": "Pharmacist Roles",
+				"roles": [
+				"o3: Pharmacist",
+				"Community Pharmacy"
+				]
+			},
+			{
+				"category": "Inventory Roles",
+				"roles": [
+				"o3: Stock Controller/Manager",
+				"o3 Stock Manager",
+				"Inventory Administrator",
+				"Inventory Provider Access",
+				"Inventory Clerk",
+				"Inventory Manager",
+				"Stock Management Base Role",
+				"Inventory Reporting",
+				"Inventory Dispensing"
+				]
+			},
+				{
+				"category": "Core Inventory Roles",
+				"roles": [
+				"Inventory Administrator",
+				"Inventory Provider Access",
+				"Inventory Clerk",
+				"Inventory Manager",
+				"Stock Management Base Role",
+				"Inventory Reporting",
+				"Inventory Dispensing"
+				]
+			}
+		]
+		</defaultValue>
+		<description>
+			Configures for grouping of user roles
+		</description>
+	</globalProperty>
 </module>
