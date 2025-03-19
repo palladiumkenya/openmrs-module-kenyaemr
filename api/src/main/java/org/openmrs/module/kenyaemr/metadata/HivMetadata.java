@@ -45,7 +45,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String LAB_ORDER = "e1406e88-e9a9-11e8-9f32-f2801f1b9fd1";
 		public static final String CCC_DEFAULTER_TRACING = "1495edf8-2df2-11e9-b210-d663bd873d93";
 		public static final String ALCOHOL_AND_DRUGS_ABUSE = "4224f8bf-11b2-4e47-a958-1dbdfd7fa41d";
-		public static final String VIOLENCE_SCREENING_ENCOUNTER = "f091b067-bea5-4657-8445-cfec05dc46a2";
+		public static final String GENDER_BASED_VIOLENCE = "f091b067-bea5-4657-8445-cfec05dc46a2";
 		public static final String ENHANCED_ADHERENCE = "54df6991-13de-4efc-a1a9-2d5ac1b72ff8";
 		public static final String ART_PREPARATION = "ec2a91e5-444a-4ca0-87f1-f71ddfaf57eb";
 		public static final String HIGH_IIT_INTERVENTION = "84d66c25-e2bd-48a2-8686-c1652eb9d283";
@@ -68,7 +68,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String FAMILY_TESTING_FORM_FOR_NEGATIVE_CLIENTS = "62846fae-8d0b-4202-827e-8b6ffd30e587";
 		public static final String DRUG_ORDER = "888dbabd-1c18-4653-82c2-e753415ab79a";
 		public static final String TREATMENT_PREPARATION = "782a4263-3ac9-4ce8-b316-534571233f12";
-		public static final String VIOLENCE_SCREENING = "03767614-1384-4ce3-aea9-27e2f4e67d01";
+		public static final String GBV_SCREENING = "03767614-1384-4ce3-aea9-27e2f4e67d01";
 		public static final String ALCOHOL_AND_DRUGS_SCREENING = "7b1ec2d5-a4ad-4ffc-a0d3-ff1ea68e293c";
 		public static final String ENHANCED_ADHERENCE_SCREENING = "c483f10f-d9ee-4b0d-9b8c-c24c1ec24701";
 		public static final String CCC_DEFAULTER_TRACING = "a1a62d1e-2def-11e9-b210-d663bd873d93";
@@ -108,7 +108,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(encounterType("Alcohol and Drug Abuse Screening", "Alcohol and Drug Abuse Screening", _EncounterType.ALCOHOL_AND_DRUGS_ABUSE));
 		install(encounterType("ART Preparation", "ART Preparation", _EncounterType.ART_PREPARATION));
 		install(encounterType("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE));
-		install(encounterType("Violence Screening Encounter", "Violence Screening Encounter", _EncounterType.VIOLENCE_SCREENING_ENCOUNTER));
+		install(encounterType("Violence Screening Encounter", "Violence Screening Encounter", _EncounterType.GENDER_BASED_VIOLENCE));
 		install(encounterType("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION));
 		install(encounterType("Home Visit Checklist", "Home Visit Checklist", _EncounterType.HOME_VISIT_CHECKLIST));
 
@@ -124,7 +124,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(form("Family and Partner Testing Results", "Family and Partner Testing for HIV Negative Patients", _EncounterType.FAMILY_AND_PARTNER_TESTING, "1", _Form.FAMILY_TESTING_FORM_FOR_NEGATIVE_CLIENTS));
 		install(form("Drug Order", "Drug Order", _EncounterType.DRUG_ORDER, "1", _Form.DRUG_ORDER));
 		install(form("ART Preparation", "ART Preparation", _EncounterType.ART_PREPARATION, "1", _Form.TREATMENT_PREPARATION));
-		install(form("Violence Screening", "Violence Screening", _EncounterType.VIOLENCE_SCREENING_ENCOUNTER, "1", _Form.VIOLENCE_SCREENING));
+		install(form("Violence Screening", "Violence Screening", _EncounterType.GENDER_BASED_VIOLENCE, "1", _Form.GBV_SCREENING));
 		install(form("Alcohol and Drug Abuse Screening(CAGE-AID/CRAFFT)", "Alcohol and Drug Abuse Screening", _EncounterType.ALCOHOL_AND_DRUGS_ABUSE, "1", _Form.ALCOHOL_AND_DRUGS_SCREENING));
 		install(form("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE, "1", _Form.ENHANCED_ADHERENCE_SCREENING));
 		install(form("CCC Defaulter Tracing", "Defaulter Tracing Form", _EncounterType.CCC_DEFAULTER_TRACING, "1", _Form.CCC_DEFAULTER_TRACING));
