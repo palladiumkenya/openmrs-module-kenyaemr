@@ -2314,8 +2314,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
         } else if (medOrdersMapObsDapsone != null  && medOrdersMapObsDapsone.getValueCoded() != null
                 && medOrdersMapObsDapsone.getValueCoded()
                         .equals(Dictionary.getConcept(Dictionary.SULFAMETHOXAZOLE_TRIMETHOPRIM))
-                || medicationDispensedCtxObs != null  && medOrdersMapObsDapsone.getValueCoded() != null
-                        && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES))) {
+                || ( medicationDispensedCtxObs != null  && medicationDispensedCtxObs.getValueCoded() != null
+                        && medicationDispensedCtxObs.getValueCoded().equals(Dictionary.getConcept(Dictionary.YES)))) {
             patientSummary.put("dapsone", "No");
         } else {
             patientSummary.put("dapsone", "No");
