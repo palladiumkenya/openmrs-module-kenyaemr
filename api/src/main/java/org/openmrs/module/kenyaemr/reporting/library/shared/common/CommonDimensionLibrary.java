@@ -181,6 +181,19 @@ public class CommonDimensionLibrary {
         return dim;
     }
 
+    public CohortDefinitionDimension specialClinicsAgeGroups() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("fine age between(<1, btw 1 and 12, btw 1 and 5, btw 5 and 9, btw 10 and 14");
+        dim.addParameter(new Parameter("onDate", "Date", Date.class));
+        dim.addCohortDefinition("<1", map(commonCohortLibrary.agedAtMost(0), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("1-12", map(commonCohortLibrary.agedAtLeastAgedAtMostInMonths(1, 12), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("1-5", map(commonCohortLibrary.agedAtLeastAgedAtMost(1, 5), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("5-9", map(commonCohortLibrary.agedAtLeastAgedAtMost(5, 9), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("10-14", map(commonCohortLibrary.agedAtLeastAgedAtMost(10, 14), "effectiveDate=${onDate}"));
+        return dim;
+    }
+
+
 
     /**
      * Dimension of age between

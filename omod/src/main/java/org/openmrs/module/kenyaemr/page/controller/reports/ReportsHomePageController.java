@@ -57,6 +57,7 @@ public class ReportsHomePageController {
 		for (ReportDescriptor report : reportManager.getEhrReports(currentApp)) {
 			ehrReports.add(ui.simplifyObject(report));
 		}
+
 		reportsByProgram.put("Common", common);
 		reportsByProgram.put("Cohort Analysis", cohortAnalysis);
 		reportsByProgram.put("EHR Reports", ehrReports);
