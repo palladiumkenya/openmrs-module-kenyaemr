@@ -179,10 +179,6 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
 		LastRiskEvaluationDateDataDefinition lastRiskEvaluationDateDataDefinition = new LastRiskEvaluationDateDataDefinition();
 		lastRiskEvaluationDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		lastRiskEvaluationDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        TBScreeningAtLastVisitDataDefinition tbScreeningAtLastVisitDataDefinition = new TBScreeningAtLastVisitDataDefinition();
-        tbScreeningAtLastVisitDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        tbScreeningAtLastVisitDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
 
 
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
