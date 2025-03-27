@@ -3648,7 +3648,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/facility-dashboard")
     @ResponseBody
-    public Object getFacilityDashboard(HttpServletRequest request) {
+    public Object getFacilityDashboard(HttpServletRequest request, @RequestParam(value = "startDate", required = true)
+        String startDate, @RequestParam(value = "endDate", required = true) String endDate) {
         double PERCENT_DIVISOR = 100.0;
         final String clinicalActionPercentageThreshold = getGlobalPropertyValue(
                 CommonMetadata.GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD);
@@ -3671,18 +3672,18 @@ public class KenyaemrCoreRestController extends BaseRestController {
         }
 
         return SimpleObject.create(
-                "getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(),
-                "getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(),
-                "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(),
-                "getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(),
-                "getEligibleForVl", FacilityDashboardUtil.getEligibleForVl(),
-                "getEligibleForVlSampleNotTaken", FacilityDashboardUtil.getEligibleForVlSampleNotTaken(),
-                "getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(),
-                "getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(),
-                "getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(),
-                "getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(),
-                "getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(),
-                "getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(),
+                "getHivPositiveNotLinked", FacilityDashboardUtil.getHivPositiveNotLinked(startDate, endDate),
+                "getHivTestedPositive", FacilityDashboardUtil.getPatientsTestedHivPositive(startDate, endDate),
+                "getPregnantOrPostpartumClients", FacilityDashboardUtil.getPregnantOrPostpartumClients(startDate, endDate),
+                "getPregnantPostpartumNotInPrep", FacilityDashboardUtil.getPregnantPostpartumNotInPrep(startDate, endDate),
+                "getEligibleForVl", FacilityDashboardUtil.getEligibleForVl(startDate, endDate),
+                "getEligibleForVlSampleNotTaken", FacilityDashboardUtil.getEligibleForVlSampleNotTaken(startDate, endDate),
+                "getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(startDate, endDate),
+                "getVirallyUnsuppressedWithoutEAC", FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(startDate, endDate),
+                "getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiSixToEightWeeksOld(startDate, endDate),
+                "getHeiSixToEightWeeksWithoutPCRResults", FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(startDate, endDate),
+                "getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(startDate, endDate),
+                "getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
                 "clinicalActionThreshold",clinicalActionThreshold,
                 "heiClinicalActionThreshold",heiClinicalActionThreshold
         );
