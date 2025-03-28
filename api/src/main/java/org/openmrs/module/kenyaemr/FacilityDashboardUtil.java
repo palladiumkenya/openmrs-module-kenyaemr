@@ -10,11 +10,16 @@
 package org.openmrs.module.kenyaemr;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.util.PrivilegeConstants;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class FacilityDashboardUtil {
 
@@ -515,5 +520,75 @@ public class FacilityDashboardUtil {
 		LocalDate end = LocalDate.parse(endDate, formatter);
 		long days = ChronoUnit.DAYS.between(start, end);
 		return days;
+	}
+
+	/**
+	 * Surveillance dashboards - line graph
+	 * 7. Count and date of clients tested positive not linked within the month
+	 * @return string value
+	 */
+	public static SimpleObject getMonthlyHivPositiveNotLinked(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String hivMonthlyPositiveNotLinkedQuery = "SELECT COUNT(a.patient_id) as number_hiv_positive,a.visit_date as visit_date\n" +
+				"FROM ((SELECT av.patient_id, av.visit_date\n" +
+				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
+				"       WHERE av.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"         AND av.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT d.patient_id, d.visit_date\n" +
+				"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
+				"       WHERE d.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"         AND d.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT p.patient_id, p.visit_date\n" +
+				"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
+				"       WHERE p.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"         AND p.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT t.patient_id, t.visit_date\n" +
+				"       FROM kenyaemr_etl.etl_hts_test t\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+				"           AND t.final_test_result = 'Positive'\n" +
+				"           AND t.voided = 0\n" +
+				"           AND t.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE)) a\n" +
+				"         LEFT JOIN\n" +
+				"     (SELECT l.patient_id, l.ccc_number\n" +
+				"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
+				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
+				"         LEFT JOIN (SELECT e.patient_id\n" +
+				"                    FROM kenyaemr_etl.etl_hiv_enrollment e\n" +
+				"                    WHERE date(e.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) e\n" +
+				"                   ON e.patient_id = a.patient_id\n" +
+				"  where l.patient_id is null\n" +
+				"  and e.patient_id is null\n" +
+				"  group by date(visit_date);";
+
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivMonthlyPositiveNotLinkedQuery, true);
+
+			List<SimpleObject> hivPositiveNotLinked = new ArrayList<>();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			for (List<Object> row : resultSet) {
+				if (row.size() >= 2) {
+					int value = ((Number) row.get(0)).intValue();
+					Date sqlDate = (Date) row.get(1);
+					String day = dateFormat.format(sqlDate);
+
+					hivPositiveNotLinked.add(SimpleObject.create("day", day, "value", value));
+				}
+			}
+
+			return SimpleObject.create(
+					"data", hivPositiveNotLinked
+			);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
 	}
 }
