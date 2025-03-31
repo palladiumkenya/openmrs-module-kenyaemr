@@ -180,6 +180,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.getMonthlyHivPositiveNotLinked;
+import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.getMonthlyHivPositiveNotLinkedPatients;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
@@ -3687,7 +3688,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 "getHei24MonthsWithoutDocumentedOutcome", FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
                 "clinicalActionThreshold",clinicalActionThreshold,
                 "heiClinicalActionThreshold",heiClinicalActionThreshold,
-                "getMonthlyHivPositiveNotLinked",getMonthlyHivPositiveNotLinked(startDate, endDate)
+                "getMonthlyHivPositiveNotLinked",getMonthlyHivPositiveNotLinked(startDate, endDate),
+                "getMonthlyHivPositiveNotLinkedPatients", getMonthlyHivPositiveNotLinkedPatients(startDate, endDate)
         );
     }
 }
