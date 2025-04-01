@@ -144,8 +144,8 @@ public class MOH705BReportBuilder extends AbstractReportBuilder {
 		ReportingUtils.addRow(cohortDsd, "ANT", "Suspected Anthrax",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAnthraxList(),EQUAL_AND_OVER_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
            
         ReportingUtils.addRow(cohortDsd, "AODA", "All other diseases for adults", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAllOtherDiseasesListForAdults(), EQUAL_AND_OVER_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-        ReportingUtils.addRow(cohortDsd, "NFAA", "No. Of First Attendances",ReportUtils.map(moh705indicatorLibrary.newAttendances(EQUAL_AND_OVER_FIVE)), ReportAddonUtils.getAdultChildrenColumns());
-        ReportingUtils.addRow(cohortDsd, "RETA", "Re-Attendances", ReportUtils.map(moh705indicatorLibrary.reAttendances(EQUAL_AND_OVER_FIVE)),ReportAddonUtils.getAdultChildrenColumns());
+        ReportingUtils.addRow(cohortDsd, "NFAA", "No. Of First Attendances", ReportUtils.map(moh705indicatorLibrary.newAttendances(EQUAL_AND_OVER_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+        ReportingUtils.addRow(cohortDsd, "RETA", "Re-Attendances", ReportUtils.map(moh705indicatorLibrary.reAttendances(EQUAL_AND_OVER_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RFHA","Referrals from other health facility", ReportUtils.map(moh705indicatorLibrary.referralsFromOtherFacilities(EQUAL_AND_OVER_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RFCA","Referrals to other health facility", ReportUtils.map(moh705indicatorLibrary.referralsToOtherFacilities(EQUAL_AND_OVER_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 
