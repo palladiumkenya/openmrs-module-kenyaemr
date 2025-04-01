@@ -565,7 +565,8 @@ public class FacilityDashboardUtil {
 				"                   ON e.patient_id = a.patient_id\n" +
 				"  where l.patient_id is null\n" +
 				"  and e.patient_id is null\n" +
-				"  group by date(visit_date);";
+				"  group by date(visit_date)" +
+				"order by date(visit_date) ASC;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -586,6 +587,40 @@ public class FacilityDashboardUtil {
 			return SimpleObject.create(
 					"data", hivPositiveNotLinked
 			);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
+
+	public static SimpleObject getMonthlyHivPositiveNotLinkedPatients(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String hivPositiveMonthlyNotLinkedPatients = "SELECT count(l.patient_id) ,\n" +
+				"       if(l.tracing_outcome = 1118,'NotContacted',\n" +
+				"       if(l.tracing_outcome = 1066,'ContactedButNotLinked',\n" +
+				"       if(l.tracing_outcome = 1065,'ContactedAndLinked',''))) as grouped_tracing_status,\n" +
+				"    l.visit_date\n" +
+				"    FROM kenyaemr_etl.etl_hts_linkage_tracing l\n" +
+				"             inner join kenyaemr_etl.etl_patient_demographics a on l.patient_id = a.patient_id\n" +
+				"    WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"group by date(visit_date),grouped_tracing_status\n" +
+				"order by date(visit_date) ASC;";
+
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivPositiveMonthlyNotLinkedPatients, true);
+			List<SimpleObject> hivPositiveNotLinkedPatients = new ArrayList<>();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			for (List<Object> row : resultSet) {
+				if (row.size() >= 3) {
+					int value = ((Number) row.get(0)).intValue();
+					String grouped_tracing_status = (String) row.get(1);
+					Date sqlDate = (Date) row.get(2);
+					String day = dateFormat.format(sqlDate);
+					hivPositiveNotLinkedPatients.add(SimpleObject.create("day", day, "value", value, "group",grouped_tracing_status));
+				}
+			}
+			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
