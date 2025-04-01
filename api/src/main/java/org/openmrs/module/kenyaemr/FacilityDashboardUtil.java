@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr;
 
+import org.junit.platform.commons.function.Try;
 import org.openmrs.api.context.Context;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.util.PrivilegeConstants;
@@ -621,6 +622,86 @@ public class FacilityDashboardUtil {
 				}
 			}
 			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
+		}
+		finally {
+			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+		}
+	}
+	public static SimpleObject getMonthlyHighRiskPBFWNotOnPrep(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String highRiskPBFWNotOnPrepQuery = "SELECT COUNT(a.patient_id) as high_risk_not_on_PrEP, a.visit_date as visit_date\n" +
+				"FROM (SELECT s.patient_id,s.visit_date\n" +
+				"      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
+				"               INNER JOIN (SELECT t.patient_id,\n" +
+				"                                  max(t.visit_date)                                           AS hts_date,\n" +
+				"                                  mid(max(concat(date(visit_date), t.final_test_result)), 11) AS hiv_test_results,\n" +
+				"                                  mid(max(concat(date(visit_date), t.hts_entry_point)), 11)   AS entry_point,\n" +
+				"                                  t.visit_date\n" +
+				"                           from kenyaemr_etl.etl_hts_test t\n" +
+				"                           GROUP BY t.patient_id\n" +
+				"                           HAVING hts_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"                              AND hiv_test_results = 'Negative'\n" +
+				"                              AND entry_point in (160538, 160456, 1623)) t\n" +
+				"                          ON s.patient_id = t.patient_id -- AND s.visit_date <= t.visit_date\n" +
+				"    where s.hts_risk_category IN ('High', 'Very high') and s.currently_on_prep in ('NO','Declined to answer')\n" +
+				"         AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) a\n" +
+				"         left join (select e.patient_id,\n" +
+				"                           max(e.visit_date)                                        as latest_enrollment_date,\n" +
+				"                           f.latest_fup_date,\n" +
+				"                           greatest(ifnull(f.latest_fup_app_date, '0000-00-00'),\n" +
+				"                                    ifnull(latest_refill_app_date, '0000-00-00'))   as latest_appointment_date,\n" +
+				"                           greatest(ifnull(latest_fup_date, '0000-00-00'),\n" +
+				"                                    ifnull(latest_refill_visit_date, '0000-00-00')) as latest_visit_date,\n" +
+				"                           r.latest_refill_visit_date,\n" +
+				"                           f.latest_fup_app_date,\n" +
+				"                           r.latest_refill_app_date,\n" +
+				"                           d.latest_disc_date,\n" +
+				"                           d.disc_patient\n" +
+				"                    from kenyaemr_etl.etl_prep_enrolment e\n" +
+				"                             left join\n" +
+				"                         (select f.patient_id,\n" +
+				"                                 max(f.visit_date)                                      as latest_fup_date,\n" +
+				"                                 mid(max(concat(f.visit_date, f.appointment_date)), 11) as latest_fup_app_date\n" +
+				"                          from kenyaemr_etl.etl_prep_followup f\n" +
+				"                          where f.visit_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"                          group by f.patient_id) f on e.patient_id = f.patient_id\n" +
+				"                             left join (select r.patient_id,\n" +
+				"                                               max(r.visit_date)                                      as latest_refill_visit_date,\n" +
+				"                                               mid(max(concat(r.visit_date, r.next_appointment)), 11) as latest_refill_app_date\n" +
+				"                                        from kenyaemr_etl.etl_prep_monthly_refill r\n" +
+				"                                        where r.visit_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"                                        group by r.patient_id) r on e.patient_id = r.patient_id\n" +
+				"                             left join (select patient_id                                               as disc_patient,\n" +
+				"                                               max(d.visit_date)                                        as latest_disc_date,\n" +
+				"                                               mid(max(concat(d.visit_date, d.discontinue_reason)), 11) as latest_disc_reason\n" +
+				"                                        from kenyaemr_etl.etl_prep_discontinuation d\n" +
+				"                                        where d.visit_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"                                        group by patient_id\n" +
+				"                                        having latest_disc_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) d\n" +
+				"                                       on e.patient_id = d.disc_patient\n" +
+				"                    group by e.patient_id\n" +
+				"                    having timestampdiff(DAY, date(latest_appointment_date), DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE)\n" +
+				"                       and date(latest_appointment_date) >= date(latest_visit_date)\n" +
+				"                       and ((latest_enrollment_date >= d.latest_disc_date\n" +
+				"                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
+				"                   on a.patient_id = b.patient_id\n" +
+				"       where b.patient_id is null\n" +
+				"order by date(latest_appointment_date) ASC\n;";
+
+		try {
+			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(highRiskPBFWNotOnPrepQuery, true);
+			List<SimpleObject> highRiskPBFWNotOnPrep = new ArrayList<>();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			for (List<Object> row : resultSet) {
+				if (row.size() >= 2) {
+					int value = (int) row.get(0);
+					Date date = (Date) row.get(1);
+					String day = dateFormat.format(date);
+					highRiskPBFWNotOnPrep.add(SimpleObject.create("day", day, "value", value));
+				}
+			}
+			return SimpleObject.create("data", highRiskPBFWNotOnPrep);
 		}
 		finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
