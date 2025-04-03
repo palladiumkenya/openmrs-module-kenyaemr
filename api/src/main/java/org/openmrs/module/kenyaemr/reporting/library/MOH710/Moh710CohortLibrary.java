@@ -1142,7 +1142,7 @@ public class Moh710CohortLibrary {
 	/*Given Yellow Fever vaccine*/
 	public CohortDefinition givenYellowFeverVaccineCl() {
 		SqlCohortDefinition cd = new SqlCohortDefinition();
-		String sqlQuery = "select i.patient_id,i.Measles_rubella_1 from kenyaemr_etl.etl_immunization i where date(i.Yellow_fever) between date(:startDate) and date(:endDate);";
+		String sqlQuery = "select i.patient_id from kenyaemr_etl.etl_immunization i where date(i.Yellow_fever) between date(:startDate) and date(:endDate);";
 
 		cd.setName("YF");
 		cd.setQuery(sqlQuery);
