@@ -564,7 +564,8 @@ public class FacilityDashboardUtil {
 				"                    FROM kenyaemr_etl.etl_hiv_enrollment e\n" +
 				"                    WHERE date(e.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) e\n" +
 				"                   ON e.patient_id = a.patient_id\n" +
-				"  where l.patient_id is null\n" +
+				"	where date(a.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n"+
+				"  and l.patient_id is null\n" +
 				"  and e.patient_id is null\n" +
 				"  group by date(visit_date)" +
 				"order by date(visit_date) ASC;";
@@ -594,28 +595,29 @@ public class FacilityDashboardUtil {
 				"    WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
 				"group by date(visit_date),grouped_tracing_status\n" +
 				"order by date(visit_date) ASC;";
-
-		try {
-			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivPositiveMonthlyNotLinkedPatients, true);
-			List<SimpleObject> hivPositiveNotLinkedPatients = new ArrayList<>();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			if (resultSet != null) {
-				for (List<Object> row : resultSet) {
-					if (row.size() >= 3) {
-						int value = ((Number) row.get(0)).intValue();
-						String grouped_tracing_status = (String) row.get(1);
-						Date sqlDate = (Date) row.get(2);
-						String day = dateFormat.format(sqlDate);
-						hivPositiveNotLinkedPatients.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
-					}
-				}
-			}
-			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
-		}
-		finally {
-			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-		}
+		return getSimpleObject(hivPositiveMonthlyNotLinkedPatients);
+//
+//		try {
+//			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+//			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivPositiveMonthlyNotLinkedPatients, true);
+//			List<SimpleObject> hivPositiveNotLinkedPatients = new ArrayList<>();
+//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//			if (resultSet != null) {
+//				for (List<Object> row : resultSet) {
+//					if (row.size() >= 3) {
+//						int value = ((Number) row.get(0)).intValue();
+//						String grouped_tracing_status = (String) row.get(1);
+//						Date sqlDate = (Date) row.get(2);
+//						String day = dateFormat.format(sqlDate);
+//						hivPositiveNotLinkedPatients.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
+//					}
+//				}
+//			}
+//			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
+//		}
+//		finally {
+//			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+//		}
 	}
 
 	/**
@@ -687,8 +689,9 @@ public class FacilityDashboardUtil {
 				"                       and ((latest_enrollment_date >= d.latest_disc_date\n" +
 				"                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
 				"                   on a.patient_id = b.patient_id\n" +
-				"       where b.patient_id is null\n" +
-				"order by date(latest_appointment_date) ASC\n;";
+				"		where a.visit_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"       and b.patient_id is null\n" +
+				"		order by date(latest_appointment_date) ASC\n;";
 
 		return getSimpleObject(highRiskPBFWNotOnPrepQuery);
 	}
@@ -707,25 +710,33 @@ public class FacilityDashboardUtil {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(query, true);
 
-			List<SimpleObject> highRiskPBFWNotOnPrep = new ArrayList<>();
+			List<SimpleObject> simpleObjectArrayList = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 			if (resultSet != null) {
 				for (List<Object> row : resultSet) {
-					if (row.size() >= 2 ) {
-						int value = ((Number) row.get(0)).intValue();
+					if (row == null || row.isEmpty()) continue;
+					int value = ((Number) row.get(0)).intValue();
+
+					if (row.size() == 2) {
 						Date date = (Date) row.get(1);
-						String day = dateFormat.format(date);
-						highRiskPBFWNotOnPrep.add(SimpleObject.create("day", day, "value", value));
+						String day = (date != null) ? dateFormat.format(date) : "";
+						simpleObjectArrayList.add(SimpleObject.create("day", day, "value", value));
+					} else if (row.size() == 3) {
+						String grouped_tracing_status = (String) row.get(1);
+						Date sqlDate = (Date) row.get(2);
+						String day = (sqlDate != null) ? dateFormat.format(sqlDate) : "";
+						simpleObjectArrayList.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
 					}
 				}
 			}
 
-			return SimpleObject.create("data", highRiskPBFWNotOnPrep);
+			return SimpleObject.create("data", simpleObjectArrayList);
 		} finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
 	}
+
 
 	/**
 	 * Retrieves the count of HEI (HIV-Exposed Infants) without a DNA PCR test
@@ -749,7 +760,8 @@ public class FacilityDashboardUtil {
 				"    WHERE x.lab_test = 1030\n" +
 				"    AND x.order_reason = 1040\n" +
 				") t ON e.patient_id = t.week6pcr\n" +
-				"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
 				"AND hiv.patient_id IS NULL\n" +
 				"AND t.week6pcr IS NULL\n" +
 				"GROUP BY DATE(e.visit_date)\n" +
@@ -831,6 +843,7 @@ public class FacilityDashboardUtil {
 				"    )\n" +
 				"    AND v.latest_hiv_followup_visit > v.date_test_requested\n" +
 				") b ON e.patient_id = b.patient_id\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
 				"GROUP BY DATE(e.visit_date)\n" +
 				"ORDER BY DATE(e.visit_date) ASC;";
 		return getSimpleObject(eligibleForVlSampleNotTakenQuery);
@@ -863,7 +876,8 @@ public class FacilityDashboardUtil {
 				"    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
 				"    WHERE visit_date <= CURRENT_DATE\n" +
 				") hiv_prog ON e.patient_id = hiv_prog.patient_id\n" +
-				"WHERE TIMESTAMPDIFF(\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n"+
+				"AND TIMESTAMPDIFF(\n" +
 				"    MONTH, \n" +
 				"    d.dob, \n" +
 				"    DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
@@ -903,10 +917,11 @@ public class FacilityDashboardUtil {
 				"    SELECT e.patient_id, e.visit_date AS eac_date\n" +
 				"    FROM kenyaemr_etl.etl_enhanced_adherence e\n" +
 				"    WHERE e.visit_date \n" +
-				"        BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) \n" +
+				"        BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY) \n" +
 				"        AND CURRENT_DATE\n" +
 				") e ON b.patient_id = e.patient_id\n" +
-				"WHERE e.patient_id IS NULL\n" +
+				"WHERE DATE(eac_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"AND e.patient_id IS NULL\n" +
 				"GROUP BY DATE(eac_date)\n" +
 				"ORDER BY DATE(eac_date) ASC;";
 		return getSimpleObject(virallyUnsuppressedWithoutEACQuery);
