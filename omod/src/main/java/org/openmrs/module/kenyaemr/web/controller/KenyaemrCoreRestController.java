@@ -3689,7 +3689,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
                 "heiClinicalActionThreshold",heiClinicalActionThreshold,
                 "getMonthlyHivPositiveNotLinked",getMonthlyHivPositiveNotLinked(startDate, endDate),
                 "getMonthlyHivPositiveNotLinkedPatients", getMonthlyHivPositiveNotLinkedPatients(startDate, endDate),
-                "getMonthlyHighRiskPBFWNotOnPrep", getMonthlyHighRiskPBFWNotOnPrep(startDate, endDate)
+                "getMonthlyHighRiskPBFWNotOnPrep", getMonthlyHighRiskPBFWNotOnPrep(startDate, endDate),
+                "getMonthlyHeiDNAPCRPending", getMonthlyHeiDNAPCRPending(startDate, endDate),
+                "getMonthlyEligibleForVlSampleNotTaken", getMonthlyEligibleForVlSampleNotTaken(startDate,endDate),
+                "getMonthlyHei24MonthsWithoutDocumentedOutcome", getMonthlyHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
+                "getMonthlyVirallyUnsuppressedWithoutEAC", getMonthlyVirallyUnsuppressedWithoutEAC(startDate, endDate)
         );
     }
 }

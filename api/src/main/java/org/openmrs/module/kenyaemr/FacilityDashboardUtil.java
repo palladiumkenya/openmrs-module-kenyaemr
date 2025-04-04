@@ -564,7 +564,8 @@ public class FacilityDashboardUtil {
 				"                    FROM kenyaemr_etl.etl_hiv_enrollment e\n" +
 				"                    WHERE date(e.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) e\n" +
 				"                   ON e.patient_id = a.patient_id\n" +
-				"  where l.patient_id is null\n" +
+				"	where date(a.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n"+
+				"  and l.patient_id is null\n" +
 				"  and e.patient_id is null\n" +
 				"  group by date(visit_date)" +
 				"order by date(visit_date) ASC;";
@@ -594,36 +595,15 @@ public class FacilityDashboardUtil {
 				"    WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
 				"group by date(visit_date),grouped_tracing_status\n" +
 				"order by date(visit_date) ASC;";
-
-		try {
-			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivPositiveMonthlyNotLinkedPatients, true);
-			List<SimpleObject> hivPositiveNotLinkedPatients = new ArrayList<>();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			if (resultSet != null) {
-				for (List<Object> row : resultSet) {
-					if (row.size() >= 3) {
-						int value = ((Number) row.get(0)).intValue();
-						String grouped_tracing_status = (String) row.get(1);
-						Date sqlDate = (Date) row.get(2);
-						String day = dateFormat.format(sqlDate);
-						hivPositiveNotLinkedPatients.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
-					}
-				}
-			}
-			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
-		}
-		finally {
-			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-		}
+		return getSimpleObject(hivPositiveMonthlyNotLinkedPatients);
 	}
 
 	/**
 	 * Retrieves a summary of high-risk pregnant and breastfeeding women (PBFW) who are not on PrEP
 	 * within a given date range.
 	 *
-	 * @param startDate The start date of the period (not currently used in the query).
-	 * @param endDate   The end date of the period (not currently used in the query).
+	 * @param startDate The start date of the period.
+	 * @param endDate   The end date of the period.
 	 * @return A {@link SimpleObject} containing an array of records with:
 	 *         - "day" (formatted as dd-MM-yyyy): The visit date.
 	 *         - "value": The count of high-risk PBFW not on PrEP.
@@ -687,8 +667,9 @@ public class FacilityDashboardUtil {
 				"                       and ((latest_enrollment_date >= d.latest_disc_date\n" +
 				"                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
 				"                   on a.patient_id = b.patient_id\n" +
-				"       where b.patient_id is null\n" +
-				"order by date(latest_appointment_date) ASC\n;";
+				"		where a.visit_date <= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"       and b.patient_id is null\n" +
+				"		order by date(latest_appointment_date) ASC\n;";
 
 		return getSimpleObject(highRiskPBFWNotOnPrepQuery);
 	}
@@ -707,23 +688,220 @@ public class FacilityDashboardUtil {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(query, true);
 
-			List<SimpleObject> highRiskPBFWNotOnPrep = new ArrayList<>();
+			List<SimpleObject> simpleObjectArrayList = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 			if (resultSet != null) {
 				for (List<Object> row : resultSet) {
-					if (row.size() >= 2 ) {
-						int value = ((Number) row.get(0)).intValue();
+					if (row == null || row.isEmpty()) continue;
+					int value = ((Number) row.get(0)).intValue();
+
+					if (row.size() == 2) {
 						Date date = (Date) row.get(1);
-						String day = dateFormat.format(date);
-						highRiskPBFWNotOnPrep.add(SimpleObject.create("day", day, "value", value));
+						String day = (date != null) ? dateFormat.format(date) : "";
+						simpleObjectArrayList.add(SimpleObject.create("day", day, "value", value));
+					} else if (row.size() == 3) {
+						String grouped_tracing_status = (String) row.get(1);
+						Date sqlDate = (Date) row.get(2);
+						String day = (sqlDate != null) ? dateFormat.format(sqlDate) : "";
+						simpleObjectArrayList.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
 					}
 				}
 			}
 
-			return SimpleObject.create("data", highRiskPBFWNotOnPrep);
+			return SimpleObject.create("data", simpleObjectArrayList);
 		} finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
+	}
+
+
+	/**
+	 * Retrieves the count of HEI (HIV-Exposed Infants) without a DNA PCR test
+	 * within a specified date range, grouped by visit date.
+	 *
+	 * @param startDate The start date of the period.
+	 * @param endDate   The end date of the period.
+	 * @return A {@code SimpleObject} containing the results, with each record including:
+	 *         - `hei_without_pcr`: The count of HEI without a PCR test.
+	 *         - `visit_date`: The date of the HEI enrollment visit.
+	 */
+	public static SimpleObject getMonthlyHeiDNAPCRPending(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String heiDNAPCRPendingQuery = "SELECT COUNT(e.patient_id) AS hei_without_pcr, DATE(e.visit_date) AS visit_date\n" +
+				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
+				"LEFT JOIN kenyaemr_etl.etl_hiv_enrollment hiv ON e.patient_id = hiv.patient_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT x.patient_id AS week6pcr, x.test_result AS week6results\n" +
+				"    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+				"    WHERE x.lab_test = 1030\n" +
+				"    AND x.order_reason = 1040\n" +
+				") t ON e.patient_id = t.week6pcr\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
+				"AND hiv.patient_id IS NULL\n" +
+				"AND t.week6pcr IS NULL\n" +
+				"GROUP BY DATE(e.visit_date)\n" +
+				"ORDER BY DATE(e.visit_date) ASC;";
+		return getSimpleObject(heiDNAPCRPendingQuery);
+	}
+
+	/**
+	 * Retrieves the count of patients eligible for a viral load (VL) sample but have not had one taken
+	 * within a specified date range. The data is grouped by visit date.
+	 * @param startDate The start date of the period.
+	 * @param endDate   The end date of the period.
+	 * @return A {@code SimpleObject} containing the aggregated count of eligible patients grouped by their visit dates.
+	 */
+	public static SimpleObject getMonthlyEligibleForVlSampleNotTaken(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String eligibleForVlSampleNotTakenQuery = "SELECT COUNT(b.patient_id) AS eligible_for_vl_sample_not_taken, DATE(e.visit_date) AS visit_date\n" +
+				"FROM (\n" +
+				"    SELECT fup.visit_date,\n" +
+				"           fup.patient_id,\n" +
+				"           MIN(e.visit_date) AS enroll_date,\n" +
+				"           MAX(fup.visit_date) AS latest_vis_date,\n" +
+				"           MID(MAX(CONCAT(fup.visit_date, fup.next_appointment_date)), 11) AS latest_tca,\n" +
+				"           MAX(d.visit_date) AS date_discontinued,\n" +
+				"           d.patient_id AS disc_patient,\n" +
+				"           de.patient_id AS started_on_drugs\n" +
+				"    FROM kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"    JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = fup.patient_id\n" +
+				"    JOIN kenyaemr_etl.etl_hiv_enrollment e ON fup.patient_id = e.patient_id\n" +
+				"    LEFT OUTER JOIN kenyaemr_etl.etl_drug_event de \n" +
+				"        ON e.patient_id = de.patient_id AND DATE(date_started) <= CURRENT_DATE\n" +
+				"    LEFT OUTER JOIN (\n" +
+				"        SELECT patient_id, visit_date\n" +
+				"        FROM kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"        WHERE DATE(visit_date) <= CURRENT_DATE\n" +
+				"        AND program_name = 'HIV'\n" +
+				"        GROUP BY patient_id\n" +
+				"    ) d ON d.patient_id = fup.patient_id\n" +
+				"    WHERE fup.visit_date <= CURRENT_DATE\n" +
+				"    GROUP BY patient_id\n" +
+				"    HAVING (started_on_drugs IS NOT NULL AND started_on_drugs <> \"\")\n" +
+				"       AND (\n" +
+				"        (DATE(latest_tca) > CURRENT_DATE \n" +
+				"         AND (DATE(latest_tca) > DATE(date_discontinued) OR disc_patient IS NULL)) \n" +
+				"        OR \n" +
+				"        ((DATE(latest_tca) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH) \n" +
+				"        AND CURRENT_DATE) \n" +
+				"        AND (DATE(latest_vis_date) >= DATE(latest_tca)))\n" +
+				"        AND (DATE(latest_tca) > DATE(date_discontinued) OR disc_patient IS NULL))\n" +
+				") e\n" +
+				"INNER JOIN (\n" +
+				"    SELECT v.patient_id\n" +
+				"    FROM kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+				"    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON v.patient_id = d.patient_id\n" +
+				"    WHERE (\n" +
+				"        (TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 3 \n" +
+				"         AND v.base_viral_load_test_result IS NULL) \n" +
+				"        OR \n" +
+				"        ((v.pregnancy_status = 1065 OR v.breastfeeding_status = 1065) \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 3 \n" +
+				"         AND (v.vl_result IS NOT NULL AND v.date_test_requested < v.latest_hiv_followup_visit)) \n" +
+				"        OR \n" +
+				"        (v.vl_result >= 200 \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 3) \n" +
+				"        OR \n" +
+				"        (v.vl_result < 200 \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 6 \n" +
+				"         AND TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) \n" +
+				"        OR \n" +
+				"        (v.vl_result < 200 \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 12 \n" +
+				"         AND TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) \n" +
+				"        OR \n" +
+				"        ((v.pregnancy_status = 1065 OR v.breastfeeding_status = 1065) \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 3 \n" +
+				"         AND (v.order_reason IN (159882, 1434) \n" +
+				"         AND TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) >= 12) \n" +
+				"         AND v.vl_result < 200)\n" +
+				"    )\n" +
+				"    AND v.latest_hiv_followup_visit > v.date_test_requested\n" +
+				") b ON e.patient_id = b.patient_id\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"GROUP BY DATE(e.visit_date)\n" +
+				"ORDER BY DATE(e.visit_date) ASC;";
+		return getSimpleObject(eligibleForVlSampleNotTakenQuery);
+	}
+
+	/**
+	 * Retrieves the count of children aged 24 months who have not had a documented outcome
+	 *
+	 * @param startDate The start date of the period.
+	 * @param endDate   The end date of the period.
+	 * @return A {@code SimpleObject} containing the result of the query, with counts of patients without documented outcomes
+	 *         grouped by their visit dates.
+	 */
+	public static SimpleObject getMonthlyHei24MonthsWithoutDocumentedOutcome(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(e.patient_id) AS hei_without_outcome, DATE(e.visit_date) AS visit_date\n" +
+				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT v.patient_id\n" +
+				"    FROM kenyaemr_etl.etl_hei_follow_up_visit v\n" +
+				"    WHERE v.dna_pcr_result IS NOT NULL\n" +
+				"        OR v.first_antibody_result IS NOT NULL\n" +
+				"        OR v.final_antibody_result IS NOT NULL\n" +
+				"    GROUP BY v.patient_id\n" +
+				") has_test ON e.patient_id = has_test.patient_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT e.patient_id\n" +
+				"    FROM kenyaemr_etl.etl_hiv_enrollment e\n" +
+				"    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
+				"    WHERE visit_date <= CURRENT_DATE\n" +
+				") hiv_prog ON e.patient_id = hiv_prog.patient_id\n" +
+				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n"+
+				"AND TIMESTAMPDIFF(\n" +
+				"    MONTH, \n" +
+				"    d.dob, \n" +
+				"    DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				") = 24\n" +
+				"AND has_test.patient_id IS NULL\n" +
+				"AND hiv_prog.patient_id IS NULL\n" +
+				"GROUP BY DATE(e.visit_date)\n" +
+				"ORDER BY DATE(e.visit_date) ASC;";
+		return getSimpleObject(hei24MonthsWithoutDocumentedOutcomeQuery);
+	}
+
+	/**
+	 * Retrieves the count of virally unsuppressed patients who have not received an Enhanced Adherence Counseling (EAC)
+	 * session within a specified date range.
+	 *
+	 * @param startDate The start date of the period.
+	 * @param endDate   The end date of the period.
+	 * @return A {@code SimpleObject} containing an array of records with count of virally unsuppressed patients
+	 *         who have not received EAC, grouped by the EAC visit date.
+	 */
+	public static SimpleObject getMonthlyVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
+		long days = getNumberOfDays(startDate, endDate);
+		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(b.patient_id) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date\n" +
+				"FROM (\n" +
+				"    SELECT \n" +
+				"        x.patient_id AS patient_id,\n" +
+				"        DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), \n" +
+				"        DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
+				"    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+				"    WHERE x.lab_test = 856\n" +
+				"        AND test_result >= 200\n" +
+				"        AND x.date_test_result_received \n" +
+				"            BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY) \n" +
+				"            AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
+				") b\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT e.patient_id, e.visit_date AS eac_date\n" +
+				"    FROM kenyaemr_etl.etl_enhanced_adherence e\n" +
+				"    WHERE e.visit_date \n" +
+				"        BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY) \n" +
+				"        AND CURRENT_DATE\n" +
+				") e ON b.patient_id = e.patient_id\n" +
+				"WHERE DATE(eac_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"AND e.patient_id IS NULL\n" +
+				"GROUP BY DATE(eac_date)\n" +
+				"ORDER BY DATE(eac_date) ASC;";
+		return getSimpleObject(virallyUnsuppressedWithoutEACQuery);
 	}
 }
