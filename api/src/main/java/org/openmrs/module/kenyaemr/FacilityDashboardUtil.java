@@ -596,28 +596,6 @@ public class FacilityDashboardUtil {
 				"group by date(visit_date),grouped_tracing_status\n" +
 				"order by date(visit_date) ASC;";
 		return getSimpleObject(hivPositiveMonthlyNotLinkedPatients);
-//
-//		try {
-//			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-//			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(hivPositiveMonthlyNotLinkedPatients, true);
-//			List<SimpleObject> hivPositiveNotLinkedPatients = new ArrayList<>();
-//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//			if (resultSet != null) {
-//				for (List<Object> row : resultSet) {
-//					if (row.size() >= 3) {
-//						int value = ((Number) row.get(0)).intValue();
-//						String grouped_tracing_status = (String) row.get(1);
-//						Date sqlDate = (Date) row.get(2);
-//						String day = dateFormat.format(sqlDate);
-//						hivPositiveNotLinkedPatients.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
-//					}
-//				}
-//			}
-//			return SimpleObject.create("data", hivPositiveNotLinkedPatients);
-//		}
-//		finally {
-//			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-//		}
 	}
 
 	/**
