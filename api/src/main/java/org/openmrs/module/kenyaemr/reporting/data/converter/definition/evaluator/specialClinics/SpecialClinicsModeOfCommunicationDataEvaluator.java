@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNeonatalRiskFactorsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsModeOfCommunicationDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsNeonatalRiskFactorsDataDefinition.class, order=50)
-public class SpecialClinicsNeonatalRiskFactorsDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsModeOfCommunicationDataDefinition.class, order=50)
+public class SpecialClinicsModeOfCommunicationDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,11 +36,11 @@ public class SpecialClinicsNeonatalRiskFactorsDataEvaluator implements Encounter
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNeonatalRiskFactorsDataDefinition cohortDefinition = (SpecialClinicsNeonatalRiskFactorsDataDefinition) definition;
+        SpecialClinicsModeOfCommunicationDataDefinition cohortDefinition = (SpecialClinicsModeOfCommunicationDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.neonatal_risk_factor when 1065 then 'Yes' when 1066 then 'No' else '' end) as neonatal_risk_factor\n" +
+                "(case v.communication_mode when 163787 then 'Verbal Communication' when 159928 then 'Non-verbal communication' else '' end) as communication_mode\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 

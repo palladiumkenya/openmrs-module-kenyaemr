@@ -112,6 +112,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh745"/>
 				<ref bean="kenyaemr.ehrReports.report.moh416" />
 				<ref bean="kenyaemr.ehrReports.report.moh417" />
+				<ref bean="kenyaemr.ehrReports.report.moh419B" />
 				<ref bean="kenyaemr.ehrReports.report.moh420" />
 				<ref bean="kenyaemr.ehrReports.report.moh275" />
 				<ref bean="kenyaemr.ehrReports.report.moh407A" />
@@ -1140,6 +1141,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh416.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH416" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.moh419B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="a2f8774e-186b-4136-8b37-fb0e9d9b8449" />
+		<property name="name" value="MOH 419B Hearing Screening Register Register" />
+		<property name="description" value="MOH 419B Hearing Screening Register Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh419B.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH419B" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh420" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="7d617d4b-e825-4d15-bc9d-1569beff3edb" />

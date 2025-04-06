@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsPresenceOfComobiditiesDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsFirstScreeningDateDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsPresenceOfComobiditiesDataDefinition.class, order=50)
-public class SpecialClinicsPresenceOfComobiditiesDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsFirstScreeningDateDataDefinition.class, order=50)
+public class SpecialClinicsFirstScreeningDateDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,11 +36,11 @@ public class SpecialClinicsPresenceOfComobiditiesDataEvaluator implements Encoun
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsPresenceOfComobiditiesDataDefinition cohortDefinition = (SpecialClinicsPresenceOfComobiditiesDataDefinition) definition;
+        SpecialClinicsFirstScreeningDateDataDefinition cohortDefinition = (SpecialClinicsFirstScreeningDateDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "v.presence_of_comobidities\n" +
+                "v.first_screening_date\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 

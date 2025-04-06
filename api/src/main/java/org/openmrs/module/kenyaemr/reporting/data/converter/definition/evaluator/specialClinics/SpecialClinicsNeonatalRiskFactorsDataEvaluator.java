@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsTypeOfAdmissionDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNeonatalRiskFactorsDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsTypeOfAdmissionDataDefinition.class, order=50)
-public class SpecialClinicsTypeOfAdmissionDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsNeonatalRiskFactorsDataDefinition.class, order=50)
+public class SpecialClinicsNeonatalRiskFactorsDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,11 +36,11 @@ public class SpecialClinicsTypeOfAdmissionDataEvaluator implements EncounterData
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsTypeOfAdmissionDataDefinition cohortDefinition = (SpecialClinicsTypeOfAdmissionDataDefinition) definition;
+        SpecialClinicsNeonatalRiskFactorsDataDefinition cohortDefinition = (SpecialClinicsNeonatalRiskFactorsDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.anaemia_level when 1118 then 'Not Done' when 1115 then 'Normal' when 1498 then 'Mild' when 1499 then 'Moderate' when 1500 then 'Severe' else '' end) as anaemia_level\n" +
+                "(case v.neonatal_risk_factor when 1065 then 'Yes' when 1066 then 'No' else '' end) as neonatal_risk_factor\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 

@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
 /**
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class SpecialClinicsModeOfCommunicationDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class SpecialClinicsFirstScreeningDateDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
@@ -28,14 +28,14 @@ public class SpecialClinicsModeOfCommunicationDataDefinition extends BaseDataDef
     /**
      * Default Constructor
      */
-    public SpecialClinicsModeOfCommunicationDataDefinition() {
+    public SpecialClinicsFirstScreeningDateDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public SpecialClinicsModeOfCommunicationDataDefinition(String name) {
+    public SpecialClinicsFirstScreeningDateDataDefinition(String name) {
         super(name);
     }
 

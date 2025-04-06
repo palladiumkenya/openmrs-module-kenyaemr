@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsModeOfCommunicationDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsSiteOfScreeningDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsModeOfCommunicationDataDefinition.class, order=50)
-public class SpecialClinicsModeOfCommunicationDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsSiteOfScreeningDataDefinition.class, order=50)
+public class SpecialSiteOfScreeningDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,11 +36,11 @@ public class SpecialClinicsModeOfCommunicationDataEvaluator implements Encounter
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsModeOfCommunicationDataDefinition cohortDefinition = (SpecialClinicsModeOfCommunicationDataDefinition) definition;
+        SpecialClinicsSiteOfScreeningDataDefinition cohortDefinition = (SpecialClinicsSiteOfScreeningDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.communication_mode when 163787 then 'Verbal Communication' when 159928 then 'Non-verbal communication' else '' end) as communication_mode\n" +
+                "(case v.screening_site when 1537 then 'Facility based' when 159928 then 'School based' when 1000478 then 'Community health Unit (Outreach/EARC/Household)' else '' end) as screening_site\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 
