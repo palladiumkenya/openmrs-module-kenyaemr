@@ -36,7 +36,7 @@ public class ETLLastVLDateDataEvaluator implements PersonDataEvaluator {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry = "select patient_id, date(max(visit_date)) as last_vl_date\n" +
-                "from kenyaemr_etl.etl_laboratory_extract where lab_test in (1305,856) and coalesce(date(date_test_requested),date(visit_date)) <= date(:endDate)\n" +
+                "from kenyaemr_etl.etl_laboratory_extract where lab_test in (1305,856) and test_result is not null and coalesce(date(date_test_requested),date(visit_date)) <= date(:endDate)\n" +
                 "GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

@@ -40,7 +40,7 @@ public class ETLLastVLResultDataEvaluator implements PersonDataEvaluator {
                 "                                    if(lab_test = 856, test_result, if(lab_test = 1305 and test_result = 1302, 'LDL', '')), '')),\n" +
                 "                         11) as vl_result\n" +
                 "             from kenyaemr_etl.etl_laboratory_extract\n" +
-                "             where date(visit_date) <= date(:endDate) and lab_test in (1305, 856)\n" +
+                "             where date(visit_date) <= date(:endDate) and lab_test in (1305, 856) and test_result is not null\n" +
                 "             GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
