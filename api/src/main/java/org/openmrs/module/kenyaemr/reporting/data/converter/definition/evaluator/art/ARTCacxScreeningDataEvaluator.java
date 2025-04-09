@@ -34,14 +34,18 @@ public class ARTCacxScreeningDataEvaluator implements PersonDataEvaluator {
 
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
-        String qry = "  select v.patient_id,\n" +
-                "       case when coalesce(v.via_vili_screening_result, v.hpv_screening_result, v.pap_smear_screening_result, v.colposcopy_screening_result) is not null \n" +
-                "       then 'Yes' else 'No' end as screening_result \n" +
+
+        String qry = "select v.patient_id,\n" +
+                "case when coalesce(v.via_vili_screening_result, v.hpv_screening_result, v.pap_smear_screening_result, v.colposcopy_screening_result) is not null \n" +
+                "then 'Yes' else 'No' end as screening_result \n" +
                 "from kenyaemr_etl.etl_cervical_cancer_screening v\n" +
                 "inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = v.patient_id \n" +
-                "       and p.voided = 0 \n" +
-                "       and p.Gender = 'F' \n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
+                "and p.voided = 0 \n" +
+                "and p.Gender = 'F' \n" +
+                "inner join kenyaemr_etl.etl_patient_hiv_followup f on f.patient_id = v.patient_id\n" +
+                "where f.person_present = 978\n" +
+                "and date(v.visit_date) <= date(:endDate)\n" +
+                "group by v.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

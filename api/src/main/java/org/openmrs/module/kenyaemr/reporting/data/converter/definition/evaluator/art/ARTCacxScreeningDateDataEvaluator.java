@@ -36,14 +36,15 @@ public class ARTCacxScreeningDateDataEvaluator implements PersonDataEvaluator {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry = "select v.patient_id,\n" +
-                "       coalesce(max(date(v.followup_date)), max(date(v.visit_date))) as cacx_date\n" +
-                "       from kenyaemr_etl.etl_cervical_cancer_screening v\n" +
-                "       inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = v.patient_id\n" +
-                "       and p.voided = 0\n" +
-                "       and p.Gender = 'F'\n" +
-                "       where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "       group by v.patient_id;";
-
+                "coalesce(max(date(v.followup_date)), max(date(v.visit_date))) as cacx_date\n" +
+                "from kenyaemr_etl.etl_cervical_cancer_screening v\n" +
+                "inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = v.patient_id\n" +
+                "and p.voided = 0\n" +
+                "and p.Gender = 'F'\n" +
+                "inner join kenyaemr_etl.etl_patient_hiv_followup f on f.patient_id = v.patient_id\n" +
+                "where f.person_present = 978\n" +
+                "and date(v.visit_date) <= date(:endDate)\n" +
+                "group by v.patient_id;";
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
