@@ -54,7 +54,7 @@ import java.util.List;
 public class MOH419BReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-	private static final String SPECIAL_CLINIC = CommonMetadata._Form.HEARING_SCREENING_CLINICAL_FORM;
+	private static final String SPECIAL_CLINIC_HEARING_FORM_UUID = CommonMetadata._Form.HEARING_SCREENING_CLINICAL_FORM;
     private static final String COMPARATIVE_OPERATION = ">=";
     private static final Integer AGE = 0;
 
@@ -93,72 +93,72 @@ public class MOH419BReportBuilder extends AbstractReportBuilder {
 		SpecialClinicsReferredToDataDefinition specialClinicsReferredToDataDefinition = new SpecialClinicsReferredToDataDefinition();
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		specialClinicsReferredToDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+		specialClinicsReferredToDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
 		SpecialClinicsReferredFromDataDefinition specialClinicsReferredFromDataDefinition = new SpecialClinicsReferredFromDataDefinition();
 		specialClinicsReferredFromDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		specialClinicsReferredFromDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		specialClinicsReferredFromDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+		specialClinicsReferredFromDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
 		SpecialClinicsVisitTypeDataDefinition specialClinicsVisitTypeDataDefinition = new SpecialClinicsVisitTypeDataDefinition();
 		specialClinicsVisitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		specialClinicsVisitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		specialClinicsVisitTypeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+		specialClinicsVisitTypeDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsPaymentMethodsDataDefinition paymentMethodsDataDefinition = new SpecialClinicsPaymentMethodsDataDefinition();
         paymentMethodsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         paymentMethodsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        paymentMethodsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        paymentMethodsDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsReceiptNumberDataDefinition receiptNumberDataDefinition = new SpecialClinicsReceiptNumberDataDefinition();
         receiptNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         receiptNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        receiptNumberDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        receiptNumberDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
 		SpecialClinicsDiagnosisDataDefinition diagnosisDataDefinition = new SpecialClinicsDiagnosisDataDefinition();
 		diagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		diagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        diagnosisDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        diagnosisDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsAmountPaidDataDefinition amountPaidDataDefinition = new SpecialClinicsAmountPaidDataDefinition();
         amountPaidDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         amountPaidDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        amountPaidDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        amountPaidDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsNeonatalRiskFactorsDataDefinition neonatalRiskFactorsDataDefinition = new SpecialClinicsNeonatalRiskFactorsDataDefinition();
         neonatalRiskFactorsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         neonatalRiskFactorsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        neonatalRiskFactorsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        neonatalRiskFactorsDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsPresenceOfComobiditiesDataDefinition presenceOfComobiditiesDataDefinition = new SpecialClinicsPresenceOfComobiditiesDataDefinition();
         presenceOfComobiditiesDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         presenceOfComobiditiesDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        presenceOfComobiditiesDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        presenceOfComobiditiesDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsFirstScreeningDateDataDefinition firstScreeningDateDataDefinition = new SpecialClinicsFirstScreeningDateDataDefinition();
         firstScreeningDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         firstScreeningDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        firstScreeningDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        firstScreeningDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsModeOfCommunicationDataDefinition modeOfCommunicationDataDefinition = new SpecialClinicsModeOfCommunicationDataDefinition();
         modeOfCommunicationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         modeOfCommunicationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        modeOfCommunicationDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        modeOfCommunicationDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsSiteOfScreeningDataDefinition siteOfScreeningDataDefinition = new SpecialClinicsSiteOfScreeningDataDefinition();
         siteOfScreeningDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         siteOfScreeningDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        siteOfScreeningDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        siteOfScreeningDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsFirstScreeningOutComeDataDefinition firstScreeningOutComeDataDefinition = new SpecialClinicsFirstScreeningOutComeDataDefinition();
         firstScreeningOutComeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         firstScreeningOutComeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        firstScreeningOutComeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        firstScreeningOutComeDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         SpecialClinicsSecondScreeningOutComeDataDefinition secondScreeningOutComeDataDefinition = new SpecialClinicsSecondScreeningOutComeDataDefinition();
         secondScreeningOutComeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         secondScreeningOutComeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        secondScreeningOutComeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+        secondScreeningOutComeDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
         PersonAttributeType f_name = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.GUARDIAN_FIRST_NAME);
@@ -196,7 +196,7 @@ public class MOH419BReportBuilder extends AbstractReportBuilder {
 		SpecialClinicsRegisterCohortDefinition cd = new SpecialClinicsRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.setSpecialClinic(SPECIAL_CLINIC);
+		cd.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
         cd.setComparisonOperator(COMPARATIVE_OPERATION);
         cd.setAge(AGE);
 		dsd.addRowFilter(cd, paramMapping);
