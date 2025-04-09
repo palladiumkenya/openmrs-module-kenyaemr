@@ -356,4 +356,11 @@
 			Configures for grouping of user roles
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.sha.jwt.auth.mode</property>
+		<defaultValue>post</defaultValue>
+		<description>
+			The authentication mode for HIE. Accepted options are post or get : Please note these are case sensitive.
+		</description>
+	</globalProperty>
 </module>
