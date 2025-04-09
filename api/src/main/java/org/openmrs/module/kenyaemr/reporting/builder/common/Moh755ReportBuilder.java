@@ -44,7 +44,7 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
     protected static final Log log = LogFactory.getLog(Moh755ReportBuilder.class);
     static final int NEW_VISIT = 164180,RE_VISIT= 160530;
     static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
-    static final String INTERVENTION = "Neonatal Screening", REFERRAL_IN = "Referral", REFERRAL_OUT = "Referrals OUT";;
+    static final String INTERVENTION = "Neonatal Screening", REFERRAL_IN = "Referrals IN", REFERRAL_OUT = "Referrals OUT";;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
     @Autowired
@@ -100,6 +100,7 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total of Interventions(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNoOfOtInterventions(NEW_VISIT, RE_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("Total No. Of ATs Dispensed New Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, NEW_VISIT, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("Total No. Of ATs Dispensed Re-Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, RE_VISIT, SPECIAL_CLINIC), indParams), "");
+        dsd.addColumn("Total No. Of ATs Dispensed(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsNewAndRevisitDispensed(INTERVENTION,REFERRAL_IN, REFERRAL_OUT,NEW_VISIT, RE_VISIT,SPECIAL_CLINIC), indParams), "");
         EmrReportingUtils.addRow(dsd, "learningFindings", "Learning Findings", ReportUtils.map(specialClinicsIndicators.learningFindings(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
         EmrReportingUtils.addRow(dsd, "neurodevelopmental", "Neuron Developmental", ReportUtils.map(specialClinicsIndicators.neurodevelopmental(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
         EmrReportingUtils.addRow(dsd, "neurodiversityConditions", "Neurodiversity Conditions", ReportUtils.map(specialClinicsIndicators.neurodiversityConditions(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));

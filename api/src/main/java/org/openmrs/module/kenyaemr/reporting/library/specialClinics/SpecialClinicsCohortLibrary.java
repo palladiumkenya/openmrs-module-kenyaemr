@@ -37,7 +37,10 @@ public class SpecialClinicsCohortLibrary {
 
     public CohortDefinition otIntervention(String interventionType, String specialClinic) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_special_clinics f where f.ot_intervention = '"+interventionType+"' and f.visit_date between date(:startDate) and date(:endDate) and f.special_clinic_form_uuid = '" + specialClinic + "';";
+        String sqlQuery = "SELECT f.patient_id\n" +
+                "FROM kenyaemr_etl.etl_special_clinics f\n" +
+                "WHERE FIND_IN_SET('"+interventionType+"', f.ot_intervention) > 0\n" +
+                "and f.visit_date between date(:startDate) and date(:endDate) and f.special_clinic_form_uuid = '" + specialClinic + "';";
         cd.setName("OT Intervention");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -80,7 +83,15 @@ public class SpecialClinicsCohortLibrary {
         cd.setCompositionString("totalATsDispensed AND visitType");
         return cd;
     }
-
+    public CohortDefinition totalNumberOfATsNewAndRevisitDispensed(String intervention, String referredIn,String referredOut,  int newVisit, int reVisit, String specialClinic) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("totalATsDispensed", ReportUtils.map(totalATsDispensed(intervention,referredIn,referredOut, specialClinic), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("totalCountVisits", ReportUtils.map(totalCountVisits(newVisit,reVisit, specialClinic), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("totalATsDispensed AND totalCountVisits");
+        return cd;
+    }
     public CohortDefinition neurodevelopmental(String specialClinic) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "SELECT DISTINCT v.patient_id\n" +

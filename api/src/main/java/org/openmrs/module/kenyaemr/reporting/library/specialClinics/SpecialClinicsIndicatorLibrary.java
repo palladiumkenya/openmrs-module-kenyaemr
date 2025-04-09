@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.specialClinics;
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,6 +60,8 @@ public class SpecialClinicsIndicatorLibrary {
 	public CohortIndicator totalCountVisits(int newVisits, int revists, String specialClinic){
 		return cohortIndicator("No. total visits", ReportUtils.map(specialClinicsCohortLibrary.totalCountVisits(newVisits,revists,specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
-
+	public  CohortIndicator totalNumberOfATsNewAndRevisitDispensed(String intervention, String referredIn, String referredOut, int newVisit, int reVisit, String specialClinic) {
+		return cohortIndicator("No. total of new and Revisit Dispensed", ReportUtils.map(specialClinicsCohortLibrary.totalNumberOfATsNewAndRevisitDispensed(intervention,referredIn,referredOut,newVisit,reVisit,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
 
 }
