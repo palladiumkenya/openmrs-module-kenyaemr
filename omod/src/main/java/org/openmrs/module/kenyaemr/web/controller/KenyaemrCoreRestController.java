@@ -3487,7 +3487,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 		// Encode username and password for Basic Auth
 		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
-		System.out.println("Encoded hie token auth : " + auth);
+		//System.out.println("Encoded hie token auth : " + auth);
 		
 		//Config to toggle GET and POST requests
 		GlobalProperty gpHIEAuthMode = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_AUTH_MODE);
@@ -3524,13 +3524,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				System.err.println("Get HIE Post Auth: ERROR: Request failed: " + postResponse.code() + " - " + postResponse.message());
 			} else {
 				String payload = postResponse.body().string();
-				System.out.println("Got HIE Post Auth token payload: " + payload);
+				//System.out.println("Got HIE Post Auth token payload: " + payload);
 				com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
 				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
 				ret = rootNode.path("access_token").asText();
 			}
 		}
-		System.out.println("HIE Auth Token retrieved ==>" + ret);
+		//System.out.println("HIE Auth Token retrieved ==>" + ret);
 		return ret;
 	}
 
