@@ -55,7 +55,7 @@ public class ActiveInMchDataDefinitionEvaluator implements PersonDataEvaluator {
                 "WHERE DATE(pp.date_completed) IS NULL\n" +
                 "  AND pp.program IN ('MCH-Child Services', 'MCH-Mother Services')\n" +
                 "GROUP BY pp.patient_id\n" +
-                "HAVING MID(MAX(DATE(pp.date_enrolled)), 1, 10) <= DATE(:endDate);";
+                "HAVING DATE(MAX(pp.date_enrolled)) <= DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
