@@ -169,7 +169,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String ADVERSE_DRUG_REACTION_FORM = "461e1b45-b3f2-4899-b3e9-d3b110b6ed9c";
 		public static final String DERMATOLOGY_CLINICAL_FORM = "efa2f992-44af-487e-aaa7-c92813a34612";
 		public static final String UROLOGY_CLINICAL_FORM = "57df8a60-7585-4fc0-b51b-e10e568cf53c";
-		public static final String HEARING_SCREENING_CLINICAL_FORM = "270f388f-439f-476a-8919-8211f850d366";
+		public static final String HEARING_SCREENING_CLINICAL_FORM = "54462245-2cb6-4ca9-a15a-ba35adfa0e8f";
 		public static final String NEUROLOGY_CLINICAL_FORM = "f97f2bf3-c26b-4adf-aacd-e09d720a14cd";
 		public static final String POST_MORTEM_CLINICAL_FORM = "016beec1-edff-4293-b3ed-817c7dddaa93";
 		public static final String EAR_NOSE_THROAT_CLINICAL_FORM = "c5055956-c3bb-45f2-956f-82e114c57aa7";
