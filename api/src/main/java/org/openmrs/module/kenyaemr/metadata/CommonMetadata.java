@@ -78,6 +78,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_FACILITY_REGISTRATION_NUMBER = "kenyaemr.sha.registration.number";
 	public static final String GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD = "kenyaemr.clinical.action.percentage.threshold";
 	public static final String GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD = "kenyaemr.clinical.action.hei.absolute.threshold";
+	public static final String GP_SHA_JWT_AUTH_MODE = "kenyaemr.sha.jwt.auth.mode";
 
 
 	public static final class _EncounterType {
