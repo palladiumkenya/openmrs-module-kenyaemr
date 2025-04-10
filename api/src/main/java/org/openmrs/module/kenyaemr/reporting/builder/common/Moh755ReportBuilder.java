@@ -41,22 +41,14 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 @Component
 @Builds({"kenyaemr.ehrReports.report.moh755"})
 public class Moh755ReportBuilder extends AbstractReportBuilder {
-
     protected static final Log log = LogFactory.getLog(Moh755ReportBuilder.class);
-    static final int NEW_VISIT = 164180,
-            RE_VISIT= 160530,REFERALS= 160563, INTERVENTION = 165001, REFERRAL_IN =160563, REFERRAL_OUT = 159492;
+    static final int NEW_VISIT = 164180,RE_VISIT= 160530;
     static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
+    static final String INTERVENTION = "Neonatal Screening", REFERRAL_IN = "Referrals IN", REFERRAL_OUT = "Referrals OUT";;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
-
     @Autowired
     private SpecialClinicsIndicatorLibrary specialClinicsIndicators;
-
-    @Autowired
-    private Moh711IndicatorLibrary moh711Indicators;
-    /**
-     * @see AbstractReportBuilder#getParameters(ReportDescriptor)
-     */
     @Override
     protected List<Parameter> getParameters(ReportDescriptor descriptor) {
         return Arrays.asList(
@@ -65,24 +57,17 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
                 new Parameter("dateBasedReporting", "", String.class)
         );
     }
-
     String indParams = "startDate=${startDate},endDate=${endDate}";
-
-    /**
-     * @see AbstractReportBuilder#buildDataSets(ReportDescriptor, ReportDefinition)
-     */
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
         return Arrays.asList(
                 ReportUtils.map(createOphthalmicServiceSummaryDataSet(), indParams)
-
         );
     }
 
-   ColumnParameters fUnder1Month = new ColumnParameters(null, "<1 months", "gender=F|age=<1");
+    ColumnParameters fUnder1Month = new ColumnParameters(null, "<1 months", "gender=F|age=<1");
     ColumnParameters mUnder1Month = new ColumnParameters(null, "<1 months", "gender=M|age=<1");
     ColumnParameters f1To12Months = new ColumnParameters(null, "1-12 months", "gender=F|age=1-12");
-
     ColumnParameters m1To12Months = new ColumnParameters(null, "1-12 months", "gender=M|age=1-12");
     ColumnParameters f1_5 = new ColumnParameters(null, "1-5 years", "gender=F|age=1-5");
     ColumnParameters m1_5 = new ColumnParameters(null, "1-5 years", "gender=M|age=1-5");
@@ -91,10 +76,8 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
     ColumnParameters f10_14 = new ColumnParameters(null, "10-14 years", "gender=F|age=10-14");
     ColumnParameters m10_14 = new ColumnParameters(null, "10-14 years", "gender=M|age=10-14");
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
-
     List<ColumnParameters> therapeuticAgeDisaggregations = Arrays.asList(mUnder1Month, fUnder1Month,m1To12Months, f1To12Months,m1_5, f1_5,m5_9, f5_9,
             m10_14, f10_14, colTotal);
-
     private DataSetDefinition createOphthalmicServiceSummaryDataSet() {
         CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
         dsd.setName("OPHTHALMIC_SERVICE_SUMMARY");
@@ -103,7 +86,9 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addDimension("age", map(commonDimensions.specialClinicsAgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", map(commonDimensions.gender()));
-
+        dsd.addColumn("No. of new visits", "", ReportUtils.map(specialClinicsIndicators.visitType(NEW_VISIT, SPECIAL_CLINIC), indParams), "");
+        dsd.addColumn("No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.visitType(RE_VISIT, SPECIAL_CLINIC), indParams), "");
+        dsd.addColumn("Total No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.totalCountVisits(NEW_VISIT,RE_VISIT, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of interventions", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of referrals In", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_IN, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of referrals Out", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_OUT, SPECIAL_CLINIC), indParams), "");
@@ -115,6 +100,7 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total of Interventions(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNoOfOtInterventions(NEW_VISIT, RE_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("Total No. Of ATs Dispensed New Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, NEW_VISIT, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("Total No. Of ATs Dispensed Re-Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, RE_VISIT, SPECIAL_CLINIC), indParams), "");
+        dsd.addColumn("Total No. Of ATs Dispensed(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsNewAndRevisitDispensed(INTERVENTION,REFERRAL_IN, REFERRAL_OUT,NEW_VISIT, RE_VISIT,SPECIAL_CLINIC), indParams), "");
         EmrReportingUtils.addRow(dsd, "learningFindings", "Learning Findings", ReportUtils.map(specialClinicsIndicators.learningFindings(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
         EmrReportingUtils.addRow(dsd, "neurodevelopmental", "Neuron Developmental", ReportUtils.map(specialClinicsIndicators.neurodevelopmental(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
         EmrReportingUtils.addRow(dsd, "neurodiversityConditions", "Neurodiversity Conditions", ReportUtils.map(specialClinicsIndicators.neurodiversityConditions(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));

@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.specialClinics;
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,16 +27,16 @@ public class SpecialClinicsIndicatorLibrary {
 	private SpecialClinicsCohortLibrary specialClinicsCohortLibrary;
 
 
-	public CohortIndicator otInterventionVisitType(int visitType, int otIntervention,String specialClinic){
+	public CohortIndicator otInterventionVisitType(int visitType, String otIntervention,String specialClinic){
 		return cohortIndicator("OT Intervention Visit Type", ReportUtils.map(specialClinicsCohortLibrary.noOtIntervention(visitType, otIntervention, specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator visitType(int visitType, String specialClinic){
 		return cohortIndicator("OT Intervention Visit Type", ReportUtils.map(specialClinicsCohortLibrary.visitType(visitType,specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
-		public CohortIndicator totalNoOfOtInterventions(int newVisit, int reVisit,int interventionType,  String specialClinic){
+		public CohortIndicator totalNoOfOtInterventions(int newVisit, int reVisit,String interventionType,  String specialClinic){
 		return cohortIndicator("OT Intervention Visit Type", ReportUtils.map(specialClinicsCohortLibrary.totalNoOfOtInterventions(newVisit,reVisit,interventionType,specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator totalNumberOfATsDispensed(int intervention, int referredIn,int referredOut,  int visitType, String specialClinic){
+	public CohortIndicator totalNumberOfATsDispensed(String intervention, String referredIn,String referredOut,  int visitType, String specialClinic){
 		return cohortIndicator("OT Intervention Visit Type", ReportUtils.map(specialClinicsCohortLibrary.totalNumberOfATsDispensed(intervention,referredIn,referredOut,visitType,specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator neurodevelopmental(String specialClinic){
@@ -56,6 +57,11 @@ public class SpecialClinicsIndicatorLibrary {
 	public CohortIndicator childrenTrainedOnAT(String specialClinic){
 		return cohortIndicator("No. of children  identified on assistive technology play device", ReportUtils.map(specialClinicsCohortLibrary.childrenTrainedOnAT(specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
-
+	public CohortIndicator totalCountVisits(int newVisits, int revists, String specialClinic){
+		return cohortIndicator("No. total visits", ReportUtils.map(specialClinicsCohortLibrary.totalCountVisits(newVisits,revists,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public  CohortIndicator totalNumberOfATsNewAndRevisitDispensed(String intervention, String referredIn, String referredOut, int newVisit, int reVisit, String specialClinic) {
+		return cohortIndicator("No. total of new and Revisit Dispensed", ReportUtils.map(specialClinicsCohortLibrary.totalNumberOfATsNewAndRevisitDispensed(intervention,referredIn,referredOut,newVisit,reVisit,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
 
 }

@@ -1177,8 +1177,8 @@
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh755" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="510c1c6b-682f-46d1-b838-a90981dc7b66" />
-		<property name="name" value="MOH 755" />
-		<property name="description" value="The user should be able to generate and see the data recorded in Therapeutic Play Summary MOH 755 using Occupational Form and Occupational Register" />
+		<property name="name" value="MOH 755 Occupational Therapy Register" />
+		<property name="description" value="MOH 755 Occupational Therapy Register" />
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 		<property name="template" value="kenyaemr:moh755.xls" />
 	</bean>
