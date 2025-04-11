@@ -3487,8 +3487,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 		// Encode username and password for Basic Auth
 		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
-		//System.out.println("Encoded hie token auth : " + auth);
-		
+				
 		//Config to toggle GET and POST requests
 		GlobalProperty gpHIEAuthMode = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_AUTH_MODE);
 		if (gpHIEAuthMode == null) {
