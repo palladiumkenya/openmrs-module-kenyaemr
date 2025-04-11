@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.openmrs.util.OpenmrsUtil;
 
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 public class SHAInterventionsHandler extends DataHandler {
-    private static final String LOCAL_FILE_PATH = "/var/lib/OpenMRS/sha/sha_interventions.json";
+    private static String LOCAL_FILE_PATH = OpenmrsUtil.getApplicationDataDirectory() + "/sha/sha_interventions.json";
     private static final Logger log = LoggerFactory.getLogger(SHAInterventionsHandler.class);
 
     private static final String SHA_INTERVENTIONS = CommonMetadata.GP_SHA_INTERVENTIONS;

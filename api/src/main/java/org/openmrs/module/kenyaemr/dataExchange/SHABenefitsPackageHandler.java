@@ -19,13 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.openmrs.util.OpenmrsUtil;
 
 import java.net.HttpURLConnection;
 
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 public class SHABenefitsPackageHandler extends DataHandler{
-    private static final String LOCAL_FILE_PATH = "/var/lib/OpenMRS/sha/sha_benefits_package.json";
+    private static String LOCAL_FILE_PATH = OpenmrsUtil.getApplicationDataDirectory() + "/sha/sha_benefits_package.json";
 
     private static final Logger log = LoggerFactory.getLogger(SHABenefitsPackageHandler.class);
 
