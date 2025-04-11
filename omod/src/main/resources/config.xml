@@ -363,4 +363,11 @@
 			The authentication mode for HIE. Accepted options are post or get : Please note these are case sensitive.
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.hie.facility.registry.code</property>
+		<defaultValue></defaultValue>
+		<description>
+			This is the HIE facility registry code for use in sha claims submission.
+		</description>
+	</globalProperty>
 </module>
