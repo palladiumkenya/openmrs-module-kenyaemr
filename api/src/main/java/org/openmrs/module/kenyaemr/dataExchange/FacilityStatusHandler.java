@@ -17,6 +17,8 @@ import org.codehaus.jackson.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,9 +169,14 @@ public class FacilityStatusHandler extends DataHandler {
                                             statusMap.put("shaFacilityId", identifier.optString("value", "--"));
                                             break;
                                         case "fr-code":
+											//Set Facility Registry Global Property 
+											GlobalProperty facilityRegistryCodeGP = Context.getAdministrationService().getGlobalPropertyObject("kenyaemr.hie.facility.registry.code");
+											facilityRegistryCodeGP.setPropertyValue(identifier.optString("value", ""));
+											Context.getAdministrationService().saveGlobalProperty(facilityRegistryCodeGP);
+											
                                             statusMap.put("facilityRegistryCode", identifier.optString("value", "--"));
                                             break;
-                                        case "registration-number":
+                                        case "registration-number":									
                                             statusMap.put("registrationNumber", identifier.optString("value", "--"));
                                             break;
                                     }
