@@ -179,8 +179,12 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
 		LastRiskEvaluationDateDataDefinition lastRiskEvaluationDateDataDefinition = new LastRiskEvaluationDateDataDefinition();
 		lastRiskEvaluationDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		lastRiskEvaluationDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
-
+        ARTCacxScreeningDataDefinition cacxScreeningDataDefinition = new ARTCacxScreeningDataDefinition();
+        cacxScreeningDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxScreeningDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        ARTCacxScreeningDateDataDefinition cacxScreeningDateDataDefinition = new ARTCacxScreeningDateDataDefinition();
+        cacxScreeningDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxScreeningDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), formatter);
         dsd.addColumn("MFL Code", new MFLCodeDataDefinition(), "");
@@ -191,7 +195,6 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("DOB", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age at reporting", ageAtReportingDataDefinition, "endDate=${endDate}");
-        //dsd.addColumn("Age", new AgeDataDefinition(), "", new DataConverter[0]);
         dsd.addColumn("Weight", new WeightAtArtDataDefinition(), "");
         dsd.addColumn("Height", new HeightAtArtDataDefinition(), "");
         dsd.addColumn("Blood Pressure", bloodPressureDataDefinition, "endDate=${endDate}");
@@ -200,13 +203,14 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("Enrollment Date", new CalculationDataDefinition("Enrollment Date", new DateOfEnrollmentArtCalculation()), "", new DateArtStartDateConverter());
         dsd.addColumn("Art Start Date", new ETLArtStartDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
         dsd.addColumn("First Regimen", new ETLFirstRegimenDataDefinition(), "");
-        //dsd.addColumn("First Substitution Date", new ETLFirstSubstitutionDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
         dsd.addColumn("Current Regimen", new ETLCurrentRegimenDataDefinition(), "");
         dsd.addColumn("Current Regimen Line", new ETLCurrentRegLineDataDefinition(), "");
         dsd.addColumn("Baseline CD4", new BaselineCD4CountDataDefinition(), "");
         dsd.addColumn("Date of Baseline CD4 test", new BaselineCD4DateDataDefinition(), "");
         dsd.addColumn("Latest CD4 Result",  lastCD4ResultDataDefinition, "endDate=${endDate}");
         dsd.addColumn("Latest CD4 Result Date",etlLastCD4DateDataDefinition,"endDate=${endDate}");
+        dsd.addColumn("Cacx Screening", cacxScreeningDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Cacx Screening Date", cacxScreeningDateDataDefinition, "endDate=${endDate}", new DateConverter(DATE_FORMAT));
         dsd.addColumn("Last WHO Stage", new WHOStageArtDataDefinition(), "");
         dsd.addColumn("Last WHO Stage Date", new ETLLastWHOStageDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
         dsd.addColumn("Last VL Result",  lastVlResultDataDefinition, "endDate=${endDate}");
