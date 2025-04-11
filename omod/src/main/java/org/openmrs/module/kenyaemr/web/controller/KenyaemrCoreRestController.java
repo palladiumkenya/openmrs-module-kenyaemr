@@ -3502,7 +3502,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			// Execute the request
 			Response response = client.newCall(request).execute();
 			if (response.isSuccessful()) {
-				// System.out.println("Response: " + response.body().string());
 				ret = response.body().string();
 			} else {
 				System.out.println("HIE Auth Get Request failed: " + response.code() + " - " + response.message());
@@ -3523,13 +3522,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				System.err.println("Get HIE Post Auth: ERROR: Request failed: " + postResponse.code() + " - " + postResponse.message());
 			} else {
 				String payload = postResponse.body().string();
-				//System.out.println("Got HIE Post Auth token payload: " + payload);
 				com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
 				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
 				ret = rootNode.path("access_token").asText();
 			}
-		}
-		//System.out.println("HIE Auth Token retrieved ==>" + ret);
+		}	
 		return ret;
 	}
 
