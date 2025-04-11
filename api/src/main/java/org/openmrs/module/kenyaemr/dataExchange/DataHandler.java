@@ -10,6 +10,9 @@
 package org.openmrs.module.kenyaemr.dataExchange;
 
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +26,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +48,6 @@ import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 public abstract class DataHandler {
 
     private static final Logger log = LoggerFactory.getLogger(DataHandler.class);
-
-    private static final String BASE_JWT_URL_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_JWT_GET_END_POINT;
-    private static final String API_USER_KEY = CommonMetadata.GP_HIE_API_USER;
-    private static final String API_SECRET_KEY = CommonMetadata.GP_SHA_FACILITY_VERIFICATION_GET_API_SECRET;
     private final String localFilePath;
     protected final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -131,28 +132,76 @@ public abstract class DataHandler {
         );
     }
 
-    public static String getBearerToken() {
-        String username = getGlobalPropertyValue(API_USER_KEY).trim();
-        String secret = getGlobalPropertyValue(API_SECRET_KEY).trim();
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(BASE_JWT_URL_KEY));
-            getRequest.setHeader("Content-Type", "application/x-www-form-urlencoded");
-            getRequest.setHeader("Authorization", createBasicAuthHeader(username, secret));
+    public static String getBearerToken() throws IOException {
+		// Utility function to get auth token
+		String ret = null;
+		OkHttpClient client = new OkHttpClient();
+		GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
+		String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
+		if (shaJwtTokenUrl == null || shaJwtTokenUrl.trim().isEmpty()) {
+			System.out.println("Jwt token url configs not updated: ");
+		}
+		GlobalProperty globalGetJwtUsername = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_USERNAME);
+		String shaJwtUsername = globalGetJwtUsername.getPropertyValue();
+		if (shaJwtUsername == null || shaJwtUsername.trim().isEmpty()) {
+			System.out.println("Jwt token username not updated: ");
+		}
+		GlobalProperty globalGetJwtPassword = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_PASSWORD);
+		String shaJwtPassword = globalGetJwtPassword.getPropertyValue();
+		if (shaJwtPassword == null || shaJwtPassword.trim().isEmpty()) {
+			System.out.println("Jwt token password not updated: ");
+		}
 
-            try (CloseableHttpResponse response = httpClient.execute(getRequest)) {
+		// Encode username and password for Basic Auth
+		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
+		//System.out.println("Encoded hie token auth : " + auth);
 
-                if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK) {
-                    String responseString = EntityUtils.toString(response.getEntity()).trim();
-                    log.info("Bearer token retrieved successfully...");
-                    return responseString;
-                } else {
-                    System.err.println("Failed to fetch Bearer Token. HTTP Status:"+ response.getStatusLine().getStatusCode());
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error retrieving Bearer Token: "+ e.getMessage());
-        }
-        return "";
+		//Config to toggle GET and POST requests
+		GlobalProperty gpHIEAuthMode = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_AUTH_MODE);
+		if (gpHIEAuthMode == null) {
+			System.out.println("Jwt Auth mode not configured: ");
+		} else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("get")) {
+			// Build the GET request
+			Request request = new Request.Builder()
+				.url(shaJwtTokenUrl)
+				.header("Authorization", "Basic " + auth)
+				.build();
+
+			// Execute the request
+			Response response = client.newCall(request).execute();
+			if (response.isSuccessful()) {
+				// System.out.println("Response: " + response.body().string());
+				ret = response.body().string();
+			} else {
+				System.out.println("HIE Auth Get Request failed: " + response.code() + " - " + response.message());
+			}
+		} else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("post")) {
+			// Build the POST request
+			System.out.println("Auth mode is post: ");
+			okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
+			okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "");
+			Request postRequest = new Request.Builder()
+				.url(shaJwtTokenUrl)
+				.method("POST", body)
+				.header("Authorization", "Basic " + auth)
+				.header("Cookie", "incap_ses_6550_2912339=Gt0ldtSEr3gzhyyAnUbmWsc39mcAAAAAeRlLAEJa78AYqRNx3TRw5A==; visid_incap_2912339=cOIlO1QSR62/Wo6Ega29z/TjjWcAAAAAQUIPAAAAAAB6TxV9uQ87Ev365z8yUqhP")
+				.build();
+			Response postResponse = client.newCall(postRequest).execute();
+			if (!postResponse.isSuccessful()) {
+				System.err.println("Get HIE Post Auth: ERROR: Request failed: " + postResponse.code() + " - " + postResponse.message());
+			} else {
+				String payload = postResponse.body().string();
+				//System.out.println("Got HIE Post Auth token payload: " + payload);
+				com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
+				ret = rootNode.path("access_token").asText();
+			}
+		}
+		//System.out.println("HIE Auth Token retrieved ==>" + ret);
+		return ret;
     }
 
     private static String createBasicAuthHeader(String username, String password) {

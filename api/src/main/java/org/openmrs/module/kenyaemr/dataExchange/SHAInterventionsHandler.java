@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.openmrs.util.OpenmrsUtil;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
@@ -51,7 +52,7 @@ public class SHAInterventionsHandler extends DataHandler {
         return null;
     }
 
-    public static ResponseEntity<String> getInterventions() {
+    public static ResponseEntity<String> getInterventions() throws IOException {
 
         String bearerToken = getBearerToken();
         if (bearerToken.isEmpty()) {

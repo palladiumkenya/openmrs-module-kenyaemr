@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
 import org.openmrs.util.OpenmrsUtil;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -57,7 +59,7 @@ public class FacilityStatusHandler extends DataHandler {
         return null;
     }
 
-    public static ResponseEntity<String> getFacilityStatus() {
+    public static ResponseEntity<String> getFacilityStatus() throws IOException {
 
         String bearerToken = DataHandler.getBearerToken();
         if (bearerToken.isEmpty()) {
@@ -90,7 +92,7 @@ public class FacilityStatusHandler extends DataHandler {
         }
     }
 
-    private static ResponseEntity<String> extractFacilityStatus() {
+    private static ResponseEntity<String> extractFacilityStatus() throws IOException {
         ResponseEntity<String> organizationResourceResponse = getFacilityStatus();
         Map<String, String> statusMap = new HashMap<>();
         statusMap.put("operationalStatus", "--");
