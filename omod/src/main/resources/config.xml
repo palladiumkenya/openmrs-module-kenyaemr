@@ -370,4 +370,18 @@
 			This is the HIE facility registry code for use in sha claims submission.
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.hie.consent.sms</property>
+		<defaultValue>https://apistg.safaricom.co.ke/hie/api/v1/consent/request</defaultValue>
+		<description>
+			Consent sms url for HIE client access
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>kenyaemr.hie.consent.validation</property>
+		<defaultValue>https://apistg.safaricom.co.ke/hie/api/v1/consent/validate-otp</defaultValue>
+		<description>
+			Consent validation url for HIE client access
+		</description>
+	</globalProperty>
 </module>
