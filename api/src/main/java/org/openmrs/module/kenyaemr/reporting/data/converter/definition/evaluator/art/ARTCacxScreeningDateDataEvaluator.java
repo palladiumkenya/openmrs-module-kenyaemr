@@ -35,27 +35,37 @@ public class ARTCacxScreeningDateDataEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT hiv_subquery.patient_id,\n" +
-                "CASE WHEN ccs.screened_for_cacx = 'Yes' AND IFNULL(ccs.screening_date, hiv_subquery.fup_date) >= hiv_subquery.fup_date THEN\n" +
-                "GREATEST(hiv_subquery.fup_date, IFNULL(ccs.screening_date, hiv_subquery.fup_date))\n" +
-                "    WHEN hiv_subquery.hiv_screening_result = 'Yes' THEN GREATEST(hiv_subquery.fup_date, IFNULL(ccs.screening_date, hiv_subquery.fup_date))\n" +
-                "    ELSE NULL\n" +
-                "END AS screening_date\n" +
+        String qry ="SELECT hiv_subquery.patient_id,\n" +
+                "       if(screened_for_cacx is not null, ccs.screening_date,\n" +
+                "          if(hiv_screening_result = 'Yes', fup_date, null))                                                    as screening_date\n" +
                 "FROM (SELECT f.patient_id,\n" +
-                "CASE WHEN MID(MAX(CONCAT(f.visit_date, CASE WHEN f.cacx_screening IS NOT NULL THEN 'Yes' ELSE 'No' END)), 11) = 'Yes' THEN 'Yes' ELSE 'No'\n" +
-                "END AS hiv_screening_result, MAX(f.visit_date) AS fup_date\n" +
-                "     FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
-                "     WHERE f.person_present = 978 AND DATE(f.visit_date) <= date(:endDate)\n" +
-                "     GROUP BY f.patient_id) hiv_subquery\n" +
-                "INNER JOIN \n" +
-                "    kenyaemr_etl.etl_patient_demographics p\n" +
-                "    ON p.patient_id = hiv_subquery.patient_id AND p.voided = 0 AND p.gender = 'F'\n" +
-                "LEFT JOIN \n" +
-                "    (SELECT v.patient_id,MID(MAX(CONCAT(v.visit_date, v.cervical_cancer)), 11) AS screened_for_cacx,MAX(v.visit_date) AS screening_date FROM kenyaemr_etl.etl_cervical_cancer_screening v\n" +
-                "     WHERE DATE(v.visit_date) <= date(:endDate)\n" +
-                "     GROUP BY v.patient_id) ccs\n" +
-                "    ON ccs.patient_id = hiv_subquery.patient_id AND ccs.screening_date >= hiv_subquery.fup_date\n" +
+                "             MID(MAX(CONCAT(DATE(f.visit_date),\n" +
+                "                            CASE\n" +
+                "                                WHEN f.cacx_screening IN (703, 664, 1065) THEN 'Yes'\n" +
+                "                                WHEN f.cacx_screening = 1066 THEN 'No'\n" +
+                "                                WHEN f.cacx_screening = 1118 THEN 'No'\n" +
+                "                                WHEN f.cacx_screening = 1175 THEN 'N/A'\n" +
+                "                                END)), 11) AS hiv_screening_result,\n" +
+                "             MAX(f.visit_date)             AS fup_date\n" +
+                "      FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      WHERE f.person_present = 978\n" +
+                "        AND DATE(f.visit_date) <= DATE(:endDate)\n" +
+                "      GROUP BY f.patient_id) hiv_subquery\n" +
+                "         INNER JOIN kenyaemr_etl.etl_patient_demographics p\n" +
+                "                    ON p.patient_id = hiv_subquery.patient_id\n" +
+                "                        AND p.voided = 0\n" +
+                "                        AND p.gender = 'F'\n" +
+                "         LEFT JOIN (SELECT v.patient_id,\n" +
+                "                           MID(MAX(CONCAT(v.visit_date, v.cervical_cancer)), 11) AS screened_for_cacx,\n" +
+                "                           MAX(v.visit_date)                                     AS screening_date\n" +
+                "                    FROM kenyaemr_etl.etl_cervical_cancer_screening v\n" +
+                "                    WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                      AND v.cervical_cancer IS NOT NULL\n" +
+                "                    GROUP BY v.patient_id) ccs\n" +
+                "                   ON ccs.patient_id = hiv_subquery.patient_id\n" +
+                "                       AND ccs.screening_date >= hiv_subquery.fup_date\n" +
                 "GROUP BY hiv_subquery.patient_id;";
+
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
