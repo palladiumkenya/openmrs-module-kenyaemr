@@ -36,30 +36,59 @@ public class ETLDifferentiatedCareModelDataEvaluator implements PersonDataEvalua
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry="select fup.patient_id,\n" +
-                "       (case fup.differentiated_care\n" +
-                "            when 164942 then \"Standard Care\"\n" +
-                "            when 164943 then \"Fast Track\"\n" +
-                "            when 166443 then \"Health care worker Led facility ART group(HFAG)\"\n" +
-                "            when 166444 then \"Peer Led Facility ART Group(PFAG)\"\n" +
-                "            when 1555 then \"Health care worker Led Community ART group(HCAG)\"\n" +
-                "            when 164945 then \"Peer Led Community ART Group(PCAG)\"\n" +
-                "            when 1000478 then \"Community Pharmacy(CP)\"\n" +
-                "            when 164944 then \"Community ART Distribution Points(CAPD)\"\n" +
-                "            when 166583 then \"Individual patient ART Community Distribution(IACD)\"\n" +
-                "            when 164946 then \"Facility ART Distribution Group\"\n" +
-                "            else \"\" end) as differentiated_care_model\n" +
-                "from (SELECT f.patient_id,\n" +
-                "             MID(MAX(CONCAT(f.visit_date, f.differentiated_care)), 11) AS differentiated_care\n" +
-                "      FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
-                "               INNER JOIN\n" +
-                "           kenyaemr_etl.etl_patient_demographics d\n" +
-                "           ON f.patient_id = d.patient_id\n" +
-                "      WHERE f.stability IS NOT NULL\n" +
-                "        AND f.person_present = 978\n" +
-                "        AND DATE(f.visit_date) <= DATE(:endDate)\n" +
-                "        AND f.voided = 0\n" +
-                "      GROUP BY f.patient_id) fup;";
+        String qry="WITH patient_followup AS (\n" +
+                "    SELECT\n" +
+                "        f.patient_id,\n" +
+                "        MID(MAX(CONCAT(f.visit_date, f.differentiated_care_group)), 11) AS differentiated_care_group,\n" +
+                "        MID(MAX(CONCAT(f.visit_date, f.differentiated_care)), 11) AS differentiated_care\n" +
+                "    FROM\n" +
+                "        kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "            INNER JOIN\n" +
+                "        kenyaemr_etl.etl_patient_demographics d\n" +
+                "        ON\n" +
+                "            f.patient_id = d.patient_id\n" +
+                "    WHERE\n" +
+                "        f.stability IS NOT NULL\n" +
+                "      AND f.person_present = 978\n" +
+                "      AND DATE(f.visit_date) <= DATE(:endDate)\n" +
+                "      AND f.voided = 0\n" +
+                "    GROUP BY\n" +
+                "        f.patient_id\n" +
+                "),\n" +
+                "     differentiated_care AS (\n" +
+                "         SELECT\n" +
+                "             patient_id,\n" +
+                "             CASE differentiated_care_group\n" +
+                "                 WHEN 1537 THEN \"Facility ART distribution group\"\n" +
+                "                 WHEN 163488 THEN \"Community ART distribution group\"\n" +
+                "                 END AS differentiated_care_group,\n" +
+                "             CASE differentiated_care\n" +
+                "                 WHEN 164942 THEN CONCAT_WS('-',\"Standard Care\",\n" +
+                "                                            CASE differentiated_care_group\n" +
+                "                                                WHEN 1537 THEN \"Facility ART distribution group\"\n" +
+                "                                                WHEN 163488 THEN \"Community ART distribution group\"\n" +
+                "                                                END)\n" +
+                "                 WHEN 164943 THEN CONCAT_WS('-',\"Fast Track\",\n" +
+                "                                            CASE differentiated_care_group\n" +
+                "                                                WHEN 1537 THEN \"Facility ART distribution group\"\n" +
+                "                                                WHEN 163488 THEN \"Community ART distribution group\"\n" +
+                "                                                END)\n" +
+                "                 WHEN 166443 THEN \"Health care worker Led facility ART group(HFAG)\"\n" +
+                "                 WHEN 166444 THEN \"Peer Led Facility ART Group(PFAG)\"\n" +
+                "                 WHEN 1555 THEN \"Health care worker Led Community ART group(HCAG)\"\n" +
+                "                 WHEN 164945 THEN \"Peer Led Community ART Group(PCAG)\"\n" +
+                "                 WHEN 1000478 THEN \"Community Pharmacy(CP)\"\n" +
+                "                 WHEN 164944 THEN \"Community ART Distribution Points(CAPD)\"\n" +
+                "                 WHEN 166583 THEN \"Individual patient ART Community Distribution(IACD)\"\n" +
+                "                 END AS differentiated_care_model\n" +
+                "         FROM\n" +
+                "             patient_followup\n" +
+                "     )\n" +
+                "SELECT\n" +
+                "    patient_id,\n" +
+                "    differentiated_care_model\n" +
+                "FROM\n" +
+                "    differentiated_care;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
