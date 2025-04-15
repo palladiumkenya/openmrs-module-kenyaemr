@@ -35,13 +35,8 @@ public class TBScreeningAtLastVisitDataEvaluator implements PersonDataEvaluator 
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry = "SELECT v.patient_id,\n" +
-                "       CASE v.lastTBStatus\n" +
-                "           WHEN 1660 THEN 'No TB Signs'\n" +
-                "           WHEN 142177 THEN 'Presumed TB'\n" +
-                "           WHEN 1662 THEN 'TB Confirmed'\n" +
-                "           WHEN 160737 THEN 'TB Screening Not Done' END as lastTBStatus\n" +
+                "       v.lastTBStatus\n" +
                 "from (SELECT f.patient_id,\n" +
-                "             f.visit_date,\n" +
                 "             MID(MAX(CONCAT(DATE(s.visit_date), f.tb_status)), 11) AS lastTBStatus\n" +
                 "      FROM kenyaemr_etl.etl_tb_screening s\n" +
                 "               INNER JOIN kenyaemr_etl.etl_patient_hiv_followup f\n" +
