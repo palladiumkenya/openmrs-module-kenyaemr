@@ -127,6 +127,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String NEW_BORN_ADMISSION = "454db697-7bc4-49e7-a9fa-097c19f1c9ec";
 		public static final String PLASTIC_SURGERY = "5748bd8a-06bf-41a0-88df-16eed290db21";
 		public static final String IIT_SCORE = "1dab4593-b09d-4c5b-83fe-f041092145d3";
+		public static final String IPD_DISCHARGE = "7e618d13-ffdb-4650-9a97-10ccd16ca36d";
 	}
 
 	public static final class _Form {
@@ -191,6 +192,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PRE_OPERATION_CHECKLIST_FORM = "a14824ca-29af-4d37-b9da-6bdee39f8808";
 		public static final String NEW_BORN_ADMISSION_FORM = "5b0a08f5-87c1-40cc-8c09-09c33b44523d";
 		public static final String PLASTIC_SURGERY_FORM = "05365b29-0bf1-4351-a2fb-524ec72130e8";
+		public static final String IPD_DISCHARGE_FORM = "98a781d2-b777-4756-b4c9-c9b0deb3483c";
 	}
 
 	public static final class _OrderType {
@@ -355,6 +357,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("New born admission", "New born admission clinical encounter type", _EncounterType.NEW_BORN_ADMISSION));
 		install(encounterType("Plastic Surgery Clinic", "Plastic surgery clinical encounter type", _EncounterType.PLASTIC_SURGERY));
 		install(encounterType("IIT Score", "IIT Score clinical encounter type", _EncounterType.IIT_SCORE));
+		install(encounterType("IPD Discharge", "Inpatient department clinical discharge encounter type", _EncounterType.IPD_DISCHARGE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -438,6 +441,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
 		install(form("Newbord Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
 		install(form("Plastic Surgery Clinical Form", "Form for Plastic surgery clinical encounter", _EncounterType.PLASTIC_SURGERY, "1", _Form.PLASTIC_SURGERY_FORM));
+		install(form("Inpatient Discharge Clinical Form", "Form for Inpatient Discharge clinical encounter", _EncounterType.IPD_DISCHARGE, "1", _Form.IPD_DISCHARGE_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
