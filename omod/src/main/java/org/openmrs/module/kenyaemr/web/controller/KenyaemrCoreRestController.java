@@ -177,8 +177,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
-import static org.openmrs.module.kenyaemr.api.impl.KenyaEmrServiceImpl.ConsentOTPValidation;
-import static org.openmrs.module.kenyaemr.api.impl.KenyaEmrServiceImpl.ConsentSendOTP;
+import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
+import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentSendOTP;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
