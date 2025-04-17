@@ -112,6 +112,7 @@ import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.metadata.TbMetadata;
 import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
+import org.openmrs.module.kenyaemr.model.ConsentOTPRequest;
 import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
@@ -138,12 +139,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -181,6 +177,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
+import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
+import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentSendOTP;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
@@ -3716,5 +3714,77 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			"getMonthlyHei24MonthsWithoutDocumentedOutcome", getMonthlyHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
 			"getMonthlyVirallyUnsuppressedWithoutEAC", getMonthlyVirallyUnsuppressedWithoutEAC(startDate, endDate)
 		);
+	}
+
+	/**
+	 * Handles a POST request to initiate a consent OTP request.
+	 *
+	 * @param request the {@link ConsentOTPRequest} object containing:
+	 *          - identifierType - type of identifier (e.g., National ID)
+	 *          - identifierNumber - unique identifier number
+	 *          - phoneNumber - recipient's phone number
+	 *          - scope - list of consent scopes (e.g., CLIENT_REGISTRY, SHARED_HEALTH_RECORD)
+	 *          - facilityCode - code for the requesting facility
+	 * @return a {@link SimpleObject} containing the response message from the consent service
+	 * @throws RuntimeException if there is an error sending the OTP
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/consent-request")
+	@ResponseBody
+	public Object getConsentOTP(@RequestBody ConsentOTPRequest request ){
+		try {
+			if (request.getIdentifierType() == null || request.getIdentifierType().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier type");
+			}
+			if (request.getIdentifierNumber() == null || request.getIdentifierNumber().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier number");
+			}
+			if (request.getPhoneNumber() == null || request.getPhoneNumber().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid phone number");
+			}
+			if (request.getScope() == null || request.getScope().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid scope");
+			}
+			if (request.getFacility() == null || request.getFacility().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid facility");
+			}
+			String token = getAuthToken();
+			return ConsentSendOTP(request.getIdentifierType(),
+					request.getIdentifierNumber(),
+					request.getPhoneNumber(),
+					request.getScope(),
+					request.getFacility(), token);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("--> Failed to send consent OTP request " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Handles a POST request to validate a previously sent consent OTP.
+	 *
+	 * @param request the {@link ConsentOTPRequest} object containing:
+	 *          - id - the unique request ID associated with the sent OTP</li>
+	 *          - otp - the one-time password (OTP) to be validated
+	 * @return a {@link SimpleObject} containing the result of the OTP validation (success or failure)
+	 * @throws RuntimeException if the OTP validation fails or an error occurs during the request
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/validate-otp")
+	@ResponseBody
+	public Object validateOtp(@RequestBody ConsentOTPRequest request ){
+		try {
+			if (request.getId() == null || request.getId().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier type");
+			}
+			if (request.getOtp() == null || request.getOtp().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier number");
+			}
+			String token = getAuthToken();
+			return ConsentOTPValidation(
+					request.getId(),
+					request.getOtp(), token);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("--> Failed to send OTP validation request " + e.getMessage());
+		}
 	}
 }
