@@ -3732,6 +3732,21 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@ResponseBody
 	public Object getConsentOTP(@RequestBody ConsentOTPRequest request ){
 		try {
+			if (request.getIdentifierType() == null || request.getIdentifierType().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier type");
+			}
+			if (request.getIdentifierNumber() == null || request.getIdentifierNumber().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier number");
+			}
+			if (request.getPhoneNumber() == null || request.getPhoneNumber().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid phone number");
+			}
+			if (request.getScope() == null || request.getScope().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid scope");
+			}
+			if (request.getFacility() == null || request.getFacility().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid facility");
+			}
 			String token = getAuthToken();
 			return ConsentSendOTP(request.getIdentifierType(),
 					request.getIdentifierNumber(),
@@ -3739,7 +3754,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 					request.getScope(),
 					request.getFacility(), token);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("--> Failed to send consent OTP request " + e.getMessage());
 		}
 	}
 
@@ -3756,12 +3772,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@ResponseBody
 	public Object validateOtp(@RequestBody ConsentOTPRequest request ){
 		try {
+			if (request.getId() == null || request.getId().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier type");
+			}
+			if (request.getOtp() == null || request.getOtp().isEmpty()) {
+				return ResponseEntity.badRequest().body("Missing or invalid identifier number");
+			}
 			String token = getAuthToken();
 			return ConsentOTPValidation(
 					request.getId(),
 					request.getOtp(), token);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("--> Failed to send OTP validation request " + e.getMessage());
 		}
 	}
 }
