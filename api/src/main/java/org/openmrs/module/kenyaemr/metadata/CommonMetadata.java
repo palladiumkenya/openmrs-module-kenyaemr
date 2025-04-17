@@ -269,6 +269,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PROVIDER_ADDRESS = "033ff604-ecf7-464f-b623-5b77c733667f";
 		public static final String PROVIDER_TELEPHONE = "37daed7f-1f4e-4e62-8e83-6048ade18a87";
 		public static final String PROVIDER_PASSPORT_NUMBER = "5b4b88e8-9db3-41e6-a175-5e39f2c8a9a5";
+		public static final String PROVIDER_UNIQUE_IDENTIFIER = "dace9d99-9f29-4653-9eae-c05929f34a32";
 
 	}
 
@@ -712,6 +713,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			_ProviderAttributeType.PROVIDER_TELEPHONE));
 		install(providerAttributeType("Provider passport number", "Provider passport number", FreeTextDatatype.class, "", 0, 9999,
 			_ProviderAttributeType.PROVIDER_PASSPORT_NUMBER));
+		install(providerAttributeType("Provider unique identifier", "Provider unique identifier", FreeTextDatatype.class, "", 0, 9999,
+			_ProviderAttributeType.PROVIDER_UNIQUE_IDENTIFIER));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects",
 				_RelationshipType.GUARDIAN_DEPENDANT));
