@@ -10,26 +10,24 @@
 package org.openmrs.module.kenyaemr.dataExchange;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.codehaus.jackson.JsonNode;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.util.OpenmrsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.openmrs.util.OpenmrsUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 public class SHAInterventionsHandler extends DataHandler {
-    private static String LOCAL_FILE_PATH = OpenmrsUtil.getApplicationDataDirectory() + "/sha/sha_interventions.json";
+    private static final String LOCAL_FILE_PATH = OpenmrsUtil.getApplicationDataDirectory() + "/sha/sha_interventions.json";
     private static final Logger log = LoggerFactory.getLogger(SHAInterventionsHandler.class);
 
     private static final String SHA_INTERVENTIONS = CommonMetadata.GP_SHA_INTERVENTIONS;
@@ -63,7 +61,6 @@ public class SHAInterventionsHandler extends DataHandler {
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
 
-
             String url = getGlobalPropertyValue(SHA_INTERVENTIONS);
 
             if (url.trim().isEmpty()) {
@@ -71,15 +68,10 @@ public class SHAInterventionsHandler extends DataHandler {
                 return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON)
                         .body("{\"status\": \"Error\", \"message\": \"URL is missing\"}");
             }
-            HttpPost postRequest = new HttpPost(url);
 
-            postRequest.setHeader("Authorization", "Bearer " + bearerToken);
-            postRequest.setHeader("Content-Type", "application/json");
-
-            String jsonPayload = "{\"searchKeyAndValues\": {}}"; // Adjust if additional parameters are needed
-            postRequest.setEntity(new StringEntity(jsonPayload, StandardCharsets.UTF_8));
-
-            HttpResponse response = httpClient.execute(postRequest);
+            HttpGet getRequest = new HttpGet(url);
+            getRequest.setHeader("Authorization", "Bearer " + bearerToken);
+            HttpResponse response = httpClient.execute(getRequest);
             int responseCode = response.getStatusLine().getStatusCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {

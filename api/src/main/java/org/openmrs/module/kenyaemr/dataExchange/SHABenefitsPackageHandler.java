@@ -31,7 +31,7 @@ public class SHABenefitsPackageHandler extends DataHandler{
 
     private static final Logger log = LoggerFactory.getLogger(SHABenefitsPackageHandler.class);
 
-    private static final String BASE_URL_KEY = CommonMetadata.GP_HIE_BASE_END_POINT_URL;
+    private static final String SHA_PACKAGES_URL = CommonMetadata.GP_SHA_PACKAGES;
 
     public SHABenefitsPackageHandler() {
         super(LOCAL_FILE_PATH);
@@ -61,7 +61,7 @@ public class SHABenefitsPackageHandler extends DataHandler{
 
         try {
             CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSslConnectionFactory()).build();
-            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(BASE_URL_KEY) + "benefit-package");
+            HttpGet getRequest = new HttpGet(getGlobalPropertyValue(SHA_PACKAGES_URL));
             getRequest.setHeader("Authorization", "Bearer " + bearerToken);
 
             HttpResponse response = httpClient.execute(getRequest);
