@@ -75,6 +75,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_JWT_TOKEN_USERNAME = "kenyaemr.sha.jwt.token.username";
 	public static final String GP_SHA_JWT_TOKEN_PASSWORD = "kenyaemr.sha.jwt.token.password";
 	public static final String GP_SHA_INTERVENTIONS = "kenyaemr.sha.interventions";
+	public static final String GP_SHA_PACKAGES = "kenyaemr.sha.packages";
 	public static final String GP_SHA_FACILITY_REGISTRATION_NUMBER = "kenyaemr.sha.registration.number";
 	public static final String GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD = "kenyaemr.clinical.action.percentage.threshold";
 	public static final String GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD = "kenyaemr.clinical.action.hei.absolute.threshold";
@@ -547,6 +548,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_INTERVENTIONS) == null) {
 			install(globalProperty(GP_SHA_INTERVENTIONS, "SHA Interventions url", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_PACKAGES) == null) {
+			install(globalProperty(GP_SHA_PACKAGES, "SHA packages url", ""));
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_FACILITY_REGISTRATION_NUMBER) == null) {
 			install(globalProperty(GP_SHA_FACILITY_REGISTRATION_NUMBER, "SHA facility registration number", ""));
