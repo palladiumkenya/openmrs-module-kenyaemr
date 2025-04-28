@@ -64,21 +64,19 @@ public class TBScreeningConverter implements DataConverter {
 
         if(what.equals("outcome")) {
 
-            if (tbStatusCode != null) {
-                if (tbStatusCode.equals(1660)) {
-                    return "No TB signs";
-                } else if (tbStatusCode.equals(164128)) {
-                    return "INH";
-                } else if (tbStatusCode.equals(142177)) {
-                    return "Presumed TB";
-                } else if (tbStatusCode.equals(1662)) {
-                    return "TB Confirmed";
-                } else if (tbStatusCode.equals(1111)) {
-                    return "TB Rx";
-                } else if (tbStatusCode.equals(160737)) {
-                return "TB Screening Not Done";
-            }
-            }
+            if (tbStatusCode.equals(1660)) {
+                return "No TB signs";
+            } else if (tbStatusCode.equals(164128)) {
+                return "INH";
+            } else if (tbStatusCode.equals(142177)) {
+                return "Presumed TB";
+            } else if (tbStatusCode.equals(1662)) {
+                return "TB Confirmed";
+            } else if (tbStatusCode.equals(1111)) {
+                return "TB Rx";
+            } else if (tbStatusCode.equals(160737)) {
+            return "TB Screening Not Done";
+        }
             return "Missing";
 
         }
