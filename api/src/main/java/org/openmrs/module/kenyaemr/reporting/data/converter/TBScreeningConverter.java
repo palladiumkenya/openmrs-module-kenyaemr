@@ -45,16 +45,25 @@ public class TBScreeningConverter implements DataConverter {
             return "Missing";
         }
 
-        String value = (String) obj;
+        Integer tbStatusCode;
+        if (obj instanceof String) {
+            String value = (String) obj;
 
-        if(value == null) {
-            return  "Missing";
+            if (value == null || value.isEmpty()) {
+                return "Missing";
+            }
+            try {
+                tbStatusCode = Integer.valueOf(value);
+            } catch (NumberFormatException e) {
+                return "Missing";
+            }
+        } else if (obj instanceof Integer) {
+            tbStatusCode = (Integer) obj;
+        } else {
+            return "Missing";
         }
 
-        Integer tbStatusCode = Integer.valueOf(value);
-
-
-        if(what.equals("screeningDone")) {
+        if (what.equals("screeningDone")) {
             if (tbStatusCode.equals(160737)) {
                 return "No";
             } else {
@@ -62,7 +71,7 @@ public class TBScreeningConverter implements DataConverter {
             }
         }
 
-        if(what.equals("outcome")) {
+        if (what.equals("outcome")) {
 
             if (tbStatusCode.equals(1660)) {
                 return "No TB signs";
@@ -75,12 +84,12 @@ public class TBScreeningConverter implements DataConverter {
             } else if (tbStatusCode.equals(1111)) {
                 return "TB Rx";
             } else if (tbStatusCode.equals(160737)) {
-            return "TB Screening Not Done";
-        }
+                return "TB Screening Not Done";
+            }
             return "Missing";
 
         }
-        return  "Missing";
+        return "Missing";
 
     }
 
