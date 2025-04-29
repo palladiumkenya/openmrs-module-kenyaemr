@@ -80,6 +80,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_CLINICAL_ACTION_PERCENTAGE_THRESHOLD = "kenyaemr.clinical.action.percentage.threshold";
 	public static final String GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD = "kenyaemr.clinical.action.hei.absolute.threshold";
 	public static final String GP_SHA_JWT_AUTH_MODE = "kenyaemr.sha.jwt.auth.mode";
+	public static final String GP_SHA_INTERVENTIONS_PAGE_SIZE = "kenyaemr.sha.interventions.page.size";
 
 
 	public static final class _EncounterType {
@@ -560,6 +561,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD) == null) {
 			install(globalProperty(GP_CLINICAL_ACTION_HEI_ABSOLUTE_THRESHOLD, "Absolute threshold for clinical action for HEI", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_INTERVENTIONS_PAGE_SIZE) == null) {
+			install(globalProperty(GP_SHA_INTERVENTIONS_PAGE_SIZE, "Page size for SHA interventions per fetch", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",

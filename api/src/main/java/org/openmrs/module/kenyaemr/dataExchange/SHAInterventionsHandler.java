@@ -37,6 +37,7 @@ public class SHAInterventionsHandler extends DataHandler {
     private static final Logger log = LoggerFactory.getLogger(SHAInterventionsHandler.class);
 
     private static final String SHA_INTERVENTIONS = CommonMetadata.GP_SHA_INTERVENTIONS;
+    private static final String INTERVENTIONS_PAGE_SIZE = CommonMetadata.GP_SHA_INTERVENTIONS_PAGE_SIZE;
 
     public SHAInterventionsHandler() {
         super(LOCAL_FILE_PATH);
@@ -89,6 +90,14 @@ public class SHAInterventionsHandler extends DataHandler {
                     response = httpClient.execute(postRequest);
                     responseCode = response.getStatusLine().getStatusCode();
                 } else if ("post".equalsIgnoreCase(authMode)) {
+                    String pageSize = getGlobalPropertyValue(INTERVENTIONS_PAGE_SIZE).trim();
+                    if (!pageSize.trim().isEmpty()) {
+                        url += (url.contains("?") ? "&" : "?") + "page_size=" + pageSize;
+                    }
+                    else {
+                        System.err.println("WARN - SHA Interventions page size is not configured. Using default page size.");
+                    }
+
                     HttpGet getRequest = new HttpGet(url);
                     getRequest.setHeader("Authorization", "Bearer " + bearerToken);
                     response = httpClient.execute(getRequest);
