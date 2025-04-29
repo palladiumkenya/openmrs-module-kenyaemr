@@ -196,6 +196,215 @@ public class SpecialClinicsCohortLibrary {
         return cd;
     }
 
+    public CohortDefinition paymentType(String paymentType, String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "SELECT v.patient_id, " +
+                "m.name AS paymentType " +
+                "FROM kenyaemr_etl.etl_special_clinics v " +
+                "LEFT JOIN openmrs.cashier_bill t " +
+                "    ON v.patient_id = t.patient_id " +
+                "LEFT JOIN openmrs.cashier_bill_payment tp " +
+                "    ON t.bill_id = tp.bill_id " +
+                "LEFT JOIN openmrs.cashier_payment_mode m " +
+                "    ON tp.payment_mode_id = m.payment_mode_id " +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) " +
+                "AND v.special_clinic_form_uuid = '" + specialClinic + "' " +
+                "AND m.name = '" + paymentType + "' " +
+                "GROUP BY v.patient_id;";
+        cd.setName("Payment Type");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Payment Type");
+        return cd;
+    }
+
+    public CohortDefinition amountPaid( String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = " SELECT v.patient_id, tp.amount AS amountPaid\n" +
+                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+                "LEFT JOIN openmrs.cashier_bill t\n" +
+                "    ON v.patient_id = t.patient_id\n" +
+                "LEFT JOIN openmrs.cashier_bill_payment tp\n" +
+                "    ON t.bill_id = tp.bill_id\n" +
+                "LEFT JOIN openmrs.cashier_payment_mode m\n" +
+                "    ON tp.payment_mode_id = m.payment_mode_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "  AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "GROUP BY v.patient_id;";
+
+        cd.setName("mount Paid");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("mount Paid");
+        return cd;
+    }
+    public  CohortDefinition procedureDone(Integer procedureType, String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "SELECT v.patient_id\n" +
+                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+                "INNER JOIN (\n" +
+                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
+                "    FROM orders ed\n" +
+                "    INNER JOIN concept_name cn ON cn.concept_id = ed.concept_id\n" +
+                "    WHERE cn.locale = 'en'\n" +
+                "    AND cn.concept_id =  '" + procedureType + "'\n" +
+                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ") con ON v.patient_id = con.patient_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "  AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "GROUP BY v.patient_id;";
+        cd.setName("Procedure Done");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Procedure Done");
+        return cd;
+    }
+
+
+    public  CohortDefinition procedureOtherDone(Integer crepeBandages,Integer armsling, String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+                String sqlQuery = "SELECT v.patient_id\n" +
+                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+                "INNER JOIN (\n" +
+                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
+                "    FROM orders ed\n" +
+                "    INNER JOIN concept_name cn ON cn.concept_id = ed.concept_id\n" +
+                "    WHERE cn.locale = 'en'\n" +
+                "    AND cn.concept_id NOT IN ('" + crepeBandages + "','" + armsling + "')\n" +
+                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ") con ON v.patient_id = con.patient_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "  AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "GROUP BY v.patient_id;";
+        cd.setName("Other Procedure Done");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Other Procedure Done");
+        return cd;
+    }
+
+    public CohortDefinition facilityFrom (String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_special_clinics v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "AND v.referred_from IN (159928, 164407, 1000478, 1000479, 1000498, 1175)\n" +
+                "GROUP BY v.patient_id;";
+//        String sqlQuery = "select v.patient_id,\n" +
+//                "(case v.referred_to when 159928 then 'School' when 164407 then 'Other health facility'  when 1000478 then 'CHU' when 1000479 then 'CHU' when 1000498 then 'Within' when 1175 then 'Not Applicable(N/A)'  when 160542 then 'Community unit(CU)' when 163266 then 'This health facility' else '' end) as referred_to\n" +
+//                "from kenyaemr_etl.etl_special_clinics v\n" +
+//                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
+//                "GROUP BY v.patient_id;";
+        cd.setName("Facility From");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Facility From");
+        return cd;
+    }
+
+    public CohortDefinition facilityTo (String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_special_clinics v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "AND v.referred_to IN (159928, 164407, 1000478, 1000479, 1000498, 1175)\n" +
+                "GROUP BY v.patient_id;";
+//        String sqlQuery = "select v.patient_id\n" +
+//             "from kenyaemr_etl.etl_special_clinics v\n" +
+//                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
+//                " AND (CASE v.referred_to " +
+//                "WHEN 159928 THEN 'School' " +
+//                "WHEN 164407 THEN 'Other health facility' " +
+//                "WHEN 1000478 THEN 'CHU' " +
+//                "WHEN 1000479 THEN 'CHU' " +
+//                "WHEN 1000498 THEN 'Within' " +
+//                "WHEN 1175 THEN 'Not Applicable(N/A)' " +
+//                "ELSE '' END) IS NOT NULL\n" +
+//                "GROUP BY v.patient_id;";
+        cd.setName("Facility To");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Facility To");
+        return cd;
+    }
+
+    public CohortDefinition closedReduction (String reduction ,String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+//        String sqlQuery = "SELECT v.patient_id\n" +
+//                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+//                "INNER JOIN (\n" +
+//                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
+//                "    FROM encounter_diagnosis ed\n" +
+//                "    INNER JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded\n" +
+//                "    WHERE cn.locale = 'en'\n" +
+//                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+//                ") con ON v.patient_id = con.patient_id\n" +
+//                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+//                " AND v.special_clinic_form_uuid = '" + specialClinic + "'\n"+
+//                "AND con.name LIKE '%'" + reduction + "'%'\n" +
+//                "GROUP BY v.patient_id;";
+        String sqlQuery = "SELECT v.patient_id\n" +
+                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+                "INNER JOIN (\n" +
+                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
+                "    FROM encounter_diagnosis ed\n" +
+                "    INNER JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded\n" +
+                "    WHERE cn.locale = 'en'\n" +
+                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ") con ON v.patient_id = con.patient_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                " AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
+                "AND con.name LIKE '%" + reduction + "%'\n" +
+                "GROUP BY v.patient_id;";
+        cd.setName("closed Reduction");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("closed Reduction");
+        return cd;
+    }
+
+    public CohortDefinition fractureAndDislocation(String specialClinic) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "SELECT v.patient_id \n" +
+                "FROM kenyaemr_etl.etl_special_clinics v\n" +
+                "INNER JOIN (\n" +
+                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
+                "    FROM encounter_diagnosis ed\n" +
+                "    INNER JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded\n" +
+                "    WHERE cn.locale = 'en'\n" +
+                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ") con ON v.patient_id = con.patient_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                " AND v.special_clinic_form_uuid = '" + specialClinic + "'\n"+
+                "AND (con.name LIKE '%Fracture%' OR con.name LIKE '%Dislocation%')\n" +
+                "GROUP BY v.patient_id;";
+        cd.setName("Fracture and Dislocation");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Fracture and Dislocation");
+        return cd;
+    }
+
+    public CohortDefinition totalAmountPaid(String paymentType, String specialClinic) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("paymentType", ReportUtils.map(paymentType(paymentType, specialClinic), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("amountPaid", ReportUtils.map(amountPaid(specialClinic), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("paymentType AND amountPaid");
+        return cd;
+    }
 
     public CohortDefinition totalNoOfOtInterventions(int newVisit, int reVisit,  String interventionType, String specialClinic) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();

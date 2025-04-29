@@ -8,6 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.reporting.library.specialClinics;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
@@ -63,5 +64,35 @@ public class SpecialClinicsIndicatorLibrary {
 	public  CohortIndicator totalNumberOfATsNewAndRevisitDispensed(String intervention, String referredIn, String referredOut, int newVisit, int reVisit, String specialClinic) {
 		return cohortIndicator("No. total of new and Revisit Dispensed", ReportUtils.map(specialClinicsCohortLibrary.totalNumberOfATsNewAndRevisitDispensed(intervention,referredIn,referredOut,newVisit,reVisit,specialClinic), "startDate=${startDate},endDate=${endDate}"));
 	}
+
+	public CohortIndicator paymentType(String paymentType, String specialClinic) {
+		return cohortIndicator("Payment Type", ReportUtils.map(specialClinicsCohortLibrary.paymentType(paymentType,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator totalAmountPaid(String specialClinic, String paymentType) {
+		return cohortIndicator("Total Amount Paid", ReportUtils.map(specialClinicsCohortLibrary.totalAmountPaid(specialClinic,paymentType), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator procedureDone(Integer procedureType, String specialClinic) {
+		return cohortIndicator("Procedure done", ReportUtils.map(specialClinicsCohortLibrary.procedureDone(procedureType,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator procedureOtherDone(Integer crepeBandages,Integer armsling, String specialClinic) {
+		return cohortIndicator("Other Procedure done", ReportUtils.map(specialClinicsCohortLibrary.procedureOtherDone(crepeBandages,armsling,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator referredTo( String specialClinic) {
+		return cohortIndicator("Referred To", ReportUtils.map(specialClinicsCohortLibrary.facilityTo(specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator referredFrom( String specialClinic) {
+		return cohortIndicator("Referred From", ReportUtils.map(specialClinicsCohortLibrary.facilityFrom(specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator closedReduction(String reduction, String specialClinic) {
+		return cohortIndicator("Closed Reduction", ReportUtils.map(specialClinicsCohortLibrary.closedReduction(reduction,specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator fractureAndDislocation(String specialClinic) {
+		return cohortIndicator("Fracture and Dislocation", ReportUtils.map(specialClinicsCohortLibrary.fractureAndDislocation(specialClinic), "startDate=${startDate},endDate=${endDate}"));
+	}
+
 
 }
