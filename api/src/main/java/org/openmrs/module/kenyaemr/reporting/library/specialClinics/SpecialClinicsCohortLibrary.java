@@ -234,11 +234,11 @@ public class SpecialClinicsCohortLibrary {
                 "  AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
                 "GROUP BY v.patient_id;";
 
-        cd.setName("mount Paid");
+        cd.setName("Amount Paid");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("mount Paid");
+        cd.setDescription("Amount Paid");
         return cd;
     }
     public  CohortDefinition procedureDone(Integer procedureType, String specialClinic) {
@@ -295,11 +295,6 @@ public class SpecialClinicsCohortLibrary {
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
                 "AND v.referred_from IN (159928, 164407, 1000478, 1000479, 1000498, 1175)\n" +
                 "GROUP BY v.patient_id;";
-//        String sqlQuery = "select v.patient_id,\n" +
-//                "(case v.referred_to when 159928 then 'School' when 164407 then 'Other health facility'  when 1000478 then 'CHU' when 1000479 then 'CHU' when 1000498 then 'Within' when 1175 then 'Not Applicable(N/A)'  when 160542 then 'Community unit(CU)' when 163266 then 'This health facility' else '' end) as referred_to\n" +
-//                "from kenyaemr_etl.etl_special_clinics v\n" +
-//                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
-//                "GROUP BY v.patient_id;";
         cd.setName("Facility From");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -315,18 +310,6 @@ public class SpecialClinicsCohortLibrary {
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
                 "AND v.referred_to IN (159928, 164407, 1000478, 1000479, 1000498, 1175)\n" +
                 "GROUP BY v.patient_id;";
-//        String sqlQuery = "select v.patient_id\n" +
-//             "from kenyaemr_etl.etl_special_clinics v\n" +
-//                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "'\n" +
-//                " AND (CASE v.referred_to " +
-//                "WHEN 159928 THEN 'School' " +
-//                "WHEN 164407 THEN 'Other health facility' " +
-//                "WHEN 1000478 THEN 'CHU' " +
-//                "WHEN 1000479 THEN 'CHU' " +
-//                "WHEN 1000498 THEN 'Within' " +
-//                "WHEN 1175 THEN 'Not Applicable(N/A)' " +
-//                "ELSE '' END) IS NOT NULL\n" +
-//                "GROUP BY v.patient_id;";
         cd.setName("Facility To");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -338,19 +321,6 @@ public class SpecialClinicsCohortLibrary {
     public CohortDefinition closedReduction (String reduction ,String specialClinic) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
 
-//        String sqlQuery = "SELECT v.patient_id\n" +
-//                "FROM kenyaemr_etl.etl_special_clinics v\n" +
-//                "INNER JOIN (\n" +
-//                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
-//                "    FROM encounter_diagnosis ed\n" +
-//                "    INNER JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded\n" +
-//                "    WHERE cn.locale = 'en'\n" +
-//                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-//                ") con ON v.patient_id = con.patient_id\n" +
-//                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-//                " AND v.special_clinic_form_uuid = '" + specialClinic + "'\n"+
-//                "AND con.name LIKE '%'" + reduction + "'%'\n" +
-//                "GROUP BY v.patient_id;";
         String sqlQuery = "SELECT v.patient_id\n" +
                 "FROM kenyaemr_etl.etl_special_clinics v\n" +
                 "INNER JOIN (\n" +
