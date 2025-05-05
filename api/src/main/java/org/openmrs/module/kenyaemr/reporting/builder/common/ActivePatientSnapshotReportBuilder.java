@@ -24,13 +24,13 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.PatientsWithAdvancedH
 import org.openmrs.module.kenyaemr.calculation.library.hiv.art.DateOfEnrollmentArtCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.DateArtStartDateConverter;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.IPTOutcomeDataConverter;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.SimpleResultDateConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.ActivePatientsSnapshotCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.ActiveInProgramConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.BooleanResultsConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.TBScreeningConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ActivePatientsPopulationTypeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.MFLCodeDataDefinition;
@@ -185,11 +185,10 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         ARTCacxScreeningDateDataDefinition cacxScreeningDateDataDefinition = new ARTCacxScreeningDateDataDefinition();
         cacxScreeningDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         cacxScreeningDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        CPIMSUniqueIdentifierDataDefinition cpimsDataDefinition = new CPIMSUniqueIdentifierDataDefinition();
-        cpimsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cpimsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         CPIMSNumberForActiveInOVCDataDefinition cpimsOvcDataDefinition = new CPIMSNumberForActiveInOVCDataDefinition();
         cpimsOvcDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        PatientIdentifierType cpims = MetadataUtils.existing(PatientIdentifierType.class, OVCMetadata._PatientIdentifierType.CPIMS_NUMBER);
+        DataDefinition cpimsIdentifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(cpims.getName(), cpims), identifierFormatter);
         DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), formatter);
         dsd.addColumn("MFL Code", new MFLCodeDataDefinition(), "");
@@ -197,7 +196,7 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("CCC No", identifierDef, "");
         dsd.addColumn("NUPI", nupiDef, "");
-        dsd.addColumn("CPIMS No", cpimsDataDefinition, "");
+        dsd.addColumn("CPIMS No", cpimsIdentifierDef, "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
         dsd.addColumn("DOB", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Age at reporting", ageAtReportingDataDefinition, "endDate=${endDate}");
