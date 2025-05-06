@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionalStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionalSamMamDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsNutritionalStatusDataDefinition.class, order=50)
-public class SpecialClinicsNutritionalStatusDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsNutritionalSamMamDataDefinition.class, order=50)
+public class SpecialClinicsNutritionalSamMamDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,11 +36,11 @@ public class SpecialClinicsNutritionalStatusDataEvaluator implements EncounterDa
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNutritionalStatusDataDefinition cohortDefinition = (SpecialClinicsNutritionalStatusDataDefinition) definition;
+        SpecialClinicsNutritionalSamMamDataDefinition cohortDefinition = (SpecialClinicsNutritionalSamMamDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.nutritional_details  when 5544 then 'Gaining Weight' when 832 then 'Losing Weight' when 128378 then 'Static Weight' when 159791 then 'Cured' when 1692 then 'Discharged' when 163484 then 'Refused Nutrition Support' else '' end) as nutritional_details\n" +
+                "(case v.nutritional_status  when 1687 then '1st Time Diagnosis' when 160033 then 'Relapse' when 1655 then 'Re-admission' else '' end) as nutritional_status\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 

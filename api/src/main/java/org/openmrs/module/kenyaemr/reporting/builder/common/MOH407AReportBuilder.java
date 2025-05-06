@@ -24,6 +24,9 @@ import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculati
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.specialClinics.SpecialClinicsRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PatientDisabilityTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastCD4DateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastCD4ResultDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLNextAppointmentDateDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDBMIDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDHeightDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDWeightDataDefinition;
@@ -190,6 +193,25 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		specialClinicsVisitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		specialClinicsVisitTypeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
+		SpecialClinicsPatientPregnantDataDefinition patientPregnantDataDefinition = new SpecialClinicsPatientPregnantDataDefinition();
+		patientPregnantDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		patientPregnantDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		patientPregnantDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsFirst0_6MonthsDataDefinition first0_6MonthsDataDefinition = new SpecialClinicsFirst0_6MonthsDataDefinition();
+		first0_6MonthsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		first0_6MonthsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		first0_6MonthsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsSecond6_12MonthsDataDefinition second6_12MonthsDataDefinition = new SpecialClinicsSecond6_12MonthsDataDefinition();
+		second6_12MonthsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		second6_12MonthsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		second6_12MonthsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsNutritionalSamMamDataDefinition nutritionalSamMamDataDefinition = new SpecialClinicsNutritionalSamMamDataDefinition();
+		nutritionalSamMamDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		nutritionalSamMamDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		nutritionalSamMamDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
 		OPDHeightDataDefinition opdHeightDataDefinition = new OPDHeightDataDefinition();
 		opdHeightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -200,7 +222,12 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		OPDBMIDataDefinition opdBMIDataDefinition = new OPDBMIDataDefinition();
 		opdBMIDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdBMIDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
+		ETLLastCD4ResultDataDefinition lastCD4ResultDataDefinition = new ETLLastCD4ResultDataDefinition();
+		lastCD4ResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		ETLLastCD4DateDataDefinition etlLastCD4DateDataDefinition = new ETLLastCD4DateDataDefinition();
+		etlLastCD4DateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		ETLNextAppointmentDateDataDefinition nextAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+		nextAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		PatientDisabilityTypeDataDefinition patientDisabilityTypeDataDefinition = new PatientDisabilityTypeDataDefinition();
 		patientDisabilityTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		patientDisabilityTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -222,11 +249,17 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Weight", opdWeightDataDefinition, paramMapping);
 		dsd.addColumn("Height", opdHeightDataDefinition, paramMapping);
 		dsd.addColumn("BMI", opdBMIDataDefinition, paramMapping);
+		dsd.addColumn("Lactating", patientPregnantDataDefinition, paramMapping);
 		dsd.addColumn("Visit Type", specialClinicsVisitTypeDataDefinition, paramMapping);
 		dsd.addColumn("Sero Status", seroStatusDataDefinition, paramMapping);
 		dsd.addColumn("Coexisting Medical Condition", coexialMedicalConditionDataDefinition, paramMapping);
 		dsd.addColumn("Nutrition Intervention", nutritionInterventionDataDefinition, paramMapping);
 		dsd.addColumn("Edema", edemaDataDefinition, paramMapping);
+		dsd.addColumn("First 0-6 months", first0_6MonthsDataDefinition, paramMapping);
+		dsd.addColumn("Second 6-12 months", second6_12MonthsDataDefinition, paramMapping);
+		dsd.addColumn("SAM/MAM Patients", nutritionalSamMamDataDefinition, paramMapping);
+		dsd.addColumn("Latest CD4 Count",  lastCD4ResultDataDefinition, "endDate=${endDate}");
+		dsd.addColumn("Latest CD4 Count Date",etlLastCD4DateDataDefinition,"endDate=${endDate}");
 		dsd.addColumn("Nutritional Status", nutritionalStatusDataDefinition, paramMapping);
 		dsd.addColumn("Patient on ARVs", patientOnARVsDataDefinition, paramMapping);
 		dsd.addColumn("Postnatal Feeding", postnatalFeedingDataDefinition, paramMapping);
@@ -240,6 +273,7 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Type of Admission", typeOfAdmissionDataDefinition, paramMapping);
 		dsd.addColumn("Cadre", cadreDataDefinition, paramMapping);
 		dsd.addColumn("Referral Status", referralStatusDataDefinition, paramMapping);
+		dsd.addColumn("Next Appointment Date", nextAppointmentDateDataDefinition, "endDate=${endDate}", new DateConverter(DATE_FORMAT));
 
 
 		SpecialClinicsRegisterCohortDefinition cd = new SpecialClinicsRegisterCohortDefinition();
