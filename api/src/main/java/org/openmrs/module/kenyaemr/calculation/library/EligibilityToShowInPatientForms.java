@@ -48,12 +48,15 @@ public class EligibilityToShowInPatientForms extends AbstractPatientCalculation 
         for (Integer ptId : cohort) {
             Patient patient = patientService.getPatient(ptId);
             List<Visit> activeVisits =visitService.getActiveVisitsByPatient(patient);
-            Visit visit = activeVisits.get(0);
-            boolean eligible = false;
-            if (alive.contains(ptId) && visit != null && visit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT)) {
-                eligible = true;
+            if(!activeVisits.isEmpty()) {
+                Visit visit = activeVisits.get(0);
+                boolean eligible = false;
+                if (alive.contains(ptId) && visit != null && visit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT)) {
+                    eligible = true;
+                }
+                ret.put(ptId, new BooleanResult(eligible, this));
             }
-            ret.put(ptId, new BooleanResult(eligible, this));
+           
         }
         return ret;
     }

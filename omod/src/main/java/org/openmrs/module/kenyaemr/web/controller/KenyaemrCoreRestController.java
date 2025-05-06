@@ -126,6 +126,8 @@ import org.openmrs.module.kenyaemrorderentry.util.Utils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
+import org.openmrs.parameter.VisitSearchCriteria;
+import org.openmrs.parameter.VisitSearchCriteriaBuilder;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.util.OpenmrsUtil;
@@ -160,6 +162,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -252,12 +257,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/forms") // gets all visit forms for a patient
 	@ResponseBody
 	public Object getAllAvailableFormsForVisit(HttpServletRequest request,
-											   @RequestParam("patientUuid") String patientUuid) {
+											   @RequestParam("patientUuid") String patientUuid, 
+                                               @RequestParam(value = "visitStartDate", required = false) String visitStartDate, 
+                                               @RequestParam(value = "visitEndDate",required = false) String visitEndDate) {
 		if (StringUtils.isBlank(patientUuid)) {
 			return new ResponseEntity<Object>("You must specify patientUuid in the request!",
 				new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
-
 		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
 
 		if (patient == null) {
@@ -311,6 +317,42 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				}
 			}
 		}
+
+
+        // Show available forms for retrospective data entry
+        if(patient != null && !StringUtils.isBlank(visitEndDate) && !StringUtils.isBlank(visitStartDate) && activeVisits.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime endDateTime = LocalDateTime.parse(visitEndDate, formatter);
+            LocalDateTime startDateTime = LocalDateTime.parse(visitStartDate, formatter);
+            Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            Date starDate = Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            VisitSearchCriteria visitSearchCriteria = new VisitSearchCriteriaBuilder()
+				.patient(patient)
+				.minStartDatetime(starDate)
+				.maxEndDatetime(endDate)
+				.includeVoided(false)
+				.includeInactive(true)
+				.build();
+			
+			List<Visit> retroVisits = Context.getVisitService().getVisits(visitSearchCriteria);
+            if (!retroVisits.isEmpty()) {
+                Visit patientVisit = retroVisits.get(0);    
+                FormManager formManager = CoreContext.getInstance().getManager(FormManager.class);
+                List<FormDescriptor> uncompletedFormDescriptors = formManager.getAllUncompletedFormsForVisit(patientVisit);
+    
+                if (!uncompletedFormDescriptors.isEmpty()) {
+    
+                    for (FormDescriptor descriptor : uncompletedFormDescriptors) {
+                        if (!descriptor.getTarget().getRetired()) {
+                            ObjectNode retroFormObj = generateFormDescriptorPayload(descriptor);
+                            retroFormObj.put("formCategory", "available");
+                            formList.add(retroFormObj);
+                        }
+                    }
+                }  
+            } 
+
+        }
 
 		allFormsObj.put("results", formList);
 
