@@ -610,8 +610,15 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@ResponseBody
 	public ResponseEntity<String> getShaInterventions(
 		@RequestParam(value = "synchronize", defaultValue = "false") boolean isSynchronize) {
-		SHAInterventionsHandler shaInterventionsHandler = new SHAInterventionsHandler();
-		return fetchData(shaInterventionsHandler, isSynchronize);
+		try {
+			SHAInterventionsHandler shaInterventionsHandler = new SHAInterventionsHandler();
+			return fetchData(shaInterventionsHandler, isSynchronize);
+		}catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(
+					"Unable to load interventions from upstream" + e);
+			}
+			
 	}
 
 	private ResponseEntity<String> fetchData(DataHandler handler, boolean isSynchronize) {
