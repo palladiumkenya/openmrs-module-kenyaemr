@@ -1108,7 +1108,8 @@
 			</set>
 		</property>
 		<property name="template" value="kenyaemr:dmi/idsr.xls" />
-		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:dysentery | sheet:4,row:6,dataset:cholera  | sheet:5,row:6,dataset:ili | sheet:6,row:7,dataset:sari  | sheet:7,row:6,dataset:riftvalleyFever | sheet:8,row:6,dataset:malaria | sheet:9,row:6,dataset:chikungunya | sheet:10,row:6,dataset:poliomyelitis | sheet:11,row:6,dataset:viralHaemorrhagicFever | sheet:12,row:6,dataset:measles" />
+		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:ili | sheet:4,row:6,dataset:sari | sheet:5,row:6,dataset:poliomyelitis | sheet:6,row:6,dataset:viralHaemorrhagicFever | sheet:7,row:6,dataset:jaundice
+		| sheet:8,row:6,dataset:neurological | sheet:9,row:6,dataset:febrileIllness | sheet:10,row:6,dataset:febrileRash | sheet:11,row:6,dataset:meningitis | sheet:12,row:6,dataset:wateryDiarrhoea " />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh204A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="9902f845-8079-484f-8060-e3cf4f5d0f6f" />
