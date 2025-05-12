@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.kenyaemr.calculation.library.surveillance;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -123,6 +132,9 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 					Concept refusalToFeedResult = cs.getConceptByUuid(REFUSAL_TO_FEED);
 					Concept convulsionsResult = cs.getConceptByUuid(CONVULSIONS);
 					Concept neckStiffnessResult = cs.getConceptByUuid(NECK_STIFFNESS);
+					Concept lymphadenopathyResult = cs.getConceptByUuid(LYMPHADENOPATHY);
+					Concept myalgiaResult = cs.getConceptByUuid(MYALGIA);
+					Concept backpainResult = cs.getConceptByUuid(BACKPAIN);
 					String ili = "Influenza Like Illness";
 					String sari = "Severe Acute Respiratory Infection";
 					String haemorrhagic_fever = "Acute Haemorrhagic Fever";
@@ -133,6 +145,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 					String acute_watery_diarrhoeal = "Acute Watery Diarrhoea";
 					String neurological_syndrome = "Neurological Syndrome";
 					String acute_febrile_illness = "Acute Febrile Illness";
+					String mpox = "Mpox";
 					CalculationResultMap tempMap = Calculations.lastObs(cs.getConceptByUuid(TEMPERATURE), cohort, context);
 					boolean triageEncounterHasFever = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, measureFeverResult) : false;
 					boolean hivFollowupEncounterHasFever = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, measureFeverResult) : false;
@@ -174,6 +187,27 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 					boolean hivFollowupEncounterHasWeakLimbs = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, limbsWeaknessResult) : false;
 					boolean clinicalEncounterHasWeakLimbs = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, limbsWeaknessResult) : false;
 					boolean patientAdmissionStatus = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, adminQuestion, admissionAnswer) : false;
+					//Rash
+					boolean triageEncounterHasRash = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, rashResult) : false;
+					boolean hivFollowupEncounterHasRash = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, rashResult) : false;
+					boolean clinicalEncounterHasRash = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, rashResult) : false;
+					//Headache
+					boolean triageEncounterHasHeadache = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, headacheResult) : false;
+					boolean hivFollowupEncounterHasHeadache = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, headacheResult) : false;
+					boolean clinicalEncounterHasHeadache = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, headacheResult) : false;
+
+					//lymphadenopathy
+					boolean triageEncounterHasLymphadenopathy = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					boolean hivFollowupEncounterHasLymphadenopathy = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					boolean clinicalEncounterHasLymphadenopathy = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, lymphadenopathyResult) : false;
+					//myalgia
+					boolean triageEncounterHasMyalgia = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, myalgiaResult) : false;
+					boolean hivFollowupEncounterHasMyalgia = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, myalgiaResult) : false;
+					boolean clinicalEncounterHasMyalgia = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, myalgiaResult) : false;
+					//backpain
+					boolean triageEncounterHasBackpain = lastTriageEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastTriageEncounter, screeningQuestion, backpainResult) : false;
+					boolean hivFollowupEncounterHasBackpain = lastHivFollowUpEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastHivFollowUpEncounter, screeningQuestion, backpainResult) : false;
+					boolean clinicalEncounterHasBackpain = lastClinicalEncounter != null ? EmrUtils.encounterThatPassCodedAnswer(lastClinicalEncounter, screeningQuestion, backpainResult) : false;
 
 					Visit currentVisit = activeVisits.get(0);
 					Obs lastTempObs = EmrCalculationUtils.obsResultForPatient(tempMap, ptId);
@@ -374,6 +408,24 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 								}
 							}
 						}
+						//10. Monkeypox
+						if (triageEncounterHasRash && triageEncounterHasFever) {
+							if (triageEncounterHasHeadache || triageEncounterHasLymphadenopathy || triageEncounterHasMyalgia || triageEncounterHasBackpain)
+								for (Obs obs : lastTriageEncounter.getObs()) {
+									dateCreated = obs.getDateCreated();
+									if (dateCreated != null) {
+										String createdDate = dateFormat.format(dateCreated);
+										if (tempValue != null && tempValue >= 38.5) {
+											if (createdDate.equals(todayDate)) {
+												eligible = true;
+												idsrMessage.add(mpox);
+												break;
+											}
+										}
+									}
+								}
+
+						}
 					}
 					//Hiv followup encounter
 					if (lastHivFollowUpEncounter != null) {
@@ -569,6 +621,24 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 								}
 							}
 						}
+						//10. Mpox
+						if (hivFollowupEncounterHasRash && hivFollowupEncounterHasFever) {
+							if (hivFollowupEncounterHasHeadache || hivFollowupEncounterHasLymphadenopathy || hivFollowupEncounterHasMyalgia || hivFollowupEncounterHasBackpain) {
+								for (Obs obs : lastHivFollowUpEncounter.getObs()) {
+									dateCreated = obs.getDateCreated();
+									if (dateCreated != null) {
+										String createdDate = dateFormat.format(dateCreated);
+										if (tempValue != null && tempValue >= 38.5) {
+											if (createdDate.equals(todayDate)) {
+												eligible = true;
+												idsrMessage.add(mpox);
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 					//Clinical Encounter
 					if (lastClinicalEncounter != null) {
@@ -757,6 +827,24 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 											if (createdDate.equals(todayDate)) {
 												eligible = true;
 												idsrMessage.add(acute_watery_diarrhoeal);
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+						//10. Mpox
+						if (clinicalEncounterHasRash && clinicalEncounterHasFever) {
+							if (clinicalEncounterHasHeadache || clinicalEncounterHasLymphadenopathy || clinicalEncounterHasMyalgia || clinicalEncounterHasBackpain) {
+								for (Obs obs : lastClinicalEncounter.getObs()) {
+									dateCreated = obs.getDateCreated();
+									if (dateCreated != null) {
+										String createdDate = dateFormat.format(dateCreated);
+										if (tempValue != null && tempValue >= 38.5) {
+											if (createdDate.equals(todayDate)) {
+												eligible = true;
+												idsrMessage.add(mpox);
 												break;
 											}
 										}
