@@ -15,10 +15,10 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Malaria cohort definition
+ * Watery Diarrhoea cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.MalariaCohortDefinition")
-public class MalariaCohortDefinition extends BaseCohortDefinition {
+@Localized("reporting.WateryDiarrhoeaCohortDefinition")
+public class WateryDiarrhoeaCohortDefinition extends BaseCohortDefinition {
 	
 }

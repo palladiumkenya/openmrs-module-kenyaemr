@@ -15,10 +15,10 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Dysentery cohort definition
+ * mpox cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.DysenteryCohortDefinition")
-public class DysenteryCohortDefinition extends BaseCohortDefinition {
+@Localized("reporting.MpoxCohortDefinition")
+public class MpoxCohortDefinition extends BaseCohortDefinition {
 	
 }

@@ -73,16 +73,16 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(iliDataSetDefinitionColumns(),
                         "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
                         sariDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(dysenteryDataSetDefinitionColumns(),
-                        "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
-                        choleraDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(riftValleyFeverDataSetDefinitionColumns(),
-                        "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
-                        malariaDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(chikungunyaDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(poliomyelitisDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(flaccidParalysisDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(viralHaemorrhagicFeverDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(measlesDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"));
+                ReportUtils.map(mPoxDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(jaundiceDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(febrileIllnessDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(febrileRashDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(meningitisDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(neurologicalSyndromeDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(wateryDiarrhoeaDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}")
+                );
     }
 
     protected DataSetDefinition caseIdentificationClassificationIndicators() {
@@ -92,33 +92,41 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
-        cohortDsd.addColumn("Dysentery", "",
-                ReportUtils.map(idsrIndicatorLibrary.dysenteryCases(), indParams), "");
-        cohortDsd.addColumn("Cholera", "",
-                ReportUtils.map(idsrIndicatorLibrary.choleraCases(), indParams), "");
         cohortDsd.addColumn("ILI", "",
                 ReportUtils.map(idsrIndicatorLibrary.iliCases(), indParams), "");
         cohortDsd.addColumn("SARI", "",
                 ReportUtils.map(idsrIndicatorLibrary.sariCases(), indParams), "");
         cohortDsd.addColumn(
-                "Riftvalley Fever", "",
-                ReportUtils.map(idsrIndicatorLibrary.riftvalleyFeverCases(), indParams), "");
-        cohortDsd.addColumn(
-                "Malaria", "",
-                ReportUtils.map(idsrIndicatorLibrary.malariaCases(), indParams), "");
-        cohortDsd.addColumn("Chikungunya", "",
-                ReportUtils.map(idsrIndicatorLibrary.chikungunyaCases(), indParams), "");
-        cohortDsd.addColumn(
-                "Poliomyelitis", "",
+                "Acute Flaccid Paralysis", "",
                 ReportUtils.map(idsrIndicatorLibrary.poliomyelitisCases(), indParams), "");
         cohortDsd.addColumn(
-                "Viral Haemorrhagic Fever",
+                "Acute Haemorrhagic Fever",
                 "", ReportUtils.map(idsrIndicatorLibrary.viralHaemorrhagicFeverCases(), indParams), "");
         cohortDsd.addColumn(
-                "Measles",
-                "", ReportUtils.map(idsrIndicatorLibrary.measlesCases(), indParams), "");
+                "Monkey Pox",
+                "", ReportUtils.map(idsrIndicatorLibrary.monkeyPoxCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Acute Jaundice",
+                "", ReportUtils.map(idsrIndicatorLibrary.jaundiceCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Neurological Syndrome",
+                "", ReportUtils.map(idsrIndicatorLibrary.neurologicalSyndromeCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Acute Watery Diarrhoea",
+                "", ReportUtils.map(idsrIndicatorLibrary.acuteWateryDiarrhoeaCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Acute Febrile Rash Infections",
+                "", ReportUtils.map(idsrIndicatorLibrary.acuteFebrileRashCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Acute Febrile Illness",
+                "", ReportUtils.map(idsrIndicatorLibrary.acuteFebrileIllnessCases(), indParams), "");
+        cohortDsd.addColumn(
+                "Acute Meningitis and Encephalitis",
+                "", ReportUtils.map(idsrIndicatorLibrary.acuteMeningitisCases(), indParams), "");
 
         return cohortDsd;
+
+
     }
 
     protected DataSetDefinition idsrSuspectedCasesDataSetDefinitionColumns() {
@@ -179,123 +187,6 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         IDSRSuspectedCasesCohortDefinition cd = new IDSRSuspectedCasesCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        dsd.addRowFilter(cd, paramMapping);
-        return dsd;
-    }
-
-    protected DataSetDefinition dysenteryDataSetDefinitionColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("dysentery");
-        dsd.setDescription("Dysentery cases information");
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
-
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
-                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                upn.getName(), upn), identifierFormatter);
-        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                nupi.getName(), nupi), identifierFormatter);
-        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
-        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
-        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
-        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
-                new PreferredNameDataDefinition(), formatter);
-        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
-                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("id", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Name", nameDef, "");
-        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
-        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
-        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
-        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
-
-        DysenteryCohortDefinition cd = new DysenteryCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        dsd.addRowFilter(cd, paramMapping);
-        return dsd;
-    }
-
-    protected DataSetDefinition choleraDataSetDefinitionColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("cholera");
-        dsd.setDescription("Cholera");
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
-
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
-                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                upn.getName(), upn), identifierFormatter);
-        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                nupi.getName(), nupi), identifierFormatter);
-        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
-        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
-        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
-        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
-                new PreferredNameDataDefinition(), formatter);
-        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
-                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("id", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Name", nameDef, "");
-        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
-        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
-        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
-        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
-
-        CholeraCohortDefinition cd = new CholeraCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-
         dsd.addRowFilter(cd, paramMapping);
         return dsd;
     }
@@ -560,184 +451,11 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         return dsd;
     }
 
-    protected DataSetDefinition riftValleyFeverDataSetDefinitionColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("riftvalleyFever");
-        dsd.setDescription("Riftvalley Fever");
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
 
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
-                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                upn.getName(), upn), identifierFormatter);
-        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                nupi.getName(), nupi), identifierFormatter);
-        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
-        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
-        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
-        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
-                new PreferredNameDataDefinition(), formatter);
-        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
-                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("id", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Name", nameDef, "");
-        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
-        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
-        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
-        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
-
-        RiftValleyFeverCohortDefinition cd = new RiftValleyFeverCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        dsd.addRowFilter(cd, paramMapping);
-        return dsd;
-    }
-
-    protected DataSetDefinition malariaDataSetDefinitionColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("malaria");
-        dsd.setDescription("Malaria Information");
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
-
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
-                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                upn.getName(), upn), identifierFormatter);
-        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                nupi.getName(), nupi), identifierFormatter);
-        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
-        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
-        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
-        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
-                new PreferredNameDataDefinition(), formatter);
-        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
-                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("id", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Name", nameDef, "");
-        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
-        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
-        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
-        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
-
-        MalariaCohortDefinition cd = new MalariaCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        dsd.addRowFilter(cd, paramMapping);
-        return dsd;
-    }
-
-    protected DataSetDefinition chikungunyaDataSetDefinitionColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("chikungunya");
-        dsd.setDescription("Chikungunya");
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
-
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
-                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
-                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                upn.getName(), upn), identifierFormatter);
-        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
-                nupi.getName(), nupi), identifierFormatter);
-        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
-        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
-        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
-        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
-                new PreferredNameDataDefinition(), formatter);
-        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
-                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
-        dsd.addColumn("id", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Name", nameDef, "");
-        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
-        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
-        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
-        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
-        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
-        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
-        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
-
-        ChikungunyaCohortDefinition cd = new ChikungunyaCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-
-        dsd.addRowFilter(cd, paramMapping);
-        return dsd;
-    }
-
-    protected DataSetDefinition poliomyelitisDataSetDefinitionColumns() {
+    protected DataSetDefinition flaccidParalysisDataSetDefinitionColumns() {
         PatientDataSetDefinition dsd = new PatientDataSetDefinition();
         dsd.setName("poliomyelitis");
-        dsd.setDescription("Poliomyelitis");
+        dsd.setDescription("Acute Flaccid Paralysis");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         String paramMapping = "startDate=${startDate},endDate=${endDate}";
@@ -784,7 +502,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
         dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
 
-        PoliomyelitisCohortDefinition cd = new PoliomyelitisCohortDefinition();
+        FlaccidParalysisCohortDefinition cd = new FlaccidParalysisCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
@@ -795,7 +513,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
     protected DataSetDefinition viralHaemorrhagicFeverDataSetDefinitionColumns() {
         PatientDataSetDefinition dsd = new PatientDataSetDefinition();
         dsd.setName("viralHaemorrhagicFever");
-        dsd.setDescription("Viral Haemorrhagic Fever Information");
+        dsd.setDescription("Acute Haemorrhagic Fever");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         String paramMapping = "startDate=${startDate},endDate=${endDate}";
@@ -850,10 +568,10 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         return dsd;
     }
 
-    protected DataSetDefinition measlesDataSetDefinitionColumns() {
+    protected DataSetDefinition mPoxDataSetDefinitionColumns() {
         PatientDataSetDefinition dsd = new PatientDataSetDefinition();
-        dsd.setName("measles");
-        dsd.setDescription("Measles");
+        dsd.setName("mPox");
+        dsd.setDescription("Monkey Pox");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         String paramMapping = "startDate=${startDate},endDate=${endDate}";
@@ -900,11 +618,363 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
         dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
 
-        MeaslesCohortDefinition cd = new MeaslesCohortDefinition();
+        MpoxCohortDefinition cd = new MpoxCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         dsd.addRowFilter(cd, paramMapping);
         return dsd;
     }
+
+    protected DataSetDefinition jaundiceDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("jaundice");
+        dsd.setDescription("Acute Jaundice");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        JaundiceCohortDefinition cd = new JaundiceCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition febrileIllnessDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("febrileIllness");
+        dsd.setDescription("Acute Febrile Illness");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        FebrileIllnessCohortDefinition cd = new FebrileIllnessCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition febrileRashDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("febrileRash");
+        dsd.setDescription("Acute Febrile Rash Infections");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        FebrileRashCohortDefinition cd = new FebrileRashCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition meningitisDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("meningitis");
+        dsd.setDescription("Acute Meningitis and Encephalitis");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        MeningitisCohortDefinition cd = new MeningitisCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition neurologicalSyndromeDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("neurological");
+        dsd.setDescription("Neurological Syndrome");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        NeurologicalSyndromeCohortDefinition cd = new NeurologicalSyndromeCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+    protected DataSetDefinition wateryDiarrhoeaDataSetDefinitionColumns() {
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        dsd.setName("wateryDiarrhoea");
+        dsd.setDescription("Acute Watery Diarrhoea");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class,
+                HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class,
+                CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                upn.getName(), upn), identifierFormatter);
+        DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(
+                nupi.getName(), nupi), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ETLNextAppointmentDateDataDefinition lastAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        lastAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        VisitTypeWithComplaintsDataDefinition visitTypeDataDefinition = new VisitTypeWithComplaintsDataDefinition();
+        visitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        ComplaintAttendantProviderDataDefinition attendedByDataDefinition = new ComplaintAttendantProviderDataDefinition();
+        attendedByDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        attendedByDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        VisitDateWithComplaintsDataDefinition visitDateWithComplaintsDataDefinition = new VisitDateWithComplaintsDataDefinition();
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        visitDateWithComplaintsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name",
+                new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class,
+                CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        // dsd.addColumn("Hospital Unit", new MFLCodeDataDefinition(), "");
+        dsd.addColumn("Visit Type", visitTypeDataDefinition, paramMapping);
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age", ageAtReportingDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("Visit Date", visitDateWithComplaintsDataDefinition, paramMapping);
+        dsd.addColumn("Attended By", attendedByDataDefinition, paramMapping);
+        dsd.addColumn("Next Visit", lastAppointmentDateDataDefinition, paramMapping);
+
+        WateryDiarrhoeaCohortDefinition cd = new WateryDiarrhoeaCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+    }
+
+
+
+
 }

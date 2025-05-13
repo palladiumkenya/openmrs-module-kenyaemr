@@ -15,10 +15,10 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Measles cohort definition
+ * Poliomyelitis cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.MeaslesCohortDefinition")
-public class MeaslesCohortDefinition extends BaseCohortDefinition {
+@Localized("reporting.PoliomyelitisCohortDefinition")
+public class FlaccidParalysisCohortDefinition extends BaseCohortDefinition {
 	
 }

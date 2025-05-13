@@ -41,8 +41,6 @@
 				<ref bean="kenyaemr.common.form.oncologyScreening"/>
 				<ref bean="kenyaemr.hiv.form.genderBasedViolenceScreening"/>
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
-				<ref bean="kenyaemr.common.form.iliSurveillance"/>
-				<ref bean="kenyaemr.common.form.sariSurveillance"/>
 				<ref bean="kenyaemr.common.form.nutrition"/>
 				<ref bean="kenyaemr.common.form.familyPlanning"/>
 				<ref bean="kenyaemr.common.form.cardexNursing"/>
@@ -534,42 +532,7 @@
 		<property name="htmlform" value="kenyaemr:hts/hivSelfTesting.html" />
 		<property name="order" value="201095" />
 	</bean>
-	<!-- ILI Surveillance Form -->
-	<bean id="kenyaemr.common.form.iliSurveillance" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="05bcb369-5d50-4130-9a15-19c77a80314a" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.registration" />
-				<ref bean="kenyaemr.app.clinician" />
-				<ref bean="kenyaemr.app.chart" />
-				<ref bean="kenyaemr.app.hts" />
-				<ref bean="kenyaemr.app.prep" />
-			</set>
-		</property>
-		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.surveillance.EligibleForIliScreeningCalculation" />
-		<property name="icon" value="kenyaui:forms/generic.png" />
-		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
-		<property name="order" value="201097" />
-	</bean>
 
-	<!-- SARI Surveillance Form -->
-	<bean id="kenyaemr.common.form.sariSurveillance" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="be0f79d3-9e9a-414b-a1ca-6a2974110bc4" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.registration" />
-				<ref bean="kenyaemr.app.clinician" />
-				<ref bean="kenyaemr.app.chart" />
-				<ref bean="kenyaemr.app.hts" />
-				<ref bean="kenyaemr.app.prep" />
-			</set>
-		</property>
-		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.surveillance.EligibleForSariScreeningCalculation" />
-		<property name="icon" value="kenyaui:forms/generic.png" />
-		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
-		<property name="order" value="201099" />
-	</bean>
-	<!-- Family planning Form -->
 	<bean id="kenyaemr.common.form.familyPlanning" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="a52c57d4-110f-4879-82ae-907b0d90add6" />
 		<property name="apps">
@@ -1108,7 +1071,8 @@
 			</set>
 		</property>
 		<property name="template" value="kenyaemr:dmi/idsr.xls" />
-		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:dysentery | sheet:4,row:6,dataset:cholera  | sheet:5,row:6,dataset:ili | sheet:6,row:7,dataset:sari  | sheet:7,row:6,dataset:riftvalleyFever | sheet:8,row:6,dataset:malaria | sheet:9,row:6,dataset:chikungunya | sheet:10,row:6,dataset:poliomyelitis | sheet:11,row:6,dataset:viralHaemorrhagicFever | sheet:12,row:6,dataset:measles" />
+		<property name="repeatingSection" value="sheet:2,row:6,dataset:idsrSuspectedCases | sheet:3,row:6,dataset:ili | sheet:4,row:6,dataset:sari | sheet:5,row:6,dataset:poliomyelitis | sheet:6,row:6,dataset:viralHaemorrhagicFever | sheet:7,row:6,dataset:mPox | sheet:8,row:6,dataset:jaundice
+		| sheet:9,row:6,dataset:neurological | sheet:10,row:6,dataset:febrileIllness | sheet:11,row:6,dataset:febrileRash | sheet:12,row:6,dataset:meningitis | sheet:13,row:6,dataset:wateryDiarrhoea " />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh204A" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="9902f845-8079-484f-8060-e3cf4f5d0f6f" />

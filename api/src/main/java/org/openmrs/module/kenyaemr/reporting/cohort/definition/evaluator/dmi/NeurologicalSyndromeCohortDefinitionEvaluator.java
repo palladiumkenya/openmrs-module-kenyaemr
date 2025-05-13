@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.MeaslesCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.NeurologicalSyndromeCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for ILI Cohort
+ * Evaluator for Neurological Syndrome Cohort
  */
-@Handler(supports = { MeaslesCohortDefinition.class })
-public class MeaslesCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { NeurologicalSyndromeCohortDefinition.class })
+public class NeurologicalSyndromeCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,30 +41,28 @@ public class MeaslesCohortDefinitionEvaluator implements CohortDefinitionEvaluat
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		MeaslesCohortDefinition definition = (MeaslesCohortDefinition) cohortDefinition;
+		NeurologicalSyndromeCohortDefinition definition = (NeurologicalSyndromeCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
 		
 		Cohort newCohort = new Cohort();
-		
-		String qry = "select a.patient_id\n" +
-				"        from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint,\n" +
-				"                    CASE\n" +
-				"                         WHEN group_concat(concat_ws('|',c.complaint,c.complaint_duration))  LIKE '%140238%' THEN\n" +
-				"                             SUBSTRING_INDEX(SUBSTRING_INDEX(group_concat(concat_ws('|',c.complaint,c.complaint_duration)) , '|', -1), ',', 1)\n" +
-				"                         END AS fever_duration_from_days\n" +
-				"              from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-				"              where c.complaint in (140238,512,106,516,143264)\n" +
-				"                and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"              group by patient_id) a\n" +
-				"        where fever_duration_from_days > 2\n" +
-				"          and FIND_IN_SET(140238, a.complaint) > 0\n" +
-				"          and FIND_IN_SET(512, a.complaint) > 0\n" +
-				"          and FIND_IN_SET(106, a.complaint) > 0\n" +
-				"          and FIND_IN_SET(516, a.complaint) > 0\n" +
-				"          and FIND_IN_SET(143264, a.complaint) > 0";
-		
+
+		String qry = " SELECT a.patient_id\n" +
+				"FROM (\n" +
+				"    SELECT patient_id, c.visit_date, GROUP_CONCAT(c.complaint) AS complaint\n" +
+				"    FROM kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+				"    WHERE c.complaint IN (6017, 113054)\n" +
+				"      AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id\n" +
+				") a\n" +
+				"JOIN kenyaemr_etl.etl_patient_demographics d ON a.patient_id = d.patient_id\n" +
+				"JOIN kenyaemr_etl.etl_patient_triage t ON a.patient_id = t.patient_id\n" +
+				"    AND DATE(t.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"WHERE FIND_IN_SET(6017, a.complaint) > 0\n" +
+				"  AND FIND_IN_SET(113054, a.complaint) > 0\n" +
+				"  AND TIMESTAMPDIFF(DAY, d.DOB, a.visit_date) BETWEEN 2 AND 28;";
+
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
 		Date startDate = (Date) context.getParameterValue("startDate");

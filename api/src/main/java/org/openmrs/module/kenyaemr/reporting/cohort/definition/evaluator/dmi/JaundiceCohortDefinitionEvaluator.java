@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.CholeraCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.JaundiceCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for Cholera Cohort
+ * Evaluator for Jaundice Cohort
  */
-@Handler(supports = { CholeraCohortDefinition.class })
-public class CholeraCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { JaundiceCohortDefinition.class })
+public class JaundiceCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,26 +41,30 @@ public class CholeraCohortDefinitionEvaluator implements CohortDefinitionEvaluat
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		CholeraCohortDefinition definition = (CholeraCohortDefinition) cohortDefinition;
+		JaundiceCohortDefinition definition = (JaundiceCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
-		
 		Cohort newCohort = new Cohort();
-		
-		String qry = "select a.patient_id\n" +
-				"from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date,\n" +
-				"             c.complaint_duration\n" +
-				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-				"      where c.complaint in (161887,122983)\n" +
-				"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"      group by patient_id) a\n" +
-				"         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
-				"where timestampdiff(YEAR,date(d.DOB),coalesce(date(DATE_SUB(a.visit_date, INTERVAL a.complaint_duration DAY)),date(a.visit_date))) > 2 and FIND_IN_SET(122983, a.complaint) > 0\n" +
-				"  and FIND_IN_SET(161887, a.complaint) > 0;";
-		
+		String sqlQuery = "SELECT a.patient_id\n" +
+				"FROM (\n" +
+				"    SELECT patient_id, GROUP_CONCAT(c.general_examination) AS general_examination\n" +
+				"    FROM kenyaemr_etl.etl_clinical_encounter c\n" +
+				"    WHERE c.general_examination LIKE '%Jaundice%'\n" +
+				"      AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id\n" +
+				"    UNION ALL\n" +
+				"    SELECT patient_id, GROUP_CONCAT(h.general_examination) AS general_examination\n" +
+				"    FROM kenyaemr_etl.etl_patient_hiv_followup h\n" +
+				"    WHERE h.general_examination LIKE '%Jaundice%'\n" +
+				"      AND DATE(h.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id\n" +
+				") a\n" +
+				"WHERE a.general_examination IS NOT NULL\n" +
+				"  AND FIND_IN_SET('Jaundice', a.general_examination) > 0;";
+
 		SqlQueryBuilder builder = new SqlQueryBuilder();
-		builder.append(qry);
+		builder.append(sqlQuery);
 		Date startDate = (Date) context.getParameterValue("startDate");
 		Date endDate = (Date) context.getParameterValue("endDate");
 		builder.addParameter("startDate", startDate);

@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.PoliomyelitisCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.WateryDiarrhoeaCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for Poliomyelitis Cohort
+ * Evaluator for Watery Diarrhoea Cohort
  */
-@Handler(supports = { PoliomyelitisCohortDefinition.class })
-public class PoliomyelitisCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { WateryDiarrhoeaCohortDefinition.class })
+public class WateryDiarrhoeaCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,24 +41,29 @@ public class PoliomyelitisCohortDefinitionEvaluator implements CohortDefinitionE
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		PoliomyelitisCohortDefinition definition = (PoliomyelitisCohortDefinition) cohortDefinition;
+		WateryDiarrhoeaCohortDefinition definition = (WateryDiarrhoeaCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
 		
 		Cohort newCohort = new Cohort();
-		
-		String qry = "select a.patient_id\n" +
-				"from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint\n" +
-				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-				"      where c.complaint = 157498\n" +
-				"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"      group by patient_id) a\n" +
-				"         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id and\n" +
-				"                                                         timestampdiff(YEAR,d.DOB,a.visit_date) < 15\n" +
-				"         join kenyaemr_etl.etl_patient_triage t\n" +
-				"              on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"where FIND_IN_SET(157498, a.complaint) > 0;";
+
+		String qry = "SELECT a.patient_id\n" +
+				"FROM (\n" +
+				"    SELECT \n" +
+				"        patient_id, \n" +
+				"        c.visit_date,\n" +
+				"        GROUP_CONCAT(c.complaint) AS complaint, \n" +
+				"        DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) AS complaint_date,\n" +
+				"        c.complaint_duration\n" +
+				"    FROM \n" +
+				"        kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+				"    WHERE \n" +
+				"        c.complaint = 161887\n" +
+				"        AND c.complaint_duration < 14\n" +
+				"        AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id) a\n" +
+				"WHERE FIND_IN_SET(161887, a.complaint) > 0;;";
 		
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
