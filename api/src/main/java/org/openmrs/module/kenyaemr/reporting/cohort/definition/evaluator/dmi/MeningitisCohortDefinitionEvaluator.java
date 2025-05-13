@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.ChikungunyaCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.MeningitisCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for Chikungunya Cohort
+ * Evaluator for Meningitis Cohort
  */
-@Handler(supports = { ChikungunyaCohortDefinition.class })
-public class ChikungunyaCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { MeningitisCohortDefinition.class })
+public class MeningitisCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,33 +41,25 @@ public class ChikungunyaCohortDefinitionEvaluator implements CohortDefinitionEva
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		ChikungunyaCohortDefinition definition = (ChikungunyaCohortDefinition) cohortDefinition;
+		MeningitisCohortDefinition definition = (MeningitisCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
 		
 		Cohort newCohort = new Cohort();
-		
-		String qry = "select a.patient_id\n" +
-				"        from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint,\n" +
-				"        CASE\n" +
-				"                         WHEN group_concat(concat_ws('|',c.complaint,c.complaint_duration))  LIKE '%140238%' THEN\n" +
-				"                             SUBSTRING_INDEX(SUBSTRING_INDEX(group_concat(concat_ws('|',c.complaint,c.complaint_duration)) , '|', -1), ',', 1)\n" +
-				"                         END AS fever_duration_from_days\n" +
-				"              from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-				"              where c.complaint in (140238, 116558)\n" +
-				"                and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"              group by patient_id) a\n" +
-				"                 join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
-				"                 join kenyaemr_etl.etl_patient_triage t\n" +
-				"                      on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate) and\n" +
-				"                         t.temperature > 38.5 and date(a.visit_date) between date(:startDate) and date(:endDate)\n" +
-				"        where fever_duration_from_days > 2\n" +
-				"          and FIND_IN_SET(140238, a.complaint) > 0\n" +
-				"          and FIND_IN_SET(116558, a.complaint) > 0";
-		
+
+		String sqlQuery = "SELECT a.patient_id\n" +
+				"FROM (\n" +
+				"    SELECT patient_id, GROUP_CONCAT(c.complaint) AS complaint\n" +
+				"    FROM kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+				"    WHERE c.complaint IN (112721)\n" +
+				"      AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id\n" +
+				") a\n" +
+				"WHERE FIND_IN_SET(112721, a.complaint) > 0;";
+
 		SqlQueryBuilder builder = new SqlQueryBuilder();
-		builder.append(qry);
+		builder.append(sqlQuery);
 		Date startDate = (Date) context.getParameterValue("startDate");
 		Date endDate = (Date) context.getParameterValue("endDate");
 		builder.addParameter("startDate", startDate);

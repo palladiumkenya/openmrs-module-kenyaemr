@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.MalariaCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.FebrileRashCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for Malaria Cohort
+ * Evaluator for FebrileRash Cohort
  */
-@Handler(supports = { MalariaCohortDefinition.class })
-public class MalariaCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { FebrileRashCohortDefinition.class })
+public class FebrileRashCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,34 +41,33 @@ public class MalariaCohortDefinitionEvaluator implements CohortDefinitionEvaluat
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		MalariaCohortDefinition definition = (MalariaCohortDefinition) cohortDefinition;
+		FebrileRashCohortDefinition definition = (FebrileRashCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
 		
 		Cohort newCohort = new Cohort();
-		
-		String qry = "select a.patient_id\n" +
-                "from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint,\n" +
-                "             CASE\n" +
-                "                 WHEN group_concat(concat_ws('|',c.complaint,c.complaint_duration))  LIKE '%140238%' THEN\n" +
-                "                     SUBSTRING_INDEX(SUBSTRING_INDEX(group_concat(concat_ws('|',c.complaint,c.complaint_duration)) , '|', -1), ',', 1)\n" +
-                "                 END AS fever_duration_from_days\n" +
-                "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-                "      where c.complaint in (140238,139084,871)\n" +
-                "        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "      group by patient_id) a\n" +
-                "         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id\n" +
-                "         join kenyaemr_etl.etl_patient_triage t\n" +
-                "              on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate) and\n" +
-                "                 t.temperature > 37.5 and date(a.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "where FIND_IN_SET(140238, a.complaint) > 0\n" +
-                "  and FIND_IN_SET(139084, a.complaint) > 0\n" +
-                "  and FIND_IN_SET(871, a.complaint) > 0\n" +
-                "  and a.fever_duration_from_days > 1;";
-		
+		String sqlQuery = "SELECT a.patient_id\n" +
+				"FROM (\n" +
+				"    SELECT\n" +
+				"        patient_id,\n" +
+				"        c.visit_date,\n" +
+				"        GROUP_CONCAT(c.complaint) AS complaint,\n" +
+				"        DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) AS complaint_date,\n" +
+				"        c.complaint_duration\n" +
+				"    FROM\n" +
+				"        kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+				"    WHERE\n" +
+				"        c.complaint IN (140238, 512)\n" +
+				"        AND c.complaint_duration < 14\n" +
+				"        AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+				"    GROUP BY patient_id) a\n" +
+				"WHERE\n" +
+				"    FIND_IN_SET(140238, a.complaint) > 0\n" +
+				"    AND FIND_IN_SET(512, a.complaint) > 0;";
+
 		SqlQueryBuilder builder = new SqlQueryBuilder();
-		builder.append(qry);
+		builder.append(sqlQuery);
 		Date startDate = (Date) context.getParameterValue("startDate");
 		Date endDate = (Date) context.getParameterValue("endDate");
 		builder.addParameter("startDate", startDate);

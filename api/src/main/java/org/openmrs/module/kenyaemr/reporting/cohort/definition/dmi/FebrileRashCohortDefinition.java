@@ -15,10 +15,10 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Cholera cohort definition
+ * Febrile Rash cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
-public class CholeraCohortDefinition extends BaseCohortDefinition {
+@Localized("reporting.FebrileRashCohortDefinition")
+public class FebrileRashCohortDefinition extends BaseCohortDefinition {
 	
 }

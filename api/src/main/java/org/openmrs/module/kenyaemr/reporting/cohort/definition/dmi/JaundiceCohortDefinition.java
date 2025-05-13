@@ -15,10 +15,10 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Riftvalley fever cohort definition
+ * Jaundice cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.RiftValleyFeverCohortDefinition")
-public class RiftValleyFeverCohortDefinition extends BaseCohortDefinition {
+@Localized("reporting.JaundiceCohortDefinition")
+public class JaundiceCohortDefinition extends BaseCohortDefinition {
 	
 }

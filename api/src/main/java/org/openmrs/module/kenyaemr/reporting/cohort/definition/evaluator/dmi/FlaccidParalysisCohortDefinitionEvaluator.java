@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.SARICohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.dmi.FlaccidParalysisCohortDefinition;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Evaluator for SARI Cohort
+ * Evaluator for Flaccid Paralysis Cohort
  */
-@Handler(supports = { SARICohortDefinition.class })
-public class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+@Handler(supports = { FlaccidParalysisCohortDefinition.class })
+public class FlaccidParalysisCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
@@ -41,7 +41,7 @@ public class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator 
 	@Override
 	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
 
-		SARICohortDefinition definition = (SARICohortDefinition) cohortDefinition;
+		FlaccidParalysisCohortDefinition definition = (FlaccidParalysisCohortDefinition) cohortDefinition;
 		
 		if (definition == null)
 			return null;
@@ -49,19 +49,16 @@ public class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator 
 		Cohort newCohort = new Cohort();
 		
 		String qry = "select a.patient_id\n" +
-			"from (select patient_id, c.complaint as complaint, DATE_SUB(c.visit_date, INTERVAL c.complaint_duration DAY) as complaint_date, c.visit_date\n" +
-			"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-			"     where c.complaint = 143264\n" +
-			"       and c.complaint_duration < 10\n" +
-			"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"      group by patient_id) a\n" +
-			"             left join kenyaemr_etl.etl_clinical_encounter e\n" +
-			"                       on a.patient_id = e.patient_id and date(e.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"             left join kenyaemr_etl.etl_patient_triage t\n" +
-			"                       on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate) and t.temperature >= 38\n" +
-			"             join openmrs.visit v\n" +
-			"                  on a.patient_id = v.patient_id and (v.visit_type_id = 3 or v.visit_type_id = 1) or e.patient_outcome = 1654\n" +
-			"where e.patient_id is not null or t.patient_id is not null;";
+				"from (select patient_id, c.visit_date,group_concat(c.complaint) as complaint\n" +
+				"      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
+				"      where c.complaint = 157498\n" +
+				"        and date(c.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"      group by patient_id) a\n" +
+				"         join kenyaemr_etl.etl_patient_demographics d on a.patient_id = d.patient_id and\n" +
+				"                                                         timestampdiff(YEAR,d.DOB,a.visit_date) < 15\n" +
+				"         join kenyaemr_etl.etl_patient_triage t\n" +
+				"              on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate)\n" +
+				"where FIND_IN_SET(157498, a.complaint) > 0;";
 		
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
