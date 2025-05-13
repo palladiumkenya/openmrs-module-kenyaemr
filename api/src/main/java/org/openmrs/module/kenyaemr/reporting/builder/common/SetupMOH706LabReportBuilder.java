@@ -47,7 +47,7 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
 	static final int  URINE_ANALYSIS_T_VAGINATIS  = 163648;
 	static final int  URINE_ANALYSIS_YEAST_CELLS  = 163686;
 	static final int  URINE_ANALYSIS_BACTERIA = 165561;
-	static final int  PARASITOLOGY_MALARIA_BS = 2001193;
+	static final int  PARASITOLOGY_MALARIA_BS = 2017917;
 	static final int  PARASITOLOGY_MALARIA_RAPID = 1643;
 	static final int  PARASITOLOGY_TAENIA_SPP = 1000453;
 	static final int  PARASITOLOGY_HNANA = 1000454;
@@ -180,9 +180,9 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("UABP", "1.10 Bacteria Positive", ReportUtils.map(moh706IndicatorLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(URINE_ANALYSIS_BACTERIA, Arrays.asList(SEEN)), indParam), "");
 
         //PARASITOLOGY
-		//TODO: BS for malaria is text based
+		//TODO: BS for malaria is text based changes to coded
         ReportingUtils.addRow(cohortDsd, "BST", "Parastology - Malaria test totals", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_MALARIA_BS), indParam), ReportAddonUtils.getAgeUnderOver5Columns());
-        ReportingUtils.addRow(cohortDsd, "BSP", "Parasitology - Malaria test positive", ReportUtils.map(moh706IndicatorLibrary.getAllBSMalariaTestsPositiveCases(PARASITOLOGY_MALARIA_BS), indParam), ReportAddonUtils.getAgeUnderOver5Columns());
+        ReportingUtils.addRow(cohortDsd, "BSP", "Parasitology - Malaria test positive", ReportUtils.map(moh706IndicatorLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(PARASITOLOGY_MALARIA_BS, Arrays.asList(POSITIVE))), ReportAddonUtils.getAgeUnderOver5Columns());
         
 		cohortDsd.addColumn("BSRT", "3.3 Malaria Rapid Diagnostic Tests totals", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(PARASITOLOGY_MALARIA_RAPID), indParam), "");
         cohortDsd.addColumn("BSRTP", "3.3 Malaria Rapid Diagnostic Tests positives",ReportUtils.map(moh706IndicatorLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(PARASITOLOGY_MALARIA_RAPID, Arrays.asList(POSITIVE)), indParam), "");

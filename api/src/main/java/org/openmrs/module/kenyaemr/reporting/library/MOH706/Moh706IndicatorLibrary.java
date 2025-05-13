@@ -32,10 +32,6 @@ public class Moh706IndicatorLibrary {
 				"startDate=${startDate},endDate=${endDate}"));
 	}
 
-	public CohortIndicator getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
-		return cohortIndicator("All patients who have malaria test done and are positive",
-			map(moh706LabCohortLibrary.getAllBSMalariaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
-	}
 
 	public CohortIndicator getTotalCodedLabsByConceptAndPositiveAnswer(int q, List<Integer> ans) {
 		return cohortIndicator("All patients who have tests based on a question and answers",

@@ -101,19 +101,5 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
-		SqlCohortDefinition sql = new SqlCohortDefinition();
-		sql.setName("Get patients with malaria tests positive cases");
-		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-		sql.setQuery("#Malaria BS\n" +
-			"select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
-			"where le.set_member_conceptId = " + testConceptId + " and le.test_result like '%seen%'\n" +
-			"  and date(le.visit_date) between :startDate and :endDate;"
-
-		);
-		return sql;
-	}
-
+	
 }
