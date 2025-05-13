@@ -37,14 +37,11 @@ public class DiseaseDataEvaluator implements PersonDataEvaluator {
 
         String qry = "select a.patient_id,\n" +
                 "                       CASE\n" +
-                "                           WHEN FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0 THEN 'Dysentery'\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(112721, a.complaint) > 0 THEN 'Acute Meningitis and Encephalitis'\n" +
                 "                           WHEN FIND_IN_SET(142412, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
                 "                                a.complaint_duration > 2\n" +
                 "                               THEN 'Cholera'\n" +
-                "                           WHEN a.complaint = 143264 AND a.complaint_duration < 10 AND\n" +
-                "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id = 1 AND\n" +
-                "                                a.temperature >= 38 THEN 'ILI'\n" +
-                "                           WHEN a.complaint = 143264 AND a.complaint_duration < 10 AND\n" +
+                "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(143264, a.complaint) > 0 AND a.complaint_duration < 10 AND\n" +
                 "                                date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id = 3 AND\n" +
                 "                                a.temperature >= 38 THEN 'SARI'\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(141830, a.complaint) > 0 AND\n" +
@@ -55,7 +52,7 @@ public class DiseaseDataEvaluator implements PersonDataEvaluator {
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(116558, a.complaint) > 0 AND a.temperature > 38.5 AND a.fever_duration_from_days > 2\n" +
                 "                               THEN 'Chikungunya'\n" +
                 "                           WHEN FIND_IN_SET(157498, a.complaint) > 0 AND timestampdiff(YEAR, a.DOB, a.visit_date) <= 15\n" +
-                "                               THEN 'Poliomyelitis'\n" +
+                "                               THEN 'Acute Flaccid Paralysis '\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(162628, a.complaint) > 0 AND\n" +
                 "                                a.fever_duration_from_days >= 3 THEN 'Viral Haemorrhagic Fever'\n" +
                 "                           WHEN FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(512, a.complaint) > 0 AND\n" +
@@ -83,10 +80,10 @@ public class DiseaseDataEvaluator implements PersonDataEvaluator {
                 "                                         on c.patient_id = t.patient_id and\n" +
                 "                                            date(t.visit_date) between date(:startDate) and date(:endDate)\n" +
                 "                      group by patient_id) a\n" +
-                "                where (FIND_IN_SET(117671, a.complaint) > 0 AND FIND_IN_SET(142412, a.complaint) > 0)\n" +
+                "                where (FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(112721, a.complaint) > 0)\n" +
                 "                   OR (FIND_IN_SET(142412, a.complaint) > 0 AND FIND_IN_SET(122983, a.complaint) > 0 AND\n" +
                 "                       a.complaint_duration > 2)\n" +
-                "                   OR (FIND_IN_SET(143264, a.complaint) > 0 AND a.complaint_duration < 10 AND\n" +
+                "                   OR (FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(143264, a.complaint) > 0 AND a.complaint_duration < 10 AND\n" +
                 "                       date(a.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) AND a.visit_type_id IN (1, 3) AND\n" +
                 "                       a.temperature >= 38)\n" +
                 "                   OR (FIND_IN_SET(140238, a.complaint) > 0 AND FIND_IN_SET(141830, a.complaint) > 0 AND\n" +

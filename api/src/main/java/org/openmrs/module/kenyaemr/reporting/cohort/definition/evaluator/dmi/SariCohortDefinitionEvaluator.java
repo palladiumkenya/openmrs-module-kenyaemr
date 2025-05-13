@@ -60,7 +60,7 @@ public class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator 
 			"             left join kenyaemr_etl.etl_patient_triage t\n" +
 			"                       on a.patient_id = t.patient_id and date(t.visit_date) between date(:startDate) and date(:endDate) and t.temperature >= 38\n" +
 			"             join openmrs.visit v\n" +
-			"                  on a.patient_id = v.patient_id and v.visit_type_id = 3  or e.patient_outcome = 1654\n" +
+			"                  on a.patient_id = v.patient_id and (v.visit_type_id = 3 or v.visit_type_id = 1) or e.patient_outcome = 1654\n" +
 			"where e.patient_id is not null or t.patient_id is not null;";
 		
 		SqlQueryBuilder builder = new SqlQueryBuilder();
