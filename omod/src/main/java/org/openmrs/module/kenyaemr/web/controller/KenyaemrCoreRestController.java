@@ -377,9 +377,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		}
 
 		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-		ProgramWorkflowService service = Context.getProgramWorkflowService();
-		List<PatientProgram> programEnrolmentHistory = service.getPatientPrograms(patient, null, null, null, null, null,
-			false);
+	//	ProgramWorkflowService service = Context.getProgramWorkflowService();
+	//	List<PatientProgram> programEnrolmentHistory = service.getPatientPrograms(patient, null, null, null, null, null, false);
 
 		if (patient == null) {
 			return new ResponseEntity<Object>("The provided patient was not found in the system!",
@@ -390,10 +389,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
 
 		// TODO: Consider flags categorization for a patient who is not in any program
-		if (programEnrolmentHistory.size() < 1) {
-			flagsObj.put("results", JsonNodeFactory.instance.arrayNode()); // return an empty list
-			return flagsObj.toString();
-		}
+		//TODO: Commenting this to allow patients not enrolled in any programs to see flags focussing on facility wide implementation
+//		if (programEnrolmentHistory.size() < 1) {
+//			flagsObj.put("results", JsonNodeFactory.instance.arrayNode()); // return an empty list
+//			return flagsObj.toString();
+//		}
 
 		CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
 		Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
