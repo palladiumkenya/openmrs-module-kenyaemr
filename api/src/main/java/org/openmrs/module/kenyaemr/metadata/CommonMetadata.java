@@ -130,6 +130,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String PLASTIC_SURGERY = "5748bd8a-06bf-41a0-88df-16eed290db21";
 		public static final String IIT_SCORE = "1dab4593-b09d-4c5b-83fe-f041092145d3";
 		public static final String IPD_DISCHARGE = "7e618d13-ffdb-4650-9a97-10ccd16ca36d";
+		public static final String LEPROSY_INITIAL = "6c15c4d1-91a5-4db1-928b-75ec05ee8e74";
+		public static final String LEPROSY_FOLLOWUP = "8db0b85a-441b-4ee3-8955-0cf4cb55f726";
+		public static final String LEPROSY_POSTOPERATIVE = "4469d5f5-18fe-4f47-bf05-36819b9bf5e1";
 	}
 
 	public static final class _Form {
@@ -195,6 +198,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String NEW_BORN_ADMISSION_FORM = "5b0a08f5-87c1-40cc-8c09-09c33b44523d";
 		public static final String PLASTIC_SURGERY_FORM = "05365b29-0bf1-4351-a2fb-524ec72130e8";
 		public static final String IPD_DISCHARGE_FORM = "98a781d2-b777-4756-b4c9-c9b0deb3483c";
+		public static final String LEPROSY_INITIAL_FORM = "3b869649-81cd-42d2-bf71-a33dccaa04ff";
+		public static final String LEPROSY_FOLLOWUP_FORM = "a0336b03-6c14-4b73-97b0-d2bf345008ab";
+		public static final String LEPROSY_POSTOPERATIVE_FORM = "fe955bae-4124-4350-a32d-922304637e8f";
 	}
 
 	public static final class _OrderType {
@@ -361,6 +367,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Plastic Surgery Clinic", "Plastic surgery clinical encounter type", _EncounterType.PLASTIC_SURGERY));
 		install(encounterType("IIT Score", "IIT Score clinical encounter type", _EncounterType.IIT_SCORE));
 		install(encounterType("IPD Discharge", "Inpatient department clinical discharge encounter type", _EncounterType.IPD_DISCHARGE));
+		install(encounterType("Leprosy Initial", "Leprosy Initial Clinical encounter type", _EncounterType.LEPROSY_INITIAL));
+		install(encounterType("Leprosy Followup", "Leprosy Followup Clinical encounter type", _EncounterType.LEPROSY_FOLLOWUP));
+		install(encounterType("Leprosy Postoperative", "Leprosy Postoperative Clinical encounter type", _EncounterType.LEPROSY_POSTOPERATIVE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -445,6 +454,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Newbord Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
 		install(form("Plastic Surgery Clinical Form", "Form for Plastic surgery clinical encounter", _EncounterType.PLASTIC_SURGERY, "1", _Form.PLASTIC_SURGERY_FORM));
 		install(form("Inpatient Discharge Clinical Form", "Form for Inpatient Discharge clinical encounter", _EncounterType.IPD_DISCHARGE, "1", _Form.IPD_DISCHARGE_FORM));
+		install(form("Leprosy Initial Clinical Form", "Form for Leprosy Initial contact clinical encounter", _EncounterType.LEPROSY_INITIAL, "1", _Form.LEPROSY_INITIAL_FORM));
+		install(form("Leprosy Followup Clinical Form", "Form for Leprosy Followup contact clinical encounter", _EncounterType.LEPROSY_FOLLOWUP, "1", _Form.LEPROSY_FOLLOWUP_FORM));
+		install(form("Leprosy Postoperative Clinical Form", "Form for Leprosy Postoperative clinical encounter", _EncounterType.LEPROSY_POSTOPERATIVE, "1", _Form.LEPROSY_FOLLOWUP_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
