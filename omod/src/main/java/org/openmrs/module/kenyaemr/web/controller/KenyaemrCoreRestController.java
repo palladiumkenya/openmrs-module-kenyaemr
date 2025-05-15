@@ -165,6 +165,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -180,6 +181,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.time.OffsetDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.function.Function;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
 import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
@@ -321,18 +325,53 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         // Show available forms for retrospective data entry
         if(patient != null && !StringUtils.isBlank(visitEndDate) && !StringUtils.isBlank(visitStartDate) && activeVisits.isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            LocalDateTime endDateTime = LocalDateTime.parse(visitEndDate, formatter);
-            LocalDateTime startDateTime = LocalDateTime.parse(visitStartDate, formatter);
-            Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
-            Date starDate = Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant());
-            VisitSearchCriteria visitSearchCriteria = new VisitSearchCriteriaBuilder()
-				.patient(patient)
-				.minStartDatetime(starDate)
-				.maxEndDatetime(endDate)
-				.includeVoided(false)
-				.includeInactive(true)
-				.build();
+            // 1) Build a formatter that accepts:
+			// • required “yyyy-MM-dd'T'HH:mm:ss”
+			// • optional “.SSS”
+			// • optional offset in any of these forms: +0300, +03:00, +03, or Z
+			DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+					.appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+					.optionalStart().appendPattern(".SSS").optionalEnd()
+					.optionalStart().appendPattern("XX").optionalEnd()
+					.optionalStart().appendPattern("XXX").optionalEnd()
+					.optionalStart().appendPattern("X").optionalEnd()
+					.toFormatter();
+
+			// 2) Helper to go from String → java.util.Date
+			Function<String, Date> toDate = new Function<String, Date>() {
+				@Override
+				public Date apply(String str) {
+					// parseBest tries OffsetDateTime first, then LocalDateTime
+					TemporalAccessor ta = formatter.parseBest(
+							str,
+							OffsetDateTime::from,
+							LocalDateTime::from);
+
+					Instant instant;
+					if (ta instanceof OffsetDateTime) {
+						// we got an explicit offset
+						OffsetDateTime odt = OffsetDateTime.from(ta);
+						instant = odt.toInstant();
+					} else {
+						// no offset in the string → assume system default zone
+						LocalDateTime ldt = LocalDateTime.from(ta);
+						instant = ldt.atZone(ZoneId.systemDefault()).toInstant();
+					}
+					return Date.from(instant);
+				}
+			};
+
+			// 3) Use it in your code
+			Date endDate = toDate.apply(visitEndDate);
+			Date startDate = toDate.apply(visitStartDate);
+
+			VisitSearchCriteria visitSearchCriteria = new VisitSearchCriteriaBuilder()
+					.patient(patient)
+					.minStartDatetime(startDate)
+					.maxEndDatetime(endDate)
+					.includeVoided(false)
+					.includeInactive(true)
+					.build();
 			
 			List<Visit> retroVisits = Context.getVisitService().getVisits(visitSearchCriteria);
             if (!retroVisits.isEmpty()) {
