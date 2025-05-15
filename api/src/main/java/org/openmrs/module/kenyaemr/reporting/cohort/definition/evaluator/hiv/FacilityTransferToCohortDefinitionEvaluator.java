@@ -32,9 +32,10 @@ import java.util.Map;
 
 	public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
 		EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
-
-		String qry = "select patient_id, transfer_facility from kenyaemr_etl.etl_patient_program_discontinuation;";
-
+		String qry = "SELECT d.patient_id,\n" +
+				"COALESCE(l.name, d.transfer_facility) AS transfer_facility\n" +
+				"FROM kenyaemr_etl.etl_patient_program_discontinuation d\n" +
+				"LEFT JOIN openmrs.location l ON d.transfer_facility COLLATE utf8mb3_general_ci = l.uuid;";
 		SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
 		queryBuilder.append(qry);
 		Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
