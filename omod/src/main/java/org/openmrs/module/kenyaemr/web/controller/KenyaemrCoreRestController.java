@@ -321,7 +321,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         // Show available forms for retrospective data entry
         if(patient != null && !StringUtils.isBlank(visitEndDate) && !StringUtils.isBlank(visitStartDate) && activeVisits.isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             LocalDateTime endDateTime = LocalDateTime.parse(visitEndDate, formatter);
             LocalDateTime startDateTime = LocalDateTime.parse(visitStartDate, formatter);
             Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
