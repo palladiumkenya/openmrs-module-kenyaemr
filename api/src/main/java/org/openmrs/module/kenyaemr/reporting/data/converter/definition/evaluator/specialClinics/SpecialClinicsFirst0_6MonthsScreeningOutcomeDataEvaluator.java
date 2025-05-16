@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionalStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsFirst0_6MonthsDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -27,8 +27,8 @@ import java.util.Map;
  * Evaluates Referred to  
  * OPD Register
  */
-@Handler(supports= SpecialClinicsNutritionalStatusDataDefinition.class, order=50)
-public class SpecialClinicsNutritionalStatusDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsFirst0_6MonthsDataDefinition.class, order=50)
+public class SpecialClinicsFirst0_6MonthsScreeningOutcomeDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,25 +36,23 @@ public class SpecialClinicsNutritionalStatusDataEvaluator implements EncounterDa
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNutritionalStatusDataDefinition cohortDefinition = (SpecialClinicsNutritionalStatusDataDefinition) definition;
+        SpecialClinicsFirst0_6MonthsDataDefinition cohortDefinition = (SpecialClinicsFirst0_6MonthsDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.nutritional_details  when 5544 then 'Gaining Weight' when 832 then 'Losing Weight' when 128378 then 'Static Weight' when 159791 then 'Cured' when 1692 then 'Discharged' when 163484 then 'Refused Nutrition Support' else '' end) as nutritional_details\n" +
+                "(case v.first_0_6_months when 5526 then 'Exclusive breastfeeding' when 164477 then 'Exclusive replacement feeding' when 6046 then 'Mixed feeding' else '' end) as first_0_6_months\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date) context.getParameterValue("startDate");
-        Date endDate = (Date) context.getParameterValue("endDate");
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        queryBuilder.addParameter("specialClinic", specialClinic); // Corrected parameter name
+        queryBuilder.addParameter("specialClinic", specialClinic);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
     }
-
-
 }
