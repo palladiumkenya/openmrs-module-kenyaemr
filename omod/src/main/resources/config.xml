@@ -91,7 +91,7 @@
 	</globalProperty>
 	<globalProperty>
 		<property>kenyaemr.isDmi</property>
-		<defaultValue>false</defaultValue>
+		<defaultValue>true</defaultValue>
 		<description>
 			Defines whether facility is DMI site or not
 		</description>
