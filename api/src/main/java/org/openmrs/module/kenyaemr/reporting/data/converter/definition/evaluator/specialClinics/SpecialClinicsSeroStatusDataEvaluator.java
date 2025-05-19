@@ -24,8 +24,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+ * Evaluates Sero status
  */
 @Handler(supports= SpecialClinicsSeroStatusDataDefinition.class, order=50)
 public class SpecialClinicsSeroStatusDataEvaluator implements EncounterDataEvaluator {
@@ -40,11 +39,18 @@ public class SpecialClinicsSeroStatusDataEvaluator implements EncounterDataEvalu
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.sero_status when 703 then 'Positive' when 664 then 'Negative' when 1067 then 'Unknown' else '' end) as sero_status\n" +
+                "       (case v.sero_status\n" +
+                "            when 703 then 'Positive'\n" +
+                "            when 664 then 'Negative'\n" +
+                "            when 1067 then 'Unknown'\n" +
+                "            else '' end) as sero_status\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "  and special_clinic_form_uuid = '"+specialClinic+"';\n";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
+
+
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
         Date endDate = (Date)context.getParameterValue("endDate");

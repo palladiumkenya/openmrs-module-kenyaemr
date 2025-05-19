@@ -1167,7 +1167,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:moh407A.xls" />
-		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407A" />
+		<property name="repeatingSection" value="sheet:1,row:13,dataset:MOH407A" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh407B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="ea5c0087-c734-4f14-b673-8e00cfa40675" />
@@ -1178,7 +1178,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:moh407B.xls" />
-		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH407B" />
+		<property name="repeatingSection" value="sheet:1,row:13,dataset:MOH407B" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh417" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="bc7b3cde-7df5-4ebe-93a6-9281c834b06b" />

@@ -37,17 +37,19 @@ public class SpecialClinicsDiagnosisDataEvaluator implements EncounterDataEvalua
         SpecialClinicsDiagnosisDataDefinition cohortDefinition = (SpecialClinicsDiagnosisDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "SELECT v.encounter_id, con.name AS mnci_diagnosis\n" +
-                "FROM kenyaemr_etl.etl_special_clinics v\n" +
-                "INNER JOIN (\n" +
-                "    SELECT cn.name, cn.date_created, ed.patient_id\n" +
-                "    FROM encounter_diagnosis ed\n" +
-                "    INNER JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded\n" +
-                "    WHERE cn.locale = 'en'\n" +
-                "    AND DATE(ed.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                ") con ON v.patient_id = con.patient_id\n" +
-                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select c.encounter_id,d.diagnosis from kenyaemr_etl.etl_special_clinics c inner join\n" +
+                "   (SELECT d.patient_id,\n" +
+                "           GROUP_CONCAT(DISTINCT n.name SEPARATOR '\\r\\n') AS diagnosis,DATE(d.date_created) as visit_date\n" +
+                "    FROM encounter_diagnosis d\n" +
+                "             INNER JOIN concept_name n\n" +
+                "                        ON d.diagnosis_coded = n.concept_id\n" +
+                "                            AND n.locale = 'en'\n" +
+                "             inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "    WHERE n.concept_name_type = 'FULLY_SPECIFIED'\n" +
+                "      AND d.voided = 0\n" +
+                "      AND d.dx_rank = 1\n" +
+                "    GROUP BY d.patient_id, d.encounter_id, DATE(d.date_created))d on c.patient_id = c.patient_id and c.visit_date = d.visit_date\n" +
+                "where c.visit_date between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = '"+specialClinic+"';";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

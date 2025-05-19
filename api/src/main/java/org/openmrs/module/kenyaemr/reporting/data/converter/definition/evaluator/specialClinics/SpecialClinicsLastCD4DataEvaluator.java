@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsSecond6_12MonthsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsHFAZScoreDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsLastCD4DataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +25,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+     * Evaluates Last CD4
  */
-@Handler(supports= SpecialClinicsSecond6_12MonthsDataDefinition.class, order=50)
-public class SpecialClinicsSecond6_12MonthsScreeningOutcomeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsLastCD4DataDefinition.class, order=50)
+public class SpecialClinicsLastCD4DataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,13 +36,24 @@ public class SpecialClinicsSecond6_12MonthsScreeningOutcomeDataEvaluator impleme
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsSecond6_12MonthsDataDefinition cohortDefinition = (SpecialClinicsSecond6_12MonthsDataDefinition) definition;
+        SpecialClinicsLastCD4DataDefinition cohortDefinition = (SpecialClinicsLastCD4DataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select v.encounter_id,\n" +
-                "(case v.second_6_12_months when 5632 then 'Breastfeeding' when 140719 then 'Not Breastfeeding' when 1067 then 'Not Known' when 159854 then 'Began complimentary feeding' else '' end) as second_6_12_months\n" +
-                "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select s.encounter_id,\n" +
+                "                           mid(max(concat(coalesce(date(x.date_test_requested), date(x.visit_date)),\n" +
+                "                                          if(x.lab_test = 5497, x.test_result, if(x.lab_test = 167718 and x.test_result = 1254, '>200',\n" +
+                "                                                                                  if(x.lab_test = 167718 and x.test_result = 167717,\n" +
+                "                                                                                     '<=200',\n" +
+                "                                                                                     if(x.lab_test = 730, concat(x.test_result, '%'), '')))),\n" +
+                "                                          '')),\n" +
+                "                               11) as cd4\n" +
+                "                    from kenyaemr_etl.etl_special_clinics s\n" +
+                "                             inner join kenyaemr_etl.etl_laboratory_extract x on s.patient_id = x.patient_id\n" +
+                "                    where s.visit_date between date(:startDate) and date(:endDate)\n" +
+                "                      and date(x.visit_date) <= date(:endDate)\n" +
+                "                      and lab_test in (167718, 5497, 730)\n" +
+                "                    and s.special_clinic_form_uuid = '"+specialClinic+"'\n" +
+                "                    GROUP BY x.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

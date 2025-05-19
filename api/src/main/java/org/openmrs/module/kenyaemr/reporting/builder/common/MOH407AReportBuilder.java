@@ -20,6 +20,7 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculat
 import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.specialClinics.SpecialClinicsRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
@@ -62,9 +63,6 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 	private static final String COMPARATIVE_OPERATION = ">=";
 	private static final Integer AGE = 15;
 
-
-
-
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
         return Arrays.asList(
@@ -81,42 +79,46 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
         );
     }
 
-    protected DataSetDefinition datasetColumns() {
-        EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("MOH407A");
-        dsd.setDescription("MOH407A Visit information");
-        dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
-        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+	protected DataSetDefinition datasetColumns() {
+		EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
+		dsd.setName("MOH407A");
+		dsd.setDescription("MOH407A Visit information");
+		dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
+		dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+		String paramMapping = "startDate=${startDate},endDate=${endDate}";
 
-        DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
-        DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
-        PatientIdentifierType pcn = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.PATIENT_CLINIC_NUMBER);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
-
-
-		SpecialClinicsDiagnosisDataDefinition diagnosisDataDefinition = new SpecialClinicsDiagnosisDataDefinition();
-		diagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		diagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		diagnosisDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+		DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
+		DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
+		PatientIdentifierType pcn = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.PATIENT_CLINIC_NUMBER);
+		DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+		DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
+		PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+		PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+		PatientIdentifierType shaNumber = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER);
+		DataDefinition shaDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(shaNumber.getName(), shaNumber), identifierFormatter);
+		DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
 		SpecialClinicsSeroStatusDataDefinition seroStatusDataDefinition = new SpecialClinicsSeroStatusDataDefinition();
 		seroStatusDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		seroStatusDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		seroStatusDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
+		SpecialClinicsActualAgeDataDefinition actualAgeDataDefinition = new SpecialClinicsActualAgeDataDefinition();
+		actualAgeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		actualAgeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		actualAgeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
 		SpecialCoexialMedicalConditionDataDefinition coexialMedicalConditionDataDefinition = new SpecialCoexialMedicalConditionDataDefinition();
 		coexialMedicalConditionDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		coexialMedicalConditionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		coexialMedicalConditionDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
-		SpecialClinicsNutritionInterventionDataDefinition nutritionInterventionDataDefinition = new SpecialClinicsNutritionInterventionDataDefinition();
-		nutritionInterventionDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		nutritionInterventionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		nutritionInterventionDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+		SpecialClinicsMaternalNutritionDataDefinition maternalNutritionDataDefinition = new SpecialClinicsMaternalNutritionDataDefinition();
+		maternalNutritionDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		maternalNutritionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		maternalNutritionDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
 		SpecialClinicsPostnatalFeedingDataDefinition postnatalFeedingDataDefinition = new SpecialClinicsPostnatalFeedingDataDefinition();
 		postnatalFeedingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -127,6 +129,32 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		edemaDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		edemaDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		edemaDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsWeightDataDefinition weightDataDefinition = new SpecialClinicsWeightDataDefinition();
+		weightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		weightDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		weightDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsHeightDataDefinition heightDataDefinition = new SpecialClinicsHeightDataDefinition();
+		heightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		heightDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		heightDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsWFHZScoreDataDefinition zScoreWFHDataDefinition = new SpecialClinicsWFHZScoreDataDefinition();
+		zScoreWFHDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		zScoreWFHDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		zScoreWFHDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+
+		SpecialClinicsAdultsBMIDataDefinition specialClinicsAdultBMIDataDefinition = new SpecialClinicsAdultsBMIDataDefinition();
+		specialClinicsAdultBMIDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		specialClinicsAdultBMIDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		specialClinicsAdultBMIDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsMUACDataDefinition muacDataDefinition = new SpecialClinicsMUACDataDefinition();
+		muacDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		muacDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		muacDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
 		SpecialClinicsNutritionalStatusDataDefinition nutritionalStatusDataDefinition = new SpecialClinicsNutritionalStatusDataDefinition();
 		nutritionalStatusDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -147,6 +175,11 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		metabolicDisordersDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		metabolicDisordersDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		metabolicDisordersDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsAllergyAndIntoleranceDataDefinition allergyAndIntoleranceDataDefinition = new SpecialClinicsAllergyAndIntoleranceDataDefinition();
+		allergyAndIntoleranceDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		allergyAndIntoleranceDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		allergyAndIntoleranceDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
 		SpecialClinicsCriticalNutritionPracticesDataDefinition criticalNutritionPracticesDataDefinition = new SpecialClinicsCriticalNutritionPracticesDataDefinition();
 		criticalNutritionPracticesDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -193,25 +226,40 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		specialClinicsVisitTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		specialClinicsVisitTypeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
+		SpecialClinicsPatientCategoryDataDefinition specialClinicsPatientCategoryDataDefinition = new SpecialClinicsPatientCategoryDataDefinition();
+		specialClinicsPatientCategoryDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		specialClinicsPatientCategoryDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		specialClinicsPatientCategoryDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsLinkedToOVCDataDefinition specialClinicsLinkedToOVCDataDefinition = new SpecialClinicsLinkedToOVCDataDefinition();
+		specialClinicsLinkedToOVCDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		specialClinicsLinkedToOVCDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		specialClinicsLinkedToOVCDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
 		SpecialClinicsPatientPregnantDataDefinition patientPregnantDataDefinition = new SpecialClinicsPatientPregnantDataDefinition();
 		patientPregnantDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		patientPregnantDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		patientPregnantDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
-		SpecialClinicsFirst0_6MonthsDataDefinition first0_6MonthsDataDefinition = new SpecialClinicsFirst0_6MonthsDataDefinition();
-		first0_6MonthsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		first0_6MonthsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		first0_6MonthsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
-
-		SpecialClinicsSecond6_12MonthsDataDefinition second6_12MonthsDataDefinition = new SpecialClinicsSecond6_12MonthsDataDefinition();
-		second6_12MonthsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		second6_12MonthsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		second6_12MonthsDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
-
 		SpecialClinicsNutritionalSamMamDataDefinition nutritionalSamMamDataDefinition = new SpecialClinicsNutritionalSamMamDataDefinition();
 		nutritionalSamMamDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		nutritionalSamMamDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		nutritionalSamMamDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsNutritionalOutcomeDataDefinition nutritionalOutcome = new SpecialClinicsNutritionalOutcomeDataDefinition();
+		nutritionalOutcome.addParameter(new Parameter("endDate", "End Date", Date.class));
+		nutritionalOutcome.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		nutritionalOutcome.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsLastCD4DataDefinition lastCD4ResultDataDefinition = new SpecialClinicsLastCD4DataDefinition();
+		lastCD4ResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		lastCD4ResultDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		lastCD4ResultDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
+
+		SpecialClinicsNextAppointmentDateDataDefinition nextAppointmentDateDataDefinition = new SpecialClinicsNextAppointmentDateDataDefinition();
+		nextAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		nextAppointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		nextAppointmentDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
 		OPDHeightDataDefinition opdHeightDataDefinition = new OPDHeightDataDefinition();
 		opdHeightDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -222,69 +270,59 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		OPDBMIDataDefinition opdBMIDataDefinition = new OPDBMIDataDefinition();
 		opdBMIDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdBMIDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		ETLLastCD4ResultDataDefinition lastCD4ResultDataDefinition = new ETLLastCD4ResultDataDefinition();
-		lastCD4ResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		ETLLastCD4DateDataDefinition etlLastCD4DateDataDefinition = new ETLLastCD4DateDataDefinition();
-		etlLastCD4DateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-		ETLNextAppointmentDateDataDefinition nextAppointmentDateDataDefinition = new ETLNextAppointmentDateDataDefinition();
-		nextAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
 		PatientDisabilityTypeDataDefinition patientDisabilityTypeDataDefinition = new PatientDisabilityTypeDataDefinition();
 		patientDisabilityTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		patientDisabilityTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		
+
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
-        dsd.addColumn("Name", nameDef, "");
-        dsd.addColumn("id", new PatientIdDataDefinition(), "");
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
-        dsd.addColumn("Age", new AgeDataDefinition(), "");
-        dsd.addColumn("Sex", new GenderDataDefinition(), "");
-        dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));         
-		dsd.addColumn("OPD Number (New)", patientClinicNo, "");
-		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
-		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
-		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
-		dsd.addColumn("Diagnosis",diagnosisDataDefinition, paramMapping);  //TODO: Add all diagnosis
-		dsd.addColumn("Weight", opdWeightDataDefinition, paramMapping);
-		dsd.addColumn("Height", opdHeightDataDefinition, paramMapping);
-		dsd.addColumn("BMI", opdBMIDataDefinition, paramMapping);
-		dsd.addColumn("Lactating", patientPregnantDataDefinition, paramMapping);
+		dsd.addColumn("id", new PatientIdDataDefinition(), "");
+		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(DATE_FORMAT));
+		dsd.addColumn("SHA No", shaDef, "");
+		dsd.addColumn("Name", nameDef, "");
 		dsd.addColumn("Visit Type", specialClinicsVisitTypeDataDefinition, paramMapping);
-		dsd.addColumn("Sero Status", seroStatusDataDefinition, paramMapping);
-		dsd.addColumn("Coexisting Medical Condition", coexialMedicalConditionDataDefinition, paramMapping);
-		dsd.addColumn("Nutrition Intervention", nutritionInterventionDataDefinition, paramMapping);
+		dsd.addColumn("Patient Category", specialClinicsPatientCategoryDataDefinition, paramMapping);
+		dsd.addColumn("Age", new AgeDataDefinition(), "");
+		dsd.addColumn("Sex", new GenderDataDefinition(), "");
+		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
+		dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
+		dsd.addColumn("Weight", weightDataDefinition, paramMapping);
 		dsd.addColumn("Edema", edemaDataDefinition, paramMapping);
-		dsd.addColumn("First 0-6 months", first0_6MonthsDataDefinition, paramMapping);
-		dsd.addColumn("Second 6-12 months", second6_12MonthsDataDefinition, paramMapping);
-		dsd.addColumn("SAM/MAM Patients", nutritionalSamMamDataDefinition, paramMapping);
-		dsd.addColumn("Latest CD4 Count",  lastCD4ResultDataDefinition, "endDate=${endDate}");
-		dsd.addColumn("Latest CD4 Count Date",etlLastCD4DateDataDefinition,"endDate=${endDate}");
+		dsd.addColumn("Height", heightDataDefinition, paramMapping);
+		dsd.addColumn("ZScore (Weight for Height)", zScoreWFHDataDefinition, paramMapping);
+		//dsd.addColumn("ZScore (Height For Age)", zScoreHFADataDefinition, paramMapping);
+		//dsd.addColumn("BMI For Age ZScore", new SpecialClinicsHeightDataDefinition(), paramMapping);
+		dsd.addColumn("BMI (Adults)", specialClinicsAdultBMIDataDefinition, paramMapping);
+		dsd.addColumn("MUAC", muacDataDefinition, paramMapping);
 		dsd.addColumn("Nutritional Status", nutritionalStatusDataDefinition, paramMapping);
+		dsd.addColumn("SAM and MAM", nutritionalSamMamDataDefinition, paramMapping);
+		dsd.addColumn("Sero Status", seroStatusDataDefinition, paramMapping);
 		dsd.addColumn("Patient on ARVs", patientOnARVsDataDefinition, paramMapping);
-		dsd.addColumn("Postnatal Feeding", postnatalFeedingDataDefinition, paramMapping);
+		dsd.addColumn("Co-existing Conditions", coexialMedicalConditionDataDefinition, paramMapping);
 		dsd.addColumn("Anaemic Level", anaemicLevelDataDefinition, paramMapping);
 		dsd.addColumn("Metabolic Disorders", metabolicDisordersDataDefinition, paramMapping);
-		dsd.addColumn("Critical Nutrition Practices", criticalNutritionPracticesDataDefinition, paramMapping);
-		dsd.addColumn("Supplemental Foods", supplementalFoodsDataDefinition, paramMapping);
+		dsd.addColumn("Allergies And Intolerance", allergyAndIntoleranceDataDefinition, paramMapping);
+		dsd.addColumn("CD4",  lastCD4ResultDataDefinition, "endDate=${endDate}");
+		// dsd.addColumn("Food Secure",  lastCD4ResultDataDefinition, "endDate=${endDate}");
+		dsd.addColumn("Maternal Nutrition",  maternalNutritionDataDefinition, paramMapping);
+		dsd.addColumn("Nutrition counselling (Critical Nutrition Practices)", criticalNutritionPracticesDataDefinition, paramMapping);
 		dsd.addColumn("Therapeutic Foods", therapeuticFoodsDataDefinition, paramMapping);
+		dsd.addColumn("Supplemental Foods", supplementalFoodsDataDefinition, paramMapping);
 		dsd.addColumn("Micronutrients", micronutrientsDataDefinition, paramMapping);
-		dsd.addColumn("Criteria for Admission", criteriaForAdmissionDataDefinition, paramMapping);
-		dsd.addColumn("Type of Admission", typeOfAdmissionDataDefinition, paramMapping);
-		dsd.addColumn("Cadre", cadreDataDefinition, paramMapping);
+		dsd.addColumn("Nutritional outcome", nutritionalOutcome, paramMapping);
 		dsd.addColumn("Referral Status", referralStatusDataDefinition, paramMapping);
-		dsd.addColumn("Next Appointment Date", nextAppointmentDateDataDefinition, "endDate=${endDate}", new DateConverter(DATE_FORMAT));
-
+		dsd.addColumn("TCA", nextAppointmentDateDataDefinition, paramMapping, new DateConverter(DATE_FORMAT));
+		dsd.addColumn("Clinicians Designation", cadreDataDefinition, paramMapping);
 
 		SpecialClinicsRegisterCohortDefinition cd = new SpecialClinicsRegisterCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.setSpecialClinic(SPECIAL_CLINIC);
 		dsd.addRowFilter(cd, paramMapping);
 		cd.setAge(AGE);
 		cd.setComparisonOperator(COMPARATIVE_OPERATION);
 		return dsd;
-
-    }
+	}
 
 }

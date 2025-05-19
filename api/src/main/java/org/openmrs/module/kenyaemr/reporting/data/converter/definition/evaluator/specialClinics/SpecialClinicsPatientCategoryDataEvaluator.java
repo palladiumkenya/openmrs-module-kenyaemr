@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionalSamMamDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsAdultsBMIDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsPatientCategoryDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +25,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
  */
-@Handler(supports= SpecialClinicsNutritionalSamMamDataDefinition.class, order=50)
-public class SpecialClinicsNutritionalSamMamDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsPatientCategoryDataDefinition.class, order=50)
+public class SpecialClinicsPatientCategoryDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,29 +35,31 @@ public class SpecialClinicsNutritionalSamMamDataEvaluator implements EncounterDa
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNutritionalSamMamDataDefinition cohortDefinition = (SpecialClinicsNutritionalSamMamDataDefinition) definition;
+        SpecialClinicsPatientCategoryDataDefinition cohortDefinition = (SpecialClinicsPatientCategoryDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select s.encounter_id,\n" +
-                "       case s.nutritional_status\n" +
-                "           when 1687 then '1st Time Diagnosis'\n" +
-                "           when 160033 then 'Relapse'\n" +
-                "           when 1655 then 'Re-admission' end as sam_mam\n" +
-                "from kenyaemr_etl.etl_special_clinics s\n" +
-                "where s.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and s.special_clinic_form_uuid = '"+specialClinic+"';";
+        String qry = "SELECT a.encounter_id, a.patient_category\n" +
+                "from (SELECT d.patient_id,\n" +
+                "sc.encounter_id,\n" +
+                "if(sc.pregnantOrLactating = 1065, 'Pregnant/Lactating', if(DATEDIFF(sc.visit_date, d.dob) > 17, 'Adult',\n" +
+                "            if(\n" +
+                "                    DATEDIFF(sc.visit_date, d.dob) BETWEEN 15 AND 17,\n" +
+                "                    '15-17 years',\n" +
+                "                    NULL))) as patient_category\n" +
+                "FROM kenyaemr_etl.etl_patient_demographics d\n" +
+                "INNER JOIN kenyaemr_etl.etl_special_clinics sc on d.patient_id = sc.patient_id\n" +
+                "WHERE sc.visit_date BETWEEN date(:startDate) AND date(:endDate)\n" +
+                "AND sc.special_clinic_form_uuid = '"+specialClinic+"') a;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date) context.getParameterValue("startDate");
-        Date endDate = (Date) context.getParameterValue("endDate");
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        queryBuilder.addParameter("specialClinic", specialClinic); // Corrected parameter name
+        queryBuilder.addParameter("specialClinic", specialClinic);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
     }
-
-
 }

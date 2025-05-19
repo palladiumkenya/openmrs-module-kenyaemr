@@ -24,8 +24,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+ *
+ *
+ * Evaluates Edema
  */
 @Handler(supports= SpecialClinicsEdemaDataDefinition.class, order=50)
 public class SpecialClinicsEdemaDataEvaluator implements EncounterDataEvaluator {
@@ -40,9 +41,13 @@ public class SpecialClinicsEdemaDataEvaluator implements EncounterDataEvaluator 
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.patient_has_edema when 1065 then 'Yes' when 1066 then 'No' else '' end) as patient_has_edema\n" +
+                "       (case v.patient_has_edema\n" +
+                "            when 1065 then 'Yes'\n" +
+                "            when 1066 then 'No'\n" +
+                "             end) as patient_has_edema\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "  and special_clinic_form_uuid = '"+specialClinic+"';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
