@@ -280,7 +280,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 					if (!descriptor.getTarget().getRetired().booleanValue()) {
 						ObjectNode formObj = generateFormDescriptorPayload(descriptor);
 						formObj.put("formCategory", "available");
-							formList.add(formObj);
+						formList.add(formObj);
 					}
 				}
 				PatientWrapper patientWrapper = new PatientWrapper(patient);
@@ -3870,7 +3870,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				"getMonthlyEligibleForVlSampleNotTaken", getMonthlyEligibleForVlSampleNotTaken(startDate, endDate),
 				"getMonthlyHei24MonthsWithoutDocumentedOutcome",
 				getMonthlyHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
-				"getMonthlyVirallyUnsuppressedWithoutEAC", getMonthlyVirallyUnsuppressedWithoutEAC(startDate, endDate));
+				"getMonthlyVirallyUnsuppressedWithoutEAC", getMonthlyVirallyUnsuppressedWithoutEAC(startDate, endDate),
+				"getMonthlyPatientsTestedHivPositive",
+				FacilityDashboardUtil.getMonthlyPatientsTestedHivPositive(startDate, endDate),
+				"getMonthlyPregnantOrPostpartumClients", FacilityDashboardUtil
+						.getMonthlyPregnantOrPostpartumClients(startDate, endDate),
+				"getMonthlyHeiSixToEightWeeksOld", FacilityDashboardUtil
+						.getMonthlyHeiSixToEightWeeksOld(startDate, endDate),
+				"getMonthlyEligibleForVl", FacilityDashboardUtil
+						.getMonthlyEligibleForVl(startDate, endDate),
+				"getMonthlyHei24MonthsOld", FacilityDashboardUtil
+						.getMonthlyHei24MonthsOld(startDate, endDate),
+				"getMonthlyVirallyUnsuppressed", FacilityDashboardUtil
+						.getMonthlyVirallyUnsuppressed(startDate, endDate));
 	}
 
 	/**
