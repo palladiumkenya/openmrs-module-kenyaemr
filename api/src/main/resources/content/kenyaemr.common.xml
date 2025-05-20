@@ -98,6 +98,7 @@
 			<set>
 				<ref bean="kenyaemr.ehrReports.report.moh705A" />
 				<ref bean="kenyaemr.ehrReports.report.moh705B" />
+				<ref bean="kenyaemr.ehrReports.report.moh740" />
 				<ref bean="kenyaemr.ehrReports.report.717" />
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
@@ -1059,6 +1060,16 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:MOH705B.xls" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.moh740" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="c70b7c4a-a016-40db-b64e-a634152345a5" />
+		<property name="name" value="MOH 740 Monthly Summary" />
+		<property name="description" value="MOH 740 Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh740.xls" />
 	</bean>
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
 	<bean id="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">

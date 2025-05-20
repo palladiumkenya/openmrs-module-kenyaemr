@@ -7,87 +7,154 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.reporting.library.MOH745;
+package org.openmrs.module.kenyaemr.reporting.library.MOH740;
+
+import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyaemr.reporting.library.MOH740.Moh740IndicatorLibrary;
+import org.openmrs.module.reporting.indicator.CohortIndicator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
 
-import org.openmrs.module.reporting.indicator.CohortIndicator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.openmrs.module.kenyacore.report.ReportUtils;
-
 @Component
-public class Moh745IndicatorLibrary {
+public class Moh740IndicatorLibrary {
 
     @Autowired
-    private Moh745CohortLibrary Moh745CohortLibrary;
+    private Moh740CohortLibrary Moh740Cohorts;
 
-    /*Received VIA Screening */
-    public CohortIndicator receivedScreeningVIA(String[] indicatorVal, String visitType) {
-        return cohortIndicator("Received VIA Screening", ReportUtils.map(Moh745CohortLibrary.patientScreenedByVIA(indicatorVal , visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator cumulativeDiabetes() {
+        return cohortIndicator("Cumulative no. of diabetes", map(Moh740Cohorts.cumulativePatientWithDiabetes(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Received PAP Smear Screening */
-    public CohortIndicator receivedScreeningPap(String[] indicatorVal, String visitType) {
-        return cohortIndicator("Received Pap Smear Screening", ReportUtils.map(Moh745CohortLibrary.patientScreenedByPapSmear(indicatorVal , visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator cumulativeHypertension() {
+        return cohortIndicator("Cumulative no. of hypertension", map(Moh740Cohorts.cumulativePatientWithHypertension(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Received Hpv Screening */
-    public CohortIndicator receivedScreeningHpv(String[] indicatorVal, String visitType) {
-        return cohortIndicator("Received Hpv Screening", ReportUtils.map(Moh745CohortLibrary.patientScreenedByHpv(indicatorVal , visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    /*Diagnosed diabetes & hypertension */
+    public CohortIndicator newDiagnosedDiabetes() {
+        return cohortIndicator("Diagnosed Diabetes", map(Moh740Cohorts.patientWithDiabetesAndHypertension(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Received Positive VIA Screening Result*/
-    public CohortIndicator receivedPositiveScreeningVIA(String[] indicatorVal, String visitType) {
-
-        return cohortIndicator("Received Positive VIA Screening", ReportUtils.map(Moh745CohortLibrary.patientPositiveScreenedVia(indicatorVal, visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator newDiagnosedHypertension() {
+        return cohortIndicator("Diagnosed Hypertension", map(Moh740Cohorts.patientWithDiabetesAndHypertension(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Received Positive Colposcopy Screening Result*/
-    public CohortIndicator receivedPositiveScreeningColposcopy(String[] indicatorVal, String visitType) {
-
-        return cohortIndicator("Received Positive Colposcopy Screening", ReportUtils.map(Moh745CohortLibrary.patientPositiveScreenedColposcopy(indicatorVal, visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator cumulativeDMAndHTN() {
+        return cohortIndicator("Cumulative No. of co-morbid DM+HTN patients in care", map(Moh740Cohorts.patientWithPreExistingConditions(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Received Positive Hpv Screening Result*/
-    public CohortIndicator receivedPositiveScreeningHpv(String[] indicatorVal, String visitType) {
-
-        return cohortIndicator("Received Positive Hpv Screening", ReportUtils.map(Moh745CohortLibrary.patientPositiveScreenedHpv(indicatorVal, visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator preExistingDM() {
+        return cohortIndicator("Pre-Existing DM", map(Moh740Cohorts.patientWithPreExistingConditions(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-      /*Suspicious Screening Result*/
-    public CohortIndicator receivedSuspiciousScreening(String visitType) {
-
-        return cohortIndicator("Received Suspicious Screening", ReportUtils.map(Moh745CohortLibrary.suspiciousScreeningCl(visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator preExistingHTN() {
+        return cohortIndicator("Pre-Existing HTN", map(Moh740Cohorts.patientWithPreExistingConditions(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*Treatment Method */
-    public CohortIndicator treatedMethod(String[] treatmentMethod, String visitType) {
-
-        return cohortIndicator("Treatment Method", ReportUtils.map(Moh745CohortLibrary.treatmentMethodCl(treatmentMethod, visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator firstVisitToClinic() {
+        return cohortIndicator("First Visit To Clinic", map(Moh740Cohorts.patientFirstVisitToClinic(), "startDate=${startDate},endDate=${endDate}"));
     }
-
-    /*HIV Positive Clients Screened*/
-    public CohortIndicator HIVPositiveClientsScreened(String visitType) {
-
-        return cohortIndicator("HIV Positive Clients Screened",map(Moh745CohortLibrary.HIVPositiveClientsScreenedCl(visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+    public CohortIndicator cumulativePatientsInCare() {
+        return cohortIndicator("Cumulative No. of Patients", map(Moh740Cohorts.cumulativePatientInCare(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator diabetesByTypeOne() {
 
-    /*HIV Positive With Positive Screening Results*/
-    public CohortIndicator HIVPositiveClientsScreenedWithPositiveResults(String visitType) {
+        return cohortIndicator("No. of Diabetes By Type One", map(Moh740Cohorts.patientWithDiabetesByType(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator diabetesByTypeTwo() {
 
-        return cohortIndicator("HIV Positive With Positive Screening Results",map(Moh745CohortLibrary.HIVPositiveClientsScreenedWithPositiveResultsCl(visitType), "startDate=${startDate},endDate=${endDate}")
-        );
+        return cohortIndicator("No. of Diabetes By Type Two", map(Moh740Cohorts.patientWithDiabetesByType(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator diabetesSecondaryToOther() {
+
+        return cohortIndicator("No. of Diabetes secondary to other causes", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientOnInsulin() {
+
+        return cohortIndicator("No. of patients on insulin", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientOnOGLAs() {
+
+        return cohortIndicator("No. of patients on OGLAs", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientOnInsulinAndOGLAs() {
+
+        return cohortIndicator("No. of patients on both (Insulin and OGLAs)", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientOnDietAndExercise() {
+
+        return cohortIndicator("No. of patients on diet and exercise only (DM and HTN)", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientDoneHbA1c() {
+
+        return cohortIndicator("No. of patients done HbA1c", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientMetHbA1cTarget() {
+
+        return cohortIndicator("No. that met HbA1c target (< 7%)", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator totalHypertension() {
+
+        return cohortIndicator("No. of Hypertension", map(Moh740Cohorts.patientWithHypertension(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientOnAntihypertensives() {
+
+        return cohortIndicator("No. of patients on antihypertensives", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientWithHighBP() {
+
+        return cohortIndicator("No. with high BP at clinic visit (≥140/90)", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedStroke() {
+
+        return cohortIndicator("Total no. of patients with Stroke", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedHeartDisease() {
+
+        return cohortIndicator("Total no. of patients with Ischemic heart disease", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedPeripheralDisease() {
+
+        return cohortIndicator("Total no. of patients with Peripheral vascular/artery disease", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedHeartFailure() {
+
+        return cohortIndicator("Total no. of patients with Heart failure", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedWithNeuropathies() {
+
+        return cohortIndicator("New diagnosis Patients with neuropathies", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientScreenedForDiabeticFoot() {
+
+        return cohortIndicator("No. of patients screened for diabetic foot", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedWithFootUlcer() {
+
+        return cohortIndicator("New diagnosis with diabetic foot ulcer", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator noFeetSavedThroughTreatment() {
+
+        return cohortIndicator("No. of feet saved through treatment", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator noAmputatedDiabeticFoot() {
+
+        return cohortIndicator("No. of amputation due to diabetic foot", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedWithKidneyComplication() {
+
+        return cohortIndicator("New diagnosis with kidney complications", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator newDiagnosedWithDiabeticRetinopathy() {
+
+        return cohortIndicator("New diagnosis with diabetic retinopathy ", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientScreenedForTuberculosis() {
+
+        return cohortIndicator("No. Screened for Tuberculosis", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientScreenedPositiveTuberculosis() {
+
+        return cohortIndicator("No. Screened Positive for Tuberculosis ", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator noEnrolledSHA() {
+
+        return cohortIndicator("No. enrolled with SHA", map(Moh740Cohorts.patientWithcondition(), "startDate=${startDate},endDate=${endDate}"));
     }
 
 }

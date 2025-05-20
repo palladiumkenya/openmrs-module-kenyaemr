@@ -18,8 +18,8 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
+import org.openmrs.module.kenyaemr.reporting.library.MOH740.Moh740IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.specialClinics.SpecialClinicsIndicatorLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
@@ -38,16 +38,15 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
  * MOH 755 report
  */
 @Component
-@Builds({"kenyaemr.ehrReports.report.moh755"})
+@Builds({"kenyaemr.ehrReports.report.moh740"})
 public class Moh740ReportBuilder extends AbstractReportBuilder {
     protected static final Log log = LogFactory.getLog(Moh740ReportBuilder.class);
     static final int NEW_VISIT = 164180,RE_VISIT= 160530;
-    static final String SPECIAL_CLINIC = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
-    static final String INTERVENTION = "Neonatal Screening", REFERRAL_IN = "Referrals IN", REFERRAL_OUT = "Referrals OUT";;
+    static final String DIABETIC_CLINICAl = CommonMetadata._Form.DIABETIC_CLINICAL_FORM;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
     @Autowired
-    private SpecialClinicsIndicatorLibrary specialClinicsIndicators;
+    private Moh740IndicatorLibrary Moh740Indicator;
     @Override
     protected List<Parameter> getParameters(ReportDescriptor descriptor) {
         return Arrays.asList(
@@ -60,52 +59,74 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
         return Arrays.asList(
-                ReportUtils.map(createOphthalmicServiceSummaryDataSet(), indParams)
+                ReportUtils.map(createMoh740SummaryDataSet(), indParams)
         );
     }
 
-    ColumnParameters fUnder1Month = new ColumnParameters(null, "<1 months", "gender=F|age=<1");
-    ColumnParameters mUnder1Month = new ColumnParameters(null, "<1 months", "gender=M|age=<1");
-    ColumnParameters f1To12Months = new ColumnParameters(null, "1-12 months", "gender=F|age=1-12");
-    ColumnParameters m1To12Months = new ColumnParameters(null, "1-12 months", "gender=M|age=1-12");
-    ColumnParameters f1_5 = new ColumnParameters(null, "1-5 years", "gender=F|age=1-5");
-    ColumnParameters m1_5 = new ColumnParameters(null, "1-5 years", "gender=M|age=1-5");
-    ColumnParameters f5_9 = new ColumnParameters(null, "5-9 years", "gender=F|age=5-9");
-    ColumnParameters m5_9 = new ColumnParameters(null, "5-9 years", "gender=M|age=5-9");
-    ColumnParameters f10_14 = new ColumnParameters(null, "10-14 years", "gender=F|age=10-14");
-    ColumnParameters m10_14 = new ColumnParameters(null, "10-14 years", "gender=M|age=10-14");
+    ColumnParameters f0_5 = new ColumnParameters(null, "0-5 years", "gender=F|age=0-5");
+    ColumnParameters m0_5 = new ColumnParameters(null, "0-5 years", "gender=M|age=0-5");
+    ColumnParameters f0_18 = new ColumnParameters(null, "0-18 years", "gender=F|age=0-18");
+    ColumnParameters m0_18 = new ColumnParameters(null, "0-18 years", "gender=M|age=0-18");
+    ColumnParameters f6_18 = new ColumnParameters(null, "6-18 years", "gender=F|age=6-18");
+    ColumnParameters m6_18 = new ColumnParameters(null, "6-18 years", "gender=M|age=6-18");
+    ColumnParameters f19_35 = new ColumnParameters(null, "19-35 years", "gender=F|age=19-35");
+    ColumnParameters m19_35 = new ColumnParameters(null, "19-35 years", "gender=M|age=19-35");
+    ColumnParameters all36AndAbove = new ColumnParameters(null, "36+ years", "age=36+");
+    ColumnParameters m36_60 = new ColumnParameters(null, "36-60 years", "gender=M|age=36-60");
+    ColumnParameters f36_60 = new ColumnParameters(null, "36-60 years", "gender=F|age=36-60");
+    ColumnParameters all60AndAbove = new ColumnParameters(null, "60+ years", "age=60+");
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
-    List<ColumnParameters> therapeuticAgeDisaggregations = Arrays.asList(mUnder1Month, fUnder1Month,m1To12Months, f1To12Months,m1_5, f1_5,m5_9, f5_9,
-            m10_14, f10_14, colTotal);
-    private DataSetDefinition createOphthalmicServiceSummaryDataSet() {
+
+    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5,m6_18, f6_18,m19_35,f19_35, all36AndAbove,colTotal);
+    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18,m19_35, f19_35,m36_60,f36_60, all60AndAbove,colTotal);
+    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18,m19_35, f19_35,m36_60,f36_60, all60AndAbove,colTotal);
+
+    private DataSetDefinition createMoh740SummaryDataSet() {
         CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
-        dsd.setName("OPHTHALMIC_SERVICE_SUMMARY");
-        dsd.setDescription("OPHTHALMIC SERVICE SUMMARY");
+        dsd.setName("MOH740");
+        dsd.setDescription("MOH740 MONTHLY SUMMARY");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        dsd.addDimension("age", map(commonDimensions.specialClinicsAgeGroups(), "onDate=${endDate}"));
+        dsd.addDimension("age", map(commonDimensions.moh740AgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", map(commonDimensions.gender()));
-        dsd.addColumn("No. of new visits", "", ReportUtils.map(specialClinicsIndicators.visitType(NEW_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.visitType(RE_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.totalCountVisits(NEW_VISIT,RE_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of interventions", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of referrals In", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_IN, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of referrals Out", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_OUT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of interventions(Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(RE_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of referrals In(Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(RE_VISIT, REFERRAL_IN, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("No. of referrals Out(Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(RE_VISIT, REFERRAL_OUT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total referrals In (New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNoOfOtInterventions(NEW_VISIT, RE_VISIT, REFERRAL_IN, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total referrals Out(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNoOfOtInterventions(NEW_VISIT, RE_VISIT, REFERRAL_OUT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total of Interventions(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNoOfOtInterventions(NEW_VISIT, RE_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total No. Of ATs Dispensed New Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, NEW_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total No. Of ATs Dispensed Re-Visits", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsDispensed(INTERVENTION, REFERRAL_IN, REFERRAL_OUT, RE_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total No. Of ATs Dispensed(New & Re-Visit)", "", ReportUtils.map(specialClinicsIndicators.totalNumberOfATsNewAndRevisitDispensed(INTERVENTION,REFERRAL_IN, REFERRAL_OUT,NEW_VISIT, RE_VISIT,SPECIAL_CLINIC), indParams), "");
-        EmrReportingUtils.addRow(dsd, "learningFindings", "Learning Findings", ReportUtils.map(specialClinicsIndicators.learningFindings(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "neurodevelopmental", "Neuron Developmental", ReportUtils.map(specialClinicsIndicators.neurodevelopmental(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "neurodiversityConditions", "Neurodiversity Conditions", ReportUtils.map(specialClinicsIndicators.neurodiversityConditions(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "childrenWithIntellectualDisabilities", "Children With Intellectual Disabilities", ReportUtils.map(specialClinicsIndicators.childrenWithIntellectualDisabilities(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "delayedDevelopmentalMilestones", "Delayed Developmental Milestones", ReportUtils.map(specialClinicsIndicators.delayedDevelopmentalMilestones(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "childrenTrainedOnAT", "No. of children  identified on assistive technology play device", ReportUtils.map(specialClinicsIndicators.childrenTrainedOnAT(SPECIAL_CLINIC), indParams), therapeuticAgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+        dsd.addColumn("Cumulative no. of diabetes patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeDiabetes(), indParams), "");
+        dsd.addColumn("Cumulative no. of hypertension patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeHypertension(), indParams), "");
+        dsd.addColumn("Cumulative no. of co-morbid DM+HTN patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeDMAndHTN(), indParams), "");
+        dsd.addColumn("No. of newly diagnosed diabetes cases", "", ReportUtils.map(Moh740Indicator.newDiagnosedDiabetes(), indParams), "");
+        dsd.addColumn("No. of newly diagnosed hypertension cases", "", ReportUtils.map(Moh740Indicator.newDiagnosedHypertension(), indParams), "");
+        dsd.addColumn("First visit to clinic", "", ReportUtils.map(Moh740Indicator.firstVisitToClinic(), indParams), "");
+        dsd.addColumn("Pre-existing DM", "", ReportUtils.map(Moh740Indicator.preExistingDM(), indParams), "");
+        dsd.addColumn("Pre-existing HTN", "", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), "");
+
+        EmrReportingUtils.addRow(dsd, "typeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+        EmrReportingUtils.addRow(dsd, "typeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+
+        dsd.addColumn("No. of Diabetes secondary to other causes", "", ReportUtils.map(Moh740Indicator.diabetesSecondaryToOther(), indParams), "");
+        dsd.addColumn("No. of patients on insulin", "", ReportUtils.map(Moh740Indicator.patientOnInsulin(), indParams), "");
+        dsd.addColumn("No. of patients on OGLAs", "", ReportUtils.map(Moh740Indicator.patientOnOGLAs(), indParams), "");
+        dsd.addColumn("No. of patients on both (Insulin and OGLAs)", "", ReportUtils.map(Moh740Indicator.patientOnInsulinAndOGLAs(), indParams), "");
+        dsd.addColumn("No. of patients on diet and exercise only (DM and HTN)", "", ReportUtils.map(Moh740Indicator.patientOnDietAndExercise(), indParams), "");
+        dsd.addColumn("No. of patients done HbA1c", "", ReportUtils.map(Moh740Indicator.patientDoneHbA1c(), indParams), "");
+        dsd.addColumn("No. that met HbA1c target (< 7%)", "", ReportUtils.map(Moh740Indicator.patientMetHbA1cTarget(), indParams), "");
+
+        EmrReportingUtils.addRow(dsd, "hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+
+        dsd.addColumn("No. of patients on antihypertensives", "", ReportUtils.map(Moh740Indicator.patientOnAntihypertensives(), indParams), "");
+        dsd.addColumn("No. with a BP (≥140/90) at clinic visit", "", ReportUtils.map(Moh740Indicator.patientWithHighBP(), indParams), "");
+        dsd.addColumn("Total no. of patients with CVD (new diagnosis) Stroke", "", ReportUtils.map(Moh740Indicator.newDiagnosedStroke(), indParams), "");
+        dsd.addColumn("Total no. of patients with CVD (new diagnosis) Ischemic heart disease", "", ReportUtils.map(Moh740Indicator.newDiagnosedHeartDisease(), indParams), "");
+        dsd.addColumn("Total no. of patients with CVD (new diagnosis) Peripheral vascular/artery disease", "", ReportUtils.map(Moh740Indicator.newDiagnosedPeripheralDisease(), indParams), "");
+        dsd.addColumn("Total no. of patients with CVD (new diagnosis) Heart failure", "", ReportUtils.map(Moh740Indicator.newDiagnosedHeartFailure(), indParams), "");
+        dsd.addColumn("No. of Patients with neuropathies (new diagnosis)", "", ReportUtils.map(Moh740Indicator.newDiagnosedWithNeuropathies(), indParams), "");
+        dsd.addColumn("No. of patients screened for diabetic foot", "", ReportUtils.map(Moh740Indicator.patientScreenedForDiabeticFoot(), indParams), "");
+        dsd.addColumn("No. of patients with diabetic foot ulcer (new diagnosis)", "", ReportUtils.map(Moh740Indicator.newDiagnosedWithFootUlcer(), indParams), "");
+        dsd.addColumn("No. of feet saved through treatment", "", ReportUtils.map(Moh740Indicator.noFeetSavedThroughTreatment(), indParams), "");
+        dsd.addColumn("No. of amputation due to diabetic foot", "", ReportUtils.map(Moh740Indicator.noAmputatedDiabeticFoot(), indParams), "");
+        dsd.addColumn("No. with kidney complications (new diagnosis)", "", ReportUtils.map(Moh740Indicator.newDiagnosedWithKidneyComplication(), indParams), "");
+        dsd.addColumn("No. with diabetic retinopathy (new diagnosis)", "", ReportUtils.map(Moh740Indicator.newDiagnosedWithDiabeticRetinopathy(), indParams), "");
+        dsd.addColumn("No. Screened for Tuberculosis", "", ReportUtils.map(Moh740Indicator.patientScreenedForTuberculosis(), indParams), "");
+        dsd.addColumn("No. Screened Positive for Tuberculosis Total", "", ReportUtils.map(Moh740Indicator.patientScreenedPositiveTuberculosis(), indParams), "");
+        dsd.addColumn("No. enrolled with SHA", "", ReportUtils.map(Moh740Indicator.noEnrolledSHA(), indParams), "");
         return dsd;
     }
 
