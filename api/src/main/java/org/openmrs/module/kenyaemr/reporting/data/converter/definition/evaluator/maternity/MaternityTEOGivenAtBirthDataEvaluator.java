@@ -35,10 +35,10 @@ public class MaternityTEOGivenAtBirthDataEvaluator implements PersonDataEvaluato
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select\n" +
-                "  v.patient_id,\n" +
-                "  (case v.teo_given when 1 then \"Yes\" when 0 then \" \" else \"\" end) as teo_given\n" +
-                "from kenyaemr_etl.etl_mchs_delivery v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select v.patient_id,\n" +
+                "       (case v.teo_given when 84893 then \"Yes\" when 1066 then \"No\" when 1175 then \"N/A\" end) as teo_given\n" +
+                "from kenyaemr_etl.etl_mchs_delivery v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

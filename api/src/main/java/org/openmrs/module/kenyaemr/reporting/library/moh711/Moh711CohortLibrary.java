@@ -210,13 +210,13 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition noOfANCClientsLowHB() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select d.patient_id from\n" +
-                "(select e.patient_id, hb.visit_date as anc_visit from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "inner join\n" +
-                "(select hb.patient_id,hb.visit_date,hb.anc_visit_number as no from kenyaemr_etl.etl_mch_antenatal_visit hb where hb.hemoglobin < 11\n" +
-                "and hb.visit_date between date(:startDate) and date(:endDate)) hb on e.patient_id = hb.patient_id\n" +
-                "group by e.patient_id\n" +
-                "having anc_visit between date(:startDate) and date(:endDate))d;";
+        String sqlQuery = "select anc.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit anc\n" +
+                "         inner join kenyaemr_etl.etl_laboratory_extract x on anc.patient_id = x.patient_id\n" +
+                "where x.lab_test = 21\n" +
+                "  and x.test_result < 11\n" +
+                "  and date(x.date_test_requested) between date(:startDate) and date(:endDate)\n" +
+                "  and date(anc.visit_date) between date(:startDate) and date(:endDate);";
         cd.setName("No.of Clients with Hb < 11 g/dl");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -417,7 +417,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select e.patient_id from kenyaemr_etl.etl_mch_enrollment e\n" +
                 "inner join kenyaemr_etl.etl_mch_antenatal_visit av on e.patient_id = av.patient_id\n" +
-                "where av.visit_date between date(:startDate) and date(:endDate) and av.breast_exam_done = 1065\n" +
+                "where av.visit_date between date(:startDate) and date(:endDate) and av.breast_exam_done in (1115,1065)\n" +
                 "group by e.patient_id;";
         cd.setName("Total women done breast examination");
         cd.setQuery(sqlQuery);
@@ -1387,7 +1387,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition givenTetracyclineAtBirth(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery ="select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where coalesce(date(date_of_delivery),date(d.visit_date)) between date(:startDate) and date(:endDate) and d.baby_condition=151849 and d.teo_given=84893;";
+        String sqlQuery ="select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where coalesce(date(date_of_delivery),date(d.visit_date)) between date(:startDate) and date(:endDate) and d.baby_condition=151849 and d.teo_given in (1,84893);";
         cd.setName("No.of babies given tetracycline at birth");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -1402,7 +1402,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition preTermBabies(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery ="select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where coalesce(date(date_of_delivery),date(d.visit_date)) between date(:startDate) and date(:endDate) and d.baby_condition=151849 and d.duration_of_pregnancy < 32;";
+        String sqlQuery ="select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where coalesce(date(date_of_delivery),date(d.visit_date)) between date(:startDate) and date(:endDate) and d.baby_condition=151849 and d.duration_of_pregnancy < 37;";
         cd.setName("Pre-Term babies");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));

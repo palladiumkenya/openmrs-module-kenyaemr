@@ -88,7 +88,7 @@ public class Moh755ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("gender", map(commonDimensions.gender()));
         dsd.addColumn("No. of new visits", "", ReportUtils.map(specialClinicsIndicators.visitType(NEW_VISIT, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.visitType(RE_VISIT, SPECIAL_CLINIC), indParams), "");
-        dsd.addColumn("Total No. of Re-visits", "", ReportUtils.map(specialClinicsIndicators.totalCountVisits(NEW_VISIT,RE_VISIT, SPECIAL_CLINIC), indParams), "");
+        dsd.addColumn("Total No. of visits", "", ReportUtils.map(specialClinicsIndicators.totalCountVisits(NEW_VISIT,RE_VISIT, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of interventions", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, INTERVENTION, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of referrals In", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_IN, SPECIAL_CLINIC), indParams), "");
         dsd.addColumn("No. of referrals Out", "", ReportUtils.map(specialClinicsIndicators.otInterventionVisitType(NEW_VISIT, REFERRAL_OUT, SPECIAL_CLINIC), indParams), "");
