@@ -10,7 +10,9 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionalSamMamDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsDiagnosisDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsHFAZScoreDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsWeightDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +26,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+ * Evaluates Height For Age ZScore
  */
-@Handler(supports= SpecialClinicsNutritionalSamMamDataDefinition.class, order=50)
-public class SpecialClinicsNutritionalSamMamDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsHFAZScoreDataDefinition.class, order=50)
+public class SpecialClinicsHFAZScoreDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,29 +37,20 @@ public class SpecialClinicsNutritionalSamMamDataEvaluator implements EncounterDa
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNutritionalSamMamDataDefinition cohortDefinition = (SpecialClinicsNutritionalSamMamDataDefinition) definition;
+        SpecialClinicsHFAZScoreDataDefinition cohortDefinition = (SpecialClinicsHFAZScoreDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select s.encounter_id,\n" +
-                "       case s.nutritional_status\n" +
-                "           when 1687 then '1st Time Diagnosis'\n" +
-                "           when 160033 then 'Relapse'\n" +
-                "           when 1655 then 'Re-admission' end as sam_mam\n" +
-                "from kenyaemr_etl.etl_special_clinics s\n" +
-                "where s.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and s.special_clinic_form_uuid = '"+specialClinic+"';";
+        String qry = ";";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date) context.getParameterValue("startDate");
-        Date endDate = (Date) context.getParameterValue("endDate");
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        queryBuilder.addParameter("specialClinic", specialClinic); // Corrected parameter name
+        queryBuilder.addParameter("specialClinic", specialClinic);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
     }
-
-
 }

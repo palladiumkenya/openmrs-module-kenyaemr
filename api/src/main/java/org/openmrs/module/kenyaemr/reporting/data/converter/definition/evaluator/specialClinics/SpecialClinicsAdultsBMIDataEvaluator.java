@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsNutritionInterventionDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsAdultsBMIDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsHeightDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +25,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
  */
-@Handler(supports= SpecialClinicsNutritionInterventionDataDefinition.class, order=50)
-public class SpecialClinicsNutritionInterventionDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsAdultsBMIDataDefinition.class, order=50)
+public class SpecialClinicsAdultsBMIDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,21 +35,23 @@ public class SpecialClinicsNutritionInterventionDataEvaluator implements Encount
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsNutritionInterventionDataDefinition cohortDefinition = (SpecialClinicsNutritionInterventionDataDefinition) definition;
+        SpecialClinicsAdultsBMIDataDefinition cohortDefinition = (SpecialClinicsAdultsBMIDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select v.encounter_id,\n" +
-                "(case v.nutritional_intervention when 1065 then 'Yes' when 1066 then 'No' else '' end) as nutritional_intervention\n" +
-                "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select c.encounter_id, ROUND(t.weight/(t.height * t.height)*10000,1) as bmi\n" +
+                "from kenyaemr_etl.etl_special_clinics c\n" +
+                "         inner join kenyaemr_etl.etl_patient_triage t on c.patient_id = t.patient_id\n" +
+                "and c.visit_date = t.visit_date\n" +
+                "  where c.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and c.special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date) context.getParameterValue("startDate");
-        Date endDate = (Date) context.getParameterValue("endDate");
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        queryBuilder.addParameter("specialClinic", specialClinic); // Corrected parameter name
+        queryBuilder.addParameter("specialClinic", specialClinic);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;

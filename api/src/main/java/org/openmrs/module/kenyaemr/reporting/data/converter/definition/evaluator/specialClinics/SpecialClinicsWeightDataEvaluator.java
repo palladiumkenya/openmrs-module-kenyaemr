@@ -10,7 +10,8 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsFirst0_6MonthsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsDiagnosisDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsWeightDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +25,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
  */
-@Handler(supports= SpecialClinicsFirst0_6MonthsDataDefinition.class, order=50)
-public class SpecialClinicsFirst0_6MonthsScreeningOutcomeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsWeightDataDefinition.class, order=50)
+public class SpecialClinicsWeightDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,13 +35,15 @@ public class SpecialClinicsFirst0_6MonthsScreeningOutcomeDataEvaluator implement
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsFirst0_6MonthsDataDefinition cohortDefinition = (SpecialClinicsFirst0_6MonthsDataDefinition) definition;
+        SpecialClinicsWeightDataDefinition cohortDefinition = (SpecialClinicsWeightDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select v.encounter_id,\n" +
-                "(case v.first_0_6_months when 5526 then 'Exclusive breastfeeding' when 164477 then 'Exclusive replacement feeding' when 6046 then 'Mixed feeding' else '' end) as first_0_6_months\n" +
-                "from kenyaemr_etl.etl_special_clinics v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select c.encounter_id, t.weight\n" +
+                "from kenyaemr_etl.etl_special_clinics c\n" +
+                "         inner join kenyaemr_etl.etl_patient_triage t on c.patient_id = t.patient_id\n" +
+                "and c.visit_date = t.visit_date\n" +
+                "  where c.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and c.special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

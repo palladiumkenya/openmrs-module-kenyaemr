@@ -24,8 +24,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+ * Evaluates Critical nutritional practices
  */
 @Handler(supports= SpecialClinicsCriticalNutritionPracticesDataDefinition.class, order=50)
 public class SpecialClinicsCriticalNutritionPracticesDataEvaluator implements EncounterDataEvaluator {
