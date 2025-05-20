@@ -35,13 +35,33 @@ public class ETLLastVLResultValidityDataEvaluator implements PersonDataEvaluator
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select patient_id,\n" +
-                "       if(timestampdiff(MONTH, coalesce(mid(max(concat(date(visit_date),date(date_test_requested))),11), max(date(visit_date))),\n" +
-                "                        date(:endDate))<= 12, 'Valid', 'Invalid') as validity\n" +
-                "from kenyaemr_etl.etl_laboratory_extract\n" +
-                "where lab_test in (1305, 856)\n" +
-                "and date(visit_date) <= date(:endDate)\n" +
-                "GROUP BY patient_id;";
+        String qry = "select vt.patient_id,\n" +
+                "       if((vt.vl_result >= 200 and timestampdiff(MONTH, date(vt.date_test_requested), date(:endDate)) >= 3)\n" +
+                "              OR (timestampdiff(YEAR, d.DOB, date(vt.date_test_requested)) between 0 and 24 and\n" +
+                "                  ((vt.lab_test = 856 and vt.vl_result < 200) OR (vt.lab_test = 1305 and vt.vl_result = 1302)) and\n" +
+                "                  timestampdiff(MONTH, date(vt.date_test_requested), date(:endDate)) >= 6)\n" +
+                "              OR (timestampdiff(MONTH, vt.date_started_art, date(:endDate)) >= 3 and vt.vl_result is null and\n" +
+                "                  vt.previous_test_result is null and vt.base_viral_load_test_result is null)\n" +
+                "              OR (TIMESTAMPDIFF(MONTH, date(vt.date_started_art), date(:endDate)) >= 3 and\n" +
+                "                  (vt.breastfeeding_status = 1065 or vt.pregnancy_status = 1065) and\n" +
+                "                  (vt.latest_hiv_followup_visit > vt.date_test_requested OR vt.date_test_requested is null))\n" +
+                "              OR (timestampdiff(MONTH, vt.date_test_requested, date(:endDate)) >= 6 and\n" +
+                "                  timestampdiff(YEAR, d.DOB, date(vt.date_test_requested)) between 0 and 24 and\n" +
+                "                  timestampdiff(MONTH, vt.date_started_art, date(:endDate)) >= 3 and\n" +
+                "                  ((vt.lab_test = 856 and vt.vl_result < 200) OR (vt.lab_test = 1305 and vt.vl_result = 1302)))\n" +
+                "              OR (timestampdiff(YEAR, d.DOB, date(vt.date_test_requested)) > 24 and\n" +
+                "                  TIMESTAMPDIFF(MONTH, date(vt.date_started_art), date(:endDate)) >= 3 and\n" +
+                "                  ((vt.lab_test = 856 and vt.vl_result < 200) OR (vt.lab_test = 1305 and vt.vl_result = 1302)) and\n" +
+                "                  timestampdiff(MONTH, date(vt.date_test_requested), date(:endDate)) >= 12)\n" +
+                "              OR (vt.pregnancy_status = 1065 or vt.breastfeeding_status = 1065 and\n" +
+                "                                                ((vt.lab_test = 856 and vt.vl_result < 200) OR\n" +
+                "                                                 (vt.lab_test = 1305 and vt.vl_result = 1302)) and\n" +
+                "                                                vt.previous_order_reason in (1434, 159882))\n" +
+                "              and timestampdiff(MONTH, date(vt.date_test_requested), date(:endDate)) >= 6, 'Invalid',\n" +
+                "          'Valid') as vl_status\n" +
+                "from kenyaemr_etl.etl_viral_load_validity_tracker vt\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = vt.patient_id\n" +
+                "group by vt.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
