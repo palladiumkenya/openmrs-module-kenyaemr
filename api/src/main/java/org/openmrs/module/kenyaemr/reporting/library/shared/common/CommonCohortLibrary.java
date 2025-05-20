@@ -123,6 +123,18 @@ public class CommonCohortLibrary {
 		cd.setMaxAgeUnit(DurationUnit.MONTHS);
 		return cd;
 	}
+	/**
+	 * patients who are at most maxAge days old on ${effectiveDate}
+	 * @return CohortDefinition
+	 */
+	public CohortDefinition agedAtMostDays(int maxAge) {
+		AgeCohortDefinition cd = new AgeCohortDefinition();
+		cd.setName("aged at most " + maxAge);
+		cd.addParameter(new Parameter("effectiveDate", "Effective Date", Date.class));
+		cd.setMaxAge(maxAge);
+		cd.setMaxAgeUnit(DurationUnit.DAYS);
+		return cd;
+	}
 
 	/**
 	 * patients who are at least minAge months old and at most days old on ${effectiveDate}

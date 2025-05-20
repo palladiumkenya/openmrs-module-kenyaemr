@@ -24,9 +24,19 @@ import java.util.Date;
  */
 @Component
 public class SpecialClinicsCohortLibrary {
+    public CohortDefinition ageCohort() {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select d.patient_id from kenyaemr_etl.etl_patient_demographics d where timestampdiff(YEAR,d.DOB,date(:endDate)) < 15;";
+        cd.setName("Under 15 Age Cohort");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Under 15 Age Cohort");
+        return cd;
+    }
+
     public CohortDefinition visitType(int visitType, String specialClinic) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_special_clinics f where f.visit_type = '"+visitType+"' and f.visit_date between date(:startDate) and date(:endDate) and f.special_clinic_form_uuid = '" + specialClinic + "';";
+        String sqlQuery = "select f.patient_id from kenyaemr_etl.etl_special_clinics f inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id and timestampdiff(YEAR,d.DOB,date(:endDate)) < 15 where f.visit_type = '"+visitType+"' and f.visit_date between date(:startDate) and date(:endDate) and f.special_clinic_form_uuid = '" + specialClinic + "';";
         cd.setName("Visit Type");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -52,7 +62,7 @@ public class SpecialClinicsCohortLibrary {
     public CohortDefinition totalCountVisits(int newVisit, int reVisit,String specialClinic) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = String.format(
-                "select f.patient_id from kenyaemr_etl.etl_special_clinics f where f.visit_date between date(:startDate) and date(:endDate)\n" +
+                "select f.patient_id from kenyaemr_etl.etl_special_clinics f inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id and timestampdiff(YEAR,d.DOB,date(:endDate)) < 15 where f.visit_date between date(:startDate) and date(:endDate)\n" +
                         "and f.visit_type in (%d, %d) and f.special_clinic_form_uuid = '" + specialClinic + "';", newVisit, reVisit) ;
         cd.setName("Total Number Count of Visits");
         cd.setQuery(sqlQuery);
@@ -80,7 +90,8 @@ public class SpecialClinicsCohortLibrary {
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("totalATsDispensed", ReportUtils.map(totalATsDispensed(intervention,referredIn,referredOut, specialClinic), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("visitType", ReportUtils.map(visitType(visitType, specialClinic), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("totalATsDispensed AND visitType");
+        cd.addSearch("ageCohort", ReportUtils.map(ageCohort(), "endDate=${endDate}"));
+        cd.setCompositionString("ageCohort AND totalATsDispensed AND visitType");
         return cd;
     }
     public CohortDefinition totalNumberOfATsNewAndRevisitDispensed(String intervention, String referredIn,String referredOut,  int newVisit, int reVisit, String specialClinic) {
@@ -89,7 +100,8 @@ public class SpecialClinicsCohortLibrary {
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("totalATsDispensed", ReportUtils.map(totalATsDispensed(intervention,referredIn,referredOut, specialClinic), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("totalCountVisits", ReportUtils.map(totalCountVisits(newVisit,reVisit, specialClinic), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("totalATsDispensed AND totalCountVisits");
+        cd.addSearch("ageCohort", ReportUtils.map(ageCohort(), "endDate=${endDate}"));
+        cd.setCompositionString("ageCohort AND totalATsDispensed AND totalCountVisits");
         return cd;
     }
     public CohortDefinition neurodevelopmental(String specialClinic) {
@@ -382,7 +394,8 @@ public class SpecialClinicsCohortLibrary {
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("totalCountVisits", ReportUtils.map(totalCountVisits(newVisit,reVisit, specialClinic), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("interventionType", ReportUtils.map(otIntervention(interventionType, specialClinic), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("totalCountVisits AND interventionType");
+        cd.addSearch("ageCohort", ReportUtils.map(ageCohort(), "endDate=${endDate}"));
+        cd.setCompositionString("ageCohort AND totalCountVisits AND interventionType");
         return cd;
     }
 
@@ -392,7 +405,8 @@ public class SpecialClinicsCohortLibrary {
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("visitType", ReportUtils.map(visitType(visitType, specialClinic), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("interventionType", ReportUtils.map(otIntervention(interventionType, specialClinic), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("visitType AND interventionType");
+        cd.addSearch("ageCohort", ReportUtils.map(ageCohort(), "endDate=${endDate}"));
+        cd.setCompositionString("visitType AND interventionType AND ageCohort");
         return cd;
     }
 

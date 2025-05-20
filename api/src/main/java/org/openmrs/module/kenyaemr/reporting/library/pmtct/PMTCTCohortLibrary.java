@@ -1299,7 +1299,7 @@ public class PMTCTCohortLibrary {
         return cd;
     }
     public CohortDefinition givenTetracyclineSql() {
-        String sqlQuery = "select ld.patient_id from kenyaemr_etl.etl_mchs_delivery ld where ld.teo_given in(84893,1) and date(ld.visit_date) between date(:startDate) and date(:endDate);";
+        String sqlQuery = "select ld.patient_id from kenyaemr_etl.etl_mchs_delivery ld where ld.teo_given in (84893,1) and date(ld.visit_date) between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("Babies given tetracycline at birth");
         cd.setQuery(sqlQuery);
