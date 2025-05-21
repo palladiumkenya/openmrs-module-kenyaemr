@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsReceiptNumberDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsProcedureOrderDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -25,8 +25,8 @@ import java.util.Map;
 
 /**
  */
-@Handler(supports= SpecialClinicsReceiptNumberDataDefinition.class, order=50)
-public class SpecialClinicsReceiptNumberDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsProcedureOrderDataDefinition.class, order=50)
+public class SpecialClinicsProcedureOrderDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -34,24 +34,16 @@ public class SpecialClinicsReceiptNumberDataEvaluator implements EncounterDataEv
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsReceiptNumberDataDefinition cohortDefinition = (SpecialClinicsReceiptNumberDataDefinition) definition;
+        SpecialClinicsProcedureOrderDataDefinition cohortDefinition = (SpecialClinicsProcedureOrderDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "SELECT v.encounter_id, t.receipt_number AS receipt_number\n" +
-                "FROM kenyaemr_etl.etl_special_clinics v\n" +
-                "LEFT JOIN openmrs.cashier_bill t \n" +
-                "    ON v.patient_id = t.patient_id \n" +
-                "    AND DATE(t.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "LEFT JOIN openmrs.cashier_bill_payment tp \n" +
-                "    ON t.bill_id = tp.bill_id \n" +
-                "    AND DATE(tp.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "LEFT JOIN openmrs.cashier_payment_mode m \n" +
-                "    ON tp.payment_mode_id = m.payment_mode_id \n" +
-                "    AND DATE(m.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
-                "GROUP BY v.encounter_id;";
-
+        String qry = "select c.encounter_id,d.procedures from kenyaemr_etl.etl_special_clinics c inner join\n" +
+                "(SELECT d.patient_id, GROUP_CONCAT(DISTINCT n.name SEPARATOR '\\\\r\\\\n') AS procedures,DATE(d.date_created) as visit_date\n" +
+                "FROM orders d INNER JOIN concept_name n ON d.concept_id = n.concept_id AND n.locale = 'en'\n" +
+                "inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "WHERE n.concept_name_type = 'FULLY_SPECIFIED' AND d.voided = 0\n" +
+                "GROUP BY d.patient_id, d.encounter_id, DATE(d.date_created))d on c.patient_id = d.patient_id and c.visit_date = d.visit_date\n" +
+                "where c.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate) and c.special_clinic_form_uuid = '" + specialClinic + "';" ;
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
