@@ -35,7 +35,7 @@ public class PhysicalIPVDataDefinitionEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT a.encounter_id, IF(a.physical_ipv=1066, 'No', IF(a.`physical_ipv`=158358, 'Yes', NULL)) physical_ipv FROM kenyaemr_etl.etl_gbv_screening a";
+        String qry = "SELECT a.encounter_id, IF(a.physical_ipv=1066, 'No', IF(a.`physical_ipv` in (1065,158358), 'Yes', NULL)) physical_ipv FROM kenyaemr_etl.etl_gbv_screening a";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

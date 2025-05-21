@@ -35,7 +35,7 @@ public class EmotionalIPVDataDefinitionEvaluator implements EncounterDataEvaluat
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT a.encounter_id, IF(a.emotional_ipv=1066, 'No', IF(a.emotional_ipv=118688, 'Yes', NULL)) emotional_ipv FROM kenyaemr_etl.etl_gbv_screening a";
+        String qry = "SELECT a.encounter_id, IF(a.emotional_ipv=1066, 'No', IF(a.emotional_ipv in (1065,118688), 'Yes', NULL)) emotional_ipv FROM kenyaemr_etl.etl_gbv_screening a";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
