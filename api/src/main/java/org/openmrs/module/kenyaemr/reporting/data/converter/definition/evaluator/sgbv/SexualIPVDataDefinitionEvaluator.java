@@ -35,7 +35,7 @@ public class SexualIPVDataDefinitionEvaluator implements EncounterDataEvaluator 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT a.encounter_id, IF(a.sexual_ipv=1066, 'No', IF(a.sexual_ipv=152370, 'Yes', NULL)) sexual_ipv FROM kenyaemr_etl.etl_gbv_screening a;";
+        String qry = "SELECT a.encounter_id, IF(a.sexual_ipv=1066, 'No', IF(a.sexual_ipv in (1065,152370), 'Yes', NULL)) sexual_ipv FROM kenyaemr_etl.etl_gbv_screening a;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
