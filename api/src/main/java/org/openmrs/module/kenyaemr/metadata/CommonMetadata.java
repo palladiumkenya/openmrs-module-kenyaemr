@@ -133,6 +133,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LEPROSY_INITIAL = "6c15c4d1-91a5-4db1-928b-75ec05ee8e74";
 		public static final String LEPROSY_FOLLOWUP = "8db0b85a-441b-4ee3-8955-0cf4cb55f726";
 		public static final String LEPROSY_POSTOPERATIVE = "4469d5f5-18fe-4f47-bf05-36819b9bf5e1";
+		public static final String NCD_ENCOUNTER = "dfcbe5d0-1afb-48a0-8f1e-5e5988b11f15";
+
 	}
 
 	public static final class _Form {
@@ -198,9 +200,13 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String NEW_BORN_ADMISSION_FORM = "5b0a08f5-87c1-40cc-8c09-09c33b44523d";
 		public static final String PLASTIC_SURGERY_FORM = "05365b29-0bf1-4351-a2fb-524ec72130e8";
 		public static final String IPD_DISCHARGE_FORM = "98a781d2-b777-4756-b4c9-c9b0deb3483c";
+
 		public static final String LEPROSY_INITIAL_FORM = "3b869649-81cd-42d2-bf71-a33dccaa04ff";
 		public static final String LEPROSY_FOLLOWUP_FORM = "a0336b03-6c14-4b73-97b0-d2bf345008ab";
 		public static final String LEPROSY_POSTOPERATIVE_FORM = "fe955bae-4124-4350-a32d-922304637e8f";
+
+		public static final String NCD_FORM ="c4994dd7-f2b6-4c28-bdc7-8b1d9d2a6a97";
+
 	}
 
 	public static final class _OrderType {
