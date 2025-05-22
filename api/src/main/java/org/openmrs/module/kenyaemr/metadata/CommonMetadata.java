@@ -133,6 +133,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LEPROSY_INITIAL = "6c15c4d1-91a5-4db1-928b-75ec05ee8e74";
 		public static final String LEPROSY_FOLLOWUP = "8db0b85a-441b-4ee3-8955-0cf4cb55f726";
 		public static final String LEPROSY_POSTOPERATIVE = "4469d5f5-18fe-4f47-bf05-36819b9bf5e1";
+		public static final String FLUID_INTAKE = "657bdb00-0eab-48a6-8da4-bb1644d5fd48";
 	}
 
 	public static final class _Form {
@@ -201,6 +202,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LEPROSY_INITIAL_FORM = "3b869649-81cd-42d2-bf71-a33dccaa04ff";
 		public static final String LEPROSY_FOLLOWUP_FORM = "a0336b03-6c14-4b73-97b0-d2bf345008ab";
 		public static final String LEPROSY_POSTOPERATIVE_FORM = "fe955bae-4124-4350-a32d-922304637e8f";
+		public static final String FLUID_INTAKE_FORM = "b4bfa7a3-f6ed-4339-a4ec-b076463c0696";
 	}
 
 	public static final class _OrderType {
@@ -370,6 +372,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Leprosy Initial", "Leprosy Initial Clinical encounter type", _EncounterType.LEPROSY_INITIAL));
 		install(encounterType("Leprosy Followup", "Leprosy Followup Clinical encounter type", _EncounterType.LEPROSY_FOLLOWUP));
 		install(encounterType("Leprosy Postoperative", "Leprosy Postoperative Clinical encounter type", _EncounterType.LEPROSY_POSTOPERATIVE));
+		install(encounterType("Fluid Intake and Output", "Fluid Intake and Output Clinical encounter type", _EncounterType.FLUID_INTAKE));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -457,6 +460,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Leprosy Initial Clinical Form", "Form for Leprosy Initial contact clinical encounter", _EncounterType.LEPROSY_INITIAL, "1", _Form.LEPROSY_INITIAL_FORM));
 		install(form("Leprosy Followup Clinical Form", "Form for Leprosy Followup contact clinical encounter", _EncounterType.LEPROSY_FOLLOWUP, "1", _Form.LEPROSY_FOLLOWUP_FORM));
 		install(form("Leprosy Postoperative Clinical Form", "Form for Leprosy Postoperative clinical encounter", _EncounterType.LEPROSY_POSTOPERATIVE, "1", _Form.LEPROSY_FOLLOWUP_FORM));
+		install(form("Fluid Intake and Output Clinical Form", "Form for Fluid Intake and Output recording clinical encounter", _EncounterType.FLUID_INTAKE, "1", _Form.FLUID_INTAKE_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
