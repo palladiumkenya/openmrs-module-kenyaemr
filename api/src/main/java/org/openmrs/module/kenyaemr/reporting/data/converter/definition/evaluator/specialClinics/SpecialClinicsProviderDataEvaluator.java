@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsVisitTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsProviderDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,9 +24,12 @@ import java.util.Date;
 import java.util.Map;
 
 /**
+ *
+ *
+ * Evaluates Edema
  */
-@Handler(supports= SpecialClinicsVisitTypeDataDefinition.class, order=50)
-public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsProviderDataDefinition.class, order=50)
+public class SpecialClinicsProviderDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -34,13 +37,13 @@ public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvalua
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsVisitTypeDataDefinition cohortDefinition = (SpecialClinicsVisitTypeDataDefinition) definition;
+        SpecialClinicsProviderDataDefinition cohortDefinition = (SpecialClinicsProviderDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select v.encounter_id,\n" +
-                "           (case v.visit_type when 164180 then 'New visit' when 160530 then 'Return Visit' when 160563 then 'Referred from other facilities' when 160551 then 'Referral' else '' end) as visit_type\n" +
-                "           from kenyaemr_etl.etl_special_clinics v\n" +
-                "           where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select le.encounter_id, concat_ws(' ', d.family_name, d.given_name, d.middle_name) as creator\n" +
+                "from kenyaemr_etl.etl_special_clinics le\n" +
+                "inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = le.patient_id\n" +
+                "where special_clinic_form_uuid = '"+specialClinic+"';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
@@ -52,5 +55,6 @@ public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvalua
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
+
     }
 }

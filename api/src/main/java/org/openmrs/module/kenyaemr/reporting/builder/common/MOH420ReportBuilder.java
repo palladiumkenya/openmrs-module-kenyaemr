@@ -96,7 +96,7 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
 
-		SpecialClinicsReferredToDataDefinition specialClinicsReferredToDataDefinition = new SpecialClinicsReferredToDataDefinition();
+        SpecialClinicsReferredToDataDefinition specialClinicsReferredToDataDefinition = new SpecialClinicsReferredToDataDefinition();
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		specialClinicsReferredToDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
@@ -146,10 +146,15 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         treatmentInterventionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         treatmentInterventionDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
-        SpecialClinicsSiteOfScreeningDataDefinition siteOfScreeningDataDefinition = new SpecialClinicsSiteOfScreeningDataDefinition();
+        SpecialClinicsAreaOfServiceDataDefinition siteOfScreeningDataDefinition = new SpecialClinicsAreaOfServiceDataDefinition();
         siteOfScreeningDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         siteOfScreeningDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         siteOfScreeningDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
+
+        SpecialClinicsProviderDataDefinition providerDataDefinition = new SpecialClinicsProviderDataDefinition();
+        providerDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        providerDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        providerDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -179,7 +184,7 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Underlying Condition", procedureOrderDataDefinition, paramMapping);
         dsd.addColumn("Amount Paid", amountPaidDataDefinition, paramMapping);
         dsd.addColumn("Next Appointment Date", new ObsForPersonDataDefinition("Next Appointment Date", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.RETURN_VISIT_DATE), null, null), "", new ObsValueDatetimeConverter());
-        dsd.addColumn("Name of Officer",new OPDOrderingClinicianDataDefinition(), null);
+        dsd.addColumn("Name of Officer",providerDataDefinition, paramMapping);
         SpecialClinicsRegisterCohortDefinition cd = new SpecialClinicsRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
