@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class Moh706LabCohortLibrary {
 
-	//1.2 Urine Analysis
+	//Tests by concepts
 
 	public CohortDefinition getTotalTestsByConcept(Integer labSetConceptId) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
@@ -37,7 +37,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getTotalCodedLabsByConceptAndPositiveAnswer(int question, List<Integer> ans) {
+	public CohortDefinition getTotalCodedLabsByConceptAndPositiveAnswer(Integer question, List<Integer> ans) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -75,7 +75,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getResultsBasedOnValueNumericQuestionBetweenLimits(int question, double lower, double upper) {
+	public CohortDefinition getResultsBasedOnValueNumericQuestionBetweenLimits(Integer question, Double lower, Double upper) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id within limits");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -88,7 +88,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getResultsBasedOnValueNumericQuestion(int question) {
+	public CohortDefinition getResultsBasedOnValueNumericQuestion(Integer question) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id ");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
