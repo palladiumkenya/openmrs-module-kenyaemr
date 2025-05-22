@@ -27,17 +27,13 @@ public class Moh706IndicatorLibrary {
 
 	public CohortIndicator getTotalTestsByConcept(Integer labSetConceptId) {
 		return cohortIndicator(
-			"All patients who have urinalysis glucose",
+			"All patients who have tests",
 			map(moh706LabCohortLibrary.getTotalTestsByConcept(labSetConceptId),
 				"startDate=${startDate},endDate=${endDate}"));
 	}
 
-	public CohortIndicator getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
-		return cohortIndicator("All patients who have malaria test done and are positive",
-			map(moh706LabCohortLibrary.getAllBSMalariaTestsPositiveCases(testConceptId), "startDate=${startDate},endDate=${endDate}"));
-	}
 
-	public CohortIndicator getTotalCodedLabsByConceptAndPositiveAnswer(int q, List<Integer> ans) {
+	public CohortIndicator getTotalCodedLabsByConceptAndPositiveAnswer(Integer q, List<Integer> ans) {
 		return cohortIndicator("All patients who have tests based on a question and answers",
 			map(moh706LabCohortLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(q, ans), "startDate=${startDate},endDate=${endDate}"));
 	}
@@ -52,14 +48,14 @@ public class Moh706IndicatorLibrary {
 			map(moh706LabCohortLibrary.getResultsBasedOnAlistOfQuestions(q), "startDate=${startDate},endDate=${endDate}"));
 	}
 
-	public CohortIndicator getResultsBasedOnValueNumericQuestionBetweenLimits(int question, double lower, double upper) {
+	public CohortIndicator getResultsBasedOnValueNumericQuestionBetweenLimits(Integer question, Double lower, Double upper) {
 		return cohortIndicator(
 			"Get patients with results recorded based on  concept id within limits indicators",
 			map(moh706LabCohortLibrary.getResultsBasedOnValueNumericQuestionBetweenLimits(question, lower, upper),
 				"startDate=${startDate},endDate=${endDate}"));
 	}
 
-	public CohortIndicator getResultsBasedOnValueNumericQuestion(int question) {
+	public CohortIndicator getResultsBasedOnValueNumericQuestion(Integer question) {
 		return cohortIndicator(
 			"Get patients with tests recorded based on concept id indicators",
 			map(moh706LabCohortLibrary.getResultsBasedOnValueNumericQuestion(question),

@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class Moh706LabCohortLibrary {
 
-	//1.2 Urine Analysis
+	//Tests by concepts
 
 	public CohortDefinition getTotalTestsByConcept(Integer labSetConceptId) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
@@ -37,7 +37,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getTotalCodedLabsByConceptAndPositiveAnswer(int question, List<Integer> ans) {
+	public CohortDefinition getTotalCodedLabsByConceptAndPositiveAnswer(Integer question, List<Integer> ans) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -75,7 +75,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getResultsBasedOnValueNumericQuestionBetweenLimits(int question, double lower, double upper) {
+	public CohortDefinition getResultsBasedOnValueNumericQuestionBetweenLimits(Integer question, Double lower, Double upper) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id within limits");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -88,7 +88,7 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getResultsBasedOnValueNumericQuestion(int question) {
+	public CohortDefinition getResultsBasedOnValueNumericQuestion(Integer question) {
 		SqlCohortDefinition sql = new SqlCohortDefinition();
 		sql.setName("Get patients with tests recorded based on concept id ");
 		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -101,19 +101,5 @@ public class Moh706LabCohortLibrary {
 		return sql;
 	}
 
-	public CohortDefinition getAllBSMalariaTestsPositiveCases(Integer testConceptId) {
-		SqlCohortDefinition sql = new SqlCohortDefinition();
-		sql.setName("Get patients with malaria tests positive cases");
-		sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-		sql.setQuery("#Malaria BS\n" +
-			"select  le.patient_id from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"                               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id\n" +
-			"where le.set_member_conceptId = " + testConceptId + " and le.test_result like '%seen%'\n" +
-			"  and date(le.visit_date) between :startDate and :endDate;"
-
-		);
-		return sql;
-	}
-
+	
 }
