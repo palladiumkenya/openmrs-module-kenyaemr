@@ -47,6 +47,7 @@
 				<ref bean="kenyaemr.common.form.IPDProcedure"/>
 				<ref bean="kenyaemr.common.form.postProcedure"/>
 				<ref bean="kenyaemr.common.form.preOperative"/>
+				<ref bean="kenyaemr.common.form.ADRAssessmentTool"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
 			</set>
@@ -641,6 +642,24 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
 		<property name="order" value="201015" />
+	</bean>
+	<!-- ADR assessment tool Form -->
+	<bean id="kenyaemr.common.form.ADRAssessmentTool" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="cc27af13-69ee-49e2-8a43-e1b1926403c1" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowAdrAssessmentForm" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="201017" />
 	</bean>
 
 	<!-- ===================== Reports ===================== -->
