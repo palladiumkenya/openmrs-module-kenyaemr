@@ -18,6 +18,7 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.LastReturnVisitDateCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
@@ -151,10 +152,10 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         siteOfScreeningDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         siteOfScreeningDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
-        SpecialClinicsProviderDataDefinition providerDataDefinition = new SpecialClinicsProviderDataDefinition();
-        providerDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        providerDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        providerDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
+        SpecialClinicsNextAppointmentDateDataDefinition appointmentDateDataDefinition = new SpecialClinicsNextAppointmentDateDataDefinition();
+        appointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        appointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        appointmentDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -183,8 +184,7 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Receipt Number", receiptNumberDataDefinition, paramMapping);
         dsd.addColumn("Underlying Condition", procedureOrderDataDefinition, paramMapping);
         dsd.addColumn("Amount Paid", amountPaidDataDefinition, paramMapping);
-        dsd.addColumn("Next Appointment Date", new ObsForPersonDataDefinition("Next Appointment Date", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.RETURN_VISIT_DATE), null, null), "", new ObsValueDatetimeConverter());
-        dsd.addColumn("Name of Officer",providerDataDefinition, paramMapping);
+        dsd.addColumn("Next Appointment Date", appointmentDateDataDefinition, paramMapping);
         SpecialClinicsRegisterCohortDefinition cd = new SpecialClinicsRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
