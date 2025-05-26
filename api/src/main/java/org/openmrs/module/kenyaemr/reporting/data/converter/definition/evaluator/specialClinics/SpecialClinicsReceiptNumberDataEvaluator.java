@@ -37,7 +37,7 @@ public class SpecialClinicsReceiptNumberDataEvaluator implements EncounterDataEv
         SpecialClinicsReceiptNumberDataDefinition cohortDefinition = (SpecialClinicsReceiptNumberDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "SELECT v.encounter_id, GROUP_CONCAT(t.receipt_number SEPARATOR ', ') AS receipt_number\n" +
+        String qry = "SELECT v.encounter_id, t.receipt_number AS receipt_number\n" +
                 "FROM kenyaemr_etl.etl_special_clinics v\n" +
                 "LEFT JOIN openmrs.cashier_bill t \n" +
                 "    ON v.patient_id = t.patient_id \n" +
@@ -50,7 +50,7 @@ public class SpecialClinicsReceiptNumberDataEvaluator implements EncounterDataEv
                 "    AND DATE(m.date_created) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "AND v.special_clinic_form_uuid = '" + specialClinic + "'\n" +
-                "AND m.name IS NOT NULL GROUP BY v.encounter_id;";
+                "GROUP BY v.encounter_id;";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

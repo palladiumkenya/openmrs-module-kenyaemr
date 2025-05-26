@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsVisitTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsTreatmentInterventionDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,9 +24,11 @@ import java.util.Date;
 import java.util.Map;
 
 /**
+ * Evaluates Referred to  
+ * OPD Register
  */
-@Handler(supports= SpecialClinicsVisitTypeDataDefinition.class, order=50)
-public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsTreatmentInterventionDataDefinition.class, order=50)
+public class SpecialClinicsTreatmentInterventionDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -34,13 +36,13 @@ public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvalua
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsVisitTypeDataDefinition cohortDefinition = (SpecialClinicsVisitTypeDataDefinition) definition;
+        SpecialClinicsTreatmentInterventionDataDefinition cohortDefinition = (SpecialClinicsTreatmentInterventionDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "           (case v.visit_type when 164180 then 'New visit' when 160530 then 'Return Visit' when 160563 then 'Referred from other facilities' when 160551 then 'Referral' else '' end) as visit_type\n" +
-                "           from kenyaemr_etl.etl_special_clinics v\n" +
-                "           where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+                "v.treatment_intervention\n" +
+                "from kenyaemr_etl.etl_special_clinics v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

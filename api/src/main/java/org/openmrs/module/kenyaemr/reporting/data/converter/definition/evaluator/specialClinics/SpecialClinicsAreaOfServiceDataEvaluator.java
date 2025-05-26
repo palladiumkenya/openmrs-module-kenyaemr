@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsVisitTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsAreaOfServiceDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,9 +24,11 @@ import java.util.Date;
 import java.util.Map;
 
 /**
+ * Evaluates Referred to  
+ * OPD Register
  */
-@Handler(supports= SpecialClinicsVisitTypeDataDefinition.class, order=50)
-public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsAreaOfServiceDataDefinition.class, order=50)
+public class SpecialClinicsAreaOfServiceDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -34,23 +36,32 @@ public class SpecialClinicsVisitTypeDataEvaluator implements EncounterDataEvalua
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialClinicsVisitTypeDataDefinition cohortDefinition = (SpecialClinicsVisitTypeDataDefinition) definition;
+        SpecialClinicsAreaOfServiceDataDefinition cohortDefinition = (SpecialClinicsAreaOfServiceDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select v.encounter_id,\n" +
-                "           (case v.visit_type when 164180 then 'New visit' when 160530 then 'Return Visit' when 160563 then 'Referred from other facilities' when 160551 then 'Referral' else '' end) as visit_type\n" +
-                "           from kenyaemr_etl.etl_special_clinics v\n" +
-                "           where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
+        String qry = "select s.encounter_id,\n" +
+                "       (case s.area_of_service\n" +
+                "           when 160542 then 'CBR(Community-based rehabilitation)'\n" +
+                "           when 159937 then 'MCH'\n" +
+                "           when 164103 then 'Diabetic clinic'\n" +
+                "           when 167396 then 'NBU(newborn unit)'\n" +
+                "           when 5622 then 'Others'\n" +
+                "           when 159927 then 'Outreach/Mobile Clinic' else '' end) as area_of_service \n" +
+                "from kenyaemr_etl.etl_special_clinics s\n" +
+                "where s.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and s.special_clinic_form_uuid = '"+specialClinic+"';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date)context.getParameterValue("startDate");
-        Date endDate = (Date)context.getParameterValue("endDate");
+        Date startDate = (Date) context.getParameterValue("startDate");
+        Date endDate = (Date) context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
-        queryBuilder.addParameter("specialClinic", specialClinic);
+        queryBuilder.addParameter("specialClinic", specialClinic); // Corrected parameter name
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
     }
+
+
 }

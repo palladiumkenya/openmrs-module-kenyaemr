@@ -40,7 +40,7 @@ public class SpecialClinicsReferredToDataEvaluator implements EncounterDataEvalu
         String specialClinic = cohortDefinition.getSpecialClinic();
 
         String qry = "select v.encounter_id,\n" +
-                "(case v.referred_to when 159928 then 'School' when 164407 then 'Other health facility'  when 1000478 then 'CHU' else '' end) as referred_to\n" +
+                "(case v.referred_to when 159928 then 'School' when 164407 then 'Other health facility'  when 1000478 then 'CHU' when 163266 then 'This Facility' else '' end) as referred_to\n" +
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
 
