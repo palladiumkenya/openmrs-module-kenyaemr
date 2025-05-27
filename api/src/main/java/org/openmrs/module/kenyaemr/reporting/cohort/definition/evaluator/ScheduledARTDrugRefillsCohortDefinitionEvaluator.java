@@ -65,14 +65,13 @@ public class ScheduledARTDrugRefillsCohortDefinitionEvaluator implements CohortD
 				"from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
 				"join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id\n" +
 				"join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
-				"join obs o on o.person_id=fup.patient_id and o.concept_id=162549 and date(o.value_datetime) between date(:startDate) and date(:endDate) \n" +
 				"left outer join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and date(date_started) <= date(:endDate)\n" +
 				"left outer JOIN\n" +
 				"(select patient_id, visit_date from kenyaemr_etl.etl_patient_program_discontinuation\n" +
 				"where date(visit_date) <= date(:endDate) and program_name='HIV'\n" +
 				"group by patient_id\n" +
 				") d on d.patient_id = fup.patient_id\n" +
-				"where de.program = 'HIV' and fup.visit_date <= date(:endDate)\n" +
+				"where de.program = 'HIV' and fup.visit_date <= date(:endDate) and fup.refill_date between date(:startDate) and date(:endDate)\t\n" +
 				"group by patient_id\n" +
 				"having (started_on_drugs is not null and started_on_drugs <> \"\") and (\n" +
 				"(date(latest_tca) > date(:endDate) and (date(latest_tca) > date(date_discontinued) or disc_patient is null )) or\n" +
