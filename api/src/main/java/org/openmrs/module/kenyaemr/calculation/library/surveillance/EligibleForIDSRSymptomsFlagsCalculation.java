@@ -238,7 +238,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							}
 						}
 						//SARI
-						if (triageEncounterHasFever && triageEncounterHasCough) {
+						if (triageEncounterHasCough) {
 							for (Obs obs : lastTriageEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
 								if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -246,9 +246,9 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 								}
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+									if ((duration > 0.0 && duration < 10 && tempValue != null && tempValue >= 38.0) || triageEncounterHasFever) {
 										if (createdDate.equals(todayDate)) {
-											if (patientAdmissionStatus && (currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT))) {
+											if ((patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT)) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT)) {
 												eligible = true;
 												idsrMessage.add(sari);
 												break;
@@ -451,7 +451,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							}
 						}
 						//SARI
-						if (hivFollowupEncounterHasFever && hivFollowupEncounterHasCough) {
+						if (hivFollowupEncounterHasCough) {
 							for (Obs obs : lastHivFollowUpEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
 								if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -459,9 +459,9 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 								}
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+									if ((duration > 0.0 && duration < 10 && tempValue != null && tempValue >= 38.0)  || hivFollowupEncounterHasFever ) {
 										if (createdDate.equals(todayDate)) {
-											if (patientAdmissionStatus && (currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT))) {
+											if ((patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT)) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT)) {
 												eligible = true;
 												idsrMessage.add(sari);
 												break;
@@ -664,7 +664,7 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 							}
 						}
 						//SARI
-						if (clinicalEncounterHasFever && clinicalEncounterHasCough) {
+						if (clinicalEncounterHasCough) {
 							for (Obs obs : lastClinicalEncounter.getObs()) {
 								dateCreated = obs.getDateCreated();
 								if (obs.getConcept().getUuid().equals(DURATION)) {
@@ -672,9 +672,9 @@ public class EligibleForIDSRSymptomsFlagsCalculation extends AbstractPatientCalc
 								}
 								if (dateCreated != null) {
 									String createdDate = dateFormat.format(dateCreated);
-									if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+									if ((duration > 0.0 && duration < 10 && tempValue != null && tempValue >= 38.0)  || clinicalEncounterHasFever ) {
 										if (createdDate.equals(todayDate)) {
-											if (patientAdmissionStatus && (currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT))) {
+											if ((patientAdmissionStatus && currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT)) || currentVisit.getVisitType().getUuid().equals(CommonMetadata._VisitType.INPATIENT)) {
 												eligible = true;
 												idsrMessage.add(sari);
 												break;
