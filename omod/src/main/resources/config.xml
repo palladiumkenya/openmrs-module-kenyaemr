@@ -390,4 +390,19 @@
 			Consent validation url for HIE client access
 		</description>
 	</globalProperty>
+	<globalProperty>
+	<property>kenyaemr.hie.claim.response.url</property>
+	<defaultValue>https://apistg.safaricom.co.ke/hie/api/v1/status/ClaimResponse</defaultValue>
+	<description>
+		Url to check submitted claim status/response from HIE
+	</description>
+</globalProperty>
+<globalProperty>
+		<property>kenyaemr.hie.claim.response.source</property>
+		<defaultValue>hie</defaultValue>
+		<description>
+			Defines whether to check claims status from HIE directly of our payment aggregator: Options hie or aggregator
+		</description>
+</globalProperty>
+	
 </module>
