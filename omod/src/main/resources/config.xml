@@ -404,5 +404,12 @@
 			Defines whether to check claims status from HIE directly of our payment aggregator: Options hie or aggregator
 		</description>
 </globalProperty>
+<globalProperty>
+		<property>kenyaemr.hie.claim.callback.url</property>
+		<defaultValue>https://billing.kenyahmis.org/api/hie/claim</defaultValue>
+		<description>
+			URL pointing to the payments aggregator that acts as HIE claims callback endpoint
+		</description>
+</globalProperty>
 	
 </module>
