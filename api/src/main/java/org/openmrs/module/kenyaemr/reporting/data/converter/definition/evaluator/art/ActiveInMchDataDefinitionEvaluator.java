@@ -36,26 +36,36 @@ public class ActiveInMchDataDefinitionEvaluator implements PersonDataEvaluator {
     public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "SELECT pp.patient_id,\n" +
-                "       CASE \n" +
-                "         WHEN d.gender = 'M' THEN 'N/A'\n" +
-                "         WHEN (pf.pregnant = 'Yes' OR hf.pregnancy_status = 'Yes' OR es.pregnant = 'Yes') THEN 'Pregnant'\n" +
-                "         WHEN (pf.breastfeeding = 'Yes' OR hf.breastfeeding = 'Yes' OR es.breastfeeding_mother = 'Yes') THEN 'Breastfeeding'\n" +
-                "         ELSE 'No'\n" +
-                "       END AS program_status\n" +
-                "FROM kenyaemr_etl.etl_patient_program pp\n" +
-                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnant, breastfeeding FROM kenyaemr_etl.etl_prep_followup GROUP BY patient_id) pf \n" +
-                "       ON pp.patient_id = pf.patient_id\n" +
-                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnancy_status, breastfeeding FROM kenyaemr_etl.etl_patient_hiv_followup GROUP BY patient_id) hf \n" +
-                "       ON pp.patient_id = hf.patient_id\n" +
-                "LEFT JOIN (SELECT patient_id, MAX(visit_date) AS latest_visit_date, pregnant, breastfeeding_mother FROM kenyaemr_etl.etl_hts_eligibility_screening GROUP BY patient_id) es \n" +
-                "       ON pp.patient_id = es.patient_id\n" +
-                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d \n" +
-                "       ON pp.patient_id = d.patient_id\n" +
-                "WHERE DATE(pp.date_completed) IS NULL\n" +
-                "  AND pp.program IN ('MCH-Child Services', 'MCH-Mother Services')\n" +
-                "GROUP BY pp.patient_id\n" +
-                "HAVING DATE(MAX(pp.date_enrolled)) <= DATE(:endDate);";
+        String qry = "SELECT \n" +
+                "    a.patient_id,\n" +
+                "    CASE \n" +
+                "        WHEN a.bf = 1065 THEN 'Breastfeeding'\n" +
+                "        WHEN a.pg = 1065 OR a.anc_client IS NOT NULL THEN 'Pregnant'\n" +
+                "        ELSE 'No'\n" +
+                "    END AS active_in_pmtct\n" +
+                "FROM (\n" +
+                "    SELECT \n" +
+                "        f.patient_id,\n" +
+                "        MID(MAX(CONCAT(f.visit_date, f.breastfeeding)), 11) AS bf,\n" +
+                "        MID(MAX(CONCAT(f.visit_date, f.pregnancy_status)), 11) AS pg,\n" +
+                "        MAX(f.visit_date) AS hiv_fup_date,\n" +
+                "        anc.patient_id AS anc_client,\n" +
+                "        anc.visit_date AS anc_visit_date\n" +
+                "    FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "    INNER JOIN kenyaemr_etl.etl_patient_demographics d \n" +
+                "        ON f.patient_id = d.patient_id AND d.gender = 'F'\n" +
+                "    LEFT JOIN (\n" +
+                "        SELECT \n" +
+                "            anc.patient_id,\n" +
+                "            anc.visit_date \n" +
+                "        FROM kenyaemr_etl.etl_mch_antenatal_visit anc \n" +
+                "        WHERE anc.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "    ) anc \n" +
+                "        ON f.patient_id = anc.patient_id\n" +
+                "    WHERE f.person_present = 978 \n" +
+                "        AND DATE(f.visit_date) <= DATE(:endDate)\n" +
+                "    GROUP BY f.patient_id\n" +
+                ") a;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
