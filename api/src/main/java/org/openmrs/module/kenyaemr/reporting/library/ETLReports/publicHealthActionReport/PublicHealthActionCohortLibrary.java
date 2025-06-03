@@ -80,10 +80,43 @@ public class PublicHealthActionCohortLibrary {
      */
     public CohortDefinition notLinked() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select t.patient_id from kenyaemr_etl.etl_hts_test t left join\n" +
-                "   (select l.patient_id, l.ccc_number from kenyaemr_etl.etl_hts_referral_and_linkage l where date(l.visit_date) <= date(:endDate) group by l.patient_id) l on t.patient_id = l.patient_id\n" +
-                "left join (select e.patient_id from kenyaemr_etl.etl_hiv_enrollment e where date(e.visit_date) <= date(:endDate))e on e.patient_id = t.patient_id\n" +
-                "where t.final_test_result='Positive' and t.test_type = 2 and date(t.visit_date) between date(:startDate) and date(:endDate) and l.ccc_number is null and e.patient_id is null;";
+        String sqlQuery = "SELECT a.patient_id number_hiv_positive\n" +
+			"FROM ((SELECT av.patient_id\n" +
+			"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+			"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
+			"       WHERE av.visit_date BETWEEN date(:startDate) and date(:endDate)\n" +
+			"         AND av.final_test_result = 'Positive')\n" +
+			"      UNION\n" +
+			"      (SELECT d.patient_id\n" +
+			"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
+			"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
+			"       WHERE d.visit_date BETWEEN date(:startDate) and date(:endDate)\n" +
+			"         AND d.final_test_result = 'Positive')\n" +
+			"      UNION\n" +
+			"      (SELECT p.patient_id\n" +
+			"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+			"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
+			"       WHERE p.visit_date BETWEEN date(:startDate) and date(:endDate)\n" +
+			"         AND p.final_test_result = 'Positive')\n" +
+			"      UNION\n" +
+			"      (SELECT t.patient_id\n" +
+			"       FROM kenyaemr_etl.etl_hts_test t\n" +
+			"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+			"           AND t.final_test_result = 'Positive'\n" +
+			"           AND t.voided = 0\n" +
+			"           AND t.visit_date BETWEEN date(:startDate) and date(:endDate))) a\n" +
+			"         LEFT JOIN\n" +
+			"     (SELECT l.patient_id, l.ccc_number,l.art_start_date\n" +
+			"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
+			"      WHERE date(l.visit_date) BETWEEN date(:startDate) and date(:endDate)\n" +
+			"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
+			"         LEFT JOIN (SELECT e.patient_id\n" +
+			"                    FROM kenyaemr_etl.etl_drug_event e\n" +
+			"                    WHERE e.program = 'HIV' and  date(e.visit_date) BETWEEN date(:startDate) and date(:endDate)) e\n" +
+			"                   ON e.patient_id = a.patient_id\n" +
+			"where (l.patient_id is null or l.art_start_date is null)\n" +
+			"  and e.patient_id is null;\n";
+		
         cd.setName("notLinked");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
