@@ -401,7 +401,7 @@
 		<property>kenyaemr.hie.claim.response.source</property>
 		<defaultValue>hie</defaultValue>
 		<description>
-			Defines whether to check claims status from HIE directly of our payment aggregator: Options hie or aggregator
+			Defines whether to check claims status from HIE directly or KeHMIS payment aggregator: Options hie or aggregator
 		</description>
 </globalProperty>
 <globalProperty>
@@ -409,6 +409,13 @@
 		<defaultValue>https://billing.kenyahmis.org/api/hie/claim</defaultValue>
 		<description>
 			URL pointing to the payments aggregator that acts as HIE claims callback endpoint
+		</description>
+</globalProperty>
+<globalProperty>
+		<property>kenyaemr.hie.registry.otp.source</property>
+		<defaultValue>hie</defaultValue>
+		<description>
+			Defines whether to get otp confirmation messages from HIE or KeHMIS : Options hie or kehmis
 		</description>
 </globalProperty>
 	
