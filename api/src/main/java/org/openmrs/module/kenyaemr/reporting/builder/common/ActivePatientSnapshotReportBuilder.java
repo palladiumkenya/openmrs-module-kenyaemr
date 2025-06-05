@@ -136,6 +136,7 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         nextAppointmentDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ActiveInMchDataDefinition activeInMchDataDefinition = new ActiveInMchDataDefinition();
         activeInMchDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        activeInMchDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         ActiveInOvcDataDefinition activeInOvcDataDefinition = new ActiveInOvcDataDefinition();
         activeInOvcDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         ActiveInOtzDataDefinition activeInOtzDataDefinition = new ActiveInOtzDataDefinition();
@@ -221,7 +222,7 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("VL Validility", lastVLResultValidityDataDefinition, "endDate=${endDate}");
         dsd.addColumn("Last VL Justification", eTLLastVLJustificationDataDefinition,"endDate=${endDate}");
         dsd.addColumn("Last VL Date", lastVLDateDataDefinition, "endDate=${endDate}", new DateConverter(DATE_FORMAT));
-        dsd.addColumn("Active in PMTCT",activeInMchDataDefinition, "endDate=${endDate}", new ActiveInProgramConverter());
+        dsd.addColumn("Active in PMTCT",activeInMchDataDefinition, "startDate=${startDate},endDate=${endDate}");
         dsd.addColumn("Active in OVC", activeInOvcDataDefinition,"endDate=${endDate}",new ActiveInProgramConverter());
         dsd.addColumn("Active in OTZ", activeInOtzDataDefinition, "endDate=${endDate}",new ActiveInProgramConverter());
         dsd.addColumn("Active in TB", activeInTbDataDefinition, "endDate=${endDate}",new ActiveInProgramConverter());
