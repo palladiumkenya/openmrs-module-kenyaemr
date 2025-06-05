@@ -71,8 +71,8 @@ public class ActiveInMchDataDefinitionEvaluator implements PersonDataEvaluator {
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
         Date endDate = (Date)context.getParameterValue("endDate");
-        queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
+        queryBuilder.addParameter("endDate", endDate);
 
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
