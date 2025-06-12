@@ -9,33 +9,46 @@
  */
 package org.openmrs.module.kenyaemr.reporting.builder.hiv.art;
 
-import org.openmrs.Obs;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.calculation.result.CalculationResult;
-import org.openmrs.module.kenyacore.report.CohortReportDescriptor;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.module.kenyacore.report.HybridReportDescriptor;
+import org.openmrs.module.kenyacore.report.ReportDescriptor;
+import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyacore.report.builder.AbstractHybridReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
-import org.openmrs.module.kenyacore.report.builder.CalculationReportBuilder;
-import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
-import org.openmrs.module.kenyaemr.Dictionary;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.DateOfLastViralLoadCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.art.LowDetectableViralLoadCalculation;
+import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemr.reporting.calculation.converter.DateArtStartDateConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.IdentifierConverter;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.NeedsViralLoadTestCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.AgeAtReportingDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLArtStartDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLJustificationDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.ETLLastVLResultDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.reporting.common.TimeQualifier;
+import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.data.DataDefinition;
+import org.openmrs.module.reporting.data.converter.BirthdateConverter;
 import org.openmrs.module.reporting.data.converter.DataConverter;
 import org.openmrs.module.reporting.data.converter.DateConverter;
+import org.openmrs.module.reporting.data.converter.ObjectFormatter;
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.ObsForPersonDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.BirthdateDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.PersonAttributeDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.PersonIdDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
+import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by codehub on 10/28/15.
@@ -43,114 +56,82 @@ import java.util.Date;
  */
 @Component
 @Builds({"kenyaemr.hiv.report.needsViralLoad"})
-public class NeedsViralLoadTestReportBuilder extends CalculationReportBuilder {
+public class NeedsViralLoadTestReportBuilder extends AbstractHybridReportBuilder {
     public static final String DATE_FORMAT = "dd/MM/yyyy";
+
     @Override
-    protected void addColumns(CohortReportDescriptor report, PatientDataSetDefinition dsd) {
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), new IdentifierConverter());
-
-        addStandardColumns(report, dsd);
-        dsd.addColumn("UPN", identifierDef, "");
-        dsd.addColumn("Last viral load", new ObsForPersonDataDefinition("Last viral load", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD), null, null ), "", new DataConverter() {
-            @Override
-            public Class<?> getInputDataType() {
-                return Obs.class;
-            }
-
-            @Override
-            public Class<?> getDataType() {
-                return Double.class;
-            }
-
-            @Override
-            public Object convert(Object input) {
-                if(input == null){
-                    return null;
-                }
-                Double value = ((Obs) input).getValueNumeric();
-                if(value != null) {
-                    return  value+ "copies/ml";
-                }
-                return null ;
-            }
-        });
-        dsd.addColumn("Date of last viral load", new CalculationDataDefinition("Date of last viral load", new DateOfLastViralLoadCalculation()), "", new DateArtStartDateConverter());
-
-        /*dsd.addColumn("Date of last viral load", new ObsForPersonDataDefinition("Date of last viral load", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD), null, null ), "", new DataConverter() {
-            @Override
-            public Class<?> getInputDataType() {
-                return Obs.class;
-            }
-
-            @Override
-            public Class<?> getDataType() {
-                return Date.class;
-            }
-
-            @Override
-            public Object convert(Object input) {
-                if(input == null){
-                    return null;
-                }
-                Date date = ((Obs) input).getObsDatetime();
-                if(date != null) {
-                    return  formatDate(date);
-                }
-                return null ;
-            }
-        });*/
-        dsd.addColumn("LDL", new CalculationDataDefinition("LDL", new LowDetectableViralLoadCalculation()), "", new DataConverter() {
-            @Override
-            public Class<?> getInputDataType() {
-                return CalculationResult.class;
-            }
-
-            @Override
-            public Class<?> getDataType() {
-                return String.class;
-            }
-
-            @Override
-            public Object convert(Object input) {
-                if(input == null){
-                    return null;
-                }
-                String result =  ((CalculationResult) input).getValue().toString();
-                if(!result.isEmpty()) {
-                    return "Yes";
-                }
-                return null;
-            }
-        });
-        dsd.addColumn("Date of ldl", new ObsForPersonDataDefinition("Date of ldl", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.HIV_VIRAL_LOAD_QUALITATIVE), null, null ), "", new DataConverter() {
-            @Override
-            public Class<?> getInputDataType() {
-                return Obs.class;
-            }
-
-            @Override
-            public Class<?> getDataType() {
-                return Date.class;
-            }
-
-            @Override
-            public Object convert(Object input) {
-                if(input == null){
-                    return null;
-                }
-                Date date = ((Obs) input).getObsDatetime();
-                if(date != null) {
-                    return  formatDate(date);
-                }
-                return null ;
-            }
-        });
-
-
+    protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
+        return Arrays.asList(
+                new Parameter("endDate", "End Date", Date.class),
+                new Parameter("dateBasedReporting", "", String.class)
+        );
     }
-    private String formatDate(Date date) {
-        DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-        return date == null?"":dateFormatter.format(date);
+
+    @Override
+    protected void addColumns(HybridReportDescriptor report, PatientDataSetDefinition dsd) {
+    }
+
+    @Override
+    protected Mapped<CohortDefinition> buildCohort(HybridReportDescriptor descriptor, PatientDataSetDefinition dsd) {
+        return null;
+    }
+
+    protected Mapped<CohortDefinition> allPatientsDueForVLCohort() {
+        CohortDefinition cd = new NeedsViralLoadTestCohortDefinition();
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setName("Active Patients Due for Viral Load Tests");
+        return ReportUtils.map(cd, "endDate=${endDate}");
+    }
+
+    @Override
+    protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
+
+        PatientDataSetDefinition patientsDatasetDefinition = activePatientsDueForVlDataSetDefinition("activePatientsDueForVl");
+        patientsDatasetDefinition.addRowFilter(allPatientsDueForVLCohort());
+        DataSetDefinition vlEligiblePatientsDsd = patientsDatasetDefinition;
+
+        return Arrays.asList(ReportUtils.map(vlEligiblePatientsDsd, "endDate=${endDate}")
+        );
+    }
+
+    protected PatientDataSetDefinition activePatientsDueForVlDataSetDefinition(String datasetName) {
+
+        PatientDataSetDefinition dsd = new PatientDataSetDefinition(datasetName);
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String defParam = "endDate=${endDate}";
+
+        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
+        PatientIdentifierType nupi = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.NATIONAL_UNIQUE_PATIENT_IDENTIFIER);
+        PatientIdentifierType sha = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER);
+
+        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
+        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
+        DataDefinition shaDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(sha.getName(), sha), identifierFormatter);
+        AgeAtReportingDataDefinition ageAtReportingDataDefinition = new AgeAtReportingDataDefinition();
+        ageAtReportingDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ETLLastVLResultDataDefinition lastVlResultDataDefinition = new ETLLastVLResultDataDefinition();
+        lastVlResultDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ETLLastVLDateDataDefinition lastVLDateDataDefinition = new ETLLastVLDateDataDefinition();
+        lastVLDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        ETLLastVLJustificationDataDefinition eTLLastVLJustificationDataDefinition = new ETLLastVLJustificationDataDefinition();
+        eTLLastVLJustificationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        DataConverter formatter = new ObjectFormatter("{familyName}, {givenName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), formatter);
+        PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+
+        dsd.addColumn("id", new PersonIdDataDefinition(), "");
+        dsd.addColumn("Name", nameDef, "");
+        dsd.addColumn("CCC No", identifierDef, "");
+        dsd.addColumn("SHA No", shaDef, "");
+        dsd.addColumn("DOB", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
+        dsd.addColumn("Sex", new GenderDataDefinition(), "", null);
+        dsd.addColumn("Age at reporting", ageAtReportingDataDefinition, defParam);
+        dsd.addColumn("Phone number", new PersonAttributeDataDefinition(phoneNumber), "");
+        dsd.addColumn("Art Start Date", new ETLArtStartDateDataDefinition(), "", new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Last VL Date", lastVLDateDataDefinition, defParam, new DateConverter(DATE_FORMAT));
+        dsd.addColumn("Last VL Justification", eTLLastVLJustificationDataDefinition, defParam);
+        dsd.addColumn("Last VL Result", lastVlResultDataDefinition, defParam);
+
+        return dsd;
     }
 }
