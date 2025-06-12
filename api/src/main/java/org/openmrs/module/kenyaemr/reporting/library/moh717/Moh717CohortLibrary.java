@@ -85,7 +85,15 @@ public class Moh717CohortLibrary {
         );
         return sql;
     }
-
+    public CohortDefinition fpVisit(Integer visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Patients with Family planning visits");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select v.patient_id from kenyaemr_etl.etl_family_planning v where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "and v.type_of_visit_for_method = "+visitType+";");
+        return sql;
+    }
 
     public CohortDefinition newCWCVisits() {
         SqlCohortDefinition sql = new SqlCohortDefinition();

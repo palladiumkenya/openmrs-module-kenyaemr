@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 
@@ -160,7 +159,10 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(moh717IndicatorLibrary.newPNCVisits(), indParams), "");
         dsd.addColumn( "PNC RE-ATT", "",
                 ReportUtils.map(moh717IndicatorLibrary.pncReVisits(), indParams), "");
-
+        dsd.addColumn( "FP NEW", "",
+                ReportUtils.map(moh717IndicatorLibrary.fpVisit(NEW_VISIT), indParams), "");
+        dsd.addColumn( "FP RE-ATT", "",
+                ReportUtils.map(moh717IndicatorLibrary.fpVisit(RE_ATT), indParams), "");
         // Maternity Services
         dsd.addColumn( "Normal Deliveries", "", ReportUtils.map(moh717IndicatorLibrary.normalDeliveries(), indParams), "");
         dsd.addColumn( "Caesarean sections", "", ReportUtils.map(moh717IndicatorLibrary.caesareanSections(), indParams), "");

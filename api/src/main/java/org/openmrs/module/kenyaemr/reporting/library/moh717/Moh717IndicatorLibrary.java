@@ -14,8 +14,6 @@ import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
-
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
 
 @Component
@@ -29,30 +27,34 @@ public class Moh717IndicatorLibrary {
     }
 
     public CohortIndicator getPatientsWithNewClinicalEncounterWithinReportingPeriod() {
-        return cohortIndicator("All Patients with new clinical encounters with period", ReportUtils.map(moh717CohortLibrary.getPatientsWithNewClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with new clinical encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithNewClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     public CohortIndicator getPatientsWithReturnClinicalEncounterWithinReportingPeriod() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.getPatientsWithReturnClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithReturnClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator newANCVisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.newANCVisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.newANCVisits(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator ancRevisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.ancRevisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.ancRevisits(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator newCWCVisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.newCWCVisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.newCWCVisits(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator cwcRevisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.cwcRevisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.cwcRevisits(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator newPNCVisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.newPNCVisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.newPNCVisits(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator pncReVisits() {
-        return cohortIndicator("All Patients with return encounters with period", ReportUtils.map(moh717CohortLibrary.pncReVisits(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.pncReVisits(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator fpVisit(Integer visitType) {
+        return cohortIndicator("All Patients with encounters within period", ReportUtils.map(moh717CohortLibrary.fpVisit(visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+
     public CohortIndicator normalDeliveries() {
         return cohortIndicator("Normal Deliveries", ReportUtils.map(moh717CohortLibrary.normalDeliveries(), "startDate=${startDate},endDate=${endDate}"));
     }
