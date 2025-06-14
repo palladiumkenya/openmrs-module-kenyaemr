@@ -52,6 +52,7 @@ import org.openmrs.Relationship;
 import org.openmrs.Visit;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
@@ -125,6 +126,7 @@ import org.openmrs.module.kenyaemrorderentry.util.Utils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
+import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.util.OpenmrsUtil;
@@ -143,6 +145,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import liquibase.pro.packaged.ad;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
@@ -3960,4 +3964,53 @@ public class KenyaemrCoreRestController extends BaseRestController {
 					.body("--> Failed to send OTP validation request " + e.getMessage());
 		}
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/adrencounter")
+	@ResponseBody
+	public ArrayList<SimpleObject> adrEncounters(HttpServletRequest request,
+	        @RequestParam(value = "fromdate", required = false) String fromDate,
+	        @RequestParam(value = "todate", required = false) String toDate) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		EncounterService encounterService = Context.getEncounterService();
+		
+		// Define encounter types
+		List<EncounterType> adrEncounterTypes = Arrays.asList(
+		    encounterService.getEncounterTypeByUuid(CommonMetadata._EncounterType.ADR_ASSESSMENT_TOOL));
+		
+		try {
+			EncounterSearchCriteriaBuilder searchCriteria = new EncounterSearchCriteriaBuilder()
+			        .setFromDate(fromDate != null ? formatter.parse(fromDate) : null)
+			        .setToDate(toDate != null ? formatter.parse(toDate) : null).setEncounterTypes(adrEncounterTypes)
+			        .setIncludeVoided(false);
+			ArrayList<SimpleObject> adrEncounters = new ArrayList<SimpleObject>();
+			
+			List<Encounter> encounters = encounterService.getEncounters(searchCriteria.createEncounterSearchCriteria());
+			if(encounters.size() > 0) {
+				for (Encounter encounter : encounters) {
+				SimpleObject adrEncounter = new SimpleObject();
+				adrEncounter.put("encounterUuid", encounter.getUuid());
+				adrEncounter.put("encounterType", encounter.getEncounterType().getName());
+				adrEncounter.put("encounterTypeUuid", encounter.getEncounterType().getUuid());
+				adrEncounter.put("encounterDatetime", formatDate(encounter.getEncounterDatetime()));
+				adrEncounter.put("patientName", encounter.getPatient().getPersonName().getFullName());
+				adrEncounter.put("patientUuid", encounter.getPatient().getUuid());
+				adrEncounter.put("location", encounter.getLocation().getName());
+				adrEncounter.put("provider", encounter.getCreator().getPersonName().getFullName());
+				adrEncounter.put("formName", encounter.getForm().getName());
+				adrEncounter.put("formUuid", encounter.getForm().getUuid());
+				adrEncounter.put("visitTypeName", encounter.getVisit().getVisitType().getName());
+				adrEncounter.put("visitUuid", encounter.getVisit().getUuid());
+				adrEncounter.put("visitTypeUuid", encounter.getVisit().getVisitType().getUuid());
+				adrEncounters.add(adrEncounter);
+				}
+			}
+			
+			return adrEncounters;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Invalid date format. Please use 'yyyy-MM-dd'.");
+		}
+	}
+	
 }
