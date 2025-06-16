@@ -41,7 +41,7 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 @Builds({"kenyaemr.ehrReports.report.moh740"})
 public class Moh740ReportBuilder extends AbstractReportBuilder {
     protected static final Log log = LogFactory.getLog(Moh740ReportBuilder.class);
-    static final int NEW_VISIT = 164180,RE_VISIT= 160530;
+    static final int NEW_VISIT = 164180, RE_VISIT= 160530;
     static final String DIABETIC_CLINICAl = CommonMetadata._Form.DIABETIC_CLINICAL_FORM;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
@@ -63,23 +63,25 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         );
     }
 
-    ColumnParameters f0_5 = new ColumnParameters(null, "0-5 years", "gender=F|age=0-5");
-    ColumnParameters m0_5 = new ColumnParameters(null, "0-5 years", "gender=M|age=0-5");
-    ColumnParameters f0_18 = new ColumnParameters(null, "0-18 years", "gender=F|age=0-18");
-    ColumnParameters m0_18 = new ColumnParameters(null, "0-18 years", "gender=M|age=0-18");
-    ColumnParameters f6_18 = new ColumnParameters(null, "6-18 years", "gender=F|age=6-18");
-    ColumnParameters m6_18 = new ColumnParameters(null, "6-18 years", "gender=M|age=6-18");
-    ColumnParameters f19_35 = new ColumnParameters(null, "19-35 years", "gender=F|age=19-35");
-    ColumnParameters m19_35 = new ColumnParameters(null, "19-35 years", "gender=M|age=19-35");
-    ColumnParameters all36AndAbove = new ColumnParameters(null, "36+ years", "age=36+");
-    ColumnParameters m36_60 = new ColumnParameters(null, "36-60 years", "gender=M|age=36-60");
-    ColumnParameters f36_60 = new ColumnParameters(null, "36-60 years", "gender=F|age=36-60");
-    ColumnParameters all60AndAbove = new ColumnParameters(null, "60+ years", "age=60+");
+    ColumnParameters f0_5 = new ColumnParameters(null, "0-5 years, Female", "gender=F|age=0-5");
+    ColumnParameters m0_5 = new ColumnParameters(null, "0-5 years, Male", "gender=M|age=0-5");
+    ColumnParameters f0_18 = new ColumnParameters(null, "0-18 years, Female", "gender=F|age=0-18");
+    ColumnParameters m0_18 = new ColumnParameters(null, "0-18 years, Male", "gender=M|age=0-18");
+    ColumnParameters f6_18 = new ColumnParameters(null, "6-18 years, Female", "gender=F|age=6-18");
+    ColumnParameters m6_18 = new ColumnParameters(null, "6-18 years, Male", "gender=M|age=6-18");
+    ColumnParameters f19_35 = new ColumnParameters(null, "19-35 years, Female", "gender=F|age=19-35");
+    ColumnParameters m19_35 = new ColumnParameters(null, "19-35 years, Male", "gender=M|age=19-35");
+    ColumnParameters f_all36AndAbove = new ColumnParameters(null, "36+ years, Female", "gender=F|age=36+");
+    ColumnParameters m_all36AndAbove = new ColumnParameters(null, "36+ years, Male", "gender=M|age=36+");
+    ColumnParameters m36_60 = new ColumnParameters(null, "36-60 years, Male", "gender=M|age=36-60");
+    ColumnParameters f36_60 = new ColumnParameters(null, "36-60 years, Female", "gender=F|age=36-60");
+    ColumnParameters m_all60AndAbove = new ColumnParameters(null, "60+ years, Male", "gender=M|age=60+");
+    ColumnParameters f_all60AndAbove = new ColumnParameters(null, "60+ years, Female", "gender=F|age=60+");
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
 
-    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5,m6_18, f6_18,m19_35,f19_35, all36AndAbove,colTotal);
-    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18,m19_35, f19_35,m36_60,f36_60, all60AndAbove,colTotal);
-    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18,m19_35, f19_35,m36_60,f36_60, all60AndAbove,colTotal);
+    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5, m6_18, f6_18, m19_35, f19_35, f_all36AndAbove, m_all36AndAbove, colTotal);
+    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18, m19_35, f19_35, m36_60, f36_60, m_all60AndAbove, f_all60AndAbove, colTotal);
+    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18, m19_35, f19_35, m36_60, f36_60, m_all60AndAbove, f_all60AndAbove, colTotal);
 
     private DataSetDefinition createMoh740SummaryDataSet() {
         CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
@@ -89,17 +91,19 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addDimension("age", map(commonDimensions.moh740AgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", map(commonDimensions.gender()));
+
+
         dsd.addColumn("Cumulative no. of diabetes patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeDiabetes(), indParams), "");
         dsd.addColumn("Cumulative no. of hypertension patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeHypertension(), indParams), "");
         dsd.addColumn("Cumulative no. of co-morbid DM+HTN patients in care", "", ReportUtils.map(Moh740Indicator.cumulativeDMAndHTN(), indParams), "");
         dsd.addColumn("No. of newly diagnosed diabetes cases", "", ReportUtils.map(Moh740Indicator.newDiagnosedDiabetes(), indParams), "");
         dsd.addColumn("No. of newly diagnosed hypertension cases", "", ReportUtils.map(Moh740Indicator.newDiagnosedHypertension(), indParams), "");
-        dsd.addColumn("First visit to clinic", "", ReportUtils.map(Moh740Indicator.firstVisitToClinic(), indParams), "");
-        dsd.addColumn("Pre-existing DM", "", ReportUtils.map(Moh740Indicator.preExistingDM(), indParams), "");
-        dsd.addColumn("Pre-existing HTN", "", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), "");
+        dsd.addColumn("First visit to clinic", "", ReportUtils.map(Moh740Indicator.firstVisitToClinic(NEW_VISIT), indParams), "");
+        dsd.addColumn("Pre-existing DM and HTN", "", ReportUtils.map(Moh740Indicator.preExistingDM(), indParams), "");
+//        dsd.addColumn("Pre-existing HTN", "", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), "");
 
-        EmrReportingUtils.addRow(dsd, "typeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
-        EmrReportingUtils.addRow(dsd, "typeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+        EmrReportingUtils.addRow(dsd, "TypeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
+        EmrReportingUtils.addRow(dsd, "TypeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
 
         dsd.addColumn("No. of Diabetes secondary to other causes", "", ReportUtils.map(Moh740Indicator.diabetesSecondaryToOther(), indParams), "");
         dsd.addColumn("No. of patients on insulin", "", ReportUtils.map(Moh740Indicator.patientOnInsulin(), indParams), "");
@@ -109,7 +113,7 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("No. of patients done HbA1c", "", ReportUtils.map(Moh740Indicator.patientDoneHbA1c(), indParams), "");
         dsd.addColumn("No. that met HbA1c target (< 7%)", "", ReportUtils.map(Moh740Indicator.patientMetHbA1cTarget(), indParams), "");
 
-        EmrReportingUtils.addRow(dsd, "hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"));
+        EmrReportingUtils.addRow(dsd, "Hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
 
         dsd.addColumn("No. of patients on antihypertensives", "", ReportUtils.map(Moh740Indicator.patientOnAntihypertensives(), indParams), "");
         dsd.addColumn("No. with a BP (≥140/90) at clinic visit", "", ReportUtils.map(Moh740Indicator.patientWithHighBP(), indParams), "");
