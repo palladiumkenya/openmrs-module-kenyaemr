@@ -11,10 +11,7 @@ package org.openmrs.module.kenyaemr.advice;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.User;
-import org.openmrs.Visit;
+import org.openmrs.*;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.EmrConstants;
@@ -31,6 +28,20 @@ import java.util.*;
 public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterReturningAdvice {
 
     private Log log = LogFactory.getLog(this.getClass());
+    public static final String INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT = "160433AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    public static final String INPATIENT_ADMISSION_ANSWER_CONCEPT = "1654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    String conditionsConfig = Context.getAdministrationService().getGlobalProperty("kenyaemr.conditions.config");
+    Set<Integer> CONDITIONS_CONCEPTS = new HashSet<>();
+    {
+        if (conditionsConfig != null && !conditionsConfig.trim().isEmpty()) {
+            for (String id : conditionsConfig.split("\\s*,\\s*")) {
+                try {
+                    CONDITIONS_CONCEPTS.add(Integer.parseInt(id));
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+    }
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
 
@@ -39,7 +50,7 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
             VisitService visitService = Context.getVisitService();
             if (enc != null && enc.getVisit() != null && enc.getVisit().getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) && enc.getForm() != null && CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid())) {
                 for (Obs o : enc.getAllObs()) {
-                    if (o.getConcept().getUuid().equals(EmrConstants.INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT) && o.getValueCoded().getUuid().equals(EmrConstants.INPATIENT_ADMISSION_ANSWER_CONCEPT)) {
+                    if (o.getConcept().getUuid().equals(INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT) && o.getValueCoded().getUuid().equals(INPATIENT_ADMISSION_ANSWER_CONCEPT)) {
                         // end the OPD visit
                         Visit opdVisit = enc.getVisit();
                         opdVisit.setStopDatetime(new Date());
@@ -74,7 +85,7 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
                     for (List<Object> row : diagnosisResults) {
                         if (row != null && !row.isEmpty()) {
                             Integer diagnosisCoded = (Integer) row.get(0);
-                            if (EmrConstants.CONDITIONS_CONCEPTS.contains(diagnosisCoded)) {
+                            if (CONDITIONS_CONCEPTS.contains(diagnosisCoded)) {
                                 // Query to check if the condition already exists in the conditions table
                                 String checkConditionQuery = String.format(
                                         "SELECT condition_id FROM conditions " +
