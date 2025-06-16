@@ -93,6 +93,7 @@
 				<ref bean="kenyaemr.common.report.sgbvRegister"/>
 				<ref bean="kenyaemr.common.report.duplicateNUPI"/>
 				<ref bean="kenyaemr.common.report.caseReports" />
+				<ref bean="kenyaemr.etl.common.report.caseSurveillance" />
 			</set>
 		</property>
 		<property name="ehrReports">
@@ -999,6 +1000,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 	</bean>
+
 	<bean id="kenyaemr.etl.common.report.publicHealthAction" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
 		<property name="targetUuid" value="e473f83f-b172-4e49-97ba-5817acf5e097" />
 		<property name="name" value="Clinical Action Report (CAR)" />
@@ -1006,6 +1008,12 @@
 		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
 	</bean>
 
+	<bean id="kenyaemr.etl.common.report.caseSurveillance" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="04a2d8f7-d4e2-407e-bc13-a6039174ef74" />
+		<property name="name" value="Case Surveillance Report" />
+		<property name="description" value="Provides a line list of key indicators requiring action for improved health outcomes" />
+		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
+	</bean>
 	<bean id="kenyaemr.common.report.mortalityLineList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="8c33bfa0-0737-4688-84bc-38c5ce37855b" />
 		<property name="name" value="Mortality Linelist" />
