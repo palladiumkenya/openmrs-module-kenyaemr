@@ -66,6 +66,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
             CommonMetadata._Form.FERTILITY_CLINICAL_FORM,
             CommonMetadata._Form.UROLOGY_CLINICAL_FORM
     ));
+    static final String OCCUPATIONAL_THERAPY_FORM = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
+    static final String PHYSIOTHERAPY_FORM = CommonMetadata._Form.PHYSIOTHERAPY_FORM;
     static final String dentalFillingList = String.join(",", new ArrayList<>(Arrays.asList(
             EmrConstants.TEMP_FILLING_PER_TOOTH, EmrConstants.COMPOSITE_FILLING, EmrConstants.AMALGAM_FILLING, EmrConstants.GlASS_LONOMER_FILLING
     )));
@@ -173,6 +175,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Maternal deaths Audited", "", ReportUtils.map(moh717IndicatorLibrary.maternalDeathsAudited(), indParams), "");
         dsd.addColumn( "Live births", "", ReportUtils.map(moh717IndicatorLibrary.liveBirths(), indParams), "");
         dsd.addColumn( "Still births", "", ReportUtils.map(moh717IndicatorLibrary.stillBirths(), indParams), "");
+        dsd.addColumn( "Neonatal deaths", "", ReportUtils.map(moh717IndicatorLibrary.neonatalDeaths(), indParams), "");
         dsd.addColumn( "Low Birth weight babies", "", ReportUtils.map(moh717IndicatorLibrary.lowBirthWeightBabies(), indParams), "");
         dsd.addColumn( "Total Discharges (new born)", "", ReportUtils.map(moh717IndicatorLibrary.totalDischarges(), indParams), "");
 
@@ -223,6 +226,9 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Removal of Stitches", "", ReportUtils.map(moh717IndicatorLibrary.removalOfStitches(stitchesRemovalList), indParams), "");
         dsd.addColumn( "Injections", "", ReportUtils.map(moh717IndicatorLibrary.injections(injectionsList), indParams), "");
         dsd.addColumn( "Stitching", "", ReportUtils.map(moh717IndicatorLibrary.stitching(stitchingList), indParams), "");
+        dsd.addColumn( "Physiotherapy Treatments", "", ReportUtils.map(moh717IndicatorLibrary.specialClinics(PHYSIOTHERAPY_FORM), indParams), "");
+        dsd.addColumn( "Occupational Therapy Treatments", "", ReportUtils.map(moh717IndicatorLibrary.specialClinics(OCCUPATIONAL_THERAPY_FORM), indParams), "");
+
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){

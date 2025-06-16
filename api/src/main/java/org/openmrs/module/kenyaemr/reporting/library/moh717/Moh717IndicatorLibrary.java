@@ -82,6 +82,9 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator stillBirths() {
         return cohortIndicator("Still Births", ReportUtils.map(moh717CohortLibrary.stillBirths(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator neonatalDeaths() {
+        return cohortIndicator("Neonatal deaths", ReportUtils.map(moh717CohortLibrary.neonatalDeaths(), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator lowBirthWeightBabies() {
         return cohortIndicator("Low Birth weight Babies", ReportUtils.map(moh717CohortLibrary.lowBirthWeightBabies(), "startDate=${startDate},endDate=${endDate}"));
     }
@@ -151,5 +154,9 @@ public class Moh717IndicatorLibrary {
     }
     public CohortIndicator totalAmountExempted() {
         return cohortIndicator("Total Amount Exempted", ReportUtils.map(moh717CohortLibrary.totalAmountExempted(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
+    public CohortIndicator specialClinics(String specialClinicFormUuid) {
+        return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinics(specialClinicFormUuid), "startDate=${startDate},endDate=${endDate}"));
     }
 }
