@@ -11,16 +11,22 @@ package org.openmrs.module.kenyaemr.advice;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.*;
+import org.openmrs.Encounter;
+import org.openmrs.Obs;
+import org.openmrs.User;
+import org.openmrs.Visit;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.springframework.aop.AfterReturningAdvice;
-
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 
 /**
  * Automates the process of checking out a patient from OPD and starting an inpatient visit
