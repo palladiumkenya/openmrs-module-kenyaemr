@@ -191,6 +191,17 @@ public class Moh717CohortLibrary {
         sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where d.baby_condition in (159916,135436) and d.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
+    public CohortDefinition neonatalDeaths() {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("neonatalDeaths");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select d.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics d\n" +
+                "where d.death_date between date(:startDate) and date(:endDate)\n" +
+                "  and TIMESTAMPDIFF(DAY, d.DOB, d.death_date) <= 28;");
+        return sql;
+    }
 
     public CohortDefinition lowBirthWeightBabies() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
@@ -418,6 +429,14 @@ public class Moh717CohortLibrary {
         sql.setQuery("select CAST(IFNULL(sum(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as total_exempted\n" +
                 "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        return sql;
+    }
+    public CohortDefinition specialClinics(String specialClinicFormUuid) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("specialClinics");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+specialClinicFormUuid+"' and s.visit_date between date(:startDate) and date(:endDate)");
         return sql;
     }
 }
