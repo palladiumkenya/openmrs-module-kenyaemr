@@ -104,6 +104,58 @@ public class Moh740CohortLibrary {
         return cd;
     }
 
+    public CohortDefinition patientWithKnownDM() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 142486 \n"+
+                "and ne.diabetes_condition = 1000489 and ne.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Known DM");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patient with Known DM");
+        return cd;
+    }
+
+    public CohortDefinition preExistingPatientWithDM() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 142486 \n"+
+                "and ne.diabetes_condition = 1000489 and ne.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Known DM");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patient with Known DM");
+        return cd;
+    }
+
+    public CohortDefinition preExistingPatientWithHTN() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 117399 \n"+
+                "and ne.hypertension_condition = 1000491 and ne.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Known DM");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patient with Known DM");
+        return cd;
+    }
+
+    public CohortDefinition preExistingPatientWithComorbidDMandHTN() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 166020 \n"+
+                "and ne.comorbid_condition = 1000493 and ne.visit_date between date(:startDate) and date(:endDate);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Known DM");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patient with Known DM");
+        return cd;
+    }
+
     public CohortDefinition patientFirstVisitToClinic(int visitType) {
 
         String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) " +

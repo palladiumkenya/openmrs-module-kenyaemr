@@ -40,11 +40,14 @@ public class Moh740IndicatorLibrary {
         return cohortIndicator("Cumulative No. of co-morbid DM+HTN patients in care", map(Moh740Cohorts.cumulativePatientWithDMAndHTN(), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator preExistingDM() {
-        return cohortIndicator("Pre-Existing DM and HTN", map(Moh740Cohorts.patientWithPreExistingDMandHTN(), "startDate=${startDate},endDate=${endDate}"));
+        return cohortIndicator("Pre-Existing DM", map(Moh740Cohorts.preExistingPatientWithDM(), "startDate=${startDate},endDate=${endDate}"));
     }
-//    public CohortIndicator preExistingHTN() {
-//        return cohortIndicator("Pre-Existing HTN", map(Moh740Cohorts.patientWithPreExistingConditions(), "startDate=${startDate},endDate=${endDate}"));
-//    }
+    public CohortIndicator preExistingHTN() {
+        return cohortIndicator("Pre-Existing HTN", map(Moh740Cohorts.preExistingPatientWithHTN(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator preExistingDMandHTN() {
+        return cohortIndicator("Pre-Existing DM and HTN", map(Moh740Cohorts.preExistingPatientWithComorbidDMandHTN(), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator firstVisitToClinic(int visitType) {
         return cohortIndicator("First Visit To Clinic", map(Moh740Cohorts.patientFirstVisitToClinic(visitType), "startDate=${startDate},endDate=${endDate}"));
     }
