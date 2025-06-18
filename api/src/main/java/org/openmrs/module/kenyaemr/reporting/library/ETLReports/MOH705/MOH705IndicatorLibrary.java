@@ -39,14 +39,14 @@ public class MOH705IndicatorLibrary {
 	 * Other Diagnosis under five
 	 */
 	public CohortIndicator allOtherDiseasesUnderFive(String age) {
-		return cohortIndicator("Other Under Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age, StringUtils.join(DiagnosisLists.getAllOtherDiseasesListForChildren(),",")), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("Other Under Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age, StringUtils.join(DiagnosisLists.getAllOtherUnder5DiseasesList(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * Other Diagnosis Over five
 	 */
 	public CohortIndicator allOtherDiseasesAboveFive(String age) {
 
-		return cohortIndicator("Other Above Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesUnderFive(age, StringUtils.join(DiagnosisLists.getAllOtherDiseasesListForChildren(),",")), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("Other Above Five Diagnosis", ReportUtils.map(moh705CohortLibrary.allOtherDiseasesAboveFive(age, StringUtils.join(DiagnosisLists.getAllOtherAbove5DiseasesList(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	public CohortIndicator newAttendances(String age) {
@@ -60,6 +60,21 @@ public class MOH705IndicatorLibrary {
 	}
 	public CohortIndicator referralsToOtherFacilities(String age) {
 		return cohortIndicator("referralsToOtherFacilities", ReportUtils.map(moh705CohortLibrary.referralsToOtherFacilities(age), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	/**
+	 * Deaths due to Road Traffic Injuries (Tag this to  Outcome as Death and check if Diagnosis is Road Traffic Accident)
+	 */
+	public CohortIndicator deathDueToRoadTrafficInjuries(String age) {
+
+		return cohortIndicator("Deaths due to Road Traffic Injuries", ReportUtils.map(moh705CohortLibrary.deathDueToRoadTrafficInjuries(age, StringUtils.join(DiagnosisLists.getRoadTrafficInjuriesList(),",")), "startDate=${startDate},endDate=${endDate}"));
+	}
+	/**
+	 * InjuriesRoad Traffic Accidents (Tag this to  Outcome not as Death and check if Diagnosis is Road Traffic Accident)
+	 */
+	public CohortIndicator roadTrafficInjuries(String age) {
+
+		return cohortIndicator("Road Traffic Injuries", ReportUtils.map(moh705CohortLibrary.roadTrafficInjuries(age, StringUtils.join(DiagnosisLists.getRoadTrafficInjuriesList(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
 }
 
