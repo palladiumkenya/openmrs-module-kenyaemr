@@ -180,7 +180,6 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Total Discharges (new born)", "", ReportUtils.map(moh717IndicatorLibrary.totalDischarges(), indParams), "");
 
         dsd.addColumn( "Number of Laboratory tests", "", ReportUtils.map(moh717IndicatorLibrary.laboratoryTests(), indParams), "");
-        dsd.addColumn("Number of Examinations (XRay & Imaging)", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(), indParams), "");
 
         // Special Clinics
         dsd.addColumn( "ENT Clinic (New)", "", ReportUtils.map(moh717IndicatorLibrary.specialClinic(CommonMetadata._Form.EAR_NOSE_THROAT_CLINICAL_FORM, NEW_VISIT), indParams), "");
@@ -228,6 +227,13 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Stitching", "", ReportUtils.map(moh717IndicatorLibrary.stitching(stitchingList), indParams), "");
         dsd.addColumn( "Physiotherapy Treatments", "", ReportUtils.map(moh717IndicatorLibrary.specialClinics(PHYSIOTHERAPY_FORM), indParams), "");
         dsd.addColumn( "Occupational Therapy Treatments", "", ReportUtils.map(moh717IndicatorLibrary.specialClinics(OCCUPATIONAL_THERAPY_FORM), indParams), "");
+        dsd.addColumn( "Plain XRay without contrast enhancement", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.plainXRayList), indParams), "");
+        dsd.addColumn( "General ultrasound", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.generalUltrasoundList), indParams), "");
+        dsd.addColumn( "Contrast enhanced examinations", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.contrastEnhancedExaminationList), indParams), "");
+        dsd.addColumn( "Magnetic Resonance Imaging", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.magneticResonanceImagingList), indParams), "");
+        dsd.addColumn( "Computerized Tomography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.computerizedTomographyList), indParams), "");
+        dsd.addColumn( "Mammography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.mammographyList), indParams), "");
+        dsd.addColumn( "Obstetric ultrasound", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(EmrConstants.obstetricUltrasoundList), indParams), "");
 
         return dsd;
     }
