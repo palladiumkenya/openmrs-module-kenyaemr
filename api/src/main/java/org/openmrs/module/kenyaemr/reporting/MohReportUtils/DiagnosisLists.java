@@ -17,433 +17,85 @@ import org.openmrs.Concept;
 
 import static org.openmrs.module.kenyaemr.reporting.MohReportUtils.DiagnosisConcepts.getConcept;
 
+
 public class DiagnosisLists {
 
-	public static List<Integer> getDiarrheaDiagnosisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CHRONIC_DIARRHOEA,
-			DiagnosisConcepts._DiagnosisConcepts.ACUTE_DIARRHEA, DiagnosisConcepts._DiagnosisConcepts.FUNCTIONAL_DIARRHOEA,
-			DiagnosisConcepts._DiagnosisConcepts.Hemorrhagic_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.DIARRHOEA,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_for_less_than_one_month,
-			DiagnosisConcepts._DiagnosisConcepts.CHRONIC_DIARRHEA,
-			DiagnosisConcepts._DiagnosisConcepts.WHO_HIV_CRYPTOSPORIDIOSIS_WITH_DIARRHEA,
-			DiagnosisConcepts._DiagnosisConcepts.Clostridium_Difficile_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Antibiotic_Associated_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Psychogenic_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Protozoal_Diarrhoea,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_of_Infectious_Origin,
-			DiagnosisConcepts._DiagnosisConcepts.Infectious_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_Resulting_from_Infection_of_the_Bowel_Mucosa,
-			DiagnosisConcepts._DiagnosisConcepts.Campylobacter_Diarrhoea,
-			DiagnosisConcepts._DiagnosisConcepts.Dyspeptic_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Allergic_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Traveler_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Toddler_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Severe_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Secretory_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Raw_Milk_Associated_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Postcholecystectomy_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Post_Vagotomy_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_for_more_2_weeks,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_for_2_weeks,
-			DiagnosisConcepts._DiagnosisConcepts.postvagotomy_diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.nausea_vomiting_and_diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.diarrhea_due_to_drug,
-			DiagnosisConcepts._DiagnosisConcepts.Irritable_Bowel_Syndrome_with_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.CHRONIC_DIARRHEA_1,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_diarrhea_more_than_three_stools_in_24_hours,
-			DiagnosisConcepts._DiagnosisConcepts.Chronic_Diarrhea_of_Infants_and_Young_Children,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhoea_chronic_1_month_unexplained,
-			DiagnosisConcepts._DiagnosisConcepts.Chronic_diarrhea_of_unknown_origin,
-			DiagnosisConcepts._DiagnosisConcepts.Congenital_Secretory_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Congenital_Secretory_Diarrhea_Chloride_Type,
-			DiagnosisConcepts._DiagnosisConcepts.Congenital_Secretory_Diarrhea_Sodium_Type,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_2,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_After_Gastrointestinal_Tract_Surgery,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_due_to_Alcohol_Intake,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_due_to_Staphylococcus,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_in_Diabetes,
-			DiagnosisConcepts._DiagnosisConcepts.Diarrhea_of_presumed_infectious_origin,
-			DiagnosisConcepts._DiagnosisConcepts.Dietetic_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Drug_and_Toxin_Induced_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Dysenteric_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Epidemic_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Functional_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Bloody_diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Hemorrhagic_diarrhea, DiagnosisConcepts._DiagnosisConcepts.Hill_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Diabetic_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Infective_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Neonatal_Diarrhea, DiagnosisConcepts._DiagnosisConcepts.Nervous_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Non_Infective_Diarrhea,
-			DiagnosisConcepts._DiagnosisConcepts.Osmotic_Diarrhea);
+
+
+
+
+	public static List<Integer> getDiarrheaWithNoDehydrationDiagnosisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DWND_1,
+			DiagnosisConcepts._DiagnosisConcepts.DWND_2);
+
 	}
 
-	public static List<Integer> getTuberculosisDiagnosisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ACUTE_MILIARY_TUBERCULOSIS_UNSPECIFIED,
-			DiagnosisConcepts._DiagnosisConcepts.EXTRAPULMONARY_TUBERCULOSIS,
-			DiagnosisConcepts._DiagnosisConcepts.MULTI_DRUG_RESISTANT_TUBERCULOSIS,
-			DiagnosisConcepts._DiagnosisConcepts.PULMONARY_TUBERCULOSIS,
-			DiagnosisConcepts._DiagnosisConcepts.TUBERCULOSIS_OF_THE_GENITOURINARY_SYSTEM,
-			DiagnosisConcepts._DiagnosisConcepts.TUBERCULOSIS_OF_OTHER_ORGANS,
-			DiagnosisConcepts._DiagnosisConcepts.TUBERCULOSIS_IN_PREGNANCY,
-			DiagnosisConcepts._DiagnosisConcepts.ACUTE_MILIARY_TUBERCULOSIS_UNSPECIFIED,
-			DiagnosisConcepts._DiagnosisConcepts.TUBERCULOSIS, DiagnosisConcepts._DiagnosisConcepts.MILIARY_TUBERCULOSIS,
-			DiagnosisConcepts._DiagnosisConcepts.RESPIRATORY_TUBERCULOSIS, DiagnosisConcepts._DiagnosisConcepts.EPTB,
-			DiagnosisConcepts._DiagnosisConcepts.HIV_STAGING_TUBERCULOSIS_WITHIN_YEAR,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_Polyserositis,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculous_Pleurisy_in_Primary_Progressive_Tuberculosis,
-			DiagnosisConcepts._DiagnosisConcepts.Erythema_Nodosum_with_Hypersensitivity_Reaction_in_Tuberculosis,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_of_Joint,
-			DiagnosisConcepts._DiagnosisConcepts.Addisons_Disease_due_to_Tuberculosis,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_of_Urinary_Organs,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_of_Ureter,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_of_Thyroid_Gland,
-			DiagnosisConcepts._DiagnosisConcepts.Tuberculosis_of_Spleen, DiagnosisConcepts._DiagnosisConcepts.TSS,
-			DiagnosisConcepts._DiagnosisConcepts.TSS1, DiagnosisConcepts._DiagnosisConcepts.TSS2,
-			DiagnosisConcepts._DiagnosisConcepts.TSS3, DiagnosisConcepts._DiagnosisConcepts.TSS4,
-			DiagnosisConcepts._DiagnosisConcepts.TSS5, DiagnosisConcepts._DiagnosisConcepts.TSS6,
-			DiagnosisConcepts._DiagnosisConcepts.TB1, DiagnosisConcepts._DiagnosisConcepts.TB2,
-			DiagnosisConcepts._DiagnosisConcepts.TB3, DiagnosisConcepts._DiagnosisConcepts.TB4,
-			DiagnosisConcepts._DiagnosisConcepts.TB5, DiagnosisConcepts._DiagnosisConcepts.TB6,
-			DiagnosisConcepts._DiagnosisConcepts.TB7, DiagnosisConcepts._DiagnosisConcepts.TB8,
-			DiagnosisConcepts._DiagnosisConcepts.TB9, DiagnosisConcepts._DiagnosisConcepts.TB10,
-			DiagnosisConcepts._DiagnosisConcepts.TB11, DiagnosisConcepts._DiagnosisConcepts.TB12,
-			DiagnosisConcepts._DiagnosisConcepts.TB13, DiagnosisConcepts._DiagnosisConcepts.TB14,
-			DiagnosisConcepts._DiagnosisConcepts.TB15, DiagnosisConcepts._DiagnosisConcepts.TB16,
-			DiagnosisConcepts._DiagnosisConcepts.TB17, DiagnosisConcepts._DiagnosisConcepts.TB18,
-			DiagnosisConcepts._DiagnosisConcepts.TB19, DiagnosisConcepts._DiagnosisConcepts.TB20,
-			DiagnosisConcepts._DiagnosisConcepts.TB21, DiagnosisConcepts._DiagnosisConcepts.TB22,
-			DiagnosisConcepts._DiagnosisConcepts.TB23, DiagnosisConcepts._DiagnosisConcepts.TB24,
-			DiagnosisConcepts._DiagnosisConcepts.TB25, DiagnosisConcepts._DiagnosisConcepts.TB26,
-			DiagnosisConcepts._DiagnosisConcepts.TB27, DiagnosisConcepts._DiagnosisConcepts.TB28,
-			DiagnosisConcepts._DiagnosisConcepts.TB29, DiagnosisConcepts._DiagnosisConcepts.TB30,
-			DiagnosisConcepts._DiagnosisConcepts.TB31, DiagnosisConcepts._DiagnosisConcepts.TB32,
-			DiagnosisConcepts._DiagnosisConcepts.TB33, DiagnosisConcepts._DiagnosisConcepts.TB34,
-			DiagnosisConcepts._DiagnosisConcepts.TB35, DiagnosisConcepts._DiagnosisConcepts.TB36,
-			DiagnosisConcepts._DiagnosisConcepts.TB37, DiagnosisConcepts._DiagnosisConcepts.TB38,
-			DiagnosisConcepts._DiagnosisConcepts.TB39, DiagnosisConcepts._DiagnosisConcepts.TB40,
-			DiagnosisConcepts._DiagnosisConcepts.TB41, DiagnosisConcepts._DiagnosisConcepts.TB42,
-			DiagnosisConcepts._DiagnosisConcepts.TB43, DiagnosisConcepts._DiagnosisConcepts.TB44,
-			DiagnosisConcepts._DiagnosisConcepts.TB44, DiagnosisConcepts._DiagnosisConcepts.TB45,
-			DiagnosisConcepts._DiagnosisConcepts.TB46, DiagnosisConcepts._DiagnosisConcepts.TB47,
-			DiagnosisConcepts._DiagnosisConcepts.TB48, DiagnosisConcepts._DiagnosisConcepts.TB49,
-			DiagnosisConcepts._DiagnosisConcepts.TB50, DiagnosisConcepts._DiagnosisConcepts.TB51,
-			DiagnosisConcepts._DiagnosisConcepts.TB52, DiagnosisConcepts._DiagnosisConcepts.TB53,
-			DiagnosisConcepts._DiagnosisConcepts.TB54, DiagnosisConcepts._DiagnosisConcepts.TB55,
-			DiagnosisConcepts._DiagnosisConcepts.TB56, DiagnosisConcepts._DiagnosisConcepts.TB57,
-			DiagnosisConcepts._DiagnosisConcepts.TB58, DiagnosisConcepts._DiagnosisConcepts.TB59,
-			DiagnosisConcepts._DiagnosisConcepts.TB60, DiagnosisConcepts._DiagnosisConcepts.TB61,
-			DiagnosisConcepts._DiagnosisConcepts.TB62, DiagnosisConcepts._DiagnosisConcepts.TB63,
-			DiagnosisConcepts._DiagnosisConcepts.TB64, DiagnosisConcepts._DiagnosisConcepts.TB65,
-			DiagnosisConcepts._DiagnosisConcepts.TB66, DiagnosisConcepts._DiagnosisConcepts.TB67,
-			DiagnosisConcepts._DiagnosisConcepts.TB68, DiagnosisConcepts._DiagnosisConcepts.TB69,
-			DiagnosisConcepts._DiagnosisConcepts.TB70, DiagnosisConcepts._DiagnosisConcepts.TB71,
-			DiagnosisConcepts._DiagnosisConcepts.TB72, DiagnosisConcepts._DiagnosisConcepts.TB73,
-			DiagnosisConcepts._DiagnosisConcepts.TB74, DiagnosisConcepts._DiagnosisConcepts.TB75,
-			DiagnosisConcepts._DiagnosisConcepts.TB76, DiagnosisConcepts._DiagnosisConcepts.TB77,
-			DiagnosisConcepts._DiagnosisConcepts.TB78, DiagnosisConcepts._DiagnosisConcepts.TB79,
-			DiagnosisConcepts._DiagnosisConcepts.TB80, DiagnosisConcepts._DiagnosisConcepts.TB81,
-			DiagnosisConcepts._DiagnosisConcepts.TB82, DiagnosisConcepts._DiagnosisConcepts.TB83,
-			DiagnosisConcepts._DiagnosisConcepts.TB84, DiagnosisConcepts._DiagnosisConcepts.TB85,
-			DiagnosisConcepts._DiagnosisConcepts.TB86, DiagnosisConcepts._DiagnosisConcepts.TB87,
-			DiagnosisConcepts._DiagnosisConcepts.TB88, DiagnosisConcepts._DiagnosisConcepts.TB89,
-			DiagnosisConcepts._DiagnosisConcepts.TB90, DiagnosisConcepts._DiagnosisConcepts.TB91,
-			DiagnosisConcepts._DiagnosisConcepts.TB92, DiagnosisConcepts._DiagnosisConcepts.TB93,
-			DiagnosisConcepts._DiagnosisConcepts.TB94, DiagnosisConcepts._DiagnosisConcepts.TB95,
-			DiagnosisConcepts._DiagnosisConcepts.TB96, DiagnosisConcepts._DiagnosisConcepts.TB97,
-			DiagnosisConcepts._DiagnosisConcepts.TB98, DiagnosisConcepts._DiagnosisConcepts.TB99,
-			DiagnosisConcepts._DiagnosisConcepts.TB100, DiagnosisConcepts._DiagnosisConcepts.TB101,
-			DiagnosisConcepts._DiagnosisConcepts.TB102, DiagnosisConcepts._DiagnosisConcepts.TB103,
-			DiagnosisConcepts._DiagnosisConcepts.TB104, DiagnosisConcepts._DiagnosisConcepts.TB105,
-			DiagnosisConcepts._DiagnosisConcepts.TB106, DiagnosisConcepts._DiagnosisConcepts.TB107,
-			DiagnosisConcepts._DiagnosisConcepts.TB108, DiagnosisConcepts._DiagnosisConcepts.TB109,
-			DiagnosisConcepts._DiagnosisConcepts.TB110, DiagnosisConcepts._DiagnosisConcepts.TB111,
-			DiagnosisConcepts._DiagnosisConcepts.TB112, DiagnosisConcepts._DiagnosisConcepts.TB113,
-			DiagnosisConcepts._DiagnosisConcepts.TB114, DiagnosisConcepts._DiagnosisConcepts.TB115,
-			DiagnosisConcepts._DiagnosisConcepts.TB116, DiagnosisConcepts._DiagnosisConcepts.TB117,
-			DiagnosisConcepts._DiagnosisConcepts.TB118, DiagnosisConcepts._DiagnosisConcepts.TB119,
-			DiagnosisConcepts._DiagnosisConcepts.TB120, DiagnosisConcepts._DiagnosisConcepts.TB121,
-			DiagnosisConcepts._DiagnosisConcepts.TB122, DiagnosisConcepts._DiagnosisConcepts.TB123,
-			DiagnosisConcepts._DiagnosisConcepts.TB124, DiagnosisConcepts._DiagnosisConcepts.TB125,
-			DiagnosisConcepts._DiagnosisConcepts.TB126, DiagnosisConcepts._DiagnosisConcepts.TB127,
-			DiagnosisConcepts._DiagnosisConcepts.TB128, DiagnosisConcepts._DiagnosisConcepts.TB129,
-			DiagnosisConcepts._DiagnosisConcepts.TB130, DiagnosisConcepts._DiagnosisConcepts.TB131,
-			DiagnosisConcepts._DiagnosisConcepts.TB132, DiagnosisConcepts._DiagnosisConcepts.TB133,
-			DiagnosisConcepts._DiagnosisConcepts.TB134, DiagnosisConcepts._DiagnosisConcepts.TB135,
-			DiagnosisConcepts._DiagnosisConcepts.TB136, DiagnosisConcepts._DiagnosisConcepts.TB137,
-			DiagnosisConcepts._DiagnosisConcepts.TB138, DiagnosisConcepts._DiagnosisConcepts.TB139,
-			DiagnosisConcepts._DiagnosisConcepts.TB140, DiagnosisConcepts._DiagnosisConcepts.TB141,
-			DiagnosisConcepts._DiagnosisConcepts.TB142, DiagnosisConcepts._DiagnosisConcepts.TB143,
-			DiagnosisConcepts._DiagnosisConcepts.TB144, DiagnosisConcepts._DiagnosisConcepts.TB145,
-			DiagnosisConcepts._DiagnosisConcepts.TB146, DiagnosisConcepts._DiagnosisConcepts.TB147,
-			DiagnosisConcepts._DiagnosisConcepts.TB148, DiagnosisConcepts._DiagnosisConcepts.TB149,
-			DiagnosisConcepts._DiagnosisConcepts.TB150, DiagnosisConcepts._DiagnosisConcepts.TB151,
-			DiagnosisConcepts._DiagnosisConcepts.TB152, DiagnosisConcepts._DiagnosisConcepts.TB153,
-			DiagnosisConcepts._DiagnosisConcepts.TB154, DiagnosisConcepts._DiagnosisConcepts.TB155,
-			DiagnosisConcepts._DiagnosisConcepts.TB156, DiagnosisConcepts._DiagnosisConcepts.TB157,
-			DiagnosisConcepts._DiagnosisConcepts.TB158, DiagnosisConcepts._DiagnosisConcepts.TB159,
-			DiagnosisConcepts._DiagnosisConcepts.TB160, DiagnosisConcepts._DiagnosisConcepts.TB161,
-			DiagnosisConcepts._DiagnosisConcepts.TB162, DiagnosisConcepts._DiagnosisConcepts.TB163,
-			DiagnosisConcepts._DiagnosisConcepts.TB164, DiagnosisConcepts._DiagnosisConcepts.TB165,
-			DiagnosisConcepts._DiagnosisConcepts.TB166, DiagnosisConcepts._DiagnosisConcepts.TB167,
-			DiagnosisConcepts._DiagnosisConcepts.TB168, DiagnosisConcepts._DiagnosisConcepts.TB169,
-			DiagnosisConcepts._DiagnosisConcepts.TB170, DiagnosisConcepts._DiagnosisConcepts.TB171,
-			DiagnosisConcepts._DiagnosisConcepts.TB172, DiagnosisConcepts._DiagnosisConcepts.TB173,
-			DiagnosisConcepts._DiagnosisConcepts.TB174, DiagnosisConcepts._DiagnosisConcepts.TB175,
-			DiagnosisConcepts._DiagnosisConcepts.TB176, DiagnosisConcepts._DiagnosisConcepts.TB177,
-			DiagnosisConcepts._DiagnosisConcepts.TB178, DiagnosisConcepts._DiagnosisConcepts.TB179,
-			DiagnosisConcepts._DiagnosisConcepts.TB180, DiagnosisConcepts._DiagnosisConcepts.TB181,
-			DiagnosisConcepts._DiagnosisConcepts.TB182, DiagnosisConcepts._DiagnosisConcepts.TB183,
-			DiagnosisConcepts._DiagnosisConcepts.TB184, DiagnosisConcepts._DiagnosisConcepts.TB185,
-			DiagnosisConcepts._DiagnosisConcepts.TB186, DiagnosisConcepts._DiagnosisConcepts.TB187,
-			DiagnosisConcepts._DiagnosisConcepts.TB188, DiagnosisConcepts._DiagnosisConcepts.TB189,
-			DiagnosisConcepts._DiagnosisConcepts.TB190, DiagnosisConcepts._DiagnosisConcepts.TB191,
-			DiagnosisConcepts._DiagnosisConcepts.TB192, DiagnosisConcepts._DiagnosisConcepts.TB193,
-			DiagnosisConcepts._DiagnosisConcepts.TB194, DiagnosisConcepts._DiagnosisConcepts.TB195,
-			DiagnosisConcepts._DiagnosisConcepts.TB196, DiagnosisConcepts._DiagnosisConcepts.TB197,
-			DiagnosisConcepts._DiagnosisConcepts.TB198, DiagnosisConcepts._DiagnosisConcepts.TB199,
-			DiagnosisConcepts._DiagnosisConcepts.TB200, DiagnosisConcepts._DiagnosisConcepts.TB201,
-			DiagnosisConcepts._DiagnosisConcepts.TB202, DiagnosisConcepts._DiagnosisConcepts.TB204,
-			DiagnosisConcepts._DiagnosisConcepts.TB205, DiagnosisConcepts._DiagnosisConcepts.TB203,
-			DiagnosisConcepts._DiagnosisConcepts.TB206, DiagnosisConcepts._DiagnosisConcepts.TB207,
-			DiagnosisConcepts._DiagnosisConcepts.TB208, DiagnosisConcepts._DiagnosisConcepts.TB209,
-			DiagnosisConcepts._DiagnosisConcepts.TB210, DiagnosisConcepts._DiagnosisConcepts.TB211,
-			DiagnosisConcepts._DiagnosisConcepts.TB212, DiagnosisConcepts._DiagnosisConcepts.TB213,
-			DiagnosisConcepts._DiagnosisConcepts.TB214, DiagnosisConcepts._DiagnosisConcepts.TB215,
-			DiagnosisConcepts._DiagnosisConcepts.TB216, DiagnosisConcepts._DiagnosisConcepts.TB217,
-			DiagnosisConcepts._DiagnosisConcepts.TB218, DiagnosisConcepts._DiagnosisConcepts.TB219,
-			DiagnosisConcepts._DiagnosisConcepts.TB220, DiagnosisConcepts._DiagnosisConcepts.TB221,
-			DiagnosisConcepts._DiagnosisConcepts.TB222, DiagnosisConcepts._DiagnosisConcepts.TB223,
-			DiagnosisConcepts._DiagnosisConcepts.TB224, DiagnosisConcepts._DiagnosisConcepts.TB225,
-			DiagnosisConcepts._DiagnosisConcepts.TB226, DiagnosisConcepts._DiagnosisConcepts.TB227,
-			DiagnosisConcepts._DiagnosisConcepts.TB228, DiagnosisConcepts._DiagnosisConcepts.TB229,
-			DiagnosisConcepts._DiagnosisConcepts.TB230, DiagnosisConcepts._DiagnosisConcepts.TB231,
-			DiagnosisConcepts._DiagnosisConcepts.TB232, DiagnosisConcepts._DiagnosisConcepts.TB233,
-			DiagnosisConcepts._DiagnosisConcepts.TB234, DiagnosisConcepts._DiagnosisConcepts.TB235,
-			DiagnosisConcepts._DiagnosisConcepts.TB236, DiagnosisConcepts._DiagnosisConcepts.TB237,
-			DiagnosisConcepts._DiagnosisConcepts.TB238, DiagnosisConcepts._DiagnosisConcepts.TB239,
-			DiagnosisConcepts._DiagnosisConcepts.TB240, DiagnosisConcepts._DiagnosisConcepts.TB241,
-			DiagnosisConcepts._DiagnosisConcepts.TB242, DiagnosisConcepts._DiagnosisConcepts.TB243,
-			DiagnosisConcepts._DiagnosisConcepts.TB244, DiagnosisConcepts._DiagnosisConcepts.TB245,
-			DiagnosisConcepts._DiagnosisConcepts.TB246, DiagnosisConcepts._DiagnosisConcepts.TB247,
-			DiagnosisConcepts._DiagnosisConcepts.TB248, DiagnosisConcepts._DiagnosisConcepts.TB249,
-			DiagnosisConcepts._DiagnosisConcepts.TB250, DiagnosisConcepts._DiagnosisConcepts.TB251,
-			DiagnosisConcepts._DiagnosisConcepts.TB252, DiagnosisConcepts._DiagnosisConcepts.TB253,
-			DiagnosisConcepts._DiagnosisConcepts.TB254, DiagnosisConcepts._DiagnosisConcepts.TB255,
-			DiagnosisConcepts._DiagnosisConcepts.TB256, DiagnosisConcepts._DiagnosisConcepts.TB257,
-			DiagnosisConcepts._DiagnosisConcepts.TB258, DiagnosisConcepts._DiagnosisConcepts.TB259,
-			DiagnosisConcepts._DiagnosisConcepts.TB260, DiagnosisConcepts._DiagnosisConcepts.TB261,
-			DiagnosisConcepts._DiagnosisConcepts.TB262, DiagnosisConcepts._DiagnosisConcepts.TB263,
-			DiagnosisConcepts._DiagnosisConcepts.TB264, DiagnosisConcepts._DiagnosisConcepts.TB265,
-			DiagnosisConcepts._DiagnosisConcepts.TB266, DiagnosisConcepts._DiagnosisConcepts.TB267,
-			DiagnosisConcepts._DiagnosisConcepts.TB268, DiagnosisConcepts._DiagnosisConcepts.TB269,
-			DiagnosisConcepts._DiagnosisConcepts.TB270, DiagnosisConcepts._DiagnosisConcepts.TB271,
-			DiagnosisConcepts._DiagnosisConcepts.TB272, DiagnosisConcepts._DiagnosisConcepts.TB273,
-			DiagnosisConcepts._DiagnosisConcepts.TB274, DiagnosisConcepts._DiagnosisConcepts.TB275,
-			DiagnosisConcepts._DiagnosisConcepts.TB276, DiagnosisConcepts._DiagnosisConcepts.TB277,
-			DiagnosisConcepts._DiagnosisConcepts.TB278, DiagnosisConcepts._DiagnosisConcepts.TB279,
-			DiagnosisConcepts._DiagnosisConcepts.TB280, DiagnosisConcepts._DiagnosisConcepts.TB281,
-			DiagnosisConcepts._DiagnosisConcepts.TB282, DiagnosisConcepts._DiagnosisConcepts.TB283,
-			DiagnosisConcepts._DiagnosisConcepts.TB284, DiagnosisConcepts._DiagnosisConcepts.TB285,
-			DiagnosisConcepts._DiagnosisConcepts.TB286, DiagnosisConcepts._DiagnosisConcepts.TB287,
-			DiagnosisConcepts._DiagnosisConcepts.TB288, DiagnosisConcepts._DiagnosisConcepts.TB289,
-			DiagnosisConcepts._DiagnosisConcepts.TB290, DiagnosisConcepts._DiagnosisConcepts.TB291,
-			DiagnosisConcepts._DiagnosisConcepts.TB292, DiagnosisConcepts._DiagnosisConcepts.TB293,
-			DiagnosisConcepts._DiagnosisConcepts.TB294, DiagnosisConcepts._DiagnosisConcepts.TB295,
-			DiagnosisConcepts._DiagnosisConcepts.TB296, DiagnosisConcepts._DiagnosisConcepts.TB297,
-			DiagnosisConcepts._DiagnosisConcepts.TB298, DiagnosisConcepts._DiagnosisConcepts.TB299,
-			DiagnosisConcepts._DiagnosisConcepts.TB300, DiagnosisConcepts._DiagnosisConcepts.TB301,
-			DiagnosisConcepts._DiagnosisConcepts.TB302
+	public static List<Integer> getGastroenteritisList() {
+		return Arrays
+			.asList(DiagnosisConcepts._DiagnosisConcepts.GAS_1,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_2,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_3,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_4,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_5,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_6,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_7,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_8,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_9,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_10,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_11,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_12,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_13,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_14,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_15,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_16,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_17,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_18,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_19,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_20,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_21,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_22,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_23,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_24,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_25,
+				DiagnosisConcepts._DiagnosisConcepts.GAS_26
 
+			);
+	}
+
+	public static List<Integer> getSeverePneumoniaList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SP_1,
+			DiagnosisConcepts._DiagnosisConcepts.SP_2,
+			DiagnosisConcepts._DiagnosisConcepts.SP_3,
+			DiagnosisConcepts._DiagnosisConcepts.SP_4,
+			DiagnosisConcepts._DiagnosisConcepts.SP_5,
+			DiagnosisConcepts._DiagnosisConcepts.SP_6,
+			DiagnosisConcepts._DiagnosisConcepts.SP_7,
+			DiagnosisConcepts._DiagnosisConcepts.SP_8,
+			DiagnosisConcepts._DiagnosisConcepts.SP_9,
+			DiagnosisConcepts._DiagnosisConcepts.SP_10
 		);
 	}
 
-	public static List<Integer> getDysenteryList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DYSENTERY,
-			DiagnosisConcepts._DiagnosisConcepts.AMOEBIC_DYSENTERY, DiagnosisConcepts._DiagnosisConcepts.SHIGELLA_DYSENTERY,
-			DiagnosisConcepts._DiagnosisConcepts.BACILLARY_DYSENTERY, DiagnosisConcepts._DiagnosisConcepts.Viral_Dysentery,
-			DiagnosisConcepts._DiagnosisConcepts.Haemorrhagic_Dysentery,
-			DiagnosisConcepts._DiagnosisConcepts.Catarrhal_Dysentery,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_Amebic_Dysentery_without_Abscess,
-			DiagnosisConcepts._DiagnosisConcepts.Joint_problem_following_dysentery);
-	}
-
-	public static List<Integer> getCholeraList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DIARRHEA_CHOLERA,
-			DiagnosisConcepts._DiagnosisConcepts.CHOLERA,
-			DiagnosisConcepts._DiagnosisConcepts.Cholera_due_to_Vibrio_Cholerae,
-			DiagnosisConcepts._DiagnosisConcepts.Need_for_Vaccination_for_Cholera,
-			DiagnosisConcepts._DiagnosisConcepts.Pseudopancreatic_Cholera_Syndrome,
-			DiagnosisConcepts._DiagnosisConcepts.Poisoning_by_Cholera_Vaccine,
-			DiagnosisConcepts._DiagnosisConcepts.Hog_Cholera,
-			DiagnosisConcepts._DiagnosisConcepts.Cholera_due_to_Vibrio_Cholerae_El_Tor,
-			DiagnosisConcepts._DiagnosisConcepts.Cholera_Contact, DiagnosisConcepts._DiagnosisConcepts.Cholera_Carrier,
-			DiagnosisConcepts._DiagnosisConcepts.CHOLERA_1,
-			DiagnosisConcepts._DiagnosisConcepts.Adverse_Reaction_to_Cholera_Vaccine,
-			DiagnosisConcepts._DiagnosisConcepts.accidental_cholera_vaccine_poisoning,
-			DiagnosisConcepts._DiagnosisConcepts.cholera_due_to_vibrio_cholerae_01_biovar_cholerae,
-			DiagnosisConcepts._DiagnosisConcepts.cholera_due_to_vibrio_cholerae_01_biovar_El_Tor,
-			DiagnosisConcepts._DiagnosisConcepts.cholera_vaccine_adverse_reaction,
-			DiagnosisConcepts._DiagnosisConcepts.cholera_vaccine_poisoning_of_undetermined_intent,
-			DiagnosisConcepts._DiagnosisConcepts.intentional_cholera_vaccine_poisoning
-
+	public static List<Integer> getLowerTractInfectionList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.LTI_1,
+			DiagnosisConcepts._DiagnosisConcepts.LTI_2,
+			DiagnosisConcepts._DiagnosisConcepts.LTI_3
 		);
 	}
 
-	public static List<Integer> getMeningococcalMeningitisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MENINGOCOCCAL_MENINGITIS);
-	}
-
-	public static List<Integer> getOtherMenigitisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BACTERIAL_MENINGITIS,
-			DiagnosisConcepts._DiagnosisConcepts.CRYPTOCOCCAL_MENINGITIS,
-			DiagnosisConcepts._DiagnosisConcepts.VIRAL_MENINGITIS, DiagnosisConcepts._DiagnosisConcepts.OM1,
-			DiagnosisConcepts._DiagnosisConcepts.OM2, DiagnosisConcepts._DiagnosisConcepts.OM3,
-			DiagnosisConcepts._DiagnosisConcepts.OM4, DiagnosisConcepts._DiagnosisConcepts.OM5,
-			DiagnosisConcepts._DiagnosisConcepts.OM6, DiagnosisConcepts._DiagnosisConcepts.OM7,
-			DiagnosisConcepts._DiagnosisConcepts.OM8, DiagnosisConcepts._DiagnosisConcepts.OM9,
-			DiagnosisConcepts._DiagnosisConcepts.OM10, DiagnosisConcepts._DiagnosisConcepts.OM11,
-			DiagnosisConcepts._DiagnosisConcepts.OM12, DiagnosisConcepts._DiagnosisConcepts.OM13,
-			DiagnosisConcepts._DiagnosisConcepts.OM14, DiagnosisConcepts._DiagnosisConcepts.OM15,
-			DiagnosisConcepts._DiagnosisConcepts.OM16, DiagnosisConcepts._DiagnosisConcepts.OM17,
-			DiagnosisConcepts._DiagnosisConcepts.OM18, DiagnosisConcepts._DiagnosisConcepts.OM19,
-			DiagnosisConcepts._DiagnosisConcepts.OM20, DiagnosisConcepts._DiagnosisConcepts.OM21,
-			DiagnosisConcepts._DiagnosisConcepts.OM22, DiagnosisConcepts._DiagnosisConcepts.OM23,
-			DiagnosisConcepts._DiagnosisConcepts.OM24, DiagnosisConcepts._DiagnosisConcepts.OM25,
-			DiagnosisConcepts._DiagnosisConcepts.OM26, DiagnosisConcepts._DiagnosisConcepts.OM27,
-			DiagnosisConcepts._DiagnosisConcepts.OM28, DiagnosisConcepts._DiagnosisConcepts.OM29,
-			DiagnosisConcepts._DiagnosisConcepts.OM30, DiagnosisConcepts._DiagnosisConcepts.OM31,
-			DiagnosisConcepts._DiagnosisConcepts.OM32, DiagnosisConcepts._DiagnosisConcepts.OM33,
-			DiagnosisConcepts._DiagnosisConcepts.OM34, DiagnosisConcepts._DiagnosisConcepts.OM35,
-			DiagnosisConcepts._DiagnosisConcepts.OM36, DiagnosisConcepts._DiagnosisConcepts.OM37,
-			DiagnosisConcepts._DiagnosisConcepts.OM38, DiagnosisConcepts._DiagnosisConcepts.OM39,
-			DiagnosisConcepts._DiagnosisConcepts.OM40, DiagnosisConcepts._DiagnosisConcepts.OM41,
-			DiagnosisConcepts._DiagnosisConcepts.OM42, DiagnosisConcepts._DiagnosisConcepts.OM43,
-			DiagnosisConcepts._DiagnosisConcepts.OM44, DiagnosisConcepts._DiagnosisConcepts.OM45,
-			DiagnosisConcepts._DiagnosisConcepts.OM46, DiagnosisConcepts._DiagnosisConcepts.OM47,
-			DiagnosisConcepts._DiagnosisConcepts.OM48, DiagnosisConcepts._DiagnosisConcepts.OM49,
-			DiagnosisConcepts._DiagnosisConcepts.OM50, DiagnosisConcepts._DiagnosisConcepts.OM51,
-			DiagnosisConcepts._DiagnosisConcepts.OM52, DiagnosisConcepts._DiagnosisConcepts.OM53,
-			DiagnosisConcepts._DiagnosisConcepts.OM54, DiagnosisConcepts._DiagnosisConcepts.OM55
-
+	public static List<Integer> getUpperRespiratoryTractInfectionsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.URC_1,
+			DiagnosisConcepts._DiagnosisConcepts.URC_2,
+			DiagnosisConcepts._DiagnosisConcepts.URC_3,
+			DiagnosisConcepts._DiagnosisConcepts.URC_4,
+			DiagnosisConcepts._DiagnosisConcepts.URC_5,
+			DiagnosisConcepts._DiagnosisConcepts.URC_6
 		);
 	}
 
-	public static List<Integer> getPoliomyelitisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.PLY1, DiagnosisConcepts._DiagnosisConcepts.PLY2,
-			DiagnosisConcepts._DiagnosisConcepts.PLY3, DiagnosisConcepts._DiagnosisConcepts.PLY4,
-			DiagnosisConcepts._DiagnosisConcepts.PLY5, DiagnosisConcepts._DiagnosisConcepts.PLY6,
-			DiagnosisConcepts._DiagnosisConcepts.PLY7, DiagnosisConcepts._DiagnosisConcepts.PLY8,
-			DiagnosisConcepts._DiagnosisConcepts.PLY9, DiagnosisConcepts._DiagnosisConcepts.PLY10,
-			DiagnosisConcepts._DiagnosisConcepts.PLY11, DiagnosisConcepts._DiagnosisConcepts.PLY12,
-			DiagnosisConcepts._DiagnosisConcepts.PLY13, DiagnosisConcepts._DiagnosisConcepts.PLY14,
-			DiagnosisConcepts._DiagnosisConcepts.PLY15, DiagnosisConcepts._DiagnosisConcepts.PLY16,
-			DiagnosisConcepts._DiagnosisConcepts.PLY17, DiagnosisConcepts._DiagnosisConcepts.PLY18,
-			DiagnosisConcepts._DiagnosisConcepts.PLY19, DiagnosisConcepts._DiagnosisConcepts.PLY20,
-			DiagnosisConcepts._DiagnosisConcepts.PLY21, DiagnosisConcepts._DiagnosisConcepts.PLY22,
-			DiagnosisConcepts._DiagnosisConcepts.PLY23, DiagnosisConcepts._DiagnosisConcepts.PLY24,
-			DiagnosisConcepts._DiagnosisConcepts.PLY25, DiagnosisConcepts._DiagnosisConcepts.PLY26,
-			DiagnosisConcepts._DiagnosisConcepts.PLY27, DiagnosisConcepts._DiagnosisConcepts.PLY28,
-			DiagnosisConcepts._DiagnosisConcepts.PLY29, DiagnosisConcepts._DiagnosisConcepts.PLY30,
-			DiagnosisConcepts._DiagnosisConcepts.PLY31, DiagnosisConcepts._DiagnosisConcepts.PLY32,
-			DiagnosisConcepts._DiagnosisConcepts.PLY33, DiagnosisConcepts._DiagnosisConcepts.PLY34
-
-		);
-	}
-
-	public static List<Integer> getNeonatalTetanusList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TETANUS_NEONATORUM);
-	}
-
-	public static List<Integer> getChickenPoxList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CHICKEN_POX, DiagnosisConcepts._DiagnosisConcepts.CP2,
-			DiagnosisConcepts._DiagnosisConcepts.CP3, DiagnosisConcepts._DiagnosisConcepts.CP4,
-			DiagnosisConcepts._DiagnosisConcepts.CP5, DiagnosisConcepts._DiagnosisConcepts.CP6);
-	}
-
-	public static List<Integer> getMeaslesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MEASLES, DiagnosisConcepts._DiagnosisConcepts.MSC1,
-			DiagnosisConcepts._DiagnosisConcepts.MSC2, DiagnosisConcepts._DiagnosisConcepts.MSC3,
-			DiagnosisConcepts._DiagnosisConcepts.MSC4, DiagnosisConcepts._DiagnosisConcepts.MSC5,
-			DiagnosisConcepts._DiagnosisConcepts.MSC6, DiagnosisConcepts._DiagnosisConcepts.MSC7,
-			DiagnosisConcepts._DiagnosisConcepts.MSC8, DiagnosisConcepts._DiagnosisConcepts.MSC9,
-			DiagnosisConcepts._DiagnosisConcepts.MSC10, DiagnosisConcepts._DiagnosisConcepts.MSC12,
-			DiagnosisConcepts._DiagnosisConcepts.MSC13, DiagnosisConcepts._DiagnosisConcepts.MSC14,
-			DiagnosisConcepts._DiagnosisConcepts.MSC15, DiagnosisConcepts._DiagnosisConcepts.MSC16,
-			DiagnosisConcepts._DiagnosisConcepts.MSC17, DiagnosisConcepts._DiagnosisConcepts.MSC18,
-			DiagnosisConcepts._DiagnosisConcepts.MSC19, DiagnosisConcepts._DiagnosisConcepts.MSC20
-
-		);
-	}
-
-	public static List<Integer> getHepatitisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HP1, DiagnosisConcepts._DiagnosisConcepts.HP2,
-			DiagnosisConcepts._DiagnosisConcepts.HP3, DiagnosisConcepts._DiagnosisConcepts.HP4,
-			DiagnosisConcepts._DiagnosisConcepts.HP5, DiagnosisConcepts._DiagnosisConcepts.HP6,
-			DiagnosisConcepts._DiagnosisConcepts.HP7, DiagnosisConcepts._DiagnosisConcepts.HP8,
-			DiagnosisConcepts._DiagnosisConcepts.HP9, DiagnosisConcepts._DiagnosisConcepts.HP10,
-			DiagnosisConcepts._DiagnosisConcepts.HP11, DiagnosisConcepts._DiagnosisConcepts.HP12,
-			DiagnosisConcepts._DiagnosisConcepts.HP13, DiagnosisConcepts._DiagnosisConcepts.HP14,
-			DiagnosisConcepts._DiagnosisConcepts.HP15, DiagnosisConcepts._DiagnosisConcepts.HP16,
-			DiagnosisConcepts._DiagnosisConcepts.HP17, DiagnosisConcepts._DiagnosisConcepts.HP18,
-			DiagnosisConcepts._DiagnosisConcepts.HP19, DiagnosisConcepts._DiagnosisConcepts.HP20,
-			DiagnosisConcepts._DiagnosisConcepts.HP21, DiagnosisConcepts._DiagnosisConcepts.HP22,
-			DiagnosisConcepts._DiagnosisConcepts.HP23, DiagnosisConcepts._DiagnosisConcepts.HP24,
-			DiagnosisConcepts._DiagnosisConcepts.HP25, DiagnosisConcepts._DiagnosisConcepts.HP26,
-			DiagnosisConcepts._DiagnosisConcepts.HP27, DiagnosisConcepts._DiagnosisConcepts.HP28,
-			DiagnosisConcepts._DiagnosisConcepts.HP29, DiagnosisConcepts._DiagnosisConcepts.HP30,
-			DiagnosisConcepts._DiagnosisConcepts.HP31, DiagnosisConcepts._DiagnosisConcepts.HP32,
-			DiagnosisConcepts._DiagnosisConcepts.HP33, DiagnosisConcepts._DiagnosisConcepts.HP34,
-			DiagnosisConcepts._DiagnosisConcepts.HP35, DiagnosisConcepts._DiagnosisConcepts.HP36,
-			DiagnosisConcepts._DiagnosisConcepts.HP37, DiagnosisConcepts._DiagnosisConcepts.HP38,
-			DiagnosisConcepts._DiagnosisConcepts.HP39, DiagnosisConcepts._DiagnosisConcepts.HP40,
-			DiagnosisConcepts._DiagnosisConcepts.HP41, DiagnosisConcepts._DiagnosisConcepts.HP42,
-			DiagnosisConcepts._DiagnosisConcepts.HP43, DiagnosisConcepts._DiagnosisConcepts.HP44,
-			DiagnosisConcepts._DiagnosisConcepts.HP45, DiagnosisConcepts._DiagnosisConcepts.HP46,
-			DiagnosisConcepts._DiagnosisConcepts.HP47, DiagnosisConcepts._DiagnosisConcepts.HP48,
-			DiagnosisConcepts._DiagnosisConcepts.HP49, DiagnosisConcepts._DiagnosisConcepts.HP50,
-			DiagnosisConcepts._DiagnosisConcepts.HP51, DiagnosisConcepts._DiagnosisConcepts.HP52,
-			DiagnosisConcepts._DiagnosisConcepts.HP53, DiagnosisConcepts._DiagnosisConcepts.HP54,
-			DiagnosisConcepts._DiagnosisConcepts.HP55, DiagnosisConcepts._DiagnosisConcepts.HP56,
-			DiagnosisConcepts._DiagnosisConcepts.HP57, DiagnosisConcepts._DiagnosisConcepts.HP58,
-			DiagnosisConcepts._DiagnosisConcepts.HP59, DiagnosisConcepts._DiagnosisConcepts.HP60,
-			DiagnosisConcepts._DiagnosisConcepts.HP61, DiagnosisConcepts._DiagnosisConcepts.HP62,
-			DiagnosisConcepts._DiagnosisConcepts.HP63, DiagnosisConcepts._DiagnosisConcepts.HP64,
-			DiagnosisConcepts._DiagnosisConcepts.HP65, DiagnosisConcepts._DiagnosisConcepts.HP66,
-			DiagnosisConcepts._DiagnosisConcepts.HP67, DiagnosisConcepts._DiagnosisConcepts.HP68,
-			DiagnosisConcepts._DiagnosisConcepts.HP69, DiagnosisConcepts._DiagnosisConcepts.HP70,
-			DiagnosisConcepts._DiagnosisConcepts.HP71, DiagnosisConcepts._DiagnosisConcepts.HP72,
-			DiagnosisConcepts._DiagnosisConcepts.HP73, DiagnosisConcepts._DiagnosisConcepts.HP74,
-			DiagnosisConcepts._DiagnosisConcepts.HP75, DiagnosisConcepts._DiagnosisConcepts.HP76,
-			DiagnosisConcepts._DiagnosisConcepts.HP77, DiagnosisConcepts._DiagnosisConcepts.HP78,
-			DiagnosisConcepts._DiagnosisConcepts.HP79, DiagnosisConcepts._DiagnosisConcepts.HP80,
-			DiagnosisConcepts._DiagnosisConcepts.HP81, DiagnosisConcepts._DiagnosisConcepts.HP82,
-			DiagnosisConcepts._DiagnosisConcepts.HP83, DiagnosisConcepts._DiagnosisConcepts.HP84,
-			DiagnosisConcepts._DiagnosisConcepts.HP85, DiagnosisConcepts._DiagnosisConcepts.HP86,
-			DiagnosisConcepts._DiagnosisConcepts.HP87, DiagnosisConcepts._DiagnosisConcepts.HP88,
-			DiagnosisConcepts._DiagnosisConcepts.HP89, DiagnosisConcepts._DiagnosisConcepts.HP90,
-			DiagnosisConcepts._DiagnosisConcepts.HP91, DiagnosisConcepts._DiagnosisConcepts.HP92,
-			DiagnosisConcepts._DiagnosisConcepts.HP93, DiagnosisConcepts._DiagnosisConcepts.HP94,
-			DiagnosisConcepts._DiagnosisConcepts.HP95, DiagnosisConcepts._DiagnosisConcepts.HP96,
-			DiagnosisConcepts._DiagnosisConcepts.HP97, DiagnosisConcepts._DiagnosisConcepts.HP98,
-			DiagnosisConcepts._DiagnosisConcepts.HP99, DiagnosisConcepts._DiagnosisConcepts.HP100,
-			DiagnosisConcepts._DiagnosisConcepts.HP101, DiagnosisConcepts._DiagnosisConcepts.HP102,
-			DiagnosisConcepts._DiagnosisConcepts.HP103, DiagnosisConcepts._DiagnosisConcepts.HP104,
-			DiagnosisConcepts._DiagnosisConcepts.HP105, DiagnosisConcepts._DiagnosisConcepts.HP106,
-			DiagnosisConcepts._DiagnosisConcepts.HP107, DiagnosisConcepts._DiagnosisConcepts.HP108,
-			DiagnosisConcepts._DiagnosisConcepts.HP109, DiagnosisConcepts._DiagnosisConcepts.HP110,
-			DiagnosisConcepts._DiagnosisConcepts.HP111, DiagnosisConcepts._DiagnosisConcepts.HP112,
-			DiagnosisConcepts._DiagnosisConcepts.HP113, DiagnosisConcepts._DiagnosisConcepts.HP114
-
-		);
-	}
-
-	public static List<Integer> getMumpsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MUMPS1, DiagnosisConcepts._DiagnosisConcepts.MUMPS2,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS3, DiagnosisConcepts._DiagnosisConcepts.MUMPS4,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS5, DiagnosisConcepts._DiagnosisConcepts.MUMPS6,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS7, DiagnosisConcepts._DiagnosisConcepts.MUMPS8,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS9, DiagnosisConcepts._DiagnosisConcepts.MUMPS10,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS11, DiagnosisConcepts._DiagnosisConcepts.MUMPS12,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS13, DiagnosisConcepts._DiagnosisConcepts.MUMPS14,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS15, DiagnosisConcepts._DiagnosisConcepts.MUMPS16,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS17, DiagnosisConcepts._DiagnosisConcepts.MUMPS18,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS19, DiagnosisConcepts._DiagnosisConcepts.MUMPS20,
-			DiagnosisConcepts._DiagnosisConcepts.MUMPS21, DiagnosisConcepts._DiagnosisConcepts.MUMPS22
+	public static List<Integer> getPresumedTuberculosisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TCP_1,
+			DiagnosisConcepts._DiagnosisConcepts.TCP_2
 
 		);
 	}
@@ -451,96 +103,1802 @@ public class DiagnosisLists {
 	public static List<Integer> getMalariaList() {
 		return Arrays
 			.asList(
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_MILD,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_SEVERE,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_PRESUMED,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_RULE_OUT,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_R_O,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_CLINICAL,
-				DiagnosisConcepts._DiagnosisConcepts.CLINICAL_MALARIA,
-				DiagnosisConcepts._DiagnosisConcepts.UNSPECIFIED_MALARIA,
-				DiagnosisConcepts._DiagnosisConcepts.Maternal_Malaria_with_Delivery,
-				DiagnosisConcepts._DiagnosisConcepts.Malarial_Fever,
-				DiagnosisConcepts._DiagnosisConcepts.Complicated_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.MALARIA_1,
-				DiagnosisConcepts._DiagnosisConcepts.Haemolytic_Anaemia_due_to_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Falciparum_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Vivax_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Therapeutically_Induced_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Simian_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Quartan_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Malariae_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Poisoning_by_Antimalarial_Drug,
-				DiagnosisConcepts._DiagnosisConcepts.Ovale_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Other_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Mixed_Malaria,
-
-				DiagnosisConcepts._DiagnosisConcepts.Maternal_Malaria_with_Delivery_with_Current_Postpartum_Complication,
-				DiagnosisConcepts._DiagnosisConcepts.Malarial_Nephrosis,
-				DiagnosisConcepts._DiagnosisConcepts.Malarial_Hepatitis,
-				DiagnosisConcepts._DiagnosisConcepts.Induced_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.hyper_reactive_malarial_splenomegaly,
-				DiagnosisConcepts._DiagnosisConcepts.HO_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Congenital_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Cerebral_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Algid_Malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Plasmodium_Falciparum_Malaria_with_Cerebral_Complications,
-				DiagnosisConcepts._DiagnosisConcepts.Plasmodium_Malariae_Malaria_with_Nephropathy,
-				DiagnosisConcepts._DiagnosisConcepts.congenital_falciparum_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Plasmodium_vivax_malaria_with_rupture_of_spleen,
-				DiagnosisConcepts._DiagnosisConcepts.Uncomplicated_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Malaria_uncomplicated,
-				DiagnosisConcepts._DiagnosisConcepts.Malaria_confirmed,
-				DiagnosisConcepts._DiagnosisConcepts.Presumptive_malaria_with_minor_digestive_system,
-				DiagnosisConcepts._DiagnosisConcepts.Malaria_confirmed_with_minor_digestive_symptoms,
-				DiagnosisConcepts._DiagnosisConcepts.Presumptive_malaria_with_pregnancy,
-				DiagnosisConcepts._DiagnosisConcepts.Confirmed_malaria_with_pregnancy,
-				DiagnosisConcepts._DiagnosisConcepts.Presumptive_malaria_with_minor_digestive_symptoms_pregnant,
-				DiagnosisConcepts._DiagnosisConcepts.Confirmed_malaria_with_minor_digestive_symptoms_pregnant,
-				DiagnosisConcepts._DiagnosisConcepts.Severe_malaria,
-				DiagnosisConcepts._DiagnosisConcepts.Non_falciparum_malaria);
+				DiagnosisConcepts._DiagnosisConcepts.CMC_1,
+				DiagnosisConcepts._DiagnosisConcepts.CMC_2,
+				DiagnosisConcepts._DiagnosisConcepts.CMC_3,
+				DiagnosisConcepts._DiagnosisConcepts.CMC_4
+			);
 	}
 
-	public static List<Integer> getUrinaryTractInfectionList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.UTI1, DiagnosisConcepts._DiagnosisConcepts.UTI2,
-			DiagnosisConcepts._DiagnosisConcepts.UTI3, DiagnosisConcepts._DiagnosisConcepts.UTI4,
-			DiagnosisConcepts._DiagnosisConcepts.UTI5, DiagnosisConcepts._DiagnosisConcepts.UTI6,
-			DiagnosisConcepts._DiagnosisConcepts.UTI7, DiagnosisConcepts._DiagnosisConcepts.UTI8,
-			DiagnosisConcepts._DiagnosisConcepts.UTI9, DiagnosisConcepts._DiagnosisConcepts.UTI10,
-			DiagnosisConcepts._DiagnosisConcepts.UTI11, DiagnosisConcepts._DiagnosisConcepts.UTI12,
-			DiagnosisConcepts._DiagnosisConcepts.UTI13, DiagnosisConcepts._DiagnosisConcepts.UTI14,
-			DiagnosisConcepts._DiagnosisConcepts.UTI15, DiagnosisConcepts._DiagnosisConcepts.UTI16,
-			DiagnosisConcepts._DiagnosisConcepts.UTI17, DiagnosisConcepts._DiagnosisConcepts.UTI18,
-			DiagnosisConcepts._DiagnosisConcepts.UTI19, DiagnosisConcepts._DiagnosisConcepts.UTI20,
-			DiagnosisConcepts._DiagnosisConcepts.UTI21, DiagnosisConcepts._DiagnosisConcepts.UTI22,
-			DiagnosisConcepts._DiagnosisConcepts.UTI23, DiagnosisConcepts._DiagnosisConcepts.UTI24,
-			DiagnosisConcepts._DiagnosisConcepts.UTI25
+	public static List<Integer> getEarInfectionsConditionsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ERA1, DiagnosisConcepts._DiagnosisConcepts.ERA2,
+			DiagnosisConcepts._DiagnosisConcepts.ERA3, DiagnosisConcepts._DiagnosisConcepts.ERA4,
+			DiagnosisConcepts._DiagnosisConcepts.ERA5, DiagnosisConcepts._DiagnosisConcepts.ERA6,
+			DiagnosisConcepts._DiagnosisConcepts.ERA7);
+	}
 
+
+	public static List<Integer> getOtherMenigitisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OMC_1,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_2,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_3,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_4,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_5,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_6,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_7,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_8,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_9,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_10,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_11,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_12,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_13,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_14,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_15,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_16,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_17,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_18,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_19,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_20,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_21,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_22,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_23,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_24,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_25,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_26,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_27,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_28,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_29,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_30,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_31,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_32,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_33,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_34,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_35,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_36,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_37,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_38,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_39,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_40,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_41,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_42,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_43,
+			DiagnosisConcepts._DiagnosisConcepts.OMC_44
+
+		);
+	}
+
+	public static List<Integer> getPoliomyelitisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.PMC_1,
+			DiagnosisConcepts._DiagnosisConcepts.PMC_2
+
+		);
+	}
+	public static List<Integer> getChickenPoxList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CPC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.CPC_2,
+			DiagnosisConcepts._DiagnosisConcepts.CPC_3,
+			DiagnosisConcepts._DiagnosisConcepts.CPC_4,
+			DiagnosisConcepts._DiagnosisConcepts.CPC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.CPC_6,
+			DiagnosisConcepts._DiagnosisConcepts.CPC_7, 
+			DiagnosisConcepts._DiagnosisConcepts.CPC_8);
+	}
+
+	public static List<Integer> getMeaslesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MSC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.MSC_2,
+			DiagnosisConcepts._DiagnosisConcepts.MSC_3, 
+			DiagnosisConcepts._DiagnosisConcepts.MSC_4,
+			DiagnosisConcepts._DiagnosisConcepts.MSC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.MSC_6
+
+		);
+	}
+
+	public static List<Integer> getHepatitisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HPC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_2,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_3,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_4,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_6,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_7, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_8,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_9, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_10,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_11,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_12,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_13,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_14,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_15,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_16,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_17, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_18,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_19, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_20,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_21, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_22,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_23, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_24,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_25, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_26,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_27, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_28,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_29, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_30,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_31, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_32,
+			DiagnosisConcepts._DiagnosisConcepts.HPC_33, 
+			DiagnosisConcepts._DiagnosisConcepts.HPC_34
+
+		);
+	}
+
+	public static List<Integer> getAmoebiasis() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.AM_1,
+			DiagnosisConcepts._DiagnosisConcepts.AM_2,
+			DiagnosisConcepts._DiagnosisConcepts.AM_3,
+			DiagnosisConcepts._DiagnosisConcepts.AM_4,
+			DiagnosisConcepts._DiagnosisConcepts.AM_5
+
+		);
+	}
+
+	public static List<Integer> getMumpsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MPC_1,
+			DiagnosisConcepts._DiagnosisConcepts.MPC_2,
+			DiagnosisConcepts._DiagnosisConcepts.MPC_3,
+			DiagnosisConcepts._DiagnosisConcepts.MPC_4
 		);
 	}
 
 	public static List<Integer> getTyphoidList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TF1, DiagnosisConcepts._DiagnosisConcepts.TF2,
-			DiagnosisConcepts._DiagnosisConcepts.TF3, DiagnosisConcepts._DiagnosisConcepts.TF4,
-			DiagnosisConcepts._DiagnosisConcepts.TF5
-
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TYC_1,
+			DiagnosisConcepts._DiagnosisConcepts.TYC_2,
+			DiagnosisConcepts._DiagnosisConcepts.TYC_3, 
+			DiagnosisConcepts._DiagnosisConcepts.TYC_4
 		);
 	}
 
 	public static List<Integer> getBilharziaList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BL1, DiagnosisConcepts._DiagnosisConcepts.BL2,
-			DiagnosisConcepts._DiagnosisConcepts.BL3
-
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BLC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.BLC_2,
+			DiagnosisConcepts._DiagnosisConcepts.BLC_3, 
+			DiagnosisConcepts._DiagnosisConcepts.BLC_4,
+			DiagnosisConcepts._DiagnosisConcepts.BLC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.BLC_6
 		);
 	}
 
 	public static List<Integer> getInterstinalwormsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ISW1, DiagnosisConcepts._DiagnosisConcepts.ISW2,
-			DiagnosisConcepts._DiagnosisConcepts.ISW3
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.IWC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.IWC_2,
+			DiagnosisConcepts._DiagnosisConcepts.IWC_3, 
+			DiagnosisConcepts._DiagnosisConcepts.IWC_4,
+			DiagnosisConcepts._DiagnosisConcepts.IWC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.IWC_6
+		);
+	}
+
+	public static List<Integer> getEyeInfectionsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.EC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_2,
+			DiagnosisConcepts._DiagnosisConcepts.EC_3, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_4,
+			DiagnosisConcepts._DiagnosisConcepts.EC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_6,
+			DiagnosisConcepts._DiagnosisConcepts.EC_7, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_8,
+			DiagnosisConcepts._DiagnosisConcepts.EC_9, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_10,
+			DiagnosisConcepts._DiagnosisConcepts.EC_11, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_12,
+			DiagnosisConcepts._DiagnosisConcepts.EC_13, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_14,
+			DiagnosisConcepts._DiagnosisConcepts.EC_15, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_16,
+			DiagnosisConcepts._DiagnosisConcepts.EC_17, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_18,
+			DiagnosisConcepts._DiagnosisConcepts.EC_19, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_20,
+			DiagnosisConcepts._DiagnosisConcepts.EC_21,
+			DiagnosisConcepts._DiagnosisConcepts.EC_22,
+			DiagnosisConcepts._DiagnosisConcepts.EC_23, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_24,
+			DiagnosisConcepts._DiagnosisConcepts.EC_25, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_26,
+			DiagnosisConcepts._DiagnosisConcepts.EC_27, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_28,
+			DiagnosisConcepts._DiagnosisConcepts.EC_29, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_30,
+			DiagnosisConcepts._DiagnosisConcepts.EC_31, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_32,
+			DiagnosisConcepts._DiagnosisConcepts.EC_33, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_34,
+			DiagnosisConcepts._DiagnosisConcepts.EC_35, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_36,
+			DiagnosisConcepts._DiagnosisConcepts.EC_37, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_38,
+			DiagnosisConcepts._DiagnosisConcepts.EC_39, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_40,
+			DiagnosisConcepts._DiagnosisConcepts.EC_41, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_42,
+			DiagnosisConcepts._DiagnosisConcepts.EC_43, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_44,
+			DiagnosisConcepts._DiagnosisConcepts.EC_45, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_46,
+			DiagnosisConcepts._DiagnosisConcepts.EC_47, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_48,
+			DiagnosisConcepts._DiagnosisConcepts.EC_49, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_50,
+			DiagnosisConcepts._DiagnosisConcepts.EC_51, 
+			DiagnosisConcepts._DiagnosisConcepts.EC_52,
+			DiagnosisConcepts._DiagnosisConcepts.EC_53
+		);
+	}
+
+
+
+	public static List<Integer> getTonsilitiesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TSC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.TSC_2,
+			DiagnosisConcepts._DiagnosisConcepts.TSC_3,
+			DiagnosisConcepts._DiagnosisConcepts.TSC_4,
+			DiagnosisConcepts._DiagnosisConcepts.TSC_5, 
+			DiagnosisConcepts._DiagnosisConcepts.TSC_6,
+			DiagnosisConcepts._DiagnosisConcepts.TSC_7, 
+			DiagnosisConcepts._DiagnosisConcepts.TSC_8,
+			DiagnosisConcepts._DiagnosisConcepts.TSC_9, 
+			DiagnosisConcepts._DiagnosisConcepts.TSC_10
+		);
+	}
+
+	public static List<Integer> getUrinaryTractInfectionList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.UTI1, 
+			DiagnosisConcepts._DiagnosisConcepts.UTI2,
+			DiagnosisConcepts._DiagnosisConcepts.UTI3, 
+			DiagnosisConcepts._DiagnosisConcepts.UTI4,
+			DiagnosisConcepts._DiagnosisConcepts.UTI5, 
+			DiagnosisConcepts._DiagnosisConcepts.UTI6,
+			DiagnosisConcepts._DiagnosisConcepts.UTI6
 
 		);
 	}
+
+	public static List<Integer> getMentalDisordersList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MDC_1,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_2, DiagnosisConcepts._DiagnosisConcepts.MDC_3,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_4, DiagnosisConcepts._DiagnosisConcepts.MDC_5,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_6, DiagnosisConcepts._DiagnosisConcepts.MDC_7,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_8, DiagnosisConcepts._DiagnosisConcepts.MDC_9,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_10, DiagnosisConcepts._DiagnosisConcepts.MDC_11,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_12, DiagnosisConcepts._DiagnosisConcepts.MDC_13,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_14, DiagnosisConcepts._DiagnosisConcepts.MDC_15,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_16, DiagnosisConcepts._DiagnosisConcepts.MDC_17,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_18, DiagnosisConcepts._DiagnosisConcepts.MDC_19,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_20, DiagnosisConcepts._DiagnosisConcepts.MDC_21,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_22, DiagnosisConcepts._DiagnosisConcepts.MDC_23,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_24, DiagnosisConcepts._DiagnosisConcepts.MDC_25,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_26, DiagnosisConcepts._DiagnosisConcepts.MDC_27,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_28, DiagnosisConcepts._DiagnosisConcepts.MDC_29,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_30, DiagnosisConcepts._DiagnosisConcepts.MDC_31,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_32, DiagnosisConcepts._DiagnosisConcepts.MDC_33,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_34, DiagnosisConcepts._DiagnosisConcepts.MDC_35,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_36, DiagnosisConcepts._DiagnosisConcepts.MDC_37,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_38, DiagnosisConcepts._DiagnosisConcepts.MDC_39,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_40, DiagnosisConcepts._DiagnosisConcepts.MDC_41,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_42, DiagnosisConcepts._DiagnosisConcepts.MDC_43,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_44, DiagnosisConcepts._DiagnosisConcepts.MDC_45,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_46, DiagnosisConcepts._DiagnosisConcepts.MDC_47,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_48, DiagnosisConcepts._DiagnosisConcepts.MDC_49,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_50, DiagnosisConcepts._DiagnosisConcepts.MDC_51,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_52, DiagnosisConcepts._DiagnosisConcepts.MDC_53,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_54, DiagnosisConcepts._DiagnosisConcepts.MDC_55,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_56, DiagnosisConcepts._DiagnosisConcepts.MDC_57,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_58, DiagnosisConcepts._DiagnosisConcepts.MDC_59,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_60, DiagnosisConcepts._DiagnosisConcepts.MDC_61,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_62, DiagnosisConcepts._DiagnosisConcepts.MDC_63,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_64, DiagnosisConcepts._DiagnosisConcepts.MDC_65,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_66, DiagnosisConcepts._DiagnosisConcepts.MDC_67,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_68, DiagnosisConcepts._DiagnosisConcepts.MDC_69,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_70, DiagnosisConcepts._DiagnosisConcepts.MDC_71,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_72, DiagnosisConcepts._DiagnosisConcepts.MDC_73,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_74, DiagnosisConcepts._DiagnosisConcepts.MDC_75,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_76, DiagnosisConcepts._DiagnosisConcepts.MDC_77,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_78, DiagnosisConcepts._DiagnosisConcepts.MDC_79,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_80, DiagnosisConcepts._DiagnosisConcepts.MDC_81,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_82, DiagnosisConcepts._DiagnosisConcepts.MDC_83,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_84, DiagnosisConcepts._DiagnosisConcepts.MDC_85,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_86, DiagnosisConcepts._DiagnosisConcepts.MDC_87,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_88, DiagnosisConcepts._DiagnosisConcepts.MDC_89,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_90, DiagnosisConcepts._DiagnosisConcepts.MDC_91,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_92, DiagnosisConcepts._DiagnosisConcepts.MDC_93,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_94, DiagnosisConcepts._DiagnosisConcepts.MDC_95,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_96, DiagnosisConcepts._DiagnosisConcepts.MDC_97,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_98, DiagnosisConcepts._DiagnosisConcepts.MDC_99,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_100, DiagnosisConcepts._DiagnosisConcepts.MDC_101,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_102, DiagnosisConcepts._DiagnosisConcepts.MDC_103,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_104, DiagnosisConcepts._DiagnosisConcepts.MDC_105,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_106, DiagnosisConcepts._DiagnosisConcepts.MDC_107,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_108, DiagnosisConcepts._DiagnosisConcepts.MDC_109,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_110, DiagnosisConcepts._DiagnosisConcepts.MDC_111,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_112, DiagnosisConcepts._DiagnosisConcepts.MDC_113,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_114, DiagnosisConcepts._DiagnosisConcepts.MDC_115,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_116, DiagnosisConcepts._DiagnosisConcepts.MDC_117,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_118, DiagnosisConcepts._DiagnosisConcepts.MDC_119,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_120, DiagnosisConcepts._DiagnosisConcepts.MDC_121,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_122, DiagnosisConcepts._DiagnosisConcepts.MDC_123,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_124, DiagnosisConcepts._DiagnosisConcepts.MDC_125,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_126, DiagnosisConcepts._DiagnosisConcepts.MDC_127,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_128, DiagnosisConcepts._DiagnosisConcepts.MDC_129,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_130, DiagnosisConcepts._DiagnosisConcepts.MDC_131,
+			DiagnosisConcepts._DiagnosisConcepts.MDC_132
+		);
+
+	}
+
+
+	public static List<Integer> getDentalDisordersList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DDC_1, DiagnosisConcepts._DiagnosisConcepts.DDC_2,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_3, DiagnosisConcepts._DiagnosisConcepts.DDC_4,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_5, DiagnosisConcepts._DiagnosisConcepts.DDC_6,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_7, DiagnosisConcepts._DiagnosisConcepts.DDC_8,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_9, DiagnosisConcepts._DiagnosisConcepts.DDC_10,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_11, DiagnosisConcepts._DiagnosisConcepts.DDC_12,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_13, DiagnosisConcepts._DiagnosisConcepts.DDC_14,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_15, DiagnosisConcepts._DiagnosisConcepts.DDC_16,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_17, DiagnosisConcepts._DiagnosisConcepts.DDC_18,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_19, DiagnosisConcepts._DiagnosisConcepts.DDC_20,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_21, DiagnosisConcepts._DiagnosisConcepts.DDC_22,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_23, DiagnosisConcepts._DiagnosisConcepts.DDC_24,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_25, DiagnosisConcepts._DiagnosisConcepts.DDC_26,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_27, DiagnosisConcepts._DiagnosisConcepts.DDC_28,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_29, DiagnosisConcepts._DiagnosisConcepts.DDC_30,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_31, DiagnosisConcepts._DiagnosisConcepts.DDC_32,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_33, DiagnosisConcepts._DiagnosisConcepts.DDC_34,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_35, DiagnosisConcepts._DiagnosisConcepts.DDC_36,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_37, DiagnosisConcepts._DiagnosisConcepts.DDC_38,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_39, DiagnosisConcepts._DiagnosisConcepts.DDC_40,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_41, DiagnosisConcepts._DiagnosisConcepts.DDC_42,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_43, DiagnosisConcepts._DiagnosisConcepts.DDC_44,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_45, DiagnosisConcepts._DiagnosisConcepts.DDC_46,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_47, DiagnosisConcepts._DiagnosisConcepts.DDC_48,
+			DiagnosisConcepts._DiagnosisConcepts.DDC_49, DiagnosisConcepts._DiagnosisConcepts.DDC_50
+
+		);
+
+	}
+
+	public static List<Integer> getRoadTrafficInjuriesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.RTC_1, DiagnosisConcepts._DiagnosisConcepts.RTC_2,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_3,DiagnosisConcepts._DiagnosisConcepts.RTC_4,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_5,DiagnosisConcepts._DiagnosisConcepts.RTC_6,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_7,DiagnosisConcepts._DiagnosisConcepts.RTC_8,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_9,DiagnosisConcepts._DiagnosisConcepts.RTC_10,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_11,DiagnosisConcepts._DiagnosisConcepts.RTC_12,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_13,DiagnosisConcepts._DiagnosisConcepts.RTC_14,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_15,DiagnosisConcepts._DiagnosisConcepts.RTC_16,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_17,DiagnosisConcepts._DiagnosisConcepts.RTC_18,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_19,DiagnosisConcepts._DiagnosisConcepts.RTC_20,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_21,DiagnosisConcepts._DiagnosisConcepts.RTC_22,
+			DiagnosisConcepts._DiagnosisConcepts.RTC_23
+		);
+	}
+
+	public static List<Integer> getViolenceRelatedInjuriesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.VRC_1, DiagnosisConcepts._DiagnosisConcepts.VRC_2,
+			DiagnosisConcepts._DiagnosisConcepts.VRC_3, DiagnosisConcepts._DiagnosisConcepts.VRC_4,
+			DiagnosisConcepts._DiagnosisConcepts.VRC_5, DiagnosisConcepts._DiagnosisConcepts.VRC_6,
+			DiagnosisConcepts._DiagnosisConcepts.VRC_7
+
+		);
+	}
+
+	public static List<Integer> getOtherInjuriesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OIC_1, DiagnosisConcepts._DiagnosisConcepts.OIC_2,
+			DiagnosisConcepts._DiagnosisConcepts.OIC_3, DiagnosisConcepts._DiagnosisConcepts.OIC_4,
+			DiagnosisConcepts._DiagnosisConcepts.OIC_5, DiagnosisConcepts._DiagnosisConcepts.OIC_6,
+			DiagnosisConcepts._DiagnosisConcepts.OIC_7, DiagnosisConcepts._DiagnosisConcepts.OIC_8,
+			DiagnosisConcepts._DiagnosisConcepts.OIC_9, DiagnosisConcepts._DiagnosisConcepts.OIC_10,
+			DiagnosisConcepts._DiagnosisConcepts.OIC_11, DiagnosisConcepts._DiagnosisConcepts.OIC_12
+		);
+
+	}
+
+	public static List<Integer> getSexualAssaultList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SAC_1, 
+			DiagnosisConcepts._DiagnosisConcepts.SAC_2,
+//			DiagnosisConcepts._DiagnosisConcepts.SAC_3 TODO:a icd11 mapping XE85Q was shared instead of the concept ID,
+			DiagnosisConcepts._DiagnosisConcepts.SAC_4,
+			DiagnosisConcepts._DiagnosisConcepts.SAC_5
+
+		);
+	}
+	public static List<Integer> getBurnsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BC_1, DiagnosisConcepts._DiagnosisConcepts.BC_2,
+			DiagnosisConcepts._DiagnosisConcepts.BC_3, DiagnosisConcepts._DiagnosisConcepts.BC_4,
+			DiagnosisConcepts._DiagnosisConcepts.BC_5, DiagnosisConcepts._DiagnosisConcepts.BC_6,
+			DiagnosisConcepts._DiagnosisConcepts.BC_7, DiagnosisConcepts._DiagnosisConcepts.BC_8,
+			DiagnosisConcepts._DiagnosisConcepts.BC_9, DiagnosisConcepts._DiagnosisConcepts.BC_10,
+			DiagnosisConcepts._DiagnosisConcepts.BC_11, DiagnosisConcepts._DiagnosisConcepts.BC_12,
+			DiagnosisConcepts._DiagnosisConcepts.BC_13, DiagnosisConcepts._DiagnosisConcepts.BC_13,
+			DiagnosisConcepts._DiagnosisConcepts.BC_14, DiagnosisConcepts._DiagnosisConcepts.BC_15,
+			DiagnosisConcepts._DiagnosisConcepts.BC_16, DiagnosisConcepts._DiagnosisConcepts.BC_17,
+			DiagnosisConcepts._DiagnosisConcepts.BC_18, DiagnosisConcepts._DiagnosisConcepts.BC_19,
+			DiagnosisConcepts._DiagnosisConcepts.BC_20, DiagnosisConcepts._DiagnosisConcepts.BC_21,
+			DiagnosisConcepts._DiagnosisConcepts.BC_22, DiagnosisConcepts._DiagnosisConcepts.BC_23,
+			DiagnosisConcepts._DiagnosisConcepts.BC_24, DiagnosisConcepts._DiagnosisConcepts.BC_25,
+			DiagnosisConcepts._DiagnosisConcepts.BC_26, DiagnosisConcepts._DiagnosisConcepts.BC_27,
+			DiagnosisConcepts._DiagnosisConcepts.BC_28, DiagnosisConcepts._DiagnosisConcepts.BC_29,
+			DiagnosisConcepts._DiagnosisConcepts.BC_30, DiagnosisConcepts._DiagnosisConcepts.BC_31,
+			DiagnosisConcepts._DiagnosisConcepts.BC_32, DiagnosisConcepts._DiagnosisConcepts.BC_33,
+			DiagnosisConcepts._DiagnosisConcepts.BC_34, DiagnosisConcepts._DiagnosisConcepts.BC_35,
+			DiagnosisConcepts._DiagnosisConcepts.BC_36, DiagnosisConcepts._DiagnosisConcepts.BC_37,
+			DiagnosisConcepts._DiagnosisConcepts.BC_38, DiagnosisConcepts._DiagnosisConcepts.BC_39,
+			DiagnosisConcepts._DiagnosisConcepts.BC_40, DiagnosisConcepts._DiagnosisConcepts.BC_41,
+			DiagnosisConcepts._DiagnosisConcepts.BC_42, DiagnosisConcepts._DiagnosisConcepts.BC_43,
+			DiagnosisConcepts._DiagnosisConcepts.BC_44, DiagnosisConcepts._DiagnosisConcepts.BC_45,
+			DiagnosisConcepts._DiagnosisConcepts.BC_46, DiagnosisConcepts._DiagnosisConcepts.BC_47,
+			DiagnosisConcepts._DiagnosisConcepts.BC_48, DiagnosisConcepts._DiagnosisConcepts.BC_49,
+			DiagnosisConcepts._DiagnosisConcepts.BC_50, DiagnosisConcepts._DiagnosisConcepts.BC_51,
+			DiagnosisConcepts._DiagnosisConcepts.BC_52, DiagnosisConcepts._DiagnosisConcepts.BC_53,
+			DiagnosisConcepts._DiagnosisConcepts.BC_54, DiagnosisConcepts._DiagnosisConcepts.BC_55,
+			DiagnosisConcepts._DiagnosisConcepts.BC_56, DiagnosisConcepts._DiagnosisConcepts.BC_57,
+			DiagnosisConcepts._DiagnosisConcepts.BC_58, DiagnosisConcepts._DiagnosisConcepts.BC_59,
+			DiagnosisConcepts._DiagnosisConcepts.BC_60, DiagnosisConcepts._DiagnosisConcepts.BC_61,
+			DiagnosisConcepts._DiagnosisConcepts.BC_61, DiagnosisConcepts._DiagnosisConcepts.BC_62,
+			DiagnosisConcepts._DiagnosisConcepts.BC_63, DiagnosisConcepts._DiagnosisConcepts.BC_64,
+			DiagnosisConcepts._DiagnosisConcepts.BC_65, DiagnosisConcepts._DiagnosisConcepts.BC_66,
+			DiagnosisConcepts._DiagnosisConcepts.BC_67, DiagnosisConcepts._DiagnosisConcepts.BC_68,
+			DiagnosisConcepts._DiagnosisConcepts.BC_69, DiagnosisConcepts._DiagnosisConcepts.BC_70,
+			DiagnosisConcepts._DiagnosisConcepts.BC_71, DiagnosisConcepts._DiagnosisConcepts.BC_72,
+			DiagnosisConcepts._DiagnosisConcepts.BC_73, DiagnosisConcepts._DiagnosisConcepts.BC_74,
+			DiagnosisConcepts._DiagnosisConcepts.BC_75, DiagnosisConcepts._DiagnosisConcepts.BC_76,
+			DiagnosisConcepts._DiagnosisConcepts.BC_77, DiagnosisConcepts._DiagnosisConcepts.BC_78,
+			DiagnosisConcepts._DiagnosisConcepts.BC_79, DiagnosisConcepts._DiagnosisConcepts.BC_80,
+			DiagnosisConcepts._DiagnosisConcepts.BC_81, DiagnosisConcepts._DiagnosisConcepts.BC_82,
+			DiagnosisConcepts._DiagnosisConcepts.BC_83, DiagnosisConcepts._DiagnosisConcepts.BC_84,
+			DiagnosisConcepts._DiagnosisConcepts.BC_85, DiagnosisConcepts._DiagnosisConcepts.BC_86,
+			DiagnosisConcepts._DiagnosisConcepts.BC_87, DiagnosisConcepts._DiagnosisConcepts.BC_88,
+			DiagnosisConcepts._DiagnosisConcepts.BC_89, DiagnosisConcepts._DiagnosisConcepts.BC_90,
+			DiagnosisConcepts._DiagnosisConcepts.BC_91, DiagnosisConcepts._DiagnosisConcepts.BC_92,
+			DiagnosisConcepts._DiagnosisConcepts.BC_93, DiagnosisConcepts._DiagnosisConcepts.BC_94,
+			DiagnosisConcepts._DiagnosisConcepts.BC_95, DiagnosisConcepts._DiagnosisConcepts.BC_96,
+			DiagnosisConcepts._DiagnosisConcepts.BC_97, DiagnosisConcepts._DiagnosisConcepts.BC_98,
+			DiagnosisConcepts._DiagnosisConcepts.BC_99, DiagnosisConcepts._DiagnosisConcepts.BC_100,
+			DiagnosisConcepts._DiagnosisConcepts.BC_101, DiagnosisConcepts._DiagnosisConcepts.BC_102,
+			DiagnosisConcepts._DiagnosisConcepts.BC_103, DiagnosisConcepts._DiagnosisConcepts.BC_104,
+			DiagnosisConcepts._DiagnosisConcepts.BC_105
+		);
+	}
+
+
+	public static List<Integer> getSnakeBitesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SBC_1,
+			DiagnosisConcepts._DiagnosisConcepts.SBC_2, DiagnosisConcepts._DiagnosisConcepts.SBC_3,
+			DiagnosisConcepts._DiagnosisConcepts.SBC_4, DiagnosisConcepts._DiagnosisConcepts.SBC_5,
+			DiagnosisConcepts._DiagnosisConcepts.SBC_6
+		);
+	}
+
+	public static List<Integer> getDogBitesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DBC_1, DiagnosisConcepts._DiagnosisConcepts.DBC_2,
+			DiagnosisConcepts._DiagnosisConcepts.DBC_3, DiagnosisConcepts._DiagnosisConcepts.DBC_4
+		);
+
+	}
+	public static List<Integer> getOtherBitesList() {
+
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OBC_1, DiagnosisConcepts._DiagnosisConcepts.OBC_2,
+			DiagnosisConcepts._DiagnosisConcepts.OBC_3, DiagnosisConcepts._DiagnosisConcepts.OBC_4,
+			DiagnosisConcepts._DiagnosisConcepts.OBC_5, DiagnosisConcepts._DiagnosisConcepts.OBC_6,
+			DiagnosisConcepts._DiagnosisConcepts.OBC_7
+		);
+
+	}
+
+	public static List<Integer> getDiabetesList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DTC_1, DiagnosisConcepts._DiagnosisConcepts.DTC_2,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_3, DiagnosisConcepts._DiagnosisConcepts.DTC_4,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_5, DiagnosisConcepts._DiagnosisConcepts.DTC_6,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_7, DiagnosisConcepts._DiagnosisConcepts.DTC_8,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_9,	DiagnosisConcepts._DiagnosisConcepts.DTC_10,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_11,DiagnosisConcepts._DiagnosisConcepts.DTC_12,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_13, DiagnosisConcepts._DiagnosisConcepts.DTC_14,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_15, DiagnosisConcepts._DiagnosisConcepts.DTC_16,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_17, DiagnosisConcepts._DiagnosisConcepts.DTC_18,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_19, DiagnosisConcepts._DiagnosisConcepts.DTC_20,
+			DiagnosisConcepts._DiagnosisConcepts.DTC_21
+		);
+	}
+
+	public static List<Integer> getEpilepsyList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.EPC_1,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_2, DiagnosisConcepts._DiagnosisConcepts.EPC_3,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_4, DiagnosisConcepts._DiagnosisConcepts.EPC_5,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_6, DiagnosisConcepts._DiagnosisConcepts.EPC_7,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_8, DiagnosisConcepts._DiagnosisConcepts.EPC_9,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_10, DiagnosisConcepts._DiagnosisConcepts.EPC_11,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_12, DiagnosisConcepts._DiagnosisConcepts.EPC_13,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_14, DiagnosisConcepts._DiagnosisConcepts.EPC_15,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_16, DiagnosisConcepts._DiagnosisConcepts.EPC_17,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_18, DiagnosisConcepts._DiagnosisConcepts.EPC_19,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_20, DiagnosisConcepts._DiagnosisConcepts.EPC_21,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_22, DiagnosisConcepts._DiagnosisConcepts.EPC_23,
+			DiagnosisConcepts._DiagnosisConcepts.EPC_24
+		);
+	}
+
+	public static List<Integer> getOtherConvulsiveDisordersList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OCDC_1,
+			DiagnosisConcepts._DiagnosisConcepts.OCDC_2,
+			DiagnosisConcepts._DiagnosisConcepts.OCDC_3
+		);
+	}
+
+	public static List<Integer> getReumonicFeverList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.RF_1,
+			DiagnosisConcepts._DiagnosisConcepts.RF_2, DiagnosisConcepts._DiagnosisConcepts.RF_3,
+			DiagnosisConcepts._DiagnosisConcepts.RF_4
+
+		);
+	}
+
+	public static List<Integer> getRicketsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.RKC_1, DiagnosisConcepts._DiagnosisConcepts.RKC_2,
+			DiagnosisConcepts._DiagnosisConcepts.RKC_3, DiagnosisConcepts._DiagnosisConcepts.RKC_4,
+			DiagnosisConcepts._DiagnosisConcepts.RKC_5
+		);
+	}
+
+	public static List<Integer> getCerebralPalsyList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CRPC_1, DiagnosisConcepts._DiagnosisConcepts.CRPC_2,
+			DiagnosisConcepts._DiagnosisConcepts.CRPC_3, DiagnosisConcepts._DiagnosisConcepts.CRPC_4,
+			DiagnosisConcepts._DiagnosisConcepts.CRPC_5, DiagnosisConcepts._DiagnosisConcepts.CRPC_6,
+			DiagnosisConcepts._DiagnosisConcepts.CRPC_7, DiagnosisConcepts._DiagnosisConcepts.CRPC_8,
+			DiagnosisConcepts._DiagnosisConcepts.CRPC_9, DiagnosisConcepts._DiagnosisConcepts.CRPC_10,
+			DiagnosisConcepts._DiagnosisConcepts.CRPC_11,DiagnosisConcepts._DiagnosisConcepts.CRPC_12
+
+		);
+	}
+
+	public static List<Integer> getAutismList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ATC_1,
+			DiagnosisConcepts._DiagnosisConcepts.ATC_2, DiagnosisConcepts._DiagnosisConcepts.ATC_3,
+			DiagnosisConcepts._DiagnosisConcepts.ATC_4, DiagnosisConcepts._DiagnosisConcepts.ATC_5,
+			DiagnosisConcepts._DiagnosisConcepts.ATC_6, DiagnosisConcepts._DiagnosisConcepts.ATC_7,
+			DiagnosisConcepts._DiagnosisConcepts.ATC_8
+		);
+	}
+
+	public static List<Integer> getTryponomiasisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TRC_1,
+			DiagnosisConcepts._DiagnosisConcepts.TRC_2, DiagnosisConcepts._DiagnosisConcepts.TRC_3,
+			DiagnosisConcepts._DiagnosisConcepts.TRC_4, DiagnosisConcepts._DiagnosisConcepts.TRC_5,
+			DiagnosisConcepts._DiagnosisConcepts.TRC_6, DiagnosisConcepts._DiagnosisConcepts.TRC_7,
+			DiagnosisConcepts._DiagnosisConcepts.TRC_8, DiagnosisConcepts._DiagnosisConcepts.TRC_9,
+			DiagnosisConcepts._DiagnosisConcepts.TRC_10
+
+
+		);
+	}
+	public static List<Integer> getYellowFeverList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.YFC_1,
+			DiagnosisConcepts._DiagnosisConcepts.YFC_2
+		);
+	}
+
+	public static List<Integer> getRiftValleyFeverList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.RVF_1,
+			DiagnosisConcepts._DiagnosisConcepts.RVF_2
+		);
+	}
+
+	public static List<Integer> getChikungunyaFeverList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CKU_1,
+			DiagnosisConcepts._DiagnosisConcepts.CKU_2);
+	}
+
+	public static List<Integer> getDengueFeverList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DENF_1,
+			DiagnosisConcepts._DiagnosisConcepts.DENF_2, DiagnosisConcepts._DiagnosisConcepts.DENF_3,
+			DiagnosisConcepts._DiagnosisConcepts.DENF_4, DiagnosisConcepts._DiagnosisConcepts.DENF_5,
+			DiagnosisConcepts._DiagnosisConcepts.DENF_6
+
+		);
+	}
+
+	public static List<Integer> getKalazarLeishmaniasisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.KLC_1,
+			DiagnosisConcepts._DiagnosisConcepts.KLC_2,
+			DiagnosisConcepts._DiagnosisConcepts.KLC_3,
+			DiagnosisConcepts._DiagnosisConcepts.KLC_4
+		);
+	}
+
+	public static List<Integer> getChildHoodCancerist() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SCC_1, DiagnosisConcepts._DiagnosisConcepts.SCC_2,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_3, DiagnosisConcepts._DiagnosisConcepts.SCC_4,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_5, DiagnosisConcepts._DiagnosisConcepts.SCC_6,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_7, DiagnosisConcepts._DiagnosisConcepts.SCC_8,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_9, DiagnosisConcepts._DiagnosisConcepts.SCC_10,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_11, DiagnosisConcepts._DiagnosisConcepts.SCC_12,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_13, DiagnosisConcepts._DiagnosisConcepts.SCC_14,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_15, DiagnosisConcepts._DiagnosisConcepts.SCC_16,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_17, DiagnosisConcepts._DiagnosisConcepts.SCC_18,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_19, DiagnosisConcepts._DiagnosisConcepts.SCC_20,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_21, DiagnosisConcepts._DiagnosisConcepts.SCC_22,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_23, DiagnosisConcepts._DiagnosisConcepts.SCC_24,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_25, DiagnosisConcepts._DiagnosisConcepts.SCC_26,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_27, DiagnosisConcepts._DiagnosisConcepts.SCC_28,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_29, DiagnosisConcepts._DiagnosisConcepts.SCC_30,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_31, DiagnosisConcepts._DiagnosisConcepts.SCC_32,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_33, DiagnosisConcepts._DiagnosisConcepts.SCC_34,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_35, DiagnosisConcepts._DiagnosisConcepts.SCC_36,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_37, DiagnosisConcepts._DiagnosisConcepts.SCC_38,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_39, DiagnosisConcepts._DiagnosisConcepts.SCC_40,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_41, DiagnosisConcepts._DiagnosisConcepts.SCC_42,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_43, DiagnosisConcepts._DiagnosisConcepts.SCC_44,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_45, DiagnosisConcepts._DiagnosisConcepts.SCC_46,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_47, DiagnosisConcepts._DiagnosisConcepts.SCC_48,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_49, DiagnosisConcepts._DiagnosisConcepts.SCC_50,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_51, DiagnosisConcepts._DiagnosisConcepts.SCC_52,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_53, DiagnosisConcepts._DiagnosisConcepts.SCC_54,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_55, DiagnosisConcepts._DiagnosisConcepts.SCC_56,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_57, DiagnosisConcepts._DiagnosisConcepts.SCC_58,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_59, DiagnosisConcepts._DiagnosisConcepts.SCC_60,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_61, DiagnosisConcepts._DiagnosisConcepts.SCC_62,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_63, DiagnosisConcepts._DiagnosisConcepts.SCC_64,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_65, DiagnosisConcepts._DiagnosisConcepts.SCC_66,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_67, DiagnosisConcepts._DiagnosisConcepts.SCC_68,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_69, DiagnosisConcepts._DiagnosisConcepts.SCC_70,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_71, DiagnosisConcepts._DiagnosisConcepts.SCC_72,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_73, DiagnosisConcepts._DiagnosisConcepts.SCC_74,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_75, DiagnosisConcepts._DiagnosisConcepts.SCC_76,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_77, DiagnosisConcepts._DiagnosisConcepts.SCC_78,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_79, DiagnosisConcepts._DiagnosisConcepts.SCC_80,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_81, DiagnosisConcepts._DiagnosisConcepts.SCC_82,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_83, DiagnosisConcepts._DiagnosisConcepts.SCC_84,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_85, DiagnosisConcepts._DiagnosisConcepts.SCC_86,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_87, DiagnosisConcepts._DiagnosisConcepts.SCC_88,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_89, DiagnosisConcepts._DiagnosisConcepts.SCC_90,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_91, DiagnosisConcepts._DiagnosisConcepts.SCC_92,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_93, DiagnosisConcepts._DiagnosisConcepts.SCC_94,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_95, DiagnosisConcepts._DiagnosisConcepts.SCC_96,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_97, DiagnosisConcepts._DiagnosisConcepts.SCC_98,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_99, DiagnosisConcepts._DiagnosisConcepts.SCC_100,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_101, DiagnosisConcepts._DiagnosisConcepts.SCC_102,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_103, DiagnosisConcepts._DiagnosisConcepts.SCC_104,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_105, DiagnosisConcepts._DiagnosisConcepts.SCC_106,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_107, DiagnosisConcepts._DiagnosisConcepts.SCC_108,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_109, DiagnosisConcepts._DiagnosisConcepts.SCC_110,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_111, DiagnosisConcepts._DiagnosisConcepts.SCC_112,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_113, DiagnosisConcepts._DiagnosisConcepts.SCC_114,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_115, DiagnosisConcepts._DiagnosisConcepts.SCC_116,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_117, DiagnosisConcepts._DiagnosisConcepts.SCC_118,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_119, DiagnosisConcepts._DiagnosisConcepts.SCC_120,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_121, DiagnosisConcepts._DiagnosisConcepts.SCC_122,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_123, DiagnosisConcepts._DiagnosisConcepts.SCC_124,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_125, DiagnosisConcepts._DiagnosisConcepts.SCC_126,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_127, DiagnosisConcepts._DiagnosisConcepts.SCC_128,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_129, DiagnosisConcepts._DiagnosisConcepts.SCC_130,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_131, DiagnosisConcepts._DiagnosisConcepts.SCC_132,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_133, DiagnosisConcepts._DiagnosisConcepts.SCC_134,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_135, DiagnosisConcepts._DiagnosisConcepts.SCC_136,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_137, DiagnosisConcepts._DiagnosisConcepts.SCC_138,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_139, DiagnosisConcepts._DiagnosisConcepts.SCC_140,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_141, DiagnosisConcepts._DiagnosisConcepts.SCC_142,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_143, DiagnosisConcepts._DiagnosisConcepts.SCC_144,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_145, DiagnosisConcepts._DiagnosisConcepts.SCC_146,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_147, DiagnosisConcepts._DiagnosisConcepts.SCC_148,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_149, DiagnosisConcepts._DiagnosisConcepts.SCC_150,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_151, DiagnosisConcepts._DiagnosisConcepts.SCC_152,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_153, DiagnosisConcepts._DiagnosisConcepts.SCC_154,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_155, DiagnosisConcepts._DiagnosisConcepts.SCC_156,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_157, DiagnosisConcepts._DiagnosisConcepts.SCC_158,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_159, DiagnosisConcepts._DiagnosisConcepts.SCC_160,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_161, DiagnosisConcepts._DiagnosisConcepts.SCC_162,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_163, DiagnosisConcepts._DiagnosisConcepts.SCC_164,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_165, DiagnosisConcepts._DiagnosisConcepts.SCC_166,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_167, DiagnosisConcepts._DiagnosisConcepts.SCC_168,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_169, DiagnosisConcepts._DiagnosisConcepts.SCC_170,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_171, DiagnosisConcepts._DiagnosisConcepts.SCC_172,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_173, DiagnosisConcepts._DiagnosisConcepts.SCC_174,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_175, DiagnosisConcepts._DiagnosisConcepts.SCC_176,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_177, DiagnosisConcepts._DiagnosisConcepts.SCC_178,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_179, DiagnosisConcepts._DiagnosisConcepts.SCC_180,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_181, DiagnosisConcepts._DiagnosisConcepts.SCC_182,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_183, DiagnosisConcepts._DiagnosisConcepts.SCC_184,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_185, DiagnosisConcepts._DiagnosisConcepts.SCC_186,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_187, DiagnosisConcepts._DiagnosisConcepts.SCC_188,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_189, DiagnosisConcepts._DiagnosisConcepts.SCC_190,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_191, DiagnosisConcepts._DiagnosisConcepts.SCC_192,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_193, DiagnosisConcepts._DiagnosisConcepts.SCC_194,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_195, DiagnosisConcepts._DiagnosisConcepts.SCC_196,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_197, DiagnosisConcepts._DiagnosisConcepts.SCC_198,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_199, DiagnosisConcepts._DiagnosisConcepts.SCC_200,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_201, DiagnosisConcepts._DiagnosisConcepts.SCC_202,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_203, DiagnosisConcepts._DiagnosisConcepts.SCC_204,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_205, DiagnosisConcepts._DiagnosisConcepts.SCC_206,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_207, DiagnosisConcepts._DiagnosisConcepts.SCC_208,
+			DiagnosisConcepts._DiagnosisConcepts.SCC_209, DiagnosisConcepts._DiagnosisConcepts.SCC_210
+		);
+	}
+
+	//moh705B
+
+	public static List<Integer> getDiarrheaDiagnosisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DA_1,
+			DiagnosisConcepts._DiagnosisConcepts.DA_2,
+			DiagnosisConcepts._DiagnosisConcepts.DA_3,
+			DiagnosisConcepts._DiagnosisConcepts.DA_4, 
+			DiagnosisConcepts._DiagnosisConcepts.DA_5
+		);
+	}
+
+	public static List<Integer> getTuberculosisDiagnosisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TBA_1,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_2,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_3,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_4,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_5,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_6,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_7,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_8, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_9,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_10, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_11,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_12,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_13,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_14,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_15,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_16,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_17,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_18,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_19,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_20,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_21, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_22,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_23, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_24,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_25, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_26,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_27, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_28,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_29, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_30,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_31, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_32,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_33, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_34,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_35, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_36,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_37, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_38,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_39, 
+			DiagnosisConcepts._DiagnosisConcepts.TBA_40,
+			DiagnosisConcepts._DiagnosisConcepts.TBA_41
+		);
+	}
+
+	public static List<Integer> getDysenteryList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DYA_1,
+			DiagnosisConcepts._DiagnosisConcepts.DYA_2);
+	}
+
+	public static List<Integer> getCholeraList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CLA_1,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_2,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_3,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_4,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_5,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_6,
+			DiagnosisConcepts._DiagnosisConcepts.CLA_7
+
+		);
+	}
+
+	public static List<Integer> getMeningococcalMeningitisList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MENINGOCOCCAL_MENINGITIS
+
+		);
+	}
+
+	public static List<Integer> getOtherMenigitisListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MOA_1,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_2, DiagnosisConcepts._DiagnosisConcepts.MOA_3,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_4, DiagnosisConcepts._DiagnosisConcepts.MOA_5,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_6, DiagnosisConcepts._DiagnosisConcepts.MOA_7,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_8, DiagnosisConcepts._DiagnosisConcepts.MOA_9,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_10, DiagnosisConcepts._DiagnosisConcepts.MOA_11,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_12, DiagnosisConcepts._DiagnosisConcepts.MOA_13,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_14, DiagnosisConcepts._DiagnosisConcepts.MOA_15,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_16, DiagnosisConcepts._DiagnosisConcepts.MOA_17,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_18, DiagnosisConcepts._DiagnosisConcepts.MOA_19,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_20, DiagnosisConcepts._DiagnosisConcepts.MOA_21,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_22, DiagnosisConcepts._DiagnosisConcepts.MOA_23,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_24, DiagnosisConcepts._DiagnosisConcepts.MOA_25,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_26, DiagnosisConcepts._DiagnosisConcepts.MOA_27,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_28, DiagnosisConcepts._DiagnosisConcepts.MOA_29,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_30, DiagnosisConcepts._DiagnosisConcepts.MOA_31,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_32, DiagnosisConcepts._DiagnosisConcepts.MOA_33,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_34, DiagnosisConcepts._DiagnosisConcepts.MOA_35,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_36, DiagnosisConcepts._DiagnosisConcepts.MOA_37,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_38, DiagnosisConcepts._DiagnosisConcepts.MOA_39,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_40, DiagnosisConcepts._DiagnosisConcepts.MOA_41,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_42, DiagnosisConcepts._DiagnosisConcepts.MOA_43,
+			DiagnosisConcepts._DiagnosisConcepts.MOA_44, DiagnosisConcepts._DiagnosisConcepts.MOA_45
+
+		);
+	}
+
+	public static List<Integer> getTetanusList() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.NTA_1, DiagnosisConcepts._DiagnosisConcepts.NTA_2,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_3, DiagnosisConcepts._DiagnosisConcepts.NTA_4,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_5, DiagnosisConcepts._DiagnosisConcepts.NTA_6,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_7, DiagnosisConcepts._DiagnosisConcepts.NTA_8,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_9, DiagnosisConcepts._DiagnosisConcepts.NTA_10,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_11, DiagnosisConcepts._DiagnosisConcepts.NTA_12,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_13, DiagnosisConcepts._DiagnosisConcepts.NTA_14,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_15, DiagnosisConcepts._DiagnosisConcepts.NTA_16,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_17, DiagnosisConcepts._DiagnosisConcepts.NTA_18,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_19, DiagnosisConcepts._DiagnosisConcepts.NTA_20,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_21, DiagnosisConcepts._DiagnosisConcepts.NTA_22,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_23, DiagnosisConcepts._DiagnosisConcepts.NTA_24,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_25, DiagnosisConcepts._DiagnosisConcepts.NTA_26,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_27, DiagnosisConcepts._DiagnosisConcepts.NTA_28,
+			DiagnosisConcepts._DiagnosisConcepts.NTA_29
+
+		);
+	}
+
+
+	public static List<Integer> getPoliomyelitisListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.PMA_1,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_2,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_3,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_4,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_5,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_6,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_7,
+			DiagnosisConcepts._DiagnosisConcepts.PMA_8
+		);
+	}
+
+	public static List<Integer> getChickenPoxListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CPA_1, DiagnosisConcepts._DiagnosisConcepts.CPA_2,
+			DiagnosisConcepts._DiagnosisConcepts.CPA_3, DiagnosisConcepts._DiagnosisConcepts.CPA_4,
+			DiagnosisConcepts._DiagnosisConcepts.CPA_5, DiagnosisConcepts._DiagnosisConcepts.CPA_6,
+			DiagnosisConcepts._DiagnosisConcepts.CPA_7, DiagnosisConcepts._DiagnosisConcepts.CPA_8,
+			DiagnosisConcepts._DiagnosisConcepts.CPA_9, DiagnosisConcepts._DiagnosisConcepts.CPA_10
+
+		);
+	}
+
+
+	public static List<Integer> getMeaslesListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MEA_1, DiagnosisConcepts._DiagnosisConcepts.MEA_2,
+			DiagnosisConcepts._DiagnosisConcepts.MEA_3, DiagnosisConcepts._DiagnosisConcepts.MEA_4,
+			DiagnosisConcepts._DiagnosisConcepts.MEA_5, DiagnosisConcepts._DiagnosisConcepts.MEA_6,
+			DiagnosisConcepts._DiagnosisConcepts.MEA_7, DiagnosisConcepts._DiagnosisConcepts.MEA_8,
+			DiagnosisConcepts._DiagnosisConcepts.MEA_9
+
+		);
+	}
+
+
+	public static List<Integer> getHepatitisListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HEA_1, DiagnosisConcepts._DiagnosisConcepts.HEA_2,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_3, DiagnosisConcepts._DiagnosisConcepts.HEA_4,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_5, DiagnosisConcepts._DiagnosisConcepts.HEA_6,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_7, DiagnosisConcepts._DiagnosisConcepts.HEA_8,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_9, DiagnosisConcepts._DiagnosisConcepts.HEA_10,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_11, DiagnosisConcepts._DiagnosisConcepts.HEA_12,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_13, DiagnosisConcepts._DiagnosisConcepts.HEA_14,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_15, DiagnosisConcepts._DiagnosisConcepts.HEA_16,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_17, DiagnosisConcepts._DiagnosisConcepts.HEA_18,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_19, DiagnosisConcepts._DiagnosisConcepts.HEA_20,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_21, DiagnosisConcepts._DiagnosisConcepts.HEA_22,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_23, DiagnosisConcepts._DiagnosisConcepts.HEA_24,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_25, DiagnosisConcepts._DiagnosisConcepts.HEA_26,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_27, DiagnosisConcepts._DiagnosisConcepts.HEA_28,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_29, DiagnosisConcepts._DiagnosisConcepts.HEA_30,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_31, DiagnosisConcepts._DiagnosisConcepts.HEA_32,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_33, DiagnosisConcepts._DiagnosisConcepts.HEA_34,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_35, DiagnosisConcepts._DiagnosisConcepts.HEA_36,
+			DiagnosisConcepts._DiagnosisConcepts.HEA_37
+
+		);
+	}
+
+
+	public static List<Integer> getMumpsListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MPSA_1, DiagnosisConcepts._DiagnosisConcepts.MPSA_2,
+			DiagnosisConcepts._DiagnosisConcepts.MPSA_3, DiagnosisConcepts._DiagnosisConcepts.MPSA_4
+		);
+	}
+	public static List<Integer> getTestedMalariaListB() {
+		return Arrays
+			.asList(
+				DiagnosisConcepts._DiagnosisConcepts.TMC_1,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_2,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_3,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_4,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_5,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_6
+
+			);
+	}
+
+
+	public static List<Integer> getMalariaListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.COA_1, DiagnosisConcepts._DiagnosisConcepts.COA_2,
+			DiagnosisConcepts._DiagnosisConcepts.COA_3, DiagnosisConcepts._DiagnosisConcepts.COA_4,
+			DiagnosisConcepts._DiagnosisConcepts.COA_5, DiagnosisConcepts._DiagnosisConcepts.COA_6,
+			DiagnosisConcepts._DiagnosisConcepts.COA_7, DiagnosisConcepts._DiagnosisConcepts.COA_8,
+			DiagnosisConcepts._DiagnosisConcepts.COA_9, DiagnosisConcepts._DiagnosisConcepts.COA_10,
+			DiagnosisConcepts._DiagnosisConcepts.COA_11, DiagnosisConcepts._DiagnosisConcepts.COA_12,
+			DiagnosisConcepts._DiagnosisConcepts.COA_13, DiagnosisConcepts._DiagnosisConcepts.COA_14,
+			DiagnosisConcepts._DiagnosisConcepts.COA_15, DiagnosisConcepts._DiagnosisConcepts.COA_16,
+			DiagnosisConcepts._DiagnosisConcepts.COA_17
+		);
+	}
+
+
+	public static List<Integer> getSexuallyTransmittedInfectionsList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.STIA_1, DiagnosisConcepts._DiagnosisConcepts.STIA_2,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_3, DiagnosisConcepts._DiagnosisConcepts.STIA_4,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_5, DiagnosisConcepts._DiagnosisConcepts.STIA_6,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_7, DiagnosisConcepts._DiagnosisConcepts.STIA_8,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_9, DiagnosisConcepts._DiagnosisConcepts.STIA_10,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_11, DiagnosisConcepts._DiagnosisConcepts.STIA_12,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_13, DiagnosisConcepts._DiagnosisConcepts.STIA_14,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_15, DiagnosisConcepts._DiagnosisConcepts.STIA_16,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_17, DiagnosisConcepts._DiagnosisConcepts.STIA_18,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_19, DiagnosisConcepts._DiagnosisConcepts.STIA_20,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_21, DiagnosisConcepts._DiagnosisConcepts.STIA_22,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_23, DiagnosisConcepts._DiagnosisConcepts.STIA_24,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_25, DiagnosisConcepts._DiagnosisConcepts.STIA_26,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_27, DiagnosisConcepts._DiagnosisConcepts.STIA_28,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_29, DiagnosisConcepts._DiagnosisConcepts.STIA_30,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_31, DiagnosisConcepts._DiagnosisConcepts.STIA_32,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_33, DiagnosisConcepts._DiagnosisConcepts.STIA_34,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_35, DiagnosisConcepts._DiagnosisConcepts.STIA_36,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_37, DiagnosisConcepts._DiagnosisConcepts.STIA_38,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_39, DiagnosisConcepts._DiagnosisConcepts.STIA_40,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_41, DiagnosisConcepts._DiagnosisConcepts.STIA_42,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_43, DiagnosisConcepts._DiagnosisConcepts.STIA_44,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_45, DiagnosisConcepts._DiagnosisConcepts.STIA_46,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_47, DiagnosisConcepts._DiagnosisConcepts.STIA_48,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_49, DiagnosisConcepts._DiagnosisConcepts.STIA_50,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_51, DiagnosisConcepts._DiagnosisConcepts.STIA_52,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_53, DiagnosisConcepts._DiagnosisConcepts.STIA_54,
+			DiagnosisConcepts._DiagnosisConcepts.STIA_55, DiagnosisConcepts._DiagnosisConcepts.STIA_56
+		);
+	}
+
+
+	public static List<Integer> getUrinaryTractInfectionListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.URA_1, DiagnosisConcepts._DiagnosisConcepts.URA_2,
+			DiagnosisConcepts._DiagnosisConcepts.URA_3, DiagnosisConcepts._DiagnosisConcepts.URA_4,
+			DiagnosisConcepts._DiagnosisConcepts.URA_5, DiagnosisConcepts._DiagnosisConcepts.URA_6,
+			DiagnosisConcepts._DiagnosisConcepts.URA_6, DiagnosisConcepts._DiagnosisConcepts.URA_8
+
+
+		);
+	}
+
+	public static List<Integer> getInterstinalwormsListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.INA_1, DiagnosisConcepts._DiagnosisConcepts.INA_2,
+			DiagnosisConcepts._DiagnosisConcepts.INA_3, DiagnosisConcepts._DiagnosisConcepts.INA_4,
+			DiagnosisConcepts._DiagnosisConcepts.INA_5, DiagnosisConcepts._DiagnosisConcepts.INA_6,
+			DiagnosisConcepts._DiagnosisConcepts.INA_7, DiagnosisConcepts._DiagnosisConcepts.INA_8
+		);
+	}
+
+	public static List<Integer> getMalnutritionListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MLA_1, DiagnosisConcepts._DiagnosisConcepts.MLA_2,
+			DiagnosisConcepts._DiagnosisConcepts.MLA_3, DiagnosisConcepts._DiagnosisConcepts.MLA_4,
+			DiagnosisConcepts._DiagnosisConcepts.MLA_5, DiagnosisConcepts._DiagnosisConcepts.MLA_6,
+			DiagnosisConcepts._DiagnosisConcepts.MLA_7
+
+
+		);
+	}
+
+	public static List<Integer> getAnaemiaListB() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ANEA_1, DiagnosisConcepts._DiagnosisConcepts.ANEA_2,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_3, DiagnosisConcepts._DiagnosisConcepts.ANEA_4,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_5, DiagnosisConcepts._DiagnosisConcepts.ANEA_6,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_7,DiagnosisConcepts._DiagnosisConcepts.ANEA_8,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_9,DiagnosisConcepts._DiagnosisConcepts.ANEA_10,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_11,DiagnosisConcepts._DiagnosisConcepts.ANEA_12,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_13,DiagnosisConcepts._DiagnosisConcepts.ANEA_14,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_15,DiagnosisConcepts._DiagnosisConcepts.ANEA_16,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_17,DiagnosisConcepts._DiagnosisConcepts.ANEA_18,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_19,DiagnosisConcepts._DiagnosisConcepts.ANEA_20,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_21,DiagnosisConcepts._DiagnosisConcepts.ANEA_22,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_23,DiagnosisConcepts._DiagnosisConcepts.ANEA_24,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_25,DiagnosisConcepts._DiagnosisConcepts.ANEA_26,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_27,DiagnosisConcepts._DiagnosisConcepts.ANEA_28,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_29,DiagnosisConcepts._DiagnosisConcepts.ANEA_30,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_31,DiagnosisConcepts._DiagnosisConcepts.ANEA_32,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_33,DiagnosisConcepts._DiagnosisConcepts.ANEA_34,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_35,DiagnosisConcepts._DiagnosisConcepts.ANEA_36,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_37,DiagnosisConcepts._DiagnosisConcepts.ANEA_38,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_39,DiagnosisConcepts._DiagnosisConcepts.ANEA_40,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_41,DiagnosisConcepts._DiagnosisConcepts.ANEA_42,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_43,DiagnosisConcepts._DiagnosisConcepts.ANEA_44,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_45,DiagnosisConcepts._DiagnosisConcepts.ANEA_46,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_47,DiagnosisConcepts._DiagnosisConcepts.ANEA_48,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_49,DiagnosisConcepts._DiagnosisConcepts.ANEA_50,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_51,DiagnosisConcepts._DiagnosisConcepts.ANEA_52,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_53,DiagnosisConcepts._DiagnosisConcepts.ANEA_54,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_55,DiagnosisConcepts._DiagnosisConcepts.ANEA_56,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_57,DiagnosisConcepts._DiagnosisConcepts.ANEA_58,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_59,DiagnosisConcepts._DiagnosisConcepts.ANEA_60,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_61,DiagnosisConcepts._DiagnosisConcepts.ANEA_62,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_63,DiagnosisConcepts._DiagnosisConcepts.ANEA_64,
+			DiagnosisConcepts._DiagnosisConcepts.ANEA_65
+
+
+
+		);
+	}
+
+	//EYE INFECTION B
+
+	public static List<Integer> getEyeInfectionsListB() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.EYA_1,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_2,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_3,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_4,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_5,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_6,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_7,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_8,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_9,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_10,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_11,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_12,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_13,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_14,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_15,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_16,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_17,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_18,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_19,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_20,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_21,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_22,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_23,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_24,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_25,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_26,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_27,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_28,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_29,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_30,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_31,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_32,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_33,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_34,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_35,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_36,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_37,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_38,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_39,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_40,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_41,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_42,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_43,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_44,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_45,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_46,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_47,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_48,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_49,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_50,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_51,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_52,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_53,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_54,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_55,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_56,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_57,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_58,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_59,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_60,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_61,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_62,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_63,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_64,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_65,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_66,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_67,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_68,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_69,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_70,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_71,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_72,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_73,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_74,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_75,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_76,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_77,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_78,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_79,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_80,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_81,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_82,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_83,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_84,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_85,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_86,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_87,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_88,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_89,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_90,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_91,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_92,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_93,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_94,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_95,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_96,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_97,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_98,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_99,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_100,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_101,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_102,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_103,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_104,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_105,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_106,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_107,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_108,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_109,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_110,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_111,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_112,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_113,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_114,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_115,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_116,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_117,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_118,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_119,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_120,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_121,
+			DiagnosisConcepts._DiagnosisConcepts.EYA_122
+		);
+	}
+
+
+//Ear Infections
+
+	public static List<Integer> getEarInfectionConditionsList() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.EIA_1,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_2,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_3,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_4,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_5,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_6,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_7,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_8,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_9,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_10,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_11,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_12,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_13,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_14,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_15,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_16,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_17,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_18,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_19,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_20,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_21,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_22,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_23,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_24,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_25,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_26,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_27,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_28,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_29,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_30,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_31,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_32,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_33,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_34,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_35,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_36,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_37,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_38,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_39,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_40,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_41,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_42,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_43,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_44,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_45,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_46,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_47,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_48,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_49,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_50,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_51,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_52,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_53,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_54,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_55,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_56,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_57,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_58,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_59,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_60,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_61,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_62, 
+			DiagnosisConcepts._DiagnosisConcepts.EIA_63,
+			DiagnosisConcepts._DiagnosisConcepts.EIA_64, 
+			DiagnosisConcepts._DiagnosisConcepts.EIA_65
+		);
+	}
+
+	public static List<Integer> getUpperRespiratoryTractInfectionsListB() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.UPA_1,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_2,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_3,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_4,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_5,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_6,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_7,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_8,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_9,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_10,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_11,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_12,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_13,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_14,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_15,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_16,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_17,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_18,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_19,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_20,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_21,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_22,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_23,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_24,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_25,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_26,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_27,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_28,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_29,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_30,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_31,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_32,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_33,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_34,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_35,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_36,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_37,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_38,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_39,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_40,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_41,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_42,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_43,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_44,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_45,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_46,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_47,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_48,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_49,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_50,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_51,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_52,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_53,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_54,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_55,
+			DiagnosisConcepts._DiagnosisConcepts.UPA_56
+		);
+	}
+
+
+	//Asthma
+	public static List<Integer> getAsthmaListB() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.ASA_1,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_2,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_3,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_4,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_5,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_6,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_7,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_8,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_9,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_10,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_11,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_12,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_13,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_14,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_15,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_16,
+			DiagnosisConcepts._DiagnosisConcepts.ASA_17
+		);
+	}
+
+	public static List<Integer> getPneumoniaListB() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.PNA_1,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_2,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_3,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_4,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_5,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_6,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_7,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_8,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_9,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_10,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_11,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_12,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_13,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_14,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_15,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_16,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_17,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_18,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_19,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_20,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_21,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_22,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_23,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_24,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_25,
+			DiagnosisConcepts._DiagnosisConcepts.PNA_26
+		);
+	}
+	// Method to get all skin disease conditions
+	public static List<Integer> getDiseasesOfSkin() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.DS_1,
+			DiagnosisConcepts._DiagnosisConcepts.DS_2,
+			DiagnosisConcepts._DiagnosisConcepts.DS_3,
+			DiagnosisConcepts._DiagnosisConcepts.DS_4,
+			DiagnosisConcepts._DiagnosisConcepts.DS_5,
+			DiagnosisConcepts._DiagnosisConcepts.DS_6,
+			DiagnosisConcepts._DiagnosisConcepts.DS_7,
+			DiagnosisConcepts._DiagnosisConcepts.DS_8,
+			DiagnosisConcepts._DiagnosisConcepts.DS_9,
+			DiagnosisConcepts._DiagnosisConcepts.DS_10,
+			DiagnosisConcepts._DiagnosisConcepts.DS_11,
+			DiagnosisConcepts._DiagnosisConcepts.DS_12,
+			DiagnosisConcepts._DiagnosisConcepts.DS_13,
+			DiagnosisConcepts._DiagnosisConcepts.DS_14,
+			DiagnosisConcepts._DiagnosisConcepts.DS_15,
+			DiagnosisConcepts._DiagnosisConcepts.DS_16,
+			DiagnosisConcepts._DiagnosisConcepts.DS_17,
+			DiagnosisConcepts._DiagnosisConcepts.DS_18,
+			DiagnosisConcepts._DiagnosisConcepts.DS_19,
+			DiagnosisConcepts._DiagnosisConcepts.DS_20,
+			DiagnosisConcepts._DiagnosisConcepts.DS_21,
+			DiagnosisConcepts._DiagnosisConcepts.DS_22,
+			DiagnosisConcepts._DiagnosisConcepts.DS_23,
+			DiagnosisConcepts._DiagnosisConcepts.DS_24,
+			DiagnosisConcepts._DiagnosisConcepts.DS_25,
+			DiagnosisConcepts._DiagnosisConcepts.DS_26,
+			DiagnosisConcepts._DiagnosisConcepts.DS_27,
+			DiagnosisConcepts._DiagnosisConcepts.DS_28,
+			DiagnosisConcepts._DiagnosisConcepts.DS_29,
+			DiagnosisConcepts._DiagnosisConcepts.DS_30,
+			DiagnosisConcepts._DiagnosisConcepts.DS_31,
+			DiagnosisConcepts._DiagnosisConcepts.DS_32,
+			DiagnosisConcepts._DiagnosisConcepts.DS_33,
+			DiagnosisConcepts._DiagnosisConcepts.DS_34,
+			DiagnosisConcepts._DiagnosisConcepts.DS_35,
+			DiagnosisConcepts._DiagnosisConcepts.DS_36,
+			DiagnosisConcepts._DiagnosisConcepts.DS_37,
+			DiagnosisConcepts._DiagnosisConcepts.DS_38,
+			DiagnosisConcepts._DiagnosisConcepts.DS_39,
+			DiagnosisConcepts._DiagnosisConcepts.DS_40,
+			DiagnosisConcepts._DiagnosisConcepts.DS_41,
+			DiagnosisConcepts._DiagnosisConcepts.DS_42,
+			DiagnosisConcepts._DiagnosisConcepts.DS_43,
+			DiagnosisConcepts._DiagnosisConcepts.DS_44,
+			DiagnosisConcepts._DiagnosisConcepts.DS_45,
+			DiagnosisConcepts._DiagnosisConcepts.DS_46,
+			DiagnosisConcepts._DiagnosisConcepts.DS_47,
+			DiagnosisConcepts._DiagnosisConcepts.DS_48,
+			DiagnosisConcepts._DiagnosisConcepts.DS_49,
+			DiagnosisConcepts._DiagnosisConcepts.DS_50,
+			DiagnosisConcepts._DiagnosisConcepts.DS_51,
+			DiagnosisConcepts._DiagnosisConcepts.DS_52,
+			DiagnosisConcepts._DiagnosisConcepts.DS_53,
+			DiagnosisConcepts._DiagnosisConcepts.DS_54,
+			DiagnosisConcepts._DiagnosisConcepts.DS_55,
+			DiagnosisConcepts._DiagnosisConcepts.DS_56,
+			DiagnosisConcepts._DiagnosisConcepts.DS_57,
+			DiagnosisConcepts._DiagnosisConcepts.DS_58,
+			DiagnosisConcepts._DiagnosisConcepts.DS_59,
+			DiagnosisConcepts._DiagnosisConcepts.DS_60,
+			DiagnosisConcepts._DiagnosisConcepts.DS_61,
+			DiagnosisConcepts._DiagnosisConcepts.DS_62,
+			DiagnosisConcepts._DiagnosisConcepts.DS_63,
+			DiagnosisConcepts._DiagnosisConcepts.DS_64,
+			DiagnosisConcepts._DiagnosisConcepts.DS_65,
+			DiagnosisConcepts._DiagnosisConcepts.DS_66,
+			DiagnosisConcepts._DiagnosisConcepts.DS_67,
+			DiagnosisConcepts._DiagnosisConcepts.DS_68,
+			DiagnosisConcepts._DiagnosisConcepts.DS_69,
+			DiagnosisConcepts._DiagnosisConcepts.DS_70,
+			DiagnosisConcepts._DiagnosisConcepts.DS_71,
+			DiagnosisConcepts._DiagnosisConcepts.DS_72,
+			DiagnosisConcepts._DiagnosisConcepts.DS_73,
+			DiagnosisConcepts._DiagnosisConcepts.DS_74,
+			DiagnosisConcepts._DiagnosisConcepts.DS_75,
+			DiagnosisConcepts._DiagnosisConcepts.DS_76,
+			DiagnosisConcepts._DiagnosisConcepts.DS_77
+		);
+	}
+
+
+	public static List<Integer> getOtherDisOfRespiratorySystemList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OTRA_1,
+			DiagnosisConcepts._DiagnosisConcepts.OTRA_2
+
+		);
+	}
+
+
+	public static List<Integer> getAbortionList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ABA_1,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_2,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_3,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_4,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_5,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_6,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_7,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_8,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_9,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_10,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_11,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_12,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_13,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_14,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_15,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_16,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_17,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_18,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_19,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_20,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_21,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_22,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_23,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_24,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_25,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_26,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_27,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_28,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_29,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_30,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_31,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_32,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_33,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_34,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_35,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_36,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_37,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_38,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_39,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_40,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_41,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_42,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_43,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_44,
+			DiagnosisConcepts._DiagnosisConcepts.ABA_45
+
+		);
+	}
+
+
+
+//Dis. of Puerperium & Childbirth
+
+
+	public static List<Integer> getDisOfPuerperiumChildbathList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DPA_1,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_2,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_3,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_4,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_5,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_6,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_7,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_8,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_9,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_10,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_11,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_12,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_13,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_14,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_15,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_16,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_17,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_18,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_19,
+			DiagnosisConcepts._DiagnosisConcepts.DPA_20
+
+
+		);
+	}
+
+	public static List<Integer> getHypertensionList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HYA_1,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_2,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_3,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_4,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_5,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_6,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_7,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_8,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_9,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_10,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_11,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_12,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_13,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_14,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_15,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_16,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_17,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_18,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_19,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_20,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_21,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_22,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_23,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_24,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_25,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_26,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_27,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_28,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_29,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_30,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_31,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_32,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_33,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_34,
+			DiagnosisConcepts._DiagnosisConcepts.HYA_35
+
+		);
+	}
+	
+	public static List<Integer> getDentalDisordersListB() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.DEA_1,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_2,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_3,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_4,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_5,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_6,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_7,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_8,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_9,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_10,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_11,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_12,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_13,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_14,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_15,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_16,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_17,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_18,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_19,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_20,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_21,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_22,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_23,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_24,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_25,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_26,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_27,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_28,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_29,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_30,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_31,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_32,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_33,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_34,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_35,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_36,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_37,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_38,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_39,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_40,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_41,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_42,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_43,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_44,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_45,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_46,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_47,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_48,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_49,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_50,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_51,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_52,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_53,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_54,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_55,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_56,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_57,
+			DiagnosisConcepts._DiagnosisConcepts.DEA_58
+		);
+	}
+	public static List<Integer> getAnthritisJointPainsList() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_1,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_2,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_3,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_4,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_5,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_6,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_7,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_8,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_9,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_10,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_11,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_12,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_13,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_14,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_15,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_16,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_17,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_18,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_19,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_20,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_21,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_22,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_23,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_24,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_25,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_26,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_27,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_28,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_29,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_30,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_31,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_32,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_33,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_34,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_35,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_36,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_37,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_38,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_39,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_40,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_41,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_42,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_43,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_44,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_45,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_46,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_47,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_48,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_49,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_50,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_51,
+			DiagnosisConcepts._DiagnosisConcepts.AJPA_52
+		);
+	}
+
+	public static List<Integer> getOtherCentralNervousSystemConditionsList() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_1,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_2,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_3,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_4,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_5,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_6,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_7,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_8,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_9,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_10,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_11,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_12,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_13,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_14,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_15,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_16,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_17,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_18,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_19,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_20,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_21,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_22,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_23,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_24,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_25,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_26,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_27,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_28,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_29,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_30,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_31,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_32,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_33,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_34,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_35,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_36,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_37,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_38,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_39,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_40,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_41,
+			DiagnosisConcepts._DiagnosisConcepts.CNSA_42
+		);
+	}
+
+
+	public static List<Integer> getOverweightList() {
+		return Arrays.asList(
+			DiagnosisConcepts._DiagnosisConcepts.OVA_1,
+			DiagnosisConcepts._DiagnosisConcepts.OVA_2,
+			DiagnosisConcepts._DiagnosisConcepts.OVA_3,
+			DiagnosisConcepts._DiagnosisConcepts.OVA_4,
+			DiagnosisConcepts._DiagnosisConcepts.OVA_5,
+			DiagnosisConcepts._DiagnosisConcepts.OVA_6
+		);
+	}
+
+	public static List<Integer> getDiseaseOfTheSkinList() {
+		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SKIN_1, DiagnosisConcepts._DiagnosisConcepts.SKIN_2,
+			DiagnosisConcepts._DiagnosisConcepts.SKIN_3, DiagnosisConcepts._DiagnosisConcepts.SKIN_4,
+			DiagnosisConcepts._DiagnosisConcepts.SKIN_5
+
+		);
+	}
+
+
+
+	public static List<Integer> getPoisoningList() {
+		return Arrays.asList( DiagnosisConcepts._DiagnosisConcepts.POA_1,
+			DiagnosisConcepts._DiagnosisConcepts.POA_2,
+			DiagnosisConcepts._DiagnosisConcepts.POA_3,
+			DiagnosisConcepts._DiagnosisConcepts.POA_4,
+			DiagnosisConcepts._DiagnosisConcepts.POA_5,
+			DiagnosisConcepts._DiagnosisConcepts.POA_6,
+			DiagnosisConcepts._DiagnosisConcepts.POA_7,
+			DiagnosisConcepts._DiagnosisConcepts.POA_8,
+			DiagnosisConcepts._DiagnosisConcepts.POA_9,
+			DiagnosisConcepts._DiagnosisConcepts.POA_10
+
+		);
+	}
+
+
+	public static List<Integer> getCardiovascularConditionsList() {
+		return Arrays.asList( DiagnosisConcepts._DiagnosisConcepts.CAA_1,
+			DiagnosisConcepts._DiagnosisConcepts.CAA_2,
+			DiagnosisConcepts._DiagnosisConcepts.CAA_3,
+			DiagnosisConcepts._DiagnosisConcepts.CAA_4
+
+		);
+	}
+
+//End concept mapping Refactoring for 705A and 705B
+
+
+
+
+
+
+
+
 
 	public static List<Integer> getMalnutritionList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MALN1, DiagnosisConcepts._DiagnosisConcepts.MALN2,
@@ -644,193 +2002,11 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getEyeInfectionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OE1, DiagnosisConcepts._DiagnosisConcepts.OE2,
-			DiagnosisConcepts._DiagnosisConcepts.EI1, DiagnosisConcepts._DiagnosisConcepts.EI2,
-			DiagnosisConcepts._DiagnosisConcepts.OE3, DiagnosisConcepts._DiagnosisConcepts.OE4,
-			DiagnosisConcepts._DiagnosisConcepts.OE5, DiagnosisConcepts._DiagnosisConcepts.OE6,
-			DiagnosisConcepts._DiagnosisConcepts.OE7, DiagnosisConcepts._DiagnosisConcepts.OE8,
-			DiagnosisConcepts._DiagnosisConcepts.OE9, DiagnosisConcepts._DiagnosisConcepts.OE10,
-			DiagnosisConcepts._DiagnosisConcepts.OE11, DiagnosisConcepts._DiagnosisConcepts.OE12,
-			DiagnosisConcepts._DiagnosisConcepts.OE13, DiagnosisConcepts._DiagnosisConcepts.OE14,
-			DiagnosisConcepts._DiagnosisConcepts.OE15, DiagnosisConcepts._DiagnosisConcepts.OE16,
-			DiagnosisConcepts._DiagnosisConcepts.OE17, DiagnosisConcepts._DiagnosisConcepts.OE18,
-			DiagnosisConcepts._DiagnosisConcepts.OE19, DiagnosisConcepts._DiagnosisConcepts.OE20,
-			DiagnosisConcepts._DiagnosisConcepts.OE21, DiagnosisConcepts._DiagnosisConcepts.OE22,
-			DiagnosisConcepts._DiagnosisConcepts.OE23, DiagnosisConcepts._DiagnosisConcepts.OE24,
-			DiagnosisConcepts._DiagnosisConcepts.OE25, DiagnosisConcepts._DiagnosisConcepts.OE26,
-			DiagnosisConcepts._DiagnosisConcepts.OE27, DiagnosisConcepts._DiagnosisConcepts.OE28,
-			DiagnosisConcepts._DiagnosisConcepts.OE29, DiagnosisConcepts._DiagnosisConcepts.OE30,
-			DiagnosisConcepts._DiagnosisConcepts.OE31, DiagnosisConcepts._DiagnosisConcepts.OE32,
-			DiagnosisConcepts._DiagnosisConcepts.OE33, DiagnosisConcepts._DiagnosisConcepts.OE34,
-			DiagnosisConcepts._DiagnosisConcepts.OE35, DiagnosisConcepts._DiagnosisConcepts.OE36,
-			DiagnosisConcepts._DiagnosisConcepts.OE37, DiagnosisConcepts._DiagnosisConcepts.OE38,
-			DiagnosisConcepts._DiagnosisConcepts.OE39, DiagnosisConcepts._DiagnosisConcepts.OE40,
-			DiagnosisConcepts._DiagnosisConcepts.OE41, DiagnosisConcepts._DiagnosisConcepts.OE42,
-			DiagnosisConcepts._DiagnosisConcepts.OE43, DiagnosisConcepts._DiagnosisConcepts.OE44,
-			DiagnosisConcepts._DiagnosisConcepts.OE45, DiagnosisConcepts._DiagnosisConcepts.OE46,
-			DiagnosisConcepts._DiagnosisConcepts.OE47, DiagnosisConcepts._DiagnosisConcepts.OE48,
-			DiagnosisConcepts._DiagnosisConcepts.OE49, DiagnosisConcepts._DiagnosisConcepts.OE50,
-			DiagnosisConcepts._DiagnosisConcepts.OE51, DiagnosisConcepts._DiagnosisConcepts.OE52,
-			DiagnosisConcepts._DiagnosisConcepts.OE53, DiagnosisConcepts._DiagnosisConcepts.OE54,
-			DiagnosisConcepts._DiagnosisConcepts.OE55, DiagnosisConcepts._DiagnosisConcepts.OE56,
-			DiagnosisConcepts._DiagnosisConcepts.OE57, DiagnosisConcepts._DiagnosisConcepts.OE58,
-			DiagnosisConcepts._DiagnosisConcepts.OE59, DiagnosisConcepts._DiagnosisConcepts.OE60,
-			DiagnosisConcepts._DiagnosisConcepts.OE61, DiagnosisConcepts._DiagnosisConcepts.OE62,
-			DiagnosisConcepts._DiagnosisConcepts.OE63, DiagnosisConcepts._DiagnosisConcepts.OE64,
-			DiagnosisConcepts._DiagnosisConcepts.OE65, DiagnosisConcepts._DiagnosisConcepts.OE66,
-			DiagnosisConcepts._DiagnosisConcepts.OE67, DiagnosisConcepts._DiagnosisConcepts.OE68,
-			DiagnosisConcepts._DiagnosisConcepts.OE69, DiagnosisConcepts._DiagnosisConcepts.OE70,
-			DiagnosisConcepts._DiagnosisConcepts.OE71, DiagnosisConcepts._DiagnosisConcepts.OE72,
-			DiagnosisConcepts._DiagnosisConcepts.OE73, DiagnosisConcepts._DiagnosisConcepts.OE74,
-			DiagnosisConcepts._DiagnosisConcepts.OE75, DiagnosisConcepts._DiagnosisConcepts.OE76,
-			DiagnosisConcepts._DiagnosisConcepts.OE77, DiagnosisConcepts._DiagnosisConcepts.OE78,
-			DiagnosisConcepts._DiagnosisConcepts.OE79, DiagnosisConcepts._DiagnosisConcepts.OE80,
-			DiagnosisConcepts._DiagnosisConcepts.OE81, DiagnosisConcepts._DiagnosisConcepts.OE82,
-			DiagnosisConcepts._DiagnosisConcepts.OE83, DiagnosisConcepts._DiagnosisConcepts.OE84,
-			DiagnosisConcepts._DiagnosisConcepts.OE85, DiagnosisConcepts._DiagnosisConcepts.OE86,
-			DiagnosisConcepts._DiagnosisConcepts.OE87, DiagnosisConcepts._DiagnosisConcepts.OE88,
-			DiagnosisConcepts._DiagnosisConcepts.OE89, DiagnosisConcepts._DiagnosisConcepts.OE90,
-			DiagnosisConcepts._DiagnosisConcepts.OE91, DiagnosisConcepts._DiagnosisConcepts.OE92,
-			DiagnosisConcepts._DiagnosisConcepts.OE93, DiagnosisConcepts._DiagnosisConcepts.OE94,
-			DiagnosisConcepts._DiagnosisConcepts.OE95, DiagnosisConcepts._DiagnosisConcepts.OE96,
-			DiagnosisConcepts._DiagnosisConcepts.OE97, DiagnosisConcepts._DiagnosisConcepts.OE98,
-			DiagnosisConcepts._DiagnosisConcepts.OE99, DiagnosisConcepts._DiagnosisConcepts.OE100,
-			DiagnosisConcepts._DiagnosisConcepts.OE101, DiagnosisConcepts._DiagnosisConcepts.OE102,
-			DiagnosisConcepts._DiagnosisConcepts.OE103, DiagnosisConcepts._DiagnosisConcepts.OE104,
-			DiagnosisConcepts._DiagnosisConcepts.OE105, DiagnosisConcepts._DiagnosisConcepts.OE106,
-			DiagnosisConcepts._DiagnosisConcepts.OE107, DiagnosisConcepts._DiagnosisConcepts.OE108,
-			DiagnosisConcepts._DiagnosisConcepts.OE110, DiagnosisConcepts._DiagnosisConcepts.OE111,
-			DiagnosisConcepts._DiagnosisConcepts.OE112, DiagnosisConcepts._DiagnosisConcepts.OE113,
-			DiagnosisConcepts._DiagnosisConcepts.OE114, DiagnosisConcepts._DiagnosisConcepts.OE115,
-			DiagnosisConcepts._DiagnosisConcepts.OE116, DiagnosisConcepts._DiagnosisConcepts.OE117,
-			DiagnosisConcepts._DiagnosisConcepts.OE118, DiagnosisConcepts._DiagnosisConcepts.OE119,
-			DiagnosisConcepts._DiagnosisConcepts.OE120, DiagnosisConcepts._DiagnosisConcepts.OE121,
-			DiagnosisConcepts._DiagnosisConcepts.OE122, DiagnosisConcepts._DiagnosisConcepts.OE123,
-			DiagnosisConcepts._DiagnosisConcepts.OE124, DiagnosisConcepts._DiagnosisConcepts.OE125,
-			DiagnosisConcepts._DiagnosisConcepts.OE126, DiagnosisConcepts._DiagnosisConcepts.OE127,
-			DiagnosisConcepts._DiagnosisConcepts.OE128, DiagnosisConcepts._DiagnosisConcepts.OE129,
-			DiagnosisConcepts._DiagnosisConcepts.OE130, DiagnosisConcepts._DiagnosisConcepts.OE131,
-			DiagnosisConcepts._DiagnosisConcepts.OE132, DiagnosisConcepts._DiagnosisConcepts.OE133,
-			DiagnosisConcepts._DiagnosisConcepts.OE134, DiagnosisConcepts._DiagnosisConcepts.OE135,
-			DiagnosisConcepts._DiagnosisConcepts.OE136, DiagnosisConcepts._DiagnosisConcepts.OE137,
-			DiagnosisConcepts._DiagnosisConcepts.OE138, DiagnosisConcepts._DiagnosisConcepts.OE139,
-			DiagnosisConcepts._DiagnosisConcepts.OE140, DiagnosisConcepts._DiagnosisConcepts.OE141,
-			DiagnosisConcepts._DiagnosisConcepts.OE142, DiagnosisConcepts._DiagnosisConcepts.OE143,
-			DiagnosisConcepts._DiagnosisConcepts.OE144, DiagnosisConcepts._DiagnosisConcepts.OE145,
-			DiagnosisConcepts._DiagnosisConcepts.OE146, DiagnosisConcepts._DiagnosisConcepts.OE147,
-			DiagnosisConcepts._DiagnosisConcepts.OE148, DiagnosisConcepts._DiagnosisConcepts.OE149,
-			DiagnosisConcepts._DiagnosisConcepts.OE150, DiagnosisConcepts._DiagnosisConcepts.OE151,
-			DiagnosisConcepts._DiagnosisConcepts.OE152, DiagnosisConcepts._DiagnosisConcepts.OE153,
-			DiagnosisConcepts._DiagnosisConcepts.OE154, DiagnosisConcepts._DiagnosisConcepts.OE155,
-			DiagnosisConcepts._DiagnosisConcepts.OE156, DiagnosisConcepts._DiagnosisConcepts.OE157,
-			DiagnosisConcepts._DiagnosisConcepts.OE158, DiagnosisConcepts._DiagnosisConcepts.OE159,
-			DiagnosisConcepts._DiagnosisConcepts.OE160, DiagnosisConcepts._DiagnosisConcepts.OE161,
-			DiagnosisConcepts._DiagnosisConcepts.OE162, DiagnosisConcepts._DiagnosisConcepts.OE163,
-			DiagnosisConcepts._DiagnosisConcepts.OE164, DiagnosisConcepts._DiagnosisConcepts.OE165,
-			DiagnosisConcepts._DiagnosisConcepts.OE166, DiagnosisConcepts._DiagnosisConcepts.OE167,
-			DiagnosisConcepts._DiagnosisConcepts.OE168, DiagnosisConcepts._DiagnosisConcepts.OE169,
-			DiagnosisConcepts._DiagnosisConcepts.OE170, DiagnosisConcepts._DiagnosisConcepts.OE171,
-			DiagnosisConcepts._DiagnosisConcepts.OE172, DiagnosisConcepts._DiagnosisConcepts.OE173,
-			DiagnosisConcepts._DiagnosisConcepts.OE174, DiagnosisConcepts._DiagnosisConcepts.OE175,
-			DiagnosisConcepts._DiagnosisConcepts.OE176, DiagnosisConcepts._DiagnosisConcepts.OE177,
-			DiagnosisConcepts._DiagnosisConcepts.OE178, DiagnosisConcepts._DiagnosisConcepts.OE179,
-			DiagnosisConcepts._DiagnosisConcepts.OE180, DiagnosisConcepts._DiagnosisConcepts.OE181,
-			DiagnosisConcepts._DiagnosisConcepts.OE182, DiagnosisConcepts._DiagnosisConcepts.OE183,
-			DiagnosisConcepts._DiagnosisConcepts.OE184, DiagnosisConcepts._DiagnosisConcepts.OE185,
-			DiagnosisConcepts._DiagnosisConcepts.OE186, DiagnosisConcepts._DiagnosisConcepts.OE187,
-			DiagnosisConcepts._DiagnosisConcepts.OE188, DiagnosisConcepts._DiagnosisConcepts.OE189,
-			DiagnosisConcepts._DiagnosisConcepts.OE190, DiagnosisConcepts._DiagnosisConcepts.OE191,
-			DiagnosisConcepts._DiagnosisConcepts.OE192, DiagnosisConcepts._DiagnosisConcepts.OE193,
-			DiagnosisConcepts._DiagnosisConcepts.OE194, DiagnosisConcepts._DiagnosisConcepts.OE195,
-			DiagnosisConcepts._DiagnosisConcepts.OE196, DiagnosisConcepts._DiagnosisConcepts.OE197,
-			DiagnosisConcepts._DiagnosisConcepts.OE198, DiagnosisConcepts._DiagnosisConcepts.OE199,
-			DiagnosisConcepts._DiagnosisConcepts.OE200, DiagnosisConcepts._DiagnosisConcepts.OE201,
-			DiagnosisConcepts._DiagnosisConcepts.OE202, DiagnosisConcepts._DiagnosisConcepts.OE203,
-			DiagnosisConcepts._DiagnosisConcepts.OE204, DiagnosisConcepts._DiagnosisConcepts.OE205,
-			DiagnosisConcepts._DiagnosisConcepts.OE206, DiagnosisConcepts._DiagnosisConcepts.OE207,
-			DiagnosisConcepts._DiagnosisConcepts.OE208, DiagnosisConcepts._DiagnosisConcepts.OE209,
-			DiagnosisConcepts._DiagnosisConcepts.OE210, DiagnosisConcepts._DiagnosisConcepts.OE211,
-			DiagnosisConcepts._DiagnosisConcepts.OE212, DiagnosisConcepts._DiagnosisConcepts.OE213,
-			DiagnosisConcepts._DiagnosisConcepts.OE214, DiagnosisConcepts._DiagnosisConcepts.OE215,
-			DiagnosisConcepts._DiagnosisConcepts.OE216, DiagnosisConcepts._DiagnosisConcepts.OE217,
-			DiagnosisConcepts._DiagnosisConcepts.OE218, DiagnosisConcepts._DiagnosisConcepts.OE219,
-			DiagnosisConcepts._DiagnosisConcepts.OE220, DiagnosisConcepts._DiagnosisConcepts.OE221,
-			DiagnosisConcepts._DiagnosisConcepts.OE222, DiagnosisConcepts._DiagnosisConcepts.OE223,
-			DiagnosisConcepts._DiagnosisConcepts.OE224, DiagnosisConcepts._DiagnosisConcepts.OE225,
-			DiagnosisConcepts._DiagnosisConcepts.OE226, DiagnosisConcepts._DiagnosisConcepts.OE227,
-			DiagnosisConcepts._DiagnosisConcepts.OE228, DiagnosisConcepts._DiagnosisConcepts.OE229,
-			DiagnosisConcepts._DiagnosisConcepts.OE230, DiagnosisConcepts._DiagnosisConcepts.OE231,
-			DiagnosisConcepts._DiagnosisConcepts.OE232, DiagnosisConcepts._DiagnosisConcepts.OE233,
-			DiagnosisConcepts._DiagnosisConcepts.OE234, DiagnosisConcepts._DiagnosisConcepts.OE235,
-			DiagnosisConcepts._DiagnosisConcepts.OE236, DiagnosisConcepts._DiagnosisConcepts.OE237,
-			DiagnosisConcepts._DiagnosisConcepts.OE238, DiagnosisConcepts._DiagnosisConcepts.OE239,
-			DiagnosisConcepts._DiagnosisConcepts.OE240, DiagnosisConcepts._DiagnosisConcepts.OE241,
-			DiagnosisConcepts._DiagnosisConcepts.OE242, DiagnosisConcepts._DiagnosisConcepts.OE243,
-			DiagnosisConcepts._DiagnosisConcepts.OE244, DiagnosisConcepts._DiagnosisConcepts.OE245,
-			DiagnosisConcepts._DiagnosisConcepts.OE246, DiagnosisConcepts._DiagnosisConcepts.OE247,
-			DiagnosisConcepts._DiagnosisConcepts.OE248, DiagnosisConcepts._DiagnosisConcepts.OE249,
-			DiagnosisConcepts._DiagnosisConcepts.OE250, DiagnosisConcepts._DiagnosisConcepts.OE251,
-			DiagnosisConcepts._DiagnosisConcepts.OE252, DiagnosisConcepts._DiagnosisConcepts.OE253,
-			DiagnosisConcepts._DiagnosisConcepts.OE254, DiagnosisConcepts._DiagnosisConcepts.OE255,
-			DiagnosisConcepts._DiagnosisConcepts.OE256, DiagnosisConcepts._DiagnosisConcepts.OE257,
-			DiagnosisConcepts._DiagnosisConcepts.OE258, DiagnosisConcepts._DiagnosisConcepts.OE259,
-			DiagnosisConcepts._DiagnosisConcepts.OE260, DiagnosisConcepts._DiagnosisConcepts.OE261,
-			DiagnosisConcepts._DiagnosisConcepts.OE262, DiagnosisConcepts._DiagnosisConcepts.OE263,
-			DiagnosisConcepts._DiagnosisConcepts.OE264, DiagnosisConcepts._DiagnosisConcepts.OE265,
-			DiagnosisConcepts._DiagnosisConcepts.OE266, DiagnosisConcepts._DiagnosisConcepts.OE267,
-			DiagnosisConcepts._DiagnosisConcepts.OE268, DiagnosisConcepts._DiagnosisConcepts.OE269,
-			DiagnosisConcepts._DiagnosisConcepts.OE270, DiagnosisConcepts._DiagnosisConcepts.OE271,
-			DiagnosisConcepts._DiagnosisConcepts.OE272, DiagnosisConcepts._DiagnosisConcepts.OE273,
-			DiagnosisConcepts._DiagnosisConcepts.OE274, DiagnosisConcepts._DiagnosisConcepts.OE275,
-			DiagnosisConcepts._DiagnosisConcepts.OE276, DiagnosisConcepts._DiagnosisConcepts.OE277,
-			DiagnosisConcepts._DiagnosisConcepts.OE278, DiagnosisConcepts._DiagnosisConcepts.OE279,
-			DiagnosisConcepts._DiagnosisConcepts.OE280, DiagnosisConcepts._DiagnosisConcepts.OE281,
-			DiagnosisConcepts._DiagnosisConcepts.OE282, DiagnosisConcepts._DiagnosisConcepts.OE283,
-			DiagnosisConcepts._DiagnosisConcepts.OE284, DiagnosisConcepts._DiagnosisConcepts.OE285,
-			DiagnosisConcepts._DiagnosisConcepts.OE286, DiagnosisConcepts._DiagnosisConcepts.OE287,
-			DiagnosisConcepts._DiagnosisConcepts.OE288, DiagnosisConcepts._DiagnosisConcepts.OE289,
-			DiagnosisConcepts._DiagnosisConcepts.OE290, DiagnosisConcepts._DiagnosisConcepts.OE291,
-			DiagnosisConcepts._DiagnosisConcepts.OE292, DiagnosisConcepts._DiagnosisConcepts.OE293,
-			DiagnosisConcepts._DiagnosisConcepts.OE294, DiagnosisConcepts._DiagnosisConcepts.OE295,
-			DiagnosisConcepts._DiagnosisConcepts.OE296, DiagnosisConcepts._DiagnosisConcepts.OE297,
-			DiagnosisConcepts._DiagnosisConcepts.OE298, DiagnosisConcepts._DiagnosisConcepts.OE299,
-			DiagnosisConcepts._DiagnosisConcepts.OE300, DiagnosisConcepts._DiagnosisConcepts.OE301,
-			DiagnosisConcepts._DiagnosisConcepts.OE302, DiagnosisConcepts._DiagnosisConcepts.OE303,
-			DiagnosisConcepts._DiagnosisConcepts.OE304, DiagnosisConcepts._DiagnosisConcepts.OE305,
-			DiagnosisConcepts._DiagnosisConcepts.OE306, DiagnosisConcepts._DiagnosisConcepts.OE307,
-			DiagnosisConcepts._DiagnosisConcepts.OE308, DiagnosisConcepts._DiagnosisConcepts.OE309,
-			DiagnosisConcepts._DiagnosisConcepts.OE310, DiagnosisConcepts._DiagnosisConcepts.OE311
 
-		);
-	}
 
-	public static List<Integer> getEarInfectionsConditionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ERA1, DiagnosisConcepts._DiagnosisConcepts.ERA2,
-			DiagnosisConcepts._DiagnosisConcepts.ERA3, DiagnosisConcepts._DiagnosisConcepts.ERA4,
-			DiagnosisConcepts._DiagnosisConcepts.ERA5, DiagnosisConcepts._DiagnosisConcepts.ERA6,
-			DiagnosisConcepts._DiagnosisConcepts.ERA7);
-	}
 
-	public static List<Integer> getUpperRespiratoryTractInfectionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.UPPER_RESPIRATORY_TRACT_INFECTION,
-			DiagnosisConcepts._DiagnosisConcepts.WHO_HIV_RECURRENT_UPPER_RESPIRATORY_INFECTIONS,
-			DiagnosisConcepts._DiagnosisConcepts.Congenital_Anomaly_of_Upper_Respiratory_System,
-			DiagnosisConcepts._DiagnosisConcepts.Congenital_Abnormality_of_Upper_Respiratory_Tract,
-			DiagnosisConcepts._DiagnosisConcepts.Benign_Neoplasm_of_Upper_Respiratory_Tract,
-			DiagnosisConcepts._DiagnosisConcepts.Viral_Upper_Respiratory_Tract_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.Upper_Respiratory_Tract_Obstruction,
-			DiagnosisConcepts._DiagnosisConcepts.Upper_Respiratory_Tract_Hypersensitivity_Reaction,
-			DiagnosisConcepts._DiagnosisConcepts.Upper_Respiratory_Inflammation_due_to_Fumes_and_or_Vapors,
-			DiagnosisConcepts._DiagnosisConcepts.Upper_Respiratory_Inflammation_due_to_Chemical_Fumes,
-			DiagnosisConcepts._DiagnosisConcepts.Upper_Respiratory_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.Recurrent_Upper_Respiratory_Tract_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.Influenzal_Acute_Upper_Respiratory_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.Disorder_of_Upper_Respiratory_System,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_Upper_Respiratory_Infection_of_Multiple_Sites,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_Upper_Respiratory_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.COVID);
-	}
+
+
 
 	public static List<Integer> getAsthmaList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ASTHMA1, DiagnosisConcepts._DiagnosisConcepts.ASTHMA2,
@@ -867,11 +2043,7 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getTonsilitiesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TONSILITIES
 
-		);
-	}
 
 	public static List<Integer> getChromosomalAbnormalitiesList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CHRAB1, DiagnosisConcepts._DiagnosisConcepts.CHRAB2,
@@ -1018,1364 +2190,8 @@ public class DiagnosisLists {
 			DiagnosisConcepts._DiagnosisConcepts.PNEUMONIA_122);
 	}
 
-	public static List<Integer> getAbortionList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.ABORTION_1,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_2, DiagnosisConcepts._DiagnosisConcepts.ABORTION_3,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_4, DiagnosisConcepts._DiagnosisConcepts.ABORTION_5,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_6, DiagnosisConcepts._DiagnosisConcepts.ABORTION_7,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_8, DiagnosisConcepts._DiagnosisConcepts.ABORTION_9,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_10, DiagnosisConcepts._DiagnosisConcepts.ABORTION_11,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_12, DiagnosisConcepts._DiagnosisConcepts.ABORTION_13,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_14, DiagnosisConcepts._DiagnosisConcepts.ABORTION_15,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_16, DiagnosisConcepts._DiagnosisConcepts.ABORTION_17,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_18, DiagnosisConcepts._DiagnosisConcepts.ABORTION_19,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_20, DiagnosisConcepts._DiagnosisConcepts.ABORTION_21,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_22, DiagnosisConcepts._DiagnosisConcepts.ABORTION_23,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_24, DiagnosisConcepts._DiagnosisConcepts.ABORTION_25,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_26, DiagnosisConcepts._DiagnosisConcepts.ABORTION_27,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_28, DiagnosisConcepts._DiagnosisConcepts.ABORTION_29,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_30, DiagnosisConcepts._DiagnosisConcepts.ABORTION_31,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_32, DiagnosisConcepts._DiagnosisConcepts.ABORTION_33,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_34, DiagnosisConcepts._DiagnosisConcepts.ABORTION_35,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_36, DiagnosisConcepts._DiagnosisConcepts.ABORTION_37,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_38, DiagnosisConcepts._DiagnosisConcepts.ABORTION_39,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_40, DiagnosisConcepts._DiagnosisConcepts.ABORTION_41,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_42, DiagnosisConcepts._DiagnosisConcepts.ABORTION_43,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_44, DiagnosisConcepts._DiagnosisConcepts.ABORTION_45,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_46, DiagnosisConcepts._DiagnosisConcepts.ABORTION_47,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_48, DiagnosisConcepts._DiagnosisConcepts.ABORTION_49,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_50, DiagnosisConcepts._DiagnosisConcepts.ABORTION_51,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_52, DiagnosisConcepts._DiagnosisConcepts.ABORTION_53,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_54, DiagnosisConcepts._DiagnosisConcepts.ABORTION_55,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_56, DiagnosisConcepts._DiagnosisConcepts.ABORTION_57,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_58, DiagnosisConcepts._DiagnosisConcepts.ABORTION_59,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_60, DiagnosisConcepts._DiagnosisConcepts.ABORTION_61,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_62, DiagnosisConcepts._DiagnosisConcepts.ABORTION_63,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_64, DiagnosisConcepts._DiagnosisConcepts.ABORTION_65,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_66, DiagnosisConcepts._DiagnosisConcepts.ABORTION_67,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_68, DiagnosisConcepts._DiagnosisConcepts.ABORTION_69,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_70, DiagnosisConcepts._DiagnosisConcepts.ABORTION_71,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_72, DiagnosisConcepts._DiagnosisConcepts.ABORTION_73,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_74, DiagnosisConcepts._DiagnosisConcepts.ABORTION_75,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_76, DiagnosisConcepts._DiagnosisConcepts.ABORTION_77,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_78, DiagnosisConcepts._DiagnosisConcepts.ABORTION_79,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_80, DiagnosisConcepts._DiagnosisConcepts.ABORTION_81,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_82, DiagnosisConcepts._DiagnosisConcepts.ABORTION_83,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_84, DiagnosisConcepts._DiagnosisConcepts.ABORTION_85,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_86, DiagnosisConcepts._DiagnosisConcepts.ABORTION_87,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_88, DiagnosisConcepts._DiagnosisConcepts.ABORTION_89,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_90, DiagnosisConcepts._DiagnosisConcepts.ABORTION_91,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_92, DiagnosisConcepts._DiagnosisConcepts.ABORTION_93,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_94, DiagnosisConcepts._DiagnosisConcepts.ABORTION_95,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_96, DiagnosisConcepts._DiagnosisConcepts.ABORTION_97,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_98, DiagnosisConcepts._DiagnosisConcepts.ABORTION_99,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_100, DiagnosisConcepts._DiagnosisConcepts.ABORTION_101,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_102, DiagnosisConcepts._DiagnosisConcepts.ABORTION_103,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_104, DiagnosisConcepts._DiagnosisConcepts.ABORTION_105,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_106, DiagnosisConcepts._DiagnosisConcepts.ABORTION_107,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_108, DiagnosisConcepts._DiagnosisConcepts.ABORTION_109,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_110, DiagnosisConcepts._DiagnosisConcepts.ABORTION_111,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_112, DiagnosisConcepts._DiagnosisConcepts.ABORTION_113,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_114, DiagnosisConcepts._DiagnosisConcepts.ABORTION_115,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_116, DiagnosisConcepts._DiagnosisConcepts.ABORTION_117,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_118, DiagnosisConcepts._DiagnosisConcepts.ABORTION_119,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_120, DiagnosisConcepts._DiagnosisConcepts.ABORTION_121,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_122, DiagnosisConcepts._DiagnosisConcepts.ABORTION_123,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_124, DiagnosisConcepts._DiagnosisConcepts.ABORTION_125,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_126, DiagnosisConcepts._DiagnosisConcepts.ABORTION_127,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_128, DiagnosisConcepts._DiagnosisConcepts.ABORTION_129,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_130, DiagnosisConcepts._DiagnosisConcepts.ABORTION_131,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_132, DiagnosisConcepts._DiagnosisConcepts.ABORTION_133,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_134, DiagnosisConcepts._DiagnosisConcepts.ABORTION_135,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_136, DiagnosisConcepts._DiagnosisConcepts.ABORTION_137,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_138, DiagnosisConcepts._DiagnosisConcepts.ABORTION_139,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_140, DiagnosisConcepts._DiagnosisConcepts.ABORTION_141,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_142, DiagnosisConcepts._DiagnosisConcepts.ABORTION_143,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_144, DiagnosisConcepts._DiagnosisConcepts.ABORTION_145,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_146, DiagnosisConcepts._DiagnosisConcepts.ABORTION_147,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_148, DiagnosisConcepts._DiagnosisConcepts.ABORTION_149,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_150, DiagnosisConcepts._DiagnosisConcepts.ABORTION_151,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_152, DiagnosisConcepts._DiagnosisConcepts.ABORTION_153,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_154, DiagnosisConcepts._DiagnosisConcepts.ABORTION_155,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_156, DiagnosisConcepts._DiagnosisConcepts.ABORTION_157,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_158, DiagnosisConcepts._DiagnosisConcepts.ABORTION_159,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_160, DiagnosisConcepts._DiagnosisConcepts.ABORTION_161,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_162, DiagnosisConcepts._DiagnosisConcepts.ABORTION_163,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_164, DiagnosisConcepts._DiagnosisConcepts.ABORTION_165,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_166, DiagnosisConcepts._DiagnosisConcepts.ABORTION_167,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_168, DiagnosisConcepts._DiagnosisConcepts.ABORTION_169,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_170, DiagnosisConcepts._DiagnosisConcepts.ABORTION_171,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_172, DiagnosisConcepts._DiagnosisConcepts.ABORTION_173,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_174, DiagnosisConcepts._DiagnosisConcepts.ABORTION_175,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_176, DiagnosisConcepts._DiagnosisConcepts.ABORTION_177,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_178, DiagnosisConcepts._DiagnosisConcepts.ABORTION_179,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_180, DiagnosisConcepts._DiagnosisConcepts.ABORTION_181,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_182, DiagnosisConcepts._DiagnosisConcepts.ABORTION_183,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_186, DiagnosisConcepts._DiagnosisConcepts.ABORTION_185,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_187, DiagnosisConcepts._DiagnosisConcepts.ABORTION_188,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_189, DiagnosisConcepts._DiagnosisConcepts.ABORTION_190,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_191, DiagnosisConcepts._DiagnosisConcepts.ABORTION_192,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_193, DiagnosisConcepts._DiagnosisConcepts.ABORTION_194,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_195, DiagnosisConcepts._DiagnosisConcepts.ABORTION_196,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_197, DiagnosisConcepts._DiagnosisConcepts.ABORTION_198,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_199, DiagnosisConcepts._DiagnosisConcepts.ABORTION_200,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_201, DiagnosisConcepts._DiagnosisConcepts.ABORTION_202,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_203, DiagnosisConcepts._DiagnosisConcepts.ABORTION_204,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_205, DiagnosisConcepts._DiagnosisConcepts.ABORTION_206,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_207, DiagnosisConcepts._DiagnosisConcepts.ABORTION_208,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_209, DiagnosisConcepts._DiagnosisConcepts.ABORTION_210,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_211, DiagnosisConcepts._DiagnosisConcepts.ABORTION_212,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_213, DiagnosisConcepts._DiagnosisConcepts.ABORTION_214,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_215, DiagnosisConcepts._DiagnosisConcepts.ABORTION_216,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_217, DiagnosisConcepts._DiagnosisConcepts.ABORTION_218,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_219, DiagnosisConcepts._DiagnosisConcepts.ABORTION_220,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_221, DiagnosisConcepts._DiagnosisConcepts.ABORTION_222,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_223, DiagnosisConcepts._DiagnosisConcepts.ABORTION_224,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_225, DiagnosisConcepts._DiagnosisConcepts.ABORTION_226,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_227, DiagnosisConcepts._DiagnosisConcepts.ABORTION_228,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_229, DiagnosisConcepts._DiagnosisConcepts.ABORTION_230,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_231, DiagnosisConcepts._DiagnosisConcepts.ABORTION_232,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_233, DiagnosisConcepts._DiagnosisConcepts.ABORTION_234,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_235, DiagnosisConcepts._DiagnosisConcepts.ABORTION_236,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_237, DiagnosisConcepts._DiagnosisConcepts.ABORTION_238,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_239, DiagnosisConcepts._DiagnosisConcepts.ABORTION_240,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_241, DiagnosisConcepts._DiagnosisConcepts.ABORTION_242,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_243, DiagnosisConcepts._DiagnosisConcepts.ABORTION_244,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_245, DiagnosisConcepts._DiagnosisConcepts.ABORTION_246,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_247, DiagnosisConcepts._DiagnosisConcepts.ABORTION_248,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_252, DiagnosisConcepts._DiagnosisConcepts.ABORTION_250,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_251, DiagnosisConcepts._DiagnosisConcepts.ABORTION_253,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_254, DiagnosisConcepts._DiagnosisConcepts.ABORTION_255,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_256, DiagnosisConcepts._DiagnosisConcepts.ABORTION_257,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_258, DiagnosisConcepts._DiagnosisConcepts.ABORTION_259,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_260, DiagnosisConcepts._DiagnosisConcepts.ABORTION_261,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_262, DiagnosisConcepts._DiagnosisConcepts.ABORTION_263,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_264, DiagnosisConcepts._DiagnosisConcepts.ABORTION_265,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_266, DiagnosisConcepts._DiagnosisConcepts.ABORTION_267,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_268, DiagnosisConcepts._DiagnosisConcepts.ABORTION_269,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_270, DiagnosisConcepts._DiagnosisConcepts.ABORTION_271,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_272, DiagnosisConcepts._DiagnosisConcepts.ABORTION_273,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_274, DiagnosisConcepts._DiagnosisConcepts.ABORTION_275,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_276, DiagnosisConcepts._DiagnosisConcepts.ABORTION_277,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_278, DiagnosisConcepts._DiagnosisConcepts.ABORTION_279,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_280, DiagnosisConcepts._DiagnosisConcepts.ABORTION_281,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_282, DiagnosisConcepts._DiagnosisConcepts.ABORTION_283,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_284, DiagnosisConcepts._DiagnosisConcepts.ABORTION_285,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_286, DiagnosisConcepts._DiagnosisConcepts.ABORTION_287,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_288, DiagnosisConcepts._DiagnosisConcepts.ABORTION_289,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_290, DiagnosisConcepts._DiagnosisConcepts.ABORTION_291,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_292, DiagnosisConcepts._DiagnosisConcepts.ABORTION_293,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_294, DiagnosisConcepts._DiagnosisConcepts.ABORTION_295,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_296, DiagnosisConcepts._DiagnosisConcepts.ABORTION_297,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_298, DiagnosisConcepts._DiagnosisConcepts.ABORTION_299,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_300, DiagnosisConcepts._DiagnosisConcepts.ABORTION_301,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_302, DiagnosisConcepts._DiagnosisConcepts.ABORTION_303,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_304, DiagnosisConcepts._DiagnosisConcepts.ABORTION_305,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_306, DiagnosisConcepts._DiagnosisConcepts.ABORTION_307,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_307, DiagnosisConcepts._DiagnosisConcepts.ABORTION_308,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_309, DiagnosisConcepts._DiagnosisConcepts.ABORTION_310,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_311, DiagnosisConcepts._DiagnosisConcepts.ABORTION_312,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_313, DiagnosisConcepts._DiagnosisConcepts.ABORTION_314,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_315, DiagnosisConcepts._DiagnosisConcepts.ABORTION_316,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_317, DiagnosisConcepts._DiagnosisConcepts.ABORTION_317,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_318, DiagnosisConcepts._DiagnosisConcepts.ABORTION_319,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_320, DiagnosisConcepts._DiagnosisConcepts.ABORTION_321,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_322, DiagnosisConcepts._DiagnosisConcepts.ABORTION_323,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_324, DiagnosisConcepts._DiagnosisConcepts.ABORTION_325,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_326, DiagnosisConcepts._DiagnosisConcepts.ABORTION_327,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_328, DiagnosisConcepts._DiagnosisConcepts.ABORTION_329,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_330, DiagnosisConcepts._DiagnosisConcepts.ABORTION_331,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_332, DiagnosisConcepts._DiagnosisConcepts.ABORTION_333,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_334, DiagnosisConcepts._DiagnosisConcepts.ABORTION_335,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_336, DiagnosisConcepts._DiagnosisConcepts.ABORTION_337,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_338, DiagnosisConcepts._DiagnosisConcepts.ABORTION_339,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_340, DiagnosisConcepts._DiagnosisConcepts.ABORTION_341,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_342, DiagnosisConcepts._DiagnosisConcepts.ABORTION_343,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_344, DiagnosisConcepts._DiagnosisConcepts.ABORTION_345,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_346, DiagnosisConcepts._DiagnosisConcepts.ABORTION_347,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_348, DiagnosisConcepts._DiagnosisConcepts.ABORTION_349,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_351, DiagnosisConcepts._DiagnosisConcepts.ABORTION_352,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_353, DiagnosisConcepts._DiagnosisConcepts.ABORTION_354,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_355, DiagnosisConcepts._DiagnosisConcepts.ABORTION_356,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_357, DiagnosisConcepts._DiagnosisConcepts.ABORTION_358,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_359, DiagnosisConcepts._DiagnosisConcepts.ABORTION_360,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_361, DiagnosisConcepts._DiagnosisConcepts.ABORTION_362,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_363, DiagnosisConcepts._DiagnosisConcepts.ABORTION_364,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_365, DiagnosisConcepts._DiagnosisConcepts.ABORTION_366,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_367, DiagnosisConcepts._DiagnosisConcepts.ABORTION_368,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_369, DiagnosisConcepts._DiagnosisConcepts.ABORTION_370,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_371, DiagnosisConcepts._DiagnosisConcepts.ABORTION_372,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_373, DiagnosisConcepts._DiagnosisConcepts.ABORTION_374,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_375, DiagnosisConcepts._DiagnosisConcepts.ABORTION_376,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_377, DiagnosisConcepts._DiagnosisConcepts.ABORTION_378,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_379, DiagnosisConcepts._DiagnosisConcepts.ABORTION_380,
-			DiagnosisConcepts._DiagnosisConcepts.ABORTION_381);
 
-	}
 
-	public static List<Integer> getDisOfPuerperiumChildbathList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DPCB1, DiagnosisConcepts._DiagnosisConcepts.DPCB2,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB3, DiagnosisConcepts._DiagnosisConcepts.DPCB4,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB5, DiagnosisConcepts._DiagnosisConcepts.DPCB6,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB7, DiagnosisConcepts._DiagnosisConcepts.DPCB8,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB9, DiagnosisConcepts._DiagnosisConcepts.DPCB10,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB11, DiagnosisConcepts._DiagnosisConcepts.DPCB12,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB13, DiagnosisConcepts._DiagnosisConcepts.DPCB14,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB15, DiagnosisConcepts._DiagnosisConcepts.DPCB16,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB17, DiagnosisConcepts._DiagnosisConcepts.DPCB18,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB19, DiagnosisConcepts._DiagnosisConcepts.DPCB20,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB21, DiagnosisConcepts._DiagnosisConcepts.DPCB22,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB23, DiagnosisConcepts._DiagnosisConcepts.DPCB24,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB25, DiagnosisConcepts._DiagnosisConcepts.DPCB26,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB27, DiagnosisConcepts._DiagnosisConcepts.DPCB28,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB29, DiagnosisConcepts._DiagnosisConcepts.DPCB30,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB31, DiagnosisConcepts._DiagnosisConcepts.DPCB32,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB33, DiagnosisConcepts._DiagnosisConcepts.DPCB34,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB35, DiagnosisConcepts._DiagnosisConcepts.DPCB36,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB37, DiagnosisConcepts._DiagnosisConcepts.DPCB38,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB39, DiagnosisConcepts._DiagnosisConcepts.DPCB40,
-			DiagnosisConcepts._DiagnosisConcepts.DPCB41, DiagnosisConcepts._DiagnosisConcepts.DPCB42
-
-		);
-	}
-
-	public static List<Integer> getHypertensionList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_1,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_2, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_3,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_4, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_5,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_6, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_7,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_8, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_9,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_10, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_11,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_12, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_13,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_14, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_15,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_16, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_17,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_18, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_19,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_20, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_21,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_22, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_23,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_24, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_25,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_26, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_27,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_28, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_29,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_30, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_31,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_32, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_33,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_34, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_35,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_36, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_37,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_38, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_39,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_40, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_41,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_42, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_43,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_44, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_45,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_46, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_47,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_48, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_49,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_50, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_51,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_52, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_53,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_54, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_55,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_56, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_57,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_58, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_59,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_60, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_61,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_62, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_63,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_64, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_65,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_66, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_67,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_68, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_69,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_70, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_71,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_72, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_73,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_74, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_75,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_76, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_77,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_78, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_79,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_80, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_81,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_82, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_83,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_84, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_85,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_86, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_87,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_88, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_89,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_90, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_91,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_92, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_93,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_94, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_95,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_96, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_97,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_98, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_99,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_100, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_101,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_102, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_103,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_104, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_105,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_106, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_107,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_108, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_109,
-			DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_110, DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_111
-
-		);
-	}
-
-	public static List<Concept> getHypertensionConceptList() {
-		return Arrays.asList(getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_1),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_2),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_3),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_5),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_6),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_7),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_8),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_9),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_10),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_11),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_12),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_13),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_14),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_15),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_16),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_17),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_18),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_19),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_20),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_21),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_22),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_23),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_24),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_25),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_26),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_27),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_28),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_29),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_30),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_31),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_32),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_33),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_34),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_35),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_36),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_37),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_38),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_39),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_40),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_41),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_42),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_43),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_44),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_45),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_46),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_47),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_48),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_49),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_50),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_51),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_52),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_53),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_54),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_55),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_56),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_57),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_58),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_59),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_60),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_61),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_62),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_63),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_64),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_65),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_66),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_67),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_68),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_69),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_70),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_71),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_72),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_73),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_75),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_76),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_77),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_78),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_79),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_80),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_81),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_82),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_83),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_84),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_85),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_86),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_87),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_88),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_89),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_90),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_91),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_92),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_93),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_94),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_95),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_96),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_97),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_98),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_99),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_100),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_101),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_102),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_103),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_104),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_105),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_106),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_107),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_108),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_109),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_110),
-			getConcept(DiagnosisConcepts._DiagnosisConcepts.HYPERTENSION_111)
-
-		);
-	}
-
-	public static List<Integer> getMentalDisordersList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_1,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_2, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_3,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_4, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_5,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_6, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_7,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_8, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_9,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_10, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_11,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_12, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_13,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_14, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_15,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_16, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_17,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_18, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_19,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_20, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_21,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_22, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_23,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_24, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_25,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_26, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_27,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_28, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_37,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_30, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_31,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_32, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_33,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_34, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_35,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_36, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_36,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_38, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_39,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_40, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_41,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_42, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_43,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_44, DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_45,
-			DiagnosisConcepts._DiagnosisConcepts.MENTALDIS_46,
-			DiagnosisConcepts._DiagnosisConcepts.F000_Dementia_in_Alzheimer_disease_with_early_onset,
-			DiagnosisConcepts._DiagnosisConcepts.F01_Vascular_dementia,
-			DiagnosisConcepts._DiagnosisConcepts.F03_Unspecified_dementia,
-			DiagnosisConcepts._DiagnosisConcepts.F21_Schizotypal_disorder,
-			DiagnosisConcepts._DiagnosisConcepts.F010_Vascular_dementia_of_acute_onset,
-			DiagnosisConcepts._DiagnosisConcepts.F012_Subcortical_vascular_dementia,
-			DiagnosisConcepts._DiagnosisConcepts.F013_Mixed_cortical_and_subcortical_vascular_dementia,
-			DiagnosisConcepts._DiagnosisConcepts.F20_Schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F22_Persistent_delusional_disorders,
-			DiagnosisConcepts._DiagnosisConcepts.F23_Acute_and_transient_psychotic_disorders,
-			DiagnosisConcepts._DiagnosisConcepts.F24_Induced_delusional_disorder,
-			DiagnosisConcepts._DiagnosisConcepts.F25_Schizoaffective_disorders,
-			DiagnosisConcepts._DiagnosisConcepts.F250_Schizoaffective_disorder_manic_type,
-			DiagnosisConcepts._DiagnosisConcepts.F251_Schizoaffective_disorder_depressive_type,
-			DiagnosisConcepts._DiagnosisConcepts.F252_Schizoaffective_disorder_mixed_type,
-			DiagnosisConcepts._DiagnosisConcepts.F30_Manic_episode, DiagnosisConcepts._DiagnosisConcepts.F300_Hypomania,
-			DiagnosisConcepts._DiagnosisConcepts.F340_Cyclothymia,
-			DiagnosisConcepts._DiagnosisConcepts.F323_Severe_depressive_episode_with_psychotic_symptoms,
-			DiagnosisConcepts._DiagnosisConcepts.F322_Severe_depressive_episode_without_psychotic_symptoms,
-			DiagnosisConcepts._DiagnosisConcepts.F321_Moderate_depressive_episode,
-			DiagnosisConcepts._DiagnosisConcepts.F320_Mild_depressive_episode,
-			DiagnosisConcepts._DiagnosisConcepts.F302_Mania_with_psychotic_symptoms,
-			DiagnosisConcepts._DiagnosisConcepts.F301_Mania_without_psychotic_symptoms,
-			DiagnosisConcepts._DiagnosisConcepts.F011_Multi_infarct_dementia,
-			DiagnosisConcepts._DiagnosisConcepts.F200_Paranoid_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F201_Hebephrenic_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F202_Catatonic_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F203_Undifferentiated_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F204_Post_schizophrenic_depression,
-			DiagnosisConcepts._DiagnosisConcepts.F205_Residual_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F206_Simple_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F208_Other_schizophrenia,
-			DiagnosisConcepts._DiagnosisConcepts.F220_Delusional_disorder,
-			//DiagnosisConcepts._DiagnosisConcepts.F229_Persistent_delusional_disorder_unspecified,
-			DiagnosisConcepts._DiagnosisConcepts.F232_Acute_schizophrenia_like_psychotic_disorder
-
-		);
-
-	}
-
-	public static List<Integer> getDentalDisordersList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DENTAL_1, DiagnosisConcepts._DiagnosisConcepts.DENTAL_2,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_3, DiagnosisConcepts._DiagnosisConcepts.DENTAL_4,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_5, DiagnosisConcepts._DiagnosisConcepts.DENTAL_6,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_7, DiagnosisConcepts._DiagnosisConcepts.DENTAL_8,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_9, DiagnosisConcepts._DiagnosisConcepts.DENTAL_10,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_11, DiagnosisConcepts._DiagnosisConcepts.DENTAL_12,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_13, DiagnosisConcepts._DiagnosisConcepts.DENTAL_14,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_15, DiagnosisConcepts._DiagnosisConcepts.DENTAL_16,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_17, DiagnosisConcepts._DiagnosisConcepts.DENTAL_18,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_19, DiagnosisConcepts._DiagnosisConcepts.DENTAL_20,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_21, DiagnosisConcepts._DiagnosisConcepts.DENTAL_22,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_23, DiagnosisConcepts._DiagnosisConcepts.DENTAL_24,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_25, DiagnosisConcepts._DiagnosisConcepts.DENTAL_26,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_27, DiagnosisConcepts._DiagnosisConcepts.DENTAL_28,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_29, DiagnosisConcepts._DiagnosisConcepts.DENTAL_30,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_31, DiagnosisConcepts._DiagnosisConcepts.DENTAL_32,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_33, DiagnosisConcepts._DiagnosisConcepts.DENTAL_34,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_35, DiagnosisConcepts._DiagnosisConcepts.DENTAL_36,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_37, DiagnosisConcepts._DiagnosisConcepts.DENTAL_38,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_39, DiagnosisConcepts._DiagnosisConcepts.DENTAL_40,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_41, DiagnosisConcepts._DiagnosisConcepts.DENTAL_42,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_43, DiagnosisConcepts._DiagnosisConcepts.DENTAL_44,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_45, DiagnosisConcepts._DiagnosisConcepts.DENTAL_46,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_47, DiagnosisConcepts._DiagnosisConcepts.DENTAL_48,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_49, DiagnosisConcepts._DiagnosisConcepts.DENTAL_50,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_51, DiagnosisConcepts._DiagnosisConcepts.DENTAL_52,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_53, DiagnosisConcepts._DiagnosisConcepts.DENTAL_54,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_55, DiagnosisConcepts._DiagnosisConcepts.DENTAL_56,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_57, DiagnosisConcepts._DiagnosisConcepts.DENTAL_58,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_59, DiagnosisConcepts._DiagnosisConcepts.DENTAL_60,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_61, DiagnosisConcepts._DiagnosisConcepts.DENTAL_62,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_63, DiagnosisConcepts._DiagnosisConcepts.DENTAL_64,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_65, DiagnosisConcepts._DiagnosisConcepts.DENTAL_66,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_67, DiagnosisConcepts._DiagnosisConcepts.DENTAL_68,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_69, DiagnosisConcepts._DiagnosisConcepts.DENTAL_70,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_71, DiagnosisConcepts._DiagnosisConcepts.DENTAL_72,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_73, DiagnosisConcepts._DiagnosisConcepts.DENTAL_74,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_75, DiagnosisConcepts._DiagnosisConcepts.DENTAL_76,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_77, DiagnosisConcepts._DiagnosisConcepts.DENTAL_78,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_79, DiagnosisConcepts._DiagnosisConcepts.DENTAL_80,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_81, DiagnosisConcepts._DiagnosisConcepts.DENTAL_82,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_83, DiagnosisConcepts._DiagnosisConcepts.DENTAL_84,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_85, DiagnosisConcepts._DiagnosisConcepts.DENTAL_86,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_87, DiagnosisConcepts._DiagnosisConcepts.DENTAL_88,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_89, DiagnosisConcepts._DiagnosisConcepts.DENTAL_90,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_91, DiagnosisConcepts._DiagnosisConcepts.DENTAL_92,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_93, DiagnosisConcepts._DiagnosisConcepts.DENTAL_94,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_95, DiagnosisConcepts._DiagnosisConcepts.DENTAL_96,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_97, DiagnosisConcepts._DiagnosisConcepts.DENTAL_100,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_99, DiagnosisConcepts._DiagnosisConcepts.DENTAL_101,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_102, DiagnosisConcepts._DiagnosisConcepts.DENTAL_103,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_104, DiagnosisConcepts._DiagnosisConcepts.DENTAL_105,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_106, DiagnosisConcepts._DiagnosisConcepts.DENTAL_107,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_108, DiagnosisConcepts._DiagnosisConcepts.DENTAL_109,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_110, DiagnosisConcepts._DiagnosisConcepts.DENTAL_111,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_112, DiagnosisConcepts._DiagnosisConcepts.DENTAL_113,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_114, DiagnosisConcepts._DiagnosisConcepts.DENTAL_115,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_116, DiagnosisConcepts._DiagnosisConcepts.DENTAL_117,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_118, DiagnosisConcepts._DiagnosisConcepts.DENTAL_119,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_120, DiagnosisConcepts._DiagnosisConcepts.DENTAL_121,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_122, DiagnosisConcepts._DiagnosisConcepts.DENTAL_123,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_124, DiagnosisConcepts._DiagnosisConcepts.DENTAL_125,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_126, DiagnosisConcepts._DiagnosisConcepts.DENTAL_127,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_128, DiagnosisConcepts._DiagnosisConcepts.DENTAL_129,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_130, DiagnosisConcepts._DiagnosisConcepts.DENTAL_131,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_132, DiagnosisConcepts._DiagnosisConcepts.DENTAL_133,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_134, DiagnosisConcepts._DiagnosisConcepts.DENTAL_135,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_136, DiagnosisConcepts._DiagnosisConcepts.DENTAL_137,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_138, DiagnosisConcepts._DiagnosisConcepts.DENTAL_139,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_140, DiagnosisConcepts._DiagnosisConcepts.DENTAL_141,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_142, DiagnosisConcepts._DiagnosisConcepts.DENTAL_143,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_144, DiagnosisConcepts._DiagnosisConcepts.DENTAL_145,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_146, DiagnosisConcepts._DiagnosisConcepts.DENTAL_147,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_147, DiagnosisConcepts._DiagnosisConcepts.DENTAL_149,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_150, DiagnosisConcepts._DiagnosisConcepts.DENTAL_151,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_152, DiagnosisConcepts._DiagnosisConcepts.DENTAL_153,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_154, DiagnosisConcepts._DiagnosisConcepts.DENTAL_155,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_156, DiagnosisConcepts._DiagnosisConcepts.DENTAL_157,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_158, DiagnosisConcepts._DiagnosisConcepts.DENTAL_159,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_160, DiagnosisConcepts._DiagnosisConcepts.DENTAL_161,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_162, DiagnosisConcepts._DiagnosisConcepts.DENTAL_163,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_164, DiagnosisConcepts._DiagnosisConcepts.DENTAL_165,
-			DiagnosisConcepts._DiagnosisConcepts.DENTAL_166, DiagnosisConcepts._DiagnosisConcepts.DENTAL_167
-
-		);
-
-	}
-
-	public static List<Integer> getDiseaseOfTheSkinList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SKIN_1, DiagnosisConcepts._DiagnosisConcepts.SKIN_2,
-			DiagnosisConcepts._DiagnosisConcepts.SKIN_3, DiagnosisConcepts._DiagnosisConcepts.SKIN_4,
-			DiagnosisConcepts._DiagnosisConcepts.SKIN_5
-
-		);
-	}
-
-	public static List<Integer> getAnthritisJointPainsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_1,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_2, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_3,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_4, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_5,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_6, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_7,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_8, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_9,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_10, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_11,
-			DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_12, DiagnosisConcepts._DiagnosisConcepts.JOINT_PAIN_13
-
-		);
-	}
-
-	public static List<Integer> getPoisoningList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.POISONING_1,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_2, DiagnosisConcepts._DiagnosisConcepts.POISONING_3,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_4, DiagnosisConcepts._DiagnosisConcepts.POISONING_5,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_6, DiagnosisConcepts._DiagnosisConcepts.POISONING_7,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_8, DiagnosisConcepts._DiagnosisConcepts.POISONING_9,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_10, DiagnosisConcepts._DiagnosisConcepts.POISONING_11,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_12, DiagnosisConcepts._DiagnosisConcepts.POISONING_13,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_14, DiagnosisConcepts._DiagnosisConcepts.POISONING_15,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_16, DiagnosisConcepts._DiagnosisConcepts.POISONING_17,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_18, DiagnosisConcepts._DiagnosisConcepts.POISONING_19,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_20, DiagnosisConcepts._DiagnosisConcepts.POISONING_21,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_22, DiagnosisConcepts._DiagnosisConcepts.POISONING_23,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_24, DiagnosisConcepts._DiagnosisConcepts.POISONING_25,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_26, DiagnosisConcepts._DiagnosisConcepts.POISONING_27,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_28, DiagnosisConcepts._DiagnosisConcepts.POISONING_29,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_30, DiagnosisConcepts._DiagnosisConcepts.POISONING_31,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_32, DiagnosisConcepts._DiagnosisConcepts.POISONING_33,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_34, DiagnosisConcepts._DiagnosisConcepts.POISONING_35,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_36, DiagnosisConcepts._DiagnosisConcepts.POISONING_37,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_38, DiagnosisConcepts._DiagnosisConcepts.POISONING_39,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_40, DiagnosisConcepts._DiagnosisConcepts.POISONING_41,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_42, DiagnosisConcepts._DiagnosisConcepts.POISONING_43,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_44, DiagnosisConcepts._DiagnosisConcepts.POISONING_45,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_46, DiagnosisConcepts._DiagnosisConcepts.POISONING_47,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_48, DiagnosisConcepts._DiagnosisConcepts.POISONING_49,
-			DiagnosisConcepts._DiagnosisConcepts.POISONING_50
-
-		);
-	}
-
-	public static List<Integer> getOtherInjuriesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.INJURY1, DiagnosisConcepts._DiagnosisConcepts.INJURY2,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY3, DiagnosisConcepts._DiagnosisConcepts.INJURY4,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY5, DiagnosisConcepts._DiagnosisConcepts.INJURY6,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY7, DiagnosisConcepts._DiagnosisConcepts.INJURY8,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY9, DiagnosisConcepts._DiagnosisConcepts.INJURY10,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY11, DiagnosisConcepts._DiagnosisConcepts.INJURY12,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY13, DiagnosisConcepts._DiagnosisConcepts.INJURY14,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY15, DiagnosisConcepts._DiagnosisConcepts.INJURY16,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY17, DiagnosisConcepts._DiagnosisConcepts.INJURY18,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY19, DiagnosisConcepts._DiagnosisConcepts.INJURY20,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY21, DiagnosisConcepts._DiagnosisConcepts.INJURY22,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY23, DiagnosisConcepts._DiagnosisConcepts.INJURY24,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY25, DiagnosisConcepts._DiagnosisConcepts.INJURY26,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY27, DiagnosisConcepts._DiagnosisConcepts.INJURY28,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY29, DiagnosisConcepts._DiagnosisConcepts.INJURY30,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY31, DiagnosisConcepts._DiagnosisConcepts.INJURY32,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY33, DiagnosisConcepts._DiagnosisConcepts.INJURY34,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY35, DiagnosisConcepts._DiagnosisConcepts.INJURY36,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY37, DiagnosisConcepts._DiagnosisConcepts.INJURY38,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY39, DiagnosisConcepts._DiagnosisConcepts.INJURY40,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY41, DiagnosisConcepts._DiagnosisConcepts.INJURY42,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY43, DiagnosisConcepts._DiagnosisConcepts.INJURY44,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY45, DiagnosisConcepts._DiagnosisConcepts.INJURY46,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY47, DiagnosisConcepts._DiagnosisConcepts.INJURY48,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY49, DiagnosisConcepts._DiagnosisConcepts.INJURY50,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY51, DiagnosisConcepts._DiagnosisConcepts.INJURY52,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY53, DiagnosisConcepts._DiagnosisConcepts.INJURY54,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY55, DiagnosisConcepts._DiagnosisConcepts.INJURY56,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY57, DiagnosisConcepts._DiagnosisConcepts.INJURY58,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY59, DiagnosisConcepts._DiagnosisConcepts.INJURY60,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY61, DiagnosisConcepts._DiagnosisConcepts.INJURY62,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY63, DiagnosisConcepts._DiagnosisConcepts.INJURY64,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY65, DiagnosisConcepts._DiagnosisConcepts.INJURY66,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY67, DiagnosisConcepts._DiagnosisConcepts.INJURY68,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY69, DiagnosisConcepts._DiagnosisConcepts.INJURY70,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY71, DiagnosisConcepts._DiagnosisConcepts.INJURY72,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY73, DiagnosisConcepts._DiagnosisConcepts.INJURY74,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY75, DiagnosisConcepts._DiagnosisConcepts.INJURY76,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY77, DiagnosisConcepts._DiagnosisConcepts.INJURY78,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY79, DiagnosisConcepts._DiagnosisConcepts.INJURY80,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY81, DiagnosisConcepts._DiagnosisConcepts.INJURY82,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY83, DiagnosisConcepts._DiagnosisConcepts.INJURY84,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY85, DiagnosisConcepts._DiagnosisConcepts.INJURY86,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY87, DiagnosisConcepts._DiagnosisConcepts.INJURY88,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY89, DiagnosisConcepts._DiagnosisConcepts.INJURY90,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY91, DiagnosisConcepts._DiagnosisConcepts.INJURY92,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY93, DiagnosisConcepts._DiagnosisConcepts.INJURY94,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY95, DiagnosisConcepts._DiagnosisConcepts.INJURY96,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY97, DiagnosisConcepts._DiagnosisConcepts.INJURY98,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY99, DiagnosisConcepts._DiagnosisConcepts.INJURY100,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY101, DiagnosisConcepts._DiagnosisConcepts.INJURY102,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY103, DiagnosisConcepts._DiagnosisConcepts.INJURY104,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY105, DiagnosisConcepts._DiagnosisConcepts.INJURY106,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY107, DiagnosisConcepts._DiagnosisConcepts.INJURY108,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY109, DiagnosisConcepts._DiagnosisConcepts.INJURY110,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY111, DiagnosisConcepts._DiagnosisConcepts.INJURY112,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY113, DiagnosisConcepts._DiagnosisConcepts.INJURY114,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY115, DiagnosisConcepts._DiagnosisConcepts.INJURY116,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY117, DiagnosisConcepts._DiagnosisConcepts.INJURY118,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY119, DiagnosisConcepts._DiagnosisConcepts.INJURY120,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY121, DiagnosisConcepts._DiagnosisConcepts.INJURY122,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY123, DiagnosisConcepts._DiagnosisConcepts.INJURY124,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY125, DiagnosisConcepts._DiagnosisConcepts.INJURY126,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY127, DiagnosisConcepts._DiagnosisConcepts.INJURY128,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY129, DiagnosisConcepts._DiagnosisConcepts.INJURY130,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY131, DiagnosisConcepts._DiagnosisConcepts.INJURY132,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY133, DiagnosisConcepts._DiagnosisConcepts.INJURY134,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY135, DiagnosisConcepts._DiagnosisConcepts.INJURY136,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY137, DiagnosisConcepts._DiagnosisConcepts.INJURY138,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY139, DiagnosisConcepts._DiagnosisConcepts.INJURY140,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY141, DiagnosisConcepts._DiagnosisConcepts.INJURY142,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY143, DiagnosisConcepts._DiagnosisConcepts.INJURY144,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY145, DiagnosisConcepts._DiagnosisConcepts.INJURY146,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY147, DiagnosisConcepts._DiagnosisConcepts.INJURY148,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY149, DiagnosisConcepts._DiagnosisConcepts.INJURY150,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY151, DiagnosisConcepts._DiagnosisConcepts.INJURY152,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY153, DiagnosisConcepts._DiagnosisConcepts.INJURY154,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY155, DiagnosisConcepts._DiagnosisConcepts.INJURY156,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY157, DiagnosisConcepts._DiagnosisConcepts.INJURY158,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY159, DiagnosisConcepts._DiagnosisConcepts.INJURY160,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY161, DiagnosisConcepts._DiagnosisConcepts.INJURY162,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY163, DiagnosisConcepts._DiagnosisConcepts.INJURY164,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY165, DiagnosisConcepts._DiagnosisConcepts.INJURY166,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY167, DiagnosisConcepts._DiagnosisConcepts.INJURY168,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY169, DiagnosisConcepts._DiagnosisConcepts.INJURY170,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY171, DiagnosisConcepts._DiagnosisConcepts.INJURY172,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY173, DiagnosisConcepts._DiagnosisConcepts.INJURY174,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY175, DiagnosisConcepts._DiagnosisConcepts.INJURY176,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY177, DiagnosisConcepts._DiagnosisConcepts.INJURY178,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY179, DiagnosisConcepts._DiagnosisConcepts.INJURY180,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY181, DiagnosisConcepts._DiagnosisConcepts.INJURY182,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY183, DiagnosisConcepts._DiagnosisConcepts.INJURY184,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY185, DiagnosisConcepts._DiagnosisConcepts.INJURY186,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY187, DiagnosisConcepts._DiagnosisConcepts.INJURY188,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY189, DiagnosisConcepts._DiagnosisConcepts.INJURY190,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY191, DiagnosisConcepts._DiagnosisConcepts.INJURY192,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY193, DiagnosisConcepts._DiagnosisConcepts.INJURY194,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY195, DiagnosisConcepts._DiagnosisConcepts.INJURY196,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY197, DiagnosisConcepts._DiagnosisConcepts.INJURY198,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY199, DiagnosisConcepts._DiagnosisConcepts.INJURY200,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY201, DiagnosisConcepts._DiagnosisConcepts.INJURY202,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY203, DiagnosisConcepts._DiagnosisConcepts.INJURY204,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY205, DiagnosisConcepts._DiagnosisConcepts.INJURY206,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY207, DiagnosisConcepts._DiagnosisConcepts.INJURY208,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY209, DiagnosisConcepts._DiagnosisConcepts.INJURY210,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY211, DiagnosisConcepts._DiagnosisConcepts.INJURY212,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY213, DiagnosisConcepts._DiagnosisConcepts.INJURY214,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY215, DiagnosisConcepts._DiagnosisConcepts.INJURY216,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY217, DiagnosisConcepts._DiagnosisConcepts.INJURY218,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY219, DiagnosisConcepts._DiagnosisConcepts.INJURY220,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY221, DiagnosisConcepts._DiagnosisConcepts.INJURY222,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY223, DiagnosisConcepts._DiagnosisConcepts.INJURY224,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY225, DiagnosisConcepts._DiagnosisConcepts.INJURY226,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY227, DiagnosisConcepts._DiagnosisConcepts.INJURY228,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY229, DiagnosisConcepts._DiagnosisConcepts.INJURY230,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY231, DiagnosisConcepts._DiagnosisConcepts.INJURY232,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY233, DiagnosisConcepts._DiagnosisConcepts.INJURY234,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY235, DiagnosisConcepts._DiagnosisConcepts.INJURY236,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY237, DiagnosisConcepts._DiagnosisConcepts.INJURY238,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY239, DiagnosisConcepts._DiagnosisConcepts.INJURY240,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY241, DiagnosisConcepts._DiagnosisConcepts.INJURY242,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY243, DiagnosisConcepts._DiagnosisConcepts.INJURY244,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY245, DiagnosisConcepts._DiagnosisConcepts.INJURY246,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY247, DiagnosisConcepts._DiagnosisConcepts.INJURY248,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY249, DiagnosisConcepts._DiagnosisConcepts.INJURY250,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY251, DiagnosisConcepts._DiagnosisConcepts.INJURY252,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY253, DiagnosisConcepts._DiagnosisConcepts.INJURY254,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY255, DiagnosisConcepts._DiagnosisConcepts.INJURY256,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY257, DiagnosisConcepts._DiagnosisConcepts.INJURY258,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY259, DiagnosisConcepts._DiagnosisConcepts.INJURY260,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY261, DiagnosisConcepts._DiagnosisConcepts.INJURY262,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY263, DiagnosisConcepts._DiagnosisConcepts.INJURY264,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY265, DiagnosisConcepts._DiagnosisConcepts.INJURY266,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY267, DiagnosisConcepts._DiagnosisConcepts.INJURY268,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY269, DiagnosisConcepts._DiagnosisConcepts.INJURY270,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY271, DiagnosisConcepts._DiagnosisConcepts.INJURY272,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY273, DiagnosisConcepts._DiagnosisConcepts.INJURY274,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY275, DiagnosisConcepts._DiagnosisConcepts.INJURY276,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY277, DiagnosisConcepts._DiagnosisConcepts.INJURY278,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY279, DiagnosisConcepts._DiagnosisConcepts.INJURY280,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY281, DiagnosisConcepts._DiagnosisConcepts.INJURY282,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY283, DiagnosisConcepts._DiagnosisConcepts.INJURY284,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY285, DiagnosisConcepts._DiagnosisConcepts.INJURY286,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY287, DiagnosisConcepts._DiagnosisConcepts.INJURY288,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY289, DiagnosisConcepts._DiagnosisConcepts.INJURY290,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY291, DiagnosisConcepts._DiagnosisConcepts.INJURY292,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY293, DiagnosisConcepts._DiagnosisConcepts.INJURY294,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY295, DiagnosisConcepts._DiagnosisConcepts.INJURY296,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY297, DiagnosisConcepts._DiagnosisConcepts.INJURY298,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY299, DiagnosisConcepts._DiagnosisConcepts.INJURY300,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY301, DiagnosisConcepts._DiagnosisConcepts.INJURY302,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY303, DiagnosisConcepts._DiagnosisConcepts.INJURY304,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY305, DiagnosisConcepts._DiagnosisConcepts.INJURY306,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY307, DiagnosisConcepts._DiagnosisConcepts.INJURY308,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY309, DiagnosisConcepts._DiagnosisConcepts.INJURY310,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY311, DiagnosisConcepts._DiagnosisConcepts.INJURY312,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY313, DiagnosisConcepts._DiagnosisConcepts.INJURY314,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY315, DiagnosisConcepts._DiagnosisConcepts.INJURY316,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY317, DiagnosisConcepts._DiagnosisConcepts.INJURY318,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY319, DiagnosisConcepts._DiagnosisConcepts.INJURY320,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY321, DiagnosisConcepts._DiagnosisConcepts.INJURY322,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY323, DiagnosisConcepts._DiagnosisConcepts.INJURY324,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY325, DiagnosisConcepts._DiagnosisConcepts.INJURY326,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY327, DiagnosisConcepts._DiagnosisConcepts.INJURY328,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY329, DiagnosisConcepts._DiagnosisConcepts.INJURY330,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY331, DiagnosisConcepts._DiagnosisConcepts.INJURY332,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY333, DiagnosisConcepts._DiagnosisConcepts.INJURY334,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY335, DiagnosisConcepts._DiagnosisConcepts.INJURY336,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY337, DiagnosisConcepts._DiagnosisConcepts.INJURY338,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY339, DiagnosisConcepts._DiagnosisConcepts.INJURY340,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY341, DiagnosisConcepts._DiagnosisConcepts.INJURY342,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY343, DiagnosisConcepts._DiagnosisConcepts.INJURY344,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY345, DiagnosisConcepts._DiagnosisConcepts.INJURY346,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY347, DiagnosisConcepts._DiagnosisConcepts.INJURY348,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY349, DiagnosisConcepts._DiagnosisConcepts.INJURY350,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY351, DiagnosisConcepts._DiagnosisConcepts.INJURY352,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY353, DiagnosisConcepts._DiagnosisConcepts.INJURY354,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY355, DiagnosisConcepts._DiagnosisConcepts.INJURY356,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY357, DiagnosisConcepts._DiagnosisConcepts.INJURY358,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY359, DiagnosisConcepts._DiagnosisConcepts.INJURY360,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY361, DiagnosisConcepts._DiagnosisConcepts.INJURY362,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY363, DiagnosisConcepts._DiagnosisConcepts.INJURY364,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY365, DiagnosisConcepts._DiagnosisConcepts.INJURY366,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY367, DiagnosisConcepts._DiagnosisConcepts.INJURY368,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY369, DiagnosisConcepts._DiagnosisConcepts.INJURY370,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY371, DiagnosisConcepts._DiagnosisConcepts.INJURY372,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY373, DiagnosisConcepts._DiagnosisConcepts.INJURY374,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY375, DiagnosisConcepts._DiagnosisConcepts.INJURY376,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY377, DiagnosisConcepts._DiagnosisConcepts.INJURY378,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY379, DiagnosisConcepts._DiagnosisConcepts.INJURY380,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY381, DiagnosisConcepts._DiagnosisConcepts.INJURY382,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY383, DiagnosisConcepts._DiagnosisConcepts.INJURY384,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY385, DiagnosisConcepts._DiagnosisConcepts.INJURY386,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY387, DiagnosisConcepts._DiagnosisConcepts.INJURY388,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY389, DiagnosisConcepts._DiagnosisConcepts.INJURY390,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY391, DiagnosisConcepts._DiagnosisConcepts.INJURY392,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY393, DiagnosisConcepts._DiagnosisConcepts.INJURY394,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY395, DiagnosisConcepts._DiagnosisConcepts.INJURY396,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY397, DiagnosisConcepts._DiagnosisConcepts.INJURY398,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY399, DiagnosisConcepts._DiagnosisConcepts.INJURY400,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY401, DiagnosisConcepts._DiagnosisConcepts.INJURY402,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY403, DiagnosisConcepts._DiagnosisConcepts.INJURY404,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY405, DiagnosisConcepts._DiagnosisConcepts.INJURY406,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY407, DiagnosisConcepts._DiagnosisConcepts.INJURY408,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY409, DiagnosisConcepts._DiagnosisConcepts.INJURY410,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY411, DiagnosisConcepts._DiagnosisConcepts.INJURY412,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY413, DiagnosisConcepts._DiagnosisConcepts.INJURY414,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY415, DiagnosisConcepts._DiagnosisConcepts.INJURY416,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY417, DiagnosisConcepts._DiagnosisConcepts.INJURY418,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY419, DiagnosisConcepts._DiagnosisConcepts.INJURY420,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY421, DiagnosisConcepts._DiagnosisConcepts.INJURY422,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY423, DiagnosisConcepts._DiagnosisConcepts.INJURY424,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY425, DiagnosisConcepts._DiagnosisConcepts.INJURY426,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY427, DiagnosisConcepts._DiagnosisConcepts.INJURY428,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY429, DiagnosisConcepts._DiagnosisConcepts.INJURY430,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY431, DiagnosisConcepts._DiagnosisConcepts.INJURY432,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY433, DiagnosisConcepts._DiagnosisConcepts.INJURY434,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY435, DiagnosisConcepts._DiagnosisConcepts.INJURY436,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY437, DiagnosisConcepts._DiagnosisConcepts.INJURY438,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY439, DiagnosisConcepts._DiagnosisConcepts.INJURY440,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY441, DiagnosisConcepts._DiagnosisConcepts.INJURY442,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY443, DiagnosisConcepts._DiagnosisConcepts.INJURY444,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY445, DiagnosisConcepts._DiagnosisConcepts.INJURY446,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY447, DiagnosisConcepts._DiagnosisConcepts.INJURY448,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY449, DiagnosisConcepts._DiagnosisConcepts.INJURY450,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY451, DiagnosisConcepts._DiagnosisConcepts.INJURY452,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY453, DiagnosisConcepts._DiagnosisConcepts.INJURY454,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY455, DiagnosisConcepts._DiagnosisConcepts.INJURY456,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY457, DiagnosisConcepts._DiagnosisConcepts.INJURY458,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY459, DiagnosisConcepts._DiagnosisConcepts.INJURY460,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY461, DiagnosisConcepts._DiagnosisConcepts.INJURY462,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY463, DiagnosisConcepts._DiagnosisConcepts.INJURY464,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY465, DiagnosisConcepts._DiagnosisConcepts.INJURY466,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY467, DiagnosisConcepts._DiagnosisConcepts.INJURY468,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY469, DiagnosisConcepts._DiagnosisConcepts.INJURY470,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY471, DiagnosisConcepts._DiagnosisConcepts.INJURY472,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY473, DiagnosisConcepts._DiagnosisConcepts.INJURY474,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY475, DiagnosisConcepts._DiagnosisConcepts.INJURY476,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY477, DiagnosisConcepts._DiagnosisConcepts.INJURY478,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY479, DiagnosisConcepts._DiagnosisConcepts.INJURY480,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY481, DiagnosisConcepts._DiagnosisConcepts.INJURY482,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY483, DiagnosisConcepts._DiagnosisConcepts.INJURY484,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY485, DiagnosisConcepts._DiagnosisConcepts.INJURY486,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY487, DiagnosisConcepts._DiagnosisConcepts.INJURY488,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY489, DiagnosisConcepts._DiagnosisConcepts.INJURY490,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY491, DiagnosisConcepts._DiagnosisConcepts.INJURY492,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY493, DiagnosisConcepts._DiagnosisConcepts.INJURY494,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY495, DiagnosisConcepts._DiagnosisConcepts.INJURY496,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY497, DiagnosisConcepts._DiagnosisConcepts.INJURY498,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY499, DiagnosisConcepts._DiagnosisConcepts.INJURY500,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY501, DiagnosisConcepts._DiagnosisConcepts.INJURY502,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY503, DiagnosisConcepts._DiagnosisConcepts.INJURY504,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY505, DiagnosisConcepts._DiagnosisConcepts.INJURY506,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY507, DiagnosisConcepts._DiagnosisConcepts.INJURY508,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY509, DiagnosisConcepts._DiagnosisConcepts.INJURY510,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY511, DiagnosisConcepts._DiagnosisConcepts.INJURY512,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY513, DiagnosisConcepts._DiagnosisConcepts.INJURY514,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY515, DiagnosisConcepts._DiagnosisConcepts.INJURY516,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY517, DiagnosisConcepts._DiagnosisConcepts.INJURY518,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY519, DiagnosisConcepts._DiagnosisConcepts.INJURY520,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY521, DiagnosisConcepts._DiagnosisConcepts.INJURY522,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY523, DiagnosisConcepts._DiagnosisConcepts.INJURY524,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY525, DiagnosisConcepts._DiagnosisConcepts.INJURY526,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY527, DiagnosisConcepts._DiagnosisConcepts.INJURY528,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY529, DiagnosisConcepts._DiagnosisConcepts.INJURY530,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY531, DiagnosisConcepts._DiagnosisConcepts.INJURY532,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY533, DiagnosisConcepts._DiagnosisConcepts.INJURY534,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY535, DiagnosisConcepts._DiagnosisConcepts.INJURY536,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY537, DiagnosisConcepts._DiagnosisConcepts.INJURY538,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY539, DiagnosisConcepts._DiagnosisConcepts.INJURY540,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY541, DiagnosisConcepts._DiagnosisConcepts.INJURY542,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY543, DiagnosisConcepts._DiagnosisConcepts.INJURY544,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY545, DiagnosisConcepts._DiagnosisConcepts.INJURY546,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY547, DiagnosisConcepts._DiagnosisConcepts.INJURY548,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY549, DiagnosisConcepts._DiagnosisConcepts.INJURY550,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY551, DiagnosisConcepts._DiagnosisConcepts.INJURY552,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY553, DiagnosisConcepts._DiagnosisConcepts.INJURY554,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY555, DiagnosisConcepts._DiagnosisConcepts.INJURY556,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY557, DiagnosisConcepts._DiagnosisConcepts.INJURY558,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY559, DiagnosisConcepts._DiagnosisConcepts.INJURY560,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY561, DiagnosisConcepts._DiagnosisConcepts.INJURY562,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY563, DiagnosisConcepts._DiagnosisConcepts.INJURY564,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY565, DiagnosisConcepts._DiagnosisConcepts.INJURY566,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY567, DiagnosisConcepts._DiagnosisConcepts.INJURY568,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY569, DiagnosisConcepts._DiagnosisConcepts.INJURY570,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY571, DiagnosisConcepts._DiagnosisConcepts.INJURY572,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY573, DiagnosisConcepts._DiagnosisConcepts.INJURY574,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY575, DiagnosisConcepts._DiagnosisConcepts.INJURY576,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY577, DiagnosisConcepts._DiagnosisConcepts.INJURY578,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY579, DiagnosisConcepts._DiagnosisConcepts.INJURY580,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY581, DiagnosisConcepts._DiagnosisConcepts.INJURY582,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY583, DiagnosisConcepts._DiagnosisConcepts.INJURY584,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY585, DiagnosisConcepts._DiagnosisConcepts.INJURY586,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY587, DiagnosisConcepts._DiagnosisConcepts.INJURY588,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY589, DiagnosisConcepts._DiagnosisConcepts.INJURY590,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY591, DiagnosisConcepts._DiagnosisConcepts.INJURY592,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY593, DiagnosisConcepts._DiagnosisConcepts.INJURY594,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY595, DiagnosisConcepts._DiagnosisConcepts.INJURY596,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY597, DiagnosisConcepts._DiagnosisConcepts.INJURY598,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY599, DiagnosisConcepts._DiagnosisConcepts.INJURY600,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY601, DiagnosisConcepts._DiagnosisConcepts.INJURY602,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY603, DiagnosisConcepts._DiagnosisConcepts.INJURY604,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY605, DiagnosisConcepts._DiagnosisConcepts.INJURY606,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY607, DiagnosisConcepts._DiagnosisConcepts.INJURY608,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY609, DiagnosisConcepts._DiagnosisConcepts.INJURY610,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY611, DiagnosisConcepts._DiagnosisConcepts.INJURY612,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY613, DiagnosisConcepts._DiagnosisConcepts.INJURY614,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY615, DiagnosisConcepts._DiagnosisConcepts.INJURY616,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY617, DiagnosisConcepts._DiagnosisConcepts.INJURY618,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY619, DiagnosisConcepts._DiagnosisConcepts.INJURY620,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY621, DiagnosisConcepts._DiagnosisConcepts.INJURY622,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY623, DiagnosisConcepts._DiagnosisConcepts.INJURY624,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY625, DiagnosisConcepts._DiagnosisConcepts.INJURY626,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY627, DiagnosisConcepts._DiagnosisConcepts.INJURY628,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY629, DiagnosisConcepts._DiagnosisConcepts.INJURY630,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY631, DiagnosisConcepts._DiagnosisConcepts.INJURY632,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY633, DiagnosisConcepts._DiagnosisConcepts.INJURY634,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY635, DiagnosisConcepts._DiagnosisConcepts.INJURY636,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY637, DiagnosisConcepts._DiagnosisConcepts.INJURY638,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY639, DiagnosisConcepts._DiagnosisConcepts.INJURY640,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY641, DiagnosisConcepts._DiagnosisConcepts.INJURY642,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY643, DiagnosisConcepts._DiagnosisConcepts.INJURY644,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY645, DiagnosisConcepts._DiagnosisConcepts.INJURY646,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY647, DiagnosisConcepts._DiagnosisConcepts.INJURY648,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY649, DiagnosisConcepts._DiagnosisConcepts.INJURY650,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY651, DiagnosisConcepts._DiagnosisConcepts.INJURY652,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY653, DiagnosisConcepts._DiagnosisConcepts.INJURY654,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY655, DiagnosisConcepts._DiagnosisConcepts.INJURY656,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY657, DiagnosisConcepts._DiagnosisConcepts.INJURY658,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY659, DiagnosisConcepts._DiagnosisConcepts.INJURY660,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY661, DiagnosisConcepts._DiagnosisConcepts.INJURY662,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY663, DiagnosisConcepts._DiagnosisConcepts.INJURY664,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY665, DiagnosisConcepts._DiagnosisConcepts.INJURY666,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY667, DiagnosisConcepts._DiagnosisConcepts.INJURY668,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY669, DiagnosisConcepts._DiagnosisConcepts.INJURY670,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY671, DiagnosisConcepts._DiagnosisConcepts.INJURY672,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY673, DiagnosisConcepts._DiagnosisConcepts.INJURY674,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY675, DiagnosisConcepts._DiagnosisConcepts.INJURY676,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY677, DiagnosisConcepts._DiagnosisConcepts.INJURY678,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY679, DiagnosisConcepts._DiagnosisConcepts.INJURY680,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY681, DiagnosisConcepts._DiagnosisConcepts.INJURY682,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY683, DiagnosisConcepts._DiagnosisConcepts.INJURY684,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY685, DiagnosisConcepts._DiagnosisConcepts.INJURY686,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY687, DiagnosisConcepts._DiagnosisConcepts.INJURY688,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY689, DiagnosisConcepts._DiagnosisConcepts.INJURY690,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY691, DiagnosisConcepts._DiagnosisConcepts.INJURY692,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY693, DiagnosisConcepts._DiagnosisConcepts.INJURY694,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY695, DiagnosisConcepts._DiagnosisConcepts.INJURY696,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY697, DiagnosisConcepts._DiagnosisConcepts.INJURY698,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY699, DiagnosisConcepts._DiagnosisConcepts.INJURY700,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY701, DiagnosisConcepts._DiagnosisConcepts.INJURY702,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY703, DiagnosisConcepts._DiagnosisConcepts.INJURY704,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY705, DiagnosisConcepts._DiagnosisConcepts.INJURY706,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY707, DiagnosisConcepts._DiagnosisConcepts.INJURY708,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY709, DiagnosisConcepts._DiagnosisConcepts.INJURY710,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY711, DiagnosisConcepts._DiagnosisConcepts.INJURY712,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY713, DiagnosisConcepts._DiagnosisConcepts.INJURY714,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY715, DiagnosisConcepts._DiagnosisConcepts.INJURY716,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY717, DiagnosisConcepts._DiagnosisConcepts.INJURY718,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY719, DiagnosisConcepts._DiagnosisConcepts.INJURY720,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY721, DiagnosisConcepts._DiagnosisConcepts.INJURY722,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY723, DiagnosisConcepts._DiagnosisConcepts.INJURY724,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY725, DiagnosisConcepts._DiagnosisConcepts.INJURY726,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY727, DiagnosisConcepts._DiagnosisConcepts.INJURY728,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY729, DiagnosisConcepts._DiagnosisConcepts.INJURY730,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY731, DiagnosisConcepts._DiagnosisConcepts.INJURY732,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY733, DiagnosisConcepts._DiagnosisConcepts.INJURY734,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY735, DiagnosisConcepts._DiagnosisConcepts.INJURY736,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY737, DiagnosisConcepts._DiagnosisConcepts.INJURY738,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY739, DiagnosisConcepts._DiagnosisConcepts.INJURY740,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY741, DiagnosisConcepts._DiagnosisConcepts.INJURY742,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY743, DiagnosisConcepts._DiagnosisConcepts.INJURY744,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY745, DiagnosisConcepts._DiagnosisConcepts.INJURY746,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY747, DiagnosisConcepts._DiagnosisConcepts.INJURY748,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY749, DiagnosisConcepts._DiagnosisConcepts.INJURY750,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY751, DiagnosisConcepts._DiagnosisConcepts.INJURY752,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY753, DiagnosisConcepts._DiagnosisConcepts.INJURY754,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY755, DiagnosisConcepts._DiagnosisConcepts.INJURY756,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY757, DiagnosisConcepts._DiagnosisConcepts.INJURY758,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY759, DiagnosisConcepts._DiagnosisConcepts.INJURY760,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY761, DiagnosisConcepts._DiagnosisConcepts.INJURY762,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY763, DiagnosisConcepts._DiagnosisConcepts.INJURY764,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY765, DiagnosisConcepts._DiagnosisConcepts.INJURY766,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY767, DiagnosisConcepts._DiagnosisConcepts.INJURY768,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY769, DiagnosisConcepts._DiagnosisConcepts.INJURY770,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY771, DiagnosisConcepts._DiagnosisConcepts.INJURY772,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY773, DiagnosisConcepts._DiagnosisConcepts.INJURY774,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY775, DiagnosisConcepts._DiagnosisConcepts.INJURY776,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY777, DiagnosisConcepts._DiagnosisConcepts.INJURY778,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY779, DiagnosisConcepts._DiagnosisConcepts.INJURY780,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY781, DiagnosisConcepts._DiagnosisConcepts.INJURY782,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY783, DiagnosisConcepts._DiagnosisConcepts.INJURY784,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY785, DiagnosisConcepts._DiagnosisConcepts.INJURY786,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY787, DiagnosisConcepts._DiagnosisConcepts.INJURY788,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY789, DiagnosisConcepts._DiagnosisConcepts.INJURY790,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY791, DiagnosisConcepts._DiagnosisConcepts.INJURY792,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY793, DiagnosisConcepts._DiagnosisConcepts.INJURY794,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY795, DiagnosisConcepts._DiagnosisConcepts.INJURY796,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY797, DiagnosisConcepts._DiagnosisConcepts.INJURY798,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY799, DiagnosisConcepts._DiagnosisConcepts.INJURY800,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY801, DiagnosisConcepts._DiagnosisConcepts.INJURY802,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY803, DiagnosisConcepts._DiagnosisConcepts.INJURY804,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY805, DiagnosisConcepts._DiagnosisConcepts.INJURY806,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY807, DiagnosisConcepts._DiagnosisConcepts.INJURY808,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY809, DiagnosisConcepts._DiagnosisConcepts.INJURY810,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY811, DiagnosisConcepts._DiagnosisConcepts.INJURY812,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY813, DiagnosisConcepts._DiagnosisConcepts.INJURY814,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY815, DiagnosisConcepts._DiagnosisConcepts.INJURY816,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY817, DiagnosisConcepts._DiagnosisConcepts.INJURY818,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY819, DiagnosisConcepts._DiagnosisConcepts.INJURY820,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY821, DiagnosisConcepts._DiagnosisConcepts.INJURY822,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY823, DiagnosisConcepts._DiagnosisConcepts.INJURY824,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY825, DiagnosisConcepts._DiagnosisConcepts.INJURY826,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY827, DiagnosisConcepts._DiagnosisConcepts.INJURY828,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY829, DiagnosisConcepts._DiagnosisConcepts.INJURY830,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY831, DiagnosisConcepts._DiagnosisConcepts.INJURY832,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY833, DiagnosisConcepts._DiagnosisConcepts.INJURY834,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY835, DiagnosisConcepts._DiagnosisConcepts.INJURY836,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY837, DiagnosisConcepts._DiagnosisConcepts.INJURY838,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY839, DiagnosisConcepts._DiagnosisConcepts.INJURY840,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY841, DiagnosisConcepts._DiagnosisConcepts.INJURY842,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY843, DiagnosisConcepts._DiagnosisConcepts.INJURY844,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY845, DiagnosisConcepts._DiagnosisConcepts.INJURY846,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY847, DiagnosisConcepts._DiagnosisConcepts.INJURY848,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY849, DiagnosisConcepts._DiagnosisConcepts.INJURY850,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY851, DiagnosisConcepts._DiagnosisConcepts.INJURY852,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY853, DiagnosisConcepts._DiagnosisConcepts.INJURY854,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY855, DiagnosisConcepts._DiagnosisConcepts.INJURY856,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY857, DiagnosisConcepts._DiagnosisConcepts.INJURY858,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY859, DiagnosisConcepts._DiagnosisConcepts.INJURY860,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY861, DiagnosisConcepts._DiagnosisConcepts.INJURY862,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY863, DiagnosisConcepts._DiagnosisConcepts.INJURY864,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY865, DiagnosisConcepts._DiagnosisConcepts.INJURY866,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY867, DiagnosisConcepts._DiagnosisConcepts.INJURY868,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY869, DiagnosisConcepts._DiagnosisConcepts.INJURY870,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY871, DiagnosisConcepts._DiagnosisConcepts.INJURY872,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY873, DiagnosisConcepts._DiagnosisConcepts.INJURY874,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY875, DiagnosisConcepts._DiagnosisConcepts.INJURY876,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY877, DiagnosisConcepts._DiagnosisConcepts.INJURY878,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY879, DiagnosisConcepts._DiagnosisConcepts.INJURY880,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY881, DiagnosisConcepts._DiagnosisConcepts.INJURY882,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY883, DiagnosisConcepts._DiagnosisConcepts.INJURY884,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY885, DiagnosisConcepts._DiagnosisConcepts.INJURY886,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY887, DiagnosisConcepts._DiagnosisConcepts.INJURY888,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY889, DiagnosisConcepts._DiagnosisConcepts.INJURY890,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY891, DiagnosisConcepts._DiagnosisConcepts.INJURY892,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY893, DiagnosisConcepts._DiagnosisConcepts.INJURY894,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY895, DiagnosisConcepts._DiagnosisConcepts.INJURY896,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY897, DiagnosisConcepts._DiagnosisConcepts.INJURY898,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY899, DiagnosisConcepts._DiagnosisConcepts.INJURY900,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY901, DiagnosisConcepts._DiagnosisConcepts.INJURY902,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY903, DiagnosisConcepts._DiagnosisConcepts.INJURY904,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY905, DiagnosisConcepts._DiagnosisConcepts.INJURY906,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY907, DiagnosisConcepts._DiagnosisConcepts.INJURY908,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY909, DiagnosisConcepts._DiagnosisConcepts.INJURY910,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY911, DiagnosisConcepts._DiagnosisConcepts.INJURY912,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY913, DiagnosisConcepts._DiagnosisConcepts.INJURY914,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY915, DiagnosisConcepts._DiagnosisConcepts.INJURY916,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY917, DiagnosisConcepts._DiagnosisConcepts.INJURY918,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY919, DiagnosisConcepts._DiagnosisConcepts.INJURY920,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY921, DiagnosisConcepts._DiagnosisConcepts.INJURY922,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY923, DiagnosisConcepts._DiagnosisConcepts.INJURY924,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY925, DiagnosisConcepts._DiagnosisConcepts.INJURY926,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY927, DiagnosisConcepts._DiagnosisConcepts.INJURY928,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY929, DiagnosisConcepts._DiagnosisConcepts.INJURY930,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY931, DiagnosisConcepts._DiagnosisConcepts.INJURY932,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY933, DiagnosisConcepts._DiagnosisConcepts.INJURY934,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY935, DiagnosisConcepts._DiagnosisConcepts.INJURY936,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY937, DiagnosisConcepts._DiagnosisConcepts.INJURY938,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY939, DiagnosisConcepts._DiagnosisConcepts.INJURY940,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY941, DiagnosisConcepts._DiagnosisConcepts.INJURY942,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY943, DiagnosisConcepts._DiagnosisConcepts.INJURY944,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY945, DiagnosisConcepts._DiagnosisConcepts.INJURY946,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY947, DiagnosisConcepts._DiagnosisConcepts.INJURY948,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY949, DiagnosisConcepts._DiagnosisConcepts.INJURY950,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY951, DiagnosisConcepts._DiagnosisConcepts.INJURY952,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY953, DiagnosisConcepts._DiagnosisConcepts.INJURY954,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY955, DiagnosisConcepts._DiagnosisConcepts.INJURY956,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY957, DiagnosisConcepts._DiagnosisConcepts.INJURY958,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY959, DiagnosisConcepts._DiagnosisConcepts.INJURY960,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY961, DiagnosisConcepts._DiagnosisConcepts.INJURY962,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY963, DiagnosisConcepts._DiagnosisConcepts.INJURY964,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY965, DiagnosisConcepts._DiagnosisConcepts.INJURY966,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY967, DiagnosisConcepts._DiagnosisConcepts.INJURY968,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY969, DiagnosisConcepts._DiagnosisConcepts.INJURY970,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY971, DiagnosisConcepts._DiagnosisConcepts.INJURY972,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY973, DiagnosisConcepts._DiagnosisConcepts.INJURY974,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY975, DiagnosisConcepts._DiagnosisConcepts.INJURY976,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY977, DiagnosisConcepts._DiagnosisConcepts.INJURY978,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY979, DiagnosisConcepts._DiagnosisConcepts.INJURY980,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY981, DiagnosisConcepts._DiagnosisConcepts.INJURY982,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY983, DiagnosisConcepts._DiagnosisConcepts.INJURY984,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY985, DiagnosisConcepts._DiagnosisConcepts.INJURY986,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY987, DiagnosisConcepts._DiagnosisConcepts.INJURY988,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY989, DiagnosisConcepts._DiagnosisConcepts.INJURY990,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY991, DiagnosisConcepts._DiagnosisConcepts.INJURY992,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY993, DiagnosisConcepts._DiagnosisConcepts.INJURY994,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY995, DiagnosisConcepts._DiagnosisConcepts.INJURY996,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY997, DiagnosisConcepts._DiagnosisConcepts.INJURY998,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY999, DiagnosisConcepts._DiagnosisConcepts.INJURY1000,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1001, DiagnosisConcepts._DiagnosisConcepts.INJURY1002,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1003, DiagnosisConcepts._DiagnosisConcepts.INJURY1004,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1005, DiagnosisConcepts._DiagnosisConcepts.INJURY1006,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1007, DiagnosisConcepts._DiagnosisConcepts.INJURY1008,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1009, DiagnosisConcepts._DiagnosisConcepts.INJURY1010,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1011, DiagnosisConcepts._DiagnosisConcepts.INJURY1012,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1013, DiagnosisConcepts._DiagnosisConcepts.INJURY1014,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1015, DiagnosisConcepts._DiagnosisConcepts.INJURY1016,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1017, DiagnosisConcepts._DiagnosisConcepts.INJURY1018,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1019, DiagnosisConcepts._DiagnosisConcepts.INJURY1020,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1021, DiagnosisConcepts._DiagnosisConcepts.INJURY1022,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1023, DiagnosisConcepts._DiagnosisConcepts.INJURY1024,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1025, DiagnosisConcepts._DiagnosisConcepts.INJURY1026,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1027, DiagnosisConcepts._DiagnosisConcepts.INJURY1028,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1029, DiagnosisConcepts._DiagnosisConcepts.INJURY1030,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1031, DiagnosisConcepts._DiagnosisConcepts.INJURY1032,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1033, DiagnosisConcepts._DiagnosisConcepts.INJURY1034,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1035, DiagnosisConcepts._DiagnosisConcepts.INJURY1036,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1037, DiagnosisConcepts._DiagnosisConcepts.INJURY1038,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1039, DiagnosisConcepts._DiagnosisConcepts.INJURY1040,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1041, DiagnosisConcepts._DiagnosisConcepts.INJURY1042,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1043, DiagnosisConcepts._DiagnosisConcepts.INJURY1044,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1045, DiagnosisConcepts._DiagnosisConcepts.INJURY1046,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1047, DiagnosisConcepts._DiagnosisConcepts.INJURY1048,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1049, DiagnosisConcepts._DiagnosisConcepts.INJURY1050,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1051, DiagnosisConcepts._DiagnosisConcepts.INJURY1052,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1053, DiagnosisConcepts._DiagnosisConcepts.INJURY1054,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1055, DiagnosisConcepts._DiagnosisConcepts.INJURY1056,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1057, DiagnosisConcepts._DiagnosisConcepts.INJURY1058,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1059, DiagnosisConcepts._DiagnosisConcepts.INJURY1060,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1061, DiagnosisConcepts._DiagnosisConcepts.INJURY1062,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1063, DiagnosisConcepts._DiagnosisConcepts.INJURY1064,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1065, DiagnosisConcepts._DiagnosisConcepts.INJURY1066,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1067, DiagnosisConcepts._DiagnosisConcepts.INJURY1068,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1069, DiagnosisConcepts._DiagnosisConcepts.INJURY1070,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1071, DiagnosisConcepts._DiagnosisConcepts.INJURY1072,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1073, DiagnosisConcepts._DiagnosisConcepts.INJURY1074,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1075, DiagnosisConcepts._DiagnosisConcepts.INJURY1076,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1077, DiagnosisConcepts._DiagnosisConcepts.INJURY1078,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1079, DiagnosisConcepts._DiagnosisConcepts.INJURY1080,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1081, DiagnosisConcepts._DiagnosisConcepts.INJURY1082,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1083, DiagnosisConcepts._DiagnosisConcepts.INJURY1084,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1085, DiagnosisConcepts._DiagnosisConcepts.INJURY1086,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1087, DiagnosisConcepts._DiagnosisConcepts.INJURY1088,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1089, DiagnosisConcepts._DiagnosisConcepts.INJURY1090,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1091, DiagnosisConcepts._DiagnosisConcepts.INJURY1092,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1093, DiagnosisConcepts._DiagnosisConcepts.INJURY1094,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1095, DiagnosisConcepts._DiagnosisConcepts.INJURY1096,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1097, DiagnosisConcepts._DiagnosisConcepts.INJURY1098,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1099, DiagnosisConcepts._DiagnosisConcepts.INJURY1100,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1101, DiagnosisConcepts._DiagnosisConcepts.INJURY1102,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1103, DiagnosisConcepts._DiagnosisConcepts.INJURY1104,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1105, DiagnosisConcepts._DiagnosisConcepts.INJURY1106,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1107, DiagnosisConcepts._DiagnosisConcepts.INJURY1108,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1109, DiagnosisConcepts._DiagnosisConcepts.INJURY1110,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1111, DiagnosisConcepts._DiagnosisConcepts.INJURY1112,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1113, DiagnosisConcepts._DiagnosisConcepts.INJURY1114,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1115, DiagnosisConcepts._DiagnosisConcepts.INJURY1116,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1117, DiagnosisConcepts._DiagnosisConcepts.INJURY1118,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1119, DiagnosisConcepts._DiagnosisConcepts.INJURY1120,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1121, DiagnosisConcepts._DiagnosisConcepts.INJURY1122,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1123, DiagnosisConcepts._DiagnosisConcepts.INJURY1124,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1125, DiagnosisConcepts._DiagnosisConcepts.INJURY1126,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1127, DiagnosisConcepts._DiagnosisConcepts.INJURY1128,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1129, DiagnosisConcepts._DiagnosisConcepts.INJURY1130,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1131, DiagnosisConcepts._DiagnosisConcepts.INJURY1132,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1133, DiagnosisConcepts._DiagnosisConcepts.INJURY1134,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1135, DiagnosisConcepts._DiagnosisConcepts.INJURY1136,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1137, DiagnosisConcepts._DiagnosisConcepts.INJURY1138,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1139, DiagnosisConcepts._DiagnosisConcepts.INJURY1140,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1141, DiagnosisConcepts._DiagnosisConcepts.INJURY1142,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1143, DiagnosisConcepts._DiagnosisConcepts.INJURY1144,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1145, DiagnosisConcepts._DiagnosisConcepts.INJURY1146,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1147, DiagnosisConcepts._DiagnosisConcepts.INJURY1148,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1149, DiagnosisConcepts._DiagnosisConcepts.INJURY1150,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1151, DiagnosisConcepts._DiagnosisConcepts.INJURY1152,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1153, DiagnosisConcepts._DiagnosisConcepts.INJURY1154,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1155, DiagnosisConcepts._DiagnosisConcepts.INJURY1156,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1157, DiagnosisConcepts._DiagnosisConcepts.INJURY1158,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1159, DiagnosisConcepts._DiagnosisConcepts.INJURY1160,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1161, DiagnosisConcepts._DiagnosisConcepts.INJURY1162,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1163, DiagnosisConcepts._DiagnosisConcepts.INJURY1164,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1165, DiagnosisConcepts._DiagnosisConcepts.INJURY1166,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1167, DiagnosisConcepts._DiagnosisConcepts.INJURY1168,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1169, DiagnosisConcepts._DiagnosisConcepts.INJURY1170,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1171, DiagnosisConcepts._DiagnosisConcepts.INJURY1172,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1173, DiagnosisConcepts._DiagnosisConcepts.INJURY1174,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1175, DiagnosisConcepts._DiagnosisConcepts.INJURY1176,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1177, DiagnosisConcepts._DiagnosisConcepts.INJURY1178,
-			DiagnosisConcepts._DiagnosisConcepts.INJURY1179, DiagnosisConcepts._DiagnosisConcepts.INJURY1180
-
-		);
-
-	}
-
-	public static List<Integer> getSexualAssaultList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SEXUAL1, DiagnosisConcepts._DiagnosisConcepts.SEXUAL2,
-			DiagnosisConcepts._DiagnosisConcepts.SEXUAL3
-
-		);
-	}
-
-	public static List<Integer> getViolenceRelatedInjuriesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.VIOLENCE1, DiagnosisConcepts._DiagnosisConcepts.VIOLENCE2,
-			DiagnosisConcepts._DiagnosisConcepts.VIOLENCE3, DiagnosisConcepts._DiagnosisConcepts.VIOLENCE4
-
-		);
-	}
-
-	public static List<Integer> getBurnsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BURN1, DiagnosisConcepts._DiagnosisConcepts.BURN2,
-			DiagnosisConcepts._DiagnosisConcepts.BURN3, DiagnosisConcepts._DiagnosisConcepts.BURN4,
-			DiagnosisConcepts._DiagnosisConcepts.BURN5, DiagnosisConcepts._DiagnosisConcepts.BURN6,
-			DiagnosisConcepts._DiagnosisConcepts.BURN7, DiagnosisConcepts._DiagnosisConcepts.BURN8,
-			DiagnosisConcepts._DiagnosisConcepts.BURN9, DiagnosisConcepts._DiagnosisConcepts.BURN10,
-			DiagnosisConcepts._DiagnosisConcepts.BURN11, DiagnosisConcepts._DiagnosisConcepts.BURN12,
-			DiagnosisConcepts._DiagnosisConcepts.BURN13, DiagnosisConcepts._DiagnosisConcepts.BURN14,
-			DiagnosisConcepts._DiagnosisConcepts.BURN15, DiagnosisConcepts._DiagnosisConcepts.BURN16,
-			DiagnosisConcepts._DiagnosisConcepts.BURN17, DiagnosisConcepts._DiagnosisConcepts.BURN18,
-			DiagnosisConcepts._DiagnosisConcepts.BURN19, DiagnosisConcepts._DiagnosisConcepts.BURN20,
-			DiagnosisConcepts._DiagnosisConcepts.BURN21, DiagnosisConcepts._DiagnosisConcepts.BURN22,
-			DiagnosisConcepts._DiagnosisConcepts.BURN23
-
-		);
-	}
-
-	public static List<Integer> getSnakeBitesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.SNAKEBITE1,
-			DiagnosisConcepts._DiagnosisConcepts.SNAKEBITE2, DiagnosisConcepts._DiagnosisConcepts.SNAKEBITE3,
-			DiagnosisConcepts._DiagnosisConcepts.SNAKEBITE4
-
-		);
-	}
-
-	public static List<Integer> getDogBitesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DOGBITE_1, DiagnosisConcepts._DiagnosisConcepts.DOGBITE_2,
-			DiagnosisConcepts._DiagnosisConcepts.DOGBITE_3, DiagnosisConcepts._DiagnosisConcepts.DOGBITE_4,
-			DiagnosisConcepts._DiagnosisConcepts.DOGBITE_5, DiagnosisConcepts._DiagnosisConcepts.DOGBITE_6,
-			DiagnosisConcepts._DiagnosisConcepts.DOGBITE_7, DiagnosisConcepts._DiagnosisConcepts.DOGBITE_8,
-			DiagnosisConcepts._DiagnosisConcepts.DOGBITE_9, DiagnosisConcepts._DiagnosisConcepts.DOGBITE_10
-
-		);
-
-	}
-
-	public static List<Integer> getDiabetesList() {
-		return Arrays.asList(DiabetesDiagnosisConstants.DIABETIC1, DiabetesDiagnosisConstants.DIABETIC2,
-			DiabetesDiagnosisConstants.DIABETIC3, DiabetesDiagnosisConstants.DIABETIC4,
-			DiabetesDiagnosisConstants.DIABETIC5, DiabetesDiagnosisConstants.DIABETIC6,
-			DiabetesDiagnosisConstants.DIABETIC7, DiabetesDiagnosisConstants.DIABETIC8,
-			DiabetesDiagnosisConstants.DIABETIC9, DiabetesDiagnosisConstants.DIABETIC10,
-			DiabetesDiagnosisConstants.DIABETIC11, DiabetesDiagnosisConstants.DIABETIC12,
-			DiabetesDiagnosisConstants.DIABETIC13, DiabetesDiagnosisConstants.DIABETIC14,
-			DiabetesDiagnosisConstants.DIABETIC15, DiabetesDiagnosisConstants.DIABETIC16,
-			DiabetesDiagnosisConstants.DIABETIC17, DiabetesDiagnosisConstants.DIABETIC18,
-			DiabetesDiagnosisConstants.DIABETIC19, DiabetesDiagnosisConstants.DIABETIC20,
-			DiabetesDiagnosisConstants.DIABETIC21, DiabetesDiagnosisConstants.DIABETIC22,
-			DiabetesDiagnosisConstants.DIABETIC23, DiabetesDiagnosisConstants.DIABETIC24,
-			DiabetesDiagnosisConstants.DIABETIC25, DiabetesDiagnosisConstants.DIABETIC26,
-			DiabetesDiagnosisConstants.DIABETIC27, DiabetesDiagnosisConstants.DIABETIC28,
-			DiabetesDiagnosisConstants.DIABETIC29, DiabetesDiagnosisConstants.DIABETIC30,
-			DiabetesDiagnosisConstants.DIABETIC31, DiabetesDiagnosisConstants.DIABETIC32,
-			DiabetesDiagnosisConstants.DIABETIC33, DiabetesDiagnosisConstants.DIABETIC34,
-			DiabetesDiagnosisConstants.DIABETIC35, DiabetesDiagnosisConstants.DIABETIC36,
-			DiabetesDiagnosisConstants.DIABETIC37, DiabetesDiagnosisConstants.DIABETIC38,
-			DiabetesDiagnosisConstants.DIABETIC39, DiabetesDiagnosisConstants.DIABETIC40,
-			DiabetesDiagnosisConstants.DIABETIC41, DiabetesDiagnosisConstants.DIABETIC42,
-			DiabetesDiagnosisConstants.DIABETIC43, DiabetesDiagnosisConstants.DIABETIC44,
-			DiabetesDiagnosisConstants.DIABETIC45, DiabetesDiagnosisConstants.DIABETIC46,
-			DiabetesDiagnosisConstants.DIABETIC47, DiabetesDiagnosisConstants.DIABETIC48,
-			DiabetesDiagnosisConstants.DIABETIC49, DiabetesDiagnosisConstants.DIABETIC50,
-			DiabetesDiagnosisConstants.DIABETIC51, DiabetesDiagnosisConstants.DIABETIC52,
-			DiabetesDiagnosisConstants.DIABETIC53, DiabetesDiagnosisConstants.DIABETIC54,
-			DiabetesDiagnosisConstants.DIABETIC55, DiabetesDiagnosisConstants.DIABETIC56,
-			DiabetesDiagnosisConstants.DIABETIC57, DiabetesDiagnosisConstants.DIABETIC58,
-			DiabetesDiagnosisConstants.DIABETIC59, DiabetesDiagnosisConstants.DIABETIC60,
-			DiabetesDiagnosisConstants.DIABETIC61, DiabetesDiagnosisConstants.DIABETIC62,
-			DiabetesDiagnosisConstants.DIABETIC63, DiabetesDiagnosisConstants.DIABETIC64,
-			DiabetesDiagnosisConstants.DIABETIC65, DiabetesDiagnosisConstants.DIABETIC66,
-			DiabetesDiagnosisConstants.DIABETIC67, DiabetesDiagnosisConstants.DIABETIC68,
-			DiabetesDiagnosisConstants.DIABETIC69, DiabetesDiagnosisConstants.DIABETIC70,
-			DiabetesDiagnosisConstants.DIABETIC71, DiabetesDiagnosisConstants.DIABETIC72,
-			DiabetesDiagnosisConstants.DIABETIC73, DiabetesDiagnosisConstants.DIABETIC74,
-			DiabetesDiagnosisConstants.DIABETIC75, DiabetesDiagnosisConstants.DIABETIC76,
-			DiabetesDiagnosisConstants.DIABETIC77, DiabetesDiagnosisConstants.DIABETIC78,
-			DiabetesDiagnosisConstants.DIABETIC79, DiabetesDiagnosisConstants.DIABETIC80,
-			DiabetesDiagnosisConstants.DIABETIC81, DiabetesDiagnosisConstants.DIABETIC82,
-			DiabetesDiagnosisConstants.DIABETIC83, DiabetesDiagnosisConstants.DIABETIC84,
-			DiabetesDiagnosisConstants.DIABETIC85, DiabetesDiagnosisConstants.DIABETIC86,
-			DiabetesDiagnosisConstants.DIABETIC87, DiabetesDiagnosisConstants.DIABETIC88,
-			DiabetesDiagnosisConstants.DIABETIC89, DiabetesDiagnosisConstants.DIABETIC90,
-			DiabetesDiagnosisConstants.DIABETIC91, DiabetesDiagnosisConstants.DIABETIC92,
-			DiabetesDiagnosisConstants.DIABETIC93, DiabetesDiagnosisConstants.DIABETIC94,
-			DiabetesDiagnosisConstants.DIABETIC95, DiabetesDiagnosisConstants.DIABETIC96,
-			DiabetesDiagnosisConstants.DIABETIC97, DiabetesDiagnosisConstants.DIABETIC98,
-			DiabetesDiagnosisConstants.DIABETIC99, DiabetesDiagnosisConstants.DIABETIC100,
-			DiabetesDiagnosisConstants.DIABETIC101, DiabetesDiagnosisConstants.DIABETIC102,
-			DiabetesDiagnosisConstants.DIABETIC103, DiabetesDiagnosisConstants.DIABETIC104,
-			DiabetesDiagnosisConstants.DIABETIC105, DiabetesDiagnosisConstants.DIABETIC106,
-			DiabetesDiagnosisConstants.DIABETIC107, DiabetesDiagnosisConstants.DIABETIC108,
-			DiabetesDiagnosisConstants.DIABETIC109, DiabetesDiagnosisConstants.DIABETIC110,
-			DiabetesDiagnosisConstants.DIABETIC111, DiabetesDiagnosisConstants.DIABETIC112,
-			DiabetesDiagnosisConstants.DIABETIC113, DiabetesDiagnosisConstants.DIABETIC114,
-			DiabetesDiagnosisConstants.DIABETIC115, DiabetesDiagnosisConstants.DIABETIC116,
-			DiabetesDiagnosisConstants.DIABETIC117, DiabetesDiagnosisConstants.DIABETIC118,
-			DiabetesDiagnosisConstants.DIABETIC119, DiabetesDiagnosisConstants.DIABETIC120,
-			DiabetesDiagnosisConstants.DIABETIC121, DiabetesDiagnosisConstants.DIABETIC122,
-			DiabetesDiagnosisConstants.DIABETIC123, DiabetesDiagnosisConstants.DIABETIC124,
-			DiabetesDiagnosisConstants.DIABETIC125, DiabetesDiagnosisConstants.DIABETIC126,
-			DiabetesDiagnosisConstants.DIABETIC127, DiabetesDiagnosisConstants.DIABETIC128,
-			DiabetesDiagnosisConstants.DIABETIC129, DiabetesDiagnosisConstants.DIABETIC130,
-			DiabetesDiagnosisConstants.DIABETIC131, DiabetesDiagnosisConstants.DIABETIC132,
-			DiabetesDiagnosisConstants.DIABETIC133, DiabetesDiagnosisConstants.DIABETIC134,
-			DiabetesDiagnosisConstants.DIABETIC135, DiabetesDiagnosisConstants.DIABETIC136,
-			DiabetesDiagnosisConstants.DIABETIC137, DiabetesDiagnosisConstants.DIABETIC138,
-			DiabetesDiagnosisConstants.DIABETIC139, DiabetesDiagnosisConstants.DIABETIC140,
-			DiabetesDiagnosisConstants.DIABETIC141, DiabetesDiagnosisConstants.DIABETIC142,
-			DiabetesDiagnosisConstants.DIABETIC143, DiabetesDiagnosisConstants.DIABETIC144,
-			DiabetesDiagnosisConstants.DIABETIC145, DiabetesDiagnosisConstants.DIABETIC146,
-			DiabetesDiagnosisConstants.DIABETIC147, DiabetesDiagnosisConstants.DIABETIC148,
-			DiabetesDiagnosisConstants.DIABETIC149, DiabetesDiagnosisConstants.DIABETIC150,
-			DiabetesDiagnosisConstants.DIABETIC151, DiabetesDiagnosisConstants.DIABETIC152,
-			DiabetesDiagnosisConstants.DIABETIC153, DiabetesDiagnosisConstants.DIABETIC154,
-			DiabetesDiagnosisConstants.DIABETIC155, DiabetesDiagnosisConstants.DIABETIC156,
-			DiabetesDiagnosisConstants.DIABETIC157, DiabetesDiagnosisConstants.DIABETIC158,
-			DiabetesDiagnosisConstants.DIABETIC159, DiabetesDiagnosisConstants.DIABETIC160,
-			DiabetesDiagnosisConstants.DIABETIC161, DiabetesDiagnosisConstants.DIABETIC162,
-			DiabetesDiagnosisConstants.DIABETIC163, DiabetesDiagnosisConstants.DIABETIC164,
-			DiabetesDiagnosisConstants.DIABETIC165, DiabetesDiagnosisConstants.DIABETIC166,
-			DiabetesDiagnosisConstants.DIABETIC167, DiabetesDiagnosisConstants.DIABETIC168,
-			DiabetesDiagnosisConstants.DIABETIC169, DiabetesDiagnosisConstants.DIABETIC170,
-			DiabetesDiagnosisConstants.DIABETIC171, DiabetesDiagnosisConstants.DIABETIC172,
-			DiabetesDiagnosisConstants.DIABETIC173, DiabetesDiagnosisConstants.DIABETIC174,
-			DiabetesDiagnosisConstants.DIABETIC175, DiabetesDiagnosisConstants.DIABETIC176,
-			DiabetesDiagnosisConstants.DIABETIC177, DiabetesDiagnosisConstants.DIABETIC178,
-			DiabetesDiagnosisConstants.DIABETIC179, DiabetesDiagnosisConstants.DIABETIC180,
-			DiabetesDiagnosisConstants.DIABETIC181, DiabetesDiagnosisConstants.DIABETIC182,
-			DiabetesDiagnosisConstants.DIABETIC183, DiabetesDiagnosisConstants.DIABETIC184,
-			DiabetesDiagnosisConstants.DIABETIC185, DiabetesDiagnosisConstants.DIABETIC186,
-			DiabetesDiagnosisConstants.DIABETIC187, DiabetesDiagnosisConstants.DIABETIC188,
-			DiabetesDiagnosisConstants.DIABETIC189, DiabetesDiagnosisConstants.DIABETIC190,
-			DiabetesDiagnosisConstants.DIABETIC191, DiabetesDiagnosisConstants.DIABETIC192,
-			DiabetesDiagnosisConstants.DIABETIC193, DiabetesDiagnosisConstants.DIABETIC194,
-			DiabetesDiagnosisConstants.DIABETIC195, DiabetesDiagnosisConstants.DIABETIC196,
-			DiabetesDiagnosisConstants.DIABETIC197, DiabetesDiagnosisConstants.DIABETIC198,
-			DiabetesDiagnosisConstants.DIABETIC200, DiabetesDiagnosisConstants.DIABETIC201,
-			DiabetesDiagnosisConstants.DIABETIC202, DiabetesDiagnosisConstants.DIABETIC203,
-			DiabetesDiagnosisConstants.DIABETIC204, DiabetesDiagnosisConstants.DIABETIC205,
-			DiabetesDiagnosisConstants.DIABETIC206, DiabetesDiagnosisConstants.DIABETIC207,
-			DiabetesDiagnosisConstants.DIABETIC208, DiabetesDiagnosisConstants.DIABETIC209,
-			DiabetesDiagnosisConstants.DIABETIC210, DiabetesDiagnosisConstants.DIABETIC211,
-			DiabetesDiagnosisConstants.DIABETIC212, DiabetesDiagnosisConstants.DIABETIC213,
-			DiabetesDiagnosisConstants.DIABETIC214
-
-		);
-	}
 
 	public static List<Concept> getDiabetesListConcepts() {
 		return Arrays.asList(
@@ -2490,163 +2306,9 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getOtherBitesList() {
 
-		return Arrays.asList(OtherBitesDiagnosisConstants.OTHER_BITES1, OtherBitesDiagnosisConstants.OTHER_BITES2,
-			OtherBitesDiagnosisConstants.OTHER_BITES3, OtherBitesDiagnosisConstants.OTHER_BITES4,
-			OtherBitesDiagnosisConstants.OTHER_BITES5, OtherBitesDiagnosisConstants.OTHER_BITES6,
-			OtherBitesDiagnosisConstants.OTHER_BITES7, OtherBitesDiagnosisConstants.OTHER_BITES8,
-			OtherBitesDiagnosisConstants.OTHER_BITES9, OtherBitesDiagnosisConstants.OTHER_BITES10,
-			OtherBitesDiagnosisConstants.OTHER_BITES11, OtherBitesDiagnosisConstants.OTHER_BITES12,
-			OtherBitesDiagnosisConstants.OTHER_BITES13, OtherBitesDiagnosisConstants.OTHER_BITES14,
-			OtherBitesDiagnosisConstants.OTHER_BITES15, OtherBitesDiagnosisConstants.OTHER_BITES16,
-			OtherBitesDiagnosisConstants.OTHER_BITES17, OtherBitesDiagnosisConstants.OTHER_BITES18,
-			OtherBitesDiagnosisConstants.OTHER_BITES19, OtherBitesDiagnosisConstants.OTHER_BITES20,
-			OtherBitesDiagnosisConstants.OTHER_BITES21, OtherBitesDiagnosisConstants.OTHER_BITES22,
-			OtherBitesDiagnosisConstants.OTHER_BITES23, OtherBitesDiagnosisConstants.OTHER_BITES24,
-			OtherBitesDiagnosisConstants.OTHER_BITES25, OtherBitesDiagnosisConstants.OTHER_BITES26,
-			OtherBitesDiagnosisConstants.OTHER_BITES27, OtherBitesDiagnosisConstants.OTHER_BITES28,
-			OtherBitesDiagnosisConstants.OTHER_BITES29, OtherBitesDiagnosisConstants.OTHER_BITES30,
-			OtherBitesDiagnosisConstants.OTHER_BITES31, OtherBitesDiagnosisConstants.OTHER_BITES32,
-			OtherBitesDiagnosisConstants.OTHER_BITES33, OtherBitesDiagnosisConstants.OTHER_BITES34,
-			OtherBitesDiagnosisConstants.OTHER_BITES35, OtherBitesDiagnosisConstants.OTHER_BITES36,
-			OtherBitesDiagnosisConstants.OTHER_BITES37, OtherBitesDiagnosisConstants.OTHER_BITES38,
-			OtherBitesDiagnosisConstants.OTHER_BITES39, OtherBitesDiagnosisConstants.OTHER_BITES40,
-			OtherBitesDiagnosisConstants.OTHER_BITES41, OtherBitesDiagnosisConstants.OTHER_BITES42,
-			OtherBitesDiagnosisConstants.OTHER_BITES43, OtherBitesDiagnosisConstants.OTHER_BITES44,
-			OtherBitesDiagnosisConstants.OTHER_BITES45, OtherBitesDiagnosisConstants.OTHER_BITES46,
-			OtherBitesDiagnosisConstants.OTHER_BITES47, OtherBitesDiagnosisConstants.OTHER_BITES48,
-			OtherBitesDiagnosisConstants.OTHER_BITES49, OtherBitesDiagnosisConstants.OTHER_BITES50,
-			OtherBitesDiagnosisConstants.OTHER_BITES51, OtherBitesDiagnosisConstants.OTHER_BITES52,
-			OtherBitesDiagnosisConstants.OTHER_BITES53, OtherBitesDiagnosisConstants.OTHER_BITES54,
-			OtherBitesDiagnosisConstants.OTHER_BITES55, OtherBitesDiagnosisConstants.OTHER_BITES56,
-			OtherBitesDiagnosisConstants.OTHER_BITES57, OtherBitesDiagnosisConstants.OTHER_BITES58,
-			OtherBitesDiagnosisConstants.OTHER_BITES59, OtherBitesDiagnosisConstants.OTHER_BITES60,
-			OtherBitesDiagnosisConstants.OTHER_BITES61, OtherBitesDiagnosisConstants.OTHER_BITES62,
-			OtherBitesDiagnosisConstants.OTHER_BITES63, OtherBitesDiagnosisConstants.OTHER_BITES64,
-			OtherBitesDiagnosisConstants.OTHER_BITES65, OtherBitesDiagnosisConstants.OTHER_BITES66,
-			OtherBitesDiagnosisConstants.OTHER_BITES67, OtherBitesDiagnosisConstants.OTHER_BITES68,
-			OtherBitesDiagnosisConstants.OTHER_BITES69, OtherBitesDiagnosisConstants.OTHER_BITES70,
-			OtherBitesDiagnosisConstants.OTHER_BITES71, OtherBitesDiagnosisConstants.OTHER_BITES72,
-			OtherBitesDiagnosisConstants.OTHER_BITES73, OtherBitesDiagnosisConstants.OTHER_BITES74,
-			OtherBitesDiagnosisConstants.OTHER_BITES75, OtherBitesDiagnosisConstants.OTHER_BITES76,
-			OtherBitesDiagnosisConstants.OTHER_BITES77, OtherBitesDiagnosisConstants.OTHER_BITES78,
-			OtherBitesDiagnosisConstants.OTHER_BITES79, OtherBitesDiagnosisConstants.OTHER_BITES80,
-			OtherBitesDiagnosisConstants.OTHER_BITES81, OtherBitesDiagnosisConstants.OTHER_BITES82,
-			OtherBitesDiagnosisConstants.OTHER_BITES83, OtherBitesDiagnosisConstants.OTHER_BITES84,
-			OtherBitesDiagnosisConstants.OTHER_BITES85, OtherBitesDiagnosisConstants.OTHER_BITES86,
-			OtherBitesDiagnosisConstants.OTHER_BITES87, OtherBitesDiagnosisConstants.OTHER_BITES88,
-			OtherBitesDiagnosisConstants.OTHER_BITES89, OtherBitesDiagnosisConstants.OTHER_BITES90,
-			OtherBitesDiagnosisConstants.OTHER_BITES91, OtherBitesDiagnosisConstants.OTHER_BITES92,
-			OtherBitesDiagnosisConstants.OTHER_BITES93, OtherBitesDiagnosisConstants.OTHER_BITES94,
-			OtherBitesDiagnosisConstants.OTHER_BITES95, OtherBitesDiagnosisConstants.OTHER_BITES96,
-			OtherBitesDiagnosisConstants.OTHER_BITES97, OtherBitesDiagnosisConstants.OTHER_BITES98,
-			OtherBitesDiagnosisConstants.OTHER_BITES99, OtherBitesDiagnosisConstants.OTHER_BITES100,
-			OtherBitesDiagnosisConstants.OTHER_BITES101, OtherBitesDiagnosisConstants.OTHER_BITES102,
-			OtherBitesDiagnosisConstants.OTHER_BITES103, OtherBitesDiagnosisConstants.OTHER_BITES104,
-			OtherBitesDiagnosisConstants.OTHER_BITES105, OtherBitesDiagnosisConstants.OTHER_BITES106,
-			OtherBitesDiagnosisConstants.OTHER_BITES107, OtherBitesDiagnosisConstants.OTHER_BITES108,
-			OtherBitesDiagnosisConstants.OTHER_BITES109, OtherBitesDiagnosisConstants.OTHER_BITES110,
-			OtherBitesDiagnosisConstants.OTHER_BITES111, OtherBitesDiagnosisConstants.OTHER_BITES112,
-			OtherBitesDiagnosisConstants.OTHER_BITES113, OtherBitesDiagnosisConstants.OTHER_BITES114,
-			OtherBitesDiagnosisConstants.OTHER_BITES115, OtherBitesDiagnosisConstants.OTHER_BITES116,
-			OtherBitesDiagnosisConstants.OTHER_BITES117, OtherBitesDiagnosisConstants.OTHER_BITES118,
-			OtherBitesDiagnosisConstants.OTHER_BITES119, OtherBitesDiagnosisConstants.OTHER_BITES120,
-			OtherBitesDiagnosisConstants.OTHER_BITES121, OtherBitesDiagnosisConstants.OTHER_BITES122,
-			OtherBitesDiagnosisConstants.OTHER_BITES123, OtherBitesDiagnosisConstants.OTHER_BITES124,
-			OtherBitesDiagnosisConstants.OTHER_BITES125, OtherBitesDiagnosisConstants.OTHER_BITES126,
-			OtherBitesDiagnosisConstants.OTHER_BITES127, OtherBitesDiagnosisConstants.OTHER_BITES128,
-			OtherBitesDiagnosisConstants.OTHER_BITES129, OtherBitesDiagnosisConstants.OTHER_BITES130,
-			OtherBitesDiagnosisConstants.OTHER_BITES131, OtherBitesDiagnosisConstants.OTHER_BITES132,
-			OtherBitesDiagnosisConstants.OTHER_BITES133, OtherBitesDiagnosisConstants.OTHER_BITES134,
-			OtherBitesDiagnosisConstants.OTHER_BITES135, OtherBitesDiagnosisConstants.OTHER_BITES136,
-			OtherBitesDiagnosisConstants.OTHER_BITES137, OtherBitesDiagnosisConstants.OTHER_BITES138,
-			OtherBitesDiagnosisConstants.OTHER_BITES139, OtherBitesDiagnosisConstants.OTHER_BITES140,
-			OtherBitesDiagnosisConstants.OTHER_BITES141, OtherBitesDiagnosisConstants.OTHER_BITES142,
-			OtherBitesDiagnosisConstants.OTHER_BITES143, OtherBitesDiagnosisConstants.OTHER_BITES144,
-			OtherBitesDiagnosisConstants.OTHER_BITES145, OtherBitesDiagnosisConstants.OTHER_BITES146,
-			OtherBitesDiagnosisConstants.OTHER_BITES147, OtherBitesDiagnosisConstants.OTHER_BITES148,
-			OtherBitesDiagnosisConstants.OTHER_BITES149, OtherBitesDiagnosisConstants.OTHER_BITES150,
-			OtherBitesDiagnosisConstants.OTHER_BITES151, OtherBitesDiagnosisConstants.OTHER_BITES152,
-			OtherBitesDiagnosisConstants.OTHER_BITES153, OtherBitesDiagnosisConstants.OTHER_BITES154,
-			OtherBitesDiagnosisConstants.OTHER_BITES155, OtherBitesDiagnosisConstants.OTHER_BITES156,
-			OtherBitesDiagnosisConstants.OTHER_BITES157, OtherBitesDiagnosisConstants.OTHER_BITES158,
-			OtherBitesDiagnosisConstants.OTHER_BITES159, OtherBitesDiagnosisConstants.OTHER_BITES160,
-			OtherBitesDiagnosisConstants.OTHER_BITES161, OtherBitesDiagnosisConstants.OTHER_BITES162,
-			OtherBitesDiagnosisConstants.OTHER_BITES163, OtherBitesDiagnosisConstants.OTHER_BITES164,
-			OtherBitesDiagnosisConstants.OTHER_BITES165, OtherBitesDiagnosisConstants.OTHER_BITES166,
-			OtherBitesDiagnosisConstants.OTHER_BITES167, OtherBitesDiagnosisConstants.OTHER_BITES168,
-			OtherBitesDiagnosisConstants.OTHER_BITES169, OtherBitesDiagnosisConstants.OTHER_BITES170,
-			OtherBitesDiagnosisConstants.OTHER_BITES171, OtherBitesDiagnosisConstants.OTHER_BITES172,
-			OtherBitesDiagnosisConstants.OTHER_BITES173, OtherBitesDiagnosisConstants.OTHER_BITES174,
-			OtherBitesDiagnosisConstants.OTHER_BITES175, OtherBitesDiagnosisConstants.OTHER_BITES176,
-			OtherBitesDiagnosisConstants.OTHER_BITES177, OtherBitesDiagnosisConstants.OTHER_BITES178,
-			OtherBitesDiagnosisConstants.OTHER_BITES179, OtherBitesDiagnosisConstants.OTHER_BITES180,
-			OtherBitesDiagnosisConstants.OTHER_BITES181, OtherBitesDiagnosisConstants.OTHER_BITES182
 
-		);
 
-	}
-
-	public static List<Integer> getEpilepsyList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_1,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_2, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_3,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_4, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_5,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_6, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_7,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_8, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_9,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_10, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_11,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_12, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_13,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_14, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_15,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_16, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_17,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_18, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_19,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_20, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_21,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_22, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_23,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_24, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_25,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_26, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_27,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_28, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_29,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_30, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_31,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_32, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_33,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_34, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_35,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_36, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_37,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_38, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_39,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_40, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_41,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_42, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_43,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_44, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_45,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_46, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_47,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_48, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_49,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_50, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_51,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_52, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_53,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_54, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_55,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_56, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_57,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_58, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_59,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_60, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_61,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_62, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_63,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_64, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_65,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_66, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_67,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_68, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_69,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_70, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_71,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_72, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_73,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_74, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_75,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_76, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_77,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_78, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_79,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_80, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_81,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_82, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_83,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_84, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_85,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_86, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_87,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_88, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_89,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_90, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_91,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_92, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_93,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_94, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_95,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_96, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_97,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_98, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_99,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_100, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_101,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_102, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_103,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_104, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_105,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_106, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_107,
-			DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_108, DiagnosisConcepts._DiagnosisConcepts.EPILEPSY_109
-
-		);
-	}
 
 	public static List<Integer> getBrucellosisList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.BRUCELOSIS1,
@@ -2656,32 +2318,9 @@ public class DiagnosisLists {
 			DiagnosisConcepts._DiagnosisConcepts.BRUCELLOSIS);
 	}
 
-	public static List<Integer> getCardiovascularConditionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_1,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_2, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_3,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_4, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_5,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_6, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_7,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_8, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_9,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_10, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_11,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_12, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_13,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_14, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_15,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_16, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_17,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_18, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_19,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_20, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_21,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_22, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_23,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_24, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_25,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_26, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_27,
-			DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_28, DiagnosisConcepts._DiagnosisConcepts.CARDIOVASCULAR_29
 
-		);
-	}
 
-	public static List<Integer> getOvrerweightList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OVERWEIGHT1,
-			DiagnosisConcepts._DiagnosisConcepts.OVERWEIGHT2
 
-		);
-	}
 
 	public static List<Integer> getMuscularSkeletalConditionsList() {
 		return Arrays.asList(MascularDiagnosisConstants.Muscular1, MascularDiagnosisConstants.Muscular2,
@@ -3431,29 +3070,11 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getTryponomiasisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS1,
-			DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS2, DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS3,
-			DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS4, DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS5,
-			DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS6, DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS7,
-			DiagnosisConcepts._DiagnosisConcepts.TRYPANOSOMIASIS8
 
-		);
-	}
 
-	public static List<Integer> getKalazarLeishmaniasisList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.KALAZAR);
-	}
 
-	public static List<Integer> getYellowFeverList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_1,
-			DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_2, DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_3,
-			DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_4, DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_5,
-			DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_6, DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_7,
-			DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_8, DiagnosisConcepts._DiagnosisConcepts.YELLOWFEVER_9
 
-		);
-	}
+
 
 	public static List<Integer> getViralHaemorrhagicFeverList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.HAEMORRHAGICFEVER_1,
@@ -3469,95 +3090,15 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getEarInfectionConditionsList() {
-		return Arrays.asList(
 
-			DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_0, DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_1,
-			DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_2, DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_3,
-			DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_4, DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_5,
-			DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_6, DiagnosisConcepts._DiagnosisConcepts.EAR_INFECTION_7
 
-		);
-	}
 
-	public static List<Integer> getRicketsList() {
-		return Arrays.asList(RicketsDiagnosisConstants.RICKETS1, RicketsDiagnosisConstants.RICKETS2,
-			RicketsDiagnosisConstants.RICKETS3, RicketsDiagnosisConstants.RICKETS4, RicketsDiagnosisConstants.RICKETS5,
-			RicketsDiagnosisConstants.RICKETS6, RicketsDiagnosisConstants.RICKETS7, RicketsDiagnosisConstants.RICKETS8,
-			RicketsDiagnosisConstants.RICKETS9, RicketsDiagnosisConstants.RICKETS10, RicketsDiagnosisConstants.RICKETS11,
-			RicketsDiagnosisConstants.RICKETS12, RicketsDiagnosisConstants.RICKETS13, RicketsDiagnosisConstants.RICKETS14,
-			RicketsDiagnosisConstants.RICKETS15, RicketsDiagnosisConstants.RICKETS16, RicketsDiagnosisConstants.RICKETS17,
-			RicketsDiagnosisConstants.RICKETS18, RicketsDiagnosisConstants.RICKETS19, RicketsDiagnosisConstants.RICKETS20,
-			RicketsDiagnosisConstants.RICKETS21
 
-		);
-	}
 
-	public static List<Integer> getCerebralPalsyList() {
-		return Arrays.asList(MentalPalsyDiagnosisConstants.PALSY1, MentalPalsyDiagnosisConstants.PALSY2,
-			MentalPalsyDiagnosisConstants.PALSY3, MentalPalsyDiagnosisConstants.PALSY4,
-			MentalPalsyDiagnosisConstants.PALSY5, MentalPalsyDiagnosisConstants.PALSY6,
-			MentalPalsyDiagnosisConstants.PALSY7, MentalPalsyDiagnosisConstants.PALSY8,
-			MentalPalsyDiagnosisConstants.PALSY9, MentalPalsyDiagnosisConstants.PALSY10,
-			MentalPalsyDiagnosisConstants.PALSY11, MentalPalsyDiagnosisConstants.PALSY12,
-			MentalPalsyDiagnosisConstants.PALSY13, MentalPalsyDiagnosisConstants.PALSY14,
-			MentalPalsyDiagnosisConstants.PALSY15, MentalPalsyDiagnosisConstants.PALSY16,
-			MentalPalsyDiagnosisConstants.PALSY17, MentalPalsyDiagnosisConstants.PALSY18,
-			MentalPalsyDiagnosisConstants.PALSY19, MentalPalsyDiagnosisConstants.PALSY20,
-			MentalPalsyDiagnosisConstants.PALSY21, MentalPalsyDiagnosisConstants.PALSY22,
-			MentalPalsyDiagnosisConstants.PALSY23, MentalPalsyDiagnosisConstants.PALSY23,
-			MentalPalsyDiagnosisConstants.PALSY24, MentalPalsyDiagnosisConstants.PALSY25,
-			MentalPalsyDiagnosisConstants.PALSY26, MentalPalsyDiagnosisConstants.PALSY27,
-			MentalPalsyDiagnosisConstants.PALSY28, MentalPalsyDiagnosisConstants.PALSY29,
-			MentalPalsyDiagnosisConstants.PALSY30, MentalPalsyDiagnosisConstants.PALSY31,
-			MentalPalsyDiagnosisConstants.PALSY32, MentalPalsyDiagnosisConstants.PALSY33,
-			MentalPalsyDiagnosisConstants.PALSY34, MentalPalsyDiagnosisConstants.PALSY35,
-			MentalPalsyDiagnosisConstants.PALSY36, MentalPalsyDiagnosisConstants.PALSY37,
-			MentalPalsyDiagnosisConstants.PALSY38, MentalPalsyDiagnosisConstants.PALSY39,
-			MentalPalsyDiagnosisConstants.PALSY40, MentalPalsyDiagnosisConstants.PALSY41,
-			MentalPalsyDiagnosisConstants.PALSY42, MentalPalsyDiagnosisConstants.PALSY43,
-			MentalPalsyDiagnosisConstants.PALSY44, MentalPalsyDiagnosisConstants.PALSY45,
-			MentalPalsyDiagnosisConstants.PALSY46, MentalPalsyDiagnosisConstants.PALSY47,
-			MentalPalsyDiagnosisConstants.PALSY48, MentalPalsyDiagnosisConstants.PALSY49
 
-		);
-	}
 
-	public static List<Integer> getOtherCentralNervousSystemConditionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL1,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL2, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL3,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL4, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL5,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL6, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL7,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL8, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL9,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL10, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL11,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL12, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL13,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL14, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL15,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL16, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL17,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL18, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL19,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL20, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL21,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL22, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL23,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL24, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL25,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL26, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL27,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL28, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL29,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL30, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL31,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL32, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL33,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL34, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL35,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL36, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL37,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL38, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL39,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL40, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL41,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL42, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL43,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL44, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL45,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL46, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL47,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL48, DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL49,
-			DiagnosisConcepts._DiagnosisConcepts.CENTRAL_NAVAL50
 
-		);
-	}
 
-	public static List<Integer> getRoadTrafficInjuriesList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DEATHS_DUE_TO_ROAD_TRAFFIC_INJURIES);
-
-	}
 
 	public static List<Integer> getConfirmedMalariaResults() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.POSITIVE,
@@ -3574,43 +3115,17 @@ public class DiagnosisLists {
 			DiagnosisConcepts._DiagnosisConcepts.POSITIVE, DiagnosisConcepts._DiagnosisConcepts.Procedure_performed);
 	}
 
-	public static List<Integer> getSexuallyTransmittedInfectionsList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.STI1, DiagnosisConcepts._DiagnosisConcepts.STI2,
-			DiagnosisConcepts._DiagnosisConcepts.STI3, DiagnosisConcepts._DiagnosisConcepts.STI4);
-	}
 
-	public static List<Integer> getAutismList() {
-		return Arrays.asList(AutismDiagnosisConstants.AUTISM_1, AutismDiagnosisConstants.AUTISM_2,
-			AutismDiagnosisConstants.AUTISM_3, AutismDiagnosisConstants.AUTISM_4, AutismDiagnosisConstants.AUTISM_5,
-			AutismDiagnosisConstants.AUTISM_6);
-	}
 
-	public static List<Integer> getOtherConvulsiveDisordersList() {
-		return Arrays.asList(ConvulsiveDiagnosisConstants.CONVULSIVE1, ConvulsiveDiagnosisConstants.CONVULSIVE2,
-			ConvulsiveDiagnosisConstants.CONVULSIVE3, ConvulsiveDiagnosisConstants.CONVULSIVE4,
-			ConvulsiveDiagnosisConstants.CONVULSIVE5, ConvulsiveDiagnosisConstants.CONVULSIVE6,
-			ConvulsiveDiagnosisConstants.CONVULSIVE7, ConvulsiveDiagnosisConstants.CONVULSIVE8,
-			ConvulsiveDiagnosisConstants.CONVULSIVE9, ConvulsiveDiagnosisConstants.CONVULSIVE10,
-			ConvulsiveDiagnosisConstants.CONVULSIVE11, ConvulsiveDiagnosisConstants.CONVULSIVE12,
-			ConvulsiveDiagnosisConstants.CONVULSIVE13, ConvulsiveDiagnosisConstants.CONVULSIVE14,
-			ConvulsiveDiagnosisConstants.CONVULSIVE15, ConvulsiveDiagnosisConstants.CONVULSIVE16,
-			ConvulsiveDiagnosisConstants.CONVULSIVE17, ConvulsiveDiagnosisConstants.CONVULSIVE18,
-			ConvulsiveDiagnosisConstants.CONVULSIVE19, ConvulsiveDiagnosisConstants.CONVULSIVE20,
-			ConvulsiveDiagnosisConstants.CONVULSIVE21, ConvulsiveDiagnosisConstants.CONVULSIVE22,
-			ConvulsiveDiagnosisConstants.CONVULSIVE23, ConvulsiveDiagnosisConstants.CONVULSIVE24,
-			ConvulsiveDiagnosisConstants.CONVULSIVE25, ConvulsiveDiagnosisConstants.CONVULSIVE26,
-			ConvulsiveDiagnosisConstants.CONVULSIVE27, ConvulsiveDiagnosisConstants.CONVULSIVE28
 
-		);
-	}
 
-	public static List<Integer> getJiggersInfestationList() {
-		return Arrays.asList(123964);
-	}
 
-	public static List<Integer> getAmoebiasis() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DIARRHEA_AMOEBIASIS, 124);
-	}
+
+//	public static List<Integer> getJiggersInfestationList() {
+//		return Arrays.asList(123964);
+//	}
+
+
 
 	public static List<Integer> getFeversList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.FEVER1, DiagnosisConcepts._DiagnosisConcepts.FEVER2,
@@ -3689,19 +3204,11 @@ public class DiagnosisLists {
 		);
 	}
 
-	public static List<Integer> getRiftValleyFeverList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.RIFT_VALLEY_FEVER);
-	}
 
-	public static List<Integer> getChikungunyaFeverList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.Chikungunya_Fever,
-			DiagnosisConcepts._DiagnosisConcepts.Chikungunya_Haemorrhagic_Fever);
-	}
 
-	public static List<Integer> getDengueFeverList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.Dengue_haemorrhagic_fever,
-			DiagnosisConcepts._DiagnosisConcepts.Dengue_fever, DiagnosisConcepts._DiagnosisConcepts.Dengue_Shock_Syndrome);
-	}
+
+
+
 
 	public static List<Integer> mildDehydration() {
 		return Arrays
@@ -3738,57 +3245,6 @@ public class DiagnosisLists {
 				DiagnosisConcepts._DiagnosisConcepts.Anthrax_Pneumonia);
 	}
 
-	public static List<Integer> getGastroenteritisList() {
-		return Arrays
-			.asList(DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_1,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_2,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_3,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_4,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_5,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_6,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_7,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_8,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_9,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_10,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_11,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_14,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_13,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_15,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_16,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_17,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_18,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_19,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_20,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_21,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_22,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_23,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_24,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_25,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_26,
-				DiagnosisConcepts._DiagnosisConcepts.Gastroenteritis_27);
-	}
-
-	public static List<Integer> getSeverePneumoniaList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.acute_bacterial_pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_Interstitial_Pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.Chronic_Interstitial_Pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.acute_bronchitis_due_to_Mycoplasma_pneumoniae,
-			DiagnosisConcepts._DiagnosisConcepts.acute_mucous_pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.bilateral_pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.neonatal_pneumonia,
-			DiagnosisConcepts._DiagnosisConcepts.Acute_bacterial_pneumonia_presumed,
-			DiagnosisConcepts._DiagnosisConcepts.Sub_acute_pneumonia_presumed_PCP);
-	}
-
-	public static List<Integer> getSLowerTractInfectionList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.Lower_Respiratory_Tract_Infection,
-
-			DiagnosisConcepts._DiagnosisConcepts.Chronic_Obstructive_Pulmonary_Disease_with_Acute_Lower_Respiratory_Infection,
-			DiagnosisConcepts._DiagnosisConcepts.RESPIRATORY_TRACT_INFECTION_LOWER,
-			DiagnosisConcepts._DiagnosisConcepts.RESPIRATORY_TRACT_COVID,
-			DiagnosisConcepts._DiagnosisConcepts.unspecified_acute_lower_respiratory_infection);
-	}
-
 	public static List<Integer> getNeutalSepsisList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.NEUTAL_SEPISIS);
 	}
@@ -3796,225 +3252,138 @@ public class DiagnosisLists {
 	public static List<Integer> getDownSyndromeList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.DOWN_SYNDROME);
 	}
-
-	public static List<Integer> getOtherDisOfRespiratorySystemList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.OTHER_REP_1,
-			DiagnosisConcepts._DiagnosisConcepts.OTHER_REP_2
-
-		);
-	}
-
-	public static List<Integer> getAllOtherDiseasesListForAdults() {
-		List<Integer> allListedDiagnosis = new ArrayList<Integer>();
-
-		allListedDiagnosis.addAll(getDiarrheaDiagnosisList());
-		allListedDiagnosis.addAll(getDownSyndromeList());
-		allListedDiagnosis.addAll(getOtherDisOfRespiratorySystemList());
-		allListedDiagnosis.addAll(getNeutalSepsisList());
-		allListedDiagnosis.addAll(getSLowerTractInfectionList());
-		allListedDiagnosis.addAll(getAnthraxList());
-		allListedDiagnosis.addAll(getSeverePneumoniaList());
-		allListedDiagnosis.addAll(getCutaneousLeishmaniasisList());
-		allListedDiagnosis.addAll(getChikungunyaFeverList());
-		allListedDiagnosis.addAll(getDengueFeverList());
-		allListedDiagnosis.addAll(getAutismList());
-		allListedDiagnosis.addAll(getJiggersInfestationList());
-		allListedDiagnosis.addAll(getOtherConvulsiveDisordersList());
-		allListedDiagnosis.addAll(getSexuallyTransmittedInfectionsList());
-		allListedDiagnosis.addAll(getSuspectedMalariaResults());
-		allListedDiagnosis.addAll(getConfirmedMalariaResults());
-		allListedDiagnosis.addAll(getRoadTrafficInjuriesList());
-		allListedDiagnosis.addAll(getOtherCentralNervousSystemConditionsList());
-		allListedDiagnosis.addAll(getCerebralPalsyList());
-		allListedDiagnosis.addAll(getMalariaInPregnancyList());
-		allListedDiagnosis.addAll(getEarInfectionConditionsList());
-		allListedDiagnosis.addAll(getRicketsList());
-		allListedDiagnosis.addAll(getTuberculosisDiagnosisList());
-		allListedDiagnosis.addAll(getDysenteryList());
-		allListedDiagnosis.addAll(getMeningococcalMeningitisList());
-		allListedDiagnosis.addAll(getOtherMenigitisList());
-		allListedDiagnosis.addAll(getPoliomyelitisList());
-		allListedDiagnosis.addAll(getCholeraList());
-		allListedDiagnosis.addAll(getNeonatalTetanusList());
-		allListedDiagnosis.addAll(getChickenPoxList());
-		allListedDiagnosis.addAll(getMeaslesList());
-		allListedDiagnosis.addAll(getHepatitisList());
-		allListedDiagnosis.addAll(getMumpsList());
-		allListedDiagnosis.addAll(getMalariaList());
-		allListedDiagnosis.addAll(getUrinaryTractInfectionList());
-		allListedDiagnosis.addAll(getTyphoidList());
-		allListedDiagnosis.addAll(getBilharziaList());
-		allListedDiagnosis.addAll(getInterstinalwormsList());
-		allListedDiagnosis.addAll(getMalnutritionList());
-		allListedDiagnosis.addAll(getAnaemiaList());
-		allListedDiagnosis.addAll(getEyeInfectionsList());
-		allListedDiagnosis.addAll(getEarInfectionsConditionsList());
-		allListedDiagnosis.addAll(getUpperRespiratoryTractInfectionsList());
-		allListedDiagnosis.addAll(getAsthmaList());
-		allListedDiagnosis.addAll(getTonsilitiesList());
-		allListedDiagnosis.addAll(getPneumoniaList());
-		allListedDiagnosis.addAll(getAbortionList());
-		allListedDiagnosis.addAll(getDisOfPuerperiumChildbathList());
-		allListedDiagnosis.addAll(getHypertensionList());
-		allListedDiagnosis.addAll(getMentalDisordersList());
-		allListedDiagnosis.addAll(getDentalDisordersList());
-		allListedDiagnosis.addAll(getDiseaseOfTheSkinList());
-		allListedDiagnosis.addAll(getAnthritisJointPainsList());
-		allListedDiagnosis.addAll(getPoisoningList());
-		allListedDiagnosis.addAll(getOtherInjuriesList());
-		allListedDiagnosis.addAll(getSexualAssaultList());
-		allListedDiagnosis.addAll(getViolenceRelatedInjuriesList());
-		allListedDiagnosis.addAll(getBurnsList());
-		allListedDiagnosis.addAll(getSnakeBitesList());
-		allListedDiagnosis.addAll(getDogBitesList());
-		allListedDiagnosis.addAll(getDiabetesList());
-		allListedDiagnosis.addAll(getOtherBitesList());
-		allListedDiagnosis.addAll(getEpilepsyList());
-		allListedDiagnosis.addAll(getBrucellosisList());
-		allListedDiagnosis.addAll(getCardiovascularConditionsList());
-		allListedDiagnosis.addAll(getOvrerweightList());
-		allListedDiagnosis.addAll(getMuscularSkeletalConditionsList());
-		allListedDiagnosis.addAll(getFistulaBirthRelatedList());
-		allListedDiagnosis.addAll(getNeoplamsList());
-		allListedDiagnosis.addAll(getAmoebiasis());
-		allListedDiagnosis.addAll(getPhysicalDisabilityList());
-		allListedDiagnosis.addAll(getTryponomiasisList());
-		allListedDiagnosis.addAll(getKalazarLeishmaniasisList());
-		allListedDiagnosis.addAll(getYellowFeverList());
-		allListedDiagnosis.addAll(getViralHaemorrhagicFeverList());
-		allListedDiagnosis.addAll(getRiftValleyFeverList());
-		allListedDiagnosis.addAll(getGastroenteritisList());
-
-		return allListedDiagnosis;
-	}
-
-	public static List<Integer> getReumonicFeverList() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_1,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_1, DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_3,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_4, DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_5,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_6, DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_7,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_8, DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_9,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_10, DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_11,
-			DiagnosisConcepts._DiagnosisConcepts.REUMONIC_FEVER_12
-
-		);
-	}
-
+	
 	public static List<Integer> getHypoxaemiaList() {
 		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.Hypoxaemia);
 	}
 
-	public static List<Integer> getChildHoodCancerist() {
-		return Arrays.asList(DiagnosisConcepts._DiagnosisConcepts.CCANCER_1, DiagnosisConcepts._DiagnosisConcepts.CCANCER_1,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_2, DiagnosisConcepts._DiagnosisConcepts.CCANCER_3,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_4, DiagnosisConcepts._DiagnosisConcepts.CCANCER_5,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_6, DiagnosisConcepts._DiagnosisConcepts.CCANCER_7,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_8, DiagnosisConcepts._DiagnosisConcepts.CCANCER_9,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_10, DiagnosisConcepts._DiagnosisConcepts.CCANCER_11,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_12, DiagnosisConcepts._DiagnosisConcepts.CCANCER_13,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_14, DiagnosisConcepts._DiagnosisConcepts.CCANCER_15,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_16, DiagnosisConcepts._DiagnosisConcepts.CCANCER_17,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_18, DiagnosisConcepts._DiagnosisConcepts.CCANCER_19,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_20, DiagnosisConcepts._DiagnosisConcepts.CCANCER_21,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_22, DiagnosisConcepts._DiagnosisConcepts.CCANCER_23,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_24, DiagnosisConcepts._DiagnosisConcepts.CCANCER_25,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_26, DiagnosisConcepts._DiagnosisConcepts.CCANCER_27,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_28, DiagnosisConcepts._DiagnosisConcepts.CCANCER_29,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_30, DiagnosisConcepts._DiagnosisConcepts.CCANCER_31,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_32, DiagnosisConcepts._DiagnosisConcepts.CCANCER_33,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_34, DiagnosisConcepts._DiagnosisConcepts.CCANCER_35,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_36, DiagnosisConcepts._DiagnosisConcepts.CCANCER_37,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_38, DiagnosisConcepts._DiagnosisConcepts.CCANCER_39,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_40, DiagnosisConcepts._DiagnosisConcepts.CCANCER_41,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_42, DiagnosisConcepts._DiagnosisConcepts.CCANCER_43,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_44, DiagnosisConcepts._DiagnosisConcepts.CCANCER_45,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_46, DiagnosisConcepts._DiagnosisConcepts.CCANCER_47,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_48, DiagnosisConcepts._DiagnosisConcepts.CCANCER_49,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_50, DiagnosisConcepts._DiagnosisConcepts.CCANCER_51,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_52, DiagnosisConcepts._DiagnosisConcepts.CCANCER_53,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_54, DiagnosisConcepts._DiagnosisConcepts.CCANCER_55,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_56, DiagnosisConcepts._DiagnosisConcepts.CCANCER_57,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_58, DiagnosisConcepts._DiagnosisConcepts.CCANCER_59,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_60, DiagnosisConcepts._DiagnosisConcepts.CCANCER_61,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_62, DiagnosisConcepts._DiagnosisConcepts.CCANCER_63,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_64, DiagnosisConcepts._DiagnosisConcepts.CCANCER_65,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_66, DiagnosisConcepts._DiagnosisConcepts.CCANCER_67,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_68, DiagnosisConcepts._DiagnosisConcepts.CCANCER_69,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_70, DiagnosisConcepts._DiagnosisConcepts.CCANCER_71,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_72, DiagnosisConcepts._DiagnosisConcepts.CCANCER_73,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_74, DiagnosisConcepts._DiagnosisConcepts.CCANCER_75,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_76, DiagnosisConcepts._DiagnosisConcepts.CCANCER_77,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_78, DiagnosisConcepts._DiagnosisConcepts.CCANCER_79,
-			DiagnosisConcepts._DiagnosisConcepts.CCANCER_80);
+	public static List<Integer> getJiggersInfestationList() {
+		return Arrays.asList(123964);
 	}
 
-	public static List<Integer> getAllOtherDiseasesListForChildren() {
-		List<Integer> allListedDiagnosisForChildren = new ArrayList<Integer>();
-		allListedDiagnosisForChildren.addAll(getDiarrheaDiagnosisList());
-		//allListedDiagnosisForChildren.addAll(mildDehydration());
-		allListedDiagnosisForChildren.addAll(getCholeraList());
-		allListedDiagnosisForChildren.addAll(getDysenteryList());
-		allListedDiagnosisForChildren.addAll(getGastroenteritisList());
-		allListedDiagnosisForChildren.addAll(getPneumoniaList());
-		allListedDiagnosisForChildren.addAll(getSeverePneumoniaList());
-		allListedDiagnosisForChildren.addAll(getUpperRespiratoryTractInfectionsList());
-		allListedDiagnosisForChildren.addAll(getSLowerTractInfectionList());
-		allListedDiagnosisForChildren.addAll(getAsthmaList());
-		allListedDiagnosisForChildren.addAll(getTuberculosisDiagnosisList());
-		allListedDiagnosisForChildren.addAll(getSuspectedMalariaResults());
-		allListedDiagnosisForChildren.addAll(getConfirmedMalariaResults());
-		allListedDiagnosisForChildren.addAll(getEarInfectionsConditionsList());
-		allListedDiagnosisForChildren.addAll(getMalnutritionList());
-		allListedDiagnosisForChildren.addAll(getAnaemiaList());
-		allListedDiagnosisForChildren.addAll(getMeningococcalMeningitisList());
-		allListedDiagnosisForChildren.addAll(getOtherMenigitisList());
-		allListedDiagnosisForChildren.addAll(getNeutalSepsisList());
-		allListedDiagnosisForChildren.addAll(getNeonatalTetanusList());
-		allListedDiagnosisForChildren.addAll(getPoliomyelitisList());
-		allListedDiagnosisForChildren.addAll(getChickenPoxList());
-		allListedDiagnosisForChildren.addAll(getMeaslesList());
-		allListedDiagnosisForChildren.addAll(getAmoebiasis());
-		allListedDiagnosisForChildren.addAll(getMumpsList());
-		allListedDiagnosisForChildren.addAll(getTyphoidList());
-		allListedDiagnosisForChildren.addAll(getBilharziaList());
-		allListedDiagnosisForChildren.addAll(getInterstinalwormsList());
-		allListedDiagnosisForChildren.addAll(getEyeInfectionsList());
-		allListedDiagnosisForChildren.addAll(getTonsilitiesList());
-		allListedDiagnosisForChildren.addAll(getUrinaryTractInfectionList());
-		allListedDiagnosisForChildren.addAll(getMentalDisordersList());
-		allListedDiagnosisForChildren.addAll(getDentalDisordersList());
-		allListedDiagnosisForChildren.addAll(getDiseaseOfTheSkinList());
-		allListedDiagnosisForChildren.addAll(getDownSyndromeList());
-		allListedDiagnosisForChildren.addAll(getPoisoningList());
-		allListedDiagnosisForChildren.addAll(getRoadTrafficInjuriesList());
-		allListedDiagnosisForChildren.addAll(getRoadTrafficInjuriesList());
-		allListedDiagnosisForChildren.addAll(getViolenceRelatedInjuriesList());
-		allListedDiagnosisForChildren.addAll(getOtherInjuriesList());
-		allListedDiagnosisForChildren.addAll(getSexualAssaultList());
-		allListedDiagnosisForChildren.addAll(getBurnsList());
-		allListedDiagnosisForChildren.addAll(getSnakeBitesList());
-		allListedDiagnosisForChildren.addAll(getDogBitesList());
-		allListedDiagnosisForChildren.addAll(getOtherBitesList());
-		allListedDiagnosisForChildren.addAll(getDiabetesList());
-		allListedDiagnosisForChildren.addAll(getEpilepsyList());
-		allListedDiagnosisForChildren.addAll(getOtherConvulsiveDisordersList());
-		allListedDiagnosisForChildren.addAll(getReumonicFeverList());
-		allListedDiagnosisForChildren.addAll(getBrucellosisList());
-		allListedDiagnosisForChildren.addAll(getRicketsList());
-		allListedDiagnosisForChildren.addAll(getCerebralPalsyList());
-		allListedDiagnosisForChildren.addAll(getAutismList());
-		allListedDiagnosisForChildren.addAll(getTryponomiasisList());
-		allListedDiagnosisForChildren.addAll(getYellowFeverList());
-		allListedDiagnosisForChildren.addAll(getViralHaemorrhagicFeverList());
-		allListedDiagnosisForChildren.addAll(getRiftValleyFeverList());
-		allListedDiagnosisForChildren.addAll(getChikungunyaFeverList());
-		allListedDiagnosisForChildren.addAll(getDengueFeverList());
-		allListedDiagnosisForChildren.addAll(getKalazarLeishmaniasisList());
-		allListedDiagnosisForChildren.addAll(getCutaneousLeishmaniasisList());
-		allListedDiagnosisForChildren.addAll(getAnthraxList());
-		allListedDiagnosisForChildren.addAll(getHypoxaemiaList());
-		allListedDiagnosisForChildren.addAll(getChildHoodCancerist());
+	
 
-		return allListedDiagnosisForChildren;
+	public static List<Integer> getAllOtherUnder5DiseasesList() {			
+		List<Integer> allListedDiagnosisForUnder5 = new ArrayList<Integer>();
+		allListedDiagnosisForUnder5.addAll(DiagnosisConcepts.allNonListedDiagnosisForUnder5());		
+		allListedDiagnosisForUnder5.addAll(getDiarrheaWithNoDehydrationDiagnosisList());		
+		allListedDiagnosisForUnder5.addAll(getGastroenteritisList());
+		allListedDiagnosisForUnder5.addAll(getSeverePneumoniaList());		
+		allListedDiagnosisForUnder5.addAll(getUpperRespiratoryTractInfectionsList());
+		allListedDiagnosisForUnder5.addAll(getLowerTractInfectionList());		
+		allListedDiagnosisForUnder5.addAll(getPresumedTuberculosisList());
+		allListedDiagnosisForUnder5.addAll(getMalariaList());
+		allListedDiagnosisForUnder5.addAll(getOtherMenigitisList());
+		allListedDiagnosisForUnder5.addAll(getPoliomyelitisList());
+		allListedDiagnosisForUnder5.addAll(getChickenPoxList());
+		allListedDiagnosisForUnder5.addAll(getMeaslesList());
+		allListedDiagnosisForUnder5.addAll(getHepatitisList());
+		allListedDiagnosisForUnder5.addAll(getAmoebiasis());
+		allListedDiagnosisForUnder5.addAll(getMumpsList());
+		allListedDiagnosisForUnder5.addAll(getTyphoidList());
+		allListedDiagnosisForUnder5.addAll(getBilharziaList());
+		allListedDiagnosisForUnder5.addAll(getInterstinalwormsList());
+		allListedDiagnosisForUnder5.addAll(getEyeInfectionsList());
+		allListedDiagnosisForUnder5.addAll(getTonsilitiesList());
+		allListedDiagnosisForUnder5.addAll(getPoliomyelitisList());
+		allListedDiagnosisForUnder5.addAll(getChickenPoxList());
+		allListedDiagnosisForUnder5.addAll(getMumpsList());
+		allListedDiagnosisForUnder5.addAll(getTyphoidList());
+		allListedDiagnosisForUnder5.addAll(getBilharziaList());
+		allListedDiagnosisForUnder5.addAll(getInterstinalwormsList());
+		allListedDiagnosisForUnder5.addAll(getEyeInfectionsList());
+		allListedDiagnosisForUnder5.addAll(getTonsilitiesList());
+		allListedDiagnosisForUnder5.addAll(getUrinaryTractInfectionList());
+		allListedDiagnosisForUnder5.addAll(getMentalDisordersList());
+		allListedDiagnosisForUnder5.addAll(getDentalDisordersList());
+		allListedDiagnosisForUnder5.addAll(getViolenceRelatedInjuriesList());
+		allListedDiagnosisForUnder5.addAll(getOtherInjuriesList());
+		allListedDiagnosisForUnder5.addAll(getSexualAssaultList());
+		allListedDiagnosisForUnder5.addAll(getBurnsList());
+		allListedDiagnosisForUnder5.addAll(getSnakeBitesList());
+		allListedDiagnosisForUnder5.addAll(getDogBitesList());
+		allListedDiagnosisForUnder5.addAll(getOtherBitesList());
+		allListedDiagnosisForUnder5.addAll(getDiabetesList());
+		allListedDiagnosisForUnder5.addAll(getEpilepsyList());
+		allListedDiagnosisForUnder5.addAll(getOtherConvulsiveDisordersList());
+		allListedDiagnosisForUnder5.addAll(getReumonicFeverList());
+		allListedDiagnosisForUnder5.addAll(getRicketsList());
+		allListedDiagnosisForUnder5.addAll(getCerebralPalsyList());
+		allListedDiagnosisForUnder5.addAll(getAutismList());
+		allListedDiagnosisForUnder5.addAll(getTryponomiasisList());
+		allListedDiagnosisForUnder5.addAll(getYellowFeverList());
+		allListedDiagnosisForUnder5.addAll(getRiftValleyFeverList());
+		allListedDiagnosisForUnder5.addAll(getChikungunyaFeverList());
+		allListedDiagnosisForUnder5.addAll(getDengueFeverList());
+		allListedDiagnosisForUnder5.addAll(getKalazarLeishmaniasisList());
+		allListedDiagnosisForUnder5.addAll(getChildHoodCancerist());
+		allListedDiagnosisForUnder5.addAll(getTuberculosisDiagnosisList());
+		allListedDiagnosisForUnder5.addAll(getOverweightList());
+		allListedDiagnosisForUnder5.addAll(getRoadTrafficInjuriesList());
+		return allListedDiagnosisForUnder5;
+	}
+	public static List<Integer> getAllOtherAbove5DiseasesList() {
+		List<Integer> allListedDiagnosisForAbove5 = new ArrayList<Integer>();
+		allListedDiagnosisForAbove5.addAll(DiagnosisConcepts.allNonListedDiagnosisForAbove5());
+		allListedDiagnosisForAbove5.addAll(getDiarrheaDiagnosisList());
+		allListedDiagnosisForAbove5.addAll(getTuberculosisDiagnosisList());
+		allListedDiagnosisForAbove5.addAll(getCholeraList());
+		allListedDiagnosisForAbove5.addAll(getDysenteryList());
+		allListedDiagnosisForAbove5.addAll(getOtherMenigitisListB());
+		allListedDiagnosisForAbove5.addAll(getPoliomyelitisListB());
+		allListedDiagnosisForAbove5.addAll(getChickenPoxListB());
+		allListedDiagnosisForAbove5.addAll(getMeaslesListB());
+		allListedDiagnosisForAbove5.addAll(getHepatitisListB());
+		allListedDiagnosisForAbove5.addAll(getMumpsListB());
+		allListedDiagnosisForAbove5.addAll(getTestedMalariaListB());
+		allListedDiagnosisForAbove5.addAll(getMalariaListB());
+		allListedDiagnosisForAbove5.addAll(getUrinaryTractInfectionListB());
+		allListedDiagnosisForAbove5.addAll(getInterstinalwormsListB());
+		allListedDiagnosisForAbove5.addAll(getMalnutritionListB());
+		allListedDiagnosisForAbove5.addAll(getAnaemiaListB());
+		allListedDiagnosisForAbove5.addAll(getEyeInfectionsListB());
+		allListedDiagnosisForAbove5.addAll(getUpperRespiratoryTractInfectionsListB());
+		allListedDiagnosisForAbove5.addAll(getAsthmaListB());
+		allListedDiagnosisForAbove5.addAll(getPneumoniaListB());
+		allListedDiagnosisForAbove5.addAll(getDiseasesOfSkin());
+		allListedDiagnosisForAbove5.addAll(getOtherDisOfRespiratorySystemList());
+		allListedDiagnosisForAbove5.addAll(getMentalDisordersList());
+		allListedDiagnosisForAbove5.addAll(getDentalDisordersListB());
+		allListedDiagnosisForAbove5.addAll(getTetanusList());
+		allListedDiagnosisForAbove5.addAll(getTyphoidList());
+		allListedDiagnosisForAbove5.addAll(getAmoebiasis());
+		allListedDiagnosisForAbove5.addAll(getSexuallyTransmittedInfectionsList());
+		allListedDiagnosisForAbove5.addAll(getBilharziaList());
+		allListedDiagnosisForAbove5.addAll(getAbortionList());
+		allListedDiagnosisForAbove5.addAll(getDisOfPuerperiumChildbathList());
+		allListedDiagnosisForAbove5.addAll(getHypertensionList());
+		allListedDiagnosisForAbove5.addAll(getMentalDisordersList());
+		allListedDiagnosisForAbove5.addAll(getAnthritisJointPainsList());
+		allListedDiagnosisForAbove5.addAll(getPoisoningList());
+		allListedDiagnosisForAbove5.addAll(getRoadTrafficInjuriesList());
+		allListedDiagnosisForAbove5.addAll(getOtherInjuriesList());
+		allListedDiagnosisForAbove5.addAll(getViolenceRelatedInjuriesList());
+		allListedDiagnosisForAbove5.addAll(getSexualAssaultList());
+		allListedDiagnosisForAbove5.addAll(getBurnsList());
+		allListedDiagnosisForAbove5.addAll(getSnakeBitesList());
+		allListedDiagnosisForAbove5.addAll(getDogBitesList());
+		allListedDiagnosisForAbove5.addAll(getOtherBitesList());
+		allListedDiagnosisForAbove5.addAll(getDiabetesList());
+		allListedDiagnosisForAbove5.addAll(getEpilepsyList());
+		allListedDiagnosisForAbove5.addAll(getCardiovascularConditionsList());
+		allListedDiagnosisForAbove5.addAll(getOtherCentralNervousSystemConditionsList());
+		allListedDiagnosisForAbove5.addAll(getOverweightList());
+		allListedDiagnosisForAbove5.addAll(getTryponomiasisList());
+		allListedDiagnosisForAbove5.addAll(getYellowFeverList());
+		allListedDiagnosisForAbove5.addAll(getViralHaemorrhagicFeverList());
+		allListedDiagnosisForAbove5.addAll(getRiftValleyFeverList());
+		allListedDiagnosisForAbove5.addAll(getChikungunyaFeverList());
+		allListedDiagnosisForAbove5.addAll(getDengueFeverList());
+		allListedDiagnosisForAbove5.addAll(getKalazarLeishmaniasisList());
+		allListedDiagnosisForAbove5.addAll(getMuscularSkeletalConditionsList());
+		allListedDiagnosisForAbove5.addAll(getFistulaBirthRelatedList());
+		allListedDiagnosisForAbove5.addAll(getNeoplamsList());
+	
+		return allListedDiagnosisForAbove5;
 	}
 }

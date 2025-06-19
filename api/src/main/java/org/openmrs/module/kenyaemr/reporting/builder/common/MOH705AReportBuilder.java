@@ -39,14 +39,37 @@ import java.util.List;
 @Builds({ "kenyaemr.ehrReports.report.moh705A" })
 public class MOH705AReportBuilder extends AbstractReportBuilder {
 	static final String AGE_BELOW_FIVE = "<5";
-	static final int DIARRHOEA_WITHOUT_DEHYDRATION = 168737;
-	static final int DIARRHOEA_WITH_SOME_DEHYDRATION = 166569;
-	static final int DIARRHOEA_WITH_SEVERE_DEHYDRATION = 168736 ;
-	static final int CHOLERA = 145622;	
-	static final int CONFIRMED_MALARIA = 160148;
-	static final int TESTED_MALARIA = 168740;
-	static final int SUSPECTED_MALARIA = 166623;
-	static final int PRESUMED_TUBERCULOSIS = 168739;
+	static final int DIARRHOEA_WITHOUT_DEHYDRATION = 168737; //now a list
+	static final int DIARRHOEA_WITH_SOME_DEHYDRATION = 2007117;
+	static final int DIARRHOEA_WITH_SEVERE_DEHYDRATION = 2014248 ;
+	static final int DYSENTERY = 2014827;
+	static final int PNEUMONIA = 114100;
+	static final int ASTHMA = 121375;
+
+	static final int CHOLERA = 2002391;
+	static final int CONFIRMED_MALARIA = 160148; //now a list
+	static final int TESTED_MALARIA = 2002650;
+	static final int SUSPECTED_MALARIA = 116128;
+	static final int PRESUMED_TUBERCULOSIS = 168739;  //now a list
+	static final int MALNUTRITION = 2004984;
+	static final int ANAEMIA = 1226;
+	static final int MENINGOCOCCAL_MENINGITIS = 134369;
+	static final int NEONATAL_SEPSIS = 226;
+	static final int NEONATAL_TETANUS = 124954;
+	static final int JIGGERS_INFESTATION = 166567;
+	static final int DISEASES_OF_SKIN = 2009210;
+	static final int DOWN_SYNDROME = 144481;
+	static final int POISONING= 2027745;
+	static final int BRUCELLOSIS= 121005;
+	static final int VIRAL_HAEMORRHAGIC_FEVER= 2002647;
+	static final int CUTANEOUS_LEISHMANIASIS= 143074;
+	static final int SUSPECTED_ANTHRAX= 121555;
+	static final int HYPOXAEMIA= 2006141;
+	static final int EAR_INFECTION_PEAD= 149609;
+
+
+
+
 
 	private MOH705IndicatorLibrary moh705indicatorLibrary;
 
@@ -61,12 +84,12 @@ public class MOH705AReportBuilder extends AbstractReportBuilder {
 	@Override
 	protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
 		return Arrays.asList(new Parameter("startDate", "Start Date", Date.class), new Parameter("endDate", "End Date",
-		        Date.class), new Parameter("dateBasedReporting", "", String.class));
+			Date.class), new Parameter("dateBasedReporting", "", String.class));
 	}
 
 	@Override
 	protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor,
-	        ReportDefinition reportDefinition) {
+															ReportDefinition reportDefinition) {
 		return Arrays.asList(ReportUtils.map(moh705ADataset(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
@@ -81,84 +104,85 @@ public class MOH705AReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addDimension("day", ReportUtils.map(commonDimensionLibrary.encountersOfMonthPerDay(), indParams));
 
 		// populate datasets
-		ReportingUtils.addRow(cohortDsd,"DWND","Diarrhoea with no dehydration",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DIARRHOEA_WITHOUT_DEHYDRATION),AGE_BELOW_FIVE),indParams),ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DWND","Diarrhoea with no dehydration",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDiarrheaWithNoDehydrationDiagnosisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"DWSOD","Diarrhoea with some dehydration",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DIARRHOEA_WITH_SOME_DEHYDRATION),AGE_BELOW_FIVE),indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"DWSED","Diarrhoea with severe dehydration",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DIARRHOEA_WITH_SEVERE_DEHYDRATION),AGE_BELOW_FIVE),indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"CLC","Cholera",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(CHOLERA),AGE_BELOW_FIVE),indParams),ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"TC","Tuberculosis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getTuberculosisDiagnosisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"TCP","Presumed Tuberculosis",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(PRESUMED_TUBERCULOSIS), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"DYC","Dysentery",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDysenteryList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DYC","Dysentery",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DYSENTERY), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"GAS","Gastroenteritis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getGastroenteritisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"PNC","Pneumonia",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(PNEUMONIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"SP","Severe pneumonia",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getSeverePneumoniaList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd, "LTI", "Lower Respiratory Tract Infections", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getSLowerTractInfectionList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"NS","Neonatal Sepsis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getNeutalSepsisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"AM","AMOEBIASIS",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAmoebiasis(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"DS","Down’s syndrome",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDownSyndromeList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"RF","Rheumatic Fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getReumonicFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"CKU","Chikungunya fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getChikungunyaFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"DENF","Dengue fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDengueFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"CL", "Cutaneous Leishmaniasis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getCutaneousLeishmaniasisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"ANT","Suspected Anthrax",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAnthraxList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"CLC","Cholera",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getCholeraList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"MCC","Meningococcal Meningitis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMeningococcalMeningitisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"URC","Upper Respiratory Tract Infections", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getUpperRespiratoryTractInfectionsList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd, "LTI", "Lower Respiratory Tract Infections", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getLowerTractInfectionList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"ASC","Asthma",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(ASTHMA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"TCP","Presumed Tuberculosis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getPresumedTuberculosisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"SMC", "Suspected Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(SUSPECTED_MALARIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"TMC", "Tested Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(TESTED_MALARIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"CMC", "Confirmed Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMalariaList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"EIC","Ear Infections Conditions", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(EAR_INFECTION_PEAD),AGE_BELOW_FIVE), indParams),	ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"MNC","Malnutrition", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(MALNUTRITION), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"ANC","Anaemia",	ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(ANAEMIA),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"MCC","Meningococcal Meningitis",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(MENINGOCOCCAL_MENINGITIS), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"OMC", "Other Menignitis", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOtherMenigitisList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"NNC", "NeonatalTetanus", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getNeonatalTetanusList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"NS","Neonatal Sepsis",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(NEONATAL_SEPSIS),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"NNC", "Neonatal Tetanus", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(NEONATAL_TETANUS),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"PMC","Poliomyelitis", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getPoliomyelitisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"CPC","Chicken Pox",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getChickenPoxList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"MSC","Measles",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMeaslesList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"HPC","Hepatitis", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getHepatitisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"AM","AMOEBIASIS",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAmoebiasis(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"MPC","Mumps", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMumpsList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"SMC", "Suspected Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(SUSPECTED_MALARIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"TMC", "Tested Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(TESTED_MALARIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"CMC", "Confirmed Malaria", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMalariaList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"UTC","Urinary Tract Infection", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getUrinaryTractInfectionList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"TYC","Typhoid Fever", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getTyphoidList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"BLC","Bilharzia", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getBilharziaList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd, "IWC","Interstinal worms", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getInterstinalwormsList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"MNC","Malnutrition", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMalnutritionList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"ANC","Anaemia",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAnaemiaList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"EC","Eye Infections", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getEyeInfectionsList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"EIC","Ear Infections Conditions", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getEarInfectionsConditionsList(),AGE_BELOW_FIVE), indParams),	ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"URC","Upper Respiratory Tract Infections", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getUpperRespiratoryTractInfectionsList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"ASC","Asthma", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAsthmaList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"TSC","Tonsilities",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getTonsilitiesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"PNC","Pneumonia", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getPneumoniaList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"UTC","Urinary Tract Infection", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getUrinaryTractInfectionList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd, "MDC", "Mental Disorders", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getMentalDisordersList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd, "DDC", "DentalDisorders", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDentalDisordersList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd, "JIC", "Jiggers Infestation", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getJiggersInfestationList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd, "DOC", "Disease Of The Skin", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDiseaseOfTheSkinList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"PC",	"Poisoning",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getPoisoningList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd, "RTC", "Road TrafficI Injuries", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getRoadTrafficInjuriesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd, "JIC", "Jiggers Infestation", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(JIGGERS_INFESTATION),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd, "DOC", "Disease Of The Skin", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DISEASES_OF_SKIN),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DS","Down’s syndrome",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(DOWN_SYNDROME), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"PC",	"Poisoning",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(POISONING),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd, "RTC", "Road TrafficI Injuries", ReportUtils.map(moh705indicatorLibrary.roadTrafficInjuries(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DRTC","Deaths due to Road Traffic Injuries",ReportUtils.map(moh705indicatorLibrary.deathDueToRoadTrafficInjuries(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"VRC","Violence related  injuries", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getViolenceRelatedInjuriesList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"OIC","Other Injuries", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOtherInjuriesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"SAC","Sexual Assault", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getSexualAssaultList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"BC","Burns",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getBurnsList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"SBC","Snake Bites",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getSnakeBitesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"DBC","Dog BITES",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDogBitesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"OBC","Other Bites",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOtherBitesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"DTC","Diabetes", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDiabetesList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-    	ReportingUtils.addRow(cohortDsd,"EPC","Epilepsy", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getEpilepsyList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DTC","Diabetes", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDiabetesList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"EPC","Epilepsy", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getEpilepsyList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"OCDC","Other Convulsive Disorders", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOtherConvulsiveDisordersList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"BRC","Brucellosis",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getBrucellosisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"RF","Rheumatic Fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getReumonicFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"BRC","Brucellosis",	ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(BRUCELLOSIS),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RKC","Rickets", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getRicketsList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"VRC","Violence related  injuries", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getViolenceRelatedInjuriesList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"CRPC","Cerebral Palsy",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getCerebralPalsyList(),	AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"ATC","Autism",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getAutismList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"TRC","Tryponomiasis", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getTryponomiasisList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"KLC","Kalazar leishmaniasis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getKalazarLeishmaniasisList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"YFC","Yellow Fever", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getYellowFeverList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"VHC","Viral Haemorrhagic Fever", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getViralHaemorrhagicFeverList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"OVC","Overweight", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOvrerweightList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"SCC","Suspected Childhood Cancers",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getChildHoodCancerist(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"HYPO","Hypoxaemia (Spo2<90%)", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getHypoxaemiaList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"VHC","Viral Haemorrhagic Fever", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(VIRAL_HAEMORRHAGIC_FEVER), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RVF","Rift valley fever", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getRiftValleyFeverList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"DRTC","Deaths due to Road Traffic Injuries",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getRoadTrafficInjuriesList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"CKU","Chikungunya fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getChikungunyaFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"DENF","Dengue fever",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getDengueFeverList(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"KLC","Kalazar leishmaniasis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getKalazarLeishmaniasisList(), AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"CL", "Cutaneous Leishmaniasis",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(CUTANEOUS_LEISHMANIASIS),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"ANT","Suspected Anthrax",ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(SUSPECTED_ANTHRAX),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"SCC","Suspected Childhood Cancers",	ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getChildHoodCancerist(),AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"HYPO","Hypoxaemia (Spo2<90%)", ReportUtils.map(moh705indicatorLibrary.diagnosis(Arrays.asList(HYPOXAEMIA), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+
+		ReportingUtils.addRow(cohortDsd,"TC","Tuberculosis",ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getTuberculosisDiagnosisList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		ReportingUtils.addRow(cohortDsd,"OVC","Overweight", ReportUtils.map(moh705indicatorLibrary.diagnosis(DiagnosisLists.getOverweightList(), AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+
 		ReportingUtils.addRow(cohortDsd, "NFAC", "No. Of First Attendances", ReportUtils.map(moh705indicatorLibrary.newAttendances(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd, "RAC", "Re-Attendances", ReportUtils.map(moh705indicatorLibrary.reAttendances(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RFHC","Referrals from other health facility", ReportUtils.map(moh705indicatorLibrary.referralsFromOtherFacilities(AGE_BELOW_FIVE), indParams),ReportAddonUtils.getAdultChildrenColumns());
 		ReportingUtils.addRow(cohortDsd,"RFCC","Referrals to other health facility", ReportUtils.map(moh705indicatorLibrary.referralsToOtherFacilities(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-		ReportingUtils.addRow(cohortDsd,"AODC","All other diseases for children",ReportUtils.map(moh705indicatorLibrary.allOtherDiseasesAboveFive(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
-			//TODO: Referrals from community unit
-			//TODO:Referrals to community unit
+		ReportingUtils.addRow(cohortDsd,"AODC","All other diseases for children",ReportUtils.map(moh705indicatorLibrary.allOtherDiseasesUnderFive(AGE_BELOW_FIVE), indParams), ReportAddonUtils.getAdultChildrenColumns());
+		//TODO: Referrals from community unit
+		//TODO:Referrals to community unit
 		return cohortDsd;
 
 	}
