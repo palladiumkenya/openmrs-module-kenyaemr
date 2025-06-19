@@ -120,6 +120,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh407B" />
 				<ref bean="kenyaemr.ehrReports.report.moh755" />
         <ref bean="kenyaemr.ehrReports.report.fcdrr" />
+				<ref bean="kenyaemr.ehrReports.report.moh730B" />
 			</set>
 		</property>
 	</bean>
@@ -1273,5 +1274,12 @@
 			</set></property>
 		<property name="template" value="kenyaemr:fcdrr.xls" />
 	</bean>
-	
+	<bean id="kenyaemr.ehrReports.report.moh730B" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="a72d894b-5d4d-42cb-918b-948399a3bba1" />
+		<property name="name" value="MOH 730B F-CDRR for ANTIRETROVIRAL and OPPORTUNISTIC INFECTION MEDICINES Register" />
+		<property name="description" value="MOH 730B FACILITY CONSUMPTION DATA REPORT and REQUEST (F-CDRR) for ANTIRETROVIRAL and OPPORTUNISTIC INFECTION MEDICINES" />
+		<property name="apps"><set><ref bean="kenyaemr.app.reports" /></set></property>
+		<property name="template" value="kenyaemr:moh730B.xls" />
+	</bean>
+
 </beans>
