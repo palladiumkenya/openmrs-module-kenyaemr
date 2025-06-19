@@ -9,10 +9,6 @@
  */
 package org.openmrs.module.kenyaemr;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * KenyaEMR specific constants
  */
