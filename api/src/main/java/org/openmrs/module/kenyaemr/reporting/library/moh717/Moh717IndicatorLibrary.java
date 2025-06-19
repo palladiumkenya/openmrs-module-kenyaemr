@@ -94,8 +94,8 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator laboratoryTests() {
         return cohortIndicator("Number of Laboratory tests", ReportUtils.map(moh717CohortLibrary.laboratoryTests(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator xrayAndImaging() {
-        return cohortIndicator("xrays and imaging", ReportUtils.map(moh717CohortLibrary.xrayAndImaging(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator xrayAndImaging(String xrayAndImagingList) {
+        return cohortIndicator("xrays and imaging", ReportUtils.map(moh717CohortLibrary.xrayAndImaging(xrayAndImagingList), "startDate=${startDate},endDate=${endDate}"));
     }
 
     public CohortIndicator specialClinic(String clinicFormUUID, int visitType) {
@@ -159,4 +159,5 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator specialClinics(String specialClinicFormUuid) {
         return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinics(specialClinicFormUuid), "startDate=${startDate},endDate=${endDate}"));
     }
+
 }
