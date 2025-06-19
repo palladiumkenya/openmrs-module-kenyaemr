@@ -234,7 +234,7 @@ public class Moh717CohortLibrary {
         sql.setName("xrayAndImaging");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select o.patient_id from openmrs.orders o where o.order_type_id = 4 and o.concept_id in ("+xrayAndImaging+") and o.voided = 0 and date(date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select o.encounter_id from openmrs.orders o where o.order_type_id = 4 and o.concept_id in ("+xrayAndImaging+") and o.voided = 0 and date(date_activated) between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition specialClinic(String clinicFormUUID, int visitType) {
