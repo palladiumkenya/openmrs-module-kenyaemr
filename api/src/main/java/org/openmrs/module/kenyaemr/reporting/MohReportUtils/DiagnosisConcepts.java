@@ -80,13 +80,8 @@ public class DiagnosisConcepts {
 		public static final Integer TCP_1 = 2002912;
 		public static final Integer TCP_2 = 2002913;
 
-		//Confirmed Malaria
-		public static final Integer CMC_1 = 2002646;
-		public static final Integer CMC_2 = 2002642;
-		public static final Integer CMC_3 = 2002650;
-		public static final Integer CMC_4= 2018087;
+		
 		//Other Menignitis A
-
 		public static final Integer OMC_1= 111967;
 		public static final Integer OMC_2= 125820;
 		public static final Integer OMC_3= 125958;
@@ -1338,36 +1333,30 @@ public class DiagnosisConcepts {
 		public static final Integer MPSA_4= 2002518;
 
 		//Tested malaria TMC
-		public static final Integer TMC_1= 2002631;
-		public static final Integer TMC_2= 2002637;
-		public static final Integer TMC_3= 2002642;
-		public static final Integer TMC_4= 2002649;
-		public static final Integer TMC_5= 2002650;
-		public static final Integer TMC_6= 116128;
+		public static final Integer TMC_1= 152295;
+		public static final Integer TMC_2= 2002634;
+		public static final Integer TMC_3= 2002636;
+		public static final Integer TMC_4= 158379;
+		public static final Integer TMC_5= 2002639;
+		public static final Integer TMC_6= 2002641;
+		public static final Integer TMC_7= 152296;
+		public static final Integer TMC_8= 2002644;
+		public static final Integer TMC_9= 2002646;
+		public static final Integer TMC_10= 116128;
+		public static final Integer TMC_11= 155686;
+	
+		//Suspected malaria SMC
+		public static final Integer SMC_1= 2002652;
+		public static final Integer SMC_2= 116128;
 
 		//Confirmed Malaria positive  COA
 		public static final Integer COA_1= 2002631;
-		public static final Integer COA_2= 152295;
-		public static final Integer COA_3= 2002634;
-		public static final Integer COA_4= 2002636;
-		public static final Integer COA_5= 2002637;
-		public static final Integer COA_6= 158379;
-		public static final Integer COA_7= 2002639;
-		public static final Integer COA_8= 2002641;
-		public static final Integer COA_9= 2002642;
-		public static final Integer COA_10= 152296;
-		public static final Integer COA_11= 2002644;
-		public static final Integer COA_12= 2002646;
-		public static final Integer COA_13= 2002649;
-		public static final Integer COA_14= 2002650;
-		public static final Integer COA_15= 116128;
-		public static final Integer COA_16= 155686;
-		public static final Integer COA_17= 2018087;
+		public static final Integer COA_2= 2002637;
+		public static final Integer COA_3= 2002642;
+		public static final Integer COA_4= 2002649;
+		public static final Integer COA_5= 2002650;
 
-
-		//STI
-		/* , 2010396, 2010397, 2010398, 2010399, 2010400, 2010401, 2010402, 2014112, 120733, 2014868, 2002829, 2002830, 145665, 2002831, 2002833, 2002834, 2002835, 145667, 2002725, 120730, 155117, 2002849, */
-		
+		//STI	
 		public static final Integer STIA_1 = 2002856;
 		public static final Integer STIA_2 = 2002857;
 		public static final Integer STIA_3 = 132764;
@@ -4668,9 +4657,7 @@ public class DiagnosisConcepts {
 		Integer DYSENTERY = 2014827;
 		Integer PNEUMONIA = 114100;
 		Integer ASTHMA = 121375;
-		Integer CHOLERA = 2002391;
-		Integer TESTED_MALARIA = 2002650;
-		Integer SUSPECTED_MALARIA = 116128;
+		Integer CHOLERA = 2002391;		
 		Integer MALNUTRITION = 2004984;
 		Integer ANAEMIA = 1226;
 		Integer MENINGOCOCCAL_MENINGITIS = 134369;
@@ -4693,9 +4680,7 @@ public class DiagnosisConcepts {
 		allNonListedDiagnosisForUnder5.add(DYSENTERY);
 		allNonListedDiagnosisForUnder5.add(PNEUMONIA);
 		allNonListedDiagnosisForUnder5.add(ASTHMA);
-		allNonListedDiagnosisForUnder5.add(CHOLERA);
-		allNonListedDiagnosisForUnder5.add(TESTED_MALARIA);
-		allNonListedDiagnosisForUnder5.add(SUSPECTED_MALARIA);
+		allNonListedDiagnosisForUnder5.add(CHOLERA);		
 		allNonListedDiagnosisForUnder5.add(ANAEMIA);
 		allNonListedDiagnosisForUnder5.add(MALNUTRITION);
 		allNonListedDiagnosisForUnder5.add(MENINGOCOCCAL_MENINGITIS);
@@ -4718,7 +4703,6 @@ public class DiagnosisConcepts {
 	 *
 	 * */
 	public static List<Integer> allNonListedDiagnosisForAbove5() {
-		Integer SUSPECTED_MALARIA = 2002652;
 		Integer MENINGOCOCCAL_MENINGITIS = 134369;
 		Integer MALARIA_IN_PREGNANCY =135361;
 		Integer JIGGERS_INFESTATION =166567;
@@ -4730,7 +4714,6 @@ public class DiagnosisConcepts {
 
 		List<Integer> allNonListedDiagnosisForAbove5 = new ArrayList<Integer>();
 
-		allNonListedDiagnosisForAbove5.add(SUSPECTED_MALARIA);
 		allNonListedDiagnosisForAbove5.add(MENINGOCOCCAL_MENINGITIS);
 		allNonListedDiagnosisForAbove5.add(MALARIA_IN_PREGNANCY);
 		allNonListedDiagnosisForAbove5.add(JIGGERS_INFESTATION);
