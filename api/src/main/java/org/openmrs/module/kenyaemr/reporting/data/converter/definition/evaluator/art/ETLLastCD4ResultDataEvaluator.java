@@ -39,7 +39,7 @@ public class ETLLastCD4ResultDataEvaluator implements PersonDataEvaluator {
                 "               mid(max(concat(coalesce(date(date_test_requested),date(visit_date)),\n" +
                 "                              if(lab_test = 5497, test_result, if(lab_test = 167718 and test_result = 1254, '>200', if(lab_test = 167718 and test_result = 167717,'<=200',if(lab_test = 730,concat(test_result,'%'),'')))), '')),\n" +
                 "                   11) as cd4_count from kenyaemr_etl.etl_laboratory_extract\n" +
-                "        where date(visit_date) <= date(:endDate) and  lab_test in (167718,5497,730) GROUP BY patient_id;";
+                "        where date(visit_date) <= date(:endDate) and lab_test in (167718,5497,730) and result_name is not null GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
