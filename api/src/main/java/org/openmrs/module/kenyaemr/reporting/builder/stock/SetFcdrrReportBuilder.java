@@ -35,18 +35,20 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int DARUNAVIR_RITONAVIR_600MG_100MG = 2250;
 	static final int DOLUTEGRAVIR_50MG_TABS  = 2225;
 	static final int LAMIVUDINE_150MG_ORAL_TABLET  = 1819;
+	static final int LAMIVUDINE_3_T_C_ORAL_LIQUID  = 1815;
 	static final int LOPINAVIR_RITONAVIR_200_50MG = 1858;
 	static final int RALTEGRAVIR_100MG = 2215;
 	static final int RALTEGRAVIR_400MG = 2216;
 	static final int RITONAVIR_100MG = 2103;
-	static final int RITONAVIR_100MG_SACHET = 2105;
-	static final int TENOFOVIR_300MG = 2227;
+	static final int RITONAVIR_100MG_ORAL = 2105;
+	static final int TENOFOVIR_300MG = 2153;
 	static final int TENOFOVIR_EMTRICITABINE_300_200MG = 2236;
 	static final int TENOFOVIR_LAMIVUDINE_300_300MG = 2235;
 	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_50MG = 5624;
 	static final int TENOFOVIR_LAMIVUDINE_EFAVIRENZ_300_300_400MG = 7223;
 	static final int ZIDOVUDINE_300MG = 2209;
 	static final int ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC = 1822;
+	static final int ZIDOVUDINE_LAMIVUDINE_LIQUID = 2208;
 	static final int RITONAVIR_RTV_80MG = 2105;
 	static final int ZIDOVUDINE_10MG_100ML = 2205;
 	static final int RALTEGRAVIR_25MG = 2214;
@@ -59,23 +61,24 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int ETRAVIRINE_200MG = 2213;
 	static final int EFAVIRENZ_200MG = 1640;
 	static final int EFAVIRENZ_600MG = 1643;
-	static final int DOLUTEGRAVIR_10MG = 2223;
+	static final int DOLUTEGRAVIR_10MG = 8001;
 	static final int DARUNAVIR_100MG = 2218;
 	static final int DARUNAVIR_75MG = 2219;
+	static final int DARUNAVIR_400MG_50MG = 8256;
 	static final int DARUNAVIR_150MG = 2220;
 	static final int ABACAVIR_LAMIVUDINE_DOLUTEGRAVIR = 2251;
 	static final int ABACAVIR_LAMIVUDINE_120_60MG_= 2242;
 	static final int ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE = 1817;
 	static final int ZIDOVUDINE_LAMIVUDINE_300_150MG = 1818;
 	static final int DAPSONE_100_150MG = 1571;
-
 	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_500MG = 2240;
+	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_FCD_300_300_500MG = 7958;
 	static final int NEVIRAPINE_200MG = 1941;
 	static final int ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE_60_30_50MG= 1821;
 	static final int ACYCLOVIR_400MG= 2247;
 	static final int AMPHOTERICIN_B_50_INJECTABLE= 8033;
 	static final int AMPHOTERICIN_B_50_INJECTABLE_LYPOSOMOL= 8034;
-	static final int COTRIMOXAZOLE_960MG= 2248;
+	static final int COTRIMOXAZOLE_960MG= 2142;
 	static final int COTRIMOXAZOLE_240MG= 2249;
 	static final int FLUCONAZOLE_200MG= 2234;
 	static final int FLUCYTOSINE= 1698;
@@ -84,10 +87,13 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int ISONIAZID_100MG= 1801;
 	static final int ISONIAZID_300MG= 1805;
 	static final int PYRAZINAMIDE_400= 4;
-	static final int PYRIDOXINE_50MG= 2244;
+	static final int PYRIDOXINE_50MG= 7867;
 	static final int RIFABUTIN_150MG_TAB= 11;
 	static final int RIFAPENTINE_150_TAB= 2245;
-	static final int RIFAPENTINE_ISONIAZID_300MG_300MG= 2246;
+	static final int RIFAPENTINE_ISONIAZID_300MG_300MG= 7496;
+	static final int DAPIVIRINE= 2254;
+	static final int CABOTEGRAVIR= 2255;
+	static final int PYRIDOXINE_25MG= 2069;
 
 	static final int FACTOR_1 =1, FACTOR_30 =30, FACTOR_36 =36, FACTOR_60 = 60, FACTOR_90 = 90,FACTOR_100 = 100,FACTOR_144 = 144,
 			FACTOR_120 = 120, FACTOR_240 = 240, FACTOR_360 = 360, FACTOR_480 = 480,FACTOR_672 = 672, FACTOR_1000 = 1000;
@@ -137,8 +143,9 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 				ReportUtils.map(getDataSetDefinition("DARUNAVIR600MG", DARUNAVIR_600MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("DOLUTEGRAVIR50MGTABS", DOLUTEGRAVIR_50MG_TABS,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("DARUNAVIR_RITONAVIR_100MG", DARUNAVIR_RITONAVIR_600MG_100MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("3TC_150MG", LAMIVUDINE_150MG_ORAL_TABLET,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("AZT_3TC_FDC", ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("3TC_150MG", LAMIVUDINE_150MG_ORAL_TABLET,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("3TC_240ML", LAMIVUDINE_3_T_C_ORAL_LIQUID,FACTOR_240, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("AZT_3TC_FDC", ZIDOVUDINE_LAMIVUDINE_300MG__150MG_AZT_3TC_FDC,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("RTV", RITONAVIR_RTV_80MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AZT_100MG_100ML", ZIDOVUDINE_10MG_100ML,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("RAL_25MG", RALTEGRAVIR_25MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
@@ -147,7 +154,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 				ReportUtils.map(getDataSetDefinition("NVP_10MG_100ML_240", NEVIRAPINE_10MG_100ML,FACTOR_240, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("LPV_R_80_20MG", LOPINAVIR_RITONAVIR_80_20MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("LPV_R_40_10MG", LOPINAVIR_RITONAVIR_40_10MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("LPV_R_100_25MG", LOPINAVIR_RITONAVIR_100_25MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("LPV_R_100_25MG", LOPINAVIR_RITONAVIR_100_25MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("3TC_10MG", LAMIVUDINE_10MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("ETV_100MG", ETRAVIRINE_100MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("ETV_200MG", ETRAVIRINE_200MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
@@ -160,42 +167,51 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 				ReportUtils.map(getDataSetDefinition("DRV_75MG_60", DARUNAVIR_75MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("DRV_150MG", DARUNAVIR_150MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("DRV_150MG_240", DARUNAVIR_150MG,FACTOR_240, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ABC_3TC_DTG", ABACAVIR_LAMIVUDINE_DOLUTEGRAVIR,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ABC_3TC_120_60MG", ABACAVIR_LAMIVUDINE_120_60MG_,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("DARUNAVIR_400MG_50MG", DARUNAVIR_400MG_50MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ABC_3TC_DTG", ABACAVIR_LAMIVUDINE_DOLUTEGRAVIR,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ABC_3TC_120_60MG", ABACAVIR_LAMIVUDINE_120_60MG_,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AZT_3TC_NVP", ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AZT_3TC__300_150MG", ZIDOVUDINE_LAMIVUDINE_300_150MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("AZT_300MG", ZIDOVUDINE_300MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("TDF_3TC_EFV_300_300_400MG", TENOFOVIR_LAMIVUDINE_EFAVIRENZ_300_300_400MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("TDF_3TC_DTG_300_300_50MG", TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_500MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("AZT_300MG", ZIDOVUDINE_300MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("TDF_3TC_EFV_300_300_400MG", TENOFOVIR_LAMIVUDINE_EFAVIRENZ_300_300_400MG,FACTOR_90, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("TDF_3TC_EFV_300_300_400MG_30TBs", TENOFOVIR_LAMIVUDINE_EFAVIRENZ_300_300_400MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("TDF_3TC_DTG_300_300_50MG", TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_500MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("TDF_3TC_DTG_FCD_300_300_50MG", TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_FCD_300_300_500MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("DAPSONE_100_150MG", DAPSONE_100_150MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("TDF_3TC_300_300MG", TENOFOVIR_LAMIVUDINE_300_300MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("TDF_3TC_300_300MG_90", TENOFOVIR_LAMIVUDINE_300_300MG,FACTOR_90, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("TDF_3TC_300_300MG", TENOFOVIR_LAMIVUDINE_300_300MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("FTC_TDF_300_200MG", TENOFOVIR_EMTRICITABINE_300_200MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("TDF_300MG", TENOFOVIR_300MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("RTV_100MG", RITONAVIR_100MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("FTC_TDF_300_200MG", TENOFOVIR_EMTRICITABINE_300_200MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("TDF_300MG", TENOFOVIR_300MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("RTV_100MG", RITONAVIR_100MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("RTV_120MG", RITONAVIR_100MG,FACTOR_120, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("RAL_100MG", RALTEGRAVIR_400MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("RAL_100MG", RALTEGRAVIR_400MG,FACTOR_60, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("NVP_200MG", NEVIRAPINE_200MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("LPV_R_200_50MG", LOPINAVIR_RITONAVIR_200_50MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ATV_R_300_100MG", ATAZANAVIR_RITONAVIR_300_100MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ATV_R_300_100MG", ATAZANAVIR_RITONAVIR_300_100MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AZT_3TC_NVP_60_30_50MG", ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE_60_30_50MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ACYCLOVIR_400MG", ACYCLOVIR_400MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ACYCLOVIR_400MG", ACYCLOVIR_400MG,FACTOR_30, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AMPHOTERICIN_B_50_INJECTABLE", AMPHOTERICIN_B_50_INJECTABLE,FACTOR_1, VITAL), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("AMPHOTERICIN_B_50_INJECTABLE_LYPOSOMOL", AMPHOTERICIN_B_50_INJECTABLE_LYPOSOMOL,FACTOR_1, VITAL), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("COTRIMOXAZOLE_960MG", COTRIMOXAZOLE_960MG,30, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("COTRIMOXAZOLE_960MG", COTRIMOXAZOLE_960MG,FACTOR_1, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("COTRIMOXAZOLE_240MG", COTRIMOXAZOLE_240MG,FACTOR_100, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("FLUCONAZOLE_200MG", FLUCONAZOLE_200MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("FLUCONAZOLE_200MG", FLUCONAZOLE_200MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("FLUCYTOSINE", FLUCYTOSINE,FACTOR_100, CAPSULE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("ETHAMBUTOL_400MG", ETHAMBUTOL_400MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("ISONIAZID_10MG", ISONIAZID_10MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ISONIAZID_100MG", ISONIAZID_100MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("ISONIAZID_300MG", ISONIAZID_300MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ISONIAZID_100MG", ISONIAZID_100MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ISONIAZID_100MG_672", ISONIAZID_100MG,FACTOR_672, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ISONIAZID_300MG", ISONIAZID_300MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("PYRAZINAMIDE_400MG", PYRAZINAMIDE_400,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("PYRIDOXINE_50MG", PYRIDOXINE_50MG,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("PYRIDOXINE_50MG", PYRIDOXINE_50MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("RIFABUTIN_150MG_TAB", RIFABUTIN_150MG_TAB,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
 				ReportUtils.map(getDataSetDefinition("RIFAPENTINE_150_TAB", RIFAPENTINE_150_TAB,30, 1513), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
-				ReportUtils.map(getDataSetDefinition("RF_INH_300MG_300MG", RIFAPENTINE_ISONIAZID_300MG_300MG,FACTOR_36, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}")
+				ReportUtils.map(getDataSetDefinition("RF_INH_300MG_300MG", RIFAPENTINE_ISONIAZID_300MG_300MG,FACTOR_36, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("RITONAVIR_100MG_ORAL", RITONAVIR_100MG_ORAL,FACTOR_30, POWDER), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("ZIDOVUDINE_LAMIVUDINE_LIQUID", ZIDOVUDINE_LAMIVUDINE_LIQUID,FACTOR_240, BOTTLE), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("DAPIVIRINE", DAPIVIRINE,FACTOR_1, PIECES), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("CABOTEGRAVIR", CABOTEGRAVIR,FACTOR_1, VITAL), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}"),
+				ReportUtils.map(getDataSetDefinition("PYRIDOXINE_25MG", PYRIDOXINE_25MG,FACTOR_100, TABLET), "startDate=${startDate},endDate=${endDate},factor=${factor},dispensingUnit=${dispensingUnit}")
 		);
 
 	}
