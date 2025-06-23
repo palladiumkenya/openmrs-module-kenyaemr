@@ -25,49 +25,58 @@ import java.util.List;
 public class FacilityDashboardUtil {
 
 	/**
-	 * Surveillance dashboards
-	 * 1. Count of clients tested positive not linked
+	 * This query counts the number of HIV positive clients who were not linked to
+	 * care (numerator).
 	 * 
-	 * @return long value
+	 * @param startDate the start date of the period to consider
+	 * @param endDate   the end date of the period to consider
+	 * @return the count of HIV positive clients not linked to care
 	 */
 	public static Long getHivPositiveNotLinked(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String hivPositiveNotLinkedQuery = "SELECT COUNT(a.patient_id) number_hiv_positive\n" +
-			"FROM ((SELECT av.patient_id\n" +
-			"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
-			"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
-			"       WHERE av.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
-			"         AND av.final_test_result = 'Positive')\n" +
-			"      UNION\n" +
-			"      (SELECT d.patient_id\n" +
-			"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
-			"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
-			"       WHERE d.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
-			"         AND d.final_test_result = 'Positive')\n" +
-			"      UNION\n" +
-			"      (SELECT p.patient_id\n" +
-			"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
-			"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
-			"       WHERE p.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
-			"         AND p.final_test_result = 'Positive')\n" +
-			"      UNION\n" +
-			"      (SELECT t.patient_id\n" +
-			"       FROM kenyaemr_etl.etl_hts_test t\n" +
-			"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
-			"           AND t.final_test_result = 'Positive'\n" +
-			"           AND t.voided = 0\n" +
-			"           AND t.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y'))) a\n" +
-			"         LEFT JOIN\n" +
-			"     (SELECT l.patient_id, l.ccc_number,l.art_start_date\n" +
-			"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-			"      WHERE date(l.visit_date) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
-			"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
-			"         LEFT JOIN (SELECT e.patient_id\n" +
-			"                    FROM kenyaemr_etl.etl_drug_event e\n" +
-			"                    WHERE e.program = 'HIV' and date(e.visit_date) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) e\n" +
-			"                   ON e.patient_id = a.patient_id\n" +
-			"where (l.patient_id is null or l.art_start_date is null)\n" +
-			"  and e.patient_id is null;";
+				"FROM ((SELECT av.patient_id\n" +
+				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
+				"       WHERE av.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"         AND av.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT d.patient_id\n" +
+				"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
+				"       WHERE d.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"         AND d.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT p.patient_id\n" +
+				"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
+				"       WHERE p.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"         AND p.final_test_result = 'Positive')\n" +
+				"      UNION\n" +
+				"      (SELECT t.patient_id\n" +
+				"       FROM kenyaemr_etl.etl_hts_test t\n" +
+				"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
+				"           AND t.final_test_result = 'Positive'\n" +
+				"           AND t.voided = 0\n" +
+				"           AND t.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y'))) a\n" +
+				"         LEFT JOIN\n" +
+				"     (SELECT l.patient_id, l.ccc_number,l.art_start_date\n" +
+				"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
+				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
+				"         LEFT JOIN (SELECT e.patient_id\n" +
+				"                    FROM kenyaemr_etl.etl_drug_event e\n" +
+				"                    WHERE e.program = 'HIV' and date(e.visit_date) BETWEEN DATE_SUB(STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y')) e\n" +
+				"                   ON e.patient_id = a.patient_id\n" +
+				"where (l.patient_id is null or l.art_start_date is null)\n" +
+				"  and e.patient_id is null;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -78,10 +87,12 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * 1.1 Count of clients tested positive baseline
+	 * This query counts the number of HIV positive clients who were linked to care
+	 * (denominator).
 	 * 
-	 * @return long value
+	 * @param startDate the start date of the period to consider
+	 * @param endDate   the end date of the period to consider
+	 * @return the count of HIV positive clients linked to care
 	 */
 	public static Long getPatientsTestedHivPositive(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -124,9 +135,11 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Base query for pregnant or postpartum women
+	 * This query counts the number of pregnant or postpartum women (denominator).
 	 * 
-	 * @return
+	 * @param startDate the start date for the query
+	 * @param endDate   the end date for the query
+	 * @return the count of pregnant or postpartum women
 	 */
 	public static Long getPregnantOrPostpartumClients(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -161,10 +174,12 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * 2. Pregnant post partum women at High risk not linked to prep
-	 * 
-	 * @return long value
+	 * This query counts the number of pregnant or postpartum women not on PrEP
+	 * (numerator).
+	 *
+	 * @param startDate the start date for the query
+	 * @param endDate   the end date for the query
+	 * @return the count of pregnant or postpartum women not on PrEP
 	 */
 	public static Long getPregnantPostpartumNotInPrep(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -257,10 +272,11 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * Clients eligible for VL test
+	 * Get number of eligible patients for viral load testing (denominator)
 	 * 
-	 * @return long value
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the number of eligible patients for viral load testing
 	 */
 	public static Long getEligibleForVl(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -285,7 +301,8 @@ public class FacilityDashboardUtil {
 				"            where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
 				"              and program_name = 'HIV'\n" +
 				"            group by patient_id) d on d.patient_id = fup.patient_id\n" +
-				"      where fup.visit_date BETWEEN STR_TO_DATE('" + startDate + "', '%d/%m/%Y') AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n"  +
+				"      where fup.visit_date BETWEEN STR_TO_DATE('" + startDate + "', '%d/%m/%Y') AND STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')\n" +
 				"      group by patient_id\n" +
 				"      having (started_on_drugs is not null and started_on_drugs <> \"\")\n" +
 				"         and (\n" +
@@ -343,85 +360,117 @@ public class FacilityDashboardUtil {
 		}
 	}
 
-	
 	/**
-	 * Surveillance dashboards
-	 * 3. Delayed viral load testing. Eligible without VL test taken
-	 * 
-	 * @return long value
+	 * This query counts the number of patients eligible for viral load testing
+	 * who have not taken a sample (numerator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the number of eligible patients for viral load testing who have not
+	 *         taken a sample
 	 */
 	public static Long getEligibleForVlSampleNotTaken(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String eligibleForVlSampleNotTakenQuery = "select count(b.patient_id) as eligible_for_vl_sample_not_taken\n" +
 				"          from (select fup.visit_date,\n" +
 				"                         fup.patient_id,\n" +
-				"                         max(e.visit_date)                                                                as enroll_date,\n" +
-				"                         greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n" +
+				"                         max(e.visit_date)                                                                as enroll_date,\n"
+				+
+				"                         greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n"
+				+
 				"                         greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
-				"                                  ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n" +
-				"                         d.patient_id                                                                     as disc_patient,\n" +
-				"                         d.effective_disc_date                                                            as effective_disc_date,\n" +
-				"                         max(d.visit_date)                                                                as date_discontinued,\n" +
-				"                         de.patient_id                                                   as started_on_drugs\n" +
+				"                                  ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n"
+				+
+				"                         d.patient_id                                                                     as disc_patient,\n"
+				+
+				"                         d.effective_disc_date                                                            as effective_disc_date,\n"
+				+
+				"                         max(d.visit_date)                                                                as date_discontinued,\n"
+				+
+				"                         de.patient_id                                                   as started_on_drugs\n"
+				+
 				"                  from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
-				"                           join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"                           join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n"
+				+
 				"                           join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
 				"                           left join kenyaemr_etl.etl_drug_event de\n" +
-				"                                     on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                                     on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')\n" +
 				"                           left outer JOIN\n" +
 				"                       (select patient_id,\n" +
-				"                               coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-				"                               max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"                               coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n"
+				+
+				"                               max(date(effective_discontinuation_date)) as               effective_disc_date\n"
+				+
 				"                        from kenyaemr_etl.etl_patient_program_discontinuation\n" +
 				"                        where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
 				"                          and program_name = 'HIV'\n" +
 				"                        group by patient_id) d on d.patient_id = fup.patient_id\n" +
-				"                  where fup.visit_date BETWEEN STR_TO_DATE('" + startDate + "', '%d/%m/%Y') AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                  where fup.visit_date BETWEEN STR_TO_DATE('" + startDate
+				+ "', '%d/%m/%Y') AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
 				"                  group by patient_id\n" +
 				"                  having (started_on_drugs is not null and started_on_drugs <> '')\n" +
 				"                     and (\n" +
 				"                      (\n" +
-				"                          (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) <= 30 and\n" +
-				"                           ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate + "', '%d/%m/%Y') or date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"                          (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y')) <= 30 and\n" +
+				"                           ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y') or date(enroll_date) > date(d.effective_disc_date)) or\n" +
 				"                            d.effective_disc_date is null))\n" +
 				"                              and\n" +
-				"                          (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"                          (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n"
+				+
 				"                           disc_patient is null)\n" +
 				"                          )\n" +
 				"                      )) e\n" +
-				"                   INNER JOIN (select v.patient_id,v.date_test_requested, v.latest_hiv_followup_visit\n" +
+				"                   INNER JOIN (select v.patient_id,v.date_test_requested, v.latest_hiv_followup_visit\n"
+				+
 				"                               from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
-				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate + "'\n" +
+				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
+				+
+				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				+ endDate + "'\n" +
 				"             , '%d/%m/%Y'), INTERVAL   7   DAY)) >= 3 and\n" +
-				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n" +
-				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate + "'\n" +
+				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n"
+				+
+				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
+				+
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				+ endDate + "'\n" +
 				"             , '%d/%m/%Y'), INTERVAL 7 DAY)) >= 3 and\n" +
 				"                                       (v.vl_result is not null and\n" +
-				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\\n\"\n" +
+				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\\n\"\n"
+				+
 				"\n" +
 				"                                   OR (v.vl_result >= 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				+
 				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
 				"                                       3) -- Unsuppressed VL\n" +
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				+
 				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
 				"                                       6 and\n" +
-				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\\n\"\n" +
+				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\\n\"\n"
+				+
 				"\n" +
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n" +
-				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL "+ days +" DAY)) >=\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				+
+				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
 				"                                       12 and\n" +
-				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\\n\"\n" +
+				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\\n\"\n"
+				+
 				"\n" +
-				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate + "'\n" +
+				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
+				+
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				+ endDate + "'\n" +
 				"             , '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 3\n" +
 				"                                       and (v.order_reason in (159882, 1434) and\n" +
-				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n" +
+				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				+
 				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
 				"                                            12) and\n" +
 				"                                       v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
@@ -437,10 +486,12 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * 4. Count of Virally unsuppressed clients
-	 * 
-	 * @return long value
+	 * This query counts the number of virally unsuppressed clients
+	 * (denominator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of virally unsuppressed clients
 	 */
 	public static Long getVirallyUnsuppressed(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -461,10 +512,12 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * 4. Count of Virally suppressed clients with +2 weeks without EAC
-	 * 
-	 * @return long value
+	 * This query counts the number of virally unsuppressed clients
+	 * (numerator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of virally unsuppressed clients
 	 */
 	public static Long getVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -495,10 +548,11 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards denominator
-	 * 4. Count of HEIs turning 6-8 weeks old
-	 * 
-	 * @return long value
+	 * This query counts the number of HEI 6-8 weeks old (denominator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of HEI 6-8 weeks old
 	 */
 	public static Long getHeiSixToEightWeeksOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -518,10 +572,12 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards numerator
-	 * 5. Count of HEI 6-8 weeks without DNA PCR results
-	 * 
-	 * @return long value
+	 * This query counts the number of HEI 6-8 weeks without DNA PCR results
+	 * (numerator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of HEI 6-8 weeks without DNA PCR results
 	 */
 	public static Long getHeiSixToEightWeeksWithoutPCRResults(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -549,17 +605,19 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * HEIs turning 24 months old
-	 * 
-	 * @return long value
+	 * This query counts the number of HEI 24 months old (denominator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of HEI 24 months old
 	 */
-	//TODO turning 24 months between start and end date
 	public static Long getHei24MonthsOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String hei24MonthsOldQuery = "SELECT COUNT(e.patient_id)\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL '"+ days + "' DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y');";
+				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y'), INTERVAL '" + days + "' DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y');";
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			return (Long) Context.getAdministrationService().executeSQL(hei24MonthsOldQuery, true).get(0).get(0);
@@ -570,12 +628,13 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards
-	 * 6. Count of HEI 24 months without Documented Outcome
-	 * 
-	 * @return long value
+	 * This query counts the number of HEI 24 months old without documented outcome
+	 * (numerator).
+	 *
+	 * @param startDate the start date in "dd/MM/yyyy" format
+	 * @param endDate   the end date in "dd/MM/yyyy" format
+	 * @return the count of HEI 24 months old without documented outcome
 	 */
-	//TODO turning 24 months between start and end date
 	public static Long getHei24MonthsWithoutDocumentedOutcome(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT count(e.patient_id) as hei_without_outcome\n" +
@@ -593,7 +652,8 @@ public class FacilityDashboardUtil {
 				+
 				"                    WHERE visit_date <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) hiv_prog\n" +
 				"                   ON e.patient_id = hiv_prog.patient_id\n" +
-				"WHERE DATE_ADD( d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL "
+				"WHERE DATE_ADD( d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y'), INTERVAL "
 				+ days + " DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
 				"  AND has_test.patient_id IS NULL\n" +
 				"  AND hiv_prog.patient_id IS NULL;";
@@ -617,10 +677,15 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Surveillance dashboards - line graph
-	 * 7. Count and date of clients tested positive not linked within the month
-	 * 
-	 * @return string value
+	 * This query gets 30-day running total of HIV-positive patients who were not
+	 * linked to care.
+	 *
+	 * @param startDate The start date of the period
+	 * @param endDate   The end date of the period
+	 * @return A {@link SimpleObject} containing an array of records with:
+	 *         - "number_hiv_positive": The count of HIV-positive patients.
+	 *         - "visit_date": The visit date formatted as dd-MM-yyyy.
+	 *         - "group": The tracing outcome category
 	 */
 	public static SimpleObject getMonthlyHivPositiveNotLinked(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
@@ -887,73 +952,104 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyEligibleForVlSampleNotTaken(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String eligibleForVlSampleNotTakenQuery = "select count(b.patient_id) as eligible_for_vl_sample_not_taken, e.visit_date as visit_date\n" +
+		String eligibleForVlSampleNotTakenQuery = "select count(b.patient_id) as eligible_for_vl_sample_not_taken, e.visit_date as visit_date\n"
+				+
 				"          from (select fup.visit_date,\n" +
 				"                         fup.patient_id,\n" +
-				"                         max(e.visit_date)                                                                as enroll_date,\n" +
-				"                         greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n" +
+				"                         max(e.visit_date)                                                                as enroll_date,\n"
+				+
+				"                         greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n"
+				+
 				"                         greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
-				"                                  ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n" +
-				"                         d.patient_id                                                                     as disc_patient,\n" +
-				"                         d.effective_disc_date                                                            as effective_disc_date,\n" +
-				"                         max(d.visit_date)                                                                as date_discontinued,\n" +
-				"                         de.patient_id                                                   as started_on_drugs\n" +
+				"                                  ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n"
+				+
+				"                         d.patient_id                                                                     as disc_patient,\n"
+				+
+				"                         d.effective_disc_date                                                            as effective_disc_date,\n"
+				+
+				"                         max(d.visit_date)                                                                as date_discontinued,\n"
+				+
+				"                         de.patient_id                                                   as started_on_drugs\n"
+				+
 				"                  from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
-				"                           join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"                           join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n"
+				+
 				"                           join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
 				"                           left join kenyaemr_etl.etl_drug_event de\n" +
-				"                                     on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= current_date\n" +
+				"                                     on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= current_date\n"
+				+
 				"                           left outer JOIN\n" +
 				"                       (select patient_id,\n" +
-				"                               coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
-				"                               max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"                               coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n"
+				+
+				"                               max(date(effective_discontinuation_date)) as               effective_disc_date\n"
+				+
 				"                        from kenyaemr_etl.etl_patient_program_discontinuation\n" +
 				"                        where date(visit_date) <= current_date\n" +
 				"                          and program_name = 'HIV'\n" +
 				"                        group by patient_id) d on d.patient_id = fup.patient_id\n" +
-				"                  where fup.visit_date BETWEEN DATE_SUB(current_date, INTERVAL 30 DAY) AND current_date\n" +
+				"                  where fup.visit_date BETWEEN DATE_SUB(current_date, INTERVAL 30 DAY) AND current_date\n"
+				+
 				"                  group by patient_id\n" +
 				"                  having (started_on_drugs is not null and started_on_drugs <> '')\n" +
 				"                     and (\n" +
 				"                      (\n" +
 				"                          (timestampdiff(DAY, date(latest_tca), current_date) <= 30 and\n" +
-				"                           ((date(d.effective_disc_date) > current_date or date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"                           ((date(d.effective_disc_date) > current_date or date(enroll_date) > date(d.effective_disc_date)) or\n"
+				+
 				"                            d.effective_disc_date is null))\n" +
 				"                              and\n" +
-				"                          (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"                          (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n"
+				+
 				"                           disc_patient is null)\n" +
 				"                          )\n" +
 				"                      )) e\n" +
-				"                   INNER JOIN (select v.patient_id,v.date_test_requested, v.latest_hiv_followup_visit\n" +
+				"                   INNER JOIN (select v.patient_id,v.date_test_requested, v.latest_hiv_followup_visit\n"
+				+
 				"                               from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
-				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n" +
-				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n" +
-				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n" +
+				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
+				+
+				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n"
+				+
+				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n"
+				+
+				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
+				+
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n"
+				+
 				"                                       (v.vl_result is not null and\n" +
-				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
+				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n"
+				+
 				"\n" +
 				"                                   OR (v.vl_result >= 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                                       3) -- Unsuppressed VL\n" +
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                                       6 and\n" +
-				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n"
+				+
 				"\n" +
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                                       12 and\n" +
-				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
+				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n"
+				+
 				"\n" +
-				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3\n" +
+				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
+				+
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3\n"
+				+
 				"                                       and (v.order_reason in (159882, 1434) and\n" +
-				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                                            12) and\n" +
 				"                                       v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
-				"                                 and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'00/00/0000'))) b on e.patient_id = b.patient_id\n" +
+				"                                 and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'00/00/0000'))) b on e.patient_id = b.patient_id\n"
+				+
 				"group by date(e.visit_date)\n" +
 				"order by date(e.visit_date) asc;";
 		return getSimpleObject(eligibleForVlSampleNotTakenQuery);
@@ -989,7 +1085,8 @@ public class FacilityDashboardUtil {
 				"    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
 				"    WHERE visit_date <= CURRENT_DATE\n" +
 				") hiv_prog ON e.patient_id = hiv_prog.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"
+				+
 				"	AND has_test.patient_id IS NULL\n" +
 				"	AND hiv_prog.patient_id IS NULL\n" +
 				"GROUP BY DATE(date)\n" +
@@ -1114,7 +1211,7 @@ public class FacilityDashboardUtil {
 				"  AND s.currently_on_prep IN ('NO', 'Declined to answer')\n" + //
 				"  AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" + //
 				"                       AND CURRENT_DATE\n" +
-				"GROUP BY DATE(s.visit_date)\n"+
+				"GROUP BY DATE(s.visit_date)\n" +
 				"ORDER BY DATE(s.visit_date) ASC;";
 
 		return getSimpleObject(pregnantOrPostpartumQuery);
@@ -1165,7 +1262,8 @@ public class FacilityDashboardUtil {
 				"               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
 				"               join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
 				"               left outer join kenyaemr_etl.etl_drug_event de\n" +
-				"                               on e.patient_id = de.patient_id and date(date_started) <= current_date\n" +
+				"                               on e.patient_id = de.patient_id and date(date_started) <= current_date\n"
+				+
 				"               left outer JOIN\n" +
 				"           (select patient_id, visit_date\n" +
 				"            from kenyaemr_etl.etl_patient_program_discontinuation\n" +
@@ -1178,32 +1276,46 @@ public class FacilityDashboardUtil {
 				"         and (\n" +
 				"          (date(latest_tca) > current_date and\n" +
 				"           (date(latest_tca) > date(date_discontinued) or disc_patient is null)) or\n" +
-				"          (((date(latest_tca) between date_sub(current_date, interval 3 MONTH) and current_date) and\n" +
+				"          (((date(latest_tca) between date_sub(current_date, interval 3 MONTH) and current_date) and\n"
+				+
 				"            (date(latest_vis_date) >= date(latest_tca)))) and\n" +
 				"          (date(latest_tca) > date(date_discontinued) or disc_patient is null))) e\n" +
 				"         INNER JOIN (select v.patient_id\n" +
 				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
-				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-				"                     where (TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3 and\n" +
-				"                            v.base_viral_load_test_result is null)                              -- First VL new on ART\n" +
+				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
+				+
+				"                     where (TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3 and\n"
+				+
+				"                            v.base_viral_load_test_result is null)                              -- First VL new on ART\n"
+				+
 				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3 and\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3 and\n"
+				+
 				"                            (v.vl_result is not null and\n" +
-				"                             v.date_test_requested < v.latest_hiv_followup_visit))              -- immediate for PG & BF\n" +
+				"                             v.date_test_requested < v.latest_hiv_followup_visit))              -- immediate for PG & BF\n"
+				+
 				"                        OR (v.vl_result >= 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
-				"                            3)                                                                  -- Unsuppressed VL\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
+				"                            3)                                                                  -- Unsuppressed VL\n"
+				+
 				"                        OR (v.vl_result < 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 6 and\n" +
-				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 6 and\n"
+				+
+				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n"
+				+
 				"                        OR (v.vl_result < 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                            12 and\n" +
-				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24)             -- > 24 with last suppressed vl\n" +
+				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24)             -- > 24 with last suppressed vl\n"
+				+
 				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 30 DAY)) >= 3\n"
+				+
 				"                         and (v.order_reason in (159882, 1434) and\n" +
-				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n" +
+				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(current_date, INTERVAL 30 DAY)) >=\n"
+				+
 				"                              12) and\n" +
 				"                            v.vl_result < 200) -- PG & BF after PG/BF baseline < 200\n" +
 				") b on e.patient_id = b.patient_id\n" +
@@ -1224,10 +1336,12 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHei24MonthsOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hei24MonthsOldQuery = "SELECT COUNT(e.patient_id) AS hei_24_months, DATE_ADD(d.dob, INTERVAL 24 MONTH) AS date\n" +
+		String hei24MonthsOldQuery = "SELECT COUNT(e.patient_id) AS hei_24_months, DATE_ADD(d.dob, INTERVAL 24 MONTH) AS date\n"
+				+
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"
+				+
 				"GROUP BY DATE(date)\n" +
 				"ORDER BY DATE(date) ASC;";
 		return getSimpleObject(hei24MonthsOldQuery);
