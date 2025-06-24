@@ -87,12 +87,11 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * This query counts the number of HIV positive clients who were linked to care
-	 * (denominator).
+	 * This query counts the number of HIV positive clients (denominator).
 	 * 
 	 * @param startDate the start date of the period to consider
 	 * @param endDate   the end date of the period to consider
-	 * @return the count of HIV positive clients linked to care
+	 * @return the count of HIV positive clients
 	 */
 	public static Long getPatientsTestedHivPositive(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
