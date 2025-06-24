@@ -51,7 +51,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
 
     private final Moh717IndicatorLibrary moh717IndicatorLibrary;
 
-    static final int NEW_VISIT = 164180, RE_ATT= 160530;
+    static final int NEW_VISIT = 164180, RE_ATT= 160530, FP_RE_ATT = 164142;
 
     static final ArrayList<String> otherSpecialClinics = new ArrayList<>(Arrays.asList(
             CommonMetadata._Form.NEUROLOGY_CLINICAL_FORM,
@@ -513,7 +513,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "FP NEW", "",
                 ReportUtils.map(moh717IndicatorLibrary.fpVisit(NEW_VISIT), indParams), "");
         dsd.addColumn( "FP RE-ATT", "",
-                ReportUtils.map(moh717IndicatorLibrary.fpVisit(RE_ATT), indParams), "");
+                ReportUtils.map(moh717IndicatorLibrary.fpVisit(FP_RE_ATT), indParams), "");
         // Maternity Services
         dsd.addColumn( "Normal Deliveries", "", ReportUtils.map(moh717IndicatorLibrary.normalDeliveries(), indParams), "");
         dsd.addColumn( "Caesarean sections", "", ReportUtils.map(moh717IndicatorLibrary.caesareanSections(), indParams), "");
