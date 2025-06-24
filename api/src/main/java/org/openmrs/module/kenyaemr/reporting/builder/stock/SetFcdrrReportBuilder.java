@@ -206,178 +206,162 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 
 	private String getFcdrrDrugSummary(int drugId,int factor,int  dispensingUnit) {
 
-		String query = "select ifnull(sspu.factor,0) as unit_pack_size,\n" +
-				"      ifnull(SUM(stit.quantity),0)  +   ifnull(SUM(rc.quantity),0) - ifnull(SUM(si.quantity),0) as opening_balance,\n" +
-				"      ifnull(rc_curr.quantity,0) as curr_receipts,\n" +
-				"      ifnull(dis_curr.quantity,0) as curr_dispensed,\n" +
-				"      ifnull(curr_loss.quantity,0) as curr_loss,\n" +
-				"      ifnull(pos_adj.quantity,0) as pos_adj,\n" +
-				"      ifnull(neg_adj.quantity,0) as neg_adj,\n" +
-				"      ifnull(stck_take.quantity,0) as stck_take,\n" +
-				"      ifnull(early_exp.quantity,0) as earliest_expiry_quantity,\n" +
-				"      ifnull(early_exp.earliest_expiry_date,0) as earliest_expiry_date,\n" +
-				"      ifnull(cur_req.quantity,0) as curr_requested,\n" +
-				"      ifnull(days_out_of_stock.days_out_of_stock, 0) as days_out_of_stock\n" +
-				"-- Unit pack size\n" +
-				"     from stockmgmt_stock_item_transaction stit\n" +
-				"              inner join stockmgmt_stock_item ssi on (ssi.stock_item_id = stit.stock_item_id) and ssi.drug_id = %d\n" +
-				"              inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"              left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id and ssto.status = 'COMPLETED'\n" +
-				"                         and ssto.operation_type_id in (4, 9) and stit.date_created between date_sub(date(:startDate), interval 1 MONTH) and date_sub(date(:endDate), interval 1 MONTH)\n" +
-				"        left join (\n" +
-				"# Previous Receipt\n" +
-			"  select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"   from stockmgmt_stock_item_transaction stit\n" +
-				"            inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"            inner join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"            inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"   WHERE ssi.drug_id = %d\n" +
-				"     AND sspu.factor = %d\n" +
-				"     AND ssi.dispensing_unit_id = %d\n" +
-				"     AND ssto.status = 'COMPLETED'\n" +
-				"     AND stit.date_created <= date_sub(date(:startDate), interval 1 DAY)\n" +
-				"     AND ssto.operation_type_id in (4)\n" +
-				"   GROUP BY stit.stock_item_id "+
-				"-- Previous Issues + Disposals + TO\n" +
-				"        left join (\n" +
-		" select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"   from stockmgmt_stock_item_transaction stit\n" +
-				"            inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"            inner join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"            inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"   WHERE ssi.drug_id = %d\n" +
-				"     AND sspu.factor = %d\n" +
-				"     AND ssi.dispensing_unit_id = %d\n" +
-				"     AND ssto.status = 'COMPLETED'\n" +
-				"     AND stit.date_created <= date_sub(date(:startDate), interval 1 DAY)\n" +
-				"     AND ssto.operation_type_id in (6, 3, 2)\n" +
-				"   GROUP BY stit.stock_item_id"+
-				"-- Days Out of Stock\n" +
-				"        left join (\n" +
-				"   COUNT(DISTINCT DATE(stit.date_created)) as days_out_of_stock\n" +
-				"   from stockmgmt_stock_item_transaction stit\n" +
-				"            inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"            inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"   WHERE ssi.drug_id = %d\n" +
-				"     AND sspu.factor = %d\n" +
-				"     AND ssi.dispensing_unit_id = %d\n" +
-				"     AND stit.date_created between :startDate and :endDate\n" +
-				"     AND stit.quantity <= 0\n" +
-				"   GROUP BY ssi.drug_id) days_out_of_stock on days_out_of_stock.drug_id = ssi.drug_id\n" +
-				"-- Current receipts\n" +
-				"              left join (\n" +
-				"         select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (4)\n" +
-				"          GROUP BY stit.stock_item_id) rc_curr on rc_curr.stock_item_id = stit.stock_item_id\n" +
-				"-- Current Dispense\n" +
-				"              left join (\n" +
-				"         select SUM(stit.quantity) * -1 as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND stit.patient_id IS NOT NULL\n" +
-				"           AND stit.date_created between :startDate and :endDate) dis_curr on dis_curr.stock_item_id = stit.stock_item_id\n" +
-				"-- Current Disposals, losses and wastages\n" +
-				"left join (\n" +
-				"         select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (2)\n" +
-				"         GROUP BY stit.stock_item_id) curr_loss on curr_loss.stock_item_id = stit.stock_item_id\n" +
-				"-- Current Positive adjustments\n" +
-				" left join (\n" +
-				"         select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (1)\n" +
-				"         GROUP BY stit.stock_item_id) pos_adj on pos_adj.stock_item_id = stit.stock_item_id\n" +
-				"-- Current Negative adjustments : Transfer out\n" +
-				"              left join (\n" +
-				"         select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND stit.quantity > 0\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (3)\n" +
-				"         GROUP BY stit.stock_item_id) neg_adj on neg_adj.stock_item_id = stit.stock_item_id\n" +
-				"-- Stock take\n" +
-				"              left join (\n" +
-				"         select  mid(max(concat(ssoi.date_created,ssoi.quantity)),20) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"                  left join stockmgmt_stock_operation_item ssoi on ssoi.stock_operation_id = stit.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (8)\n" +
-				"         GROUP BY stit.stock_item_id) stck_take on stck_take.stock_item_id = stit.stock_item_id\n" +
-				"-- Expiring in 6 months\n" +
-				"              left join (\n" +
-				"         select  SUM(stit.quantity) as quantity, stit.stock_item_id, MIN(ssbt.expiration) as earliest_expiry_date\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_batch ssbt on ssbt.stock_item_id = stit.stock_item_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND date(ssbt.expiration)  between date(:endDate) and date_add(date(:endDate) , interval 6 MONTH)\n" +
-				"         GROUP BY stit.stock_item_id) early_exp on early_exp.stock_item_id = stit.stock_item_id\n" +
-				"\n" +
-				"-- Current requisitions\n" +
-				"              left join (\n" +
-				"         select SUM(stit.quantity) as quantity, stit.stock_item_id\n" +
-				"         from stockmgmt_stock_item_transaction stit\n" +
-				"                  inner join stockmgmt_stock_item ssi on ssi.stock_item_id = stit.stock_item_id\n" +
-				"                  inner join stockmgmt_stock_item_packaging_uom sspu on sspu.stock_item_id = stit.stock_item_id\n" +
-				"                  left join stockmgmt_stock_operation ssto on stit.stock_operation_id = ssto.stock_operation_id\n" +
-				"         WHERE ssi.drug_id = %d\n" +
-				"           AND sspu.factor = %d\n" +
-				"           AND ssi.dispensing_unit_id = %d\n" +
-				"           AND ssto.status = 'COMPLETED'\n" +
-				"           AND stit.date_created between :startDate and :endDate\n" +
-				"           AND ssto.operation_type_id in (7)\n" +
-				"         GROUP BY stit.stock_item_id) cur_req on cur_req.stock_item_id = stit.stock_item_id;\n";
+		String query = "SELECT IFNULL(sspu.factor, 0) AS unit_pack_size,\n" +
+				"       IFNULL(SUM(stit.quantity), 0) + IFNULL(SUM(rc.quantity), 0) AS opening_balance,\n" +
+				"       IFNULL(rc_curr.quantity, 0) AS curr_receipts,\n" +
+				"       IFNULL(dis_curr.quantity, 0) AS curr_dispensed,\n" +
+				"       IFNULL(curr_loss.quantity, 0) AS curr_loss,\n" +
+				"       IFNULL(pos_adj.quantity, 0) AS pos_adj,\n" +
+				"       IFNULL(neg_adj.quantity, 0) AS neg_adj,\n" +
+				"       IFNULL(stck_take.quantity, 0) AS stck_take,\n" +
+				"       IFNULL(early_exp.quantity, 0) AS earliest_expiry_quantity,\n" +
+				"       IFNULL(early_exp.earliest_expiry_date, 0) AS earliest_expiry_date,\n" +
+				"       IFNULL(cur_req.quantity, 0) AS curr_requested,\n" +
+				"       IFNULL(days_out_of_stock.days_out_of_stock, 0) AS days_out_of_stock\n" +
+				"FROM stockmgmt_stock_item_transaction stit\n" +
+				"INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id AND ssi.drug_id = %d\n" +
+				"INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id AND ssto.status = 'COMPLETED'\n" +
+				"AND ssto.operation_type_id IN (4, 9) AND stit.date_created BETWEEN DATE_SUB(DATE(:startDate), INTERVAL 1 MONTH) AND DATE_SUB(DATE(:endDate), INTERVAL 1 MONTH)\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created <= DATE_SUB(DATE(:startDate), INTERVAL 1 DAY)\n" +
+				"    AND ssto.operation_type_id IN (4)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") rc ON rc.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT COUNT(DISTINCT DATE(stit.date_created)) AS days_out_of_stock, ssi.drug_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND stit.quantity <= 0\n" +
+				"    GROUP BY ssi.drug_id\n" +
+				") days_out_of_stock ON days_out_of_stock.drug_id = ssi.drug_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (4)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") rc_curr ON rc_curr.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) * -1 AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND stit.patient_id IS NOT NULL\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				") dis_curr ON dis_curr.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (2)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") curr_loss ON curr_loss.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (1)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") pos_adj ON pos_adj.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND stit.quantity > 0\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (3)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") neg_adj ON neg_adj.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT MID(MAX(CONCAT(ssoi.date_created, ssoi.quantity)), 20) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation_item ssoi ON ssoi.stock_operation_id = stit.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (8)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") stck_take ON stck_take.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id, MIN(ssbt.expiration) AS earliest_expiry_date\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_batch ssbt ON ssbt.stock_item_id = stit.stock_item_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND DATE(ssbt.expiration) BETWEEN DATE(:endDate) AND DATE_ADD(DATE(:endDate), INTERVAL 6 MONTH)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") early_exp ON early_exp.stock_item_id = stit.stock_item_id\n" +
+				"LEFT JOIN (\n" +
+				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
+				"    FROM stockmgmt_stock_item_transaction stit\n" +
+				"    INNER JOIN stockmgmt_stock_item ssi ON ssi.stock_item_id = stit.stock_item_id\n" +
+				"    INNER JOIN stockmgmt_stock_item_packaging_uom sspu ON sspu.stock_item_id = stit.stock_item_id\n" +
+				"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+				"    WHERE ssi.drug_id = %d\n" +
+				"    AND sspu.factor = %d\n" +
+				"    AND ssi.dispensing_unit_id = %d\n" +
+				"    AND ssto.status = 'COMPLETED'\n" +
+				"    AND stit.date_created BETWEEN :startDate AND :endDate\n" +
+				"    AND ssto.operation_type_id IN (7)\n" +
+				"    GROUP BY stit.stock_item_id\n" +
+				") cur_req ON cur_req.stock_item_id = stit.stock_item_id;";
 
-		return String.format(query, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId,drugId, drugId, drugId, drugId,factor,factor,
-				factor,factor,factor,factor,factor,factor,factor,factor,factor,dispensingUnit,dispensingUnit,dispensingUnit,dispensingUnit,dispensingUnit,dispensingUnit,
-				dispensingUnit,dispensingUnit,dispensingUnit,dispensingUnit,dispensingUnit);
+		return String.format(query, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId, drugId, factor, factor,
+				factor, factor, factor, factor, factor, factor, factor, factor, factor, dispensingUnit, dispensingUnit, dispensingUnit, dispensingUnit, dispensingUnit, dispensingUnit,
+				dispensingUnit, dispensingUnit, dispensingUnit, dispensingUnit, dispensingUnit);
 	}
 }
