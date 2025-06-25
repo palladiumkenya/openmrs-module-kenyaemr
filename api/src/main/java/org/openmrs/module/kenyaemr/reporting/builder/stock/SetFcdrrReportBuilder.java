@@ -216,6 +216,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"    IFNULL(early_exp.earliest_expiry_date, 0) AS earliest_expiry_date,\n" +
 				"    IFNULL(cur_req.quantity, 0) AS curr_requested,\n" +
 				"    IFNULL(days_out_of_stock.days_out_of_stock, 0) AS days_out_of_stock\n" +
+				"#Unit pack size\n" +
 				"FROM stockmgmt_stock_item_transaction stit\n" +
 				"INNER JOIN stockmgmt_stock_item ssi \n" +
 				"    ON ssi.stock_item_id = stit.stock_item_id AND ssi.drug_id = %d\n" +
@@ -226,6 +227,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"    AND ssto_main.status = 'COMPLETED'\n" +
 				"    AND ssto_main.operation_type_id IN (4, 9) \n" +
 				"    AND stit.date_created BETWEEN DATE_SUB(DATE(:startDate), INTERVAL 1 MONTH) AND DATE_SUB(DATE(:endDate), INTERVAL 1 MONTH)\n" +
+				"# Previous Receipt\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -242,6 +244,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND stit.date_created BETWEEN DATE_SUB(DATE(:startDate), INTERVAL 1 MONTH) AND DATE_SUB(DATE(:endDate), INTERVAL 1 MONTH)\n" +
 				"        AND ssto_receipts.operation_type_id IN (4)\n" +
 				") rc ON rc.stock_item_id = stit.stock_item_id\n" +
+				"#Days out of stock\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT COUNT(DISTINCT DATE(stit.date_created)) AS days_out_of_stock, ssi.drug_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -254,6 +257,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"    AND stit.quantity <= 0\n" +
 				"    GROUP BY ssi.drug_id\n" +
 				") days_out_of_stock ON days_out_of_stock.drug_id = ssi.drug_id\n" +
+				"# Previous Receipt\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -270,6 +274,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND stit.date_created BETWEEN DATE_SUB(DATE(:startDate), INTERVAL 1 MONTH) AND DATE_SUB(DATE(:endDate), INTERVAL 1 MONTH)\n" +
 				"        AND ssto_disposals.operation_type_id IN (6, 3, 2)\n" +
 				") si ON si.stock_item_id = stit.stock_item_id\n" +
+				"#Current receipts\n" +
 				"LEFT JOIN (\n" +
 				"SELECT\n" +
 				"  IFNULL(SUM(stit.quantity), 0) AS quantity, stit.stock_item_id\n" +
@@ -285,6 +290,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"  AND ssto.operation_type_id IN (4)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") rc_curr ON rc_curr.stock_item_id = stit.stock_item_id\n" +
+				"#Previous Issues + Disposals + TO\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) * -1 AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -298,6 +304,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND stit.patient_id IS NOT NULL\n" +
 				"        AND stit.date_created BETWEEN :startDate AND :endDate\n" +
 				") dis_curr ON dis_curr.stock_item_id = stit.stock_item_id\n" +
+				"#Current Disposals, losses and wastages\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -315,6 +322,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND ssto_losses.operation_type_id IN (2)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") curr_loss ON curr_loss.stock_item_id = stit.stock_item_id\n" +
+				"#Current Positive adjustments\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -332,6 +340,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND ssto_pos_adj.operation_type_id IN (1)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") pos_adj ON pos_adj.stock_item_id = stit.stock_item_id\n" +
+				"#Current Negative adjustments : Transfer out\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -350,6 +359,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND ssto_neg_adj.operation_type_id IN (3)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") neg_adj ON neg_adj.stock_item_id = stit.stock_item_id\n" +
+				"#Stock take\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT MID(MAX(CONCAT(ssoi.date_created, ssoi.quantity)), 20) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -369,6 +379,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND ssto_stock_take.operation_type_id IN (8)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") stck_take ON stck_take.stock_item_id = stit.stock_item_id\n" +
+				"#Expiring in 6 months\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id, MIN(ssbt.expiration) AS earliest_expiry_date\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -385,6 +396,7 @@ private String getFcdrrDrugSummary(int drugId, int factor,int unit) {
 				"        AND DATE(ssbt.expiration) BETWEEN DATE(:endDate) AND DATE_ADD(DATE(:endDate), INTERVAL 6 MONTH)\n" +
 				"    GROUP BY stit.stock_item_id\n" +
 				") early_exp ON early_exp.stock_item_id = stit.stock_item_id\n" +
+				"#Current requisitions\n" +
 				"LEFT JOIN (\n" +
 				"    SELECT SUM(stit.quantity) AS quantity, stit.stock_item_id\n" +
 				"    FROM stockmgmt_stock_item_transaction stit\n" +
