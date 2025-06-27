@@ -492,15 +492,57 @@ public class FacilityDashboardUtil {
 	 * @param endDate   the end date in "dd/MM/yyyy" format
 	 * @return the count of virally unsuppressed clients
 	 */
-	public static Long getVirallyUnsuppressed(String startDate, String endDate) {
+	public static Long getVirallyUnsuppressed
+			(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getVirallyUnsuppressedQuery = "SELECT count(x.patient_id) as vl_unsuppressed\n" +
-				"FROM kenyaemr_etl.etl_laboratory_extract x\n" +
-				"WHERE x.lab_test = 856\n" +
-				"  AND test_result >= 200\n" +
-				"  AND x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 14 DAY);";
+		String getVirallyUnsuppressedQuery = "select count(a.patient_id) as vl_unsuppressed\n" +
+				"from (SELECT x.patient_id\n" +
+				"      FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+				"      WHERE x.lab_test = 856\n" +
+				"        AND test_result >= 200\n" +
+				"        AND x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate  +
+				"', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate +
+				"', '%d/%m/%Y'), INTERVAL 14 DAY)) a\n" +
+				"         inner join\n" +
+				"     (select t.patient_id\n" +
+				"      from (select fup.visit_date,\n" +
+				"                   fup.patient_id,\n" +
+				"                   max(e.visit_date)                                                      as enroll_date,\n" +
+				"                   greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00')) as latest_vis_date,\n" +
+				"                   greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
+				"                            ifnull(max(d.visit_date), '0000-00-00'))                      as latest_tca,\n" +
+				"                   d.patient_id                                                           as disc_patient,\n" +
+				"                   d.effective_disc_date                                                  as effective_disc_date,\n" +
+				"                   max(d.visit_date)                                                      as date_discontinued,\n" +
+				"                   de.patient_id                                                          as started_on_drugs\n" +
+				"            from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"                     join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"                     join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"                     left join kenyaemr_etl.etl_drug_event de\n" +
+				"                               on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
+				"                                  date(de.date_started) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                     left outer JOIN\n" +
+				"                 (select patient_id,\n" +
+				"                         coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
+				"                         max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"                  from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"                  where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                    and program_name = 'HIV'\n" +
+				"                  group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"            where fup.visit_date <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"            group by patient_id\n" +
+				"            having (started_on_drugs is not null and started_on_drugs <> '')\n" +
+				"               and (\n" +
+				"                (\n" +
+				"                    (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) <= 30 and\n" +
+				"                     ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate + "', '%d/%m/%Y') or\n" +
+				"                       date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"                      d.effective_disc_date is null))\n" +
+				"                        and\n" +
+				"                    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"                     disc_patient is null)\n" +
+				"                    )\n" +
+				"                )) t) b on a.patient_id = b.patient_id;";
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			return (Long) Context.getAdministrationService().executeSQL(getVirallyUnsuppressedQuery, true).get(0)
@@ -509,7 +551,6 @@ public class FacilityDashboardUtil {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		}
 	}
-
 	/**
 	 * This query counts the number of virally unsuppressed clients
 	 * (numerator).
@@ -520,22 +561,63 @@ public class FacilityDashboardUtil {
 	 */
 	public static Long getVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getVirallyUnsuppressedWithoutEACQuery = "select count(b.patient_id) as unsuppressed_no_eac\n" +
-				"from (select x.patient_id as patient_id,DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 21 DAY), DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 14 DAY)\n" +
+		String getVirallyUnsuppressedWithoutEACQuery = "select count(a.patient_id) as unsuppressed_no_eac\n" +
+				"from (select b.patient_id\n" +
+				"from (select x.patient_id as patient_id,DATE_SUB(STR_TO_DATE('" + endDate  +
+				"', '%d/%m/%Y'), INTERVAL 21 DAY), DATE_SUB(STR_TO_DATE('" + endDate +
+				"', '%d/%m/%Y'), INTERVAL 14 DAY)\n" +
 				"      from kenyaemr_etl.etl_laboratory_extract x\n" +
 				"      where x.lab_test = 856\n" +
 				"        and test_result >= 200\n" +
-				"        and x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 14 DAY)) b\n" +
+				"        and x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate +
+				"', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate  +
+				"', '%d/%m/%Y'), INTERVAL 14 DAY)) b\n" +
 				"         left join (select e.patient_id, e.visit_date as eac_date\n" +
 				"                    from kenyaemr_etl.etl_enhanced_adherence e\n" +
-				"                    where e.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL 14 DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) e\n" +
+				"                    where e.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate +
+				"', '%d/%m/%Y'), INTERVAL 14 DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) e\n" +
 				"                   on b.patient_id = e.patient_id\n" +
-				"where e.patient_id is null;\n";
+				"where e.patient_id is null) a\n" +
+				"         inner join\n" +
+				"     (select t.patient_id\n" +
+				"      from (select fup.visit_date,\n" +
+				"                   fup.patient_id,\n" +
+				"                   max(e.visit_date)                                                      as enroll_date,\n" +
+				"                   greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00')) as latest_vis_date,\n" +
+				"                   greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
+				"                            ifnull(max(d.visit_date), '0000-00-00'))                      as latest_tca,\n" +
+				"                   d.patient_id                                                           as disc_patient,\n" +
+				"                   d.effective_disc_date                                                  as effective_disc_date,\n" +
+				"                   max(d.visit_date)                                                      as date_discontinued,\n" +
+				"                   de.patient_id                                                          as started_on_drugs\n" +
+				"            from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"                     join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"                     join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"                     left join kenyaemr_etl.etl_drug_event de\n" +
+				"                               on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
+				"                                  date(de.date_started) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                     left outer JOIN\n" +
+				"                 (select patient_id,\n" +
+				"                         coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
+				"                         max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"                  from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"                  where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"                    and program_name = 'HIV'\n" +
+				"                  group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"            where fup.visit_date <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"            group by patient_id\n" +
+				"            having (started_on_drugs is not null and started_on_drugs <> '')\n" +
+				"               and (\n" +
+				"                (\n" +
+				"                    (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) <= 30 and\n" +
+				"                     ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate + "', '%d/%m/%Y') or\n" +
+				"                       date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"                      d.effective_disc_date is null))\n" +
+				"                        and\n" +
+				"                    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"                     disc_patient is null)\n" +
+				"                    )\n" +
+				"                )) t) c on a.patient_id = c.patient_id;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -1106,8 +1188,8 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(b.patient_id) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date\n"
-				+
+		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(a.patient_id) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date FROM\n" +
+				"(SELECT b.patient_id, eac_date\n" +
 				"FROM (\n" +
 				"    SELECT \n" +
 				"        x.patient_id AS patient_id,\n" +
@@ -1129,7 +1211,47 @@ public class FacilityDashboardUtil {
 				") e ON b.patient_id = e.patient_id\n" +
 				"WHERE e.patient_id IS NULL\n" +
 				"GROUP BY DATE(eac_date)\n" +
-				"ORDER BY DATE(eac_date) ASC;";
+				"ORDER BY DATE(eac_date) ASC) a\n" +
+				"    inner join\n" +
+				"    (select t.patient_id\n" +
+				"    from (select fup.visit_date,\n" +
+				"    fup.patient_id,\n" +
+				"    max(e.visit_date)                                                      as enroll_date,\n" +
+				"    greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00')) as latest_vis_date,\n" +
+				"    greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
+				"    ifnull(max(d.visit_date), '0000-00-00'))                      as latest_tca,\n" +
+				"    d.patient_id                                                           as disc_patient,\n" +
+				"    d.effective_disc_date                                                  as effective_disc_date,\n" +
+				"    max(d.visit_date)                                                      as date_discontinued,\n" +
+				"    de.patient_id                                                          as started_on_drugs\n" +
+				"    from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"    join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"    left join kenyaemr_etl.etl_drug_event de\n" +
+				"    on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
+				"    date(de.date_started) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    left outer JOIN\n" +
+				"    (select patient_id,\n" +
+				"    coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
+				"    max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"    from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"    where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    and program_name = 'HIV'\n" +
+				"    group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"    where fup.visit_date <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    group by patient_id\n" +
+				"    having (started_on_drugs is not null and started_on_drugs <> '')\n" +
+				"    and (\n" +
+				"    (\n" +
+				"    (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) <= 30 and\n" +
+				"    ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate + "', '%d/%m/%Y') or\n" +
+				"    date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"    d.effective_disc_date is null))\n" +
+				"    and\n" +
+				"    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"    disc_patient is null)\n" +
+				"    )\n" +
+				"    )) t) c on a.patient_id = c.patient_id;";
 		return getSimpleObject(virallyUnsuppressedWithoutEACQuery);
 	}
 
@@ -1357,15 +1479,55 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyVirallyUnsuppressed(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getVirallyUnsuppressedQuery = "SELECT COUNT(x.patient_id) AS vl_unsuppressed, x.visit_date AS eac_date\n"
-				+
+		String getVirallyUnsuppressedQuery = "SELECT COUNT(a.patient_id) AS vl_unsuppressed, a.visit_date AS results_enc_date FROM\n" +
+				"(SELECT x.patient_id, x.visit_date\n" +
 				"FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"WHERE x.lab_test = 856\n" +
 				"  AND x.test_result >= 200\n" +
 				"  AND x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY)\n" +
 				"  AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
 				"GROUP BY DATE(x.visit_date)\n" +
-				"ORDER BY DATE(x.visit_date) ASC;";
+				"ORDER BY DATE(x.visit_date) ASC) a\n" +
+				"    inner join\n" +
+				"    (select t.patient_id\n" +
+				"    from (select fup.visit_date,\n" +
+				"    fup.patient_id,\n" +
+				"    max(e.visit_date)                                                      as enroll_date,\n" +
+				"    greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00')) as latest_vis_date,\n" +
+				"    greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
+				"    ifnull(max(d.visit_date), '0000-00-00'))                      as latest_tca,\n" +
+				"    d.patient_id                                                           as disc_patient,\n" +
+				"    d.effective_disc_date                                                  as effective_disc_date,\n" +
+				"    max(d.visit_date)                                                      as date_discontinued,\n" +
+				"    de.patient_id                                                          as started_on_drugs\n" +
+				"    from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+				"    join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+				"    join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
+				"    left join kenyaemr_etl.etl_drug_event de\n" +
+				"    on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
+				"    date(de.date_started) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    left outer JOIN\n" +
+				"    (select patient_id,\n" +
+				"    coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
+				"    max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+				"    from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+				"    where date(visit_date) <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    and program_name = 'HIV'\n" +
+				"    group by patient_id) d on d.patient_id = fup.patient_id\n" +
+				"    where fup.visit_date <= STR_TO_DATE('" + endDate + "', '%d/%m/%Y')\n" +
+				"    group by patient_id\n" +
+				"    having (started_on_drugs is not null and started_on_drugs <> '')\n" +
+				"    and (\n" +
+				"    (\n" +
+				"    (timestampdiff(DAY, date(latest_tca), STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) <= 30 and\n" +
+				"    ((date(d.effective_disc_date) > STR_TO_DATE('" + endDate + "', '%d/%m/%Y') or\n" +
+				"    date(enroll_date) > date(d.effective_disc_date)) or\n" +
+				"    d.effective_disc_date is null))\n" +
+				"    and\n" +
+				"    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+				"    disc_patient is null)\n" +
+				"    )\n" +
+				"    )) t) c on a.patient_id = c.patient_id;";
 		return getSimpleObject(getVirallyUnsuppressedQuery);
 	}
 }
