@@ -2505,7 +2505,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			}
 		}
 		setToList.addAll(patientProgramList);
-		// setToList.add("TPT");
 		String clinicValues = "";
 		if (setToList.size() == 1) {
 			clinicValues = setToList.get(0);
@@ -3012,12 +3011,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
             case 159937:
                 prog = "MCH";
                 break;
-			// case 159937:
-            //     prog = "MCH";
-            //     break;
-			// case 160541:
-            //     prog = "TPT";
-            //     break;
 			case 165003:
                 prog = "PrEP";
                 break;
