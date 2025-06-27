@@ -68,6 +68,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     ));
     static final String OCCUPATIONAL_THERAPY_FORM = CommonMetadata._Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM;
     static final String PHYSIOTHERAPY_FORM = CommonMetadata._Form.PHYSIOTHERAPY_FORM;
+    static final String ORTHOPEDIC_FORM = CommonMetadata._Form.ORTHOPAEDIC_CLINICAL_FORM;
     static final String dentalFillingList = String.join(",", new ArrayList<>(Arrays.asList(
             EmrConstants.TEMP_FILLING_PER_TOOTH, EmrConstants.COMPOSITE_FILLING, EmrConstants.AMALGAM_FILLING, EmrConstants.GlASS_LONOMER_FILLING
     )));
@@ -443,7 +444,101 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     public static final String obstetricUltrasoundList = String.join(",",new ArrayList<>(Arrays.asList(
             EmrConstants.OBSTETRIC_ULTRASOUND,EmrConstants.ULTRASOUND_OBSTETRIC_DOPPLER
     )));
+
+    public static final String castsFixedList = String.join(",",new ArrayList<>(Arrays.asList(EmrConstants.CAST_APPLICATION,
+            EmrConstants.HIP_SPICA_APPLICATION,
+            EmrConstants.APPLICATION_OF_DYNACAST,
+            EmrConstants.POP_APPLICATION_PEADS_LONG_LENGTH,
+            EmrConstants.POP_APPLICATION_LONG_LENGTH_ADULTS,
+            EmrConstants.POP_APPLICATION_BELOW_KNEE_ADULT,
+            EmrConstants.POP_APPLICATION_ARM,
+            EmrConstants.POP_APPLICATION_PEADS_BELOW_KNEE,
+            EmrConstants.POP_APPLICATION_PAEDS,
+            EmrConstants.POP_APPLICATION)));
+
+    public static final String  tractionsFixedList= String.join(",",new ArrayList<>(Arrays.asList(
+        EmrConstants.APPLICATION_OF_SKULL_CALIPERS,
+        EmrConstants.SKIN_TRACTION_APPLICATION,
+        EmrConstants.ELECTRONIC_TRACTION,
+        EmrConstants.TRACTION_INTERMITTENT_CONTINOUS,
+        EmrConstants.LUMBAR_CERVICAL_TRACTION,
+        EmrConstants.SKELETAL_TRACTION
+    )));
+
+    public static final String closedReductionsList = String.join(",",new ArrayList<>(Arrays.asList(EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_HIP,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_PATELLA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PROXIMAL_HUMERUS,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_SHOULDER,
+            EmrConstants.MANIPULATION_OF_SHOULDER_JOINT_UNDER_ANESTHESIA,
+            EmrConstants.MANIPULATION_OF_ELBOW_JOINT_UNDER_ANESTHESIA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_HUMERUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_HUMERUS_WITH_INTRAMEDULLARY_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_SUPRACONDYLAR_FRACTURE_OF_HUMERUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_MEDIAL_EPICONDYLE_OF_HUMERUS_WITH_PERCUTANEOUS_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_LATERAL_EPICONDYLE_OF_HUMERUS_WITH_PERCUTANEOUS_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_ELBOW,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PROXIMAL_RADIUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PROXIMAL_ULNA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_RADIUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_ULNA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_DISTAL_RADIUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_DISTAL_RADIUS_WITH_PERCUTANEOUS_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_WRIST,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_METACARPAL,
+            EmrConstants.CLOSED_REDUCTION_OF_THUMB_CARPOMETACARPAL_DISLOCATION,
+            EmrConstants.CLOSED_REDUCTION_OF_METACARPOPHALANGEAL_DISLOCATION,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PHALANX_OF_HAND,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PHALANX_OF_HAND_WITH_PERCUTANEOUS_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_INTERPHALANGEAL_DISLOCATION,
+            EmrConstants.CLOSED_REDUCTION_OF_INTRACAPSULAR_FRACTURE_OF_NECK_OF_FEMUR,
+            EmrConstants.CLOSED_REDUCTION_OF_EXTRACAPSULAR_FRACTURE_OF_NECK_OF_FEMUR,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_FEMUR,
+            EmrConstants.CLOSED_REDUCTION_OF_SUPRACONDYLAR_FRACTURE_OF_FEMUR,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_DISTAL_FEMUR_CONDYLE,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_DISTAL_FEMUR_CONDYLE_WITH_PERCUTANEOUS_FIXATION,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_PROXIMAL_TIBIA,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_KNEE,
+            EmrConstants.MANIPULATION_OF_KNEE_JOINT_UNDER_ANESTHESIA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_TIBIA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_MEDIAL_MALLEOLUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_POSTERIOR_MALLEOLUS,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_SHAFT_OF_FIBULA,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_DISTAL_FIBULA_LATERAL_MALLEOLUS,
+            EmrConstants.CLOSED_REDUCTION_OF_BIMALLEOLAR_ANKLE_FRACTURE,
+            EmrConstants.CLOSED_REDUCTION_OF_DISLOCATION_OF_ANKLE,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_BONE_AND_INTERNAL_FIXATION_USING_BONE_PLATE,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_BONE_AND_INTERNAL_FIXATION_USING_SCREW,
+            EmrConstants.CLOSED_REDUCTION_OF_FRACTURE_OF_BONE_AND_INTERNAL_FIXATION_USING_WIRE,
+            EmrConstants.MANIPULATION_OF_JOINT,
+            EmrConstants.DISLOCATION_REDUCTION,
+            EmrConstants.TMJ_REDUCTION,
+            EmrConstants.CARPAL_BONE_FRACTURE_CLOSED_OR_OPEN_OPEN_REDUCTION,
+            EmrConstants.METACARPAL_FRACTURE_CLOSED_OR_OPEN_OPEN_REDUCTION_WITH_WITHOUT_SKELETAL_FIXATION,
+            EmrConstants.PHALANGEAL_FRACTURE_CLOSED_OR_OPEN_OPEN_REDUCTION_WITH_WITHOUT_SKELETAL_FIXATION,
+            EmrConstants.HIP_DISLOCATION_CLOSED_OR_OPEN_OPEN_REDUCTION,
+            EmrConstants.TIBIA_FIBULA_BIMALLEOLAR_FRACTURE_CLOSED_WITH_MANIPULATIVE_REDUCTION,
+            EmrConstants.ANKLE_DISLOCATION_CLOSED_OR_OPEN_OPEN_REDUCTION,
+            EmrConstants.MANIPULATION_UNDER_ANAESTHESIA_MUA)));
+
+    public static final String castRemovalList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.REMOVAL_OF_POP,
+            EmrConstants.REMOVAL_OF_DYNACAST
+    )));
+
+    public static final String tractionRemovalList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.SKIN_TRACTION_REMOVAL,
+            EmrConstants.SKELETAL_TRACTION_REMOVAL
+    )));
+
+    public static final String exFixatorRemovalList = String.join(",",new ArrayList<>(Arrays.asList(
+            EmrConstants.REMOVAL_OF_EXTERNAL_FIXATION,
+            EmrConstants.EXTERNAL_FIXATION_IMPLANT_REMOVAL,
+            EmrConstants.EXTERNAL_FIXATION_REMOVAL_MINOR_THEATRE
+    )));
+
     ColumnParameters femaleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=F");
+    ColumnParameters allUnder5 = new ColumnParameters(null, "<5", "age=<5");
+    ColumnParameters all5AndAbove = new ColumnParameters(null, ">5", "age=5+");
     ColumnParameters maleChildrenUnder5 = new ColumnParameters(null, "<5", "age=<5|gender=M");
     ColumnParameters females5To59 = new ColumnParameters(null, "5-59, Female", "gender=F|age=5-59");
     ColumnParameters males5To59 = new ColumnParameters(null, "5-59, Male", "gender=M|age=5-59");
@@ -453,6 +548,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
 
     List<ColumnParameters> moh717Disaggregations = Arrays.asList(males5To59, females5To59,
             maleChildrenUnder5, femaleChildrenUnder5, over60, colTotal);
+
+    List<ColumnParameters> under5AndAboveDisaggregations = Arrays.asList(allUnder5, all5AndAbove, colTotal);
 
     @Autowired
     public MOH717ReportBuilder(Moh717CohortLibrary moh717CohortLibrary, CommonDimensionLibrary commonDimensionLibrary, Moh717IndicatorLibrary moh717IndicatorLibrary) {
@@ -583,7 +680,14 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Computerized Tomography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(computerizedTomographyList), indParams), "");
         dsd.addColumn( "Mammography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(mammographyList), indParams), "");
         dsd.addColumn( "Obstetric ultrasound", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-
+        EmrReportingUtils.addRow(dsd, "Casts Fixed (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,NEW_VISIT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Casts Fixed (Revisit)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,RE_ATT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Tractions Fixed (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,tractionsFixedList,NEW_VISIT), indParams),under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Closed Reductions (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,NEW_VISIT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Closed Reductions (Revisit)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,RE_ATT), indParams),under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Cast Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Tractions Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Ex Fixator Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){
