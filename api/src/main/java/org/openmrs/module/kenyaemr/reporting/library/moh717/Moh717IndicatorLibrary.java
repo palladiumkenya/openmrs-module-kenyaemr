@@ -155,9 +155,13 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator totalAmountExempted() {
         return cohortIndicator("Total Amount Exempted", ReportUtils.map(moh717CohortLibrary.totalAmountExempted(), "startDate=${startDate},endDate=${endDate}"));
     }
-
     public CohortIndicator specialClinics(String specialClinicFormUuid) {
         return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinics(specialClinicFormUuid), "startDate=${startDate},endDate=${endDate}"));
     }
-
+    public CohortIndicator orthopaedicTraumaServices(String orthopedicFormUuid,String traumaServiceList, int visitType) {
+        return cohortIndicator("Orthopaedic Trauma Services", ReportUtils.map(moh717CohortLibrary.orthopaedicTraumaServices(orthopedicFormUuid,traumaServiceList,visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator orthopaedicRemovalServices(String orthopedicFormUuid,String removalsList) {
+        return cohortIndicator("Orthopaedic Removal Services", ReportUtils.map(moh717CohortLibrary.orthopaedicRemovalServices(orthopedicFormUuid,removalsList), "startDate=${startDate},endDate=${endDate}"));
+    }
 }
