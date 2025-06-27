@@ -2500,11 +2500,12 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			List<PatientProgram> patientPrograms = (List<PatientProgram>) clinicsEnrolledResult.getValue();
 			for (PatientProgram p : patientPrograms) {
 				if (p.getProgram().getConcept() != null) {
-					patientProgramList.add(programs(p.getProgram().getConcept().getConceptId()));
+					patientProgramList.add(p.getProgram().getName());
 				}
 			}
 		}
 		setToList.addAll(patientProgramList);
+		// setToList.add("TPT");
 		String clinicValues = "";
 		if (setToList.size() == 1) {
 			clinicValues = setToList.get(0);
@@ -3000,17 +3001,56 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 	String programs(int value) {
 		String prog = "";
-		if (value == 160541) {
-			prog = "TB";
-		}
 
-		if (value == 160631) {
-			prog = "HIV";
-		}
-
-		if (value == 159937) {
-			prog = "MCH";
-		}
+		switch (value) {
+            case 160541:
+                prog = "TB";
+                break;
+            case 160631:
+                prog = "HIV";
+                break;
+            case 159937:
+                prog = "MCH";
+                break;
+			// case 159937:
+            //     prog = "MCH";
+            //     break;
+			// case 160541:
+            //     prog = "TPT";
+            //     break;
+			case 165003:
+                prog = "PrEP";
+                break;
+			case 165368:
+                prog = "OVC";
+                break;
+			case 165358:
+                prog = "OTZ";
+                break;
+			case 164929:
+                prog = "Key Population";
+                break;
+			case 164370:
+                prog = "NimeCONFIRM";
+                break;
+			case 162223:
+                prog = "VMMC";
+                break;
+			case 167783:
+                prog = "MAT";
+                break;
+			case 168358:
+                prog = "NCD";
+                break;
+			case 124824:
+                prog = "Violence screening";
+                break;
+			case 164944:
+                prog = "CPM";
+                break;
+            default:
+                prog = "";
+        }
 
 		return prog;
 	}
