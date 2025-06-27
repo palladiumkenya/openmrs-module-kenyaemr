@@ -686,8 +686,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd, "Closed Reductions (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,NEW_VISIT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Closed Reductions (Revisit)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,RE_ATT), indParams),under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Cast Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Tractions Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Ex Fixator Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Tractions Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,tractionRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Ex Fixator Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){

@@ -448,8 +448,8 @@ public class Moh717CohortLibrary {
                 "         inner join kenyaemr_etl.etl_special_clinics s\n" +
                 "                    on o.patient_id = s.patient_id and o.order_type_id = 4 and date(o.date_activated) = s.visit_date\n" +
                 "where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"'\n" +
-                "  and s.visit_type = '"+visitType+"'\n" +
-                "  and o.concept_id in ('"+traumaServicesList+"') and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
+                "  and s.visit_type = "+visitType+"\n" +
+                "  and o.concept_id in ("+traumaServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition orthopaedicRemovalServices(String orthopedicFormUuid,String removalServicesList) {
@@ -461,7 +461,7 @@ public class Moh717CohortLibrary {
                 "                         inner join kenyaemr_etl.etl_special_clinics s\n" +
                 "                                    on o.patient_id = s.patient_id and o.order_type_id = 4 and date(o.date_activated) = s.visit_date\n" +
                 "                where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"'\n" +
-                "                  and o.concept_id in ('"+removalServicesList+"') and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
+                "                  and o.concept_id in ("+removalServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
 }
