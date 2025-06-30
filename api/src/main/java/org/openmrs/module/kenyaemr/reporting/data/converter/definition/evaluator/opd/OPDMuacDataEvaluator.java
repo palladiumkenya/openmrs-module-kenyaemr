@@ -36,12 +36,19 @@ public class OPDMuacDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
+        String qry = "SELECT\n" +
 			"    v.encounter_id,\n" +
-			"    t.muac as muac\n" +
-			"from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"         LEFT JOIN kenyaemr_etl.etl_patient_triage t ON v.patient_id = t.patient_id AND date(v.visit_date) = date(t.visit_date)\n" +
-			"where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"    CASE\n" +
+			"        WHEN t.muac >= 12.5 THEN 'GREEN'\n" +
+			"        WHEN t.muac >= 11.5 AND t.muac < 12.5 THEN 'YELLOW'\n" +
+			"        WHEN t.muac < 11.5 THEN 'RED'\n" +
+			"        ELSE NULL\n" +
+			"        END AS muac\n" +
+			"FROM kenyaemr_etl.etl_clinical_encounter v\n" +
+			"         LEFT JOIN kenyaemr_etl.etl_patient_triage t\n" +
+			"                   ON v.patient_id = t.patient_id\n" +
+			"                       AND DATE(v.visit_date) = DATE(t.visit_date)\n" +
+			"WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

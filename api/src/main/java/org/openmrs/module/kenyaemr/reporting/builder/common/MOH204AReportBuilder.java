@@ -180,7 +180,7 @@ public class MOH204AReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Immunization Status Up to Date",opdImmunizationStatusDataDefinition, paramMapping);
 		dsd.addColumn("TB Screening",opdTbScreeningDataDefinition, paramMapping);
 		dsd.addColumn("Nutrition Interventions",opdNutritionalInterventionsDataDefinition, paramMapping);  //TODO: missing  2=Nutrition therapeutic supplements and 3=Diatetics
-		dsd.addColumn("Referred to",opdNutritionalInterventionsDataDefinition, paramMapping);  //TODO: missing  1=Community Unit
+		dsd.addColumn("Referred to",opdReferredToDataDefinition, paramMapping);  //TODO: missing  1=Community Unit
 		dsd.addColumn("Remarks/Outcome",opdOutcomeDataDefinition, paramMapping); 
 		
         MOH204ARegisterCohortDefinition cd = new MOH204ARegisterCohortDefinition();
