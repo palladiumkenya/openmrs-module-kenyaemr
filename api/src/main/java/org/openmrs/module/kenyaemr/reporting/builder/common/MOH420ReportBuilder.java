@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.kenyaemr.reporting.builder.common;
 
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
@@ -21,10 +20,10 @@ import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculat
 import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.specialClinics.SpecialClinicsRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.KenyaEMROpenMRSNumberDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -35,9 +34,7 @@ import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
 import org.openmrs.module.reporting.data.converter.ObsValueConverter;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeDataDefinition;
-import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition;
-import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.*;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.EncounterDataSetDefinition;
@@ -76,7 +73,6 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
     }
 
     protected DataSetDefinition datasetColumns() {
-        PatientIdentifierType upn = MetadataUtils.existing(PatientIdentifierType.class, HivMetadata._PatientIdentifierType.UNIQUE_PATIENT_NUMBER);
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
         dsd.setName("MOH420");
         dsd.setDescription("OPD Visit information");
@@ -87,11 +83,6 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
 
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
-        PatientIdentifierType openmrsId = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.OPENMRS_ID);
-        DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(openmrsId.getName(), openmrsId), identifierFormatter);
-        DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
-
         SpecialClinicsReferredToDataDefinition specialClinicsReferredToDataDefinition = new SpecialClinicsReferredToDataDefinition();
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		specialClinicsReferredToDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -152,10 +143,14 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         appointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         appointmentDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
-        SpecialClinicsOrthopaedicPatientNumberDataDefinition specialClinicsPatientNumberDataDefinition = new SpecialClinicsOrthopaedicPatientNumberDataDefinition();
-        specialClinicsPatientNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-        specialClinicsPatientNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        specialClinicsPatientNumberDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
+        SpecialClinicsOrthopaedicPatientNumberDataDefinition specialClinicsOrthopaedicPatientNumberDataDefinition = new SpecialClinicsOrthopaedicPatientNumberDataDefinition();
+        specialClinicsOrthopaedicPatientNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        specialClinicsOrthopaedicPatientNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        specialClinicsOrthopaedicPatientNumberDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
+
+        KenyaEMROpenMRSNumberDataDefinition openMRSNumberDataDefinition = new KenyaEMROpenMRSNumberDataDefinition();
+        openMRSNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        openMRSNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -167,8 +162,8 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
 		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
-        dsd.addColumn("OP/IP Number", patientClinicNo, "");
-		dsd.addColumn("OPD Number", specialClinicsPatientNumberDataDefinition, paramMapping);
+        dsd.addColumn("OpenMRS Number", openMRSNumberDataDefinition, paramMapping);
+		dsd.addColumn("Orthopaedic Patient Number", specialClinicsOrthopaedicPatientNumberDataDefinition, paramMapping);
 		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
