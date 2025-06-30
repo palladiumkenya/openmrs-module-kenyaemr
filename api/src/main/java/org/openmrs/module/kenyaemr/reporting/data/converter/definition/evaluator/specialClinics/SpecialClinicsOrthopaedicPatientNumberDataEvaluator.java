@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.specialClinics;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialCoexialMedicalConditionDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.SpecialClinicsOrthopaedicPatientNumberDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,11 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates Referred to  
- * OPD Register
+ * Evaluates Critical
  */
-@Handler(supports= SpecialCoexialMedicalConditionDataDefinition.class, order=50)
-public class SpecialClinicsCoexialMedicalConditionDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= SpecialClinicsOrthopaedicPatientNumberDataDefinition.class, order=50)
+public class SpecialClinicsOrthopaedicPatientNumberDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -36,14 +35,12 @@ public class SpecialClinicsCoexialMedicalConditionDataEvaluator implements Encou
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        SpecialCoexialMedicalConditionDataDefinition cohortDefinition = (SpecialCoexialMedicalConditionDataDefinition) definition;
+        SpecialClinicsOrthopaedicPatientNumberDataDefinition cohortDefinition = (SpecialClinicsOrthopaedicPatientNumberDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
-
-        String qry = "select v.encounter_id,\n" +
-                "(case v.medication_condition when 112141 then 'TB' when 119481 then 'Diabetes' when 117399 then 'Hypertension' when 5622 then 'Other' else '' end) as medication_condition\n" +
+        String qry = "select v.encounter_id, \n" +
+                "v.orthopaedic_patient_no\n"+
                 "from kenyaemr_etl.etl_special_clinics v\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate) and special_clinic_form_uuid = '" + specialClinic + "';";
-
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

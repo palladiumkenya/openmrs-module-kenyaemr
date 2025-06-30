@@ -18,18 +18,13 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
 import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.LastReturnVisitDateCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
-import org.openmrs.module.kenyaemr.reporting.calculation.converter.ObsValueDatetimeConverter;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.specialClinics.SpecialClinicsRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDiagnosisDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDOrderingClinicianDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDOutcomeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.specialClinics.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -92,9 +87,9 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
 
         DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
-        PatientIdentifierType pcn = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.PATIENT_CLINIC_NUMBER);
+        PatientIdentifierType openmrsId = MetadataUtils.existing(PatientIdentifierType.class, CommonMetadata._PatientIdentifierType.OPENMRS_ID);
         DataConverter identifierFormatter = new ObjectFormatter("{identifier}");
-        DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(pcn.getName(), pcn), identifierFormatter);
+        DataDefinition patientClinicNo = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(openmrsId.getName(), openmrsId), identifierFormatter);
         DataDefinition identifierDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
 
         SpecialClinicsReferredToDataDefinition specialClinicsReferredToDataDefinition = new SpecialClinicsReferredToDataDefinition();
@@ -137,7 +132,7 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         assistiveTechnologyDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         assistiveTechnologyDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
-        SpecialClinicsProcedureOrderDataDefinition procedureOrderDataDefinition = new SpecialClinicsProcedureOrderDataDefinition();
+        SpecialClinicsPresenceOfComobiditiesDataDefinition procedureOrderDataDefinition = new SpecialClinicsPresenceOfComobiditiesDataDefinition();
         procedureOrderDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         procedureOrderDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         procedureOrderDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
@@ -157,6 +152,11 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         appointmentDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
         appointmentDateDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
 
+        SpecialClinicsOrthopaedicPatientNumberDataDefinition specialClinicsPatientNumberDataDefinition = new SpecialClinicsOrthopaedicPatientNumberDataDefinition();
+        specialClinicsPatientNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        specialClinicsPatientNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        specialClinicsPatientNumberDataDefinition.setSpecialClinic(SPECIAL_CLINIC_HEARING_FORM_UUID);
+
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
         dsd.addColumn("Name", nameDef, "");
@@ -167,13 +167,13 @@ public class MOH420ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
 		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
-        dsd.addColumn("OP/IP Number", identifierDef, "");
-		dsd.addColumn("OPD Number (New)", patientClinicNo, "");
+        dsd.addColumn("OP/IP Number", patientClinicNo, "");
+		dsd.addColumn("OPD Number", specialClinicsPatientNumberDataDefinition, paramMapping);
 		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
         dsd.addColumn("Occupation", new ObsForPersonDataDefinition("Occupation", TimeQualifier.LAST, Dictionary.getConcept(Dictionary.OCCUPATION), null, null), "", new ObsValueConverter());
-        dsd.addColumn("Diagnosis",diagnosisDataDefinition, paramMapping);  //TODO: Add all diagnosis
+        dsd.addColumn("Diagnosis",diagnosisDataDefinition, paramMapping);
         dsd.addColumn("Assistive Technology", assistiveTechnologyDataDefinition, paramMapping);
         dsd.addColumn("Treatment Intervention", treatmentInterventionDataDefinition, paramMapping);
         dsd.addColumn("Site of Screening",siteOfScreeningDataDefinition, paramMapping);
