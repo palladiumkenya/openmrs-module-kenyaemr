@@ -39,7 +39,7 @@ public class OPDTbScreeningDataEvaluator implements EncounterDataEvaluator {
 
         String qry = "select\n" +
 			"    v.encounter_id,\n" +
-			"    (case t.resulting_tb_status when 1660 then 'No TB Signs' when 142177 then 'Presumed TB' when 1662 then 'TB Confirmed' when 160737 then 'TB Screening Not Done' else '' end) as resulting_tb_status\n" +
+			"    (case t.resulting_tb_status when 1660 then 'No TB Signs' when 142177 then 1 when 1662 then 'TB Confirmed' when 160737 then 'TB Screening Not Done' else '' end) as resulting_tb_status\n" +
 			"from kenyaemr_etl.etl_clinical_encounter v\n" +
 			"         LEFT JOIN kenyaemr_etl.etl_tb_screening t ON v.patient_id = t.patient_id AND date(v.visit_date) = date(t.visit_date)\n" +
 			"where date(v.visit_date) between date(:startDate) and date(:endDate);";
