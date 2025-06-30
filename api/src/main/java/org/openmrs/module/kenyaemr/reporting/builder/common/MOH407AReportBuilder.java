@@ -110,7 +110,7 @@ public class MOH407AReportBuilder extends AbstractReportBuilder {
 		actualAgeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		actualAgeDataDefinition.setSpecialClinic(SPECIAL_CLINIC);
 
-		SpecialCoexialMedicalConditionDataDefinition coexialMedicalConditionDataDefinition = new SpecialCoexialMedicalConditionDataDefinition();
+		SpecialClinicsPresenceOfComobiditiesDataDefinition coexialMedicalConditionDataDefinition = new SpecialClinicsPresenceOfComobiditiesDataDefinition();
 		coexialMedicalConditionDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		coexialMedicalConditionDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		coexialMedicalConditionDataDefinition.setSpecialClinic(SPECIAL_CLINIC);

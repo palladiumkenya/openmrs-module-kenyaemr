@@ -37,20 +37,33 @@ public class SpecialClinicsDiagnosisDataEvaluator implements EncounterDataEvalua
         SpecialClinicsDiagnosisDataDefinition cohortDefinition = (SpecialClinicsDiagnosisDataDefinition) definition;
         String specialClinic = cohortDefinition.getSpecialClinic();
 
-        String qry = "select c.encounter_id,d.diagnosis from kenyaemr_etl.etl_special_clinics c inner join\n" +
-                "   (SELECT d.patient_id,\n" +
-                "           GROUP_CONCAT(DISTINCT n.name SEPARATOR '\\r\\n') AS diagnosis,DATE(d.date_created) as visit_date\n" +
+        String qry = "SELECT c.encounter_id, d.diagnosis\n" +
+                "FROM kenyaemr_etl.etl_special_clinics c\n" +
+                "INNER JOIN (\n" +
+                "    SELECT d.patient_id,\n" +
+                "           GROUP_CONCAT(DISTINCT n.name SEPARATOR '\\\\r\\\\n') AS diagnosis,\n" +
+                "           DATE(d.date_created) AS visit_date\n" +
                 "    FROM encounter_diagnosis d\n" +
-                "             INNER JOIN concept_name n\n" +
-                "                        ON d.diagnosis_coded = n.concept_id\n" +
-                "                            AND n.locale = 'en'\n" +
-                "             inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "    INNER JOIN concept_name n\n" +
+                "        ON d.diagnosis_coded = n.concept_id\n" +
+                "        AND n.locale = 'en'\n" +
                 "    WHERE n.concept_name_type = 'FULLY_SPECIFIED'\n" +
                 "      AND d.voided = 0\n" +
-                "      AND d.dx_rank = 1\n" +
-                "    GROUP BY d.patient_id, d.encounter_id, DATE(d.date_created))d on c.patient_id = c.patient_id and c.visit_date = d.visit_date\n" +
-                "where c.visit_date between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = '"+specialClinic+"';";
-
+                "      AND (\n" +
+                "          (d.dx_rank = 1 AND NOT EXISTS (\n" +
+                "              SELECT 1 FROM encounter_diagnosis ed WHERE ed.patient_id = d.patient_id AND ed.dx_rank = 2\n" +
+                "          ))\n" +
+                "          OR (d.dx_rank = 2 AND NOT EXISTS (\n" +
+                "              SELECT 1 FROM encounter_diagnosis ed WHERE ed.patient_id = d.patient_id AND ed.dx_rank = 1\n" +
+                "          ))\n" +
+                "          OR (d.dx_rank = 2 AND EXISTS (\n" +
+                "              SELECT 1 FROM encounter_diagnosis ed WHERE ed.patient_id = d.patient_id AND ed.dx_rank = 1\n" +
+                "          ))\n" +
+                "      )\n" +
+                "    GROUP BY d.patient_id, DATE(d.date_created)\n" +
+                ") d ON c.patient_id = d.patient_id AND DATE(c.visit_date) = d.visit_date\n" +
+                "WHERE c.visit_date between date(:startDate) and date(:endDate)\n" +
+                "   and c.special_clinic_form_uuid = '"+specialClinic+"';";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
