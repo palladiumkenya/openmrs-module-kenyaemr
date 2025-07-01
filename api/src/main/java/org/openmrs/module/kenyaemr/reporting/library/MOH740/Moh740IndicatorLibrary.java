@@ -62,6 +62,10 @@ public class Moh740IndicatorLibrary {
 
         return cohortIndicator("No. of Diabetes By Type Two", map(Moh740Cohorts.patientWithDiabetesByTypeTwo(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator diabetesGestational() {
+
+        return cohortIndicator("No. of Diabetes secondary to other causes", map(Moh740Cohorts.patientWithGestational(), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator diabetesSecondaryToOther() {
 
         return cohortIndicator("No. of Diabetes secondary to other causes", map(Moh740Cohorts.patientWithDiabetesSecondaryToOther(), "startDate=${startDate},endDate=${endDate}"));

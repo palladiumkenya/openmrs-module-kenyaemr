@@ -89,6 +89,7 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
     List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18, m19_35, f19_35, m36_60, f36_60, m_all60AndAbove, f_all60AndAbove, colTotal);
 
     List<ColumnParameters> all_indicators = Arrays.asList(male, female, allTotal);
+    List<ColumnParameters> gestational_indicator = Arrays.asList(female, allTotal);
 
 
     private DataSetDefinition createMoh740SummaryDataSet() {
@@ -114,6 +115,7 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd, "TypeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
         EmrReportingUtils.addRow(dsd, "TypeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
 
+        EmrReportingUtils.addRow(dsd,"Gestational diabetes melitus", "No. diagnosed for gestational diabetes melitus", ReportUtils.map(Moh740Indicator.diabetesGestational(), indParams), gestational_indicator, Arrays.asList("02", "03"));
         EmrReportingUtils.addRow(dsd,"No. of Diabetes secondary to other causes", "No. of Diabetes secondary to other causes", ReportUtils.map(Moh740Indicator.diabetesSecondaryToOther(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"No. of patients on insulin", "No. of patients on insulin", ReportUtils.map(Moh740Indicator.patientOnInsulin(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"No. of patients on OGLAs", "No. of patients on OGLAs", ReportUtils.map(Moh740Indicator.patientOnOGLAs(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
