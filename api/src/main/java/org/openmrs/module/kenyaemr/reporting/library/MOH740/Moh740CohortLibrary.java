@@ -475,7 +475,7 @@ public class Moh740CohortLibrary {
 
     public CohortDefinition noPatientScreenedForTuberculosis() {
 
-        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and ne.tb_screening = 142177 or ne.tb_screening = 1660 or or ne.tb_screening = 1662";
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and (ne.tb_screening = 142177 or ne.tb_screening = 1660 or ne.tb_screening = 1662)";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("No. Screened for Tuberculosis");
         cd.setQuery(sqlQuery);
