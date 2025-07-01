@@ -54,7 +54,7 @@ public class Moh740CohortLibrary {
 
     public CohortDefinition newDiagnosedWithDiabetes() {
 
-        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 117399 \n"+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.disease_type = 142486 \n"+
                 "and ne.diabetes_condition = 1000488 and ne.visit_date between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("New Diagnosed with Diabetes");
@@ -337,6 +337,18 @@ public class Moh740CohortLibrary {
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.setDescription("No. with high BP at clinic visit (≥140/90)");
+        return cd;
+    }
+    public CohortDefinition newDiagnosedWithCVDTotal() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and (ne.new_complications like '%Stroke%' " +
+                "or ne.new_complications like '%Ischaemic Heart Disease%' or ne.new_complications like '%Peripheral Vascular Disease%' or ne.new_complications like '%Heart failure%')";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("new no. of patients with CVD");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Total new no. of CVD");
         return cd;
     }
 
