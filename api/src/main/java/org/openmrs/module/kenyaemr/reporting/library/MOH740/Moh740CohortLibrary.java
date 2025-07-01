@@ -205,6 +205,18 @@ public class Moh740CohortLibrary {
         return cd;
     }
 
+    public CohortDefinition patientWithGestational() {
+
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and ne.diabetes_type = 117807";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("Gestational diabetes melitus");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("No. diagnosed for gestational diabetes melitus");
+        return cd;
+    }
+
     public CohortDefinition patientWithDiabetesSecondaryToOther() {
 
         String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and ne.diabetes_type = 126985";
@@ -463,7 +475,7 @@ public class Moh740CohortLibrary {
 
     public CohortDefinition noPatientScreenedForTuberculosis() {
 
-        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and ne.tb_screening = 142177";
+        String sqlQuery = "select ne.patient_id from kenyaemr_etl.etl_ncd_enrollment ne where ne.visit_date between date(:startDate) and date(:endDate) and ne.tb_screening = 142177 or ne.tb_screening = 1660 or or ne.tb_screening = 1662";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("No. Screened for Tuberculosis");
         cd.setQuery(sqlQuery);
