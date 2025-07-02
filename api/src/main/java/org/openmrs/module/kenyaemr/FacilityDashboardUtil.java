@@ -855,7 +855,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHighRiskPBFWNotOnPrep(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String highRiskPBFWNotOnPrepQuery = "SELECT COUNT(DISTINCT(l.patient_id)) as high_risk_not_on_PrEP, a.visit_date as visit_date\n"
+		String highRiskPBFWNotOnPrepQuery = "SELECT COUNT(DISTINCT(a.patient_id)) as high_risk_not_on_PrEP, a.visit_date as visit_date\n"
 				+
 				"FROM (SELECT s.patient_id,s.visit_date\n" +
 				"      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
@@ -998,7 +998,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHeiDNAPCRPending(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String heiDNAPCRPendingQuery = "SELECT COUNT(DISTINCT(l.patient_id)) AS hei_without_pcr, DATE(e.visit_date) AS visit_date\n"
+		String heiDNAPCRPendingQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei_without_pcr, DATE(e.visit_date) AS visit_date\n"
 				+
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
@@ -1030,7 +1030,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyEligibleForVlSampleNotTaken(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String eligibleForVlSampleNotTakenQuery = "select COUNT(DISTINCT(l.patient_id)) as eligible_for_vl_sample_not_taken, e.visit_date as visit_date\n"
+		String eligibleForVlSampleNotTakenQuery = "select COUNT(DISTINCT(b.patient_id)) as eligible_for_vl_sample_not_taken, e.visit_date as visit_date\n"
 				+
 				"          from (select fup.visit_date,\n" +
 				"                         fup.patient_id,\n" +
@@ -1145,7 +1145,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHei24MonthsWithoutDocumentedOutcome(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(DISTINCT(l.patient_id)) AS hei_without_outcome, DATE_ADD(d.dob, INTERVAL 24 MONTH) AS date\n"
+		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(e.patient_id) AS hei_without_outcome, DATE_ADD(d.dob, INTERVAL 24 MONTH) AS date\n"
 				+
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
@@ -1185,7 +1185,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(DISTINCT(l.patient_id)) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date FROM\n" +
+		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(DISTINCT(a.patient_id)) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date FROM\n" +
 				"(SELECT b.patient_id, eac_date\n" +
 				"FROM (\n" +
 				"    SELECT \n" +
