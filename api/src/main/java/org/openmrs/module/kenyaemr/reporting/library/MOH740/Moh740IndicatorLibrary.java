@@ -106,6 +106,10 @@ public class Moh740IndicatorLibrary {
 
         return cohortIndicator("No. with high BP at clinic visit (≥140/90)", map(Moh740Cohorts.patientWithHighBPOnClinicVisit(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator newDiagnosedCVD() {
+
+        return cohortIndicator("Total no. of patients with CVD", map(Moh740Cohorts.newDiagnosedWithCVDTotal(), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator newDiagnosedStroke() {
 
         return cohortIndicator("Total no. of patients with Stroke", map(Moh740Cohorts.newDiagnosedWithStroke(), "startDate=${startDate},endDate=${endDate}"));

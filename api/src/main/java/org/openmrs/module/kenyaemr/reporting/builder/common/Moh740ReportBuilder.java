@@ -65,31 +65,40 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
 
     ColumnParameters f0_5 = new ColumnParameters(null, "0-5 years, Female", "gender=F|age=0-5");
     ColumnParameters m0_5 = new ColumnParameters(null, "0-5 years, Male", "gender=M|age=0-5");
+    ColumnParameters t0_5 = new ColumnParameters(null, "0-5 years, Total", "age=0-5");
     ColumnParameters f0_18 = new ColumnParameters(null, "0-18 years, Female", "gender=F|age=0-18");
     ColumnParameters m0_18 = new ColumnParameters(null, "0-18 years, Male", "gender=M|age=0-18");
+    ColumnParameters t0_18 = new ColumnParameters(null, "0-18 years, Total", "age=0-18");
     ColumnParameters f6_18 = new ColumnParameters(null, "6-18 years, Female", "gender=F|age=6-18");
     ColumnParameters m6_18 = new ColumnParameters(null, "6-18 years, Male", "gender=M|age=6-18");
+    ColumnParameters t6_18 = new ColumnParameters(null, "6-18 years, Total", "age=6-18");
     ColumnParameters f19_35 = new ColumnParameters(null, "19-35 years, Female", "gender=F|age=19-35");
     ColumnParameters m19_35 = new ColumnParameters(null, "19-35 years, Male", "gender=M|age=19-35");
+    ColumnParameters t19_35 = new ColumnParameters(null, "19-35 years, Total", "age=19-35");
     ColumnParameters f_all36AndAbove = new ColumnParameters(null, "36+ years, Female", "gender=F|age=36+");
     ColumnParameters m_all36AndAbove = new ColumnParameters(null, "36+ years, Male", "gender=M|age=36+");
+    ColumnParameters t_all36AndAbove = new ColumnParameters(null, "36+ years, Total", "age=36+");
     ColumnParameters m36_60 = new ColumnParameters(null, "36-60 years, Male", "gender=M|age=36-60");
     ColumnParameters f36_60 = new ColumnParameters(null, "36-60 years, Female", "gender=F|age=36-60");
+    ColumnParameters t36_60 = new ColumnParameters(null, "36-60 years, Total", "age=36-60");
     ColumnParameters m_all60AndAbove = new ColumnParameters(null, "60+ years, Male", "gender=M|age=60+");
     ColumnParameters f_all60AndAbove = new ColumnParameters(null, "60+ years, Female", "gender=F|age=60+");
+    ColumnParameters t60plus = new ColumnParameters(null, "60+ years, Total", "age=60+");
     ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
+
 
     // for all gender
     ColumnParameters male = new ColumnParameters(null, "Male", "gender=M");
     ColumnParameters female = new ColumnParameters(null, "Female", "gender=F");
     ColumnParameters allTotal = new ColumnParameters(null, "Total", "");
+    ColumnParameters totalGestational = new ColumnParameters(null, "Total", "gender=F");
 
-    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5, m6_18, f6_18, m19_35, f19_35, f_all36AndAbove, m_all36AndAbove, colTotal);
-    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18, m19_35, f19_35, m36_60, f36_60, m_all60AndAbove, f_all60AndAbove, colTotal);
-    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18, m19_35, f19_35, m36_60, f36_60, m_all60AndAbove, f_all60AndAbove, colTotal);
+    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5, t0_5, m6_18, f6_18, t6_18, m19_35, f19_35, t19_35, f_all36AndAbove, m_all36AndAbove, t_all36AndAbove, colTotal);
+    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18, t0_18, m19_35, f19_35, t19_35, m36_60, f36_60, t36_60, m_all60AndAbove, f_all60AndAbove, t60plus, colTotal);
+    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18, t0_18, m19_35, f19_35, t19_35, m36_60, f36_60, t36_60, m_all60AndAbove, f_all60AndAbove, t60plus, colTotal);
 
     List<ColumnParameters> all_indicators = Arrays.asList(male, female, allTotal);
-    List<ColumnParameters> gestational_indicator = Arrays.asList(female, allTotal);
+    List<ColumnParameters> gestational_indicator = Arrays.asList(female, totalGestational);
 
 
     private DataSetDefinition createMoh740SummaryDataSet() {
@@ -112,8 +121,8 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd,"Pre-Existing DM and HTN", "Pre-Existing DM and HTN", ReportUtils.map(Moh740Indicator.preExistingDMandHTN(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
 //        dsd.addColumn("Pre-existing HTN", "", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), "");
 
-        EmrReportingUtils.addRow(dsd, "TypeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
-        EmrReportingUtils.addRow(dsd, "TypeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
+        EmrReportingUtils.addRow(dsd, "TypeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
+        EmrReportingUtils.addRow(dsd, "TypeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
 
         EmrReportingUtils.addRow(dsd,"Gestational diabetes melitus", "No. diagnosed for gestational diabetes melitus", ReportUtils.map(Moh740Indicator.diabetesGestational(), indParams), gestational_indicator, Arrays.asList("02", "03"));
         EmrReportingUtils.addRow(dsd,"No. of Diabetes secondary to other causes", "No. of Diabetes secondary to other causes", ReportUtils.map(Moh740Indicator.diabetesSecondaryToOther(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
@@ -126,10 +135,11 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd,"No. of patients done HbA1c", "No. of patients done HbA1c", ReportUtils.map(Moh740Indicator.patientDoneHbA1c(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"No. that met HbA1c target (< 7%)", "No. that met HbA1c target (< 7%)", ReportUtils.map(Moh740Indicator.patientMetHbA1cTarget(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
 
-        EmrReportingUtils.addRow(dsd, "Hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09"));
+        EmrReportingUtils.addRow(dsd, "Hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
 
         EmrReportingUtils.addRow(dsd,"No. of patients on antihypertensives", "No. of patients on antihypertensives", ReportUtils.map(Moh740Indicator.patientOnAntihypertensives(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"No. with a BP (≥140/90) at clinic visit", "No. with a BP (≥140/90) at clinic visit", ReportUtils.map(Moh740Indicator.patientWithHighBP(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD", "Total no. of patients with CVD (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedCVD(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Stroke", "Total no. of patients with CVD (new diagnosis) Stroke", ReportUtils.map(Moh740Indicator.newDiagnosedStroke(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Ischemic heart disease", "Total no. of patients with CVD (new diagnosis) Ischemic heart disease", ReportUtils.map(Moh740Indicator.newDiagnosedHeartDisease(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Peripheral vascular/artery disease", "Total no. of patients with CVD (new diagnosis) Peripheral vascular/artery disease", ReportUtils.map(Moh740Indicator.newDiagnosedPeripheralDisease(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
