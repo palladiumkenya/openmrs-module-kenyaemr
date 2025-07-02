@@ -247,8 +247,6 @@ public class ActivePatientSnapshotReportBuilder extends AbstractHybridReportBuil
         dsd.addColumn("Last risk score", lastRiskScoreDataDefinition, "endDate=${endDate}");
         dsd.addColumn("Risk categorization", lastRiskCategorizationDataDefinition, "endDate=${endDate}");
         dsd.addColumn("Evaluation date", lastRiskEvaluationDateDataDefinition, "endDate=${endDate}");
-     
-
 
         return dsd;
     }
