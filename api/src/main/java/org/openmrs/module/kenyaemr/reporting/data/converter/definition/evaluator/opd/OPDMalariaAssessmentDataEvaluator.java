@@ -41,9 +41,9 @@ public class OPDMalariaAssessmentDataEvaluator implements EncounterDataEvaluator
 			"    v.encounter_id,\n" +
 			"       if(ed.diagnosis_coded = 166623 and x.lab_test not in (1643,2017901,1366), 1,\n" +
 			"         if(x.lab_test = 1643 and x.test_result = 664, 2,\n" +
-			"           if(x.lab_test in (2017901) and x.test_result = 2017936, 3,\n" +
+			"           if(x.lab_test in (2017917) and x.test_result = 2017936, 3,\n" +
 			"            if(x.lab_test in (1643) and x.test_result = 703, 4,\n" +
-			"               if(x.lab_test in (2017901) and x.test_result = 703, 5,''))))) as malaria\n" +
+			"               if(x.lab_test in (2017917) and x.test_result = 703, 5,''))))) as malaria\n" +
 			"from kenyaemr_etl.etl_clinical_encounter v\n" +
 			"         INNER JOIN kenyaemr_etl.etl_laboratory_extract x ON v.patient_id = x.patient_id AND date(x.visit_date) between date(:startDate) and date(:endDate)\n" +
 			"         LEFT JOIN openmrs.encounter_diagnosis ed ON v.patient_id = ed.patient_id and date(ed.date_created)between date(:startDate) and date(:endDate)\n" +
