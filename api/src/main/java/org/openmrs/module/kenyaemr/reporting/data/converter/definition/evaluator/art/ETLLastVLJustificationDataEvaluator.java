@@ -41,7 +41,7 @@ public class ETLLastVLJustificationDataEvaluator implements PersonDataEvaluator 
                 " when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' when 1040 then 'Initial PCR (6week or first contact)' when 1326 then '2nd PCR (6 months)' when 164860 then '3rd PCR (12months)'\n" +
                 " when 162082 then 'Confirmatory PCR and Baseline VL' when 164460 then 'Ab test 6 weeks after cessation of breastfeeding'\n" +
                 " when 164860 then 'Ab test at 18 months (1.5 years)'\n" +
-                " else '' end as justification from kenyaemr_etl.etl_laboratory_extract where lab_test in (856,1305) and date(visit_date) <= date(:endDate)\n" +
+                " else '' end as justification from kenyaemr_etl.etl_laboratory_extract where lab_test in (856,1305) and test_result is not null and date(visit_date) <= date(:endDate)\n" +
                 "GROUP BY patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
