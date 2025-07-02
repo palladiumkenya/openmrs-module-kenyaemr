@@ -76,6 +76,13 @@ public class MOH705IndicatorLibrary {
 
 		return cohortIndicator("Road Traffic Injuries", ReportUtils.map(moh705CohortLibrary.roadTrafficInjuries(age, StringUtils.join(DiagnosisLists.getRoadTrafficInjuriesList(),",")), "startDate=${startDate},endDate=${endDate}"));
 	}
+
+	/**
+	 * LabTests
+	 */
+	public CohortIndicator labTests(List<Integer> labTestList, String age) {
+		return cohortIndicator("Lab Tests", ReportUtils.map(moh705CohortLibrary.labTest(labTestList,age), "startDate=${startDate},endDate=${endDate}"));
+	}
 }
 
 

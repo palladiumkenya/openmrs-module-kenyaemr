@@ -1344,6 +1344,7 @@ public class DiagnosisConcepts {
 		public static final Integer TMC_9= 2002646;
 		public static final Integer TMC_10= 116128;
 		public static final Integer TMC_11= 155686;
+		public static final Integer TMC_12= 2017917;
 	
 		//Suspected malaria SMC
 		public static final Integer SMC_1= 2002652;
