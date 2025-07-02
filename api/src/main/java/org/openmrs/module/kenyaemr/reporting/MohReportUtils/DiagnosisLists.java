@@ -1021,7 +1021,8 @@ public class DiagnosisLists {
 				DiagnosisConcepts._DiagnosisConcepts.TMC_8,
 				DiagnosisConcepts._DiagnosisConcepts.TMC_9,
 				DiagnosisConcepts._DiagnosisConcepts.TMC_10,
-				DiagnosisConcepts._DiagnosisConcepts.TMC_11
+				DiagnosisConcepts._DiagnosisConcepts.TMC_11,
+				DiagnosisConcepts._DiagnosisConcepts.TMC_12
 
 			);
 	}

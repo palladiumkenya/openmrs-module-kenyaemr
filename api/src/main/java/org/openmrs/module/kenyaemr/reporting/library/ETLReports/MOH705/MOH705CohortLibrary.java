@@ -58,6 +58,8 @@ public class MOH705CohortLibrary {
 		return cd;
 	}
 
+	
+	
 	/**
 	 * MOH705A and MOH705B
 	 * Diagnosis per age
@@ -222,6 +224,41 @@ public class MOH705CohortLibrary {
 		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
 		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
 		cd.setDescription("Patients with road traffic injuries");
+		return cd;
+	}
+	/**
+	 * MOH705 and MOH705B
+	 * Tests
+	 * For Composition
+	 * @return
+	 */
+	public CohortDefinition patientLabTests(List<Integer> labTestList) {
+		String labTest = String.valueOf(labTestList).replaceAll("\\[", "(").replaceAll("\\]",")");
+		String sqlQuery = "select x.patient_id from kenyaemr_etl.etl_laboratory_extract x\n" +
+			" inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = x.patient_id and  p.voided = 0\n" +
+			"where x.lab_test in " + labTest + " and date(visit_date) between date(:startDate) and date(:endDate);";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("patientsLabTest");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("Patients lab test");
+		return cd;
+	}
+	
+	/**
+	 * MOH705A and MOH705B
+	 * Tested for Malaria per age
+	 * Composition
+	 * @return
+	 */
+	public CohortDefinition labTest(List<Integer> labTestList, String age) {
+		CompositionCohortDefinition cd = new CompositionCohortDefinition();
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.addSearch("patientAge", ReportUtils.map(patientAge(age), "startDate=${startDate},endDate=${endDate}"));
+		cd.addSearch("labTest", ReportUtils.map(patientLabTests(labTestList), "startDate=${startDate},endDate=${endDate}"));
+		cd.setCompositionString("labTest AND patientAge");
 		return cd;
 	}
 }
