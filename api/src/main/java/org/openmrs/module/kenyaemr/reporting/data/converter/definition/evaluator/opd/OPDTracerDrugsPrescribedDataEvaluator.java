@@ -37,18 +37,26 @@ public class OPDTracerDrugsPrescribedDataEvaluator implements EncounterDataEvalu
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select    v.encounter_id,\n" +
-			"    if(d.drug_concept_id = 351, 1,\n" +
-			"      if(d.drug_concept_id = 86672 , 2,\n" +
-			"        if(d.drug_concept_id = 351 , 3,\n" +
-			"         if(d.drug_concept_id = 71161 , 4,\n" +
-			"             if(d.drug_concept_id = 86339 , 5,\n" +
-			"                 if(d.drug_concept_id = 81341 , 6,\n" +
-			"                     if(d.drug_concept_id = 70439 , 7,\n" +
-			"                         if(d.drug_concept_id = 162650 , 8,'')))))))) as tracer_drugs_prescribed\n" +
-			"from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"         INNER JOIN kenyaemr_etl.etl_drug_order d ON v.patient_id = d.patient_id and date(d.visit_date) = date(v.visit_date)\n" +
-			"where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "SELECT\n" +
+			"    v.encounter_id,\n" +
+			"    GROUP_CONCAT(\n" +
+			"            CASE d.drug_concept_id\n" +
+			"                WHEN 351 THEN 1\n" +
+			"                WHEN 86672 THEN 2\n" +
+			"                WHEN 71161 THEN 4\n" +
+			"                WHEN 86339 THEN 5\n" +
+			"                WHEN 81341 THEN 6\n" +
+			"                WHEN 70439 THEN 7\n" +
+			"                WHEN 162650 THEN 8\n" +
+			"                ELSE NULL\n" +
+			"                END\n" +
+			"            SEPARATOR '|'\n" +
+			"    ) AS tracer_drugs_prescribed\n" +
+			"FROM kenyaemr_etl.etl_clinical_encounter v\n" +
+			"         INNER JOIN kenyaemr_etl.etl_drug_order d\n" +
+			"                    ON v.patient_id = d.patient_id\n" +
+			"WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+			"GROUP BY v.encounter_id";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
