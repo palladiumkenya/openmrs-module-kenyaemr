@@ -459,7 +459,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Nursing Cardex Clinical Form", "Form for Cardex plan clinical encounter", _EncounterType.NURSING_CARDEX, "1", _Form.NURSING_CARDEX_FORM));
 		install(form("Pre-Operation Checklist Clinical Form", "Form for Pre-procedure checklist clinical encounter", _EncounterType.PRE_OPERATION_CHECKLIST, "1", _Form.PRE_OPERATION_CHECKLIST_FORM));
 		install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
-		install(form("Newbord Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
+		install(form("Newborn Admission Clinical Form", "Form for Newbord admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
 		install(form("Plastic Surgery Clinical Form", "Form for Plastic surgery clinical encounter", _EncounterType.PLASTIC_SURGERY, "1", _Form.PLASTIC_SURGERY_FORM));
 		install(form("Inpatient Discharge Clinical Form", "Form for Inpatient Discharge clinical encounter", _EncounterType.IPD_DISCHARGE, "1", _Form.IPD_DISCHARGE_FORM));
 		install(form("Leprosy Initial Clinical Form", "Form for Leprosy Initial contact clinical encounter", _EncounterType.LEPROSY_INITIAL, "1", _Form.LEPROSY_INITIAL_FORM));
