@@ -127,7 +127,10 @@ public class MOH204BReportBuilder extends AbstractReportBuilder {
 		OPDDiagnosisDataDefinition opdDiagnosisDataDefinition = new OPDDiagnosisDataDefinition();
 		opdDiagnosisDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
 		opdDiagnosisDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		
+		OPDVisualAcuityDataDefinition opdVisualAcuityDataDefinition = new OPDVisualAcuityDataDefinition();
+		opdVisualAcuityDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+		opdVisualAcuityDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
 		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
         dsd.addColumn("Name", nameDef, "");
@@ -148,7 +151,7 @@ public class MOH204BReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("BMI", opdBMIDataDefinition, paramMapping);	
 		dsd.addColumn("Temperature",opdTemperatureDataDefinition, paramMapping);
 		dsd.addColumn("Blood Pressure", opdBloodPressureDataDefinition, paramMapping);		
-		//dsd.addColumn("Visual Acuity", opdBloodPressureDataDefinition, paramMapping);		  //TODO: Determine how to get visual acuity. Is this an examination	
+		dsd.addColumn("Visual Acuity", opdVisualAcuityDataDefinition, paramMapping);		  	
 		dsd.addColumn("TB Screening",opdTbScreeningDataDefinition, paramMapping);
 		dsd.addColumn("Malaria",opdMalariaAssessmentDataDefinition, paramMapping);
 		dsd.addColumn("Diagnosis",opdDiagnosisDataDefinition, paramMapping);  //TODO: Add all diagnosis
