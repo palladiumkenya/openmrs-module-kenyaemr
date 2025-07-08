@@ -957,7 +957,42 @@ public class PublicHealthActionCohortLibrary {
         cd.setDescription("Patients Eligible for VL, no sample taken during last visit");
         return cd;
     }
-
+    public CohortDefinition eligibleForVLSampleNotTakenZeroGracePeriod() {
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
+                "         inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
+                "where ((TIMESTAMPDIFF(MONTH, v.date_started_art, CURRENT_DATE) >= 3 and\n" +
+                "        v.base_viral_load_test_result is null) -- First VL new on ART\n" +
+                "    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_started_art, CURRENT_DATE) >= 3 and\n" +
+                "        (v.vl_result is not null and\n" +
+                "         v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n" +
+                "    OR (v.vl_result >= 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, CURRENT_DATE) >=\n" +
+                "        3) -- Unsuppressed VL\n" +
+                "    OR (v.vl_result < 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, CURRENT_DATE) >=\n" +
+                "        6 and\n" +
+                "        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n" +
+                "    OR (v.vl_result < 200 AND\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_test_requested, CURRENT_DATE) >=\n" +
+                "        12 and\n" +
+                "        TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n" +
+                "    OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
+                "        TIMESTAMPDIFF(MONTH, v.date_started_art, CURRENT_DATE) >= 3\n" +
+                "        and (v.order_reason in (159882, 1434) and\n" +
+                "             TIMESTAMPDIFF(MONTH, v.date_test_requested, CURRENT_DATE) >=\n" +
+                "             12) and\n" +
+                "        v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
+                "  and v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'0000/00/00');\n";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("eligibleForVLSampleNotTakenZeroGracePeriod");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patients Eligible for VL, no sample taken during last visit");
+        return cd;
+    }
     /**
      * Current on ART eligible for VL, sample not taken during visit
      * @return
@@ -969,6 +1004,65 @@ public class PublicHealthActionCohortLibrary {
         cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("eligibleForVLSampleNotTaken", ReportUtils.map(eligibleForVLSampleNotTaken(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("txcurr and eligibleForVLSampleNotTaken");
+        return cd;
+    }
+    public CohortDefinition currentlyOnARTWithVisitBetweenPeriod() {
+        String sqlQuery = "select t.patient_id\n" +
+                "         from (select fup.visit_date,\n" +
+                "                      fup.patient_id,\n" +
+                "                      max(e.visit_date)                                                                as enroll_date,\n" +
+                "                      greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n" +
+                "                      greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
+                "                               ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n" +
+                "                      d.patient_id                                                                     as disc_patient,\n" +
+                "                      d.effective_disc_date                                                            as effective_disc_date,\n" +
+                "                      max(d.visit_date)                                                                as date_discontinued,\n" +
+                "                      de.patient_id                                                   as started_on_drugs\n" +
+                "               from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
+                "                        join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
+                "                        join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
+                "                                    left join kenyaemr_etl.etl_drug_event de\n" +
+                "                                   on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= date(:endDate)\n" +
+                "                        left outer JOIN\n" +
+                "                    (select patient_id,\n" +
+                "                            coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
+                "                            max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
+                "                     from kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                     where date(visit_date) <= date(:endDate)\n" +
+                "                       and program_name = 'HIV'\n" +
+                "                     group by patient_id) d on d.patient_id = fup.patient_id\n" +
+                "               where fup.visit_date between date(:startDate) and date(:endDate)\n" +
+                "               group by patient_id\n" +
+                "               having (started_on_drugs is not null and started_on_drugs <> '')\n" +
+                "                  and (\n" +
+                "                   (\n" +
+                "                           (timestampdiff(DAY, date(latest_tca), date(:endDate)) <= 30 and\n" +
+                "                            ((date(d.effective_disc_date) > date(:endDate) or date(enroll_date) > date(d.effective_disc_date)) or\n" +
+                "                             d.effective_disc_date is null))\n" +
+                "                           and\n" +
+                "                           (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
+                "                            disc_patient is null)\n" +
+                "                       )\n" +
+                "                   )) t;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("currentlyOnARTWithVisitBetweenPeriod");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Currently On ART With Visit Between Period");
+        return cd;
+    }
+    /**
+     * Patients eligible for VL testing but sample not taken during lastest visit. This method applies no grace period
+     * @return
+     */
+    public CohortDefinition delayedVLTestingZeroGracePeriod() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentlyOnARTWithVisitBetweenPeriod", ReportUtils.map(currentlyOnARTWithVisitBetweenPeriod(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("eligibleForVLSampleNotTakenZeroGracePeriod", ReportUtils.map(eligibleForVLSampleNotTakenZeroGracePeriod(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("currentlyOnARTWithVisitBetweenPeriod and eligibleForVLSampleNotTakenZeroGracePeriod");
         return cd;
     }
 	/**

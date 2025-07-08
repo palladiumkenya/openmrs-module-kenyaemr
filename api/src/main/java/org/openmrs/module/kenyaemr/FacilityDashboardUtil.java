@@ -71,8 +71,7 @@ public class FacilityDashboardUtil {
 				"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
 				"         LEFT JOIN (SELECT e.patient_id\n" +
 				"                    FROM kenyaemr_etl.etl_drug_event e\n" +
-				"                    WHERE e.program = 'HIV' and date(e.visit_date) BETWEEN DATE_SUB(STR_TO_DATE('"
-				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY) AND STR_TO_DATE('" + endDate
+				"                    WHERE e.program = 'HIV' and COALESCE(date(e.date_started),date(e.visit_date)) <= STR_TO_DATE('" + endDate
 				+ "', '%d/%m/%Y')) e\n" +
 				"                   ON e.patient_id = a.patient_id\n" +
 				"where (l.patient_id is null or l.art_start_date is null)\n" +
@@ -95,7 +94,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static Long getPatientsTestedHivPositive(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hivTestedPositiveQuery = "SELECT COUNT(patient_id) number_hiv_positive\n" +
+		String hivTestedPositiveQuery = "SELECT COUNT(DISTINCT(patient_id)) number_hiv_positive\n" +
 				"FROM ((SELECT av.patient_id, av.encounter_id\n" +
 				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
@@ -315,38 +314,38 @@ public class FacilityDashboardUtil {
 				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
 				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
 				+
-				"                     where (TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 3 and\n" +
+				"                     where (TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y')) >= 3 and\n" +
 				"                            v.base_viral_load_test_result is null)                              -- First VL new on ART\n"
 				+
 				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 3 and\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y')) >= 3 and\n" +
 				"                            (v.vl_result is not null and\n" +
 				"                             v.date_test_requested < v.latest_hiv_followup_visit))              -- immediate for PG & BF\n"
 				+
 				"                        OR (v.vl_result >= 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE('"
-				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')) >=\n" +
 				"                            3)                                                                  -- Unsuppressed VL\n"
 				+
 				"                        OR (v.vl_result < 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE('"
-				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 6 and\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')) >= 6 and\n" +
 				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n"
 				+
 				"                        OR (v.vl_result < 200 AND\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE('"
-				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')) >=\n" +
 				"                            12 and\n" +
 				"                            TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24)             -- > 24 with last suppressed vl\n"
 				+
 				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
-				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('" + endDate
-				+ "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 3\n" +
+				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('" + endDate
+				+ "', '%d/%m/%Y')) >= 3\n" +
 				"                         and (v.order_reason in (159882, 1434) and\n" +
-				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE('"
-				+ endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE('"
+				+ endDate + "', '%d/%m/%Y')) >=\n" +
 				"                              12) and\n" +
 				"                            v.vl_result < 200) -- PG & BF after PG/BF baseline < 200\n" +
 				") b on e.patient_id = b.patient_id;";
@@ -427,47 +426,47 @@ public class FacilityDashboardUtil {
 				"                               from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
 				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
 				+
-				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('"
 				+ endDate + "'\n" +
-				"             , '%d/%m/%Y'), INTERVAL   7   DAY)) >= 3 and\n" +
+				"             , '%d/%m/%Y')) >= 3 and\n" +
 				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n"
 				+
 				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
 				+
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('"
 				+ endDate + "'\n" +
-				"             , '%d/%m/%Y'), INTERVAL 7 DAY)) >= 3 and\n" +
+				"             , '%d/%m/%Y')) >= 3 and\n" +
 				"                                       (v.vl_result is not null and\n" +
 				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n"
 				+
 				"                                   OR (v.vl_result >= 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE(\n"
 				+
-				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"             '" + endDate + "', '%d/%m/%Y')) >=\n" +
 				"                                       3) -- Unsuppressed VL\n" +
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE(\n"
 				+
-				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"             '" + endDate + "', '%d/%m/%Y')) >=\n" +
 				"                                       6 and\n" +
 				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) BETWEEN 0 AND 24) -- 0-24 with last suppressed vl\n"
 				+
 				"                                   OR (v.vl_result < 200 AND\n" +
-				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE(\n"
 				+
-				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"             '" + endDate + "', '%d/%m/%Y')) >=\n" +
 				"                                       12 and\n" +
 				"                                       TIMESTAMPDIFF(YEAR, v.date_test_requested, d.DOB) > 24) -- > 24 with last suppressed vl\n"
 				+
 				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
 				+
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(STR_TO_DATE('"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, STR_TO_DATE('"
 				+ endDate + "'\n" +
-				"             , '%d/%m/%Y'), INTERVAL " + days + " DAY)) >= 3\n" +
+				"             , '%d/%m/%Y')) >= 3\n" +
 				"                                       and (v.order_reason in (159882, 1434) and\n" +
-				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, DATE_SUB(STR_TO_DATE(\n"
+				"                                            TIMESTAMPDIFF(MONTH, v.date_test_requested, STR_TO_DATE(\n"
 				+
-				"             '" + endDate + "', '%d/%m/%Y'), INTERVAL " + days + " DAY)) >=\n" +
+				"             '" + endDate + "', '%d/%m/%Y')) >=\n" +
 				"                                            12) and\n" +
 				"                                       v.vl_result < 200)) -- PG & BF after PG/BF baseline < 200\n" +
 				"                                 and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'00/00/0000'))) b on e.patient_id = b.patient_id;";
@@ -493,13 +492,12 @@ public class FacilityDashboardUtil {
 			(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String getVirallyUnsuppressedQuery = "select COUNT(DISTINCT(a.patient_id)) as vl_unsuppressed\n" +
-				"from (SELECT x.patient_id\n" +
+				"from (SELECT x.patient_id,x.date_test_result_received\n" +
 				"      FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"      WHERE x.lab_test = 856\n" +
 				"        AND test_result >= 200\n" +
-				"        AND x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate  +
-				"', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate +
-				"', '%d/%m/%Y'), INTERVAL 14 DAY)) a\n" +
+				"        AND x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY), INTERVAL DATEDIFF(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'),STR_TO_DATE('" + startDate + "', '%d/%m/%Y')) DAY)\n" +
+				"          AND  DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY)) a\n" +
 				"         inner join\n" +
 				"     (select t.patient_id\n" +
 				"      from (select fup.visit_date,\n" +
@@ -560,21 +558,17 @@ public class FacilityDashboardUtil {
 		long days = getNumberOfDays(startDate, endDate);
 		String getVirallyUnsuppressedWithoutEACQuery = "select COUNT(DISTINCT(a.patient_id)) as unsuppressed_no_eac\n" +
 				"from (select b.patient_id\n" +
-				"from (select x.patient_id as patient_id,DATE_SUB(STR_TO_DATE('" + endDate  +
-				"', '%d/%m/%Y'), INTERVAL 21 DAY), DATE_SUB(STR_TO_DATE('" + endDate +
-				"', '%d/%m/%Y'), INTERVAL 14 DAY)\n" +
-				"      from kenyaemr_etl.etl_laboratory_extract x\n" +
-				"      where x.lab_test = 856\n" +
-				"        and test_result >= 200\n" +
-				"        and x.date_test_result_received BETWEEN DATE_SUB(STR_TO_DATE('" + endDate +
-				"', '%d/%m/%Y'), INTERVAL 21 DAY) AND DATE_SUB(STR_TO_DATE('" + endDate  +
-				"', '%d/%m/%Y'), INTERVAL 14 DAY)) b\n" +
-				"         left join (select e.patient_id, e.visit_date as eac_date\n" +
-				"                    from kenyaemr_etl.etl_enhanced_adherence e\n" +
-				"                    where e.visit_date BETWEEN DATE_SUB(STR_TO_DATE('" + endDate +
-				"', '%d/%m/%Y'), INTERVAL 14 DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) e\n" +
-				"                   on b.patient_id = e.patient_id\n" +
-				"where e.patient_id is null) a\n" +
+				"      from (select x.patient_id as patient_id, x.date_test_result_received\n" +
+				"            from kenyaemr_etl.etl_laboratory_extract x\n" +
+				"            where x.lab_test = 856\n" +
+				"              and test_result >= 200\n" +
+				"              and x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY), INTERVAL DATEDIFF(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'),STR_TO_DATE('" + startDate + "', '%d/%m/%Y')) DAY)\n" +
+				"                AND  DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY)) b\n" +
+				"               left join (select e.patient_id, e.visit_date as eac_date\n" +
+				"                          from kenyaemr_etl.etl_enhanced_adherence e\n" +
+				"                          where e.visit_date BETWEEN DATE_SUB(DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY), INTERVAL DATEDIFF(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'),STR_TO_DATE('" + startDate + "', '%d/%m/%Y')) DAY) AND STR_TO_DATE('" + endDate + "', '%d/%m/%Y')) e\n" +
+				"                         on b.patient_id = e.patient_id\n" +
+				"      where e.patient_id is null AND TIMESTAMPDIFF(DAY,b.date_test_result_received,CURRENT_DATE) > 14) a\n" +
 				"         inner join\n" +
 				"     (select t.patient_id\n" +
 				"      from (select fup.visit_date,\n" +
@@ -767,8 +761,7 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHivPositiveNotLinked(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hivMonthlyPositiveNotLinkedQuery = "SELECT COUNT(DISTINCT(a.patient_id)) as number_hiv_positive,a.visit_date as visit_date\n"
-				+
+		String hivMonthlyPositiveNotLinkedQuery = "SELECT COUNT(DISTINCT(a.patient_id)) as number_hiv_positive,a.visit_date as visit_date\n" +
 				"FROM ((SELECT av.patient_id, av.visit_date\n" +
 				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
@@ -1087,13 +1080,13 @@ public class FacilityDashboardUtil {
 				"                               from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
 				"                                        inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"
 				+
-				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n"
+				"                               where ((TIMESTAMPDIFF(MONTH, v.date_started_art, current_date) >= 3 and\n"
 				+
 				"                                       v.base_viral_load_test_result is null) -- First VL new on ART\n"
 				+
 				"                                   OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n"
 				+
-				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, DATE_SUB(current_date, INTERVAL 7 DAY)) >= 3 and\n"
+				"                                       TIMESTAMPDIFF(MONTH, v.date_started_art, current_date) >= 3 and\n"
 				+
 				"                                       (v.vl_result is not null and\n" +
 				"                                        v.date_test_requested < v.latest_hiv_followup_visit)) -- immediate for PG & BF\n"
@@ -1477,12 +1470,12 @@ public class FacilityDashboardUtil {
 	public static SimpleObject getMonthlyVirallyUnsuppressed(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
 		String getVirallyUnsuppressedQuery = "SELECT COUNT(DISTINCT(a.patient_id)) AS vl_unsuppressed, a.visit_date AS results_enc_date FROM\n" +
-				"(SELECT x.patient_id, x.visit_date\n" +
+				"(SELECT x.patient_id, COALESCE(x.date_test_result_received,x.visit_date) AS visit_date\n" +
 				"FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"WHERE x.lab_test = 856\n" +
 				"  AND x.test_result >= 200\n" +
-				"  AND x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY)\n" +
-				"  AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
+				"  AND x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY), INTERVAL DATEDIFF(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'),STR_TO_DATE('" + startDate + "', '%d/%m/%Y')) DAY)\n" +
+				"          AND  DATE_SUB(STR_TO_DATE('" + endDate + "', '%d/%m/%Y'), INTERVAL 14 DAY)\n" +
 				"GROUP BY DATE(x.visit_date)\n" +
 				"ORDER BY DATE(x.visit_date) ASC) a\n" +
 				"    inner join\n" +
