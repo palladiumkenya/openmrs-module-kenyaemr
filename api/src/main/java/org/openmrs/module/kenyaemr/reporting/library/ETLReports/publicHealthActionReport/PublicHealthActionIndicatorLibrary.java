@@ -212,4 +212,12 @@ public class PublicHealthActionIndicatorLibrary {
         return cohortIndicator("Number of patients not assessed for Covid-19", ReportUtils.map(cohortLibrary.notAssessedForCovid19(), "startDate=${startDate},endDate=${endDate}"));
     }
 
+    /**
+     * Provide a line list under CAR of 'clients eligible for cervical cancer screening' - Age 25 to 49
+     * @return the indicator
+     */
+    public CohortIndicator eligibleForCervicalCancerScreening() {
+        return cohortIndicator("Clients eligible for cervical cancer screening", ReportUtils.map(cohortLibrary.eligibleForCervicalCancerScreening(), "startDate=${startDate},endDate=${endDate}"));
+    }
+
 }

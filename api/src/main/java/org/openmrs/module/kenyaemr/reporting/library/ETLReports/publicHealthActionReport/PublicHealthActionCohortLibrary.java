@@ -1096,4 +1096,55 @@ public class PublicHealthActionCohortLibrary {
 		cd.setDescription("Pregnant and postpartum women linked to PrEP");
 		return cd;
 	}
+    /*
+    * Provide a line list under CAR of 'clients eligible for cervical cancer screening' -  Age 25 to 49
+    * NB: The client must be enrolled in HIV program and currently active on ART
+    * */
+    public CohortDefinition eligibleForCervicalCancerScreening() {
+        String sqlQuery = "SELECT hiv_subquery.patient_id\n" +
+                "FROM (SELECT f.patient_id,\n" +
+                "             MID(MAX(CONCAT(DATE(f.visit_date),\n" +
+                "                            CASE\n" +
+                "                                WHEN f.cacx_screening IN (703, 664, 1065) THEN 'Yes'\n" +
+                "                            END)), 11) AS hiv_screening_result,\n" +
+                "             MAX(f.visit_date) AS fup_date\n" +
+                "      FROM kenyaemr_etl.etl_patient_hiv_followup f\n" +
+                "      WHERE f.person_present = 978\n" +
+                "        AND DATE(f.visit_date) <= DATE(:endDate)\n" +
+                "      GROUP BY f.patient_id) hiv_subquery\n" +
+                "     INNER JOIN kenyaemr_etl.etl_patient_demographics p\n" +
+                "                ON p.patient_id = hiv_subquery.patient_id\n" +
+                "                    AND p.voided = 0\n" +
+                "                    AND p.gender = 'F'\n" +
+                "                    AND TIMESTAMPDIFF(YEAR, p.DOB, CURDATE()) BETWEEN 25 AND 49\n" +
+                "     LEFT JOIN (SELECT v.patient_id,\n" +
+                "                       MID(MAX(CONCAT(v.visit_date, v.cervical_cancer)), 11) AS screened_for_cacx,\n" +
+                "                       MAX(v.visit_date) AS screening_date\n" +
+                "                FROM kenyaemr_etl.etl_cervical_cancer_screening v\n" +
+                "                WHERE DATE(v.visit_date) <= DATE(:endDate)\n" +
+                "                  AND v.cervical_cancer IS NOT NULL\n" +
+                "                  AND ((v.hpv_screening_method != 'HPV' AND v.hpv_screening_result = 'Negative' AND TIMESTAMPDIFF(MONTH, v.visit_date, CURDATE()) >= 12)\n" +
+                "                       OR (v.hpv_screening_method = 'HPV' AND v.hpv_screening_result = 'Negative' AND TIMESTAMPDIFF(MONTH, v.visit_date, CURDATE()) >= 24))\n" +
+                "                GROUP BY v.patient_id) ccs\n" +
+                "               ON ccs.patient_id = hiv_subquery.patient_id\n" +
+                "                   AND ccs.screening_date >= hiv_subquery.fup_date\n" +
+                "     LEFT JOIN (SELECT patient_id,\n" +
+                "                       COALESCE(DATE(effective_discontinuation_date), visit_date) AS visit_date,\n" +
+                "                       MAX(DATE(effective_discontinuation_date)) AS effective_disc_date\n" +
+                "                FROM kenyaemr_etl.etl_patient_program_discontinuation\n" +
+                "                WHERE DATE(visit_date) <= DATE(:endDate)\n" +
+                "                  AND program_name = 'HIV'\n" +
+                "                GROUP BY patient_id) hiv_program\n" +
+                "               ON hiv_program.patient_id = hiv_subquery.patient_id\n" +
+                "WHERE COALESCE(ccs.screened_for_cacx, hiv_subquery.hiv_screening_result) IS NOT NULL\n" +
+                "  AND hiv_program.patient_id IS NOT NULL\n" +
+                "GROUP BY hiv_subquery.patient_id;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("eligibleForCervicarCancerScreening");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Clients eligible for cervical cancer screening");
+        return cd;
+    }
 }

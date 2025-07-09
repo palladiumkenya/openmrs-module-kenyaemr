@@ -41,7 +41,7 @@ public class SpecialClinicsDiagnosisDataEvaluator implements EncounterDataEvalua
                 "FROM kenyaemr_etl.etl_special_clinics c\n" +
                 "INNER JOIN (\n" +
                 "    SELECT d.patient_id,\n" +
-                "           GROUP_CONCAT(DISTINCT n.name SEPARATOR '\\\\r\\\\n') AS diagnosis,\n" +
+                "           GROUP_CONCAT(DISTINCT n.name SEPARATOR '\r\n') AS diagnosis,\n" +
                 "           DATE(d.date_created) AS visit_date\n" +
                 "    FROM encounter_diagnosis d\n" +
                 "    INNER JOIN concept_name n\n" +
