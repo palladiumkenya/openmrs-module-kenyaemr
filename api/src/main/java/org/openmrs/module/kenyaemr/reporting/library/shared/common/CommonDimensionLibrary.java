@@ -205,6 +205,13 @@ public class CommonDimensionLibrary {
         dim.addCohortDefinition("36+", map(commonCohortLibrary.agedAtLeast(36), "effectiveDate=${onDate}"));
         dim.addCohortDefinition("60+", map(commonCohortLibrary.agedAtLeast(60), "effectiveDate=${onDate}"));
         return dim;
+    }public CohortDefinitionDimension moh505AgeGroups() {
+        CohortDefinitionDimension dim = new CohortDefinitionDimension();
+        dim.setName("fine age between(<0,>=5");
+        dim.addParameter(new Parameter("onDate", "Date", Date.class));
+        dim.addCohortDefinition("0-5", map(commonCohortLibrary.agedAtLeastAgedAtMost(0, 5), "effectiveDate=${onDate}"));
+        dim.addCohortDefinition("5+", map(commonCohortLibrary.agedAtLeast(5), "effectiveDate=${onDate}"));
+        return dim;
     }
 
 
