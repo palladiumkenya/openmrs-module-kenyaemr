@@ -135,6 +135,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LEPROSY_POSTOPERATIVE = "4469d5f5-18fe-4f47-bf05-36819b9bf5e1";
 		public static final String FLUID_INTAKE = "657bdb00-0eab-48a6-8da4-bb1644d5fd48";
 		public static final String ADR_ASSESSMENT_TOOL = "d18d6d8a-4be2-4115-ac7e-86cc0ec2b263";
+		public static final String INITIAL_NURSING_CARDEX = "3efe6966-a011-4d24-aa43-d3051bfbb8e3";
 	}
 
 	public static final class _Form {
@@ -205,6 +206,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String LEPROSY_POSTOPERATIVE_FORM = "fe955bae-4124-4350-a32d-922304637e8f";
 		public static final String FLUID_INTAKE_FORM = "b4bfa7a3-f6ed-4339-a4ec-b076463c0696";
 		public static final String ADR_ASSESSMENT_TOOL_FORM = "cc27af13-69ee-49e2-8a43-e1b1926403c1";
+		public static final String INITIAL_NURSING_CARDEX_FORM = "cd65f1dd-0047-4449-9c38-0710a7214c52";
 	}
 
 	public static final class _OrderType {
@@ -378,6 +380,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Fluid Intake and Output", "Fluid Intake and Output Clinical encounter type", _EncounterType.FLUID_INTAKE));
 		install(encounterType("ADR Assessment Tool", "Adverse Drug Reaction Assessment Tool Clinical encounter type",
 				_EncounterType.ADR_ASSESSMENT_TOOL));
+		install(encounterType("Initial Nursing Cardex", "Initial Nursing Cardex Clinical encounter type", _EncounterType.INITIAL_NURSING_CARDEX));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -467,6 +470,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Leprosy Postoperative Clinical Form", "Form for Leprosy Postoperative clinical encounter", _EncounterType.LEPROSY_POSTOPERATIVE, "1", _Form.LEPROSY_FOLLOWUP_FORM));
 		install(form("Fluid Intake and Output Clinical Form", "Form for Fluid Intake and Output recording clinical encounter", _EncounterType.FLUID_INTAKE, "1", _Form.FLUID_INTAKE_FORM));
 		install(form("ADR Assessment Tool Form", "Form for Adverse Drug Reaction Assessment Tool", _EncounterType.ADR_ASSESSMENT_TOOL, "1", _Form.ADR_ASSESSMENT_TOOL_FORM));
+		install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
