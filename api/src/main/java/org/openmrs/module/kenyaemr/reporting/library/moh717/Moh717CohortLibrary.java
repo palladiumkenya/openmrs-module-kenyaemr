@@ -464,4 +464,119 @@ public class Moh717CohortLibrary {
                 "                  and o.concept_id in ("+removalServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
         return sql;
     }
+
+    public CohortDefinition curedDischarges(int cured,String wardType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("curedDischarges");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+cured+" and t.uuid = '"+wardType+"';");
+        return sql;
+    }
+    public CohortDefinition leftAgainstMedicalAdviseDischarges(int leftAgainstMedicalAdvise,String wardType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("leftAgainstMedicalAdviseDischarges");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid = '"+wardType+"';");
+        return sql;
+    }
+    public CohortDefinition inpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardType) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("leftAgainstMedicalAdviseDischarges", ReportUtils.map(leftAgainstMedicalAdviseDischarges(leftAgainstMedicalAdvise, wardType), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("curedDischarges", ReportUtils.map(curedDischarges(cured, wardType), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("leftAgainstMedicalAdviseDischarges OR curedDischarges");
+        return cd;
+    }
+    public CohortDefinition curedDischargesOtherWards(int cured,String wardTypeList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("leftAgainstMedicalAdviseDischargesOtherWards");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+cured+" and t.uuid in ("+wardTypeList+");");
+        return sql;
+    }
+    public CohortDefinition leftAgainstMedicalAdviseDischargesOtherWards(int leftAgainstMedicalAdvise,String wardTypeList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("leftAgainstMedicalAdviseDischargesOtherWards");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid in ("+wardTypeList+");");
+        return sql;
+    }
+    public CohortDefinition otherInpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardTypeList) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("leftAgainstMedicalAdviseDischargesOtherWards", ReportUtils.map(leftAgainstMedicalAdviseDischargesOtherWards(leftAgainstMedicalAdvise, wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("curedDischargesOtherWards", ReportUtils.map(curedDischargesOtherWards(cured, wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("curedDischargesOtherWards OR leftAgainstMedicalAdviseDischargesOtherWards");
+        return cd;
+    }
+    public CohortDefinition inpatientExitStatus(int dischargeReason, String wardType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("inpatientExitStatus");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+dischargeReason+" and t.uuid = '"+wardType+"';");
+        return sql;
+    }
+    public CohortDefinition otherInpatientExitStatus(int dischargeReason, String wardTypeList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("otherInpatientExitStatus");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where b.discharge_status = "+dischargeReason+" and t.uuid in ("+wardTypeList+");");
+        return sql;
+    }
 }

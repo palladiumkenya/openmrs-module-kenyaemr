@@ -52,6 +52,28 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     private final Moh717IndicatorLibrary moh717IndicatorLibrary;
 
     static final int NEW_VISIT = 164180, RE_ATT= 160530, FP_RE_ATT = 164142;
+    static final int CURED = 162677, DECEASED = 159, ABSCONDED = 160431, LEFT_AGAINST_MEDICAL_ADVISE = 1694, REFERRED_OUT = 164165;
+
+    static final String MEDICAL_WARD = "efa4143f-c6ae-44b5-8ce5-45cbdbbda934";
+    static final String MATERNITY_WARD = "b95dd376-fa35-40a6-b140-d144c5f22f62";
+    static final String SURGICAL_WARD = "0b333d24-9933-446e-bec6-ce3f4df431b9";
+    static final String PAEDIATRICS_WARD = "0db2eb63-f0ac-4f22-8d65-766a4828c9ba";
+    static final String OBST_GYN_WARD = "b17b84a4-4357-4a10-bd04-4419cc8833fb";
+    static final String EYE_WARD = "36262a3a-aaae-4a75-93e6-b0061d809599";
+    static final String NURSERY_NEW_BORN_WARD = "45b3b847-597e-47a4-b0df-9f3e57b8573e";
+    static final String ORTHOPAEDIC_WARD = "3e6c9fc0-ab31-41eb-96ff-900300266ccf";
+    static final String ISOLATION_WARD = "cc5cb426-5433-4e9a-ad22-456e6b627b05";
+    static final String AMENITY_WARD = "cc5ebd26-b3dc-471a-a2fe-f2cea1801d80";
+    static final String PSYCHIATRY_WARD = "37bedf9c-07b1-4d8b-9ba3-ad3b9d48e10d";
+    static final String ICU_WARD = "770f6a93-8e59-48ad-ba7d-98d5652db240";
+    static final String RENAL_WARD = "f8c80058-ea8c-4c83-b26f-75e3e38a8ef5";
+    static final String HDU_WARD = "25439b2d-6495-4f5d-9ec6-4fe64686cf46";
+    static final String BURNS_UNIT = "f7537dcf-0525-402d-943e-b29356d1fc65";
+    static final String ONCOLOGY_WARD = "21215af7-dfc0-4981-af16-844c9bd30482";
+    static final String OTHER_WARDS = "48b5a485-d6fc-484b-88db-18f9ea456e25";
+
+    static final ArrayList<String> OTHER_WARDS_LIST = new ArrayList<>(Arrays.asList(
+            OTHER_WARDS,HDU_WARD,BURNS_UNIT,ONCOLOGY_WARD));
 
     static final ArrayList<String> otherSpecialClinics = new ArrayList<>(Arrays.asList(
             CommonMetadata._Form.NEUROLOGY_CLINICAL_FORM,
@@ -688,6 +710,86 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         EmrReportingUtils.addRow(dsd, "Cast Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Tractions Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,tractionRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Ex Fixator Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+
+        // In-patient
+        // Discharges
+        dsd.addColumn( "Discharges (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,MEDICAL_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,SURGICAL_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,OBST_GYN_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,PAEDIATRICS_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,MATERNITY_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,EYE_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,NURSERY_NEW_BORN_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,ORTHOPAEDIC_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,ISOLATION_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,AMENITY_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,ICU_WARD), indParams), "");
+        dsd.addColumn( "Discharges (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,ICU_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,RENAL_WARD), indParams), "");
+        dsd.addColumn( "Discharges (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientDischarges(CURED,LEFT_AGAINST_MEDICAL_ADVISE,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
+
+        //Deaths
+        dsd.addColumn( "Deaths (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,MEDICAL_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,SURGICAL_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,OBST_GYN_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,PAEDIATRICS_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,MATERNITY_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,EYE_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,NURSERY_NEW_BORN_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,ORTHOPAEDIC_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,ISOLATION_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,AMENITY_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,PSYCHIATRY_WARD), indParams), "");
+        dsd.addColumn( "Deaths (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,ICU_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(DECEASED,RENAL_WARD), indParams), "");
+        dsd.addColumn( "Deaths (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientExitStatus(DECEASED,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
+
+        //Abscondees
+        dsd.addColumn( "Abscondees (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,MEDICAL_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,SURGICAL_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,OBST_GYN_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,PAEDIATRICS_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,MATERNITY_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,EYE_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,NURSERY_NEW_BORN_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,ORTHOPAEDIC_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,ISOLATION_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,AMENITY_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,PSYCHIATRY_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,ICU_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(ABSCONDED,RENAL_WARD), indParams), "");
+        dsd.addColumn( "Abscondees (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientExitStatus(ABSCONDED,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
+
+      //Referrals Out of the facility
+        dsd.addColumn( "Referrals Out of the Facility (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,MEDICAL_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,SURGICAL_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,OBST_GYN_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,PAEDIATRICS_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,MATERNITY_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,EYE_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,NURSERY_NEW_BORN_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,ORTHOPAEDIC_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,ISOLATION_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,AMENITY_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,PSYCHIATRY_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,ICU_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.inpatientExitStatus(REFERRED_OUT,RENAL_WARD), indParams), "");
+        dsd.addColumn( "Referrals Out of the Facility (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientExitStatus(REFERRED_OUT,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
+
+        // Admissions
+        EmrReportingUtils.addRow(dsd, "Admission Under Five", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Admission Over Five", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        dsd.addColumn( "Paroles", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Occupied Bed Days- SHA Members/And other Insurers", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Occupied Bed Days- Cash", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Well Persons Days", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Beds- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Beds- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Cots- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Cots- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Incubator- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        dsd.addColumn( "Incubator- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+
         return dsd;
     }
     private DataSetDefinition totalAmountCollectedDatasetDefinition(){

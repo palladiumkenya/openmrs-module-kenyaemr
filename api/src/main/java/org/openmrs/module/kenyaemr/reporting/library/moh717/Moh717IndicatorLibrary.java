@@ -164,4 +164,16 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator orthopaedicRemovalServices(String orthopedicFormUuid,String removalsList) {
         return cohortIndicator("Orthopaedic Removal Services", ReportUtils.map(moh717CohortLibrary.orthopaedicRemovalServices(orthopedicFormUuid,removalsList), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator inpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardType) {
+        return cohortIndicator("In-patient discharges", ReportUtils.map(moh717CohortLibrary.inpatientDischarges(cured, leftAgainstMedicalAdvise,wardType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator otherInpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardTypeList) {
+        return cohortIndicator("Other in-patient Discharges", ReportUtils.map(moh717CohortLibrary.otherInpatientDischarges(cured, leftAgainstMedicalAdvise,wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator inpatientExitStatus(int dischargeReason, String wardType) {
+        return cohortIndicator("In-patient exit reason", ReportUtils.map(moh717CohortLibrary.inpatientExitStatus(dischargeReason,wardType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator otherInpatientExitStatus(int dischargeReason, String wardTypeList) {
+        return cohortIndicator("Other in-patient exit reason", ReportUtils.map(moh717CohortLibrary.otherInpatientExitStatus(dischargeReason,wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+    }
 }
