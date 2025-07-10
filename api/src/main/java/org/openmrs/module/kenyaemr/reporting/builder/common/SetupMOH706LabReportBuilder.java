@@ -56,6 +56,7 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
 	static final int  PARASITOLOGY_S_MASONII = 1000452;
 	static final int  PARASITOLOGY_TRICHURIS= 1000458;
 	static final int  HAEMATOLOGY_FULL_BLOOD_COUNT= 1019;
+	static final int  HAEMATOLOGY_BLOOD_COUNT= 679;
 	static final int  HAEMATOLOGY_HAEMOGLOBIN= 21;
 	static final int  HAEMATOLOGY_CD4= 5497;
 	static final int  HAEMATOLOGY_SICKLE_CELL= 160225;
@@ -239,7 +240,7 @@ public class SetupMOH706LabReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addColumn("HCGP", "7.11 HCG test Positive", ReportUtils.map(moh706IndicatorLibrary.getTotalCodedLabsByConceptAndPositiveAnswer(URINE_PREGNANCY, Arrays.asList(POSITIVE)), indParam), "");
 
         //4.Haematology
-		cohortDsd.addColumn("FBCT", "4.1 Haematology tests: Full blood count total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(HAEMATOLOGY_FULL_BLOOD_COUNT), indParam), "");
+		cohortDsd.addColumn("FBCT", "4.1 Haematology tests: Full blood count total", ReportUtils.map(moh706IndicatorLibrary.getTotalTestsByConcept(HAEMATOLOGY_BLOOD_COUNT), indParam), "");
         cohortDsd.addColumn("HB5", "4.1 Haematology tests: FBC HB <5 g/dl",ReportUtils.map(moh706IndicatorLibrary.getResultsBasedOnValueNumericQuestionBetweenLimits(HAEMATOLOGY_HAEMOGLOBIN, 0.0, 5.0), indParam), "");
         cohortDsd.addColumn("HB510", "4.1 Haematology tests: FBC HB Between 5-10 g/dl",ReportUtils.map(moh706IndicatorLibrary.getResultsBasedOnValueNumericQuestionBetweenLimits(HAEMATOLOGY_HAEMOGLOBIN, 5.0, 10.0), indParam), "");
         cohortDsd.addColumn("CD4T", "4.3 Haematology tests CD4 count total", ReportUtils.map(moh706IndicatorLibrary.getResultsBasedOnValueNumericQuestion(HAEMATOLOGY_CD4), indParam), "");
