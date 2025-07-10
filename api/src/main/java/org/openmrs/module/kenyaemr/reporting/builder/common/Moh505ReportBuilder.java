@@ -18,7 +18,7 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
-import org.openmrs.module.kenyaemr.reporting.library.MOH740.Moh740IndicatorLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.MOH505.Moh505IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
@@ -35,18 +35,34 @@ import java.util.List;
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 
 /**
- * MOH 755 report
+ * MOH 505 report
  */
 @Component
-@Builds({"kenyaemr.ehrReports.report.moh740"})
-public class Moh740ReportBuilder extends AbstractReportBuilder {
-    protected static final Log log = LogFactory.getLog(Moh740ReportBuilder.class);
-    static final int NEW_VISIT = 164180, RE_VISIT= 160530;
-    static final String DIABETIC_CLINICAl = CommonMetadata._Form.DIABETIC_CLINICAL_FORM;
+@Builds({"kenyaemr.ehrReports.report.moh505"})
+public class Moh505ReportBuilder extends AbstractReportBuilder {
+    protected static final Log log = LogFactory.getLog(Moh505ReportBuilder.class);
+    static final int ACUTE_MALNUTRITION = 160205;
+    static final int POLIOMYELITIS = 5258;
+    static final int ANTHRAX = 121555;
+    static final int CHOLERA = 2002391;
+    static final int DENGUE = 142592;
+    static final int DYSENTERY = 2014827;
+    static final int GUINEA_WORM_DISEASE = 164180;
+    static final int MEASLES = 134561;
+    static final int SUSPECTED_MALARIA = 166623;
+    static final int MENINGOCOCCAL_MENINGITIS = 134369;
+    static final int NEONATAL_TETANUS = 124954;
+    static final int PLAGUE = 114120;
+    static final int RABIES = 160146;
+    static final int RIFT_VALLEY_FEVER = 113217;
+    static final int SUSPECTED_MDR = 160039;
+    static final int TYPHOID = 141;
+    static final int YELLOW_FEVER = 122759;
+
     @Autowired
     private CommonDimensionLibrary commonDimensions;
     @Autowired
-    private Moh740IndicatorLibrary Moh740Indicator;
+    private Moh505IndicatorLibrary Moh505Indicator;
     @Override
     protected List<Parameter> getParameters(ReportDescriptor descriptor) {
         return Arrays.asList(
@@ -59,102 +75,50 @@ public class Moh740ReportBuilder extends AbstractReportBuilder {
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
         return Arrays.asList(
-                ReportUtils.map(createMoh740SummaryDataSet(), indParams)
+                ReportUtils.map(createMoh505DataSet(), indParams)
         );
     }
 
-    ColumnParameters f0_5 = new ColumnParameters(null, "0-5 years, Female", "gender=F|age=0-5");
-    ColumnParameters m0_5 = new ColumnParameters(null, "0-5 years, Male", "gender=M|age=0-5");
-    ColumnParameters t0_5 = new ColumnParameters(null, "0-5 years, Total", "age=0-5");
-    ColumnParameters f0_18 = new ColumnParameters(null, "0-18 years, Female", "gender=F|age=0-18");
-    ColumnParameters m0_18 = new ColumnParameters(null, "0-18 years, Male", "gender=M|age=0-18");
-    ColumnParameters t0_18 = new ColumnParameters(null, "0-18 years, Total", "age=0-18");
-    ColumnParameters f6_18 = new ColumnParameters(null, "6-18 years, Female", "gender=F|age=6-18");
-    ColumnParameters m6_18 = new ColumnParameters(null, "6-18 years, Male", "gender=M|age=6-18");
-    ColumnParameters t6_18 = new ColumnParameters(null, "6-18 years, Total", "age=6-18");
-    ColumnParameters f19_35 = new ColumnParameters(null, "19-35 years, Female", "gender=F|age=19-35");
-    ColumnParameters m19_35 = new ColumnParameters(null, "19-35 years, Male", "gender=M|age=19-35");
-    ColumnParameters t19_35 = new ColumnParameters(null, "19-35 years, Total", "age=19-35");
-    ColumnParameters f_all36AndAbove = new ColumnParameters(null, "36+ years, Female", "gender=F|age=36+");
-    ColumnParameters m_all36AndAbove = new ColumnParameters(null, "36+ years, Male", "gender=M|age=36+");
-    ColumnParameters t_all36AndAbove = new ColumnParameters(null, "36+ years, Total", "age=36+");
-    ColumnParameters m36_60 = new ColumnParameters(null, "36-60 years, Male", "gender=M|age=36-60");
-    ColumnParameters f36_60 = new ColumnParameters(null, "36-60 years, Female", "gender=F|age=36-60");
-    ColumnParameters t36_60 = new ColumnParameters(null, "36-60 years, Total", "age=36-60");
-    ColumnParameters m_all60AndAbove = new ColumnParameters(null, "60+ years, Male", "gender=M|age=60+");
-    ColumnParameters f_all60AndAbove = new ColumnParameters(null, "60+ years, Female", "gender=F|age=60+");
-    ColumnParameters t60plus = new ColumnParameters(null, "60+ years, Total", "age=60+");
-    ColumnParameters colTotal = new ColumnParameters(null, "Total", "");
 
+    ColumnParameters a0_5 = new ColumnParameters(null, "0-5 years", "age=0-5");
+    ColumnParameters a5plus = new ColumnParameters(null, "5+ years", "age=5+");
 
-    // for all gender
-    ColumnParameters male = new ColumnParameters(null, "Male", "gender=M");
-    ColumnParameters female = new ColumnParameters(null, "Female", "gender=F");
-    ColumnParameters allTotal = new ColumnParameters(null, "Total", "");
-    ColumnParameters totalGestational = new ColumnParameters(null, "Total", "gender=F");
+    List<ColumnParameters> all_epidemic = Arrays.asList(a0_5, a5plus);
 
-    List<ColumnParameters> type_1_AgeDisaggregations = Arrays.asList(m0_5, f0_5, t0_5, m6_18, f6_18, t6_18, m19_35, f19_35, t19_35, f_all36AndAbove, m_all36AndAbove, t_all36AndAbove, colTotal);
-    List<ColumnParameters> type_2_AgeDisaggregations = Arrays.asList(m0_18, f0_18, t0_18, m19_35, f19_35, t19_35, m36_60, f36_60, t36_60, m_all60AndAbove, f_all60AndAbove, t60plus, colTotal);
-    List<ColumnParameters> hypertension_AgeDisaggregations = Arrays.asList(m0_18, f0_18, t0_18, m19_35, f19_35, t19_35, m36_60, f36_60, t36_60, m_all60AndAbove, f_all60AndAbove, t60plus, colTotal);
-
-    List<ColumnParameters> all_indicators = Arrays.asList(male, female, allTotal);
-    List<ColumnParameters> gestational_indicator = Arrays.asList(female, totalGestational);
-
-
-    private DataSetDefinition createMoh740SummaryDataSet() {
+    private DataSetDefinition createMoh505DataSet() {
         CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
-        dsd.setName("MOH740");
-        dsd.setDescription("MOH740 MONTHLY SUMMARY");
+        dsd.setName("MOH505");
+        dsd.setDescription("MOH 505 IDSR Weekly Epidemic Monitoring");
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        dsd.addDimension("age", map(commonDimensions.moh740AgeGroups(), "onDate=${endDate}"));
-        dsd.addDimension("gender", map(commonDimensions.gender()));
+        dsd.addDimension("age", map(commonDimensions.moh505AgeGroups(), "onDate=${endDate}"));
 
-        EmrReportingUtils.addRow(dsd,"Cumulative no. of diabetes patients in care", "Cumulative no. of diabetes patients in care", ReportUtils.map(Moh740Indicator.cumulativeDiabetes(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Cumulative no. of hypertension patients in care", "Cumulative no. of hypertension patients in care", ReportUtils.map(Moh740Indicator.cumulativeHypertension(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Cumulative no. of co-morbid DM+HTN patients in care", "Cumulative no. of co-morbid DM+HTN patients in care", ReportUtils.map(Moh740Indicator.cumulativeDMAndHTN(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of newly diagnosed diabetes cases", "No. of newly diagnosed diabetes cases", ReportUtils.map(Moh740Indicator.newDiagnosedDiabetes(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of newly diagnosed hypertension cases", "No. of newly diagnosed hypertension cases", ReportUtils.map(Moh740Indicator.newDiagnosedHypertension(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"First visit to clinic", "First visit to clinic", ReportUtils.map(Moh740Indicator.firstVisitToClinic(NEW_VISIT), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Pre-existing DM", "Pre-existing DM", ReportUtils.map(Moh740Indicator.preExistingDM(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Pre-Existing HTN", "Pre-Existing HTN", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Pre-Existing DM and HTN", "Pre-Existing DM and HTN", ReportUtils.map(Moh740Indicator.preExistingDMandHTN(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-//        dsd.addColumn("Pre-existing HTN", "", ReportUtils.map(Moh740Indicator.preExistingHTN(), indParams), "");
+        EmrReportingUtils.addRow(dsd,"AEFI", "No of AEFI Cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Acute Jaundice", "No of Acute Jaundice Cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Acute Malnutrition", "No of Acute Malnutrition Cases", ReportUtils.map(Moh505Indicator.acuteMalnutritionCase(ACUTE_MALNUTRITION), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"AFP (Poliomyelitis)", "No of AFP (Poliomyelitis) Cases", ReportUtils.map(Moh505Indicator.poliomyelitisCase(POLIOMYELITIS), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Anthrax", "No of Anthrax Cases", ReportUtils.map(Moh505Indicator.anthraxCase(ANTHRAX), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Cholera", "No of Cholera Cases", ReportUtils.map(Moh505Indicator.choleraCase(CHOLERA), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Dengue", "No of Dengue Cases", ReportUtils.map(Moh505Indicator.dengueCase(DENGUE), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Dysentery (Bacillary)", "No of Dysentery (Bacillary) Cases", ReportUtils.map(Moh505Indicator.dysenteryCase(DYSENTERY), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Guinea Worm Disease", "No of Guinea Worm Disease Cases", ReportUtils.map(Moh505Indicator.guineaWormDiseaseCase(GUINEA_WORM_DISEASE), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Measles", "No of Measles Cases", ReportUtils.map(Moh505Indicator.measlesCase(MEASLES), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Suspected Malaria", "No of Suspected Malaria Cases", ReportUtils.map(Moh505Indicator.suspectedMalariaCase(SUSPECTED_MALARIA), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Deaths due to Malaria", "No of Deaths due to Malaria Cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Maternal deaths", "No of Maternal deaths", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Meningococcal Meningitis", "No of Meningococcal Meningitis cases", ReportUtils.map(Moh505Indicator.meningococcalMeningitisCase(MENINGOCOCCAL_MENINGITIS), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Neonatal deaths", "No of Neonatal deaths cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Neonatal Tetanus", "No of Neonatal Tetanus cases", ReportUtils.map(Moh505Indicator.neonatalTetanusCase(NEONATAL_TETANUS), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Plague", "No of Plague cases", ReportUtils.map(Moh505Indicator.plagueCase(PLAGUE), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Rabies", "No of Rabies cases", ReportUtils.map(Moh505Indicator.rabiesCase(RABIES), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Rift Valley Fever", "No of Rift Valley Fever cases", ReportUtils.map(Moh505Indicator.riftValleyFeverCase(RIFT_VALLEY_FEVER), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"SARI (Cluster ≥3 cases)", "No of SARI (Cluster ≥3 cases) cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Suspected MDR/XDR TB", "No of Suspected MDR/XDR TB cases", ReportUtils.map(Moh505Indicator.suspectedTBCase(SUSPECTED_MDR), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Typhoid ", "No of Typhoid cases", ReportUtils.map(Moh505Indicator.typhoidCase(TYPHOID), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"VHF", "No of VHF cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Yellow Fever", "No of Yellow Fever cases", ReportUtils.map(Moh505Indicator.yellowFeverCase(YELLOW_FEVER), indParams), all_epidemic, Arrays.asList("01", "02"));
+        EmrReportingUtils.addRow(dsd,"Others (Specify)", "No of Others (Specify) cases", ReportUtils.map(Moh505Indicator.acuteJaundiceCase(), indParams), all_epidemic, Arrays.asList("01", "02"));
 
-        EmrReportingUtils.addRow(dsd, "TypeOne", "Total no. with Type 1 Diabetes", ReportUtils.map(Moh740Indicator.diabetesByTypeOne(), indParams), type_1_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
-        EmrReportingUtils.addRow(dsd, "TypeTwo", "Total no. with Type 2 Diabetes ", ReportUtils.map(Moh740Indicator.diabetesByTypeTwo(), indParams), type_2_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
-
-        EmrReportingUtils.addRow(dsd,"Gestational diabetes melitus", "No. diagnosed for gestational diabetes melitus", ReportUtils.map(Moh740Indicator.diabetesGestational(), indParams), gestational_indicator, Arrays.asList("02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of Diabetes secondary to other causes", "No. of Diabetes secondary to other causes", ReportUtils.map(Moh740Indicator.diabetesSecondaryToOther(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients on insulin", "No. of patients on insulin", ReportUtils.map(Moh740Indicator.patientOnInsulin(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients on OGLAs", "No. of patients on OGLAs", ReportUtils.map(Moh740Indicator.patientOnOGLAs(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients on both (Insulin and OGLAs)", "No. of patients on both (Insulin and OGLAs)", ReportUtils.map(Moh740Indicator.patientOnInsulinAndOGLAs(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients on diet and exercise only (DM and HTN)", "No. of patients on diet and exercise only (DM and HTN)", ReportUtils.map(Moh740Indicator.patientOnDietAndExercise(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-
-        // dsd.addColumn("No. of patients done HbA1c", "", ReportUtils.map(Moh740Indicator.patientDoneHbA1c(), indParams), "");
-        EmrReportingUtils.addRow(dsd,"No. of patients done HbA1c", "No. of patients done HbA1c", ReportUtils.map(Moh740Indicator.patientDoneHbA1c(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. that met HbA1c target (< 7%)", "No. that met HbA1c target (< 7%)", ReportUtils.map(Moh740Indicator.patientMetHbA1cTarget(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-
-        EmrReportingUtils.addRow(dsd, "Hypertension", "No. with hypertension", ReportUtils.map(Moh740Indicator.totalHypertension(), indParams), hypertension_AgeDisaggregations, Arrays.asList("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"));
-
-        EmrReportingUtils.addRow(dsd,"No. of patients on antihypertensives", "No. of patients on antihypertensives", ReportUtils.map(Moh740Indicator.patientOnAntihypertensives(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. with a BP (≥140/90) at clinic visit", "No. with a BP (≥140/90) at clinic visit", ReportUtils.map(Moh740Indicator.patientWithHighBP(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD", "Total no. of patients with CVD (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedCVD(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Stroke", "Total no. of patients with CVD (new diagnosis) Stroke", ReportUtils.map(Moh740Indicator.newDiagnosedStroke(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Ischemic heart disease", "Total no. of patients with CVD (new diagnosis) Ischemic heart disease", ReportUtils.map(Moh740Indicator.newDiagnosedHeartDisease(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Peripheral vascular/artery disease", "Total no. of patients with CVD (new diagnosis) Peripheral vascular/artery disease", ReportUtils.map(Moh740Indicator.newDiagnosedPeripheralDisease(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Total no. of patients with CVD (new diagnosis) Heart failure", "Total no. of patients with CVD (new diagnosis) Heart failure", ReportUtils.map(Moh740Indicator.newDiagnosedHeartFailure(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of Patients with neuropathies (new diagnosis)", "No. of Patients with neuropathies (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedWithNeuropathies(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients screened for diabetic foot", "No. of patients screened for diabetic foot", ReportUtils.map(Moh740Indicator.patientScreenedForDiabeticFoot(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of patients with diabetic foot ulcer (new diagnosis)", "No. of patients with diabetic foot ulcer (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedWithFootUlcer(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of feet saved through treatment", "No. of feet saved through treatment", ReportUtils.map(Moh740Indicator.noFeetSavedThroughTreatment(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. of amputation due to diabetic foot", "No. of amputation due to diabetic foot", ReportUtils.map(Moh740Indicator.noAmputatedDiabeticFoot(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. with kidney complications (new diagnosis)", "No. with kidney complications (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedWithKidneyComplication(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. with diabetic retinopathy (new diagnosis)", "No. with diabetic retinopathy (new diagnosis)", ReportUtils.map(Moh740Indicator.newDiagnosedWithDiabeticRetinopathy(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. Screened for Tuberculosis", "No. Screened for Tuberculosis", ReportUtils.map(Moh740Indicator.patientScreenedForTuberculosis(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"No. Screened Positive for Tuberculosis Total", "No. Screened Positive for Tuberculosis Total", ReportUtils.map(Moh740Indicator.patientScreenedPositiveTuberculosis(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
-
-        EmrReportingUtils.addRow(dsd,"No. enrolled with SHA", "No. enrolled with SHA", ReportUtils.map(Moh740Indicator.noEnrolledSHA(), indParams), all_indicators, Arrays.asList("01", "02", "03"));
         return dsd;
     }
 
