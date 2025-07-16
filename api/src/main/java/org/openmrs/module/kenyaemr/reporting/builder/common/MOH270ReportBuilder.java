@@ -53,7 +53,7 @@ import java.util.List;
 @Builds({"kenyaemr.ehrReports.report.moh270"})
 public class MOH270ReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
-    public static final String DATE_FORMAT ="dd/MM/yy";
+    public static final String DATE_FORMAT ="dd/MM/yyyy";
 
 
     @Override
@@ -97,6 +97,7 @@ public class MOH270ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Patient No", identifierDef, null);
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("DOB", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
+        dsd.addColumn("Date of Birth", new BirthdateDataDefinition(), "", new BirthdateConverter(DATE_FORMAT));
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
         dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
@@ -140,7 +141,7 @@ public class MOH270ReportBuilder extends AbstractReportBuilder {
         // Add them to the dataset
         dsd.addColumn("Treatment Supporter Contact", treatmentSupporter, paramMapping);
         dsd.addColumn("Diagnosis", diagnosis, paramMapping);
-       dsd.addColumn("Year of Diagnosis", yearOfDiagnosis, paramMapping);
+       dsd.addColumn("Year of Diagnosis", yearOfDiagnosis, paramMapping, new DateConverter("yyyy"));
         dsd.addColumn("Complications", complications, paramMapping);
         dsd.addColumn("Treatment", medications, paramMapping);
        // dsd.addColumn("Patient Status", patientStatus, paramMapping);
