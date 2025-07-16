@@ -13,10 +13,10 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
+import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
-import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717CohortLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
@@ -28,7 +28,6 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.openmrs.module.kenyaemr.EmrConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +44,6 @@ import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 @Component
 @Builds({ "kenyaemr.ehrReports.report.717" })
 public class MOH717ReportBuilder extends AbstractReportBuilder {
-    private final Moh717CohortLibrary moh717CohortLibrary;
 
     private final CommonDimensionLibrary commonDimensionLibrary;
 
@@ -53,6 +51,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
 
     static final int NEW_VISIT = 164180, RE_ATT= 160530, FP_RE_ATT = 164142;
     static final int CURED = 162677, DECEASED = 159, ABSCONDED = 160431, LEFT_AGAINST_MEDICAL_ADVISE = 1694, REFERRED_OUT = 164165;
+    static final int CASH_PAYMENT_MODE = 168883, MOBILE_MONEY_PAYMENT_MODE = 168885, INSURANCE_PAYMENT_MODE = 168886;
 
     static final String MEDICAL_WARD = "efa4143f-c6ae-44b5-8ce5-45cbdbbda934";
     static final String MATERNITY_WARD = "b95dd376-fa35-40a6-b140-d144c5f22f62";
@@ -71,6 +70,20 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     static final String BURNS_UNIT = "f7537dcf-0525-402d-943e-b29356d1fc65";
     static final String ONCOLOGY_WARD = "21215af7-dfc0-4981-af16-844c9bd30482";
     static final String OTHER_WARDS = "48b5a485-d6fc-484b-88db-18f9ea456e25";
+
+    static final String AUTHORIZED_BEDS = "ccb79e92-3308-454b-a326-5cba26c86658";
+    static final String AUTHORIZED_COTS = "e1eb667a-918f-4877-befc-31e760a57804";
+    static final String AUTHORIZED_INCUBATORS = "1e7e4f1b-62b2-4506-b70a-9e8e4cfac1cd";
+
+    static final String BEDS = "470dee7b-cf57-4c68-83e3-ad6db4ae6931";
+    static final String COTS = "e262d7c3-a116-4759-8327-daf5336e77f6";
+    static final String INCUBATORS = "1a88ce37-c5da-40a0-93b8-d75c1f3d8977";
+
+    static final ArrayList<String> AUTHORIZED_BED_TYPES_LIST = new ArrayList<>(Arrays.asList(
+            AUTHORIZED_BEDS,AUTHORIZED_COTS,AUTHORIZED_INCUBATORS));
+
+    static final ArrayList<String> BED_TYPES_LIST = new ArrayList<>(Arrays.asList(
+            BEDS,COTS,INCUBATORS));
 
     static final ArrayList<String> OTHER_WARDS_LIST = new ArrayList<>(Arrays.asList(
             OTHER_WARDS,HDU_WARD,BURNS_UNIT,ONCOLOGY_WARD));
@@ -574,8 +587,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     List<ColumnParameters> under5AndAboveDisaggregations = Arrays.asList(allUnder5, all5AndAbove, colTotal);
 
     @Autowired
-    public MOH717ReportBuilder(Moh717CohortLibrary moh717CohortLibrary, CommonDimensionLibrary commonDimensionLibrary, Moh717IndicatorLibrary moh717IndicatorLibrary) {
-        this.moh717CohortLibrary = moh717CohortLibrary;
+    public MOH717ReportBuilder(CommonDimensionLibrary commonDimensionLibrary, Moh717IndicatorLibrary moh717IndicatorLibrary) {
         this.commonDimensionLibrary = commonDimensionLibrary;
         this.moh717IndicatorLibrary = moh717IndicatorLibrary;
     }
@@ -588,14 +600,153 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
 
     @Override
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor,ReportDefinition reportDefinition) {
-        return Arrays.asList(ReportUtils.map(moh717DatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(totalAmountCollectedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(totalAmountReceivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(clientsWaivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(totalAmountWaivedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(clientsExemptedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(totalAmountExemptedDatasetDefinition(), "startDate=${startDate},endDate=${endDate}")
-                );
+
+        List<Mapped<DataSetDefinition>> allDataSets = new ArrayList<>();
+
+        String commonParams = "startDate=${startDate},endDate=${endDate}";
+
+        allDataSets.add(ReportUtils.map(moh717DatasetDefinition(), commonParams));
+
+        allDataSets.add(ReportUtils.map(totalAmountCollectedDatasetDefinition(), commonParams));
+        allDataSets.add(ReportUtils.map(totalAmountReceivedDatasetDefinition(), commonParams));
+        allDataSets.add(ReportUtils.map(clientsWaivedDatasetDefinition(), commonParams));
+        allDataSets.add(ReportUtils.map(totalAmountWaivedDatasetDefinition(), commonParams));
+        allDataSets.add(ReportUtils.map(clientsExemptedDatasetDefinition(), commonParams));
+        allDataSets.add(ReportUtils.map(totalAmountExemptedDatasetDefinition(), commonParams));
+
+        List<String> specificWardUuids = Arrays.asList(
+                MEDICAL_WARD, MATERNITY_WARD, SURGICAL_WARD, PAEDIATRICS_WARD, OBST_GYN_WARD,
+                EYE_WARD, NURSERY_NEW_BORN_WARD, ORTHOPAEDIC_WARD, ISOLATION_WARD, AMENITY_WARD,
+                PSYCHIATRY_WARD, ICU_WARD, RENAL_WARD
+        );
+
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "paymentModeConceptId=" + INSURANCE_PAYMENT_MODE;
+
+            allDataSets.add(ReportUtils.map(
+                    getOccupiedBedDaysPercentageDatasetDefinition(wardUuid),
+                    datasetParamsString
+            ));
+        }
+
+        String otherWardsInsuranceDatasetParamsString = commonParams + "," +
+                "wardTypeUuids=" + EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST) + "," +
+                "paymentModeConceptId=" + INSURANCE_PAYMENT_MODE;
+        allDataSets.add(ReportUtils.map(
+                getOtherWardsOccupiedBedDaysPercentageDatasetDefinition(),
+                otherWardsInsuranceDatasetParamsString
+        ));
+
+        for (String wardUuid : specificWardUuids) {
+
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "mobileMoneyPaymentModeConceptId=" + MOBILE_MONEY_PAYMENT_MODE + "," +
+                    "cashPaymentModeConceptId=" + CASH_PAYMENT_MODE;
+
+            allDataSets.add(ReportUtils.map(
+                    getOccupiedBedDaysCashPercentageDatasetDefinition(wardUuid),
+                    datasetParamsString
+            ));
+        }
+        String otherWardsCashDatasetParamsString = commonParams + "," +
+                "wardTypeUuids=" + EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST) + "," +
+                "cashPaymentModeConceptId=" + CASH_PAYMENT_MODE + "," +
+                "mobileMoneyPaymentModeConceptId=" + MOBILE_MONEY_PAYMENT_MODE;
+        allDataSets.add(ReportUtils.map(
+                getOtherWardsOccupiedBedDaysCashPercentageDatasetDefinition(),
+                otherWardsCashDatasetParamsString
+        ));
+
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + AUTHORIZED_BEDS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getAuthorizedBedsDataDefinition(wardUuid, AUTHORIZED_BEDS),
+                    datasetParamsString
+            ));
+        }
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + AUTHORIZED_COTS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getAuthorizedBedsDataDefinition(wardUuid, AUTHORIZED_COTS),
+                    datasetParamsString
+            ));
+        }
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + AUTHORIZED_INCUBATORS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getAuthorizedBedsDataDefinition(wardUuid, AUTHORIZED_INCUBATORS),
+                    datasetParamsString
+            ));
+        }
+
+        for (String bedType : AUTHORIZED_BED_TYPES_LIST) {
+            String datasetParamsString = commonParams + "," +
+                    "wardTypeUuids=" + EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST) + "," +
+                    "bedType=" + bedType + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getAuthorizedBedsOtherWardsDataDefinition(bedType),
+                    datasetParamsString
+            ));
+        }
+
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + BEDS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getActualBedsDataDefinition(wardUuid, BEDS),
+                    datasetParamsString
+            ));
+        }
+
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + COTS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getActualBedsDataDefinition(wardUuid, COTS),
+                    datasetParamsString
+            ));
+        }
+
+        for (String wardUuid : specificWardUuids) {
+            String datasetParamsString = commonParams + "," +
+                    "wardType=" + wardUuid + "," +
+                    "bedType=" + INCUBATORS + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getActualBedsDataDefinition(wardUuid, INCUBATORS),
+                    datasetParamsString
+            ));
+        }
+
+        for (String bedType : BED_TYPES_LIST) {
+            String datasetParamsString = commonParams + "," +
+                    "wardTypeUuids=" + EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST) + "," +
+                    "bedType=" + bedType + "," ;
+
+            allDataSets.add(ReportUtils.map(
+                    getActualBedsOtherWardsDataDefinition(bedType),
+                    datasetParamsString
+            ));
+        }
+
+        return allDataSets;
     }
 
     private DataSetDefinition moh717DatasetDefinition() {
@@ -777,18 +928,20 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Referrals Out of the Facility (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientExitStatus(REFERRED_OUT,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
 
         // Admissions
-        EmrReportingUtils.addRow(dsd, "Admission Under Five", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Admission Over Five", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        dsd.addColumn( "Paroles", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Occupied Bed Days- SHA Members/And other Insurers", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Occupied Bed Days- Cash", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Well Persons Days", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Beds- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Beds- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Cots- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Cots- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Incubator- Authorized", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        dsd.addColumn( "Incubator- Actual Physical", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
+        EmrReportingUtils.addRow(dsd,"Admissions (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MEDICAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(SURGICAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(OBST_GYN_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PAEDIATRICS_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MATERNITY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(EYE_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(NURSERY_NEW_BORN_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ORTHOPAEDIC_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ISOLATION_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(AMENITY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PSYCHIATRY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ICU_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(RENAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd,"Admissions (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherWardsAdmissions(EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
 
         return dsd;
     }
@@ -851,6 +1004,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sqlDataSetDefinition;
     }
+
     private DataSetDefinition totalAmountExemptedDatasetDefinition(){
         SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
         sqlDataSetDefinition.setName("AmountExempted");
@@ -861,5 +1015,356 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 "where date(transaction_date) between date(:startDate) and date(:endDate);");
         return sqlDataSetDefinition;
     }
-    
+    /**
+     * Returns an SqlDataSetDefinition that calculates the occupied bed days percentage
+     * for a specific ward type and payment mode
+     * @param wardTypeUuid The UUID of the location_tag (ward type).
+     * @return A SqlDataSetDefinition.
+     */
+    private DataSetDefinition getOccupiedBedDaysPercentageDatasetDefinition(String wardTypeUuid){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Occupied Bed Days SHA Members And other Insurers (" + getWardNameFromUuid(wardTypeUuid) + ")");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardType", "Ward Type UUID", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("paymentModeConceptId", "Payment Mode Concept ID", Integer.class));
+        CAST(IFNULL(sum(IFNULL(la.value_reference, 0)),0) AS SIGNED)
+        sqlDataSetDefinition.setSqlQuery("SELECT \n" +
+                "CAST(ROUND(\n" +
+                "    CAST(COUNT(DISTINCT b.patient_id) AS SIGNED) / \n" +
+                "    NULLIF(\n" +
+                "        CAST(IFNULL(COUNT(DISTINCT d.patient_id), 0) AS SIGNED) + \n" +
+                "        CAST(COUNT(DISTINCT b.patient_id) AS SIGNED), \n" +
+                "    0) \n" +
+                "    * 100, \n" +
+                "0 ) AS SIGNED) AS occupied_bed_days\n" +
+                "FROM location_tag_map ltm \n" +
+                "INNER JOIN openmrs.location_tag t ON ltm.location_tag_id = t.location_tag_id \n" +
+                "INNER JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN (SELECT a.patient_id, a.admission_date \n" +
+                "                                FROM kenyaemr_etl.etl_inpatient_admission a \n" +
+                "                                WHERE DATE(a.admission_date) <= DATE(:endDate) AND a.payment_mode = :paymentModeConceptId) a \n" + // Use :parameterName
+                "                       ON p.patient_id = a.patient_id \n" +
+                "            WHERE date_stopped IS NULL) b \n" +
+                "           ON ltm.location_id = b.location_id \n" +
+                "LEFT JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN kenyaemr_etl.etl_inpatient_discharge d ON p.patient_id = d.patient_id \n" +
+                "            WHERE DATE(d.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) \n" +
+                "              OR DATE(p.date_stopped) BETWEEN DATE(:startDate) AND DATE(:endDate)) d \n" +
+                "           ON b.patient_id = d.patient_id \n" +
+                "WHERE t.uuid = :wardType;"); // Use :parameterName
+        return sqlDataSetDefinition;
+    }
+
+    /**
+     * Returns an SqlDataSetDefinition that calculates the occupied bed days percentage
+     * for a list of ward types
+     * @return A SqlDataSetDefinition.
+     */
+    private DataSetDefinition getOtherWardsOccupiedBedDaysPercentageDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Occupied Bed Days SHA Members And other Insurers (Other Wards)");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardTypeUuids", "Ward Type UUIDs", String.class)); 
+        sqlDataSetDefinition.addParameter(new Parameter("paymentModeConceptId", "Payment Mode Concept ID", Integer.class)); 
+
+        sqlDataSetDefinition.setSqlQuery("SELECT \n" +
+                "CAST(ROUND(\n" +
+                "    CAST(COUNT(DISTINCT b.patient_id) AS SIGNED) / \n" +
+                "    NULLIF(\n" +
+                "        CAST(IFNULL(COUNT(DISTINCT d.patient_id), 0) AS SIGNED) + \n" +
+                "        CAST(COUNT(DISTINCT b.patient_id) AS SIGNED), \n" +
+                "    0) \n" +
+                "    * 100, \n" +
+                "0 ) AS SIGNED) AS occupied_bed_days\n" +
+                "FROM location_tag_map ltm \n" +
+                "INNER JOIN openmrs.location_tag t ON ltm.location_tag_id = t.location_tag_id \n" +
+                "INNER JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN (SELECT a.patient_id, a.admission_date \n" +
+                "                                FROM kenyaemr_etl.etl_inpatient_admission a \n" +
+                "                                WHERE DATE(a.admission_date) <= DATE(:endDate) AND a.payment_mode = :paymentModeConceptId) a \n" +
+                "                       ON p.patient_id = a.patient_id \n" +
+                "            WHERE date_stopped IS NULL) b \n" +
+                "           ON ltm.location_id = b.location_id \n" +
+                "LEFT JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN kenyaemr_etl.etl_inpatient_discharge d ON p.patient_id = d.patient_id \n" +
+                "            WHERE DATE(d.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) \n" +
+                "              OR DATE(p.date_stopped) BETWEEN DATE(:startDate) AND DATE(:endDate)) d \n" +
+                "           ON b.patient_id = d.patient_id \n" +
+                "WHERE t.uuid IN (:wardTypeUuids);");
+        return sqlDataSetDefinition;
+    }
+
+    /**
+     * Returns an SqlDataSetDefinition that calculates the occupied bed days percentage
+     * for a specific ward type
+     * @param wardTypeUuid The UUID of the location_tag (ward type).
+     * @return A SqlDataSetDefinition.
+     */
+    private DataSetDefinition getOccupiedBedDaysCashPercentageDatasetDefinition(String wardTypeUuid){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Occupied Bed Days Cash (" + getWardNameFromUuid(wardTypeUuid) + ")");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardType", "Ward Type UUID", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("cashPaymentModeConceptId", "Cash Payment Mode Concept ID", Integer.class));
+        sqlDataSetDefinition.addParameter(new Parameter("mobileMoneyPaymentModeConceptId", "Mobile Money Payment Mode Concept ID", Integer.class));
+
+        sqlDataSetDefinition.setSqlQuery("SELECT \n" +
+                "CAST(ROUND(\n" +
+                "    CAST(COUNT(DISTINCT b.patient_id) AS SIGNED) / \n" +
+                "    NULLIF(\n" +
+                "        CAST(IFNULL(COUNT(DISTINCT d.patient_id), 0) AS SIGNED) + \n" +
+                "        CAST(COUNT(DISTINCT b.patient_id) AS SIGNED), \n" +
+                "    0) \n" +
+                "    * 100, \n" +
+                "0 ) AS SIGNED) AS occupied_bed_days\n" +
+                "FROM location_tag_map ltm \n" +
+                "INNER JOIN openmrs.location_tag t ON ltm.location_tag_id = t.location_tag_id \n" +
+                "INNER JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN (SELECT a.patient_id, a.admission_date \n" +
+                "                                FROM kenyaemr_etl.etl_inpatient_admission a \n" +
+                "                                WHERE DATE(a.admission_date) <= DATE(:endDate) " +
+                "                                  AND a.payment_mode IN (:cashPaymentModeConceptId, :mobileMoneyPaymentModeConceptId)) a \n" + 
+                "                       ON p.patient_id = a.patient_id \n" +
+                "            WHERE date_stopped IS NULL) b \n" +
+                "           ON ltm.location_id = b.location_id \n" +
+                "LEFT JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN kenyaemr_etl.etl_inpatient_discharge d ON p.patient_id = d.patient_id \n" +
+                "            WHERE DATE(d.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) \n" +
+                "              OR DATE(p.date_stopped) BETWEEN DATE(:startDate) AND DATE(:endDate)) d \n" +
+                "           ON b.patient_id = d.patient_id \n" +
+                "WHERE t.uuid = :wardType;");
+        return sqlDataSetDefinition;
+    }
+
+    /**
+     * Returns an SqlDataSetDefinition that calculates the occupied bed days percentage
+     * for a list of ward types
+     *
+     * @return A SqlDataSetDefinition.
+     */
+    private DataSetDefinition getOtherWardsOccupiedBedDaysCashPercentageDatasetDefinition(){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Occupied Bed Days Cash (Other Wards)");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardTypeUuids", "Ward Type UUIDs", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("cashPaymentModeConceptId", "Cash Payment Mode Concept ID", Integer.class));
+        sqlDataSetDefinition.addParameter(new Parameter("mobileMoneyPaymentModeConceptId", "Mobile Money Payment Mode Concept ID", Integer.class));
+
+        sqlDataSetDefinition.setSqlQuery("SELECT \n" +
+                "CAST(ROUND(\n" +
+                "    CAST(COUNT(DISTINCT b.patient_id) AS SIGNED) / \n" +
+                "    NULLIF(\n" +
+                "        CAST(IFNULL(COUNT(DISTINCT d.patient_id), 0) AS SIGNED) + \n" +
+                "        CAST(COUNT(DISTINCT b.patient_id) AS SIGNED), \n" +
+                "    0) \n" +
+                "    * 100, \n" +
+                "0 ) AS SIGNED) AS occupied_bed_days\n" +
+                "FROM location_tag_map ltm \n" +
+                "INNER JOIN openmrs.location_tag t ON ltm.location_tag_id = t.location_tag_id \n" +
+                "INNER JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN (SELECT a.patient_id, a.admission_date \n" +
+                "                                FROM kenyaemr_etl.etl_inpatient_admission a \n" +
+                "                                WHERE DATE(a.admission_date) <= DATE(:endDate) " +
+                "                                  AND a.payment_mode IN (:cashPaymentModeConceptId, :mobileMoneyPaymentModeConceptId)) a \n" +
+                "                       ON p.patient_id = a.patient_id \n" +
+                "            WHERE date_stopped IS NULL) b \n" +
+                "           ON ltm.location_id = b.location_id \n" +
+                "LEFT JOIN (SELECT p.patient_id, \n" +
+                "                   p.bed_id, \n" +
+                "                   p.date_started, \n" +
+                "                   p.date_stopped, \n" +
+                "                   m.location_id \n" +
+                "            FROM bed_patient_assignment_map p \n" +
+                "            INNER JOIN bed_location_map m ON p.bed_id = m.bed_id \n" +
+                "            INNER JOIN kenyaemr_etl.etl_inpatient_discharge d ON p.patient_id = d.patient_id \n" +
+                "            WHERE DATE(d.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) \n" +
+                "              OR DATE(p.date_stopped) BETWEEN DATE(:startDate) AND DATE(:endDate)) d \n" +
+                "           ON b.patient_id = d.patient_id \n" +
+                "WHERE t.uuid IN (:wardTypeUuids);");
+        return sqlDataSetDefinition;
+    }
+
+    /**
+     * Returns a DataSetDefinition for the number of authorized beds
+     * @param wardTypeUuid
+     * @param bedTypeUUID
+     * @return
+     */
+    private DataSetDefinition getAuthorizedBedsDataDefinition(String wardTypeUuid, String bedTypeUUID){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName(getBedTypeNameFromUuid(bedTypeUUID)+" (" + getWardNameFromUuid(wardTypeUuid) + ")");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardType", "Ward Type UUID", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("bedType", "Number of Authorized Beds UUID", String.class));
+
+        sqlDataSetDefinition.setSqlQuery("select CAST(IFNULL(sum(IFNULL(la.value_reference, 0)),0) AS SIGNED) as authorized_beds\n" +
+                "from (select l.location_id, t.name, l.value_reference\n" +
+                "      from location_attribute l\n" +
+                "               inner join location_attribute_type t on l.attribute_type_id = t.location_attribute_type_id\n" +
+                "          and t.uuid = :bedType) la\n" +
+                "         inner join (select t.name, m.location_id, t.location_tag_id\n" +
+                "                     from location_tag t\n" +
+                "                              inner join location_tag_map m on t.location_tag_id = m.location_tag_id\n" +
+                "                     where t.uuid = :wardType\n" +
+                ") ltm on la.location_id = ltm.location_id;");
+        return sqlDataSetDefinition;
+    }
+    /**
+     * Returns a DataSetDefinition for the number of authorized beds in other wards
+     * @param bedTypeUUID
+     * @return
+     */
+    private DataSetDefinition getAuthorizedBedsOtherWardsDataDefinition(String bedTypeUUID){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName(getBedTypeNameFromUuid(bedTypeUUID)+" (Other Wards)");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardTypeUuids", "Ward Type UUIDs", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("bedType", "Number of Authorized Beds UUID", String.class));
+
+        sqlDataSetDefinition.setSqlQuery("select CAST(IFNULL(sum(IFNULL(la.value_reference, 0)),0) AS SIGNED) as authorized_beds\n" +
+                "from (select l.location_id, t.name, l.value_reference\n" +
+                "      from location_attribute l\n" +
+                "               inner join location_attribute_type t on l.attribute_type_id = t.location_attribute_type_id\n" +
+                "          and t.uuid = :bedType) la\n" +
+                "         inner join (select t.name, m.location_id, t.location_tag_id\n" +
+                "                     from location_tag t\n" +
+                "                              inner join location_tag_map m on t.location_tag_id = m.location_tag_id\n" +
+                "                     where t.uuid in (:wardTypeUuids)\n" +
+                ") ltm on la.location_id = ltm.location_id;");
+        return sqlDataSetDefinition;
+    }
+
+    /**
+     * Returns a DataSetDefinition for the number of actual beds
+     * @param wardTypeUuid
+     * @param bedTypeUUID
+     * @return
+     */
+    private DataSetDefinition getActualBedsDataDefinition(String wardTypeUuid, String bedTypeUUID){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Actual "+getBedTypeNameFromUuid(bedTypeUUID)+" (" + getWardNameFromUuid(wardTypeUuid) + ")");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardType", "Ward Type UUIDs", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("bedType", "Bed type UUID", String.class));
+
+        sqlDataSetDefinition.setSqlQuery("select CAST(COUNT(ifnull(bed_id, 0)) AS SIGNED) as number_of_beds\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select m.bed_id, location_id, t.bed_type_id, t.name\n" +
+                "                     from bed_location_map m\n" +
+                "                              inner join bed d on m.bed_id = d.bed_id\n" +
+                "                     inner join bed_type t on d.bed_type_id = t.bed_type_id where t.uuid = :bedType) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "         inner join bed_type x on b.bed_type_id = x.bed_type_id\n" +
+                "where t.uuid = :wardType;");
+        return sqlDataSetDefinition;
+    }
+    /**
+     * Returns a DataSetDefinition for the number of actual beds in other wards
+     * @param bedTypeUUID
+     * @return
+     */
+    private DataSetDefinition getActualBedsOtherWardsDataDefinition(String bedTypeUUID){
+        SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
+        sqlDataSetDefinition.setName("Actual "+getBedTypeNameFromUuid(bedTypeUUID)+" (Other Wards)");
+        sqlDataSetDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sqlDataSetDefinition.addParameter(new Parameter("wardTypeUuids", "Ward Type UUIDs", String.class));
+        sqlDataSetDefinition.addParameter(new Parameter("bedType", "Bed type UUID", String.class));
+
+        sqlDataSetDefinition.setSqlQuery("select CAST(COUNT(ifnull(bed_id, 0)) AS SIGNED) as number_of_beds\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select m.bed_id, location_id, t.bed_type_id, t.name\n" +
+                "                     from bed_location_map m\n" +
+                "                              inner join bed d on m.bed_id = d.bed_id\n" +
+                "                     inner join bed_type t on d.bed_type_id = t.bed_type_id where t.uuid = :bedType) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "         inner join bed_type x on b.bed_type_id = x.bed_type_id\n" +
+                "where t.uuid in (:wardTypeUuids);");
+        return sqlDataSetDefinition;
+    }
+
+    private String getWardNameFromUuid(String uuid) {
+        switch (uuid) {
+            case "efa4143f-c6ae-44b5-8ce5-45cbdbbda934": return "Medical Ward";
+            case "0b333d24-9933-446e-bec6-ce3f4df431b9": return "Surgical Ward";
+            case "b17b84a4-4357-4a10-bd04-4419cc8833fb": return "Obst And Gyn Ward";
+            case "0db2eb63-f0ac-4f22-8d65-766a4828c9ba": return "Paediatrics Ward";
+            case "b95dd376-fa35-40a6-b140-d144c5f22f62": return "Maternity Ward";
+            case "36262a3a-aaae-4a75-93e6-b0061d809599": return "Eye Ward";
+            case "45b3b847-597e-47a4-b0df-9f3e57b8573e": return "Nursery And Newborn Ward";
+            case "3e6c9fc0-ab31-41eb-96ff-900300266ccf": return "Orthopaedic Ward";
+            case "cc5cb426-5433-4e9a-ad22-456e6b627b05": return "Isolation Ward";
+            case "cc5ebd26-b3dc-471a-a2fe-f2cea1801d80": return "Amenity Ward";
+            case "37bedf9c-07b1-4d8b-9ba3-ad3b9d48e10d": return "Psychiatry Ward";
+            case "770f6a93-8e59-48ad-ba7d-98d5652db240": return "ICU Ward";
+            case "f8c80058-ea8c-4c83-b26f-75e3e38a8ef5": return "Renal Ward";
+            case "25439b2d-6495-4f5d-9ec6-4fe64686cf46": return "HDU Ward";
+            case "f7537dcf-0525-402d-943e-b29356d1fc65": return "Burns Ward";
+            case "21215af7-dfc0-4981-af16-844c9bd30482": return "Oncology Ward";
+            case "48b5a485-d6fc-484b-88db-18f9ea456e25": return "Other Ward";
+            default: return "Unknown Ward";
+        }
+    }
+    private String getBedTypeNameFromUuid(String uuid) {
+        switch (uuid) {
+            case "470dee7b-cf57-4c68-83e3-ad6db4ae6931": return "Beds";
+            case "1a88ce37-c5da-40a0-93b8-d75c1f3d8977": return "Incubators";
+            case "e262d7c3-a116-4759-8327-daf5336e77f6": return "Cots";
+            case "ccb79e92-3308-454b-a326-5cba26c86658": return "Authorized Beds";
+            case "e1eb667a-918f-4877-befc-31e760a57804": return "Authorized Cots";
+            case "1e7e4f1b-62b2-4506-b70a-9e8e4cfac1cd": return "Authorized Incubators";
+            default: return "Unknown Bed Type";
+        }
+    }
 }
