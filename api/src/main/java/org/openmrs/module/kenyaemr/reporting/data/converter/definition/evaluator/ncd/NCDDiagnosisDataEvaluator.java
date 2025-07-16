@@ -38,6 +38,7 @@ public class NCDDiagnosisDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, evaluationContext);
 
 
+
         String qry = "SELECT\n" +
                 "  v.encounter_id,\n" +
                 "  cn.name AS diagnosis_name\n" +
@@ -46,6 +47,7 @@ public class NCDDiagnosisDataEvaluator implements EncounterDataEvaluator {
                 "LEFT JOIN openmrs.concept c ON c.concept_id = ed.diagnosis_coded\n" +
                 "LEFT JOIN openmrs.concept_name cn ON cn.concept_id = c.concept_id AND cn.locale = 'en'\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
