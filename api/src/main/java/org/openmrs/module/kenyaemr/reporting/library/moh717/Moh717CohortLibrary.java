@@ -14,6 +14,7 @@ import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.openmrs.module.reporting.indicator.SqlIndicator;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -380,57 +381,6 @@ public class Moh717CohortLibrary {
                 "  and e.visit_date < date(:startDate);");
         return sql;
     }
-    public CohortDefinition totalAmountReceived() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Total Amount Received");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(ifnull(sum(ifnull(r.cash_receipts_cash_from_daily_services, 0) + ifnull(r.cash_receipt_nhif_receipt, 0) +\n" +
-                "                           ifnull(r.cash_receipt_other_debtors_receipt, 0)), 0) AS SIGNED) as total_amount_received\n" +
-                "                from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "                where date(transaction_date) between date(:startDate) and date(:endDate);");
-        return sql;
-    }
-    public CohortDefinition clientsWaived() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Number of Clients Waived");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(IFNULL(count(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)), 0) AS SIGNED) as clients_waived\n" +
-                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
-        return sql;
-    }
-    public CohortDefinition totalAmountWaived() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Total Amount Waived");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(ifnull(sum(ifnull(r.revenue_not_collected_patient_not_yet_paid_waivers, 0)),0) AS SIGNED) as total_waived\n" +
-                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
-        return sql;
-    }
-    public CohortDefinition clientsExempted() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Number of Clients Exempted");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(ifnull(count(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as clients_exempted\n" +
-                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
-        return sql;
-    }
-    public CohortDefinition totalAmountExempted() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Total Amount Exempted");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(IFNULL(sum(ifnull(r.revenue_not_collected_write_offs_exemptions, 0)), 0) AS SIGNED) as total_exempted\n" +
-                "from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
-        return sql;
-    }
     public CohortDefinition specialClinics(String specialClinicFormUuid) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("specialClinics");
@@ -576,7 +526,40 @@ public class Moh717CohortLibrary {
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+dischargeReason+" and t.uuid in ("+wardTypeList+");");
+                "where b.discharge_status = " + dischargeReason + " and t.uuid in (" + wardTypeList + ");");
+        return sql;
+    }
+        public CohortDefinition stdWardsAdmissions(String wardType) {
+            SqlCohortDefinition sql = new SqlCohortDefinition();
+            sql.setName("stdWardsAdmissions");
+            sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+            sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+            sql.setQuery("select b.patient_id\n" +
+                    "from location_tag_map ltm\n" +
+                    "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                    "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
+                    "                     from bed_patient_assignment_map p\n" +
+                    "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                    "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)) b\n" +
+                    "                    on ltm.location_id = b.location_id\n" +
+                    "where t.uuid = '"+wardType+"';");
+            return sql;
+    }
+
+    public CohortDefinition otherWardsAdmissions(String wardTypeList) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("otherWardsAdmissions");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery("select b.patient_id\n" +
+                "from location_tag_map ltm\n" +
+                "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
+                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
+                "                     from bed_patient_assignment_map p\n" +
+                "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)) b\n" +
+                "                    on ltm.location_id = b.location_id\n" +
+                "where t.uuid in ("+wardTypeList+");");
         return sql;
     }
 }

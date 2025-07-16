@@ -137,24 +137,6 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator revisitCCClinic() {
         return cohortIndicator("Revisiting CCC Clinic", ReportUtils.map(moh717CohortLibrary.revisitCCClinic(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator totalAmountCollected() {
-        return cohortIndicator("Total Amount Collected", ReportUtils.map(moh717CohortLibrary.totalAmountCollected(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator totalAmountReceived() {
-        return cohortIndicator("Total Amount Received", ReportUtils.map(moh717CohortLibrary.totalAmountReceived(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator clientsWaived() {
-        return cohortIndicator("Number of Clients Waived", ReportUtils.map(moh717CohortLibrary.clientsWaived(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator totalAmountWaived() {
-        return cohortIndicator("Total Amount Waived", ReportUtils.map(moh717CohortLibrary.totalAmountWaived(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator clientsExempted() {
-        return cohortIndicator("Number of Clients Exempted", ReportUtils.map(moh717CohortLibrary.clientsExempted(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator totalAmountExempted() {
-        return cohortIndicator("Total Amount Exempted", ReportUtils.map(moh717CohortLibrary.totalAmountExempted(), "startDate=${startDate},endDate=${endDate}"));
-    }
     public CohortIndicator specialClinics(String specialClinicFormUuid) {
         return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinics(specialClinicFormUuid), "startDate=${startDate},endDate=${endDate}"));
     }
@@ -175,5 +157,11 @@ public class Moh717IndicatorLibrary {
     }
     public CohortIndicator otherInpatientExitStatus(int dischargeReason, String wardTypeList) {
         return cohortIndicator("Other in-patient exit reason", ReportUtils.map(moh717CohortLibrary.otherInpatientExitStatus(dischargeReason,wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator stdWardsAdmissions(String wardType) {
+        return cohortIndicator("stdWardsAdmissions", ReportUtils.map(moh717CohortLibrary.stdWardsAdmissions(wardType), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator otherWardsAdmissions(String wardTypeList) {
+        return cohortIndicator("otherWardsAdmissions", ReportUtils.map(moh717CohortLibrary.otherWardsAdmissions(wardTypeList), "startDate=${startDate},endDate=${endDate}"));
     }
 }
