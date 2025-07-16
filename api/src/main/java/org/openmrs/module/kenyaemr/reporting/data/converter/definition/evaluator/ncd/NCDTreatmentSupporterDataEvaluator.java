@@ -32,13 +32,13 @@ public class NCDTreatmentSupporterDataEvaluator implements EncounterDataEvaluato
 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
-        //next_of_kin_phone
-        // ;
+
         String qry = "SELECT e.encounter_id, tb.next_of_kin_phone " +
                 "FROM kenyaemr_etl.etl_ncd_enrollment e " +
                 "INNER JOIN kenyaemr_etl.etl_patient_demographics tb ON e.patient_id = tb.patient_id " +
                 "WHERE DATE(e.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate) " +
                 "AND tb.next_of_kin_phone IS NOT NULL";
+
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

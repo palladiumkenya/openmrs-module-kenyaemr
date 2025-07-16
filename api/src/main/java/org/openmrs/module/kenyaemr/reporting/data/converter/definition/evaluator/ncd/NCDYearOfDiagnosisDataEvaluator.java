@@ -41,7 +41,6 @@ public class NCDYearOfDiagnosisDataEvaluator implements EncounterDataEvaluator {
                 "from openmrs.encounter_diagnosis ed\n" +
                 "inner join kenyaemr_etl.etl_ncd_enrollment v on v.encounter_id = ed.encounter_id\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate);";
-
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");
