@@ -1028,7 +1028,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         sqlDataSetDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         sqlDataSetDefinition.addParameter(new Parameter("wardType", "Ward Type UUID", String.class));
         sqlDataSetDefinition.addParameter(new Parameter("paymentModeConceptId", "Payment Mode Concept ID", Integer.class));
-        CAST(IFNULL(sum(IFNULL(la.value_reference, 0)),0) AS SIGNED)
+
         sqlDataSetDefinition.setSqlQuery("SELECT \n" +
                 "CAST(ROUND(\n" +
                 "    CAST(COUNT(DISTINCT b.patient_id) AS SIGNED) / \n" +
