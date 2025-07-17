@@ -207,6 +207,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String FLUID_INTAKE_FORM = "b4bfa7a3-f6ed-4339-a4ec-b076463c0696";
 		public static final String ADR_ASSESSMENT_TOOL_FORM = "cc27af13-69ee-49e2-8a43-e1b1926403c1";
 		public static final String INITIAL_NURSING_CARDEX_FORM = "cd65f1dd-0047-4449-9c38-0710a7214c52";
+		public static final String MORGUE_DISCHARGE_FORM = "bd483dc1-9cd2-4f0e-a761-31a89b5f8bd0";
+		public static final String MORGUE_ADMISSION_FORM = "b990437a8-8dbb-4ae1-a2b4-71df0041adfa";
 	}
 
 	public static final class _OrderType {
@@ -362,8 +364,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Hearing Screening Clinic", "Hearing Screening clinical encounter type", _EncounterType.HEARING_SCREENING));
 		install(encounterType("Neurology Clinic", "Neurology clinical encounter type", _EncounterType.NEUROLOGY));
 		install(encounterType("Post-Mortem", "Post-Mortem clinical encounter type", _EncounterType.POST_MORTEM));
-		install(encounterType("Morgue Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
-		install(encounterType("Morgue Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
+		install(encounterType("Mortuary Admission", "Morgue admission clinical encounter type", _EncounterType.MORGUE_ADMISSION));
+		install(encounterType("Mortuary Discharge", "Morgue discharge clinical encounter type", _EncounterType.MORGUE_DISCHARGE));
 		install(encounterType("Infectious Disease", "Infectious disease clinical encounter type", _EncounterType.INFECTIOUS_DISEASE));
 		install(encounterType("IPD Procedure", "Inpatient procedure clinical encounter type", _EncounterType.IPD_PROCEDURE));
 		install(encounterType("Nursing Cardex", "Nursing cardex clinical encounter type", _EncounterType.NURSING_CARDEX));
@@ -471,6 +473,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Fluid Intake and Output Clinical Form", "Form for Fluid Intake and Output recording clinical encounter", _EncounterType.FLUID_INTAKE, "1", _Form.FLUID_INTAKE_FORM));
 		install(form("ADR Assessment Tool Form", "Form for Adverse Drug Reaction Assessment Tool", _EncounterType.ADR_ASSESSMENT_TOOL, "1", _Form.ADR_ASSESSMENT_TOOL_FORM));
 		install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
+		install(form("Mortuary Discharge Form", "Form for recording deceased body discharge details ", _EncounterType.MORGUE_DISCHARGE, "1", _Form.MORGUE_DISCHARGE_FORM));
+		install(form("Mortuary Admission Form", "Form for recording deceased body admission details ", _EncounterType.MORGUE_ADMISSION, "1", _Form.MORGUE_ADMISSION_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
