@@ -38,22 +38,22 @@ public class FacilityDashboardUtil {
 				"FROM ((SELECT av.patient_id\n" +
 				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
-				"       WHERE av.visit_date BETWEEN DATE_SUB(date(date('" + endDate + "')), INTERVAL "
-				+ days + " DAY) AND date(date('" + endDate + "'))\n" +
+				"       WHERE av.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "')\n" +
 				"         AND av.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT d.patient_id\n" +
 				"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
-				"       WHERE d.visit_date BETWEEN DATE_SUB(date(date('" + endDate + "')), INTERVAL "
-				+ days + " DAY) AND date(date('" + endDate + "'))\n" +
+				"       WHERE d.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "')\n" +
 				"         AND d.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT p.patient_id\n" +
 				"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
-				"       WHERE p.visit_date BETWEEN DATE_SUB(date(date('" + endDate + "')), INTERVAL "
-				+ days + " DAY) AND date(date('" + endDate + "'))\n" +
+				"       WHERE p.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "')\n" +
 				"         AND p.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT t.patient_id\n" +
@@ -61,13 +61,13 @@ public class FacilityDashboardUtil {
 				"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
 				"           AND t.final_test_result = 'Positive'\n" +
 				"           AND t.voided = 0\n" +
-				"           AND t.visit_date BETWEEN DATE_SUB(date(date('" + endDate + "')), INTERVAL "
-				+ days + " DAY) AND date(date('" + endDate + "')))) a\n" +
+				"           AND t.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "'))) a\n" +
 				"         LEFT JOIN\n" +
 				"     (SELECT l.patient_id, l.ccc_number,l.art_start_date\n" +
 				"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(date(date('" + endDate + "')), INTERVAL "
-				+ days + " DAY) AND date(date('" + endDate + "'))\n" +
+				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "')\n" +
 				"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
 				"         LEFT JOIN (SELECT e.patient_id\n" +
 				"                    FROM kenyaemr_etl.etl_drug_event e\n" +
