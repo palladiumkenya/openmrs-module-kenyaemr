@@ -1,0 +1,4897 @@
+[
+	{
+		"DiagnosisName": "Peptic ulcer, site unspecified",
+		"SHACode": "BlockL2-DA6",
+		"ICD11Code": "DA61"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Streptococcus pneumoniae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.07"
+	},
+	{
+		"DiagnosisName": "Acute upper respiratory infection, site unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA07.0"
+	},
+	{
+		"DiagnosisName": "Gastritis, unspecified",
+		"SHACode": "BlockL2-DA4",
+		"ICD11Code": "DA42.Z"
+	},
+	{
+		"DiagnosisName": "Upper respiratory tract disorders, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0Z"
+	},
+	{
+		"DiagnosisName": "Sepsis without septic shock",
+		"SHACode": "BlockL1-1G4",
+		"ICD11Code": "1G40"
+	},
+	{
+		"DiagnosisName": "Plasmodium malariae malaria without complication",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F42.Z"
+	},
+	{
+		"DiagnosisName": "Antenatal screening, unspecified",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA45.Z"
+	},
+	{
+		"DiagnosisName": "Diabetes mellitus, type unspecified",
+		"SHACode": "BlockL2-5A1",
+		"ICD11Code": "5A14"
+	},
+	{
+		"DiagnosisName": "Pneumonia, organism unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.Z"
+	},
+	{
+		"DiagnosisName": "Acute tonsillitis, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA03.Z"
+	},
+	{
+		"DiagnosisName": "Acute upper respiratory infections of multiple and unspecified sites",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA07"
+	},
+	{
+		"DiagnosisName": "Infectious gastroenteritis or colitis without specification of infectious agent",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A40.Z"
+	},
+	{
+		"DiagnosisName": "Type 2 diabetes mellitus",
+		"SHACode": "BlockL2-5A1",
+		"ICD11Code": "5A11"
+	},
+	{
+		"DiagnosisName": "Acute amoebiasis",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.00"
+	},
+	{
+		"DiagnosisName": "Other specified acute tonsillitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA03.Y"
+	},
+	{
+		"DiagnosisName": "Unspecified asthma",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA23.3"
+	},
+	{
+		"DiagnosisName": "Amoebiasis, unspecified",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.Z"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Chlamydophila pneumoniae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.00"
+	},
+	{
+		"DiagnosisName": "Bacterial pneumonia, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.0Z"
+	},
+	{
+		"DiagnosisName": "Plasmodium malariae malaria with nephropathy",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F42.0"
+	},
+	{
+		"DiagnosisName": "Bacterial infection of unspecified site",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C41"
+	},
+	{
+		"DiagnosisName": "Allergic contact dermatitis, unspecified",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK00.Z"
+	},
+	{
+		"DiagnosisName": "Acute nasopharyngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA00"
+	},
+	{
+		"DiagnosisName": "Malaria, unspecified",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F4Z"
+	},
+	{
+		"DiagnosisName": "Other specified pneumonia",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.Y"
+	},
+	{
+		"DiagnosisName": "Unspecified asthma with status asthmaticus",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA23.31"
+	},
+	{
+		"DiagnosisName": "Cystitis, unspecified",
+		"SHACode": "BlockL2-GC0",
+		"ICD11Code": "GC00.Z"
+	},
+	{
+		"DiagnosisName": "Acute upper respiratory infections of multiple sites",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA07.1"
+	},
+	{
+		"DiagnosisName": "Sickle cell disease with crisis",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A51.2"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Mycoplasma pneumoniae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.04"
+	},
+	{
+		"DiagnosisName": "Gastroenteritis or colitis without specification of origin",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A40.0"
+	},
+	{
+		"DiagnosisName": "Other specified acute bronchitis",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.Y"
+	},
+	{
+		"DiagnosisName": "Malaria due to Plasmodium falciparum, unspecified",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F40.Z"
+	},
+	{
+		"DiagnosisName": "Infections of other parts of urinary tract in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.3"
+	},
+	{
+		"DiagnosisName": "Diabetes mellitus, other specified type",
+		"SHACode": "BlockL2-5A1",
+		"ICD11Code": "5A13"
+	},
+	{
+		"DiagnosisName": "Hypertensive heart disease",
+		"SHACode": "BlockL1-BA0",
+		"ICD11Code": "BA01"
+	},
+	{
+		"DiagnosisName": "Chronic diseases of tonsils or adenoids, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0F.Z"
+	},
+	{
+		"DiagnosisName": "Other specified upper respiratory tract disorders",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0Y"
+	},
+	{
+		"DiagnosisName": "Acquired iron deficiency anaemia due to blood loss, unspecified",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A00.0Z"
+	},
+	{
+		"DiagnosisName": "Other and unspecified nutritional or metabolic anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A03.Y"
+	},
+	{
+		"DiagnosisName": "Urinary tract infection, site and agent not specified",
+		"SHACode": "BlockL2-GC0",
+		"ICD11Code": "GC08.Z"
+	},
+	{
+		"DiagnosisName": "Headache disorders, unspecified",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A8Z"
+	},
+	{
+		"DiagnosisName": "Acute sinusitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA01"
+	},
+	{
+		"DiagnosisName": "Migraine, unspecified",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A80.Z"
+	},
+	{
+		"DiagnosisName": "Gastroenteritis due to Campylobacter",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A06"
+	},
+	{
+		"DiagnosisName": "Cough",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD12"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to other specified virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.1Y"
+	},
+	{
+		"DiagnosisName": "Allergic asthma",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA23.0"
+	},
+	{
+		"DiagnosisName": "Staphylococcal cellulitis of skin",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B70.2"
+	},
+	{
+		"DiagnosisName": "Vulvovaginal candidosis",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.10"
+	},
+	{
+		"DiagnosisName": "Other allergic rhinitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA08.03"
+	},
+	{
+		"DiagnosisName": "Hypertrophy of tonsils with hypertrophy of adenoids",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0F.3"
+	},
+	{
+		"DiagnosisName": "Need for immunization against diphtheria-tetanus-pertussis with poliomyelitis",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC03.3"
+	},
+	{
+		"DiagnosisName": "Aplastic anaemia, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A70.Z"
+	},
+	{
+		"DiagnosisName": "Acute pharyngitis, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA02.Z"
+	},
+	{
+		"DiagnosisName": "Typhoid fever, unspecified",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A07.Z"
+	},
+	{
+		"DiagnosisName": "Essential hypertension, unspecified",
+		"SHACode": "BlockL1-BA0",
+		"ICD11Code": "BA00.Z"
+	},
+	{
+		"DiagnosisName": "Hypertrophy of tonsils",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0F.0"
+	},
+	{
+		"DiagnosisName": "Other parasitologically confirmed malaria",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F44"
+	},
+	{
+		"DiagnosisName": "Fungal pneumonia, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.2Z"
+	},
+	{
+		"DiagnosisName": "Hypertrophy of adenoids",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0F.1"
+	},
+	{
+		"DiagnosisName": "Streptococcal cellulitis of skin",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B70.1"
+	},
+	{
+		"DiagnosisName": "Laboratory examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.C"
+	},
+	{
+		"DiagnosisName": "Gastric ulcer, unspecified",
+		"SHACode": "BlockL2-DA6",
+		"ICD11Code": "DA60.Z"
+	},
+	{
+		"DiagnosisName": "Abscess of upper respiratory tract, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0K.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B95"
+	},
+	{
+		"DiagnosisName": "Functional diarrhoea",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD91.2"
+	},
+	{
+		"DiagnosisName": "Routine postpartum follow-up",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA48.2"
+	},
+	{
+		"DiagnosisName": "Chronic pharyngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA09.2"
+	},
+	{
+		"DiagnosisName": "Allergic rhinitis due to other seasonal allergens",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA08.01"
+	},
+	{
+		"DiagnosisName": "Chronic superficial gastritis of unknown aetiology",
+		"SHACode": "BlockL2-DA4",
+		"ICD11Code": "DA42.71"
+	},
+	{
+		"DiagnosisName": "Anaemia due to chronic disease, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A71.Z"
+	},
+	{
+		"DiagnosisName": "Postpartum care or examination, unspecified",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA48.Z"
+	},
+	{
+		"DiagnosisName": "Typhus fever, unspecified",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C30.Z"
+	},
+	{
+		"DiagnosisName": "Sickle cell disease without crisis",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A51.1"
+	},
+	{
+		"DiagnosisName": "Allergic contact urticaria, unspecified",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK10.Z"
+	},
+	{
+		"DiagnosisName": "Mucopurulent conjunctivitis, unspecified",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A60.3Z"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.Z"
+	},
+	{
+		"DiagnosisName": "Open wound of head, unspecified",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA01.Z"
+	},
+	{
+		"DiagnosisName": "Iron deficiency anaemia, unspecified",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A00.Z"
+	},
+	{
+		"DiagnosisName": "Other specified antenatal screening",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA45.Y"
+	},
+	{
+		"DiagnosisName": "Conjunctivitis, unspecified",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A60.Z"
+	},
+	{
+		"DiagnosisName": "Dental caries",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA08.0"
+	},
+	{
+		"DiagnosisName": "Bacterial infection of joint",
+		"SHACode": "BlockL2-FA1",
+		"ICD11Code": "FA10.0"
+	},
+	{
+		"DiagnosisName": "Conjunctival vascular disorders, unspecified",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.4Z"
+	},
+	{
+		"DiagnosisName": "Essential fatty acid deficiency",
+		"SHACode": "BlockL3-5B6",
+		"ICD11Code": "5B70"
+	},
+	{
+		"DiagnosisName": "Plasmodium falciparum malaria with cerebral complications",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F40.0"
+	},
+	{
+		"DiagnosisName": "Salmonella infection, unspecified",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A09.Z"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Rhinovirus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.1"
+	},
+	{
+		"DiagnosisName": "Gastroenteritis due to Rotavirus",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A22"
+	},
+	{
+		"DiagnosisName": "Pediculosis corporis",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G00.1"
+	},
+	{
+		"DiagnosisName": "Secondary headache, unspecified",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A84.Z"
+	},
+	{
+		"DiagnosisName": "Acute bronchiolitis due to respiratory syncytial virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA41.0"
+	},
+	{
+		"DiagnosisName": "Acute periodontitis",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA0C.0"
+	},
+	{
+		"DiagnosisName": "Tinea nigra",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F2D.4"
+	},
+	{
+		"DiagnosisName": "Respiratory tuberculosis, not confirmed",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B10.1"
+	},
+	{
+		"DiagnosisName": "Acute laryngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA05.0"
+	},
+	{
+		"DiagnosisName": "Viral pneumonia, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.1Z"
+	},
+	{
+		"DiagnosisName": "Need for immunization against measles alone",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC01.4"
+	},
+	{
+		"DiagnosisName": "Acute bronchiolitis, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA41.Z"
+	},
+	{
+		"DiagnosisName": "Chronic rhinitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA09.0"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Streptococcus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.0"
+	},
+	{
+		"DiagnosisName": "Epilepsy or seizures, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A6Z"
+	},
+	{
+		"DiagnosisName": "False labour before 37 completed weeks of gestation",
+		"SHACode": "BlockL1-JA8",
+		"ICD11Code": "JA8D.0"
+	},
+	{
+		"DiagnosisName": "Bacterial cellulitis or lymphangitis due to unspecified bacterium",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B70.Z"
+	},
+	{
+		"DiagnosisName": "Vitamin B12 deficiency anaemia due to intrinsic factor deficiency",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A01.3"
+	},
+	{
+		"DiagnosisName": "Chronic rhinitis, nasopharyngitis or pharyngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA09"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Klebsiella pneumoniae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.03"
+	},
+	{
+		"DiagnosisName": "Chronic ulcerative stomatitis",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA01.12"
+	},
+	{
+		"DiagnosisName": "Febrile seizures, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A63.0Z"
+	},
+	{
+		"DiagnosisName": "Urticaria of unspecified type",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB05"
+	},
+	{
+		"DiagnosisName": "Maternal care for unspecified conditions predominantly related to pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA65.Z"
+	},
+	{
+		"DiagnosisName": "Type 1 diabetes mellitus",
+		"SHACode": "BlockL2-5A1",
+		"ICD11Code": "5A10"
+	},
+	{
+		"DiagnosisName": "Rheumatoid arthritis, serology unspecified",
+		"SHACode": "BlockL2-FA2",
+		"ICD11Code": "FA20.Z"
+	},
+	{
+		"DiagnosisName": "Heart failure, unspecified",
+		"SHACode": "BlockL1-BD1",
+		"ICD11Code": "BD1Z"
+	},
+	{
+		"DiagnosisName": "Need for immunization against diphtheria-tetanus-pertussis, combined",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC03.1"
+	},
+	{
+		"DiagnosisName": "Secondary hypertension, unspecified",
+		"SHACode": "BlockL1-BA0",
+		"ICD11Code": "BA04.Z"
+	},
+	{
+		"DiagnosisName": "Impacted cerumen",
+		"SHACode": "BlockL2-AA4",
+		"ICD11Code": "AA42"
+	},
+	{
+		"DiagnosisName": "Otitis externa, unspecified",
+		"SHACode": "BlockL3-AA1",
+		"ICD11Code": "AA3Z"
+	},
+	{
+		"DiagnosisName": "Bacterial intestinal infections, unspecified",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A0Z"
+	},
+	{
+		"DiagnosisName": "Other specified iron deficiency anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A00.Y"
+	},
+	{
+		"DiagnosisName": "Status epilepticus, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A66.Z"
+	},
+	{
+		"DiagnosisName": "Acute serous or mucoid otitis media",
+		"SHACode": "BlockL3-AA8",
+		"ICD11Code": "AA80"
+	},
+	{
+		"DiagnosisName": "Vasomotor rhinitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA08.3"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode depressive, mild",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.3"
+	},
+	{
+		"DiagnosisName": "Need for immunization against combinations of infectious diseases, unspecified",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC03.Z"
+	},
+	{
+		"DiagnosisName": "Amoeboma of intestine",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.01"
+	},
+	{
+		"DiagnosisName": "Other specified secondary hypertension",
+		"SHACode": "BlockL1-BA0",
+		"ICD11Code": "BA04.Y"
+	},
+	{
+		"DiagnosisName": "Amoebiasis of other specified sites",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.1Y"
+	},
+	{
+		"DiagnosisName": "Candidosis of lips or oral mucous membranes",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.0"
+	},
+	{
+		"DiagnosisName": "Allergic contact dermatitis due to food allergen",
+		"SHACode": "BlockL1-4A8",
+		"ICD11Code": "4A85.22"
+	},
+	{
+		"DiagnosisName": "Acute atopic conjunctivitis",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A60.01"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Entamoeba, unspecified",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.0Z"
+	},
+	{
+		"DiagnosisName": "Acute haemorrhagic gastritis of unknown aetiology",
+		"SHACode": "BlockL2-DA4",
+		"ICD11Code": "DA42.72"
+	},
+	{
+		"DiagnosisName": "Tuberculous peripheral lymphadenopathy",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.6"
+	},
+	{
+		"DiagnosisName": "Convulsive status epilepticus",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A66.0"
+	},
+	{
+		"DiagnosisName": "Migraine without aura",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A80.0"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Escherichia coli",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.01"
+	},
+	{
+		"DiagnosisName": "Functional dyspepsia",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD90.3"
+	},
+	{
+		"DiagnosisName": "Acute malnutrition in infants, children or adolescents",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B52"
+	},
+	{
+		"DiagnosisName": "Skin disease of unspecified nature",
+		"SHACode": "BlockL2-EL7",
+		"ICD11Code": "EM0Z"
+	},
+	{
+		"DiagnosisName": "Nonsuppurative otitis media, unspecified",
+		"SHACode": "BlockL3-AA8",
+		"ICD11Code": "AA8Z"
+	},
+	{
+		"DiagnosisName": "Pediculosis capitis",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G00.0"
+	},
+	{
+		"DiagnosisName": "Chronic laryngitis or laryngotracheitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0G"
+	},
+	{
+		"DiagnosisName": "Predominantly sexually transmitted infections, unspecified",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A9Z"
+	},
+	{
+		"DiagnosisName": "Pneumonic plague",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B93.2"
+	},
+	{
+		"DiagnosisName": "Intestinal helminthiasis, unspecified",
+		"SHACode": "BlockL3-1F8",
+		"ICD11Code": "1F90.2"
+	},
+	{
+		"DiagnosisName": "Other specified anaemias or erythrocyte disorders",
+		"SHACode": "BlockL2-3A8",
+		"ICD11Code": "3A9Y"
+	},
+	{
+		"DiagnosisName": "Bacterial foodborne intoxications, unspecified",
+		"SHACode": "BlockL2-1A1",
+		"ICD11Code": "1A1Z"
+	},
+	{
+		"DiagnosisName": "Epilepsy due to unspecified structural or metabolic condition or disease",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A60.Z"
+	},
+	{
+		"DiagnosisName": "Need for immunization against diphtheria-tetanus-pertussis with typhoid-paratyphoid",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC03.2"
+	},
+	{
+		"DiagnosisName": "Functional urinary incontinence",
+		"SHACode": "BlockL2-MF5",
+		"ICD11Code": "MF50.23"
+	},
+	{
+		"DiagnosisName": "Need for immunization against measles-mumps-rubella",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC03.4"
+	},
+	{
+		"DiagnosisName": "Pregnancy examination or test",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA40"
+	},
+	{
+		"DiagnosisName": "Bipolar or related disorders, unspecified",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A6Z"
+	},
+	{
+		"DiagnosisName": "Dental examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.8"
+	},
+	{
+		"DiagnosisName": "Cellulitis or abscess of soft tissues of the mouth",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA01.30"
+	},
+	{
+		"DiagnosisName": "Spotted fever, unspecified",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C31.Z"
+	},
+	{
+		"DiagnosisName": "Hypoglycaemia without associated diabetes",
+		"SHACode": "BlockL2-5A4",
+		"ICD11Code": "5A41"
+	},
+	{
+		"DiagnosisName": "Sickle cell trait",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A51.0"
+	},
+	{
+		"DiagnosisName": "Infections of bladder in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.1"
+	},
+	{
+		"DiagnosisName": "Contact urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB01.3"
+	},
+	{
+		"DiagnosisName": "Influenza due to identified seasonal influenza virus",
+		"SHACode": "BlockL1-1E3",
+		"ICD11Code": "1E30"
+	},
+	{
+		"DiagnosisName": "Pruritus, unspecified",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC90.Z"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of other systems and organs",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12"
+	},
+	{
+		"DiagnosisName": "Paratyphoid fever",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A08"
+	},
+	{
+		"DiagnosisName": "Early syphilis, unspecified",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A61.Z"
+	},
+	{
+		"DiagnosisName": "Elevated blood glucose level, unspecified",
+		"SHACode": "BlockL2-MA1",
+		"ICD11Code": "MA18.0Z"
+	},
+	{
+		"DiagnosisName": "Acute obstructive laryngitis or epiglottitis, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA06.Z"
+	},
+	{
+		"DiagnosisName": "Other specified disorders of conjunctiva",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A6Y"
+	},
+	{
+		"DiagnosisName": "Anaemias or other erythrocyte disorders, unspecified",
+		"SHACode": "BlockL2-3A8",
+		"ICD11Code": "3A9Z"
+	},
+	{
+		"DiagnosisName": "General adult medical examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.0"
+	},
+	{
+		"DiagnosisName": "Influenza, virus not identified",
+		"SHACode": "BlockL1-1E3",
+		"ICD11Code": "1E32"
+	},
+	{
+		"DiagnosisName": "Duodenitis, unspecified",
+		"SHACode": "BlockL2-DA5",
+		"ICD11Code": "DA51.Z"
+	},
+	{
+		"DiagnosisName": "Foodborne staphylococcal intoxication",
+		"SHACode": "BlockL2-1A1",
+		"ICD11Code": "1A10"
+	},
+	{
+		"DiagnosisName": "Hookworm diseases",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F68"
+	},
+	{
+		"DiagnosisName": "Mental, behavioural or neurodevelopmental disorders, unspecified",
+		"SHACode": "BlockL1-6E6",
+		"ICD11Code": "6E8Z"
+	},
+	{
+		"DiagnosisName": "Gas gangrene",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C16"
+	},
+	{
+		"DiagnosisName": "Chronic nasopharyngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA09.1"
+	},
+	{
+		"DiagnosisName": "Attention deficit hyperactivity disorder, presentation unspecified",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A05.Z"
+	},
+	{
+		"DiagnosisName": "Burn of shoulder and arm except wrist and hand, depth of burn unspecified",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND94.Z"
+	},
+	{
+		"DiagnosisName": "Otitis media, unspecified",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AB0Z"
+	},
+	{
+		"DiagnosisName": "Nonpurulent mastitis associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB45.1"
+	},
+	{
+		"DiagnosisName": "Chronic atrophic gastritis of unknown aetiology",
+		"SHACode": "BlockL2-DA4",
+		"ICD11Code": "DA42.73"
+	},
+	{
+		"DiagnosisName": "Migraine with aura, unspecified",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A80.1Z"
+	},
+	{
+		"DiagnosisName": "Sickle cell disorders or other haemoglobinopathies, unspecified",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A51.Z"
+	},
+	{
+		"DiagnosisName": "Whooping cough, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C12.Z"
+	},
+	{
+		"DiagnosisName": "General examination or investigation of persons without complaint or reported diagnosis, unspecified",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.Z"
+	},
+	{
+		"DiagnosisName": "Allergic or hypersensitivity disorders involving the respiratory tract, unspecified",
+		"SHACode": "BlockL1-4A8",
+		"ICD11Code": "4A80.Z"
+	},
+	{
+		"DiagnosisName": "Burn of wrist and hand, depth of burn unspecified",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND95.Z"
+	},
+	{
+		"DiagnosisName": "False labour at or after 37 completed weeks of gestation",
+		"SHACode": "BlockL1-JA8",
+		"ICD11Code": "JA8D.1"
+	},
+	{
+		"DiagnosisName": "Anaemia due to acute disease",
+		"SHACode": "BlockL2-3A8",
+		"ICD11Code": "3A90"
+	},
+	{
+		"DiagnosisName": "Other specified conjunctivitis",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A60.Y"
+	},
+	{
+		"DiagnosisName": "Plasmodium vivax malaria without complication",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F41.Z"
+	},
+	{
+		"DiagnosisName": "Viral intestinal infections, unspecified",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A2Z"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection of lower genitourinary tract with periurethral or accessory gland abscess",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A70.1"
+	},
+	{
+		"DiagnosisName": "Suppurative otitis media, unspecified",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AA9Z"
+	},
+	{
+		"DiagnosisName": "Other chronic suppurative otitis media",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AA91.2"
+	},
+	{
+		"DiagnosisName": "Q fever",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C33"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis due to foods",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.06"
+	},
+	{
+		"DiagnosisName": "Varicella without complication",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E90.0"
+	},
+	{
+		"DiagnosisName": "Gynaecological examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.9"
+	},
+	{
+		"DiagnosisName": "Other specified otitis externa",
+		"SHACode": "BlockL3-AA1",
+		"ICD11Code": "AA3Y"
+	},
+	{
+		"DiagnosisName": "Acute laryngopharyngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA04"
+	},
+	{
+		"DiagnosisName": "Cellulitis of external ear",
+		"SHACode": "BlockL2-AA0",
+		"ICD11Code": "AA01"
+	},
+	{
+		"DiagnosisName": "Whooping cough due to Bordetella pertussis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C12.0"
+	},
+	{
+		"DiagnosisName": "Other specified viral intestinal infections",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A2Y"
+	},
+	{
+		"DiagnosisName": "Routine child health examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.1"
+	},
+	{
+		"DiagnosisName": "Chronic otitis externa",
+		"SHACode": "BlockL3-AA1",
+		"ICD11Code": "AA13"
+	},
+	{
+		"DiagnosisName": "Psoriasis of unspecified type",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.Z"
+	},
+	{
+		"DiagnosisName": "Anal spasm",
+		"SHACode": "BlockL2-DB6",
+		"ICD11Code": "DB72.0"
+	},
+	{
+		"DiagnosisName": "Other specified forms of inducible urticaria and angioedema",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB01.Y"
+	},
+	{
+		"DiagnosisName": "Foreign body in ear",
+		"SHACode": "BlockL1-ND7",
+		"ICD11Code": "ND71"
+	},
+	{
+		"DiagnosisName": "Pulmonary infection due to nontuberculous mycobacterium",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B21.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A90"
+	},
+	{
+		"DiagnosisName": "Herpes simplex infection of genitalia or urogenital tract",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A94.0"
+	},
+	{
+		"DiagnosisName": "Infrequent episodic tensiontype headache",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A81.0"
+	},
+	{
+		"DiagnosisName": "Need for immunization against poliomyelitis",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC01.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A31"
+	},
+	{
+		"DiagnosisName": "Seborrhoeic dermatitis of the scalp",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA81.1"
+	},
+	{
+		"DiagnosisName": "Streptococcal tonsillitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA03.0"
+	},
+	{
+		"DiagnosisName": "Other specified candidosis",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.Y"
+	},
+	{
+		"DiagnosisName": "Mental or behavioural disorders associated with pregnancy, childbirth or the puerperium, unspecified",
+		"SHACode": "BlockL1-6E2",
+		"ICD11Code": "6E2Z"
+	},
+	{
+		"DiagnosisName": "Acute obstructive laryngitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA06.0"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of alcohol, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C40.Z"
+	},
+	{
+		"DiagnosisName": "Infections of urethra in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.2"
+	},
+	{
+		"DiagnosisName": "Infections of the genital tract in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.4"
+	},
+	{
+		"DiagnosisName": "Infection of obstetric surgical wound",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.1"
+	},
+	{
+		"DiagnosisName": "Antenatal screening due to raised alphafetoprotein level",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA45.1"
+	},
+	{
+		"DiagnosisName": "Urge incontinence associated with pelvic organ prolapse",
+		"SHACode": "BlockL2-GC4",
+		"ICD11Code": "GC40.51"
+	},
+	{
+		"DiagnosisName": "Pharyngeal or tonsillar diphtheria, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C17.0Z"
+	},
+	{
+		"DiagnosisName": "Juvenile idiopathic arthritis, unspecified",
+		"SHACode": "BlockL2-FA2",
+		"ICD11Code": "FA24.Z"
+	},
+	{
+		"DiagnosisName": "Respiratory tuberculosis, confirmed",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B10.0"
+	},
+	{
+		"DiagnosisName": "Hypertrophy of nasal turbinates",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0E"
+	},
+	{
+		"DiagnosisName": "Salmonella enteritis",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A09.0"
+	},
+	{
+		"DiagnosisName": "Faecal incontinence, unspecified",
+		"SHACode": "BlockL3-ME0",
+		"ICD11Code": "ME07.Z"
+	},
+	{
+		"DiagnosisName": "Other specified general examination or investigation of persons without complaint or reported diagnosis",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.Y"
+	},
+	{
+		"DiagnosisName": "Burn of wrist or hand, epidermal burn",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND95.0"
+	},
+	{
+		"DiagnosisName": "Atopic eczema of hands",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA85.20"
+	},
+	{
+		"DiagnosisName": "Other specified megaloblastic anaemia due to vitamin B12 deficiency",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A01.Y"
+	},
+	{
+		"DiagnosisName": "Dissociative neurological symptom disorder, with nonepileptic seizures",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B60.4"
+	},
+	{
+		"DiagnosisName": "Heat stroke",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.0"
+	},
+	{
+		"DiagnosisName": "Primary genital syphilis",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A61.0"
+	},
+	{
+		"DiagnosisName": "Genetic epileptic syndromes with variable age of onset, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A61.4Z"
+	},
+	{
+		"DiagnosisName": "Chronic bronchitis, unspecified",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA20.1Z"
+	},
+	{
+		"DiagnosisName": "Dermatitis or eczema, unspecified",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA8Z"
+	},
+	{
+		"DiagnosisName": "Other specified protozoal intestinal infections",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A3Y"
+	},
+	{
+		"DiagnosisName": "Atopic eczema, unspecified",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA80.Z"
+	},
+	{
+		"DiagnosisName": "Influenza due to identified zoonotic or pandemic influenza virus",
+		"SHACode": "BlockL1-1E3",
+		"ICD11Code": "1E31"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis due to solvents",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.01"
+	},
+	{
+		"DiagnosisName": "Slow transit constipation",
+		"SHACode": "BlockL1-DB3",
+		"ICD11Code": "DB32.1"
+	},
+	{
+		"DiagnosisName": "Megaloblastic anaemia due to vitamin B12 deficiency, unspecified",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A01.Z"
+	},
+	{
+		"DiagnosisName": "Spotted fever due to Rickettsia australis",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C31.3"
+	},
+	{
+		"DiagnosisName": "Botulism, unspecified",
+		"SHACode": "BlockL2-1A1",
+		"ICD11Code": "1A11.Z"
+	},
+	{
+		"DiagnosisName": "Rhinitis, unspecified whether allergic or nonallergic",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA08.Z"
+	},
+	{
+		"DiagnosisName": "Other specified periodontal disease",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA0C.Y"
+	},
+	{
+		"DiagnosisName": "Other nutritional or metabolic anaemias",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A03"
+	},
+	{
+		"DiagnosisName": "Infections of genitourinary tract in pregnancy, other specified site",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.Y"
+	},
+	{
+		"DiagnosisName": "Depressive disorders, unspecified",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A7Z"
+	},
+	{
+		"DiagnosisName": "Vibrio cholerae O1, biovar cholerae",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN8P1"
+	},
+	{
+		"DiagnosisName": "Acute posthaemorrhagic anaemia",
+		"SHACode": "BlockL2-3A8",
+		"ICD11Code": "3A94"
+	},
+	{
+		"DiagnosisName": "Urinary tract infection following delivery",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.3"
+	},
+	{
+		"DiagnosisName": "Peritonsillar abscess",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0K.1"
+	},
+	{
+		"DiagnosisName": "Acute urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB00.0"
+	},
+	{
+		"DiagnosisName": "Allergic contact dermatitis due to cosmetics or fragrances",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK00.1"
+	},
+	{
+		"DiagnosisName": "Syncope and collapse, unspecified",
+		"SHACode": "BlockL3-MG3",
+		"ICD11Code": "MG45.Z"
+	},
+	{
+		"DiagnosisName": "Other specified bacterial intestinal infections",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A0Y"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode hypomanic",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.2"
+	},
+	{
+		"DiagnosisName": "Amoebic lung abscess",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.11"
+	},
+	{
+		"DiagnosisName": "Cutaneous amoebiasis",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.12"
+	},
+	{
+		"DiagnosisName": "Haemophilus influenzae",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN1P6"
+	},
+	{
+		"DiagnosisName": "Hypothermia",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF02"
+	},
+	{
+		"DiagnosisName": "Chlamydial infection of lower genitourinary tract",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A81.0"
+	},
+	{
+		"DiagnosisName": "Acute suppurative otitis media",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AA90"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to other specified bacteria",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.0Y"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of the digestive system",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.7"
+	},
+	{
+		"DiagnosisName": "Alcoholic gastritis",
+		"SHACode": "BlockL2-DA4",
+		"ICD11Code": "DA42.80"
+	},
+	{
+		"DiagnosisName": "Chronic serous or mucoid otitis media",
+		"SHACode": "BlockL3-AA8",
+		"ICD11Code": "AA82"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F62"
+	},
+	{
+		"DiagnosisName": "Contact with health services for insertion of contraceptive device",
+		"SHACode": "BlockL2-QA2",
+		"ICD11Code": "QA21.2"
+	},
+	{
+		"DiagnosisName": "Acute pharyngitis due to other bacteria",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA02.0"
+	},
+	{
+		"DiagnosisName": "Need for immunization against tuberculosis",
+		"SHACode": "BlockL2-QC0",
+		"ICD11Code": "QC00.2"
+	},
+	{
+		"DiagnosisName": "Unspecified bacterial disease",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C4Z"
+	},
+	{
+		"DiagnosisName": "Mycoplasma pneumoniae",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN4NV"
+	},
+	{
+		"DiagnosisName": "Generalised pustular psoriasis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.40"
+	},
+	{
+		"DiagnosisName": "Psychotherapy",
+		"SHACode": "BlockL2-QB9",
+		"ICD11Code": "QB95.4"
+	},
+	{
+		"DiagnosisName": "Retropharyngeal or parapharyngeal abscess",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0K.0"
+	},
+	{
+		"DiagnosisName": "Postpartum",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XT4Z"
+	},
+	{
+		"DiagnosisName": "Physical rehabilitation",
+		"SHACode": "BlockL2-QB9",
+		"ICD11Code": "QB95.1"
+	},
+	{
+		"DiagnosisName": "Calcium deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.1Z"
+	},
+	{
+		"DiagnosisName": "Acute effects of ultraviolet radiation on normal skin, unspecified",
+		"SHACode": "BlockL3-EJ4",
+		"ICD11Code": "EJ4Z"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Haemophilus influenzae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.02"
+	},
+	{
+		"DiagnosisName": "Infections in the puerperium, unspecified",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.Z"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Parainfluenza virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.3"
+	},
+	{
+		"DiagnosisName": "Other and unspecified infestation by parasitic worms, unspecified",
+		"SHACode": "BlockL3-1F8",
+		"ICD11Code": "1F90.Z"
+	},
+	{
+		"DiagnosisName": "Endemic nonvenereal syphilis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1F"
+	},
+	{
+		"DiagnosisName": "Zoster, unspecified",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E91.Z"
+	},
+	{
+		"DiagnosisName": "Mixed depressive and anxiety disorder",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A73"
+	},
+	{
+		"DiagnosisName": "Care or examination immediately after delivery",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA48.0"
+	},
+	{
+		"DiagnosisName": "Cholinergic urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB02.0"
+	},
+	{
+		"DiagnosisName": "Allergic contact dermatitis due to metals or metal salts",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK00.6"
+	},
+	{
+		"DiagnosisName": "Anal pruritus",
+		"SHACode": "BlockL3-EG6",
+		"ICD11Code": "EG60"
+	},
+	{
+		"DiagnosisName": "Candida meningitis",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.30"
+	},
+	{
+		"DiagnosisName": "Helminthiases, unspecified",
+		"SHACode": "BlockL3-1F8",
+		"ICD11Code": "1F9Z"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode manic, without psychotic symptoms",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.0"
+	},
+	{
+		"DiagnosisName": "Contact with health services for general counselling or advice on contraception",
+		"SHACode": "BlockL2-QA2",
+		"ICD11Code": "QA21.1"
+	},
+	{
+		"DiagnosisName": "Infection of genitourinary tract in pregnancy, site unspecified",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.Z"
+	},
+	{
+		"DiagnosisName": "Burn of hip or leg, except ankle or foot, epidermal burn",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND96.0"
+	},
+	{
+		"DiagnosisName": "Vesicular dermatitis of hands and feet",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA85.0"
+	},
+	{
+		"DiagnosisName": "Human metapneumovirus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN513"
+	},
+	{
+		"DiagnosisName": "Hereditary Vitamin B12 deficiency anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A01.0"
+	},
+	{
+		"DiagnosisName": "Certain specified disorders of eyelid",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A06"
+	},
+	{
+		"DiagnosisName": "Severe",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XS25"
+	},
+	{
+		"DiagnosisName": "Other specified hereditary haemolytic anaemia",
+		"SHACode": "BlockL3-3A1",
+		"ICD11Code": "3A10.Y"
+	},
+	{
+		"DiagnosisName": "Vibrio cholerae O1, biovar eltor",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN62R"
+	},
+	{
+		"DiagnosisName": "Hypervitaminosis D",
+		"SHACode": "BlockL3-5B9",
+		"ICD11Code": "5B90.2"
+	},
+	{
+		"DiagnosisName": "Secondary impetiginisation of the skin",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B72.2"
+	},
+	{
+		"DiagnosisName": "Aplastic anaemia due to other external agents",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A70.11"
+	},
+	{
+		"DiagnosisName": "Specific phobia",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B03"
+	},
+	{
+		"DiagnosisName": "Disorder of intellectual development, mild",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A00.0"
+	},
+	{
+		"DiagnosisName": "Developmental speech sound disorder",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.0"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Shigella",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A02"
+	},
+	{
+		"DiagnosisName": "Mucous membrane pemphigoid with ocular involvement",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A62"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of sedatives, hypnotics or anxiolytics, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C44.Z"
+	},
+	{
+		"DiagnosisName": "Cold urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB01.1"
+	},
+	{
+		"DiagnosisName": "Nasal polyp, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0J.Z"
+	},
+	{
+		"DiagnosisName": "Developmental learning disorder, unspecified",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A03.Z"
+	},
+	{
+		"DiagnosisName": "Onchocerciasis, unspecified",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6A.Z"
+	},
+	{
+		"DiagnosisName": "Wheezing",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.C"
+	},
+	{
+		"DiagnosisName": "Protozoal intestinal infections, unspecified",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A3Z"
+	},
+	{
+		"DiagnosisName": "Varicella, unspecified",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E90.Z"
+	},
+	{
+		"DiagnosisName": "Personality disorder, severity unspecified",
+		"SHACode": "BlockL1-6D1",
+		"ICD11Code": "6D10.Z"
+	},
+	{
+		"DiagnosisName": "Infection, unspecified",
+		"SHACode": "BlockL1-1G8",
+		"ICD11Code": "1H0Z"
+	},
+	{
+		"DiagnosisName": "Genital region",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA5FG3"
+	},
+	{
+		"DiagnosisName": "Other specified irritable bowel syndrome or functional bowel disorders",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD91.Y"
+	},
+	{
+		"DiagnosisName": "Neurodevelopmental disorders, unspecified",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A0Z"
+	},
+	{
+		"DiagnosisName": "Developmental learning disorder with impairment in mathematics",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A03.2"
+	},
+	{
+		"DiagnosisName": "Irritable bowel syndrome or functional bowel disorders, unspecified",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD91.Z"
+	},
+	{
+		"DiagnosisName": "Certain specified nutrient excesses, unspecified",
+		"SHACode": "BlockL3-5B9",
+		"ICD11Code": "5B9Z"
+	},
+	{
+		"DiagnosisName": "Burning feet syndrome",
+		"SHACode": "BlockL3-ED0",
+		"ICD11Code": "ED31"
+	},
+	{
+		"DiagnosisName": "Simple chronic bronchitis",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA20.10"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA23"
+	},
+	{
+		"DiagnosisName": "Allergic contact dermatitis due to topical medicaments",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK00.C"
+	},
+	{
+		"DiagnosisName": "Urge Incontinence",
+		"SHACode": "BlockL2-MF5",
+		"ICD11Code": "MF50.21"
+	},
+	{
+		"DiagnosisName": "Disorders of accommodation, unspecified",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D01.Z"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with conjunctival xerosis and Bitot's spots",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.2"
+	},
+	{
+		"DiagnosisName": "Idiopathic aplastic anaemia",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A70.12"
+	},
+	{
+		"DiagnosisName": "Other specified myiasis",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G01.Y"
+	},
+	{
+		"DiagnosisName": "Late congenital neurosyphilis",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.3"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode depressive, severe without psychotic symptoms",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.6"
+	},
+	{
+		"DiagnosisName": "Open wound of eyelid or periocular area",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA06.04"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A06.8"
+	},
+	{
+		"DiagnosisName": "Pulp",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA5B71"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B75.0"
+	},
+	{
+		"DiagnosisName": "Physical maltreatment",
+		"SHACode": "BlockL1-PJ2",
+		"ICD11Code": "PJ20"
+	},
+	{
+		"DiagnosisName": "Mood disorders, unspecified",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A8Z"
+	},
+	{
+		"DiagnosisName": "Acute stress reaction",
+		"SHACode": "BlockL2-QE8",
+		"ICD11Code": "QE84"
+	},
+	{
+		"DiagnosisName": "Sideroblastic anaemia, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A72.Z"
+	},
+	{
+		"DiagnosisName": "Contusion of thorax",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.6"
+	},
+	{
+		"DiagnosisName": "Special screening examination for human immunodeficiency virus",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.4"
+	},
+	{
+		"DiagnosisName": "Other specified injuries to the neck",
+		"SHACode": "BlockL3-NA4",
+		"ICD11Code": "NA6Y"
+	},
+	{
+		"DiagnosisName": "Special screening examination for other bacterial diseases",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.2"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of volatile inhalants, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C4B.Z"
+	},
+	{
+		"DiagnosisName": "Shigella sonnei",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN9M9"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of hallucinogens, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C49.Z"
+	},
+	{
+		"DiagnosisName": "Shigella dysenteriae",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN285"
+	},
+	{
+		"DiagnosisName": "Beta thalassaemia",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A50.2"
+	},
+	{
+		"DiagnosisName": "Hyperventilation",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.7"
+	},
+	{
+		"DiagnosisName": "Benign neoplasms of epidermal appendages",
+		"SHACode": "BlockL3-2F2",
+		"ICD11Code": "2F22"
+	},
+	{
+		"DiagnosisName": "Abnormal glucose tolerance test",
+		"SHACode": "BlockL2-MA1",
+		"ICD11Code": "MA18.00"
+	},
+	{
+		"DiagnosisName": "Burn of hip and leg except ankle and foot, depth of burn unspecified",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND96.Z"
+	},
+	{
+		"DiagnosisName": "Haemolytic anaemia due to glucose6phosphate dehydrogenase deficiency",
+		"SHACode": "BlockL3-3A1",
+		"ICD11Code": "3A10.00"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B92"
+	},
+	{
+		"DiagnosisName": "Malaria due to Plasmodium ovale",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F43"
+	},
+	{
+		"DiagnosisName": "Hereditary haemolytic anaemia, unspecified",
+		"SHACode": "BlockL3-3A1",
+		"ICD11Code": "3A10.Z"
+	},
+	{
+		"DiagnosisName": "Malignant otitis externa",
+		"SHACode": "BlockL2-AA0",
+		"ICD11Code": "AA02"
+	},
+	{
+		"DiagnosisName": "Epileptic encephalopathies, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A62.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G06"
+	},
+	{
+		"DiagnosisName": "Cellulocutaneous plague",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B93.1"
+	},
+	{
+		"DiagnosisName": "Other specified rickettsioses",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C3Y"
+	},
+	{
+		"DiagnosisName": "Adrenal gland",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA0NE9"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with corneal ulceration or keratomalacia",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.4"
+	},
+	{
+		"DiagnosisName": "Acute herpetic geniculate ganglionitis",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E91.41"
+	},
+	{
+		"DiagnosisName": "Periodontal disease, unspecified",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA0C.Z"
+	},
+	{
+		"DiagnosisName": "Infectious dermatitis, unspecified",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA88.0Z"
+	},
+	{
+		"DiagnosisName": "Pityriasis alba",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA88.4"
+	},
+	{
+		"DiagnosisName": "Disseminated secondary eczema",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA88.2"
+	},
+	{
+		"DiagnosisName": "Plaque psoriasis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.0"
+	},
+	{
+		"DiagnosisName": "Birth injury, unspecified",
+		"SHACode": "BlockL1-KA4",
+		"ICD11Code": "KA4Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6B"
+	},
+	{
+		"DiagnosisName": "Special screening examination for nutritional disorders",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.2"
+	},
+	{
+		"DiagnosisName": "Dissociative neurological symptom disorder, with unspecified symptoms",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B60.Z"
+	},
+	{
+		"DiagnosisName": "Dissociative amnesia with dissociative fugue",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B61.0"
+	},
+	{
+		"DiagnosisName": "Protein deficiency anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A03.1"
+	},
+	{
+		"DiagnosisName": "Developmental learning disorder with impairment in written expression",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A03.1"
+	},
+	{
+		"DiagnosisName": "Rosacea, unspecified",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED90.0Z"
+	},
+	{
+		"DiagnosisName": "Dissociative neurological symptom disorder, with unspecified movement disturbance",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B60.8Z"
+	},
+	{
+		"DiagnosisName": "Intermediate lesions of pinta",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1E.1"
+	},
+	{
+		"DiagnosisName": "Late lesions of pinta",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1E.2"
+	},
+	{
+		"DiagnosisName": "Genetic or presumed genetic syndromes primarily expressed as epilepsy, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A61.Z"
+	},
+	{
+		"DiagnosisName": "Disseminated Lyme borreliosis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1G.1Z"
+	},
+	{
+		"DiagnosisName": "Initial stage of trachoma",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C23.0"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Staphylococcus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.06"
+	},
+	{
+		"DiagnosisName": "Enteritis due to Norovirus",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A23"
+	},
+	{
+		"DiagnosisName": "Acute tubular necrosis",
+		"SHACode": "BlockL2-GB5",
+		"ICD11Code": "GB52"
+	},
+	{
+		"DiagnosisName": "Sexual maltreatment",
+		"SHACode": "BlockL1-PJ2",
+		"ICD11Code": "PJ21"
+	},
+	{
+		"DiagnosisName": "Pure red cell aplasia, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A6Z"
+	},
+	{
+		"DiagnosisName": "Influenza A H7N9 virus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN35G"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A70.10"
+	},
+	{
+		"DiagnosisName": "Hereditary folate deficiency anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A02.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A02.4"
+	},
+	{
+		"DiagnosisName": "Acute acquired pure red cell aplasia",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A61.0"
+	},
+	{
+		"DiagnosisName": "Special screening examination for certain developmental disorders in childhood",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.4"
+	},
+	{
+		"DiagnosisName": "Examination for normal comparison or control in clinical research programme",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.5"
+	},
+	{
+		"DiagnosisName": "Effects of thirst",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF07.1"
+	},
+	{
+		"DiagnosisName": "Examination of eyes or vision, unspecified",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.6Z"
+	},
+	{
+		"DiagnosisName": "Asphyxiation",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF05"
+	},
+	{
+		"DiagnosisName": "Effects of air pressure or water pressure, unspecified",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF04.Z"
+	},
+	{
+		"DiagnosisName": "Seizure due to unspecified acute cause",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A63.Z"
+	},
+	{
+		"DiagnosisName": "Caisson disease",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF04.2"
+	},
+	{
+		"DiagnosisName": "Chronic atticoantral suppurative otitis media",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AA91.1"
+	},
+	{
+		"DiagnosisName": "Other superficial injuries of back wall of thorax",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.4"
+	},
+	{
+		"DiagnosisName": "Streptococcal pharyngitis",
+		"SHACode": "BlockL2-1B4",
+		"ICD11Code": "1B51"
+	},
+	{
+		"DiagnosisName": "Bullous impetigo",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B72.0"
+	},
+	{
+		"DiagnosisName": "Enamel",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA5R09"
+	},
+	{
+		"DiagnosisName": "Infections of breast associated with childbirth, unspecified",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB45.Z"
+	},
+	{
+		"DiagnosisName": "Certain specified disorders of breast or lactation associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46"
+	},
+	{
+		"DiagnosisName": "Retracted nipple associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.0"
+	},
+	{
+		"DiagnosisName": "Bronchitis, unspecified",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA20.Z"
+	},
+	{
+		"DiagnosisName": "Cracked nipple associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.1"
+	},
+	{
+		"DiagnosisName": "Other or unspecified disorders of breast associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.2"
+	},
+	{
+		"DiagnosisName": "Hereditary elliptocytosis",
+		"SHACode": "BlockL3-3A1",
+		"ICD11Code": "3A10.2"
+	},
+	{
+		"DiagnosisName": "Suppressed lactation",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.5"
+	},
+	{
+		"DiagnosisName": "Effects of other deprivation, unspecified",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF07.Z"
+	},
+	{
+		"DiagnosisName": "Other specified acquired haemolytic anaemia, nonimmune",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A21.Y"
+	},
+	{
+		"DiagnosisName": "Generalised eczematous dermatitis of unspecified type",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA89"
+	},
+	{
+		"DiagnosisName": "Other specified eczematous dermatosis",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA8Y"
+	},
+	{
+		"DiagnosisName": "Guttate psoriasis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.1"
+	},
+	{
+		"DiagnosisName": "Chlamydial lymphogranuloma",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A80"
+	},
+	{
+		"DiagnosisName": "Effects of heat, unspecified",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.Z"
+	},
+	{
+		"DiagnosisName": "Other specified effects of heat",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.Y"
+	},
+	{
+		"DiagnosisName": "Heat syncope",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.1"
+	},
+	{
+		"DiagnosisName": "Chronic urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB00.1"
+	},
+	{
+		"DiagnosisName": "Xanthelasma of eyelid",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A06.4"
+	},
+	{
+		"DiagnosisName": "Hereditary syndromic sideroblastic anaemia",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A72.01"
+	},
+	{
+		"DiagnosisName": "Foodborne Clostridium perfringens intoxication",
+		"SHACode": "BlockL2-1A1",
+		"ICD11Code": "1A12"
+	},
+	{
+		"DiagnosisName": "Chronic acquired pure red cell aplasia",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A61.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6E"
+	},
+	{
+		"DiagnosisName": "Enterotoxigenic Escherichia coli infection",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A03.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B90"
+	},
+	{
+		"DiagnosisName": "Staphylococcus aureus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN6BM"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B21.Z"
+	},
+	{
+		"DiagnosisName": "Bubonic plague",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B93.0"
+	},
+	{
+		"DiagnosisName": "Toxic shock syndrome without specified infectious agent",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C45.Z"
+	},
+	{
+		"DiagnosisName": "Plague meningitis",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B93.3"
+	},
+	{
+		"DiagnosisName": "Intracranial abscess, unspecified",
+		"SHACode": "BlockL1-1D0",
+		"ICD11Code": "1D03.3Z"
+	},
+	{
+		"DiagnosisName": "Listeriosis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1A.Z"
+	},
+	{
+		"DiagnosisName": "Pulmonary candidosis",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.31"
+	},
+	{
+		"DiagnosisName": "Other specified endophthalmitis",
+		"SHACode": "BlockL1-9C2",
+		"ICD11Code": "9C21.Y"
+	},
+	{
+		"DiagnosisName": "Filariasis, unspecified",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F66.Z"
+	},
+	{
+		"DiagnosisName": "Acquired adrenocortical insufficiency",
+		"SHACode": "BlockL2-5A7",
+		"ICD11Code": "5A74.0"
+	},
+	{
+		"DiagnosisName": "Genetic CreutzfeldtJakob disease",
+		"SHACode": "BlockL1-8E0",
+		"ICD11Code": "8E02.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1J.1"
+	},
+	{
+		"DiagnosisName": "Acute or subacute infectious endocarditis",
+		"SHACode": "BlockL1-BB4",
+		"ICD11Code": "BB40"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F66.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-5B9",
+		"ICD11Code": "5B90.3"
+	},
+	{
+		"DiagnosisName": "Subacute sclerosing panencephalitis",
+		"SHACode": "BlockL1-8A4",
+		"ICD11Code": "8A45.01"
+	},
+	{
+		"DiagnosisName": "Zinc deficiency",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A60.4"
+	},
+	{
+		"DiagnosisName": "Acquired haemolytic anaemia, unspecified",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A2Z"
+	},
+	{
+		"DiagnosisName": "Fluorine deficiency",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.4"
+	},
+	{
+		"DiagnosisName": "Recurrent depressive disorder, unspecified",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A71.Z"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of opioids, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C43.Z"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of caffeine, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C48.Z"
+	},
+	{
+		"DiagnosisName": "Neuropathy due to nutritional deficiency",
+		"SHACode": "BlockL1-8D4",
+		"ICD11Code": "8D40.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-EB1",
+		"ICD11Code": "EB13.0"
+	},
+	{
+		"DiagnosisName": "Other specified geneticallydetermined hypomelanotic disorders",
+		"SHACode": "BlockL2-EC1",
+		"ICD11Code": "EC23.2Y"
+	},
+	{
+		"DiagnosisName": "Developmental speech or language disorders, unspecified",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.Z"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, unspecified",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.Z"
+	},
+	{
+		"DiagnosisName": "Anxiety or fearrelated disorders, unspecified",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B0Z"
+	},
+	{
+		"DiagnosisName": "Adjustment disorder",
+		"SHACode": "BlockL1-6B4",
+		"ICD11Code": "6B43"
+	},
+	{
+		"DiagnosisName": "Disruptive behaviour or dissocial disorders, unspecified",
+		"SHACode": "BlockL1-6C9",
+		"ICD11Code": "6C9Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-7A8",
+		"ICD11Code": "7A83"
+	},
+	{
+		"DiagnosisName": "Secondary stereotypy",
+		"SHACode": "BlockL1-8A0",
+		"ICD11Code": "8A07.01"
+	},
+	{
+		"DiagnosisName": "Dissociative disorders, unspecified",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B6Z"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Human metapneumovirus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.13"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-7A0",
+		"ICD11Code": "7A01"
+	},
+	{
+		"DiagnosisName": "Anorexia Nervosa, unspecified",
+		"SHACode": "BlockL1-6B8",
+		"ICD11Code": "6B80.Z"
+	},
+	{
+		"DiagnosisName": "Tic disorders, unspecified",
+		"SHACode": "BlockL1-8A0",
+		"ICD11Code": "8A05.Z"
+	},
+	{
+		"DiagnosisName": "Hordeolum, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A01.2Z"
+	},
+	{
+		"DiagnosisName": "Acquired epileptic aphasia",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A62.2"
+	},
+	{
+		"DiagnosisName": "Bodily distress disorder, unspecified",
+		"SHACode": "BlockL1-6C2",
+		"ICD11Code": "6C20.Z"
+	},
+	{
+		"DiagnosisName": "Ectropion of eyelid, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A03.2Z"
+	},
+	{
+		"DiagnosisName": "Abscess of external ear",
+		"SHACode": "BlockL2-AA0",
+		"ICD11Code": "AA00"
+	},
+	{
+		"DiagnosisName": "Cholesteatoma of external auditory canal",
+		"SHACode": "BlockL2-AA4",
+		"ICD11Code": "AA40.2"
+	},
+	{
+		"DiagnosisName": "Nasal cavity",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA43C9"
+	},
+	{
+		"DiagnosisName": "Chronic tubotympanic suppurative otitis media",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AA91.0"
+	},
+	{
+		"DiagnosisName": "Oral mucositis",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA01.11"
+	},
+	{
+		"DiagnosisName": "Other specified gingival diseases",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA0B.Y"
+	},
+	{
+		"DiagnosisName": "Vulval pruritus",
+		"SHACode": "BlockL2-GA4",
+		"ICD11Code": "GA42.0"
+	},
+	{
+		"DiagnosisName": "Generalised tonicclonic seizure",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A68.4"
+	},
+	{
+		"DiagnosisName": "Contact gingivostomatitis",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA02.3"
+	},
+	{
+		"DiagnosisName": "Atopic prurigo",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC91.1"
+	},
+	{
+		"DiagnosisName": "Duodenal ulcer, unspecified",
+		"SHACode": "BlockL2-DA6",
+		"ICD11Code": "DA63.Z"
+	},
+	{
+		"DiagnosisName": "Nummular dermatitis",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA82"
+	},
+	{
+		"DiagnosisName": "Erythema multiforme, unspecified",
+		"SHACode": "BlockL2-EB1",
+		"ICD11Code": "EB12.Z"
+	},
+	{
+		"DiagnosisName": "Pityriasis amiantacea",
+		"SHACode": "BlockL2-EG3",
+		"ICD11Code": "EG30.2"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis from specified external agents",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.0"
+	},
+	{
+		"DiagnosisName": "Other specified forms of psoriasis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.Y"
+	},
+	{
+		"DiagnosisName": "Anogenital pruritus",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC90.5"
+	},
+	{
+		"DiagnosisName": "Orthostatic proteinuria",
+		"SHACode": "BlockL2-MF9",
+		"ICD11Code": "MF96.0"
+	},
+	{
+		"DiagnosisName": "Diffuse inflammatory erythemas",
+		"SHACode": "BlockL2-EB1",
+		"ICD11Code": "EB10"
+	},
+	{
+		"DiagnosisName": "Toxic epidermal necrolysis",
+		"SHACode": "BlockL2-EB1",
+		"ICD11Code": "EB13.1"
+	},
+	{
+		"DiagnosisName": "Infantile acne",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED80.6"
+	},
+	{
+		"DiagnosisName": "Other specified disorders of the nail or perionychium",
+		"SHACode": "BlockL3-EE1",
+		"ICD11Code": "EE1Y"
+	},
+	{
+		"DiagnosisName": "Contact dermatitis of external ear",
+		"SHACode": "BlockL4-EG4",
+		"ICD11Code": "EG40"
+	},
+	{
+		"DiagnosisName": "Sunburn erythema",
+		"SHACode": "BlockL3-EJ4",
+		"ICD11Code": "EJ40.0"
+	},
+	{
+		"DiagnosisName": "Phototoxic reaction to fragrance or cosmetics",
+		"SHACode": "BlockL2-EK2",
+		"ICD11Code": "EK20"
+	},
+	{
+		"DiagnosisName": "Type of seizure, unspecified",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A68.Z"
+	},
+	{
+		"DiagnosisName": "Scalp folliculitis",
+		"SHACode": "BlockL2-EG3",
+		"ICD11Code": "EG30.0"
+	},
+	{
+		"DiagnosisName": "Multiple open wounds of head",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA01.7"
+	},
+	{
+		"DiagnosisName": "Burn of ankle or foot, epidermal burn",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND97.0"
+	},
+	{
+		"DiagnosisName": "Laboratory evidence of human immunodeficiency virus",
+		"SHACode": "BlockL2-MA1",
+		"ICD11Code": "MA14.0"
+	},
+	{
+		"DiagnosisName": "Abnormality of red blood cells, unspecified",
+		"SHACode": "BlockL2-MA1",
+		"ICD11Code": "MA16.0Z"
+	},
+	{
+		"DiagnosisName": "Maltreatment, unspecified",
+		"SHACode": "BlockL1-PJ2",
+		"ICD11Code": "PJ2Z"
+	},
+	{
+		"DiagnosisName": "Complications related to migraine",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A80.3"
+	},
+	{
+		"DiagnosisName": "Antenatal screening for chromosomal anomalies",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA45.0"
+	},
+	{
+		"DiagnosisName": "Foreign body in multiple parts of external eye",
+		"SHACode": "BlockL1-ND7",
+		"ICD11Code": "ND70.2"
+	},
+	{
+		"DiagnosisName": "Foreign body in conjunctival sac",
+		"SHACode": "BlockL1-ND7",
+		"ICD11Code": "ND70.1"
+	},
+	{
+		"DiagnosisName": "Other primary headache disorder",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A83"
+	},
+	{
+		"DiagnosisName": "Papular purpuric gloves and socks syndrome",
+		"SHACode": "BlockL3-EA1",
+		"ICD11Code": "EA11"
+	},
+	{
+		"DiagnosisName": "Care involving use of rehabilitation procedures, unspecified",
+		"SHACode": "BlockL2-QB9",
+		"ICD11Code": "QB95.Z"
+	},
+	{
+		"DiagnosisName": "Occupational therapy or vocational rehabilitation",
+		"SHACode": "BlockL2-QB9",
+		"ICD11Code": "QB95.7"
+	},
+	{
+		"DiagnosisName": "Streptococcus, group A",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN6LP"
+	},
+	{
+		"DiagnosisName": "Superficial injury of lip or oral cavity",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA00.4"
+	},
+	{
+		"DiagnosisName": "Multiple superficial injuries of thorax",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.7"
+	},
+	{
+		"DiagnosisName": "Special screening examination for other viral diseases",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.5"
+	},
+	{
+		"DiagnosisName": "Necrotising ulcerative gingivitis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1H.Z"
+	},
+	{
+		"DiagnosisName": "Infections due to Chlamydia psittaci",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C22"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with conjunctival xerosis",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.1"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with xerophthalmic scars of cornea or blindness",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.5"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with corneal xerosis",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.3"
+	},
+	{
+		"DiagnosisName": "Vitamin B1 deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5A.Z"
+	},
+	{
+		"DiagnosisName": "Plasmodium vivax malaria with rupture of spleen",
+		"SHACode": "BlockL2-1F4",
+		"ICD11Code": "1F41.0"
+	},
+	{
+		"DiagnosisName": "Conjunctival or subconjunctival haemorrhage",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.5"
+	},
+	{
+		"DiagnosisName": "Conjunctival or subconjunctival degenerations or deposits",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.6"
+	},
+	{
+		"DiagnosisName": "Disorders of eyelid or periocular area, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A0Z"
+	},
+	{
+		"DiagnosisName": "Special screening examination for unspecified infectious diseases",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.Z"
+	},
+	{
+		"DiagnosisName": "Gender incongruence, unspecified",
+		"SHACode": "BlockL1-HA6",
+		"ICD11Code": "HA6Z"
+	},
+	{
+		"DiagnosisName": "Heat exhaustion due to fluid depletion",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.2"
+	},
+	{
+		"DiagnosisName": "Seborrhoeic dermatosis of other specified type or distribution",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA81.Y"
+	},
+	{
+		"DiagnosisName": "Seborrhoeic dermatitis, unspecified",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA81.Z"
+	},
+	{
+		"DiagnosisName": "Acute laryngitis or tracheitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA05"
+	},
+	{
+		"DiagnosisName": "Deviated nasal septum",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0D"
+	},
+	{
+		"DiagnosisName": "Special screening examination for respiratory tuberculosis",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.1"
+	},
+	{
+		"DiagnosisName": "Folate deficiency anaemia, unspecified",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A02.Z"
+	},
+	{
+		"DiagnosisName": "Large plaque parapsoriasis",
+		"SHACode": "BlockL1-EK9",
+		"ICD11Code": "EK91.0"
+	},
+	{
+		"DiagnosisName": "Overflow incontinence associated with pelvic organ prolapse",
+		"SHACode": "BlockL2-GC4",
+		"ICD11Code": "GC40.53"
+	},
+	{
+		"DiagnosisName": "Choline deficiency",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5J"
+	},
+	{
+		"DiagnosisName": "Dermatoses due to ionizing radiation, unspecified",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EJ7Z"
+	},
+	{
+		"DiagnosisName": "Epidermoid cyst, unspecified",
+		"SHACode": "BlockL1-EK7",
+		"ICD11Code": "EK70.0Z"
+	},
+	{
+		"DiagnosisName": "Symptom or complaint of the eyelid",
+		"SHACode": "BlockL2-MC1",
+		"ICD11Code": "MC1B"
+	},
+	{
+		"DiagnosisName": "Special screening examination for cardiovascular disorders",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.6"
+	},
+	{
+		"DiagnosisName": "Examination of potential donor of organ or tissue",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.4"
+	},
+	{
+		"DiagnosisName": "Special screening examination for other diseases or disorders, unspecified",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A35"
+	},
+	{
+		"DiagnosisName": "Special screening examination for other protozoal diseases or helminthiases",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.6"
+	},
+	{
+		"DiagnosisName": "Special screening examination for infections with a predominantly sexual mode of transmission",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.3"
+	},
+	{
+		"DiagnosisName": "Symptomatic late neurosyphilis",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A62.01"
+	},
+	{
+		"DiagnosisName": "Special screening examination for intestinal infectious diseases",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA08.0"
+	},
+	{
+		"DiagnosisName": "Viral infections of the central nervous system, unspecified",
+		"SHACode": "BlockL1-1C8",
+		"ICD11Code": "1C8Z"
+	},
+	{
+		"DiagnosisName": "Harmful effects of drugs, medicaments or biological substances, not elsewhere classified",
+		"SHACode": "BlockL1-NE6",
+		"ICD11Code": "NE60"
+	},
+	{
+		"DiagnosisName": "Burn of eye or ocular adnexa",
+		"SHACode": "BlockL2-NE0",
+		"ICD11Code": "NE00"
+	},
+	{
+		"DiagnosisName": "Intertriginous dermatitis due to friction, sweating or contact with body fluids",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.20"
+	},
+	{
+		"DiagnosisName": "Ingrowing nail, unspecified",
+		"SHACode": "BlockL3-EE1",
+		"ICD11Code": "EE13.1Z"
+	},
+	{
+		"DiagnosisName": "Heat fatigue, transient",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF01.3"
+	},
+	{
+		"DiagnosisName": "Classical phenylketonuria",
+		"SHACode": "BlockL2-5C5",
+		"ICD11Code": "5C50.00"
+	},
+	{
+		"DiagnosisName": "Developmental language disorder with impairment of receptive and expressive language",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.20"
+	},
+	{
+		"DiagnosisName": "Wasting in infants, children or adolescents",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B51"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A00"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Clostridioides difficile",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A04"
+	},
+	{
+		"DiagnosisName": "Infections due to other Salmonella in other organs",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A09.Y"
+	},
+	{
+		"DiagnosisName": "Foodborne Bacillus cereus intoxication",
+		"SHACode": "BlockL2-1A1",
+		"ICD11Code": "1A13"
+	},
+	{
+		"DiagnosisName": "Sleep related Cheyne-Stokes respiration",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.4"
+	},
+	{
+		"DiagnosisName": "Acquired aplastic anaemias, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A70.1Z"
+	},
+	{
+		"DiagnosisName": "Ophthalmic zoster",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E91.1"
+	},
+	{
+		"DiagnosisName": "Dysthymic disorder",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A72"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Yersinia enterocolitica",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A05"
+	},
+	{
+		"DiagnosisName": "Mucopurulent chronic bronchitis",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA20.11"
+	},
+	{
+		"DiagnosisName": "Single episode depressive disorder, severe, with psychotic symptoms",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A70.4"
+	},
+	{
+		"DiagnosisName": "Recurrent depressive disorder, current episode moderate, without psychotic symptoms",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A71.1"
+	},
+	{
+		"DiagnosisName": "Recurrent depressive disorder, current episode mild",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A71.0"
+	},
+	{
+		"DiagnosisName": "Special screening examination for diabetes mellitus",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.10"
+	},
+	{
+		"DiagnosisName": "Low weight gain in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA65.3"
+	},
+	{
+		"DiagnosisName": "Injury or harm arising from surgical or medical care, not elsewhere classified, unspecified",
+		"SHACode": "BlockL1-NE8",
+		"ICD11Code": "NE8Z"
+	},
+	{
+		"DiagnosisName": "Disorder of oral mucosa, unspecified",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA01.Z"
+	},
+	{
+		"DiagnosisName": "Inflammatory disorders of eyelid, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A02.Z"
+	},
+	{
+		"DiagnosisName": "Superficial injury of neck, unspecified",
+		"SHACode": "BlockL1-NA2",
+		"ICD11Code": "NA20.Z"
+	},
+	{
+		"DiagnosisName": "Acute skin eruption of uncertain or unspecified nature",
+		"SHACode": "BlockL2-ME6",
+		"ICD11Code": "ME62"
+	},
+	{
+		"DiagnosisName": "Recurrent depressive disorder, current episode severe, without psychotic symptoms",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A71.3"
+	},
+	{
+		"DiagnosisName": "Unspecified undernutrition",
+		"SHACode": "BlockL3-5B6",
+		"ICD11Code": "5B7Z"
+	},
+	{
+		"DiagnosisName": "Localised adiposity",
+		"SHACode": "BlockL3-5B8",
+		"ICD11Code": "5B80.1"
+	},
+	{
+		"DiagnosisName": "Other specified keloidal disorders",
+		"SHACode": "BlockL4-EE6",
+		"ICD11Code": "EE60.Y"
+	},
+	{
+		"DiagnosisName": "Pyrexia of unknown origin following delivery",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.4"
+	},
+	{
+		"DiagnosisName": "Compound heterozygous sickling disorders without crisis",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A51.3"
+	},
+	{
+		"DiagnosisName": "Acquired pure red cell aplasia, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A61.Z"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis due to plants or other vegetable matter",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.05"
+	},
+	{
+		"DiagnosisName": "Cementum",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA4KC7"
+	},
+	{
+		"DiagnosisName": "Lung infections, unspecified",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA4Z"
+	},
+	{
+		"DiagnosisName": "Sunburn with blisters or exudation",
+		"SHACode": "BlockL3-EJ4",
+		"ICD11Code": "EJ40.1"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis, unspecified",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.Z"
+	},
+	{
+		"DiagnosisName": "Cutaneous cysts, unspecified",
+		"SHACode": "BlockL1-EK7",
+		"ICD11Code": "EK70.Z"
+	},
+	{
+		"DiagnosisName": "Factitious disorders, unspecified",
+		"SHACode": "BlockL1-6D5",
+		"ICD11Code": "6D5Z"
+	},
+	{
+		"DiagnosisName": "Vibrio vulnificus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN44G"
+	},
+	{
+		"DiagnosisName": "Streptococcus, group B",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN2M1"
+	},
+	{
+		"DiagnosisName": "Certain specified disorders of conjunctiva, unspecified",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-8A6",
+		"ICD11Code": "8A66.1Z"
+	},
+	{
+		"DiagnosisName": "Streptococcus pneumoniae",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN3PW"
+	},
+	{
+		"DiagnosisName": "Unspecified effects of reduced temperature",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF03.Z"
+	},
+	{
+		"DiagnosisName": "Harmful effects of or exposure to noxious substances, chiefly nonmedicinal as to source, not elsewhere classified",
+		"SHACode": "BlockL1-NE6",
+		"ICD11Code": "NE61"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of the nervous system, unspecified",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B11.Z"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of the genitourinary system",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.5"
+	},
+	{
+		"DiagnosisName": "Cutaneous tuberculosis",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.8"
+	},
+	{
+		"DiagnosisName": "Salmonella paratyphi A",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN1K5"
+	},
+	{
+		"DiagnosisName": "Special screening examination for eye or ear disorders",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.5"
+	},
+	{
+		"DiagnosisName": "Deep bacterial folliculitis or pyogenic abscess of the skin, unspecified",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B75.Z"
+	},
+	{
+		"DiagnosisName": "Late syphilis, unspecified",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A62.Z"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection of musculoskeletal system",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A72.0"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection of anus",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A72.2"
+	},
+	{
+		"DiagnosisName": "Burn of shoulder or arm, except wrist or hand, epidermal burn",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND94.0"
+	},
+	{
+		"DiagnosisName": "Enterobacter",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN9W5"
+	},
+	{
+		"DiagnosisName": "Congenital pure red cell aplasia, unspecified",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A60.Z"
+	},
+	{
+		"DiagnosisName": "Multiple injuries of neck",
+		"SHACode": "BlockL3-NA4",
+		"ICD11Code": "NA64"
+	},
+	{
+		"DiagnosisName": "Paraphilic disorders, unspecified",
+		"SHACode": "BlockL1-6D3",
+		"ICD11Code": "6D3Z"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode manic, with psychotic symptoms",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.1"
+	},
+	{
+		"DiagnosisName": "Helicobacter pylori",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN3DY"
+	},
+	{
+		"DiagnosisName": "Haemolytic anaemias due to hexose monophosphate shunt or glutathione metabolism anomalies, unspecified",
+		"SHACode": "BlockL3-3A1",
+		"ICD11Code": "3A10.0Z"
+	},
+	{
+		"DiagnosisName": "Proteinuria, unspecified",
+		"SHACode": "BlockL2-MF9",
+		"ICD11Code": "MF96.Z"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, currently in full remission",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.F"
+	},
+	{
+		"DiagnosisName": "Pityriasis versicolor",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F2D.0"
+	},
+	{
+		"DiagnosisName": "Post traumatic stress disorder",
+		"SHACode": "BlockL1-6B4",
+		"ICD11Code": "6B40"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Pseudomonas aeruginosa",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.05"
+	},
+	{
+		"DiagnosisName": "Other superficial injuries of front wall of thorax",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.3"
+	},
+	{
+		"DiagnosisName": "Inborn errors of amino acid or other organic acid metabolism, unspecified",
+		"SHACode": "BlockL2-5C5",
+		"ICD11Code": "5C50.Z"
+	},
+	{
+		"DiagnosisName": "Bipolar type I disorder, current episode depressive, severe with psychotic symptoms",
+		"SHACode": "BlockL2-6A6",
+		"ICD11Code": "6A60.7"
+	},
+	{
+		"DiagnosisName": "Single episode depressive disorder, moderate, without psychotic symptoms",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A70.1"
+	},
+	{
+		"DiagnosisName": "Single episode depressive disorder, unspecified",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A70.Z"
+	},
+	{
+		"DiagnosisName": "Anogenital herpes simplex infection without further specification",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A94.Z"
+	},
+	{
+		"DiagnosisName": "Echovirus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN2TU"
+	},
+	{
+		"DiagnosisName": "Varicella meningitis",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E90.1"
+	},
+	{
+		"DiagnosisName": "Varicella encephalitis",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E90.2"
+	},
+	{
+		"DiagnosisName": "Varicella with other specified complication",
+		"SHACode": "BlockL2-1E9",
+		"ICD11Code": "1E90.Y"
+	},
+	{
+		"DiagnosisName": "Special screening examination for diseases of the blood or blood-forming organs or certain disorders involving the immune mechanism",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.0"
+	},
+	{
+		"DiagnosisName": "Care or examination of lactating mother",
+		"SHACode": "BlockL3-QA3",
+		"ICD11Code": "QA48.1"
+	},
+	{
+		"DiagnosisName": "Burn of ankle and foot, depth of burn unspecified",
+		"SHACode": "BlockL2-ND9",
+		"ICD11Code": "ND97.Z"
+	},
+	{
+		"DiagnosisName": "Counselling related to sexual behaviour and orientation or sexual relationships of the person",
+		"SHACode": "BlockL2-QA1",
+		"ICD11Code": "QA15.1"
+	},
+	{
+		"DiagnosisName": "Developmental language disorder with impairment of mainly expressive language",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.21"
+	},
+	{
+		"DiagnosisName": "Other or unspecified superficial injuries of breast",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.2"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection of lower genitourinary tract without periurethral or accessory gland abscess, unspecified",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A70.0Z"
+	},
+	{
+		"DiagnosisName": "Salmonella paratyphi B",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN322"
+	},
+	{
+		"DiagnosisName": "Other specified systemic or invasive candidosis",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.3Y"
+	},
+	{
+		"DiagnosisName": "Erythema nodosum",
+		"SHACode": "BlockL3-EB2",
+		"ICD11Code": "EB31"
+	},
+	{
+		"DiagnosisName": "Acquired sideroblastic anaemias",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A72.1"
+	},
+	{
+		"DiagnosisName": "Congenital dyserythropoietic anaemia",
+		"SHACode": "BlockL2-3A6",
+		"ICD11Code": "3A73"
+	},
+	{
+		"DiagnosisName": "Vitamin C deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B56.Z"
+	},
+	{
+		"DiagnosisName": "Other specified chronic diseases of tonsils or adenoids",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0F.Y"
+	},
+	{
+		"DiagnosisName": "Mixed simple and mucopurulent chronic bronchitis",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA20.12"
+	},
+	{
+		"DiagnosisName": "Maternal care related to false labour, unspecified",
+		"SHACode": "BlockL1-JA8",
+		"ICD11Code": "JA8D.Z"
+	},
+	{
+		"DiagnosisName": "Hiccough",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.6"
+	},
+	{
+		"DiagnosisName": "Shigella boydii",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN8RN"
+	},
+	{
+		"DiagnosisName": "Granuloma inguinale",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A91"
+	},
+	{
+		"DiagnosisName": "Mineral deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.Z"
+	},
+	{
+		"DiagnosisName": "Amoebic liver abscess",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A36.10"
+	},
+	{
+		"DiagnosisName": "Other dermatoses associated with specific classes of medication",
+		"SHACode": "BlockL2-EH6",
+		"ICD11Code": "EH76.Y"
+	},
+	{
+		"DiagnosisName": "Congenital syphilis, unspecified",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.Z"
+	},
+	{
+		"DiagnosisName": "Disseminated gonococcal infection",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A73"
+	},
+	{
+		"DiagnosisName": "Erythema",
+		"SHACode": "BlockL2-ME6",
+		"ICD11Code": "ME64.0"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of cannabis, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C41.Z"
+	},
+	{
+		"DiagnosisName": "Protein deficiency",
+		"SHACode": "BlockL3-5B6",
+		"ICD11Code": "5B71"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis due to cosmetics or emollients",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.03"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of eye",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.1"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of ear",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.2"
+	},
+	{
+		"DiagnosisName": "Mixed lesions of pinta",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1E.3"
+	},
+	{
+		"DiagnosisName": "Brain irradiation",
+		"SHACode": "BlockL1-8E6",
+		"ICD11Code": "8E61.0"
+	},
+	{
+		"DiagnosisName": "Scarlet fever",
+		"SHACode": "BlockL2-1B4",
+		"ICD11Code": "1B50"
+	},
+	{
+		"DiagnosisName": "Latent yaws",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1D.3"
+	},
+	{
+		"DiagnosisName": "Sunburn, unspecified",
+		"SHACode": "BlockL3-EJ4",
+		"ICD11Code": "EJ40.Z"
+	},
+	{
+		"DiagnosisName": "Excessive weight gain in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA65.2"
+	},
+	{
+		"DiagnosisName": "Infantile napkin dermatoses, unspecified",
+		"SHACode": "BlockL3-EH1",
+		"ICD11Code": "EH40.1Z"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis due to wet work",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.00"
+	},
+	{
+		"DiagnosisName": "Infantile seborrhoeic dermatitis, unspecified",
+		"SHACode": "BlockL3-EH1",
+		"ICD11Code": "EH40.0Z"
+	},
+	{
+		"DiagnosisName": "Megacolon, unspecified",
+		"SHACode": "BlockL1-DB3",
+		"ICD11Code": "DB32.2Z"
+	},
+	{
+		"DiagnosisName": "Cutaneous myiasis",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G01.3"
+	},
+	{
+		"DiagnosisName": "Hypervitaminosis A",
+		"SHACode": "BlockL3-5B9",
+		"ICD11Code": "5B90.0"
+	},
+	{
+		"DiagnosisName": "Infestation by unknown or unspecified ectoparasite",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G0Z"
+	},
+	{
+		"DiagnosisName": "Chalazion, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A02.0Z"
+	},
+	{
+		"DiagnosisName": "Irritant contact dermatitis of hands",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK02.12"
+	},
+	{
+		"DiagnosisName": "Functional heartburn",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD90.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G04"
+	},
+	{
+		"DiagnosisName": "Other specified acne",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED80.Y"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Betahaemolytic streptococcus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.08"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Adenovirus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.10"
+	},
+	{
+		"DiagnosisName": "Acne conglobata",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED80.41"
+	},
+	{
+		"DiagnosisName": "Other specified acneform inflammatory disorders",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED81.Y"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to Respiratory syncytial virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.11"
+	},
+	{
+		"DiagnosisName": "Pneumonia due to parainfluenza virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA40.12"
+	},
+	{
+		"DiagnosisName": "Protein contact dermatitis",
+		"SHACode": "BlockL2-EJ7",
+		"ICD11Code": "EK11"
+	},
+	{
+		"DiagnosisName": "Myiasis, unspecified",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G01.Z"
+	},
+	{
+		"DiagnosisName": "Panic disorder",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B01"
+	},
+	{
+		"DiagnosisName": "Harmful pattern of use of nonpsychoactive substances, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C4H.1Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6C"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of other specified psychoactive substances, including medications, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C4E.Z"
+	},
+	{
+		"DiagnosisName": "Delayed pressure urticaria",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB01.2"
+	},
+	{
+		"DiagnosisName": "Lichenoid drug eruption",
+		"SHACode": "BlockL2-EH6",
+		"ICD11Code": "EH62"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Haemophilus influenzae",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.4"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-6B2",
+		"ICD11Code": "6B20.Z"
+	},
+	{
+		"DiagnosisName": "Abnormalities of breathing, unspecified",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.Z"
+	},
+	{
+		"DiagnosisName": "Abnormality of white blood cells, unspecified",
+		"SHACode": "BlockL2-MA1",
+		"ICD11Code": "MA16.1Z"
+	},
+	{
+		"DiagnosisName": "Allergic rhinitis, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA08.0Z"
+	},
+	{
+		"DiagnosisName": "White piedra",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F2D.2"
+	},
+	{
+		"DiagnosisName": "Nail disorder associated with specified systemic disease",
+		"SHACode": "BlockL3-EE1",
+		"ICD11Code": "EE13.4"
+	},
+	{
+		"DiagnosisName": "Other specified lichen planus",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA91.Y"
+	},
+	{
+		"DiagnosisName": "Cutaneous reactions to venomous or noxious animals",
+		"SHACode": "BlockL2-EK2",
+		"ICD11Code": "EK50"
+	},
+	{
+		"DiagnosisName": "Acropustulosis of Hallopeau",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.41"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of cocaine, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C45.Z"
+	},
+	{
+		"DiagnosisName": "Other specified secondary headache",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A84.Y"
+	},
+	{
+		"DiagnosisName": "Superficial injury of ear",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA00.2"
+	},
+	{
+		"DiagnosisName": "Actinomycosis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C10.Z"
+	},
+	{
+		"DiagnosisName": "Acquired disorders of eyelashes, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A04.Z"
+	},
+	{
+		"DiagnosisName": "Non-dermatophyte superficial dermatomycoses, unspecified",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F2D.Z"
+	},
+	{
+		"DiagnosisName": "Vitamin B3 deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5C.Z"
+	},
+	{
+		"DiagnosisName": "Insufficient sleep syndrome",
+		"SHACode": "BlockL1-7A2",
+		"ICD11Code": "7A26"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-5B9",
+		"ICD11Code": "5B90.1"
+	},
+	{
+		"DiagnosisName": "Polymorphic light eruption",
+		"SHACode": "BlockL3-EJ2",
+		"ICD11Code": "EJ30.0"
+	},
+	{
+		"DiagnosisName": "Other specified otitis media",
+		"SHACode": "BlockL3-AA9",
+		"ICD11Code": "AB0Y"
+	},
+	{
+		"DiagnosisName": "Gonococcal pharyngitis",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A72.3"
+	},
+	{
+		"DiagnosisName": "Generalised anxiety disorder",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B00"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B02"
+	},
+	{
+		"DiagnosisName": "Secondary yaws",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1D.1"
+	},
+	{
+		"DiagnosisName": "Symptoms or signs involving motivation or energy, unspecified",
+		"SHACode": "BlockL1-MB2",
+		"ICD11Code": "MB22.Z"
+	},
+	{
+		"DiagnosisName": "Other specified skin disorders provoked by external factors",
+		"SHACode": "BlockL2-EK2",
+		"ICD11Code": "EK5Y"
+	},
+	{
+		"DiagnosisName": "Social anxiety disorder",
+		"SHACode": "BlockL1-6B0",
+		"ICD11Code": "6B04"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B96"
+	},
+	{
+		"DiagnosisName": "Tertiary yaws",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1D.2"
+	},
+	{
+		"DiagnosisName": "Yaws, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1D.Z"
+	},
+	{
+		"DiagnosisName": "Periorificial dermatitis",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED90.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-5C6",
+		"ICD11Code": "5C64.41"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.1"
+	},
+	{
+		"DiagnosisName": "Lagophthalmos, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A03.4Z"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Cytomegalovirus",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A24"
+	},
+	{
+		"DiagnosisName": "Pinta, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1E.Z"
+	},
+	{
+		"DiagnosisName": "Primary lesions of pinta",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1E.0"
+	},
+	{
+		"DiagnosisName": "Infectious blepharitis",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A01.3"
+	},
+	{
+		"DiagnosisName": "Status migrainosus",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A80.30"
+	},
+	{
+		"DiagnosisName": "Other specified reactive arthropathies",
+		"SHACode": "BlockL2-FA1",
+		"ICD11Code": "FA11.Y"
+	},
+	{
+		"DiagnosisName": "Penoscrotal pruritus",
+		"SHACode": "BlockL2-GA8",
+		"ICD11Code": "GA81.0"
+	},
+	{
+		"DiagnosisName": "Syphilis, unspecified",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A6Z"
+	},
+	{
+		"DiagnosisName": "Diseases due to chlamydiae, unspecified",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C2Z"
+	},
+	{
+		"DiagnosisName": "Radiological examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.B"
+	},
+	{
+		"DiagnosisName": "Herpes simplex infection of perianal skin or rectum",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A94.1"
+	},
+	{
+		"DiagnosisName": "Skin or other sensitisation tests",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.A"
+	},
+	{
+		"DiagnosisName": "Examination of ears and hearing",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.7"
+	},
+	{
+		"DiagnosisName": "Ulceroglandular tularaemia",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B94.0"
+	},
+	{
+		"DiagnosisName": "Laryngeal diphtheria",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C17.2"
+	},
+	{
+		"DiagnosisName": "Acne, unspecified",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED80.Z"
+	},
+	{
+		"DiagnosisName": "Salmonella paratyphi C",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XN5TR"
+	},
+	{
+		"DiagnosisName": "Other specified disorders involving the hair follicle",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED9Y"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC92.0"
+	},
+	{
+		"DiagnosisName": "Enteritis due to Adenovirus",
+		"SHACode": "BlockL2-1A2",
+		"ICD11Code": "1A20"
+	},
+	{
+		"DiagnosisName": "Photosensitivity due to drug",
+		"SHACode": "BlockL2-EH6",
+		"ICD11Code": "EH75"
+	},
+	{
+		"DiagnosisName": "Respiratory tuberculosis, without mention of bacteriological or histological confirmation",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B10.Z"
+	},
+	{
+		"DiagnosisName": "Candidosis of skin or mucous membranes, unspecified",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.1Z"
+	},
+	{
+		"DiagnosisName": "Relapsing fever, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1J.Z"
+	},
+	{
+		"DiagnosisName": "Functional digestive disorders of infants, toddlers or children, unspecified",
+		"SHACode": "BlockL1-DD9",
+		"ICD11Code": "DD93.Z"
+	},
+	{
+		"DiagnosisName": "Gonococcal pelviperitonitis",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A71"
+	},
+	{
+		"DiagnosisName": "Conjunctival scars",
+		"SHACode": "BlockL2-9A6",
+		"ICD11Code": "9A61.3"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A81.Y"
+	},
+	{
+		"DiagnosisName": "Cystoisosporiasis, unspecified",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A33.Z"
+	},
+	{
+		"DiagnosisName": "Psychological or behavioural factors affecting disorders or diseases classified elsewhere, unspecified",
+		"SHACode": "BlockL1-6E2",
+		"ICD11Code": "6E40.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G03"
+	},
+	{
+		"DiagnosisName": "Sleep terrors",
+		"SHACode": "BlockL1-7B0",
+		"ICD11Code": "7B00.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.0"
+	},
+	{
+		"DiagnosisName": "Perichondritis of external ear",
+		"SHACode": "BlockL2-AA0",
+		"ICD11Code": "AA04"
+	},
+	{
+		"DiagnosisName": "Late congenital syphilis, latent",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.5"
+	},
+	{
+		"DiagnosisName": "Middle East respiratory syndrome",
+		"SHACode": "BlockL1-1D6",
+		"ICD11Code": "1D64"
+	},
+	{
+		"DiagnosisName": "Bartonellosis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C11.Z"
+	},
+	{
+		"DiagnosisName": "Infestation by mites",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G07"
+	},
+	{
+		"DiagnosisName": "Pityriasis rosea",
+		"SHACode": "BlockL3-EA1",
+		"ICD11Code": "EA10"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-FA2",
+		"ICD11Code": "FA25"
+	},
+	{
+		"DiagnosisName": "Acute noninfectious otitis externa",
+		"SHACode": "BlockL3-AA1",
+		"ICD11Code": "AA11"
+	},
+	{
+		"DiagnosisName": "Other specified acquired haemolytic anaemia, immune",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A20.Y"
+	},
+	{
+		"DiagnosisName": "Paroxysmal nocturnal haemoglobinuria",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A21.0"
+	},
+	{
+		"DiagnosisName": "Acquired haemolytic anaemia, nonimmune",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A21"
+	},
+	{
+		"DiagnosisName": "Pulmonary actinomycosis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C10.0"
+	},
+	{
+		"DiagnosisName": "Infantile papular acrodermatitis",
+		"SHACode": "BlockL3-EA1",
+		"ICD11Code": "EA12"
+	},
+	{
+		"DiagnosisName": "Mild alpha thalassaemia diseases",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A50.00"
+	},
+	{
+		"DiagnosisName": "Acquired stenosis of external auditory canal",
+		"SHACode": "BlockL2-AA4",
+		"ICD11Code": "AA40.1"
+	},
+	{
+		"DiagnosisName": "Stridor",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.B"
+	},
+	{
+		"DiagnosisName": "Bulimia Nervosa",
+		"SHACode": "BlockL1-6B8",
+		"ICD11Code": "6B81"
+	},
+	{
+		"DiagnosisName": "Contusion of breast",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.1"
+	},
+	{
+		"DiagnosisName": "Black piedra",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F2D.3"
+	},
+	{
+		"DiagnosisName": "Hereditary persistence of fetal haemoglobin",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A50.4"
+	},
+	{
+		"DiagnosisName": "Thalassaemias, unspecified",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A50.Z"
+	},
+	{
+		"DiagnosisName": "Noninflammatory disorders of the external ear, unspecified",
+		"SHACode": "BlockL2-AA4",
+		"ICD11Code": "AA4Z"
+	},
+	{
+		"DiagnosisName": "Erythema marginatum rheumaticum",
+		"SHACode": "BlockL3-EA4",
+		"ICD11Code": "EA50.0"
+	},
+	{
+		"DiagnosisName": "Hypochondriasis, unspecified",
+		"SHACode": "BlockL1-6B2",
+		"ICD11Code": "6B23.Z"
+	},
+	{
+		"DiagnosisName": "Miliary tuberculosis, unspecified",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B13.Z"
+	},
+	{
+		"DiagnosisName": "Staphylococcal scalded skin syndrome",
+		"SHACode": "BlockL3-EA4",
+		"ICD11Code": "EA50.2"
+	},
+	{
+		"DiagnosisName": "Abdominal actinomycosis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C10.1"
+	},
+	{
+		"DiagnosisName": "Chlamydial conjunctivitis",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C20"
+	},
+	{
+		"DiagnosisName": "Polypoid sinus degeneration",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0J.0"
+	},
+	{
+		"DiagnosisName": "Other specified nasal polyp",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0J.Y"
+	},
+	{
+		"DiagnosisName": "Developmental learning disorder with impairment in reading",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A03.0"
+	},
+	{
+		"DiagnosisName": "Developmental language disorder",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.2"
+	},
+	{
+		"DiagnosisName": "Trachoma, unspecified",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C23.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C32"
+	},
+	{
+		"DiagnosisName": "Disorders of the nail or perionychium, unspecified",
+		"SHACode": "BlockL3-EE1",
+		"ICD11Code": "EE1Z"
+	},
+	{
+		"DiagnosisName": "Intestinal infections due to Escherichia coli, unspecified",
+		"SHACode": "BlockL2-1A0",
+		"ICD11Code": "1A03.Z"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection of eye",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A72.4"
+	},
+	{
+		"DiagnosisName": "Pityriasis lichenoides",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA93"
+	},
+	{
+		"DiagnosisName": "Anogenital warts, unspecified",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A95.Z"
+	},
+	{
+		"DiagnosisName": "Lichenoid dermatoses",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA92"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-7B0",
+		"ICD11Code": "7B2Z"
+	},
+	{
+		"DiagnosisName": "Small plaque parapsoriasis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA95"
+	},
+	{
+		"DiagnosisName": "Pediculosis of unspecified site or type",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G00.Z"
+	},
+	{
+		"DiagnosisName": "Disorders due to use of nicotine, unspecified",
+		"SHACode": "BlockL2-6C4",
+		"ICD11Code": "6C4A.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F65"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA0C.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.6"
+	},
+	{
+		"DiagnosisName": "Early congenital syphilis, latent",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-8A8",
+		"ICD11Code": "8A81.Z"
+	},
+	{
+		"DiagnosisName": "Coccidioidomycosis, unspecified",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F25.Z"
+	},
+	{
+		"DiagnosisName": "Folate deficiency anaemia due to low intake",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A02.1"
+	},
+	{
+		"DiagnosisName": "Selenium deficiency",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.7"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA23.1"
+	},
+	{
+		"DiagnosisName": "Nasal diphtheria",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C17.1"
+	},
+	{
+		"DiagnosisName": "Burn from exposure to artificial source of ultraviolet radiation, unspecified",
+		"SHACode": "BlockL3-EJ4",
+		"ICD11Code": "EJ41.Z"
+	},
+	{
+		"DiagnosisName": "Hypertrophic lichen planus",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA91.1"
+	},
+	{
+		"DiagnosisName": "Diphtheria, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C17.Z"
+	},
+	{
+		"DiagnosisName": "Candidosis, unspecified",
+		"SHACode": "BlockL1-1F2",
+		"ICD11Code": "1F23.Z"
+	},
+	{
+		"DiagnosisName": "Disorders specifically associated with stress, unspecified",
+		"SHACode": "BlockL1-6B4",
+		"ICD11Code": "6B4Z"
+	},
+	{
+		"DiagnosisName": "Nocardiosis, unspecified",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1B.Z"
+	},
+	{
+		"DiagnosisName": "Other specified diphtheria",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C17.Y"
+	},
+	{
+		"DiagnosisName": "Late congenital syphilitic oculopathy",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.2"
+	},
+	{
+		"DiagnosisName": "Acute nonserous nonsuppurative otitis media",
+		"SHACode": "BlockL3-AA8",
+		"ICD11Code": "AA81"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-5A1",
+		"ICD11Code": "5A12"
+	},
+	{
+		"DiagnosisName": "Disorders of the sebaceous gland, unspecified",
+		"SHACode": "BlockL4-ED8",
+		"ICD11Code": "ED91.Z"
+	},
+	{
+		"DiagnosisName": "Ethmoid sinus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA58F6"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-CA2",
+		"ICD11Code": "CA24"
+	},
+	{
+		"DiagnosisName": "Tularaemia, unspecified",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B94.Z"
+	},
+	{
+		"DiagnosisName": "Secondary syphilis of other sites",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A61.4"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-EB0",
+		"ICD11Code": "EB01.0"
+	},
+	{
+		"DiagnosisName": "Asymptomatic neurosyphilis",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A62.00"
+	},
+	{
+		"DiagnosisName": "Angiostrongyliasis, unspecified",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F60.Z"
+	},
+	{
+		"DiagnosisName": "Secondary syphilis of skin or mucous membranes",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A61.3"
+	},
+	{
+		"DiagnosisName": "Acquired deformity of pinna",
+		"SHACode": "BlockL2-AA4",
+		"ICD11Code": "AA41"
+	},
+	{
+		"DiagnosisName": "Superficial injury of unspecified part of head",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA00.Z"
+	},
+	{
+		"DiagnosisName": "Possession trance disorder",
+		"SHACode": "BlockL1-6B6",
+		"ICD11Code": "6B63"
+	},
+	{
+		"DiagnosisName": "Mixed urinary incontinence associated with pelvic organ prolapse",
+		"SHACode": "BlockL2-GC4",
+		"ICD11Code": "GC40.52"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F67"
+	},
+	{
+		"DiagnosisName": "Alpha thalassaemia, unspecified",
+		"SHACode": "BlockL3-3A2",
+		"ICD11Code": "3A50.0Z"
+	},
+	{
+		"DiagnosisName": "Cutaneous involvement by unspecified bacterial infection",
+		"SHACode": "BlockL3-EA4",
+		"ICD11Code": "EA5Z"
+	},
+	{
+		"DiagnosisName": "Early congenital syphilis, symptomatic",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A60.0"
+	},
+	{
+		"DiagnosisName": "Erysipelas, unspecified",
+		"SHACode": "BlockL1-1B7",
+		"ICD11Code": "1B70.0Z"
+	},
+	{
+		"DiagnosisName": "Palmoplantar pustulosis",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA90.42"
+	},
+	{
+		"DiagnosisName": "Scorbutic anaemia",
+		"SHACode": "BlockL2-3A0",
+		"ICD11Code": "3A03.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B97"
+	},
+	{
+		"DiagnosisName": "Other infection of genital tract following delivery",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6D"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL3-1F6",
+		"ICD11Code": "1F6G"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G05"
+	},
+	{
+		"DiagnosisName": "Other specified infections in the puerperium",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB40.Y"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of bones or joints",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.40"
+	},
+	{
+		"DiagnosisName": "Acute tracheitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA05.1"
+	},
+	{
+		"DiagnosisName": "Inflammatory disorder of external ear, unspecified",
+		"SHACode": "BlockL4-EG4",
+		"ICD11Code": "EG4Z"
+	},
+	{
+		"DiagnosisName": "Tuberculosis of endocrine glands",
+		"SHACode": "BlockL2-1B1",
+		"ICD11Code": "1B12.3"
+	},
+	{
+		"DiagnosisName": "Blepharoptosis, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A03.0Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-6C9",
+		"ICD11Code": "6C91.Z"
+	},
+	{
+		"DiagnosisName": "Trichilemmal cyst",
+		"SHACode": "BlockL1-EK7",
+		"ICD11Code": "EK70.1"
+	},
+	{
+		"DiagnosisName": "Entropion of eyelid, unspecified",
+		"SHACode": "BlockL2-9A0",
+		"ICD11Code": "9A03.1Z"
+	},
+	{
+		"DiagnosisName": "Gender incongruence of adolescence or adulthood",
+		"SHACode": "BlockL1-HA6",
+		"ICD11Code": "HA60"
+	},
+	{
+		"DiagnosisName": "Lichen simplex of unspecified site",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA83.0Z"
+	},
+	{
+		"DiagnosisName": "Impulse control disorders, unspecified",
+		"SHACode": "BlockL1-6C7",
+		"ICD11Code": "6C7Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B91"
+	},
+	{
+		"DiagnosisName": "Psoriatic arthritis, unspecified",
+		"SHACode": "BlockL2-FA2",
+		"ICD11Code": "FA21.Z"
+	},
+	{
+		"DiagnosisName": "Single episode depressive disorder, mild",
+		"SHACode": "BlockL2-6A7",
+		"ICD11Code": "6A70.0"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B98"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with night blindness",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.0"
+	},
+	{
+		"DiagnosisName": "Gonococcal infection, unspecified",
+		"SHACode": "BlockL2-1A7",
+		"ICD11Code": "1A7Z"
+	},
+	{
+		"DiagnosisName": "Unspecified zoonotic bacterial disease",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B9Z"
+	},
+	{
+		"DiagnosisName": "Chlamydial infection of internal reproductive organs",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A81.1"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A81.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A8",
+		"ICD11Code": "1A92"
+	},
+	{
+		"DiagnosisName": "Scalp",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA6CW5"
+	},
+	{
+		"DiagnosisName": "Chlamydial peritonitis",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C21"
+	},
+	{
+		"DiagnosisName": "Active stage of trachoma",
+		"SHACode": "BlockL2-1C2",
+		"ICD11Code": "1C23.1"
+	},
+	{
+		"DiagnosisName": "Foreign body in cornea",
+		"SHACode": "BlockL1-ND7",
+		"ICD11Code": "ND70.0"
+	},
+	{
+		"DiagnosisName": "Verruga peruana",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C11.01"
+	},
+	{
+		"DiagnosisName": "Trench fever",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C11.1"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency with other specified manifestations",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.Y"
+	},
+	{
+		"DiagnosisName": "Rickettsioses, unspecified",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C3Z"
+	},
+	{
+		"DiagnosisName": "Dentin",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA6FX3"
+	},
+	{
+		"DiagnosisName": "Infections of kidney in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA62.0"
+	},
+	{
+		"DiagnosisName": "Other specified urinary incontinence",
+		"SHACode": "BlockL2-MF5",
+		"ICD11Code": "MF50.2Y"
+	},
+	{
+		"DiagnosisName": "Special screening examination for mental or behavioural disorders",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA0A.3"
+	},
+	{
+		"DiagnosisName": "Vitamin A deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B55.Z"
+	},
+	{
+		"DiagnosisName": "Vitamin D deficiency rickets",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B57.0"
+	},
+	{
+		"DiagnosisName": "Reflex incontinence",
+		"SHACode": "BlockL2-MF5",
+		"ICD11Code": "MF50.24"
+	},
+	{
+		"DiagnosisName": "Other specified acute bronchiolitis",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA41.Y"
+	},
+	{
+		"DiagnosisName": "Nose",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA3H13"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-EH6",
+		"ICD11Code": "EH67.0"
+	},
+	{
+		"DiagnosisName": "Latent early syphilis",
+		"SHACode": "BlockL2-1A6",
+		"ICD11Code": "1A61.5"
+	},
+	{
+		"DiagnosisName": "Abscess of breast associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB45.0"
+	},
+	{
+		"DiagnosisName": "Frontal sinus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA91G8"
+	},
+	{
+		"DiagnosisName": "Other specified infections of breast associated with childbirth",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB45.Y"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Coxsackievirus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.5"
+	},
+	{
+		"DiagnosisName": "Malnutrition in pregnancy",
+		"SHACode": "BlockL1-JA6",
+		"ICD11Code": "JA64"
+	},
+	{
+		"DiagnosisName": "Chronic rhinosinusitis, unspecified",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0A.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A32"
+	},
+	{
+		"DiagnosisName": "Primary yaws",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1D.0"
+	},
+	{
+		"DiagnosisName": "Acute radiodermatitis following radiotherapy",
+		"SHACode": "BlockL2-EL6",
+		"ICD11Code": "EL60"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C42"
+	},
+	{
+		"DiagnosisName": "Other or unspecified disorders of lactation",
+		"SHACode": "BlockL1-JB4",
+		"ICD11Code": "JB46.7"
+	},
+	{
+		"DiagnosisName": "Contact with health services for contraceptive management, unspecified",
+		"SHACode": "BlockL2-QA2",
+		"ICD11Code": "QA21.Z"
+	},
+	{
+		"DiagnosisName": "Acute epiglottitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA06.1"
+	},
+	{
+		"DiagnosisName": "Oral aphthae or aphthalike ulceration",
+		"SHACode": "BlockL1-DA0",
+		"ICD11Code": "DA01.10"
+	},
+	{
+		"DiagnosisName": "Disorders of refraction, unspecified",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.Z"
+	},
+	{
+		"DiagnosisName": "Plague, unspecified",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B93.Z"
+	},
+	{
+		"DiagnosisName": "Prurigo, unspecified",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC91.Z"
+	},
+	{
+		"DiagnosisName": "Acute poliomyelitis",
+		"SHACode": "BlockL1-1C8",
+		"ICD11Code": "1C81"
+	},
+	{
+		"DiagnosisName": "Iron deficiency",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B5K.0"
+	},
+	{
+		"DiagnosisName": "Acute disseminated encephalomyelitis, unspecified",
+		"SHACode": "BlockL1-8A4",
+		"ICD11Code": "8A42.Z"
+	},
+	{
+		"DiagnosisName": "Maxillary sinus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA1R64"
+	},
+	{
+		"DiagnosisName": "Stress incontinence",
+		"SHACode": "BlockL2-MF5",
+		"ICD11Code": "MF50.20"
+	},
+	{
+		"DiagnosisName": "Whooping cough due to Bordetella parapertussis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C12.1"
+	},
+	{
+		"DiagnosisName": "Olfactory reference disorder, unspecified",
+		"SHACode": "BlockL1-6B2",
+		"ICD11Code": "6B22.Z"
+	},
+	{
+		"DiagnosisName": "Vitamin D deficiency, unspecified",
+		"SHACode": "BlockL2-5B5",
+		"ICD11Code": "5B57.Z"
+	},
+	{
+		"DiagnosisName": "General mental examination",
+		"SHACode": "BlockL2-QA0",
+		"ICD11Code": "QA00.3"
+	},
+	{
+		"DiagnosisName": "Progressive multifocal leukoencephalopathy",
+		"SHACode": "BlockL1-8A4",
+		"ICD11Code": "8A45.02"
+	},
+	{
+		"DiagnosisName": "Spotted fever due to Rickettsia rickettsii",
+		"SHACode": "BlockL2-1C3",
+		"ICD11Code": "1C31.0"
+	},
+	{
+		"DiagnosisName": "Polyneuropathy due to infectious diseases",
+		"SHACode": "BlockL2-8C0",
+		"ICD11Code": "8C03.1"
+	},
+	{
+		"DiagnosisName": "Lichen planus of unspecified type",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA91.Z"
+	},
+	{
+		"DiagnosisName": "Encopresis with constipation or overflow incontinence",
+		"SHACode": "BlockL1-6C0",
+		"ICD11Code": "6C01.0"
+	},
+	{
+		"DiagnosisName": "Pityriasis rubra pilaris",
+		"SHACode": "BlockL2-EA9",
+		"ICD11Code": "EA94"
+	},
+	{
+		"DiagnosisName": "Other specified tularaemia",
+		"SHACode": "BlockL1-1B9",
+		"ICD11Code": "1B94.Y"
+	},
+	{
+		"DiagnosisName": "Disorders of tyrosine metabolism, unspecified",
+		"SHACode": "BlockL2-5C5",
+		"ICD11Code": "5C50.1Z"
+	},
+	{
+		"DiagnosisName": "Developmental language disorder, with other specified language impairment",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.23"
+	},
+	{
+		"DiagnosisName": "Pulmonary nocardiosis",
+		"SHACode": "BlockL1-1C1",
+		"ICD11Code": "1C1B.0"
+	},
+	{
+		"DiagnosisName": "Sphenoid sinus",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA4U67"
+	},
+	{
+		"DiagnosisName": "Multiple superficial injuries of head",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA00.5"
+	},
+	{
+		"DiagnosisName": "Superficial injury of nose",
+		"SHACode": "BlockL1-NA0",
+		"ICD11Code": "NA00.3"
+	},
+	{
+		"DiagnosisName": "Disorder of intellectual development, moderate",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A00.1"
+	},
+	{
+		"DiagnosisName": "Infections due to Balantidium coli",
+		"SHACode": "BlockL2-1A3",
+		"ICD11Code": "1A30"
+	},
+	{
+		"DiagnosisName": "Disorder of intellectual development, severe",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A00.2"
+	},
+	{
+		"DiagnosisName": "Disorder of intellectual development, profound",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A00.3"
+	},
+	{
+		"DiagnosisName": "Disorders of intellectual development, unspecified",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A00.Z"
+	},
+	{
+		"DiagnosisName": "Ear",
+		"SHACode": "J40-J47",
+		"ICD11Code": "XA01U5"
+	},
+	{
+		"DiagnosisName": "Foreign body on external eye, unspecified",
+		"SHACode": "BlockL1-ND7",
+		"ICD11Code": "ND70.Z"
+	},
+	{
+		"DiagnosisName": "Developmental speech fluency disorder",
+		"SHACode": "BlockL1-6A0",
+		"ICD11Code": "6A01.1"
+	},
+	{
+		"DiagnosisName": "Other specified chronic rhinosinusitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA0A.Y"
+	},
+	{
+		"DiagnosisName": "Acute bronchitis due to Respiratory syncytial virus",
+		"SHACode": "BlockL1-CA4",
+		"ICD11Code": "CA42.2"
+	},
+	{
+		"DiagnosisName": "Enuresis, unspecified",
+		"SHACode": "BlockL1-6C0",
+		"ICD11Code": "6C00.Z"
+	},
+	{
+		"DiagnosisName": "Chilblains",
+		"SHACode": "BlockL1-NF0",
+		"ICD11Code": "NF03.0"
+	},
+	{
+		"DiagnosisName": "Feeding or eating disorders, unspecified",
+		"SHACode": "BlockL1-6B8",
+		"ICD11Code": "6B8Z"
+	},
+	{
+		"DiagnosisName": "Factitious disorder imposed on self",
+		"SHACode": "BlockL1-6D5",
+		"ICD11Code": "6D50"
+	},
+	{
+		"DiagnosisName": "Disorders of refraction or accommodation, unspecified",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D0Z"
+	},
+	{
+		"DiagnosisName": "Asteatotic eczema",
+		"SHACode": "BlockL2-EA8",
+		"ICD11Code": "EA84"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.1"
+	},
+	{
+		"DiagnosisName": "Superficial injury of thorax, unspecified",
+		"SHACode": "BlockL1-NA8",
+		"ICD11Code": "NA80.Z"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.2"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.3"
+	},
+	{
+		"DiagnosisName": "#NAME?",
+		"SHACode": "BlockL1-9D0",
+		"ICD11Code": "9D00.5"
+	},
+	{
+		"DiagnosisName": "Unspecified parasitic diseases",
+		"SHACode": "BlockL2-1G0",
+		"ICD11Code": "1G2Z"
+	},
+	{
+		"DiagnosisName": "Nodular prurigo",
+		"SHACode": "BlockL2-EC9",
+		"ICD11Code": "EC91.0"
+	},
+	{
+		"DiagnosisName": "Acute laryngotracheitis",
+		"SHACode": "BlockL1-CA0",
+		"ICD11Code": "CA05.2"
+	},
+	{
+		"DiagnosisName": "Sneezing",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.A"
+	},
+	{
+		"DiagnosisName": "Mouth breathing, unspecified",
+		"SHACode": "BlockL2-MD1",
+		"ICD11Code": "MD11.8Z"
+	},
+	{
+		"DiagnosisName": "Oppositional defiant disorder, unspecified",
+		"SHACode": "BlockL1-6C9",
+		"ICD11Code": "6C90.Z"
+	}
+]

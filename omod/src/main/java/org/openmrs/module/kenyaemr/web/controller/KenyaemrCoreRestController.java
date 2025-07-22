@@ -3759,95 +3759,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	}
 
 	/**
-	 * Processes mapping of a locally managed concept mapping.
-	 * It reads the mapping file from the OpenMRS app directory.
-	 * The file must be a json file named local_concept_mapping.
-	 * The file content is a JSON array of mappings
-	 *
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/processicd11mapping")
-	@ResponseBody
-	public Object processICD11ConceptMapping() throws IOException {
-		ObjectNode responseObject = JsonNodeFactory.instance.objectNode();
-		ObjectMapper mapper = new ObjectMapper();
-		ConceptService conceptService = Context.getConceptService();
-		ArrayNode mappingEntries = null;
-
-		File conceptMappingFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "local_concept_mapping.json");
-		if (!conceptMappingFile.exists()) {
-			responseObject.put("status", "Error");
-			responseObject.put("message", "Concept mapping file not found!");
-			return responseObject;
-		}
-		/**
-		 * Sample conceptMappingFile content
-		 * ----------------------
-		 * [
-		 * {
-		 * "DiagnosisName": "Headache, not elsewhere classified",
-		 * "ConceptId": "139084",
-		 * "ICD11Code": "8A8Z"
-		 * }
-		 * ]
-		 */
-		String conceptMapping = FileUtils.readFileToString(conceptMappingFile, "UTF-8");
-
-		try {
-			System.out.println("Starting the concept mapping task");
-			mappingEntries = (ArrayNode) mapper.readTree(conceptMapping);
-			if (mappingEntries != null) {
-				System.out.println("Concept mapping file found");
-				ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
-				ConceptSource icd11Who = conceptService.getConceptSourceByName("ICD-11-WHO");
-				int counter = 0;
-				for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext();) {
-					ObjectNode node = (ObjectNode) it.next();
-
-					Integer conceptId = node.get("ConceptId").asInt();
-					String icd11Code = node.get("ICD11Code").asText();
-					String icd11Name = "";// TODO: add reference name
-
-					Concept concept = conceptService.getConcept(conceptId);
-					if (concept == null) {
-						continue; // just skip
-					}
-					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code,
-							icd11Who) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who)
-									: new ConceptReferenceTerm(icd11Who, icd11Code, icd11Name);
-					ConceptMap conceptMap = new ConceptMap();
-					conceptMap.setConceptMapType(sameAs);
-					conceptMap.setConceptReferenceTerm(referenceTerm);
-					if (concept.getConceptMappings().stream()
-							.anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code)
-									&& cMap.getConceptReferenceTerm().getConceptSource().equals(icd11Who))) {
-						continue; // skip existing mappings
-					}
-					concept.addConceptMapping(conceptMap);
-					conceptService.saveConcept(concept);
-					counter++;
-					if ((counter % 200) == 0) {
-						Context.flushSession();
-						Context.clearSession();
-						counter = 0;
-						System.out.println("Concept mapping: Flushing session....");
-					}
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("Failed to update concept mappings");
-			throw new RuntimeException(e);
-		}
-		responseObject.put("status", "Success");
-		responseObject.put("message", "Successfully updated concept mappings");
-		System.out.println("Successfully updated concept mappings");
-
-		return responseObject.toString();
-
-	}
-
-	/**
 	 * Generates Facility Dashboard
 	 *
 	 * @param request
@@ -4045,5 +3956,115 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			throw new RuntimeException("Invalid date format. Please use 'yyyy-MM-dd'.");
 		}
 	}
-	
+	/**
+	 * Processes mapping of a locally managed concept mapping.
+	 * It reads the mapping file from the OpenMRS app directory.
+	 * The file must be a json file named local_concept_mapping.
+	 * The file content is a JSON array of mappings
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/processingPHCSHAmapping")
+	@ResponseBody
+	public Object processPHCSHAConceptMapping() throws IOException {
+		ObjectNode responseObject = JsonNodeFactory.instance.objectNode();
+		ObjectMapper mapper = new ObjectMapper();
+		ConceptService conceptService = Context.getConceptService();
+		ArrayNode mappingEntries = null;
+		System.out.println("Starting the concept mapping task");			
+		String conceptMapping = "icd11ConceptsMapper/phcShaDiagnosisMapper.json";
+
+		if (conceptMapping == null) {
+			responseObject.put("status", "Error");
+			responseObject.put("message", "Concept mapping file not found!");
+			return responseObject;
+		}
+		/**
+		 * Sample conceptMappingFile content
+		 * ----------------------
+		 * [
+		 *   {
+		 *       "DiagnosisName": "Headache, not elsewhere classified",
+		 *       "ConceptId": "139084",
+		 *       "ICD11Code": "8A8Z"
+		 *   }
+		 * ]
+		 */
+		System.out.println("Concept mapping file found");
+		ArrayNode icd11conceptMap = icd11ConceptMappingFile(conceptMapping);
+		try {
+			System.out.println("Starting concept mapping");
+			mappingEntries = (ArrayNode) mapper.readTree(icd11conceptMap.toString());
+			System.out.println("Concept mapping ..."+mappingEntries);
+			if (mappingEntries != null) {
+				ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
+				ConceptSource phcSHAConceptSource = conceptService.getConceptSourceByName("SHA PHC");
+				System.out.println("Same as .."+sameAs);
+				System.out.println("PHC SHA concept Source.."+phcSHAConceptSource.getName());
+				int counter = 0;
+				for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext(); ) {
+					ObjectNode node = (ObjectNode) it.next();
+
+					String icd11Code = node.get("ICD11Code").asText();
+					String shaCode = node.get("SHACode").asText();
+					String phcShaName = "";// TODO: add reference name			
+					Concept concept = conceptService.getConceptByMapping(icd11Code,"ICD-11-WHO");
+					if (concept == null) {
+						continue; // just skip
+					}
+					System.out.println("Concept...."+concept);
+					
+					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(shaCode, phcSHAConceptSource) != null ? conceptService.getConceptReferenceTermByCode(shaCode, phcSHAConceptSource) : new ConceptReferenceTerm(phcSHAConceptSource, shaCode, phcShaName);
+					System.out.println("Concept reference Term...."+referenceTerm);
+					System.out.println("Same as...."+sameAs);
+					ConceptMap conceptMap = new ConceptMap();
+					conceptMap.setConceptMapType(sameAs);
+					conceptMap.setConceptReferenceTerm(referenceTerm);
+					if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(shaCode) && cMap.getConceptReferenceTerm().getConceptSource().equals(phcSHAConceptSource))) {
+                        continue; // skip existing mappings
+                    }
+						System.out.println("Started SHA concept mapping..."+conceptMap);
+						concept.addConceptMapping(conceptMap);
+						conceptService.saveConcept(concept);
+						counter++;
+						if ((counter % 200) == 0) {
+							Context.flushSession();
+							Context.clearSession();
+							counter = 0;
+							System.out.println("Concept mapping: Flushing session....");
+						}
+					}
+				}
+			
+		} catch (IOException e) {
+			System.out.println("Failed to update concept mappings");
+			throw new RuntimeException(e);
+		}
+		responseObject.put("status", "Success");
+		responseObject.put("message", "Successfully updated concept mappings");
+		System.out.println("Successfully updated concept mappings");
+
+		return responseObject.toString();
+
+    }
+
+	/**
+	 * Reads a json file with ICD11 concept mappings
+	 * The file is a json array
+	 * @param fileName
+	 * @return
+	 */
+	public static ArrayNode icd11ConceptMappingFile(String fileName) {
+		InputStream stream = KenyaemrCoreRestController.class.getClassLoader().getResourceAsStream(fileName);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ArrayNode result = mapper.readValue(stream, ArrayNode.class);
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
 }
