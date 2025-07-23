@@ -43,11 +43,6 @@ import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.parameter.OrderSearchCriteria;
 import org.openmrs.ui.framework.SimpleObject;
 
-import liquibase.pro.packaged.b;
-import liquibase.pro.packaged.bo;
-import liquibase.pro.packaged.d;
-import liquibase.pro.packaged.e;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
