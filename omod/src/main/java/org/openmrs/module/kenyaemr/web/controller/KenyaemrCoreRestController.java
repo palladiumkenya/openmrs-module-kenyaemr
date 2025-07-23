@@ -4044,5 +4044,32 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			throw new RuntimeException("Invalid date format. Please use 'yyyy-MM-dd'.");
 		}
 	}
+
+	/**
+	 * Check whether the global param kenyaemr.sha.registration.number has been filled
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/checksharegnum")
+	@ResponseBody
+	public Object checkSHARegNum(HttpServletRequest request) {
+		SimpleObject ret = SimpleObject.create("registrationNumber", "");
+		
+		try {
+			GlobalProperty gpSHARegNum = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_FACILITY_REGISTRATION_NUMBER);
+			if(gpSHARegNum != null) {
+				String stSHARegNum = gpSHARegNum.getPropertyValue();
+				if(stSHARegNum != null) {
+					ret.put("registrationNumber", stSHARegNum);
+				}
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("KenyaEMR module: An error occured getting sha registration number");
+		}
+
+		return(ret);
+	}
 	
 }
