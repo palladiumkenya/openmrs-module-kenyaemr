@@ -116,6 +116,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh270" />
 				<ref bean="kenyaemr.ehrReports.report.moh419B" />
 				<ref bean="kenyaemr.ehrReports.report.moh420" />
+				<ref bean="kenyaemr.ehrReports.report.dailyBedReturn" />
 				<ref bean="kenyaemr.ehrReports.report.moh274" />
 				<ref bean="kenyaemr.ehrReports.report.moh275" />
 				<ref bean="kenyaemr.ehrReports.report.moh407A" />
@@ -1171,6 +1172,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh420.xls" />
 		<property name="repeatingSection" value="sheet:2,row:4,dataset:MOH420" />
+	</bean>
+	<bean id="kenyaemr.ehrReports.report.dailyBedReturn" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="7c7e9ea9-bc66-4b1c-b9bc-a97cc8312a8a" />
+		<property name="name" value="Daily Bed Return (DBR) for the inpatient Register" />
+		<property name="description" value="Daily Bed Return (DBR) for the inpatient" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:dailyBedReturn.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:dailyBedReturn | sheet:2,row:6,dataset:deathDischarge" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh274" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="07a19da2-5b57-44dd-aa6c-98a6e280f472" />
