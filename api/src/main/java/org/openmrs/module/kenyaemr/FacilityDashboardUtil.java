@@ -73,8 +73,7 @@ public class FacilityDashboardUtil {
 				"                    FROM kenyaemr_etl.etl_drug_event e\n" +
 				"                    WHERE e.program = 'HIV' and COALESCE(date(e.date_started),date(e.visit_date)) <= date('" + endDate + "')) e\n" +
 				"                   ON e.patient_id = a.patient_id\n" +
-				"where (l.patient_id is null or l.art_start_date is null)\n" +
-				"  and e.patient_id is null;";
+				"where (e.patient_id is null and l.art_start_date is null);";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -121,6 +120,13 @@ public class FacilityDashboardUtil {
 				"         AND t.final_test_result = 'Positive'\n" +
 				"         AND t.voided = 0\n" +
 				"         AND t.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
+				+ days + " DAY) AND date('" + endDate + "'))" +
+				"		UNION\n" +
+				"       (SELECT l.patient_id, l.encounter_id\n" +
+				"                   FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+				"                            inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = l.patient_id\n" +
+				"                   WHERE l.lab_test = 1030 AND l.test_result = 703\n" +
+				"                     AND l.date_test_requested BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL \n"
 				+ days + " DAY) AND date('" + endDate + "'))) a;";
 
 		try {
@@ -140,27 +146,21 @@ public class FacilityDashboardUtil {
 	 */
 	public static Long getPregnantOrPostpartumClients(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String pregnantOrPostpartumQuery = "SELECT COUNT(s.patient_id) high_risk_preg_postpartum\n" +
+		String pregnantOrPostpartumQuery = "SELECT COUNT(DISTINCT(s.patient_id)) high_risk_preg_postpartum\n" +
 				"FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
 				"         INNER JOIN (SELECT t.patient_id,\n" +
-				"                            max(t.visit_date)                                           AS hts_date,\n"
-				+
-				"                            mid(max(concat(date(visit_date), t.final_test_result)), 11) AS hiv_test_results,\n"
-				+
-				"                            mid(max(concat(date(visit_date), t.hts_entry_point)), 11)   AS entry_point,\n"
-				+
-				"                            t.visit_date\n" +
+				"                            t.visit_date,\n" +
+				"                            t.final_test_result,\n" +
+				"                           t.hts_entry_point\n" +
 				"                     FROM kenyaemr_etl.etl_hts_test t\n" +
-				"                     GROUP BY t.patient_id\n" +
-				"                     HAVING hts_date BETWEEN DATE_SUB('" + endDate
+				"                     where t.visit_date BETWEEN DATE_SUB('" + endDate
 				+ "', INTERVAL " + days + " DAY) AND date('" + endDate + "')\n" +
-				"                        AND hiv_test_results = 'Negative'\n" +
-				"                        AND entry_point in (160538, 160456, 1623)) t\n" +
-				"                    ON s.patient_id = t.patient_id\n" +
+				"                        AND t.final_test_result = 'Negative'\n" +
+				"                        AND t.hts_entry_point in (160538, 160456, 1623)) t1\n" +
+				"                    ON s.patient_id = t1.patient_id\n" +
 				"WHERE s.hts_risk_category IN ('High', 'Very high')\n" +
 				"  AND s.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL " + days
 				+ " DAY) AND date('" + endDate + "');";
-
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			return (Long) Context.getAdministrationService().executeSQL(pregnantOrPostpartumQuery, true).get(0).get(0);
@@ -183,19 +183,14 @@ public class FacilityDashboardUtil {
 				"FROM (SELECT s.patient_id\n" +
 				"      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
 				"               INNER JOIN (SELECT t.patient_id,\n" +
-				"                                  max(t.visit_date)                                           AS hts_date,\n"
-				+
-				"                                  mid(max(concat(date(visit_date), t.final_test_result)), 11) AS hiv_test_results,\n"
-				+
-				"                                  mid(max(concat(date(visit_date), t.hts_entry_point)), 11)   AS entry_point,\n"
-				+
+				"                                  t.final_test_result,\n"+
+				"                                  t.hts_entry_point,\n"+
 				"                                  t.visit_date\n" +
 				"                           from kenyaemr_etl.etl_hts_test t\n" +
-				"                           GROUP BY t.patient_id\n" +
-				"                           HAVING hts_date BETWEEN DATE_SUB('" + endDate
+				"                           WHERE t.visit_date BETWEEN DATE_SUB('" + endDate
 				+ "', INTERVAL " + days + " DAY) AND date('" + endDate + "')\n" +
-				"                              AND hiv_test_results = 'Negative'\n" +
-				"                              AND entry_point in (160538, 160456, 1623)) t\n" +
+				"                              AND t.final_test_result = 'Negative'\n" +
+				"                              AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
 				"                          ON s.patient_id = t.patient_id -- AND s.visit_date <= t.visit_date\n" +
 				"    where s.hts_risk_category IN ('High', 'Very high') and s.currently_on_prep in ('NO','Declined to answer')\n"
 				+
@@ -593,7 +588,7 @@ public class FacilityDashboardUtil {
 		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id))\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-				"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
+				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
 				+ " DAY)) BETWEEN 6 AND 8;";
 
 		try {
@@ -618,15 +613,12 @@ public class FacilityDashboardUtil {
 		String heiSixToEightWeeksWithoutPCRResultsQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_without_pcr\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-				"         LEFT JOIN kenyaemr_etl.etl_hiv_enrollment hiv on e.patient_id = hiv.patient_id\n" +
 				"         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
 				"                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
-				"                   WHERE x.lab_test = 1030\n" +
-				"                     AND x.order_reason = 1040) t ON e.patient_id = t.week6pcr\n" +
-				"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
+				"                   WHERE x.lab_test = 1030) t ON e.patient_id = t.week6pcr\n" +
+				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
 				+ " DAY)) BETWEEN 6 AND 8\n" +
-				"  AND hiv.patient_id IS NULL\n" +
-				"  AND t.week6pcr IS NULL;";
+				"  AND t.week6results IS NULL;";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -650,7 +642,7 @@ public class FacilityDashboardUtil {
 		String hei24MonthsOldQuery = "SELECT COUNT(DISTINCT(e.patient_id))\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL '" + days + "' DAY) AND date('" + endDate + "');";
+				"WHERE d.hei_no is not null AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL '" + days + "' DAY) AND date('" + endDate + "');";
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 			return (Long) Context.getAdministrationService().executeSQL(hei24MonthsOldQuery, true).get(0).get(0);
@@ -670,25 +662,15 @@ public class FacilityDashboardUtil {
 	 */
 	public static Long getHei24MonthsWithoutDocumentedOutcome(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_without_outcome\n" +
+		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(DISTINCT(e.patient_id))\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"         LEFT JOIN (SELECT v.patient_id\n" +
-				"                    FROM kenyaemr_etl.etl_hei_follow_up_visit v\n" +
-				"                    WHERE v.dna_pcr_result IS NOT NULL\n" +
-				"                       OR v.first_antibody_result IS NOT NULL\n" +
-				"                       OR v.final_antibody_result IS NOT NULL\n" +
-				"                    GROUP BY v.patient_id) has_test ON e.patient_id = has_test.patient_id\n" +
-				"         LEFT JOIN (SELECT e.patient_id\n" +
-				"                    from kenyaemr_etl.etl_hiv_enrollment e\n" +
-				"                             INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n"
-				+
-				"                    WHERE visit_date <= date('" + endDate + "')) hiv_prog\n" +
-				"                   ON e.patient_id = hiv_prog.patient_id\n" +
-				"WHERE DATE_ADD( d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
-				+ days + " DAY) AND date('" + endDate + "')\n" +
-				"  AND has_test.patient_id IS NULL\n" +
-				"  AND hiv_prog.patient_id IS NULL;";
+				"         left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
+				"                   on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"WHERE d.hei_no is not null\n" +
+				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" +endDate+ "'), INTERVAL\n" +
+				"                                                          " +days+ " DAY) AND date('" +endDate+ "')\n" +
+				"  AND (c.discontinuation_reason is null and e.hiv_status_at_exit is null);";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -721,23 +703,27 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHivPositiveNotLinked(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String hivMonthlyPositiveNotLinkedQuery = "SELECT COUNT(DISTINCT(a.patient_id)) as number_hiv_positive,a.visit_date as visit_date\n" +
-				"FROM ((SELECT av.patient_id, av.visit_date\n" +
+		String hivMonthlyPositiveNotLinkedQuery = "\n" +
+				"SELECT COUNT(DISTINCT(a.patient_id)) as number_hiv_positive,a.visit_date as visit_date\n" +
+				"FROM ((SELECT av.patient_id,av.visit_date\n" +
 				"       FROM kenyaemr_etl.etl_mch_antenatal_visit av\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on av.patient_id = a.patient_id\n" +
-				"       WHERE av.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"       WHERE av.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL\n" +
+				"30 DAY) AND CURRENT_DATE\n" +
 				"         AND av.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT d.patient_id, d.visit_date\n" +
 				"       FROM kenyaemr_etl.etl_mchs_delivery d\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics a on a.patient_id = d.patient_id\n" +
-				"       WHERE d.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"       WHERE d.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL\n" +
+				"30 DAY) AND CURRENT_DATE\n" +
 				"         AND d.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT p.patient_id, p.visit_date\n" +
 				"       FROM kenyaemr_etl.etl_mch_postnatal_visit p\n" +
 				"                inner join kenyaemr_etl.etl_patient_demographics d on p.patient_id = d.patient_id\n" +
-				"       WHERE p.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"       WHERE p.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL\n" +
+				"30 DAY) AND CURRENT_DATE\n" +
 				"         AND p.final_test_result = 'Positive')\n" +
 				"      UNION\n" +
 				"      (SELECT t.patient_id, t.visit_date\n" +
@@ -745,21 +731,20 @@ public class FacilityDashboardUtil {
 				"                inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = t.patient_id\n" +
 				"           AND t.final_test_result = 'Positive'\n" +
 				"           AND t.voided = 0\n" +
-				"           AND t.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE)) a\n" +
+				"           AND t.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL\n" +
+				"30 DAY) AND CURRENT_DATE)) a\n" +
 				"         LEFT JOIN\n" +
-				"     (SELECT l.patient_id, l.ccc_number\n" +
+				"     (SELECT l.patient_id, l.ccc_number,l.art_start_date\n" +
 				"      FROM kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"      WHERE date(l.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL\n" +
+				"30 DAY) AND CURRENT_DATE\n" +
 				"      GROUP BY l.patient_id) l ON a.patient_id = l.patient_id\n" +
 				"         LEFT JOIN (SELECT e.patient_id\n" +
-				"                    FROM kenyaemr_etl.etl_hiv_enrollment e\n" +
-				"                    WHERE date(e.visit_date) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) e\n"
-				+
+				"                    FROM kenyaemr_etl.etl_drug_event e\n" +
+				"                    WHERE e.program = 'HIV' and COALESCE(date(e.date_started),date(e.visit_date)) <= CURRENT_DATE) e\n" +
 				"                   ON e.patient_id = a.patient_id\n" +
-				"	where date(a.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
-				"  and l.patient_id is null\n" +
-				"  and e.patient_id is null\n" +
-				"  group by date(visit_date)" +
+				"where (e.patient_id is null and l.art_start_date is null)\n" +
+				"            group by date(visit_date)\n" +
 				"order by date(visit_date) ASC;";
 
 		return getSimpleObject(hivMonthlyPositiveNotLinkedQuery);
@@ -962,7 +947,7 @@ public class FacilityDashboardUtil {
 				"    WHERE x.lab_test = 1030\n" +
 				"    AND x.order_reason = 1040\n" +
 				") t ON e.patient_id = t.week6pcr\n" +
-				"WHERE DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
+				"WHERE d.hei_no is not null AND DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
 				"AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
 				"AND hiv.patient_id IS NULL\n" +
 				"AND t.week6pcr IS NULL\n" +
@@ -1115,8 +1100,7 @@ public class FacilityDashboardUtil {
 				"    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
 				"    WHERE visit_date <= CURRENT_DATE\n" +
 				") hiv_prog ON e.patient_id = hiv_prog.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"
-				+
+				"WHERE d.hei_no is not null AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"+
 				"	AND has_test.patient_id IS NULL\n" +
 				"	AND hiv_prog.patient_id IS NULL\n" +
 				"GROUP BY DATE(date)\n" +
@@ -1301,7 +1285,7 @@ public class FacilityDashboardUtil {
 		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei, e.visit_date as visit_date\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-				"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
+				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
 				"GROUP BY DATE(e.visit_date)\n" +
 				"ORDER BY DATE(e.visit_date) ASC;";
 
@@ -1410,8 +1394,7 @@ public class FacilityDashboardUtil {
 				+
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"WHERE DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"
-				+
+				"WHERE d.hei_no is not null AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n"+
 				"GROUP BY DATE(date)\n" +
 				"ORDER BY DATE(date) ASC;";
 		return getSimpleObject(hei24MonthsOldQuery);
