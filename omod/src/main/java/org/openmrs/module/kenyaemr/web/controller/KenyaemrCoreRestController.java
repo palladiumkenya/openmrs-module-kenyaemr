@@ -116,6 +116,8 @@ import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
 import org.openmrs.module.kenyaemr.model.ConsentOTPRequest;
 import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
+import org.openmrs.module.kenyaemr.util.ADRReportingFormGenerator;
+import org.openmrs.module.kenyaemr.util.ADRReportingFormGenerator.ADRFormData;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.kenyaemr.util.EncounterBasedRegimenUtils;
 import org.openmrs.module.kenyaemr.util.ZScoreUtil;
@@ -135,6 +137,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -177,6 +180,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
 import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
@@ -4045,7 +4050,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		// Define encounter types
 		List<EncounterType> adrEncounterTypes = Arrays.asList(
 		    encounterService.getEncounterTypeByUuid(CommonMetadata._EncounterType.ADR_ASSESSMENT_TOOL));
-		
+
 		try {
 			EncounterSearchCriteriaBuilder searchCriteria = new EncounterSearchCriteriaBuilder()
 			        .setFromDate(fromDate != null ? formatter.parse(fromDate) : null)
@@ -4057,6 +4062,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			if(encounters.size() > 0) {
 				for (Encounter encounter : encounters) {
 				SimpleObject adrEncounter = new SimpleObject();
+				SimpleObject form = new SimpleObject();
+				form.put("name", encounter.getForm().getName());
+				form.put("uuid", encounter.getForm().getUuid());
+				form.put("version", encounter.getForm().getVersion());
+				form.put("published", encounter.getForm().getPublished());
+				form.put("retired", encounter.getForm().getRetired());;
+				form.put("formCategory", "");
+				adrEncounter.put("form", form);
 				adrEncounter.put("encounterUuid", encounter.getUuid());
 				adrEncounter.put("encounterType", encounter.getEncounterType().getName());
 				adrEncounter.put("encounterTypeUuid", encounter.getEncounterType().getUuid());
@@ -4108,5 +4121,62 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 		return(ret);
 	}
+
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/adpdf/view")
+	public ResponseEntity<byte[]> viewAdrPdf(HttpServletRequest request,
+        @RequestParam(value = "patientUuid", required = false) String patientUuid,
+        @RequestParam(value = "type", required = false, defaultValue = "filled") String type) {
+    
+		try {
+			ADRReportingFormGenerator generator = new ADRReportingFormGenerator();
+			
+			// Create a temporary file path
+			String fileName = "ADR_Reporting_Form_" + type + "_" + System.currentTimeMillis() + ".pdf";
+			String tempDir = System.getProperty("java.io.tmpdir");
+			String filePath = tempDir + File.separator + fileName;
+			
+			// Generate PDF based on type parameter
+			if ("blank".equalsIgnoreCase(type)) {
+				generator.generatePDF(filePath);
+			} else {
+				ADRFormData sampleData = ADRReportingFormGenerator.createSampleFormData(patientUuid);
+				generator.generatePDF(filePath, sampleData);
+			}
+			
+			// Read the generated PDF file
+			File pdfFile = new File(filePath);
+			byte[] pdfBytes = Files.readAllBytes(Paths.get(filePath));
+			
+			// Set response headers for inline viewing
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_PDF);
+			headers.setContentDisposition(ContentDisposition.builder("inline")
+					.filename(fileName)
+					.build());
+			headers.setContentLength(pdfBytes.length);
+			
+			// Clean up the temporary file
+			try {
+				pdfFile.delete();
+			} catch (Exception e) {
+				System.err.println("Warning: Could not delete temporary file: " + filePath);
+			}
+			
+			return ResponseEntity.ok()
+					.headers(headers)
+					.body(pdfBytes);
+					
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			
+			String errorMessage = "{\"error\": \"Failed to generate PDF: " + e.getMessage() + "\"}";
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.headers(headers)
+					.body(errorMessage.getBytes());
+		}
+	}
 }
