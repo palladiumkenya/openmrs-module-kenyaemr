@@ -9,8 +9,19 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.ETLReports.publicHealthActionReport;
 
+import org.openmrs.Program;
 import org.openmrs.module.kenyacore.report.ReportUtils;
+import org.openmrs.module.kenyacore.report.cohort.definition.CalculationCohortDefinition;
+import org.openmrs.module.kenyaemr.calculation.library.EligibleForCaCxScreeningCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.IsPregnantCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.MissedLastAppointmentCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.InCareHasAtLeast2VisitsCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.art.IsTransferOutCalculation;
+import org.openmrs.module.kenyaemr.calculation.library.hiv.cqi.HavingAtLeastOneVisitInEachQuoterCalculation;
+import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.RevisedDatim.DatimCohortLibrary;
+import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonCohortLibrary;
+import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -28,7 +39,7 @@ public class PublicHealthActionCohortLibrary {
 
     @Autowired
     private DatimCohortLibrary datimCohortLibrary;
-
+    private CommonCohortLibrary commonCohorts;
     /**
      * Clients currently on ART with no current VL results- This Query is the same as one in Viral suppression report but uses current date instead of end date.
      * Should be updated when the counterpart in viral suppression report is updated
@@ -1190,4 +1201,23 @@ public class PublicHealthActionCohortLibrary {
 		cd.setDescription("Pregnant and postpartum women linked to PrEP");
 		return cd;
 	}
+
+    /**
+     * Provide a line list under CAR of 'clients eligible for cervical cancer screening' - Age 25 to 49
+     */
+
+    public CohortDefinition eligibleForCancerScreening() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addParameter(new Parameter("onOrBefore", "Before Date", Date.class));
+        CalculationCohortDefinition cacx = new CalculationCohortDefinition(new EligibleForCaCxScreeningCalculation());
+        cacx.setName("Cancer screening calculation");
+        cacx.addParameter(new Parameter("OnDate", "On Date", Date.class));
+        cd.addSearch("currentlyOnART", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("eligibleForCacxScreening", ReportUtils.map(cacx, "onDate=${onOrBefore}"));
+        cd.setCompositionString("currentlyOnART AND eligibleForCacxScreening");
+        return cd;
+    }
+
 }
