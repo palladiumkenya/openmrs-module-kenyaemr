@@ -33,12 +33,15 @@ public class NCDYearOfDiagnosisDataEvaluator implements EncounterDataEvaluator {
 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
-        //diagnosis_date  etl_ncd_enrollment
+
+
         String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "   v.diagnosis_date\n" +
-                "from kenyaemr_etl.etl_ncd_enrollment v\n" +
+                "   ed.encounter_id,\n" +
+                "   year(v.diagnosis_date) as year_of_diagnosis\n" +
+                "from openmrs.encounter_diagnosis ed\n" +
+                "inner join kenyaemr_etl.etl_ncd_enrollment v on v.encounter_id = ed.encounter_id\n" +
                 "where date(v.visit_date) between date(:startDate) and date(:endDate);";
+
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

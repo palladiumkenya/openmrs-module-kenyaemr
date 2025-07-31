@@ -141,7 +141,7 @@ public class MOH270ReportBuilder extends AbstractReportBuilder {
         // Add them to the dataset
         dsd.addColumn("Treatment Supporter Contact", treatmentSupporter, paramMapping);
         dsd.addColumn("Diagnosis", diagnosis, paramMapping);
-       dsd.addColumn("Year of Diagnosis", yearOfDiagnosis, paramMapping, new DateConverter("yyyy"));
+       dsd.addColumn("Year of Diagnosis", yearOfDiagnosis, paramMapping);
         dsd.addColumn("Complications", complications, paramMapping);
         dsd.addColumn("Treatment", medications, paramMapping);
        // dsd.addColumn("Patient Status", patientStatus, paramMapping);

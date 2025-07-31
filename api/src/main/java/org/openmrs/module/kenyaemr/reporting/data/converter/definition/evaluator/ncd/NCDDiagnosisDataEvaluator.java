@@ -36,18 +36,16 @@ public class NCDDiagnosisDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext evaluationContext)
             throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, evaluationContext);
-        //diagnosis not there
 
-//        String qry ="select ncd.encounter_id, dl.name as diagnosis from kenyaemr_etl.etl_ncd_enrollment ncd\n" +
-//                "inner join (select cn.name, ed.patient_id from openmrs.encounter_diagnosis ed inner join openmrs.concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en') dl on ncd.patient_id = dl.patient_id;";
 
-        String qry ="SELECT ncd.encounter_id, cn.name AS diagnosis\n" +
-                "FROM kenyaemr_etl.etl_ncd_enrollment ncd\n" +
-                "INNER JOIN openmrs.encounter_diagnosis ed ON ed.encounter_id = ncd.encounter_id\n" +
-                "INNER JOIN openmrs.concept_name cn \n" +
-                "    ON cn.concept_id = ed.diagnosis_coded \n" +
-                "    AND cn.locale = 'en'\n" +
-                "WHERE DATE(ncd.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";
+        String qry = "SELECT\n" +
+                "  v.encounter_id,\n" +
+                "  cn.name AS diagnosis_name\n" +
+                "FROM kenyaemr_etl.etl_ncd_enrollment v\n" +
+                "INNER JOIN openmrs.encounter_diagnosis ed ON ed.encounter_id = v.encounter_id\n" +
+                "LEFT JOIN openmrs.concept c ON c.concept_id = ed.diagnosis_coded\n" +
+                "LEFT JOIN openmrs.concept_name cn ON cn.concept_id = c.concept_id AND cn.locale = 'en'\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
