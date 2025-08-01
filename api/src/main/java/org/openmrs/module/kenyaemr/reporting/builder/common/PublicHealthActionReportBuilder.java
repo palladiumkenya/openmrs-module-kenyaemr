@@ -73,7 +73,7 @@ public class PublicHealthActionReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("HEI with undocumented HIV status", "", ReportUtils.map(publicHealthActionIndicatorLibrary.undocumentedHEIStatus(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("HEI not Linked to Mothers", "", ReportUtils.map(publicHealthActionIndicatorLibrary.unlinkedHEI(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("HEI with Missed HIV Tests", " (Please run HEI Missed HIV Tests linelist)", ReportUtils.map(publicHealthActionIndicatorLibrary.heiMissedHIVTests(), ""), "");
-        cohortDsd.addColumn("HEI (6-8 weeks) without DNA PCR results", "(Turning 6-8 weeks within past 7 days", ReportUtils.map(publicHealthActionIndicatorLibrary.heiSixToEightWeeksMissingPCRTests(), ""), "");
+        cohortDsd.addColumn("HEI (6-8 weeks) without DNA PCR results", "(Turning 6-8 weeks within past 7 days)", ReportUtils.map(publicHealthActionIndicatorLibrary.heiSixToEightWeeksMissingPCRTests(), ""), "");
         cohortDsd.addColumn("HEI (24 months) without a final documented outcome", "(Turning 24 months within past 7 days)", ReportUtils.map(publicHealthActionIndicatorLibrary.hei24MonthsUndocumentedOutcome(), ""), "");
         cohortDsd.addColumn("Pregnant and postpartum women at high risk (ML-based) not linked to PrEP", "(Tested within past 7 days)", ReportUtils.map(publicHealthActionIndicatorLibrary.pregnantPostPartumNotLinkedToPrep(), ""), "");
         cohortDsd.addColumn("HIV+ and NOT Linked", "", ReportUtils.map(publicHealthActionIndicatorLibrary.notLinked(), "startDate=${startDate},endDate=${endDate}"), "");
