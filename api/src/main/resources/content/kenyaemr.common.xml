@@ -113,6 +113,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh745"/>
 				<ref bean="kenyaemr.ehrReports.report.moh416" />
 				<ref bean="kenyaemr.ehrReports.report.moh417" />
+				<ref bean="kenyaemr.ehrReports.report.moh270" />
 				<ref bean="kenyaemr.ehrReports.report.moh419B" />
 				<ref bean="kenyaemr.ehrReports.report.moh420" />
 				<ref bean="kenyaemr.ehrReports.report.moh274" />
@@ -1145,6 +1146,10 @@
 		<property name="template" value="kenyaemr:moh416.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH416" />
 	</bean>
+
+
+
+
 	<bean id="kenyaemr.ehrReports.report.moh419B" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="a2f8774e-186b-4136-8b37-fb0e9d9b8449" />
 		<property name="name" value="MOH 419B Hearing Screening Register Register" />
@@ -1218,6 +1223,9 @@
 		<property name="template" value="kenyaemr:moh407B.xls" />
 		<property name="repeatingSection" value="sheet:1,row:13,dataset:MOH407B" />
 	</bean>
+
+
+
 	<bean id="kenyaemr.ehrReports.report.moh417" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="bc7b3cde-7df5-4ebe-93a6-9281c834b06b" />
 		<property name="name" value="Therapeutic Play Register MOH 417" />
@@ -1228,6 +1236,18 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh417.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH417" />
+	</bean>
+
+	<bean id="kenyaemr.ehrReports.report.moh270" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="8c258c4c-5dcd-4a2b-b672-07f1cd02c5d6" />
+		<property name="name" value="MOH 270 Permanent Register" />
+		<property name="description" value="MOH 270 Permanent Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh270.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH270" />
 	</bean>
 
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
