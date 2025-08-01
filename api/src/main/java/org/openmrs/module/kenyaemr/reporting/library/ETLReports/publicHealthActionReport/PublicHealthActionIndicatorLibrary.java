@@ -87,6 +87,13 @@ public class PublicHealthActionIndicatorLibrary {
     }
 
     /**
+     * Tx Curr with unsuppressed VL without EAC
+     * @return
+     */
+    public CohortIndicator txCUrrUnsuppressedWithoutEACCs() {
+        return cohortIndicator("Tx Curr with unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    /**
      * Number of undocumented LTFU patients
      * @return the indicator
      */
@@ -130,6 +137,13 @@ public class PublicHealthActionIndicatorLibrary {
 	public CohortIndicator hei24MonthsUndocumentedOutcome() {
 		return cohortIndicator("HEIs 24 Months with undocumented Outcome", ReportUtils.map(cohortLibrary.hei24MonthsUndocumentedOutcome(), "startDate=${startDate},endDate=${endDate}"));
 	}
+    /**
+     * Number of HEIs  24 Months with undocumented Outcome Case surveillance
+     * @return the indicator
+     */
+    public CohortIndicator hei24MonthsUndocumentedOutcomeCs() {
+        return cohortIndicator("HEIs 24 Months with undocumented Outcome", ReportUtils.map(cohortLibrary.hei24MonthsUndocumentedOutcomeCs(), "startDate=${startDate},endDate=${endDate}"));
+    }
 	/**
 	 * Number of Pregnant and postpartum women at high risk (ML-based) not linked to PrEP
 	 * @return the indicator
@@ -214,5 +228,14 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator notAssessedForCovid19() {
         return cohortIndicator("Number of patients not assessed for Covid-19", ReportUtils.map(cohortLibrary.notAssessedForCovid19(), "startDate=${startDate},endDate=${endDate}"));
     }
-
+    /**
+     * HEI turning 6-8 weeks without DNA PCR test
+     * @return the indicator
+     */
+    public CohortIndicator heiSixToEightWeeksMissingPCRTestsCs() {
+        return cohortIndicator("HEI turning 6-8 weeks without DNA PCR test", ReportUtils.map(cohortLibrary.heiSixToEightWeeksMissingPCRTestsCs(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator pregnantPostPartumNotLinkedToPrepCs() {
+        return cohortIndicator("HEI turning 6-8 weeks without DNA PCR test", ReportUtils.map(cohortLibrary.pregnantPostPartumNotLinkedToPrepCs(), "startDate=${startDate},endDate=${endDate}"));
+    }
 }

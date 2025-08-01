@@ -884,16 +884,16 @@ public class PublicHealthActionCohortLibrary {
 
 	public CohortDefinition unsuppressedWithoutEAC() {
 		String sqlQuery = "select b.patient_id as unsuppressed_no_eac\n" +
-			"from (select x.patient_id as patient_id,x.date_test_result_received\n" +
+			"from (select x.patient_id as patient_id,DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
 			"      from kenyaemr_etl.etl_laboratory_extract x\n" +
 			"      where x.lab_test = 856\n" +
 			"        and test_result >= 200\n" +
-			"        and x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(date(:endDate), INTERVAL 14 DAY), INTERVAL DATEDIFF(date(:endDate),date(:startDate)) DAY) AND  DATE_SUB(date(:endDate), INTERVAL 14 DAY)) b\n" +
+			"        and x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY) AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)) b\n" +
 			"         left join (select e.patient_id, e.visit_date as eac_date\n" +
 			"                    from kenyaemr_etl.etl_enhanced_adherence e\n" +
-			"                    where e.visit_date BETWEEN DATE_SUB(DATE_SUB(date(:endDate), INTERVAL 14 DAY), INTERVAL DATEDIFF(date(:endDate),date(:startDate)) DAY) AND date(:endDate)) e\n" +
+			"                    where e.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY) AND CURRENT_DATE) e\n" +
 			"                   on b.patient_id = e.patient_id\n" +
-			"where e.patient_id is null AND TIMESTAMPDIFF(DAY,b.date_test_result_received,CURRENT_DATE) > 14;";
+			"where e.patient_id is null;\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("allSuppressedWithoutEAC");
 		cd.setQuery(sqlQuery);
@@ -902,6 +902,31 @@ public class PublicHealthActionCohortLibrary {
 		cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
 		return cd;
 	}
+    /**
+     * Number of patients with unsuppressed VL result without Enhanced Adherence Counseling
+     * @return the indicator
+     */
+
+    public CohortDefinition unsuppressedWithoutEACCs() {
+        String sqlQuery = "select b.patient_id as unsuppressed_no_eac\n" +
+                "from (select x.patient_id as patient_id,x.date_test_result_received\n" +
+                "      from kenyaemr_etl.etl_laboratory_extract x\n" +
+                "      where x.lab_test = 856\n" +
+                "        and test_result >= 200\n" +
+                "        and x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(date(:endDate), INTERVAL 14 DAY), INTERVAL DATEDIFF(date(:endDate),date(:startDate)) DAY) AND  DATE_SUB(date(:endDate), INTERVAL 14 DAY)) b\n" +
+                "         left join (select e.patient_id, e.visit_date as eac_date\n" +
+                "                    from kenyaemr_etl.etl_enhanced_adherence e\n" +
+                "                    where e.visit_date BETWEEN DATE_SUB(DATE_SUB(date(:endDate), INTERVAL 14 DAY), INTERVAL DATEDIFF(date(:endDate),date(:startDate)) DAY) AND date(:endDate)) e\n" +
+                "                   on b.patient_id = e.patient_id\n" +
+                "where e.patient_id is null AND TIMESTAMPDIFF(DAY,b.date_test_result_received,CURRENT_DATE) > 14;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("allSuppressedWithoutEACCs");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
+        return cd;
+    }
 	/**
 	 * Number of Tx Curr patients with unsuppressed VL result without Enhanced Adherence Counseling
 	 * @return the indicator
@@ -915,6 +940,19 @@ public class PublicHealthActionCohortLibrary {
 		cd.setCompositionString("txcurr and unsuppressedWithoutEAC");
 		return cd;
 	}
+    /**
+     * Number of Tx Curr patients with unsuppressed VL result without Enhanced Adherence Counseling Case surverillance
+     * @return the indicator
+     */
+    public CohortDefinition txCUrrUnsuppressedWithoutEACCs() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("unsuppressedWithoutEACCs", ReportUtils.map(unsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("txcurr and unsuppressedWithoutEACCs");
+        return cd;
+    }
 
     /**
      * Eligible for VL samlple not taken
@@ -1069,11 +1107,14 @@ public class PublicHealthActionCohortLibrary {
 		String sqlQuery = "SELECT e.patient_id as hei_without_pcr\n" +
 			"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 			"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+			"         LEFT JOIN kenyaemr_etl.etl_hiv_enrollment hiv on e.patient_id = hiv.patient_id\n" +
 			"         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
 			"                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
-			"                   WHERE x.lab_test = 1030) t ON e.patient_id = t.week6pcr\n" +
-			"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, date(:startDate)) BETWEEN 6 AND 8\n" +
-			"  AND t.week6results IS NULL;";
+			"                   WHERE x.lab_test = 1030\n" +
+			"                     AND x.order_reason = 1040) t ON e.patient_id = t.week6pcr\n" +
+			"WHERE TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) BETWEEN 6 AND 8\n" +
+			"  AND hiv.patient_id IS NULL\n" +
+			"  AND t.week6pcr IS NULL;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("heiSixToEightWeeksMissingPCRTests");
 		cd.setQuery(sqlQuery);
@@ -1082,19 +1123,50 @@ public class PublicHealthActionCohortLibrary {
 		cd.setDescription("HEIs 6-8 weeks who have missing DNA PCR Tests");
 		return cd;
 	}
+    /**
+     * HEIs 6-8 weeks missing HIV DNA PCR Case Surveillance
+     * @return
+     */
+    public CohortDefinition heiSixToEightWeeksMissingPCRTestsCs() {
+        String sqlQuery = "SELECT e.patient_id as hei_without_pcr\n" +
+                "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+                "         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+                "         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
+                "                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+                "                   WHERE x.lab_test = 1030 and x.date_test_requested <= :endDate) t ON e.patient_id = t.week6pcr\n" +
+                "WHERE d.hei_no is not null AND d.DOB between DATE_SUB(date(:endDate), INTERVAL 8 WEEK) AND\n" +
+                "    DATE_SUB(date(:endDate), INTERVAL 6 WEEK)\n" +
+                "  AND t.week6results IS NULL;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("heiSixToEightWeeksMissingPCRTestsCs");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HEIs 6-8 weeks who have missing DNA PCR Tests");
+        return cd;
+    }
 	/**
 	 * HEIs  24 Months with undocumented Outcome
 	 * @return
 	 */
 	public CohortDefinition hei24MonthsUndocumentedOutcome() {
-		String sqlQuery = "SELECT e.patient_id\n" +
-                "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
-                "         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-                "         left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
-                "                   on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
-                "WHERE d.hei_no is not null\n" +
-                "  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN date(:startDate) AND date(:endDate)\n" +
-                "  AND (c.discontinuation_reason is null and e.hiv_status_at_exit is null);";
+		String sqlQuery = "SELECT e.patient_id as hei_without_outcome\n" +
+			"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+			"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
+			"         LEFT JOIN (SELECT v.patient_id\n" +
+			"                    FROM kenyaemr_etl.etl_hei_follow_up_visit v\n" +
+			"                    WHERE v.dna_pcr_result IS NOT NULL\n" +
+			"                       OR v.first_antibody_result IS NOT NULL\n" +
+			"                       OR v.final_antibody_result IS NOT NULL\n" +
+			"                    GROUP BY v.patient_id) has_test ON e.patient_id = has_test.patient_id\n" +
+			"         LEFT JOIN (SELECT e.patient_id\n" +
+			"                    from kenyaemr_etl.etl_hiv_enrollment e\n" +
+			"                             INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+			"                    WHERE visit_date <= CURRENT_DATE) hiv_prog\n" +
+			"                   ON e.patient_id = hiv_prog.patient_id\n" +
+			"WHERE TIMESTAMPDIFF(MONTH, d.dob, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)) = 24\n" +
+			"  AND has_test.patient_id IS NULL\n" +
+			"  AND hiv_prog.patient_id IS NULL;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("hei24MonthsUndocumentedOutcomes");
 		cd.setQuery(sqlQuery);
@@ -1103,13 +1175,105 @@ public class PublicHealthActionCohortLibrary {
 		cd.setDescription("HEIs 24 Months with undocumented Outcome");
 		return cd;
 	}
-
+    /**
+     * HEIs  24 Months with undocumented Final Outcome Case surveillance
+     * @return
+     */
+    public CohortDefinition hei24MonthsUndocumentedOutcomeCs() {
+        String sqlQuery = "SELECT e.patient_id\n" +
+                "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+                "         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
+                "    LEFT JOIN (select o.patient_id,o.hiv_status_at_exit from kenyaemr_etl.etl_hei_enrollment o where o.encounter_type = 'MCHCS_HEI_COMPLETION'\n" +
+                "                   and o.visit_date <= date(:endDate)) o on o.patient_id = e.patient_id\n" +
+                "                               left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
+                "                               on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+                "                               left join kenyaemr_etl.etl_hts_test t on t.patient_id = e.patient_id\n" +
+                "WHERE d.hei_no is not null\n" +
+                "  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                "  AND (c.discontinuation_reason is null and o.hiv_status_at_exit is null and t.final_test_result is null);";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("hei24MonthsUndocumentedOutcomes");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HEIs 24 Months with undocumented Outcome");
+        return cd;
+    }
 	/**
 	 * Number of Pregnant and postpartum women at high risk (ML-based) not linked to PrEP
 	 * @return
 	 */
 	public CohortDefinition pregnantPostPartumNotLinkedToPrep() {
 		String sqlQuery = "SELECT a.patient_id high_risk_not_on_PrEP\n" +
+                "FROM (SELECT s.patient_id\n" +
+                "      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
+                "               INNER JOIN (SELECT t.patient_id,\n" +
+                "                                  t.final_test_result,\n" +
+                "                                  t.hts_entry_point,\n" +
+                "                                  t.visit_date\n" +
+                "                           from kenyaemr_etl.etl_hts_test t\n" +
+                "                           WHERE t.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE\n" +
+                "                             AND t.final_test_result = 'Negative'\n" +
+                "                             AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
+                "                          ON s.patient_id = t.patient_id\n" +
+                "      where s.hts_risk_category IN ('High', 'Very high')\n" +
+                "        and s.currently_on_prep in ('NO', 'Declined to answer')\n" +
+                "        AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE) a\n" +
+                "         left join (select e.patient_id,\n" +
+                "                           max(e.visit_date)                                        as latest_enrollment_date,\n" +
+                "                           f.latest_fup_date,\n" +
+                "                           greatest(ifnull(f.latest_fup_app_date, '0000-00-00'),\n" +
+                "                                    ifnull(latest_refill_app_date, '0000-00-00'))   as latest_appointment_date,\n" +
+                "                           greatest(ifnull(latest_fup_date, '0000-00-00'),\n" +
+                "                                    ifnull(latest_refill_visit_date, '0000-00-00')) as latest_visit_date,\n" +
+                "                           r.latest_refill_visit_date,\n" +
+                "                           f.latest_fup_app_date,\n" +
+                "                           r.latest_refill_app_date,\n" +
+                "                           d.latest_disc_date,\n" +
+                "                           d.disc_patient\n" +
+                "                    from kenyaemr_etl.etl_prep_enrolment e\n" +
+                "                             left join\n" +
+                "                         (select f.patient_id,\n" +
+                "                                 max(f.visit_date)                                      as latest_fup_date,\n" +
+                "                                 mid(max(concat(f.visit_date, f.appointment_date)), 11) as latest_fup_app_date\n" +
+                "                          from kenyaemr_etl.etl_prep_followup f\n" +
+                "                          where f.visit_date <= CURRENT_DATE\n" +
+                "                          group by f.patient_id) f on e.patient_id = f.patient_id\n" +
+                "                             left join (select r.patient_id,\n" +
+                "                                               max(r.visit_date)                                      as latest_refill_visit_date,\n" +
+                "                                               mid(max(concat(r.visit_date, r.next_appointment)), 11) as latest_refill_app_date\n" +
+                "                                        from kenyaemr_etl.etl_prep_monthly_refill r\n" +
+                "                                        where r.visit_date <= CURRENT_DATE\n" +
+                "                                        group by r.patient_id) r on e.patient_id = r.patient_id\n" +
+                "                             left join (select patient_id                                               as disc_patient,\n" +
+                "                                               max(d.visit_date)                                        as latest_disc_date,\n" +
+                "                                               mid(max(concat(d.visit_date, d.discontinue_reason)), 11) as latest_disc_reason\n" +
+                "                                        from kenyaemr_etl.etl_prep_discontinuation d\n" +
+                "                                        where d.visit_date <= CURRENT_DATE\n" +
+                "                                        group by patient_id\n" +
+                "                                        having latest_disc_date <= CURRENT_DATE) d\n" +
+                "                                       on e.patient_id = d.disc_patient\n" +
+                "                    group by e.patient_id\n" +
+                "                    having timestampdiff(DAY, date(latest_appointment_date), CURRENT_DATE) <= 7\n" +
+                "                       and date(latest_appointment_date) >= date(latest_visit_date)\n" +
+                "                       and ((latest_enrollment_date >= d.latest_disc_date\n" +
+                "                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
+                "                   on a.patient_id = b.patient_id\n" +
+                "where b.patient_id is null;";
+		SqlCohortDefinition cd = new SqlCohortDefinition();
+		cd.setName("pregnantPostPartumNotLinkedToPrep");
+		cd.setQuery(sqlQuery);
+		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+		cd.setDescription("Pregnant and postpartum women linked to PrEP");
+		return cd;
+	}
+    /**
+     * Number of Pregnant and postpartum women at high risk (ML-based) not linked to PrEP for Case Surveillance
+     * @return
+     */
+    public CohortDefinition pregnantPostPartumNotLinkedToPrepCs() {
+        String sqlQuery = "SELECT a.patient_id high_risk_not_on_PrEP\n" +
                 "FROM (SELECT s.patient_id\n" +
                 "      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
                 "               INNER JOIN (SELECT t.patient_id,\n" +
@@ -1165,12 +1329,12 @@ public class PublicHealthActionCohortLibrary {
                 "                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
                 "                   on a.patient_id = b.patient_id\n" +
                 "where b.patient_id is null;";
-		SqlCohortDefinition cd = new SqlCohortDefinition();
-		cd.setName("pregnantPostPartumNotLinkedToPrep");
-		cd.setQuery(sqlQuery);
-		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.setDescription("Pregnant and postpartum women linked to PrEP");
-		return cd;
-	}
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("pregnantPostPartumNotLinkedToPrep");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Pregnant and postpartum women linked to PrEP");
+        return cd;
+    }
 }

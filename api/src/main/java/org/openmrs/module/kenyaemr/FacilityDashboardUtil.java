@@ -614,9 +614,9 @@ public class FacilityDashboardUtil {
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
 				"         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
 				"                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
-				"                   WHERE x.lab_test = 1030) t ON e.patient_id = t.week6pcr\n" +
-				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
-				+ " DAY)) BETWEEN 6 AND 8\n" +
+				"                   WHERE x.lab_test = 1030 and x.date_test_requested <= date('" + endDate + "')) t ON e.patient_id = t.week6pcr\n" +
+				"WHERE d.hei_no is not null AND d.DOB between DATE_SUB(date('" + endDate + "'), INTERVAL 8 WEEK) AND\n" +
+				"    DATE_SUB(date('" + endDate + "'), INTERVAL 6 WEEK)\n" +
 				"  AND t.week6results IS NULL;";
 
 		try {
@@ -664,12 +664,15 @@ public class FacilityDashboardUtil {
 		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(DISTINCT(e.patient_id))\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
+				"         LEFT JOIN (select o.patient_id,o.hiv_status_at_exit from kenyaemr_etl.etl_hei_enrollment o where o.encounter_type = 'MCHCS_HEI_COMPLETION'\n" +
+				"                                                                                                      and o.visit_date <= date('" + endDate + "')) o on o.patient_id = e.patient_id\n" +
 				"         left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
 				"                   on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"         left join kenyaemr_etl.etl_hts_test t on t.patient_id = e.patient_id\n" +
 				"WHERE d.hei_no is not null\n" +
-				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" +endDate+ "'), INTERVAL\n" +
-				"                                                          " +days+ " DAY) AND date('" +endDate+ "')\n" +
-				"  AND (c.discontinuation_reason is null and e.hiv_status_at_exit is null);";
+				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL\n" +
+				"                                                           '" +days+ "' DAY) AND date('" +endDate+ "')\n" +
+				"  AND (c.discontinuation_reason is null and o.hiv_status_at_exit is null and t.final_test_result is null);";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -910,21 +913,15 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyHeiDNAPCRPending(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String heiDNAPCRPendingQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei_without_pcr, DATE(e.visit_date) AS visit_date\n"
-				+
+		String heiDNAPCRPendingQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei_without_pcr, DATE(e.visit_date) AS visit_date\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
-				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON e.patient_id = d.patient_id\n" +
-				"LEFT JOIN kenyaemr_etl.etl_hiv_enrollment hiv ON e.patient_id = hiv.patient_id\n" +
-				"LEFT JOIN (\n" +
-				"    SELECT x.patient_id AS week6pcr, x.test_result AS week6results\n" +
-				"    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
-				"    WHERE x.lab_test = 1030\n" +
-				"    AND x.order_reason = 1040\n" +
-				") t ON e.patient_id = t.week6pcr\n" +
-				"WHERE d.hei_no is not null AND DATE(e.visit_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
-				"AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
-				"AND hiv.patient_id IS NULL\n" +
-				"AND t.week6pcr IS NULL\n" +
+				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+				"         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
+				"                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+				"                   WHERE x.lab_test = 1030 and x.date_test_requested <= CURRENT_DATE) t ON e.patient_id = t.week6pcr\n" +
+				"WHERE d.hei_no is not null AND d.DOB between DATE_SUB(CURRENT_DATE, INTERVAL 8 WEEK) AND\n" +
+				"    DATE_SUB(date(CURRENT_DATE), INTERVAL 6 WEEK)\n" +
+				"  AND t.week6results IS NULL\n" +
 				"GROUP BY DATE(e.visit_date)\n" +
 				"ORDER BY DATE(e.visit_date) ASC;";
 		return getSimpleObject(heiDNAPCRPendingQuery);
@@ -1028,13 +1025,14 @@ public class FacilityDashboardUtil {
 		String hei24MonthsWithoutDocumentedOutcomeQuery = "SELECT COUNT(DISTINCT (e.patient_id)) AS hei_without_outcome, DATE_ADD(d.dob, INTERVAL 24 MONTH) AS date\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = e.patient_id\n" +
-				"         left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
-				"                   on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"                     LEFT JOIN (select o.patient_id,o.hiv_status_at_exit from kenyaemr_etl.etl_hei_enrollment o where o.encounter_type = 'MCHCS_HEI_COMPLETION'\n" +
+				"                                and o.visit_date <= CURRENT_DATE) o on o.patient_id = e.patient_id\n" +
+				"                     left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
+				"                               on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"                     left join kenyaemr_etl.etl_hts_test t on t.patient_id = e.patient_id\n" +
 				"WHERE d.hei_no is not null\n" +
-				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)\n" +
-				"  AND CURRENT_DATE\n" +
-				"  AND (c.discontinuation_reason is null\n" +
-				"  and e.hiv_status_at_exit is null)\n" +
+				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
+				"  AND (c.discontinuation_reason is null and o.hiv_status_at_exit is null and t.final_test_result is null)\n" +
 				"GROUP BY date\n" +
 				"ORDER BY date;";
 		return getSimpleObject(hei24MonthsWithoutDocumentedOutcomeQuery);

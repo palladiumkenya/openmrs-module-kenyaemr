@@ -59,11 +59,11 @@ public class CaseSurveillanceReportBuilder extends AbstractReportBuilder {
         cohortDsd.setDescription("Case Surveillance Report");
 
         cohortDsd.addColumn("HIV+ and NOT Linked", "", ReportUtils.map(publicHealthActionIndicatorLibrary.notLinked(), "startDate=${startDate},endDate=${endDate}"), "");
-        cohortDsd.addColumn("Pregnant and postpartum women at high risk (ML-based) not linked to PrEP", "(Tested within past 7 days)", ReportUtils.map(publicHealthActionIndicatorLibrary.pregnantPostPartumNotLinkedToPrep(), ""), "");
-        cohortDsd.addColumn("HEI (6-8 weeks) without DNA PCR results", "(Turning 6-8 weeks within past 7 days", ReportUtils.map(publicHealthActionIndicatorLibrary.heiSixToEightWeeksMissingPCRTests(), ""), "");
-        cohortDsd.addColumn("HEI (24 months) without a final documented outcome", "(Turning 24 months within past 7 days)", ReportUtils.map(publicHealthActionIndicatorLibrary.hei24MonthsUndocumentedOutcome(), ""), "");
+        cohortDsd.addColumn("Pregnant and postpartum women at high risk (ML-based) not linked to PrEP", "", ReportUtils.map(publicHealthActionIndicatorLibrary.pregnantPostPartumNotLinkedToPrepCs(), "startDate=${startDate},endDate=${endDate}"), "");
+        cohortDsd.addColumn("HEI (6-8 weeks) without DNA PCR results", "", ReportUtils.map(publicHealthActionIndicatorLibrary.heiSixToEightWeeksMissingPCRTestsCs(), ""), "");
+        cohortDsd.addColumn("HEI (24 months) without a final documented outcome", "", ReportUtils.map(publicHealthActionIndicatorLibrary.hei24MonthsUndocumentedOutcomeCs(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("Delayed viral load testing (Visited facility were eligible for vl but sample not taken)", "", ReportUtils.map(publicHealthActionIndicatorLibrary.delayedVLTestingZeroGracePeriod(), "startDate=${startDate},endDate=${endDate}"), "");
-        cohortDsd.addColumn("Virally Unsuppressed without Enhanced Adherence Counselling", "(No EAC past 2 weeks)", ReportUtils.map(publicHealthActionIndicatorLibrary.txCUrrUnsuppressedWithoutEAC(), "startDate=${startDate},endDate=${endDate}"), "");
+        cohortDsd.addColumn("Virally Unsuppressed without Enhanced Adherence Counselling", "(No EAC past 2 weeks)", ReportUtils.map(publicHealthActionIndicatorLibrary.txCUrrUnsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"), "");
 
         return cohortDsd;
 
