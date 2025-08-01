@@ -426,7 +426,6 @@ public class EmrUtils {
 		Location var2;
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
-			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
 			Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
 			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
 			String GP_DEFAULT_LOCATION = "kenyaemr.defaultLocation";
