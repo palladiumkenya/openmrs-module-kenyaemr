@@ -38,10 +38,16 @@ public class OPDOutcomeDataEvaluator implements EncounterDataEvaluator {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select\n" +
-			"    v.encounter_id,\n" +
+			"   v.encounter_id,\n" +
 			"    (case v.patient_outcome when 159 then 'Died'  else 'Alive' end) as patient_outcome\n" +
 			"from kenyaemr_etl.etl_clinical_encounter v\n" +
-			"where date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+			"UNION\n" +
+			"select\n" +
+			"    sc.encounter_id,\n" +
+			"    (case sc.patient_outcome when 159 then 'Died'  else 'Alive' end) as patient_outcome\n" +
+			"from kenyaemr_etl.etl_special_clinics sc\n" +
+			"where date(sc.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

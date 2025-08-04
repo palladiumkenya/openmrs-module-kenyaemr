@@ -37,11 +37,17 @@ public class OPDNumber5AndAboveNewVisitDataEvaluator implements EncounterDataEva
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "SELECT ce.encounter_id, CONCAT_WS(CHAR(10), 'New',p.patient_clinic_number)\n" +
-                "from kenyaemr_etl.etl_clinical_encounter ce\n" +
-                "         inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = ce.patient_id and p.voided = 0\n" +
-                "where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-                "  and ce.visit_type = 'New visit'\n" +
-                "  and ce.voided = 0;";
+			"  from kenyaemr_etl.etl_clinical_encounter ce\n" +
+			"           inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = ce.patient_id and p.voided = 0\n" +
+			"  where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+			"    and ce.visit_type = 'New visit'\n" +
+			"    and ce.voided = 0\n" +
+			"UNION\n" +
+			"SELECT sc.encounter_id, CONCAT_WS(CHAR(10), 'New',p.patient_clinic_number)\n" +
+			"from kenyaemr_etl.etl_special_clinics sc\n" +
+			"         inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = sc.patient_id and p.voided = 0\n" +
+			"where date(sc.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+			"  and sc.visit_type = 164180;\n";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
