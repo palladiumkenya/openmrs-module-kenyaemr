@@ -32,7 +32,22 @@ public class MOH705CohortLibrary {
 	 */
 	public CohortDefinition patientDiagnosis(List<Integer> diagnosisList) {
 		String diagnosis = String.valueOf(diagnosisList).replaceAll("\\[", "(").replaceAll("\\]",")");
-		String sqlQuery = "select patient_id from encounter_diagnosis where diagnosis_coded in " + diagnosis + " and date(date_created) between date(:startDate) and date(:endDate);";
+		String sqlQuery = "SELECT ce.patient_id\n" +
+			"FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+			"         INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = ce.patient_id AND p.voided = 0\n" +
+			"         INNER JOIN openmrs.encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
+			"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+			"  AND ce.voided = 0\n" +
+			"  AND ed.diagnosis_coded in " + diagnosis + "\n" +
+			"  AND ce.diagnosis_category = 'New'\n" +
+			"UNION ALL\n" +
+			"SELECT sc.patient_id\n" +
+			"FROM kenyaemr_etl.etl_special_clinics sc\n" +
+			"         INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = sc.patient_id AND p.voided = 0\n" +
+			"         INNER JOIN openmrs.encounter_diagnosis ed ON ed.patient_id = sc.patient_id AND ed.encounter_id = sc.encounter_id\n" +
+			"WHERE date(sc.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+			"  AND ed.diagnosis_coded in " + diagnosis + "\n" +
+			"  AND sc.diagnosis_category = 'New';";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("patientsDiagnosis");
 		cd.setQuery(sqlQuery);
