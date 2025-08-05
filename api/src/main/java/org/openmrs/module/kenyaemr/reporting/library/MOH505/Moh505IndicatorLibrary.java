@@ -9,10 +9,13 @@
  */
 package org.openmrs.module.kenyaemr.reporting.library.MOH505;
 
+import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyaemr.reporting.library.MOH505.Moh505CohortLibrary;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.openmrs.module.kenyacore.report.ReportUtils.map;
 import static org.openmrs.module.kenyaemr.reporting.EmrReportingUtils.cohortIndicator;
@@ -26,78 +29,65 @@ public class Moh505IndicatorLibrary {
     public CohortIndicator AEFICase() {
         return cohortIndicator("AEFI", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator diagnosis(int diagnosis) {
+        return cohortIndicator("Diagnosis", ReportUtils.map(Moh505Cohorts.patientDiagnosis(diagnosis), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator maternalDeathCase() {
+        return cohortIndicator("Maternal", map(Moh505Cohorts.maternalDeath(), "startDate=${startDate},endDate=${endDate}"));
+    }
+    public CohortIndicator patientDiagnosedAndDeceased(int diagnosis, int patientOutcome) {
+        return cohortIndicator("Deaths", ReportUtils.map(Moh505Cohorts.patientDeceased(diagnosis, patientOutcome), "startDate=${startDate},endDate=${endDate}"));
+    }
     public CohortIndicator acuteJaundiceCase() {
         return cohortIndicator("Acute Jaundice", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator acuteMalnutritionCase(int acuteMalnutrition) {
-        return cohortIndicator("Acute Malnutrition", map(Moh505Cohorts.malnutritionCase(acuteMalnutrition), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator acuteJaundicePatientDeceased(int patientOutcome) {
+        return cohortIndicator("Acute Jaundice Deaths", map(Moh505Cohorts.jaundiceDeceased(patientOutcome), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator poliomyelitisCase(int poliomyelitis) {
-        return cohortIndicator("AFP (Poliomyelitis)", map(Moh505Cohorts.poliomyelitisCohortCase(poliomyelitis), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator sariPatientCases() {
+        return cohortIndicator("SARI (Cluster ≥3 cases)", map(Moh505Cohorts.sariCases(), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator anthraxCase(int anthrax) {
-        return cohortIndicator("Anthrax", map(Moh505Cohorts.anthraxCohortCase(anthrax), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator sariPatientDeceased(int patientOutcome) {
+        return cohortIndicator("SARI (Cluster ≥3 deaths)", map(Moh505Cohorts.sariDeceased(patientOutcome), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator choleraCase(int cholera) {
-        return cohortIndicator("Cholera", map(Moh505Cohorts.choleraCohortCase(cholera), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator malariaTested(int diagnosis, int mRDT) {
+        return cohortIndicator("Malaria Test", ReportUtils.map(Moh505Cohorts.malariaTest(diagnosis, mRDT), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator dengueCase(int dengue) {
-        return cohortIndicator("Dengue", map(Moh505Cohorts.dengueCohortCase(dengue), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator malariaTestedPositive(int diagnosis, int mRDT) {
+        return cohortIndicator("Malaria Test Positive", ReportUtils.map(Moh505Cohorts.malariaTestPositive(diagnosis, mRDT), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator dysenteryCase(int dysentery) {
-        return cohortIndicator("Dysentery", map(Moh505Cohorts.dysenteryCohortCase(dysentery), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator typhoidTested(int typhoidTest) {
+        return cohortIndicator("Typhoid Test", ReportUtils.map(Moh505Cohorts.typhoidTest(typhoidTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator guineaWormDiseaseCase(int guineaWorm) {
-        return cohortIndicator("Guinea Worm Disease", map(Moh505Cohorts.guineaWormCohortCase(guineaWorm), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator typhoidTestedPositive(int typhoidTest) {
+        return cohortIndicator("Typhoid Test Positive", ReportUtils.map(Moh505Cohorts.typhoidTestPositive(typhoidTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator measlesCase(int measles) {
-        return cohortIndicator("Measles", map(Moh505Cohorts.measlesCohortCase(measles), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator tbTested(int tbTest) {
+        return cohortIndicator("Tubercullosis Test", ReportUtils.map(Moh505Cohorts.tbTest(tbTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator suspectedMalariaCase(int suspectedMalaria) {
-        return cohortIndicator("Suspected Malaria", map(Moh505Cohorts.suspectedMalariaCohortCase(suspectedMalaria), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator tbTestedPositive(int tbTest) {
+        return cohortIndicator("Tubercullosis Test Positive", ReportUtils.map(Moh505Cohorts.tbPositive(tbTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator deathsDueToMalariaCase() {
-        return cohortIndicator("Deaths due to Malaria", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator dysentryTested(int dysentryTest) {
+        return cohortIndicator("Shigella Dysentry Test", ReportUtils.map(Moh505Cohorts.dysentryTest(dysentryTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator maternalDeathsCase() {
-        return cohortIndicator("Maternal deaths", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator dysentryTestedPositive(int dysentryTest) {
+        return cohortIndicator("Shigella Dysentry Test Positive", ReportUtils.map(Moh505Cohorts.dysentryTestPositive(dysentryTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator meningococcalMeningitisCase(int meningococcalMeningitis) {
-        return cohortIndicator("Meningococcal Meningitis", map(Moh505Cohorts.meningococcalMeningitisCohortCase(meningococcalMeningitis), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator bacterialTested(int bacteriaTest) {
+        return cohortIndicator("Bacterial Meningitis", ReportUtils.map(Moh505Cohorts.bacterialTest(bacteriaTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator neonatalDeathsCase() {
-        return cohortIndicator("Neonatal deaths", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator bacteriaTestedPositiveNM(int bacteriaTest1, int bacteriaTest2) {
+        return cohortIndicator("BacterialMeningitis(+ve Nm)", ReportUtils.map(Moh505Cohorts.bacterialTestPositiveNM(bacteriaTest1, bacteriaTest2), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator neonatalTetanusCase(int neonatalTetanus) {
-        return cohortIndicator("Neonatal Tetanus", map(Moh505Cohorts.neonatalTetanusCohortCase(neonatalTetanus), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator bacteriaTestedPositiveSp(int bacteriaTest1, int bacteriaTest2) {
+        return cohortIndicator("BacterialMeningitis(+ve Sp)", ReportUtils.map(Moh505Cohorts.bacterialTestPositiveSp(bacteriaTest1, bacteriaTest2), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator plagueCase(int plague) {
-        return cohortIndicator("Plague", map(Moh505Cohorts.plagueCohortCase(plague), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator bacteriaTestedPositiveHInfluenza(int bacteriaTest) {
+        return cohortIndicator("BacterialMeningitis(+ve H influenza)", ReportUtils.map(Moh505Cohorts.bacterialTestPositiveHInfluenza(bacteriaTest), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator rabiesCase(int rabies) {
-        return cohortIndicator("Rabies", map(Moh505Cohorts.rabiesCohortCase(rabies), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator riftValleyFeverCase(int riftValleyFever) {
-        return cohortIndicator("Rift Valley Fever", map(Moh505Cohorts.riftValleyFeverCohortCase(riftValleyFever), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator SARICase() {
-        return cohortIndicator("SARI (Cluster ≥3 cases)", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator suspectedTBCase(int suspectedTB) {
-        return cohortIndicator("Suspected MDR/XDR TB", map(Moh505Cohorts.suspectedTBCohortCase(suspectedTB), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator typhoidCase(int typhoid) {
-        return cohortIndicator("Typhoid", map(Moh505Cohorts.typhoidCohortCase(typhoid), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator VHFCase() {
-        return cohortIndicator("VHF", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator yellowFeverCase(int yellowFever) {
-        return cohortIndicator("Yellow Fever", map(Moh505Cohorts.yellowFeverCohortCase(yellowFever), "startDate=${startDate},endDate=${endDate}"));
-    }
-    public CohortIndicator otherCase() {
-        return cohortIndicator("Others (Specify)", map(Moh505Cohorts.jaundiceCases(), "startDate=${startDate},endDate=${endDate}"));
-    }
+
+
 
 }
 
