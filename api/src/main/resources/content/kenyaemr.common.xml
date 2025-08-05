@@ -101,6 +101,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh705A" />
 				<ref bean="kenyaemr.ehrReports.report.moh705B" />
 				<ref bean="kenyaemr.ehrReports.report.moh740" />
+				<ref bean="kenyaemr.ehrReports.report.moh505" />
 				<ref bean="kenyaemr.ehrReports.report.717" />
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
