@@ -123,6 +123,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh407B" />
 				<ref bean="kenyaemr.ehrReports.report.moh755" />
                  <ref bean="kenyaemr.ehrReports.report.fcdrr" />
+                 <ref bean="kenyaemr.ehrReports.report.clinicianWorkloadReport" />
 			</set>
 		</property>
 	</bean>
@@ -1318,5 +1319,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:fcdrr.xls" />
 	</bean>
-	
+
+	<bean id="kenyaemr.ehrReports.report.clinicianWorkloadReport" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="149ac0d7-62b2-46b7-b353-3e8347a136cc" />
+		<property name="name" value="Provider Workload report" />
+		<property name="description" value="A line list of Provider Workload" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
+		<property name="template" value="kenyaemr:provider-workload.xls" />
+		<property name="repeatingSection" value="sheet:1,row:6,dataset:providerWorkload" />
+	</bean>
 </beans>
