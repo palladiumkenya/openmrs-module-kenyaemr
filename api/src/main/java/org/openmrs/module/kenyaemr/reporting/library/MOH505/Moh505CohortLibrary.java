@@ -144,7 +144,7 @@ public class Moh505CohortLibrary {
         String sqlQuery = "select d.patient_id from openmrs.encounter_diagnosis d\n" +
                 "inner join kenyaemr_etl.etl_clinical_encounter c on d.patient_id = c.patient_id\n" +
                 "where d.diagnosis_coded = " + diagnosis + " and c.patient_outcome = " + patientOutcome + "\n" +
-                "and date(d.visit_date) between date(:startDate) and date(:endDate);";
+                "and date(c.visit_date) between date(:startDate) and date(:endDate);";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("patientsDeceased");
         cd.setQuery(sqlQuery);
