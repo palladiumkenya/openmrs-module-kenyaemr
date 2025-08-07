@@ -20,6 +20,7 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -34,11 +35,44 @@ public class CACXMethodDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select encounter_id, coalesce(via_vili_screening_method,hpv_screening_method,pap_smear_screening_method,colposcopy_screening_method)\n" +
-                "from kenyaemr_etl.etl_cervical_cancer_screening;";
+        String qry = "SELECT\n" +
+                "    encounter_id,\n" +
+                "    CONCAT_WS(\n" +
+                "            ', ',\n" +
+                "            CASE\n" +
+                "                WHEN NULLIF(TRIM(via_vili_screening_method), '') IS NOT NULL\n" +
+                "                    AND NULLIF(TRIM(via_vili_screening_result), '') IS NOT NULL\n" +
+                "                    THEN TRIM(via_vili_screening_method)\n" +
+                "                ELSE NULL\n" +
+                "                END,\n" +
+                "            CASE\n" +
+                "                WHEN NULLIF(TRIM(hpv_screening_method), '') IS NOT NULL\n" +
+                "                    AND NULLIF(TRIM(hpv_screening_result), '') IS NOT NULL\n" +
+                "                    THEN TRIM(hpv_screening_method)\n" +
+                "                ELSE NULL\n" +
+                "                END,\n" +
+                "            CASE\n" +
+                "                WHEN NULLIF(TRIM(pap_smear_screening_method), '') IS NOT NULL\n" +
+                "                    AND NULLIF(TRIM(pap_smear_screening_result), '') IS NOT NULL\n" +
+                "                    THEN TRIM(pap_smear_screening_method)\n" +
+                "                ELSE NULL\n" +
+                "                END,\n" +
+                "            CASE\n" +
+                "                WHEN NULLIF(TRIM(colposcopy_screening_method), '') IS NOT NULL\n" +
+                "                    AND NULLIF(TRIM(colposcopy_screening_result), '') IS NOT NULL\n" +
+                "                    THEN TRIM(colposcopy_screening_method)\n" +
+                "                ELSE NULL\n" +
+                "                END\n" +
+                "    ) AS screening_methods\n" +
+                "FROM kenyaemr_etl.etl_cervical_cancer_screening\n" +
+                "WHERE DATE(visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
+        queryBuilder.addParameter("endDate", endDate);
+        queryBuilder.addParameter("startDate", startDate);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;
