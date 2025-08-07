@@ -405,7 +405,7 @@ public class FacilityDashboardUtil {
 				"                   INNER JOIN (select v.patient_id\n" +
 				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
 				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n"+
-				"                     where ((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
+				"                     where (((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
 				"                            v.base_viral_load_test_result is null)                              -- First VL new on ART\n"+
 				"                        OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
 				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
@@ -423,7 +423,7 @@ public class FacilityDashboardUtil {
 				"                            TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3\n" +
 				"                         and (v.order_reason in (159882, 1434, 2001237, 163718) and\n" +
 				"                              TIMESTAMPDIFF(MONTH, v.date_test_requested, v.latest_hiv_followup_visit) >= 6) and\n" +
-				"                            ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200 ))) -- PG & BF after PG/BF baseline < 200\n" +
+				"                            ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200 )))) -- PG & BF after PG/BF baseline < 200\n" +
 				"                                 and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'0000-00-00')))) b on e.patient_id = b.patient_id;";
 
 		try {
@@ -982,7 +982,7 @@ public class FacilityDashboardUtil {
 				"         INNER JOIN (select v.patient_id\n" +
 				"                     from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
 				"                              inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-				"                     where ((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
+				"                     where (((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
 				"                             v.base_viral_load_test_result is null) -- First VL new on ART +\n" +
 				"                         OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
 				"                             TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
@@ -1002,7 +1002,7 @@ public class FacilityDashboardUtil {
 				"                             TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3\n" +
 				"                             and (v.order_reason in (159882, 1434, 2001237, 163718) and\n" +
 				"                                  TIMESTAMPDIFF(MONTH, v.date_test_requested, v.latest_hiv_followup_visit) >= 6) and\n" +
-				"                             ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200))) -- PG & BF after PG/BF baseline < 200\n" +
+				"                             ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200)))) -- PG & BF after PG/BF baseline < 200\n" +
 				"                                and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested, '0000-00-00')))) b\n" +
 				"                    on e.patient_id = b.patient_id\n" +
 				"group by date(e.visit_date)\n" +
@@ -1051,13 +1051,14 @@ public class FacilityDashboardUtil {
 	 */
 	public static SimpleObject getMonthlyVirallyUnsuppressedWithoutEAC(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(DISTINCT(a.patient_id)) AS unsuppressed_no_eac, DATE(eac_date) AS eac_date FROM\n" +
-				"(SELECT b.patient_id, eac_date\n" +
+		String virallyUnsuppressedWithoutEACQuery = "SELECT COUNT(DISTINCT(a.patient_id)) AS unsuppressed_no_eac, DATE(results_date) AS results_date FROM\n" +
+				"(SELECT b.patient_id, eac_date, results_date\n" +
 				"FROM (\n" +
 				"    SELECT \n" +
 				"        x.patient_id AS patient_id,\n" +
 				"        DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), \n" +
 				"        DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
+				"        x.date_test_result_received AS results_date,\n" +
 				"    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"    WHERE x.lab_test = 856\n" +
 				"        AND test_result >= 200\n" +
@@ -1073,8 +1074,6 @@ public class FacilityDashboardUtil {
 				"        AND CURRENT_DATE\n" +
 				") e ON b.patient_id = e.patient_id\n" +
 				"WHERE e.patient_id IS NULL\n" +
-				"GROUP BY DATE(eac_date)\n" +
-				"ORDER BY DATE(eac_date) ASC) a\n" +
 				"    inner join\n" +
 				"    (select t.patient_id\n" +
 				"    from (select fup.visit_date,\n" +
@@ -1114,7 +1113,9 @@ public class FacilityDashboardUtil {
 				"    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
 				"    disc_patient is null)\n" +
 				"    )\n" +
-				"    )) t) c on a.patient_id = c.patient_id;";
+				"    )) t) c on a.patient_id = c.patient_id\n" +
+				"GROUP BY DATE(results_date)\n" +
+				"ORDER BY DATE(results_date) ASC;";
 		return getSimpleObject(virallyUnsuppressedWithoutEACQuery);
 	}
 
@@ -1333,8 +1334,8 @@ public class FacilityDashboardUtil {
 				"FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"WHERE x.lab_test = 856\n" +
 				"  AND x.test_result >= 200\n" +
-				"  AND x.date_test_result_received BETWEEN DATE_SUB(DATE_SUB(date('" + endDate + "'), INTERVAL 14 DAY), INTERVAL DATEDIFF(date('" + endDate + "'),date('" + startDate + "')) DAY)\n" +
-				"          AND  DATE_SUB(date('" + endDate + "'), INTERVAL 14 DAY)\n" +
+				"  AND x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY)\n" +
+				"  AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
 				"GROUP BY DATE(x.visit_date)\n" +
 				"ORDER BY DATE(x.visit_date) ASC) a\n" +
 				"    inner join\n" +
@@ -1354,29 +1355,31 @@ public class FacilityDashboardUtil {
 				"    join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
 				"    left join kenyaemr_etl.etl_drug_event de\n" +
 				"    on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
-				"    date(de.date_started) <= date('" + endDate + "')\n" +
+				"    date(de.date_started) <= CURRENT_DATE\n" +
 				"    left outer JOIN\n" +
 				"    (select patient_id,\n" +
 				"    coalesce(date(effective_discontinuation_date), visit_date) visit_date,\n" +
 				"    max(date(effective_discontinuation_date)) as               effective_disc_date\n" +
 				"    from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-				"    where date(visit_date) <= date('" + endDate + "')\n" +
+				"    where date(visit_date) <= CURRENT_DATE\n" +
 				"    and program_name = 'HIV'\n" +
 				"    group by patient_id) d on d.patient_id = fup.patient_id\n" +
-				"    where fup.visit_date <= date('" + endDate + "')\n" +
+				"    where fup.visit_date <= CURRENT_DATE\n" +
 				"    group by patient_id\n" +
 				"    having (started_on_drugs is not null and started_on_drugs <> '')\n" +
 				"    and (\n" +
 				"    (\n" +
-				"    (timestampdiff(DAY, date(latest_tca), date('" + endDate + "')) <= 30 and\n" +
-				"    ((date(d.effective_disc_date) > date('" + endDate + "') or\n" +
+				"    (timestampdiff(DAY, date(latest_tca), CURRENT_DATE) <= 30 and\n" +
+				"    ((date(d.effective_disc_date) > CURRENT_DATE or\n" +
 				"    date(enroll_date) > date(d.effective_disc_date)) or\n" +
 				"    d.effective_disc_date is null))\n" +
 				"    and\n" +
 				"    (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or\n" +
 				"    disc_patient is null)\n" +
 				"    )\n" +
-				"    )) t) c on a.patient_id = c.patient_id;";
+				"    )) t) c on a.patient_id = c.patient_id\n" +
+				"    GROUP BY visit_date\n" +
+				"    ORDER BY visit_date ASC;";
 		return getSimpleObject(getVirallyUnsuppressedQuery);
 	}
 }
