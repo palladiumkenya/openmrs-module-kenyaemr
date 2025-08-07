@@ -18,21 +18,21 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * CACX Population Type Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class LatestPopulationTypeDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class CountyOfResidenceDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public LatestPopulationTypeDataDefinition() {
+    public CountyOfResidenceDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public LatestPopulationTypeDataDefinition(String name) {
+    public CountyOfResidenceDataDefinition(String name) {
         super(name);
     }
 

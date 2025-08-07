@@ -19,6 +19,7 @@ import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDa
 import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.CACXRegisterCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.PopulationTypeDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.*;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
@@ -96,7 +97,7 @@ public class CancerScreeningRegisterReportBuilder extends AbstractReportBuilder 
         dsd.addColumn("Age in years", new AgeDataDefinition(), "");
         //dsd.addColumn("HIV Status", new CACXHivStatusDataDefinition(), null);
         dsd.addColumn("Hiv Status",new HivStatusDataDefinition(),null);
-        dsd.addColumn("Population Type", new LatestPopulationTypeDataDefinition(), null);
+        dsd.addColumn("Population Type", new PopulationTypeDataDefinition(), null);
         dsd.addColumn("County of Residence", new CalculationDataDefinition("County", new CountyAddressCalculation()), "", null);
         dsd.addColumn("Visit Type", new VisitTypeDataDefinition(), null);
         dsd.addColumn("Cause of Post Treatment Complications", new CauseOfPostTxComplicationsDataDefinition(), null);

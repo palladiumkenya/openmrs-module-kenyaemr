@@ -18,21 +18,19 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.CACXRegisterCohortDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXMethodDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.LatestPopulationTypeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXVisitTypeDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXScreeningResultsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ActivePatientsPopulationTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.art.AgeAtReportingDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXFollowUpDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXHivStatusDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXMethodDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXReferralDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXRemarksDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXHivStatusDataDefinition;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
-import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.KPTypeConverter;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXScreeningResultsDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CACXVisitTypeDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.cacx.CountyOfResidenceDataDefinition;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
 import org.openmrs.module.reporting.data.DataDefinition;
-import org.openmrs.module.reporting.data.converter.BirthdateConverter;
 import org.openmrs.module.reporting.data.converter.DataConverter;
 import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
@@ -40,16 +38,12 @@ import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeD
 import org.openmrs.module.reporting.data.patient.definition.ConvertedPatientDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.AgeDataDefinition;
-import org.openmrs.module.reporting.data.person.definition.BirthdateDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.ipt.PhysicalAddressDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.PersonAttributeDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.EncounterDataSetDefinition;
-import org.openmrs.module.reporting.dataset.definition.VisitDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
@@ -101,6 +95,36 @@ public class CACXRegisterReportBuilder extends AbstractReportBuilder {
         DataDefinition cccNumberDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(upn.getName(), upn), identifierFormatter);
         DataDefinition nupiDef = new ConvertedPatientDataDefinition("identifier", new PatientIdentifierDataDefinition(nupi.getName(), nupi), identifierFormatter);
 
+        AgeAtReportingDataDefinition ageDataDefinition = new AgeAtReportingDataDefinition();
+        ageDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+
+        CACXHivStatusDataDefinition cacxHivStatusDataDefinition = new CACXHivStatusDataDefinition();
+        cacxHivStatusDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxHivStatusDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CACXMethodDataDefinition cacxMethodDataDefinition = new CACXMethodDataDefinition();
+        cacxMethodDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxMethodDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CACXScreeningResultsDataDefinition cacxScreeningResultsDataDefinition = new CACXScreeningResultsDataDefinition();
+        cacxScreeningResultsDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxScreeningResultsDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CACXFollowUpDateDataDefinition cacxFollowUpDateDataDefinition = new CACXFollowUpDateDataDefinition();
+        cacxFollowUpDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxFollowUpDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CACXReferralDataDefinition cacxReferralDataDefinition = new CACXReferralDataDefinition();
+        cacxReferralDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxReferralDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CACXRemarksDataDefinition cacxRemarksDataDefinition = new CACXRemarksDataDefinition();
+        cacxRemarksDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cacxRemarksDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        CountyOfResidenceDataDefinition countyOfResidenceDataDefinition = new CountyOfResidenceDataDefinition();
+        countyOfResidenceDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        countyOfResidenceDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
@@ -113,15 +137,15 @@ public class CACXRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("NUPI", nupiDef, "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
         dsd.addColumn("Phone Number", new PersonAttributeDataDefinition(phoneNumber), "");
-        dsd.addColumn("Age in years", new AgeDataDefinition(), "");
-        dsd.addColumn("HIV Status", new CACXHivStatusDataDefinition(), null);
-        dsd.addColumn("Population Type", new LatestPopulationTypeDataDefinition(), null);
-        dsd.addColumn("County of Residence", new CalculationDataDefinition("County", new CountyAddressCalculation()), "", null);
-        dsd.addColumn("Screening Method", new CACXMethodDataDefinition(), null);
-        dsd.addColumn("Screening Modalities", new CACXScreeningResultsDataDefinition(), null);
-        dsd.addColumn("Follow Up Date", new CACXFollowUpDateDataDefinition(), null);
-        dsd.addColumn("Refferal To/From", new CACXReferralDataDefinition(), null);
-        dsd.addColumn("Remarks", new CACXRemarksDataDefinition(), null);
+        dsd.addColumn("Age in years", ageDataDefinition, "endDate=${endDate}");
+        dsd.addColumn("HIV Status", cacxHivStatusDataDefinition, paramMapping);
+        dsd.addColumn("Population Type",new ActivePatientsPopulationTypeDataDefinition(), "");
+        dsd.addColumn("County of Residence", countyOfResidenceDataDefinition, paramMapping );
+        dsd.addColumn("Screening Method",cacxMethodDataDefinition, paramMapping);
+        dsd.addColumn("Screening Modalities",cacxScreeningResultsDataDefinition, paramMapping);
+        dsd.addColumn("Follow Up Date", cacxFollowUpDateDataDefinition, paramMapping);
+        dsd.addColumn("Refferal To/From", cacxReferralDataDefinition, paramMapping);
+        dsd.addColumn("Remarks", cacxRemarksDataDefinition, paramMapping);
 
         CACXRegisterCohortDefinition cd = new CACXRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
