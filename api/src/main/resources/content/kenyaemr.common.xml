@@ -101,7 +101,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh705A" />
 				<ref bean="kenyaemr.ehrReports.report.moh705B" />
 				<ref bean="kenyaemr.ehrReports.report.moh740" />
-				<ref bean="kenyaemr.ehrReports.report.moh505" />
+				<ref bean="kenyaemr.ehrReports.report.moh505idsr" />
 				<ref bean="kenyaemr.ehrReports.report.717" />
 				<ref bean="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" />
 				<ref bean="kenyaemr.ehrReports.report.moh204A" />
@@ -1103,16 +1103,17 @@
 			</set></property>
 		<property name="template" value="kenyaemr:moh740.xls" />
 	</bean>
-	<bean id="kenyaemr.ehrReports.report.moh505" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
-		<property name="targetUuid" value="f1bf4967-83f1-491a-83d7-bbfa2b58c981" />
-		<property name="name" value="MOH 505 IDSR" />
-		<property name="description" value="MOH 505 IDSR Weekly Epidemic Monitoring" />
+	<bean id="kenyaemr.ehrReports.report.moh505idsr" class="org.openmrs.module.kenyacore.report.IndicatorReportDescriptor">
+		<property name="targetUuid" value="8967e60d-7595-40c9-a8ff-d7ce17907f83" />
+		<property name="name" value="MOH 505 IDSR Epidemic Case Monitoring" />
+		<property name="description" value="MOH 505 IDSR  Weekly Epidemic Monitoring" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:moh505.xls" />
 	</bean>
+
 	<!-- =========================== IDSR Suspected case list Reports =============================-->
 	<bean id="kenyaemr.ehrReports.report.IDSRSuspectedCaseList" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="a90d0a13-f122-43b7-92c5-ad43a0abd2ca" />
