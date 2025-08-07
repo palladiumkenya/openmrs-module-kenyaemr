@@ -20,34 +20,10 @@ import org.openmrs.module.reporting.query.encounter.definition.EncounterQuery;
 import java.util.Date;
 
 /**
- * cohort definition DailyBedReturnRegisterCohortDefinition
+ * cohort definition DailyBedReturnInterTransferRegisterCohortDefinition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.DailyBedReturnRegisterCohortDefinition")
-public class DailyBedReturnRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
-	@ConfigurationProperty
-	private Date asOfDate;
-
-	@ConfigurationProperty
-	private Integer encounterType;
-
-
-	public DailyBedReturnRegisterCohortDefinition() {
-	}
-
-	public Date getAsOfDate() {
-		return asOfDate;
-	}
-
-	public void setAsOfDate(Date asOfDate) {
-		this.asOfDate = asOfDate;
-	}
-	public Integer getEncounterType() {
-		return encounterType;
-	}
-
-	public void setEncounterType(Integer encounterType) {
-		this.encounterType = encounterType;
-	}
+@Localized("reporting.DailyBedReturnPatientDischargeRegisterCohortDefinition")
+public class DailyBedReturnPatientDischargeRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
 
 }

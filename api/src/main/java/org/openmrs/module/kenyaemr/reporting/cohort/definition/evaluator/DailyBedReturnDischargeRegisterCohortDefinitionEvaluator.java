@@ -12,7 +12,7 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnRegisterCohortDefinition;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnPatientDischargeRegisterCohortDefinition;
 import org.openmrs.module.reporting.common.ObjectUtil;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
@@ -30,8 +30,8 @@ import java.util.List;
  * Evaluator for patients for IPD Daily Bed Return Register
  */
 
-@Handler(supports = {DailyBedReturnRegisterCohortDefinition.class})
-public class DailyBedReturnRegisterCohortDefinitionEvaluator implements EncounterQueryEvaluator {
+@Handler(supports = {DailyBedReturnPatientDischargeRegisterCohortDefinition.class})
+public class DailyBedReturnDischargeRegisterCohortDefinitionEvaluator implements EncounterQueryEvaluator {
 
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
@@ -41,21 +41,19 @@ public class DailyBedReturnRegisterCohortDefinitionEvaluator implements Encounte
 		context = ObjectUtil.nvl(context, new EvaluationContext());
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
-		DailyBedReturnRegisterCohortDefinition cohortDefinition = (DailyBedReturnRegisterCohortDefinition) definition;
-		Integer encounterType = cohortDefinition.getEncounterType();
+		String qry = "SELECT ce.encounter_id from kenyaemr_etl.etl_inpatient_discharge ce\n" +
+				"where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) and ce.voided = 0;";
 
-
-		String qry = "SELECT ce.encounter_id from encounter ce\n" +
-				"where ce.encounter_type = '" + encounterType + "' AND date(ce.date_created) BETWEEN date(:startDate) AND date(:endDate) and ce.voided = 0;";
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
 		Date startDate = (Date)context.getParameterValue("startDate");
 		Date endDate = (Date)context.getParameterValue("endDate");
 		builder.addParameter("endDate", endDate);
 		builder.addParameter("startDate", startDate);
-		builder.addParameter("encounterType", encounterType);
+
 		List<Integer> results = evaluationService.evaluateToList(builder, Integer.class, context);
 		queryResult.getMemberIds().addAll(results);
 		return queryResult;
 	}
+
 }

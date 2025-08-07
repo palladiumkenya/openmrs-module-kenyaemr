@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.bed;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientAdmittedNameDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientAdmissionWardDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates IPD Patient admitted
  */
-@Handler(supports = PatientAdmittedNameDataDefinition.class, order = 50)
-public class PatientAdmittedNameDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports = PatientAdmissionWardDataDefinition.class, order = 50)
+public class PatientAdmissionWardDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,15 +35,14 @@ public class PatientAdmittedNameDataEvaluator implements EncounterDataEvaluator 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT e.encounter_id, \n" +
-                "    CONCAT_WS(' ', d.given_name, d.middle_name, d.family_name) AS patientName\n" +
-                "FROM kenyaemr_etl.etl_patient_demographics d\n" +
-                "INNER JOIN bed_patient_assignment_map e\n" +
-                "    ON e.patient_id = d.patient_id\n" +
-                "INNER JOIN encounter en\n" +
-                "    ON e.encounter_id = en.encounter_id\n" +
-                "WHERE en.encounter_type = 155\n" +
-                "GROUP BY e.encounter_id;";
+        PatientAdmissionWardDataDefinition cohortDefinition = (PatientAdmissionWardDataDefinition) definition;
+        Integer encounterType = cohortDefinition.getEncounterType();
+
+        String qry = "SELECT d.encounter_id, ln.name FROM encounter d\n" +
+                "INNER JOIN location ln \n" +
+                "ON d.location_id = ln.location_id\n" +
+                "WHERE date(d.date_created) BETWEEN date(:startDate) AND date(:endDate) AND d.encounter_type = '"+encounterType+"' \n" +
+                "GROUP BY d.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
@@ -51,6 +50,7 @@ public class PatientAdmittedNameDataEvaluator implements EncounterDataEvaluator 
         Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
+        queryBuilder.addParameter("encounterType", encounterType);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;

@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.bed;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedToDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedLocationDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates IPD Patient admitted
  */
-@Handler(supports = PatientDischargedToDataDefinition.class, order = 50)
-public class PatientDischargeToDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports = PatientDischargedLocationDataDefinition.class, order = 50)
+public class PatientDischargeLocationDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,10 +35,12 @@ public class PatientDischargeToDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT d.encounter_id, ln.name from encounter d\n" +
-                "inner JOIN location ln \n" +
-                "on d.location_id = ln.location_id\n" +
-                "where date(d.date_created) between date(:startDate) and date(:endDate) and d.encounter_type in (154,172) GROUP BY d.patient_id;";
+        String qry = "select d.encounter_id, lc.name\n" +
+                "from kenyaemr_etl.etl_inpatient_discharge d\n" +
+                "inner join location lc \n" +
+                " on d.location_id = lc.location_id\n" +
+                "where date(d.visit_date) between date(:startDate) and date(:endDate) \n" +
+                "group by d.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
