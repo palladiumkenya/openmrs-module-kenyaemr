@@ -1184,7 +1184,7 @@
 				<ref bean="kenyaemr.app.reports" />
 			</set></property>
 		<property name="template" value="kenyaemr:dailyBedReturn.xls" />
-		<property name="repeatingSection" value="sheet:1,row:6,dataset:dailyBedReturn | sheet:2,row:6,dataset:deathDischarge" />
+		<property name="repeatingSection" value="sheet:2,row:6,dataset:dailyBedReturn | sheet:3,row:6,dataset:discharge | sheet:4,row:6,dataset:interWardTransfer" />
 	</bean>
 	<bean id="kenyaemr.ehrReports.report.moh274" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="07a19da2-5b57-44dd-aa6c-98a6e280f472" />

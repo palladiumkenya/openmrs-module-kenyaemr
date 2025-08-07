@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.bed;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedNameDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedDateDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Evaluates IPD Patient admitted
  */
-@Handler(supports = PatientDischargedNameDataDefinition.class, order = 50)
-public class PatientDischargeNameDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports = PatientDischargedDateDataDefinition.class, order = 50)
+public class PatientDischargedDateDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,22 +35,15 @@ public class PatientDischargeNameDataEvaluator implements EncounterDataEvaluator
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-
-
-        String qry = "SELECT e.encounter_id, \n" +
-                "    CONCAT_WS(' ', d.given_name, d.middle_name, d.family_name) AS patientName\n" +
-                "FROM kenyaemr_etl.etl_patient_demographics d\n" +
-                "INNER JOIN bed_patient_assignment_map e\n" +
-                "    ON e.patient_id = d.patient_id\n" +
-                "INNER JOIN encounter en\n" +
-                "    ON e.encounter_id = en.encounter_id\n" +
-                "WHERE en.encounter_type in (154,172,160)\n" +
-                "GROUP BY e.encounter_id;";
+        String qry = "select encounter_id, visit_date\n" +
+                "from kenyaemr_etl.etl_inpatient_discharge \n" +
+                "where date(visit_date) between date(:startDate) and date(:endDate) \n" +
+                "group by encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
-        Date startDate = (Date) context.getParameterValue("startDate");
-        Date endDate = (Date) context.getParameterValue("endDate");
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
         queryBuilder.addParameter("endDate", endDate);
         queryBuilder.addParameter("startDate", startDate);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);

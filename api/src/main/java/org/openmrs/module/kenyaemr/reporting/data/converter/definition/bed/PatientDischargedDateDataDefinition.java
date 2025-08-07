@@ -11,29 +11,28 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed;
 
 import org.openmrs.module.reporting.data.BaseDataDefinition;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.definition.configuration.ConfigurationProperty;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class PatientDischargedNameDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class PatientDischargedDateDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+
 
     public static final long serialVersionUID = 1L;
-
 
     /**
      * Default Constructor
      */
-    public PatientDischargedNameDataDefinition() {
+    public PatientDischargedDateDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public PatientDischargedNameDataDefinition(String name) {
+    public PatientDischargedDateDataDefinition(String name) {
         super(name);
     }
 

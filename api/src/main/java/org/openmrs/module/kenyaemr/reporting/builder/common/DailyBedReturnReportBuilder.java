@@ -14,46 +14,57 @@ import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
-import org.openmrs.module.kenyacore.report.data.patient.definition.CalculationDataDefinition;
-import org.openmrs.module.kenyaemr.Dictionary;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.CountyAddressCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.hiv.SubCountyAddressCalculation;
-import org.openmrs.module.kenyaemr.calculation.library.mchcs.PersonAddressCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
-import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
+import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnPatientDischargeRegisterCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnRegisterCohortDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.CalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.KenyaEMROpenMRSNumberDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientAdmittedNameDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedNameDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedToDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.*;
+import org.openmrs.module.kenyaemr.reporting.library.bed.DailyBedReturnIndicatorLibrary;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
 import org.openmrs.module.reporting.common.SortCriteria;
-import org.openmrs.module.reporting.common.TimeQualifier;
 import org.openmrs.module.reporting.data.DataDefinition;
 import org.openmrs.module.reporting.data.converter.DataConverter;
 import org.openmrs.module.reporting.data.converter.DateConverter;
 import org.openmrs.module.reporting.data.converter.ObjectFormatter;
-import org.openmrs.module.reporting.data.converter.ObsValueConverter;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDatetimeDataDefinition;
 import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.*;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.EncounterDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static org.openmrs.module.kenyacore.report.ReportUtils.map;
+
 @Component
 @Builds({"kenyaemr.ehrReports.report.dailyBedReturn"})
 public class DailyBedReturnReportBuilder extends AbstractReportBuilder {
     public static final String ENC_DATE_FORMAT = "yyyy/MM/dd";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final Integer ADMISSION = 155;
+    public static final Integer TRANSFER = 148;
+    public static final Integer TRANSFER_REQUEST = 150;
+    public static final String OCCUPIED = "OCCUPIED";
+    public static final String AVAILABLE = "AVAILABLE";
+    public static final Integer CURED = 162677;
+    public static final Integer ABSCONDED = 160431;
+    public static final Integer LEFT_AGAINST_MEDICAL_ADVICE = 1694;
+    public static final Integer DECEASED = 159 ;
+    public static final Integer REFERRED_TO_ANOTHER_FACILITY = 164165;
+
+
+
+    @Autowired
+    private DailyBedReturnIndicatorLibrary dailyBedReturnCohortLibrary;
+    String indParams = "startDate=${startDate},endDate=${endDate}";
 
     @Override
     protected List<Parameter> getParameters(ReportDescriptor reportDescriptor) {
@@ -68,10 +79,54 @@ public class DailyBedReturnReportBuilder extends AbstractReportBuilder {
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor reportDescriptor, ReportDefinition reportDefinition) {
         return Arrays.asList(
                 ReportUtils.map(datasetColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(deathAndDischargeDatasetColumns(), "startDate=${startDate},endDate=${endDate}")
+                ReportUtils.map(deathAndDischargeDatasetColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(interWardTransferDatasetColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(summaryDailyBedReturnDataSet(), indParams),
+                ReportUtils.map(indicatorsDataSet(), indParams)
+
+
         );
     }
+    private DataSetDefinition summaryDailyBedReturnDataSet() {
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("DBR");
+        dsd.setDescription("Bed Occupation Status");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addColumn("Current Bed Occupation", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentBedOccupationStatus(OCCUPIED), indParams), "");
+        dsd.addColumn("Current Bed vacant Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentBedOccupationStatus(AVAILABLE), indParams), "");
+        dsd.addColumn("Previous Bed Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviousBedOccupationStatus(OCCUPIED), indParams), "");
+        dsd.addColumn("Previous Bed vacant Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviousBedOccupationStatus(AVAILABLE), indParams), "");
+        dsd.addColumn("Current Total Beds", "", ReportUtils.map(dailyBedReturnCohortLibrary.currentTotalBeds(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("Previous Total Beds", "", ReportUtils.map(dailyBedReturnCohortLibrary.previousTotalBeds(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("Patient Admissions Today", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientsAdmittedByEndOfToday(ADMISSION), indParams), "");
+        dsd.addColumn("Total Patients by End of Reporting Period", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsByEndOfReportingPeriod(ADMISSION,OCCUPIED), indParams), "");
+        dsd.addColumn("Total Patients Discharged today", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientsDischargedByEndOfToday(), indParams), "");
+        dsd.addColumn("Total Patients in Ward", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsRemainingInWardByEndOfReportingPeriod(ADMISSION), indParams), "");
 
+        return dsd;
+    }
+    private DataSetDefinition indicatorsDataSet() {
+        CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
+        dsd.setName("Indicators");
+        dsd.setDescription("Indicators");
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addColumn("Admission", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientAdmissionStatus(ADMISSION), indParams), "");
+        dsd.addColumn("Home", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(CURED), indParams), "");
+        dsd.addColumn("Abscondee", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(ABSCONDED), indParams), "");
+        dsd.addColumn("Left", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(LEFT_AGAINST_MEDICAL_ADVICE), indParams), "");
+        dsd.addColumn("Died", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(DECEASED), indParams), "");
+        dsd.addColumn("Referred", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(REFERRED_TO_ANOTHER_FACILITY), indParams), "");
+        dsd.addColumn("Discharge transfer", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalInterWardTransferDischargeReportingPeriod(TRANSFER), indParams), "");
+        dsd.addColumn("Admission transfer", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalInterWardAdmissionTransferReportingPeriod(ADMISSION), indParams), "");
+        dsd.addColumn("Total Discharged", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientDischargedStatus(), indParams), "");
+
+
+
+
+        return dsd;
+    }
     protected DataSetDefinition datasetColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
         dsd.setName("dailyBedReturn");
@@ -90,36 +145,85 @@ public class DailyBedReturnReportBuilder extends AbstractReportBuilder {
         openMRSNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         openMRSNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
-        PatientAdmittedNameDataDefinition patientAdmittedName = new PatientAdmittedNameDataDefinition();
-        patientAdmittedName.addParameter(new Parameter("endDate", "End Date", Date.class));
-        patientAdmittedName.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        PatientDischargedTypeDataDefinition patientDischargedTypeDataDefinition = new PatientDischargedTypeDataDefinition();
+        patientDischargedTypeDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        patientDischargedTypeDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
-		PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
+        PatientAdmittedDateDataDefinition patientAdmittedDateDataDefinition = new PatientAdmittedDateDataDefinition();
+        patientAdmittedDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        patientAdmittedDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        patientAdmittedDateDataDefinition.setEncounterType(ADMISSION);
 
-        dsd.addColumn("Name", nameDef, "");
+        PatientAdmissionWardDataDefinition wardDataDefinition = new PatientAdmissionWardDataDefinition();
+        wardDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        wardDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        wardDataDefinition.setEncounterType(ADMISSION);
+
+        PatientAdmissionWardDataDefinition wardTransferDataDefinition = new PatientAdmissionWardDataDefinition();
+        wardTransferDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        wardTransferDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        wardTransferDataDefinition.setEncounterType(TRANSFER);
+
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
-        dsd.addColumn("Serial Number", new PersonIdDataDefinition(), "");
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
+        dsd.addColumn("Date", patientAdmittedDateDataDefinition, paramMapping);
+        dsd.addColumn("OpenMRS Number", openMRSNumberDataDefinition, paramMapping);
+        dsd.addColumn("Ward", wardDataDefinition, paramMapping);
+        dsd.addColumn("Transfer Ward", wardTransferDataDefinition, paramMapping);
+        dsd.addColumn("Discharge Type", patientDischargedTypeDataDefinition, paramMapping);
+        dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("Age", new AgeDataDefinition(), "");
         dsd.addColumn("Sex", new GenderDataDefinition(), "");
-        dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");   
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
-        dsd.addColumn("OpenMRS Number", openMRSNumberDataDefinition, paramMapping);
-        dsd.addColumn("Name", patientAdmittedName, paramMapping);
-		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
-		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
-		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
+
         DailyBedReturnRegisterCohortDefinition cd = new DailyBedReturnRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setEncounterType(ADMISSION);
 		dsd.addRowFilter(cd, paramMapping);
 		return dsd;
 
     }
     protected DataSetDefinition deathAndDischargeDatasetColumns() {
         EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
-        dsd.setName("deathDischarge");
-        dsd.setDescription("IPD Visit information");
+        dsd.setName("discharge");
+        dsd.setDescription("IPD Discharge");
+        dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
+        dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        String paramMapping = "startDate=${startDate},endDate=${endDate}";
+
+        DataConverter nameFormatter = new ObjectFormatter("{familyName}, {givenName} {middleName}");
+        DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
+
+        PatientDischargedDateDataDefinition patientDischargedDateDataDefinition = new PatientDischargedDateDataDefinition();
+        patientDischargedDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        patientDischargedDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        PatientDischargedLocationDataDefinition patientDischargedLocationDataDefinition = new PatientDischargedLocationDataDefinition();
+        patientDischargedLocationDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        patientDischargedLocationDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        KenyaEMROpenMRSNumberDataDefinition openMRSNumberDataDefinition = new KenyaEMROpenMRSNumberDataDefinition();
+        openMRSNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        openMRSNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+
+        dsd.addColumn("Name", nameDef, "");
+        dsd.addColumn("id", new PatientIdDataDefinition(), "");
+        dsd.addColumn("Date", patientDischargedDateDataDefinition, paramMapping);
+        dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
+        dsd.addColumn("OpenMRS Number", openMRSNumberDataDefinition, paramMapping);
+        dsd.addColumn("Ward", patientDischargedLocationDataDefinition, paramMapping);
+
+        DailyBedReturnPatientDischargeRegisterCohortDefinition cd = new DailyBedReturnPatientDischargeRegisterCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        dsd.addRowFilter(cd, paramMapping);
+        return dsd;
+
+    }
+    protected DataSetDefinition interWardTransferDatasetColumns() {
+        EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
+        dsd.setName("interWardTransfer");
+        dsd.setDescription("IPD Discharge");
         dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
         dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -129,40 +233,42 @@ public class DailyBedReturnReportBuilder extends AbstractReportBuilder {
         DataDefinition nameDef = new ConvertedPersonDataDefinition("name", new PreferredNameDataDefinition(), nameFormatter);
 
 
+        PatientAdmittedDateDataDefinition patientAdmittedDateDataDefinition = new PatientAdmittedDateDataDefinition();
+        patientAdmittedDateDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        patientAdmittedDateDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        patientAdmittedDateDataDefinition.setEncounterType(TRANSFER);
+
+        PatientAdmissionWardDataDefinition admittedDefinition = new PatientAdmissionWardDataDefinition();
+        admittedDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        admittedDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        admittedDefinition.setEncounterType(ADMISSION);
+
+        PatientAdmissionWardDataDefinition transferredDefinition = new PatientAdmissionWardDataDefinition();
+        transferredDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+        transferredDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        transferredDefinition.setEncounterType(TRANSFER);
 
         KenyaEMROpenMRSNumberDataDefinition openMRSNumberDataDefinition = new KenyaEMROpenMRSNumberDataDefinition();
         openMRSNumberDataDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
         openMRSNumberDataDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
-        PatientDischargedNameDataDefinition patientDischargedName = new PatientDischargedNameDataDefinition();
-        patientDischargedName.addParameter(new Parameter("endDate", "End Date", Date.class));
-        patientDischargedName.addParameter(new Parameter("startDate", "Start Date", Date.class));
-
-        PatientDischargedToDataDefinition patientDischargedTo = new PatientDischargedToDataDefinition();
-        patientDischargedTo.addParameter(new Parameter("endDate", "End Date", Date.class));
-        patientDischargedTo.addParameter(new Parameter("startDate", "Start Date", Date.class));
 
         PersonAttributeType phoneNumber = MetadataUtils.existing(PersonAttributeType.class, CommonMetadata._PersonAttributeType.TELEPHONE_CONTACT);
 
         dsd.addColumn("Name", nameDef, "");
         dsd.addColumn("id", new PatientIdDataDefinition(), "");
-        dsd.addColumn("Serial Number", new PersonIdDataDefinition(), "");
-        dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
-        dsd.addColumn("Age", new AgeDataDefinition(), "");
-        dsd.addColumn("Sex", new GenderDataDefinition(), "");
-        dsd.addColumn("Parent/Caregiver Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
-        dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
+        dsd.addColumn("Date", patientAdmittedDateDataDefinition, paramMapping);
         dsd.addColumn("OpenMRS Number", openMRSNumberDataDefinition, paramMapping);
-        dsd.addColumn("Name", patientDischargedName, paramMapping);
-        dsd.addColumn("Discharged To", patientDischargedTo, paramMapping);
-        dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
-        dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
-        dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());
+        dsd.addColumn("Ward Admitted", admittedDefinition, paramMapping);
+        dsd.addColumn("Ward Transferred", transferredDefinition, paramMapping);
+
         DailyBedReturnRegisterCohortDefinition cd = new DailyBedReturnRegisterCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setEncounterType(TRANSFER);
         dsd.addRowFilter(cd, paramMapping);
         return dsd;
 
     }
+
 }

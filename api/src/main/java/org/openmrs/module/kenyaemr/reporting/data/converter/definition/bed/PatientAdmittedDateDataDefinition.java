@@ -18,22 +18,24 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
 /**
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class PatientAdmittedNameDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class PatientAdmittedDateDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
 
     public static final long serialVersionUID = 1L;
 
+    @ConfigurationProperty
+    private Integer encounterType;
     /**
      * Default Constructor
      */
-    public PatientAdmittedNameDataDefinition() {
+    public PatientAdmittedDateDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public PatientAdmittedNameDataDefinition(String name) {
+    public PatientAdmittedDateDataDefinition(String name) {
         super(name);
     }
 
@@ -44,6 +46,14 @@ public class PatientAdmittedNameDataDefinition extends BaseDataDefinition implem
      */
     public Class<?> getDataType() {
         return Double.class;
+    }
+
+    public Integer getEncounterType() {
+        return encounterType;
+    }
+
+    public void setEncounterType(Integer encounterType) {
+        this.encounterType = encounterType;
     }
 
 }
