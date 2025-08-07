@@ -1057,8 +1057,8 @@ public class FacilityDashboardUtil {
 				"    SELECT \n" +
 				"        x.patient_id AS patient_id,\n" +
 				"        DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), \n" +
-				"        DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
-				"        x.date_test_result_received AS results_date,\n" +
+				"        DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY),\n" +
+				"        x.date_test_result_received AS results_date\n" +
 				"    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
 				"    WHERE x.lab_test = 856\n" +
 				"        AND test_result >= 200\n" +
@@ -1073,7 +1073,7 @@ public class FacilityDashboardUtil {
 				"        BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY) \n" +
 				"        AND CURRENT_DATE\n" +
 				") e ON b.patient_id = e.patient_id\n" +
-				"WHERE e.patient_id IS NULL\n" +
+				"WHERE e.patient_id IS NULL) a\n" +
 				"    inner join\n" +
 				"    (select t.patient_id\n" +
 				"    from (select fup.visit_date,\n" +
