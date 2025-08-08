@@ -31,7 +31,7 @@ import java.util.List;
  * Evaluator for SARI Cohort
  */
 @Handler(supports = { SARICohortDefinition.class })
-public class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+class SariCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
