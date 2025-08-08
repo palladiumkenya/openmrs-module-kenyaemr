@@ -999,7 +999,7 @@ public class PublicHealthActionCohortLibrary {
                 "select v.patient_id\n" +
                 "from kenyaemr_etl.etl_viral_load_validity_tracker v\n" +
                 "     inner join kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id\n" +
-                "where ((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
+                "where (((TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
                 "    v.base_viral_load_test_result is null)                              -- First VL new on ART+\n" +
                 "OR ((v.pregnancy_status = 1065 or v.breastfeeding_status = 1065) and\n" +
                 "    TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3 and\n" +
@@ -1017,7 +1017,7 @@ public class PublicHealthActionCohortLibrary {
                 "    TIMESTAMPDIFF(MONTH, v.date_started_art, v.latest_hiv_followup_visit) >= 3\n" +
                 "    and (v.order_reason in (159882, 1434, 2001237, 163718) and\n" +
                 "         TIMESTAMPDIFF(MONTH, v.date_test_requested, v.latest_hiv_followup_visit) >= 6) and\n" +
-                "    ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200 ))) -- PG & BF after PG/BF baseline < 200\n" +
+                "    ((v.lab_test = 1305 AND v.vl_result = 1302) OR (v.vl_result < 200 )))) -- PG & BF after PG/BF baseline < 200\n" +
                 "       and (v.latest_hiv_followup_visit > IFNULL(v.date_test_requested,'0000-00-00')));";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("eligibleForVLSampleNotTakenZeroGracePeriod");
