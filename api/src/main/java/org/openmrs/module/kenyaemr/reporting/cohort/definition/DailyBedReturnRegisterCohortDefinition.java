@@ -9,13 +9,11 @@
  */
 package org.openmrs.module.kenyaemr.reporting.cohort.definition;
 
-import org.openmrs.Encounter;
+import org.openmrs.module.reporting.cohort.definition.BaseCohortDefinition;
 import org.openmrs.module.reporting.common.Localized;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationProperty;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
-import org.openmrs.module.reporting.query.BaseQuery;
-import org.openmrs.module.reporting.query.encounter.definition.EncounterQuery;
 
 import java.util.Date;
 
@@ -24,30 +22,40 @@ import java.util.Date;
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
 @Localized("reporting.DailyBedReturnRegisterCohortDefinition")
-public class DailyBedReturnRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
+public class DailyBedReturnRegisterCohortDefinition extends BaseCohortDefinition {
 	@ConfigurationProperty
-	private Date asOfDate;
+	private Date startDate;
 
 	@ConfigurationProperty
-	private Integer encounterType;
+	private Date endDate;
 
+	@ConfigurationProperty
+	private String encounterType;
 
 	public DailyBedReturnRegisterCohortDefinition() {
 	}
 
-	public Date getAsOfDate() {
-		return asOfDate;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setAsOfDate(Date asOfDate) {
-		this.asOfDate = asOfDate;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
-	public Integer getEncounterType() {
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getEncounterType() {
 		return encounterType;
 	}
 
-	public void setEncounterType(Integer encounterType) {
+	public void setEncounterType(String encounterType) {
 		this.encounterType = encounterType;
 	}
-
 }

@@ -11,19 +11,21 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnRegisterCohortDefinition;
+import org.openmrs.module.reporting.cohort.EvaluatedCohort;
+import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
 import org.openmrs.module.reporting.common.ObjectUtil;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
-import org.openmrs.module.reporting.query.encounter.EncounterQueryResult;
-import org.openmrs.module.reporting.query.encounter.definition.EncounterQuery;
-import org.openmrs.module.reporting.query.encounter.evaluator.EncounterQueryEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -31,22 +33,26 @@ import java.util.List;
  */
 
 @Handler(supports = {DailyBedReturnRegisterCohortDefinition.class})
-public class DailyBedReturnRegisterCohortDefinitionEvaluator implements EncounterQueryEvaluator {
+public class DailyBedReturnRegisterCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	EvaluationService evaluationService;
 
-	public EncounterQueryResult evaluate(EncounterQuery definition, EvaluationContext context) throws EvaluationException {
+	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
+		if (cohortDefinition == null)
+			return null;
+
+		DailyBedReturnRegisterCohortDefinition definition = (DailyBedReturnRegisterCohortDefinition) cohortDefinition;
+		String encounterType = definition.getEncounterType();
+
+
+		Cohort newCohort = new Cohort();
 		context = ObjectUtil.nvl(context, new EvaluationContext());
-		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
-		DailyBedReturnRegisterCohortDefinition cohortDefinition = (DailyBedReturnRegisterCohortDefinition) definition;
-		Integer encounterType = cohortDefinition.getEncounterType();
-
-
-		String qry = "SELECT ce.encounter_id from encounter ce\n" +
-				"where ce.encounter_type = '" + encounterType + "' AND date(ce.date_created) BETWEEN date(:startDate) AND date(:endDate) and ce.voided = 0;";
+		String qry = "SELECT ce.patient_id from encounter ce\n" +
+				"inner join encounter_type et on ce.encounter_type = et.encounter_type_id\n" +
+				"where et.uuid = '" + encounterType + "' AND date(ce.date_created) BETWEEN date(:startDate) AND date(:endDate) and ce.voided = 0;";
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
 		Date startDate = (Date)context.getParameterValue("startDate");
@@ -54,8 +60,8 @@ public class DailyBedReturnRegisterCohortDefinitionEvaluator implements Encounte
 		builder.addParameter("endDate", endDate);
 		builder.addParameter("startDate", startDate);
 		builder.addParameter("encounterType", encounterType);
-		List<Integer> results = evaluationService.evaluateToList(builder, Integer.class, context);
-		queryResult.getMemberIds().addAll(results);
-		return queryResult;
+		List<Integer> ptIds = evaluationService.evaluateToList(builder, Integer.class, context);
+		newCohort.setMemberIds(new HashSet<>(ptIds));
+		return new EvaluatedCohort(newCohort, definition, context);
 	}
 }

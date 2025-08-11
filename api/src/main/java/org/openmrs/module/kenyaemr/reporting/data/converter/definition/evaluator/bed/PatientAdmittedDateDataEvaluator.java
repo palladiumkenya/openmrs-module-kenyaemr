@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientAdmittedDateDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
+import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
+import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,22 +27,23 @@ import java.util.Map;
  * Evaluates IPD Patient admitted
  */
 @Handler(supports = PatientAdmittedDateDataDefinition.class, order = 50)
-public class PatientAdmittedDateDataEvaluator implements EncounterDataEvaluator {
+public class PatientAdmittedDateDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         PatientAdmittedDateDataDefinition cohortDefinition = (PatientAdmittedDateDataDefinition) definition;
-        Integer encounterType = cohortDefinition.getEncounterType();
+        String encounterType = cohortDefinition.getEncounterType();
 
-        String qry = "select encounter_id, date_created\n" +
-                "from encounter \n" +
-                "where date(date_created) between date(:startDate) and date(:endDate) \n" +
-                "and encounter_type = '"+encounterType+"'\n" +
-                "group by encounter_id;";
+        String qry = "select ce.patient_id, ce.date_created\n" +
+                "from encounter  ce\n" +
+                "inner join encounter_type et on ce.encounter_type = et.encounter_type_id\n" +
+                "where date(ce.date_created) between date(:startDate) and date(:endDate) \n" +
+                "and et.uuid = '"+encounterType+"'\n" +
+                "group by ce.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
