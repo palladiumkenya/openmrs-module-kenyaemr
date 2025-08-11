@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.PatientDischargedTypeDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
+import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
+import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,15 +27,15 @@ import java.util.Map;
  * Evaluates IPD Patient admitted
  */
 @Handler(supports = PatientDischargedTypeDataDefinition.class, order = 50)
-public class PatientDischargedTypeDataEvaluator implements EncounterDataEvaluator {
+public class PatientDischargedTypeDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select d.encounter_id,\n" +
+        String qry = "select d.patient_id,\n" +
                 "(case v.discharge_status when 162677 then 'Cured' when 160431 then 'Absconded' when 1694 then 'Left against Medical Advice' when 159 then 'Dead' \n" +
                 "when 164165 then 'Referred to another facility'\n" +
                 "else '' end) as discharge_status\n" +

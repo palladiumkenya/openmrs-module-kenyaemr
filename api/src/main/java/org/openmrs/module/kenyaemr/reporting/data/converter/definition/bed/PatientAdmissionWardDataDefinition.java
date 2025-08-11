@@ -8,9 +8,8 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed;
-
 import org.openmrs.module.reporting.data.BaseDataDefinition;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
+import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationProperty;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
@@ -18,12 +17,12 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
 /**
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class PatientAdmissionWardDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class PatientAdmissionWardDataDefinition extends BaseDataDefinition implements PersonDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     @ConfigurationProperty
-    private Integer encounterType;
+    private String encounterType;
 
     /**
      * Default Constructor
@@ -48,11 +47,11 @@ public class PatientAdmissionWardDataDefinition extends BaseDataDefinition imple
         return Double.class;
     }
 
-    public Integer getEncounterType() {
+    public String getEncounterType() {
         return encounterType;
     }
 
-    public void setEncounterType(Integer encounterType) {
+    public void setEncounterType(String encounterType) {
         this.encounterType = encounterType;
     }
 

@@ -14,6 +14,9 @@ import org.openmrs.module.kenyaemr.reporting.data.converter.definition.bed.Patie
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
+import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
+import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,15 +30,15 @@ import java.util.Map;
  * Evaluates IPD Patient admitted
  */
 @Handler(supports = PatientDischargedDateDataDefinition.class, order = 50)
-public class PatientDischargedDateDataEvaluator implements EncounterDataEvaluator {
+public class PatientDischargedDateDataEvaluator implements PersonDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
-        String qry = "select encounter_id, visit_date\n" +
+        String qry = "select patient_id, visit_date\n" +
                 "from kenyaemr_etl.etl_inpatient_discharge \n" +
                 "where date(visit_date) between date(:startDate) and date(:endDate) \n" +
                 "group by encounter_id;";

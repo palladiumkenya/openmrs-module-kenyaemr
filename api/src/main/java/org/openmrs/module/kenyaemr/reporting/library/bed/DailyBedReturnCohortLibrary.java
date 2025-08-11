@@ -8,7 +8,6 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.reporting.library.bed;
-import org.openmrs.Concept;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -67,12 +66,12 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Patient Discharged");
         return cd;
     }
-    public CohortDefinition patientAdmissionStatus(Integer admissionStatus) {
+    public CohortDefinition patientAdmissionStatus(String admissionStatus) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select patient_id\n" +
                 "from encounter \n" +
                 "where date(date_created) between date(:startDate) and date(:endDate) \n" +
-                "and encounter_type = '" + admissionStatus + "';";
+                "and uuid = '" + admissionStatus + "';";
 
         cd.setName("Patient Discharged");
         cd.setQuery(sqlQuery);
@@ -110,7 +109,7 @@ public class DailyBedReturnCohortLibrary {
         return cd;
     }
 
-    public CohortDefinition totalInterWardTransferDischargeReportingPeriod(Integer admissionStatus) {
+    public CohortDefinition totalInterWardTransferDischargeReportingPeriod(String admissionStatus) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.setName("Total Patients Inter ward discharge");
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -153,7 +152,7 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Previous Total Bed Occupation Status");
         return cd;
     }
-    public CohortDefinition patientsAdmittedByEndOfToday(Integer admissionStatus) {
+    public CohortDefinition patientsAdmittedByEndOfToday(String admissionStatus) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select patient_id\n" +
                 "from encounter \n" +
@@ -178,7 +177,7 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Patients Discharged today.");
         return cd;
     }
-    public CohortDefinition totalInterWardAdmissionTransferReportingPeriod(Integer admissionStatus) {
+    public CohortDefinition totalInterWardAdmissionTransferReportingPeriod(String admissionStatus) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.setName("Total Patients by End of Reporting Period");
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -189,7 +188,7 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Total Patients by End of Reporting Period");
         return cd;
     }
-    public CohortDefinition totalPatientsByEndOfReportingPeriod(Integer admissionStatus, String occupationStatus) {
+    public CohortDefinition totalPatientsByEndOfReportingPeriod(String admissionStatus, String occupationStatus) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.setName("Total Patients by End of Reporting Period");
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -200,7 +199,7 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Total Patients by End of Reporting Period");
         return cd;
     }
-    public CohortDefinition totalPatientsRemainingInWardByEndOfReportingPeriod(Integer admissionStatus) {
+    public CohortDefinition totalPatientsRemainingInWardByEndOfReportingPeriod(String admissionStatus) {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.setName("Total Patients at the ward at the End of Reporting Period");
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));

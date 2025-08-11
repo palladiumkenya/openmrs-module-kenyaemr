@@ -11,8 +11,12 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.DailyBedReturnPatientDischargeRegisterCohortDefinition;
+import org.openmrs.module.reporting.cohort.EvaluatedCohort;
+import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
 import org.openmrs.module.reporting.common.ObjectUtil;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
@@ -24,6 +28,7 @@ import org.openmrs.module.reporting.query.encounter.evaluator.EncounterQueryEval
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -31,17 +36,23 @@ import java.util.List;
  */
 
 @Handler(supports = {DailyBedReturnPatientDischargeRegisterCohortDefinition.class})
-public class DailyBedReturnDischargeRegisterCohortDefinitionEvaluator implements EncounterQueryEvaluator {
+public class DailyBedReturnDischargeRegisterCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
 
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	EvaluationService evaluationService;
 
-	public EncounterQueryResult evaluate(EncounterQuery definition, EvaluationContext context) throws EvaluationException {
-		context = ObjectUtil.nvl(context, new EvaluationContext());
-		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
-		String qry = "SELECT ce.encounter_id from kenyaemr_etl.etl_inpatient_discharge ce\n" +
+	public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
+		if (cohortDefinition == null)
+			return null;
+
+		DailyBedReturnPatientDischargeRegisterCohortDefinition definition = (DailyBedReturnPatientDischargeRegisterCohortDefinition) cohortDefinition;
+
+		Cohort newCohort = new Cohort();
+		context = ObjectUtil.nvl(context, new EvaluationContext());
+
+		String qry = "SELECT ce.patient_id from kenyaemr_etl.etl_inpatient_discharge ce\n" +
 				"where date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate) and ce.voided = 0;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
@@ -50,10 +61,9 @@ public class DailyBedReturnDischargeRegisterCohortDefinitionEvaluator implements
 		Date endDate = (Date)context.getParameterValue("endDate");
 		builder.addParameter("endDate", endDate);
 		builder.addParameter("startDate", startDate);
-
-		List<Integer> results = evaluationService.evaluateToList(builder, Integer.class, context);
-		queryResult.getMemberIds().addAll(results);
-		return queryResult;
+		List<Integer> ptIds = evaluationService.evaluateToList(builder, Integer.class, context);
+		newCohort.setMemberIds(new HashSet<>(ptIds));
+		return new EvaluatedCohort(newCohort, definition, context);
 	}
 
 }

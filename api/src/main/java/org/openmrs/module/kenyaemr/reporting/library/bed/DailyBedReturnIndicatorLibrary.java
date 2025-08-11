@@ -43,26 +43,26 @@ public class DailyBedReturnIndicatorLibrary {
 	public CohortIndicator totalPatientDischargedStatus() {
 		return cohortIndicator("Discharged Status", ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientDischargedStatus(), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator patientAdmissionStatus(Integer admissionStatus) {
+	public CohortIndicator patientAdmissionStatus(String admissionStatus) {
 		return cohortIndicator("Discharged Status", ReportUtils.map(dailyBedReturnCohortLibrary.patientAdmissionStatus(admissionStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
 
-	public CohortIndicator patientsAdmittedByEndOfToday( Integer admissionStatus) {
+	public CohortIndicator patientsAdmittedByEndOfToday( String admissionStatus) {
 		return cohortIndicator("Patient Admissions Today", ReportUtils.map(dailyBedReturnCohortLibrary.patientsAdmittedByEndOfToday(admissionStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator totalPatientsByEndOfReportingPeriod( Integer admissionStatus, String occupationStatus) {
+	public CohortIndicator totalPatientsByEndOfReportingPeriod( String admissionStatus, String occupationStatus) {
 		return cohortIndicator("Total Patients by End of Reporting Period", ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsByEndOfReportingPeriod(admissionStatus,occupationStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator patientsDischargedByEndOfToday() {
 		return cohortIndicator("Total Patients Discharged today", ReportUtils.map(dailyBedReturnCohortLibrary.patientsDischargedByEndOfToday(), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator totalPatientsRemainingInWardByEndOfReportingPeriod(Integer admissionStatus) {
+	public CohortIndicator totalPatientsRemainingInWardByEndOfReportingPeriod(String admissionStatus) {
 		return cohortIndicator("Total Patients in Ward", ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsRemainingInWardByEndOfReportingPeriod(admissionStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator totalInterWardTransferDischargeReportingPeriod(Integer admissionStatus) {
+	public CohortIndicator totalInterWardTransferDischargeReportingPeriod(String admissionStatus) {
 		return cohortIndicator("Total Patients Inter ward discharge", ReportUtils.map(dailyBedReturnCohortLibrary.totalInterWardTransferDischargeReportingPeriod(admissionStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator totalInterWardAdmissionTransferReportingPeriod(Integer admissionStatus) {
+	public CohortIndicator totalInterWardAdmissionTransferReportingPeriod(String admissionStatus) {
 		return cohortIndicator("Total Patients Inter ward Admission", ReportUtils.map(dailyBedReturnCohortLibrary.totalInterWardAdmissionTransferReportingPeriod(admissionStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
 
