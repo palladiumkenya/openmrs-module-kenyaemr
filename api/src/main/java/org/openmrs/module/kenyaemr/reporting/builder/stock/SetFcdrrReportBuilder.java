@@ -205,31 +205,31 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	private String getFcdrrDrugSummary(int drugId, int factor, int unit) {
 		String query =
 				"SELECT\n" +
-						"    %d AS unit_pack_size,\n" +
-						"    COALESCE(prev_month.closing_balance, 0) AS opening_balance,\n" +
-						"    COALESCE(curr_receipts.quantity, 0) AS curr_receipts,\n" +
-						"    COALESCE(curr_dispensed.quantity, 0) AS curr_dispensed,\n" +
-						"    COALESCE(curr_losses.quantity, 0) AS curr_loss,\n" +
-						"    COALESCE(pos_adjustments.quantity, 0) AS pos_adj,\n" +
-						"    COALESCE(neg_adjustments.quantity, 0) AS neg_adj,\n" +
-						"    COALESCE(\n" +
+						"    COALESCE(sspu.factor, 0) AS unit_pack_size,\n" +
+						"    ROUND(COALESCE(prev_month.closing_balance, 0), 2) AS opening_balance,\n" +
+						"    ROUND(COALESCE(COALESCE(curr_receipts.quantity, 0) + COALESCE(opening_balance.quantity, 0), 0), 2) AS curr_receipts,\n" +
+						"    ROUND(COALESCE(curr_dispensed.quantity, 0), 2) AS curr_dispensed,\n" +
+						"    ROUND(COALESCE(curr_losses.quantity, 0), 2) AS curr_loss,\n" +
+						"    ROUND(COALESCE(pos_adjustments.quantity, 0), 2) AS pos_adj,\n" +
+						"    ROUND(COALESCE(neg_adjustments.quantity, 0), 2) AS neg_adj,\n" +
+						"    ROUND(\n" +
 						"        COALESCE(prev_month.closing_balance, 0) +\n" +
-						"        COALESCE(curr_receipts.quantity, 0) -\n" +
+						"        COALESCE(COALESCE(curr_receipts.quantity, 0) + COALESCE(opening_balance.quantity, 0), 0) -\n" +
 						"        COALESCE(curr_dispensed.quantity, 0) -\n" +
 						"        COALESCE(curr_losses.quantity, 0) +\n" +
-						"        COALESCE(pos_adjustments.quantity, 0) +\n" +
+						"        COALESCE(pos_adjustments.quantity, 0) -\n" +
 						"        COALESCE(neg_adjustments.quantity, 0),\n" +
-						"    0\n" +
+						"    2\n" +
 						"    ) AS stck_take,\n" +
-						"    COALESCE(early_expiry.quantity, 0) AS earliest_expiry_quantity,\n" +
+						"    ROUND(COALESCE(early_expiry.quantity, 0), 2) AS earliest_expiry_quantity,\n" +
 						"    COALESCE(\n" +
-						"        IF(early_expiry.earliest_expiry_date IS NULL, \n" +
-						"            '0', \n" +
+						"        IF(early_expiry.earliest_expiry_date IS NULL,\n" +
+						"            '0',\n" +
 						"            DATE_FORMAT(early_expiry.earliest_expiry_date, '%%Y-%%m-%%d')\n" +
-						"        ), \n" +
+						"        ),\n" +
 						"        '0'\n" +
 						"    ) AS earliest_expiry_date,\n" +
-						"    COALESCE(curr_requisitions.quantity, 0) AS curr_requested,\n" +
+						"    ROUND(COALESCE(curr_requisitions.quantity, 0), 2) AS curr_requested,\n" +
 						"    COALESCE(days_out_of_stock.days, 0) AS days_out_of_stock\n" +
 						"FROM (SELECT %d AS drug_id, %d AS dispensing_unit_id) AS params\n" +
 						"LEFT JOIN stockmgmt_stock_item ssi\n" +
@@ -238,65 +238,91 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"LEFT JOIN stockmgmt_stock_item_packaging_uom sspu\n" +
 						"    ON sspu.stock_item_id = ssi.stock_item_id\n" +
 						"    AND sspu.factor = %d\n" +
+						"    -- Previous month\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT \n" +
+						"    SELECT\n" +
 						"        si.drug_id, si.dispensing_unit_id,\n" +
-						"        SUM(CASE \n" +
-						"            WHEN ssto.operation_type_id IN (9, 4) THEN stit.quantity\n" +
-						"            WHEN ssto.operation_type_id IN (1) AND stit.quantity > 0 THEN stit.quantity\n" +
-						"            WHEN ssto.operation_type_id IN (6, 3, 2) THEN -stit.quantity\n" +
-						"            WHEN ssto.operation_type_id IN (1) AND stit.quantity < 0 THEN stit.quantity\n" +
+						"        SUM(CASE\n" +
+						"            WHEN ssto.operation_type_id IN (9) THEN stit.quantity * uom.factor\n" +
+						"            WHEN ssto.operation_type_id IN (4) THEN stit.quantity * uom.factor\n" +
+						"            WHEN ssto.operation_type_id IN (1) AND stit.quantity > 0 THEN stit.quantity * uom.factor\n" +
+						"            WHEN ssto.operation_type_id IN (6, 3, 2) THEN -stit.quantity * uom.factor\n" +
+						"            WHEN ssto.operation_type_id IN (1) AND stit.quantity < 0 THEN stit.quantity * uom.factor\n" +
+						"            WHEN ssto.stock_operation_id IS NULL AND stit.quantity < 0 THEN stit.quantity * uom.factor\n" +
 						"            ELSE 0\n" +
 						"        END) AS closing_balance\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
-						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
+						"    LEFT JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
 						"      AND stit.date_created < :startDate\n" +
-						"      AND ssto.status = 'COMPLETED'\n" +
+						"      AND (ssto.status = 'COMPLETED' OR ssto.stock_operation_id IS NULL)\n" +
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") prev_month ON prev_month.drug_id = params.drug_id AND prev_month.dispensing_unit_id = params.dispensing_unit_id\n" +
+
+						"    -- Current Received\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity) AS quantity\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity * uom.factor) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
 						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
 						"      AND ssto.operation_type_id IN (4)\n" +
 						"      AND stit.date_created BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
 						"      AND ssto.status = 'COMPLETED'\n" +
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") curr_receipts ON curr_receipts.drug_id = params.drug_id AND curr_receipts.dispensing_unit_id = params.dispensing_unit_id\n" +
-						"#Previous Issues + Disposals + TO\n"+
+
+						"    -- Opening Balance\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(-stit.quantity) AS quantity\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity * uom.factor) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
 						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
-						"      AND ssto.operation_type_id IN (3)\n" +
+						"      AND ssto.operation_type_id IN (9)\n" +
 						"      AND stit.date_created BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
 						"      AND ssto.status = 'COMPLETED'\n" +
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
-						") curr_dispensed ON curr_dispensed.drug_id = params.drug_id AND curr_dispensed.dispensing_unit_id = params.dispensing_unit_id\n" +
-						"#Current Disposals, losses and wastages\n" +
+						") opening_balance ON opening_balance.drug_id = params.drug_id AND opening_balance.dispensing_unit_id = params.dispensing_unit_id\n" +
+
+						"    -- Current Dispensed\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(-stit.quantity) AS quantity\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(-stit.quantity * uom.factor) AS quantity\n" +
+						"    FROM stockmgmt_stock_item_transaction stit\n" +
+						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
+						"    WHERE si.drug_id = %d\n" +
+						"      AND si.dispensing_unit_id = %d\n" +
+						"      AND stit.date_created BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+						"      AND stit.stock_operation_id IS NULL AND stit.quantity < 0\n" +
+						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
+						") curr_dispensed ON curr_dispensed.drug_id = params.drug_id AND curr_dispensed.dispensing_unit_id = params.dispensing_unit_id\n" +
+
+						"    -- Current Losses\n" +
+						"LEFT JOIN (\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(-stit.quantity * uom.factor) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
 						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
 						"      AND ssto.operation_type_id IN (2)\n" +
 						"      AND stit.date_created BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
 						"      AND ssto.status = 'COMPLETED'\n" +
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") curr_losses ON curr_losses.drug_id = params.drug_id AND curr_losses.dispensing_unit_id = params.dispensing_unit_id\n" +
-						"#Current Positive adjustments\n" +
+
+						"    -- Positive Adjustment\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity) AS quantity\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity * uom.factor) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
 						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
 						"      AND ssto.operation_type_id IN (1)\n" +
 						"      AND stit.quantity > 0\n" +
@@ -305,12 +331,13 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") pos_adjustments ON pos_adjustments.drug_id = params.drug_id AND pos_adjustments.dispensing_unit_id = params.dispensing_unit_id\n" +
 
-						"#Current Negative adjustments : Transfer out\n" +
+						"    -- Negative Adjustment\n" +
 						"LEFT JOIN (\n" +
-						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity) AS quantity\n" +
+						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(-stit.quantity * uom.factor) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
 						"    INNER JOIN stockmgmt_stock_operation ssto ON stit.stock_operation_id = ssto.stock_operation_id\n" +
 						"    INNER JOIN stockmgmt_stock_item si ON stit.stock_item_id = si.stock_item_id\n" +
+						"    INNER JOIN stockmgmt_stock_item_packaging_uom uom ON stit.stock_item_packaging_uom_id = uom.stock_item_packaging_uom_id\n" +
 						"    WHERE si.drug_id = %d AND si.dispensing_unit_id = %d\n" +
 						"      AND ssto.operation_type_id IN (1)\n" +
 						"      AND stit.quantity < 0\n" +
@@ -319,7 +346,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") neg_adjustments ON neg_adjustments.drug_id = params.drug_id AND neg_adjustments.dispensing_unit_id = params.dispensing_unit_id\n" +
 
-						"#Expiring in 6 months\n" +
+						"    -- Early Expiry\n" +
 						"LEFT JOIN (\n" +
 						"    SELECT si.drug_id, si.dispensing_unit_id,\n" +
 						"        MIN(ssbt.expiration) AS earliest_expiry_date,\n" +
@@ -332,7 +359,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") early_expiry ON early_expiry.drug_id = params.drug_id AND early_expiry.dispensing_unit_id = params.dispensing_unit_id\n" +
 
-						"#Current Requisition\n" +
+						"    -- Current Requisition\n" +
 						"LEFT JOIN (\n" +
 						"    SELECT si.drug_id, si.dispensing_unit_id, SUM(stit.quantity) AS quantity\n" +
 						"    FROM stockmgmt_stock_item_transaction stit\n" +
@@ -344,7 +371,8 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"      AND ssto.status = 'COMPLETED'\n" +
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") curr_requisitions ON curr_requisitions.drug_id = params.drug_id AND curr_requisitions.dispensing_unit_id = params.dispensing_unit_id\n" +
-						"#Stock take\n" +
+
+						"    -- Days out of stock\n" +
 						"LEFT JOIN (\n" +
 						"    SELECT si.drug_id, si.dispensing_unit_id,\n" +
 						"        COUNT(DISTINCT DATE(stit.date_created)) AS days\n" +
@@ -356,8 +384,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 						"    GROUP BY si.drug_id, si.dispensing_unit_id\n" +
 						") days_out_of_stock ON days_out_of_stock.drug_id = params.drug_id AND days_out_of_stock.dispensing_unit_id = params.dispensing_unit_id;";
 
-		return String.format(query,
-				factor, drugId, unit, factor, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit
-		);
+		return String.format(query, drugId, unit, factor, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit, drugId, unit,drugId, unit,drugId, unit,drugId, unit);
 	}
+
 }
