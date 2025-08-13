@@ -62,11 +62,12 @@ public class Moh505CohortLibrary {
                 "     AND c.patient_outcome = " + patientOutcome + " AND DATE(c.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "    GROUP BY patient_id\n" +
                 "    UNION ALL\n" +
-                "    SELECT patient_id, GROUP_CONCAT(h.general_examination) AS general_examination\n" +
-                "    FROM kenyaemr_etl.etl_patient_hiv_followup h\n" +
-                "    WHERE h.general_examination LIKE '%Jaundice%'\n" +
+                "    SELECT h.patient_id, GROUP_CONCAT(h.general_examination) AS general_examination\n" +
+                "    FROM kenyaemr_etl.etl_patient_hiv_followup h " +
+                "    LEFT JOIN kenyaemr_etl.etl_patient_program_discontinuation d on h.patient_id = d.patient_id\n" +
+                "    WHERE h.general_examination LIKE '%Jaundice%' AND d.discontinuation_reason = '160034'\n" +
                 "      AND DATE(h.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "    GROUP BY patient_id\n" +
+                "    GROUP BY h.patient_id\n" +
                 ") a\n" +
                 "WHERE a.general_examination IS NOT NULL\n" +
                 "  AND FIND_IN_SET('Jaundice', a.general_examination) > 0;";
