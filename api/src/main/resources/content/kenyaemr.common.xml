@@ -114,6 +114,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh416" />
 				<ref bean="kenyaemr.ehrReports.report.moh417" />
 				<ref bean="kenyaemr.ehrReports.report.moh270" />
+				<ref bean="kenyaemr.ehrReports.report.moh512" />
 				<ref bean="kenyaemr.ehrReports.report.moh419B" />
 				<ref bean="kenyaemr.ehrReports.report.moh420" />
 				<ref bean="kenyaemr.ehrReports.report.moh274" />
@@ -1249,6 +1250,19 @@
 		<property name="template" value="kenyaemr:moh270.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:MOH270" />
 	</bean>
+
+	<bean id="kenyaemr.ehrReports.report.moh512" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="482fabf5-847e-4389-8433-3bf6159b3241" />
+		<property name="name" value="MOH 512 Family Planning Register" />
+		<property name="description" value="MOH 512 Family Planning Register" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set></property>
+		<property name="template" value="kenyaemr:moh512.xls" />
+		<property name="repeatingSection" value="sheet:1,row:12,dataset:MOH512" />
+	</bean>
+
 
 	<bean id="kenyaemr.ehrReports.report.facility.monthly.collection" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
 		<property name="targetUuid" value="51856a05-529a-4b9f-866b-2e6695c0d150" />
