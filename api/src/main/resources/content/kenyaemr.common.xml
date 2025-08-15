@@ -125,6 +125,7 @@
 				<ref bean="kenyaemr.ehrReports.report.moh755" />
                  <ref bean="kenyaemr.ehrReports.report.fcdrr" />
                  <ref bean="kenyaemr.ehrReports.report.clinicianWorkloadReport" />
+                 <ref bean="kenyaemr.ehrReports.report.moh301InpatientRegister" />
 			</set>
 		</property>
 	</bean>
@@ -1341,5 +1342,18 @@
 		</property>
 		<property name="template" value="kenyaemr:provider-workload.xls" />
 		<property name="repeatingSection" value="sheet:1,row:6,dataset:providerWorkload" />
+	</bean>
+
+	<bean id="kenyaemr.ehrReports.report.moh301InpatientRegister" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">
+		<property name="targetUuid" value="5fbb85f1-68a4-4fde-ae49-8daf61306ea0" />
+		<property name="name" value="MoH 301 Inpatient Register" />
+		<property name="description" value="A line list of patients admitted in hospital" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.reports" />
+			</set>
+		</property>
+		<property name="template" value="kenyaemr:MOH301_IP_register.xls" />
+		<property name="repeatingSection" value="sheet:2,row:6,dataset:admittedPatients" />
 	</bean>
 </beans>
