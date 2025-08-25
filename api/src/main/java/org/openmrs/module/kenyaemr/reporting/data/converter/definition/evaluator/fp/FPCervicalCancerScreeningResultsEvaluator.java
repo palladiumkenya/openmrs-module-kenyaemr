@@ -30,11 +30,10 @@ import java.util.Map;
 public class FPCervicalCancerScreeningResultsEvaluator implements EncounterDataEvaluator {
     @Autowired
     private EvaluationService evaluationService;
-    //hpv_screening_result
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        //String qry = "select v.encounter_id, v.hpv_screening_result from kenyaemr_etl.etl_cervical_cancer_screening v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+
 
         String qry = "SELECT " +
                 "    f.encounter_id, " +

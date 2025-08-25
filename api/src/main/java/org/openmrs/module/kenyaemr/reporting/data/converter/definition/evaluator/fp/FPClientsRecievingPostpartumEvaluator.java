@@ -37,16 +37,10 @@ public class FPClientsRecievingPostpartumEvaluator implements EncounterDataEvalu
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
 
-        String qry =
-                "SELECT v.encounter_id, " +
-                        "       CASE v.receiving_postpartum_fp " +
-                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '162253AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'immediate post partum(< 48 hrs)' " +
-                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = 'c14ae81a-bce4-4f53-8b36-7e582f79759d') THEN 'post partum (> 48 hrs to 6 weeks)' " +
-                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '164820AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'post abortion (within 7 days)' " +
-                        "           ELSE NULL " +
-                        "       END AS receiving_postpartum_fp " +
-                        "FROM kenyaemr_etl.etl_family_planning v " +
-                        "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+        String qry = "SELECT v.encounter_id,  cn.name AS receiving_postpartum_fp " +
+                "FROM kenyaemr_etl.etl_family_planning v LEFT JOIN openmrs.concept c ON c.concept_id = v.receiving_postpartum_fp " +
+                "LEFT JOIN openmrs.concept_name cn  ON cn.concept_id = c.concept_id  AND cn.locale = 'en' " +
+                " AND cn.concept_name_type = 'FULLY_SPECIFIED' WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

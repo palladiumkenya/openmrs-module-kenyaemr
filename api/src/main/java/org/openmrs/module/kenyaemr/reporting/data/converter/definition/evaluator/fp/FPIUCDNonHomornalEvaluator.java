@@ -35,33 +35,20 @@ public class FPIUCDNonHomornalEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
 
-//        String qry = "SELECT " +
-//                "    c.concept_id, " +
-//                "    cn.name AS concept_name " +
-//                "FROM openmrs.concept c " +
-//                "JOIN openmrs.concept_name cn " +
-//                "    ON c.concept_id = cn.concept_id " +
-//                "JOIN kenyaemr_etl.etl_family_planning fp " +
-//                "    ON fp.contraceptive_dispensed = c.concept_id " +
-//                "WHERE c.uuid = '162794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' " +
-//                "  AND cn.locale = 'en' " +
-//                "  AND cn.voided = 0 " +
-//                "AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
-
-        String qry = "SELECT " +
-                "    fp.encounter_id, " +
-                "    cn.name AS concept_name " +
-                "FROM " +
-                "    kenyaemr_etl.etl_family_planning fp " +
-                "JOIN " +
-                "    openmrs.concept c ON fp.contraceptive_dispensed = c.concept_id " +
-                "JOIN " +
-                "    openmrs.concept_name cn ON c.concept_id = cn.concept_id " +
-                "WHERE " +
-                "    c.uuid = '162794AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' " +
-                "    AND cn.locale = 'en' " +
-                "    AND cn.voided = 0 " +
-                "AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+        String qry =
+                "SELECT " +
+                        "    fp.encounter_id, " +
+                        "    cn.name AS contraceptive_dispensed " +
+                        "FROM " +
+                        "    kenyaemr_etl.etl_family_planning fp " +
+                        "JOIN " +
+                        "    openmrs.concept c ON fp.contraceptive_dispensed = c.concept_id " +
+                        "JOIN " +
+                        "    openmrs.concept_name cn ON c.concept_id = cn.concept_id " +
+                        "WHERE " +
+                        "    cn.locale = 'en' " +
+                        "    AND cn.voided = 0 " +
+                        "    AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -34,20 +34,19 @@ public class FPCervicalCancerScreeningYNEvaluator implements EncounterDataEvalua
 
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
-        //hpv_screening_method
 
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT " +
-                "    f.encounter_id, " +
-                "    CASE " +
-                "        WHEN c.colposcopy_screening_method IS NOT NULL THEN c.colposcopy_screening_method " +
-                "        WHEN c.hpv_screening_method IS NOT NULL THEN c.hpv_screening_method " +
-                "        WHEN c.pap_smear_screening_method IS NOT NULL THEN c.pap_smear_screening_method " +
-                "        WHEN c.via_vili_screening_method IS NOT NULL THEN c.via_vili_screening_method " +
-                "    END AS screening_method " +
-                "FROM kenyaemr_etl.etl_family_planning f " +
-                "JOIN kenyaemr_etl.etl_cervical_cancer_screening c " +
-                "    ON f.patient_id = c.patient_id " +
+        String qry = "SELECT f.encounter_id, \n" +
+                "       CASE \n" +
+                "           WHEN c.colposcopy_screening_method IS NOT NULL THEN c.colposcopy_screening_method\n" +
+                "           WHEN c.hpv_screening_method IS NOT NULL THEN c.hpv_screening_method\n" +
+                "           WHEN c.pap_smear_screening_method IS NOT NULL THEN c.pap_smear_screening_method\n" +
+                "           WHEN c.via_vili_screening_method IS NOT NULL THEN c.via_vili_screening_method\n" +
+                "       END AS screening_method\n" +
+                "FROM kenyaemr_etl.etl_family_planning f\n" +
+                "JOIN kenyaemr_etl.etl_cervical_cancer_screening c \n" +
+                "  ON f.patient_id = c.patient_id\n" +
+                " AND DATE(f.visit_date) = DATE(c.visit_date)\n" +
                 "WHERE DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)";
 
 

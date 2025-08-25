@@ -33,17 +33,7 @@ public class FPIUCDTypeOfVisitEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry =
-                "SELECT " +
-                        "    f.encounter_id, " +
-                        "    CASE f.type_of_visit_for_method " +
-                        "        WHEN 164180 THEN 'New' " +
-                        "        WHEN 164142 THEN 'Re-visit' " +
-                        "        WHEN 164161 THEN 'Removal' " +
-                        "        ELSE 'Unknown' " +
-                        "    END AS type_of_visit_label " +
-                        "FROM kenyaemr_etl.etl_family_planning f " +
-                        "WHERE DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)";
+        String qry =FPQueryImplantsIUCDsLibrary.TYPE_OF_VISIT_QUERY;
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

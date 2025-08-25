@@ -35,9 +35,13 @@ public class FPReferralToEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
 
-        //referred_to etl_family_planning
-        String qry = "select v.encounter_id, c.name as referred_to from kenyaemr_etl.etl_family_planning v \n" +
-                "join openmrs.concept_name c on v.referred_to=c.concept_id where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "SELECT v.encounter_id, cn.name AS referred_to " +
+                "FROM kenyaemr_etl.etl_family_planning v " +
+                "JOIN openmrs.concept_name cn " +
+                "  ON v.referred_to = cn.concept_id " +
+                " AND cn.locale = 'en' " +
+                " AND cn.locale_preferred = 1 " +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

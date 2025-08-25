@@ -39,8 +39,8 @@ public class FPFemalesCondomsQtyDispEvaluator implements EncounterDataEvaluator 
                 "    f.encounter_id,\n" +
                 "    CAST(f.quantity_dispensed AS UNSIGNED) AS quantity_dispensed\n" +
                 "FROM kenyaemr_etl.etl_family_planning f\n" +
-                "WHERE f.contraceptive_dispensed IN (164814)\n" +
-                "  AND DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";
+                "WHERE f.contraceptive_dispensed = 164814\n" +
+                "  AND DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

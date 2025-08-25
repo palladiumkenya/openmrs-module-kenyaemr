@@ -45,29 +45,6 @@ public class FPReasonsforLARCEvaluator implements EncounterDataEvaluator {
                 "  AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)";
 
 
-
-//        String qry =
-//                "SELECT v.encounter_id, " +
-//                        "       CASE v.reasons_for_larc_removal " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '161638AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Maturity' " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '160571AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Desire to get pregnant' " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '164154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Health concerns/Side effects' " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '163494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Method Switch' " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '160693AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Method Failure' " +
-//                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Others (Specify)' " +
-//                        "           ELSE NULL " +
-//                        "       END AS reasons_for_larc_removal_name " +
-//                        "FROM kenyaemr_etl.etl_family_planning v " +
-//                        "WHERE v.reasons_for_larc_removal IN ( " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '161638AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '160571AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '164154AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '163494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '160693AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-//                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') " +
-//                        ") " +
-//                        "AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
-
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

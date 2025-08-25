@@ -36,13 +36,15 @@ public class FPNaturalMethodCounselledEvaluator implements EncounterDataEvaluato
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT v.encounter_id, cn.name AS counselled_on_natural_fp " +
-                "FROM kenyaemr_etl.etl_family_planning v " +
-                "LEFT JOIN openmrs.concept_name cn " +
-                "    ON v.counselled_on_natural_fp = cn.concept_id " +
-                "    AND cn.locale = 'en' " +
-                "    AND cn.voided = 0 " +
-                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+        String qry =
+                "SELECT v.encounter_id, cn.name AS counselled_on_natural_fp " +
+                        "FROM kenyaemr_etl.etl_family_planning v " +
+                        "LEFT JOIN openmrs.concept_name cn " +
+                        "       ON v.counselled_on_natural_fp = cn.concept_id " +
+                        "       AND cn.locale = 'en' " +
+                        "       AND cn.voided = 0 " +
+                        "       AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
+                        "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

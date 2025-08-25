@@ -35,19 +35,22 @@ public class FPHIVStatusCounseledEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
+        //If patient is in hiv program and has hts record then Y
         String qry =
                 "SELECT fp.encounter_id, " +
-                        "  IF(hiv.program = 'HIV', 'Known Positive', " +
-                        "    IF(hts.final_test_result = 'Positive', 'Positive', " +
-                        "      IF(hts.final_test_result = 'Negative', 'Negative', 'Not Done'))) AS hiv_test " +
+                        "       CASE " +
+                        "           WHEN hiv.patient_id IS NOT NULL THEN 'Y' " +
+                        "           WHEN hts.patient_id IS NOT NULL THEN 'Y' " +
+                        "           ELSE 'N' " +
+                        "       END AS hiv_counselled_tested " +
                         "FROM kenyaemr_etl.etl_family_planning fp " +
                         "LEFT JOIN ( " +
-                        "    SELECT patient_id, program " +
+                        "    SELECT patient_id " +
                         "    FROM kenyaemr_etl.etl_patient_program " +
                         "    WHERE program = 'HIV' AND date_completed IS NULL " +
                         ") hiv ON fp.patient_id = hiv.patient_id " +
                         "LEFT JOIN ( " +
-                        "    SELECT ht.patient_id, ht.final_test_result " +
+                        "    SELECT ht.patient_id " +
                         "    FROM kenyaemr_etl.etl_hts_test ht " +
                         "    WHERE ht.test_type = 1 " +
                         ") hts ON fp.patient_id = hts.patient_id " +
