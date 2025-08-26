@@ -34,20 +34,15 @@ public class FPInjectablesQtyDispEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT \n" +
-                "    fp.encounter_id,\n" +
-                "    fp.quantity_dispensed\n" +
-                "FROM \n" +
-                "    kenyaemr_etl.etl_family_planning fp\n" +
-                "WHERE \n" +
-                "    fp.contraceptive_dispensed IN (\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '907AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),  -- DMPA-IM\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '79494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')   -- DMPA-SC\n" +
-                "    )\n" +
-                "    AND fp.quantity_dispensed IS NOT NULL\n" +
-                "    AND fp.quantity_dispensed != ''\n" +
-                "    AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "    AND fp.voided = 0;";
+        String qry =
+                "SELECT \n" +
+                        "    fp.encounter_id,\n" +
+                        "    fp.quantity_dispensed\n" +
+                        "FROM kenyaemr_etl.etl_family_planning fp\n" +
+                        "WHERE fp.contraceptive_dispensed IN (907, 79494)\n" +
+                        "  AND fp.quantity_dispensed IS NOT NULL\n" +
+                        "  AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                        "  AND fp.voided = 0;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

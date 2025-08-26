@@ -33,19 +33,7 @@ public class FPImplantsTypeOfVisitEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT \n" +
-                "    f.encounter_id,\n" +
-                "    CASE f.type_of_visit_for_method\n" +
-                "        WHEN 164180 THEN 'New'                     -- From typeOfVisitForMethod1\n" +
-                "        WHEN 164142 THEN 'Re-visit'                 -- From typeOfVisitForMethod1\n" +
-                "        WHEN 164180 THEN '1st time insertion'       -- From typeOfVisitForMethod2 (note: same concept ID reused)\n" +
-                "        WHEN 164161 THEN 'Removal'\n" +
-                "        WHEN 'd5ea1533-7346-4e0b-8626-9bff6cd183b2' THEN 'Re-insertion'\n" +
-                "        WHEN '356f0bfc-a3e1-44a3-8a15-efe2845cb18f' THEN 'Check-up'\n" +
-                "        ELSE 'Unknown'\n" +
-                "    END AS type_of_visit_label\n" +
-                "FROM kenyaemr_etl.etl_family_planning f\n" +
-                "WHERE DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n;";
+        String qry = FPQueryImplantsIUCDsLibrary.TYPE_OF_VISIT_QUERY;
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

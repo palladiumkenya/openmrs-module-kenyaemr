@@ -33,12 +33,21 @@ public class FPTBScreeningEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT f.encounter_id, c.name AS resulting_tb_status " +
-                "FROM kenyaemr_etl.etl_family_planning f " +
-                "JOIN kenyaemr_etl.etl_tb_screening t ON f.patient_id = t.patient_id " +
-                "JOIN openmrs.concept_name c ON t.resulting_tb_status = c.concept_id " +
-                "WHERE c.locale = 'en' AND c.locale_preferred = 1 " +
-                "AND DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)";
+        String qry =
+                "SELECT f.encounter_id, c.name AS resulting_tb_status " +
+                        "FROM kenyaemr_etl.etl_family_planning f " +
+                        "JOIN kenyaemr_etl.etl_tb_screening t " +
+                        "  ON f.patient_id = t.patient_id " +
+                        "  AND t.visit_date = (" +
+                        "       SELECT MAX(ts.visit_date) " +
+                        "       FROM kenyaemr_etl.etl_tb_screening ts " +
+                        "       WHERE ts.patient_id = f.patient_id " +
+                        "         AND DATE(ts.visit_date) <= DATE(f.visit_date)" +
+                        "  ) " +
+                        "JOIN openmrs.concept_name c " +
+                        "  ON t.resulting_tb_status = c.concept_id " +
+                        "WHERE c.locale = 'en' AND c.locale_preferred = 1 " +
+                        "  AND DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

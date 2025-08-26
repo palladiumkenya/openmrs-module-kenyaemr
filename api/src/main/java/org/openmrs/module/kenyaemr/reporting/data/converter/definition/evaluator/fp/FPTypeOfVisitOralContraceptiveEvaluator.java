@@ -35,13 +35,8 @@ public class FPTypeOfVisitOralContraceptiveEvaluator implements EncounterDataEva
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT f.encounter_id,\n" +
-                "       CASE f.type_of_visit_for_method\n" +
-                "            WHEN 164180 THEN 'New'\n" +
-                "            WHEN 164142 THEN 'Re-visit'\n" +
-                "       END AS type_of_visit_for_method_general\n" +
-                "FROM kenyaemr_etl.etl_family_planning f\n" +
-                "WHERE f.type_of_visit_for_method IN (164180, 164142);\n";
+        String qry = FPQueryVisitTypeLibrary.TYPE_OF_VISIT_QUERY;
+
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

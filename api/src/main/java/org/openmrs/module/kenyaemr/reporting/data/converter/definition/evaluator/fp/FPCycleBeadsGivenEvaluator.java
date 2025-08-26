@@ -35,24 +35,19 @@ public class FPCycleBeadsGivenEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        //String qry = "select v.encounter_id, v.circle_beads_given from kenyaemr_etl.etl_family_planning v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
-        String qry = "SELECT \n" +
-                "    v.encounter_id,\n" +
-                "    CASE \n" +
-                "        WHEN v.circle_beads_given = (SELECT concept_id FROM openmrs.concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Y'\n" +
-                "        WHEN v.circle_beads_given = (SELECT concept_id FROM openmrs.concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'N'\n" +
-                "        ELSE NULL\n" +
-                "    END AS circle_beads_given\n" +
-                "FROM \n" +
-                "    kenyaemr_etl.etl_family_planning v\n" +
-                "WHERE \n" +
-                "    v.circle_beads_given IN (\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')\n" +
-                "    )\n" +
-                "    AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
-
+        String qry =
+                "SELECT v.encounter_id, " +
+                        "       cn.name AS circle_beads_given " +
+                        "FROM kenyaemr_etl.etl_family_planning v " +
+                        "LEFT JOIN openmrs.concept c " +
+                        "       ON c.concept_id = v.circle_beads_given " +
+                        "LEFT JOIN openmrs.concept_name cn " +
+                        "       ON cn.concept_id = c.concept_id " +
+                        "      AND cn.locale = 'en' " +
+                        "      AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
+                        "WHERE v.circle_beads_given IS NOT NULL " +
+                        "  AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

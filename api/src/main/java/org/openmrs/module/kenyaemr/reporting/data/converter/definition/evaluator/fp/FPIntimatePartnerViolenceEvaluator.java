@@ -36,17 +36,15 @@ public class FPIntimatePartnerViolenceEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
         //  experienced_intimate_partner_violence
-        String qry = "SELECT v.encounter_id, " +
-                "       CASE " +
-                "           WHEN cu.uuid = '167243AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN 'Intimate partner violence' " +
-                "           WHEN cu.uuid = '965AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN 'Reproductive coercion' " +
-                "           WHEN cu.uuid = '1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' THEN 'Not Applicable' " +
-                "           ELSE 'Unknown' " +
-                "       END AS experienced_intimate_partner_violence " +
-                "FROM kenyaemr_etl.etl_family_planning v " +
-                "LEFT JOIN openmrs.concept cu " +
-                "       ON v.experienced_intimate_partner_violence = cu.concept_id " +
-                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+        String qry =
+                "SELECT v.encounter_id, " +
+                        "       CASE v.experienced_intimate_partner_violence " +
+                        "           WHEN 167243 THEN 'Intimate partner violence' " +
+                        "           WHEN 965 THEN 'Reproductive coercion' " +
+                        "           WHEN 1175 THEN 'Not Applicable' " +
+                        "       END AS experienced_intimate_partner_violence " +
+                        "FROM kenyaemr_etl.etl_family_planning v " +
+                        "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -35,29 +35,20 @@ public class FPInjectablesIMorSCEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT \n" +
-                "    fp.encounter_id,\n" +
-                "    CASE \n" +
-                "        WHEN fp.contraceptive_dispensed = (SELECT concept_id FROM openmrs.concept WHERE uuid = '907AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'IM'\n" +
-                "        WHEN fp.contraceptive_dispensed = (SELECT concept_id FROM openmrs.concept WHERE uuid = '79494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'SC'\n" +
-                "        ELSE NULL \n" +
-                "    END AS injection_type\n" +
-                "\n" +
-                "FROM \n" +
-                "    kenyaemr_etl.etl_family_planning fp\n" +
-                "JOIN \n" +
-                "    openmrs.patient p ON fp.patient_id = p.patient_id\n" +
-                "LEFT JOIN \n" +
-                "    openmrs.concept_name cn_visit ON fp.type_of_visit_for_method = cn_visit.concept_id \n" +
-                "    AND cn_visit.locale = 'en' \n" +
-                "    AND cn_visit.concept_name_type = 'FULLY_SPECIFIED'\n" +
-                "WHERE \n" +
-                "    fp.contraceptive_dispensed IN (\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '907AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),  -- DMPA-IM\n" +
-                "        (SELECT concept_id FROM openmrs.concept WHERE uuid = '79494AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')   -- DMPA-SC\n" +
-                "    )\n" +
-                "    AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "    AND fp.voided = 0;";
+
+        String qry =
+                "SELECT \n" +
+                        "    fp.encounter_id,\n" +
+                        "    CASE fp.contraceptive_dispensed \n" +
+                        "        WHEN 907 THEN 'IM'   -- DMPA-IM\n" +
+                        "        WHEN 79494 THEN 'SC' -- DMPA-SC\n" +
+                        "        ELSE NULL \n" +
+                        "    END AS injection_type\n" +
+                        "FROM kenyaemr_etl.etl_family_planning fp\n" +
+                        "WHERE fp.contraceptive_dispensed IN (907, 79494)\n" +
+                        "  AND DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                        "  AND fp.voided = 0;";
+
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
         Date startDate = (Date)context.getParameterValue("startDate");

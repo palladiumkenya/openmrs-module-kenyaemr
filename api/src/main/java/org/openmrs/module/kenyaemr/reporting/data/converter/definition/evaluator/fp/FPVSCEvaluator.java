@@ -35,7 +35,19 @@ public class FPVSCEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "select v.encounter_id, v.clinical_notes from kenyaemr_etl.etl_ncd_enrollment v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        //Voluntary Surgical Contraception
+        String qry = "SELECT \n" +
+                "    f.encounter_id,\n" +
+                "    CASE \n" +
+                "        WHEN f.contraceptive_dispensed = 1472 THEN 'BTL'\n" +
+                "        WHEN f.contraceptive_dispensed = 1489 THEN 'Vasectomy'\n" +
+                "        ELSE NULL\n" +
+                "    END AS contraceptive_dispensed\n" +
+                "FROM kenyaemr_etl.etl_family_planning f\n" +
+                "INNER JOIN openmrs.person p ON f.patient_id = p.person_id\n" +
+                "WHERE f.contraceptive_dispensed IN (1472, 1489)\n" +
+                "    AND DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "    AND f.voided = 0;\n";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -43,7 +43,6 @@ public class FPRefferalFromEvaluator implements EncounterDataEvaluator {
                "        WHEN 163488 THEN 'Community'\n" +
                "        WHEN 164407 THEN 'Another Health Facility'\n" +
                "        WHEN 1175   THEN 'Not Applicable'\n" +
-               "        ELSE 'Unknown'\n" +
                "    END AS referral_from_label\n" +
                "FROM kenyaemr_etl.etl_family_planning f\n" +
                "WHERE DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";

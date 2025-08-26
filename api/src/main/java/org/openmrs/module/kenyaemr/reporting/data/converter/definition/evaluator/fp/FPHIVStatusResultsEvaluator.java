@@ -33,23 +33,19 @@ public class FPHIVStatusResultsEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry =
-                "SELECT fp.encounter_id, " +
-                        "  IF(hiv.program = 'HIV', 'Known Positive', " +
-                        "    IF(hts.final_test_result = 'Positive', 'Positive', " +
-                        "      IF(hts.final_test_result = 'Negative', 'Negative', 'Not Done'))) AS hiv_test " +
-                        "FROM kenyaemr_etl.etl_family_planning fp " +
-                        "LEFT JOIN ( " +
-                        "    SELECT patient_id, program " +
-                        "    FROM kenyaemr_etl.etl_patient_program " +
-                        "    WHERE program = 'HIV' AND date_completed IS NULL " +
-                        ") hiv ON fp.patient_id = hiv.patient_id " +
-                        "LEFT JOIN ( " +
-                        "    SELECT ht.patient_id, ht.final_test_result " +
-                        "    FROM kenyaemr_etl.etl_hts_test ht " +
-                        "    WHERE ht.test_type = 1 " +
-                        ") hts ON fp.patient_id = hts.patient_id " +
-                        "WHERE DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+        String qry = "SELECT fp.encounter_id, " +
+                "       hts.final_test_result " +
+                "FROM kenyaemr_etl.etl_family_planning fp " +
+                "LEFT JOIN kenyaemr_etl.etl_hts_test hts " +
+                "       ON hts.patient_id = fp.patient_id " +
+                "       AND hts.visit_date = ( " +
+                "           SELECT MAX(t2.visit_date) " +
+                "           FROM kenyaemr_etl.etl_hts_test t2 " +
+                "           WHERE t2.patient_id = fp.patient_id " +
+                "             AND t2.visit_date <= fp.visit_date " +
+                "       ) " +
+                "WHERE DATE(fp.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

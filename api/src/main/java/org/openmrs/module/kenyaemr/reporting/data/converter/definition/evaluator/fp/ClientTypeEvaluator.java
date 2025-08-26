@@ -35,16 +35,7 @@ public class ClientTypeEvaluator implements EncounterDataEvaluator {
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT \n" +
-                "    f.encounter_id,\n" +
-                "    CASE \n" +
-                "        WHEN f.type_of_visit_for_method IN (164180, 1000049) THEN 'New'       -- New client\n" +
-                "        WHEN f.type_of_visit_for_method = 164142 THEN 'Re-visit'             -- Returning client\n" +
-                "        WHEN f.type_of_visit_for_method = 164161 THEN 'Follow-up'            -- Follow-up visit\n" +
-                "        ELSE 'Unknown'\n" +
-                "    END AS client_type\n" +
-                "FROM kenyaemr_etl.etl_family_planning f\n" +
-                "WHERE DATE(f.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";
+        String qry = FPQueryVisitTypeLibrary.TYPE_OF_VISIT_QUERY;
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

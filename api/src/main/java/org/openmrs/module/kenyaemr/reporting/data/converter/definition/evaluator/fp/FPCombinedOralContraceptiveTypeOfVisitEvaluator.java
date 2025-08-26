@@ -10,6 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.fp;
 
 import org.openmrs.annotation.Handler;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.fp.FPCombinedOralContraceptiveTypeOfVisitDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-@Handler(supports= FPCombinedOralContraceptiveTypeOfVisitEvaluator.class, order=50)
+@Handler(supports= FPCombinedOralContraceptiveTypeOfVisitDefinition.class, order=50)
 public class FPCombinedOralContraceptiveTypeOfVisitEvaluator implements EncounterDataEvaluator {
 
     @Autowired
@@ -33,13 +34,7 @@ public class FPCombinedOralContraceptiveTypeOfVisitEvaluator implements Encounte
     @Override
     public EvaluatedEncounterData evaluate(EncounterDataDefinition encounterDataDefinition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(encounterDataDefinition, context);
-        String qry = "SELECT f.encounter_id,\n" +
-                "       CASE f.type_of_visit_for_method\n" +
-                "            WHEN 164180 THEN 'New'\n" +
-                "            WHEN 164142 THEN 'Re-visit'\n" +
-                "       END AS type_of_visit_for_method_general\n" +
-                "FROM kenyaemr_etl.etl_family_planning f\n" +
-                "WHERE f.type_of_visit_for_method IN (164180, 164142);\n";
+        String qry = FPQueryVisitTypeLibrary.TYPE_OF_VISIT_QUERY;
 
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

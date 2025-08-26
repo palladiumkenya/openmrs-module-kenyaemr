@@ -40,16 +40,13 @@ public class FirstEverUserOfContraceptiveEvaluator implements EncounterDataEvalu
         String qry =
                 "SELECT v.encounter_id, " +
                         "       CASE v.first_user_of_contraceptive " +
-                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'Y' " +
-                        "           WHEN (SELECT concept_id FROM openmrs.concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') THEN 'N' " +
+                        "           WHEN 1065 THEN 'Yes' " +
+                        "           WHEN 1066 THEN 'No' " +
                         "           ELSE NULL " +
                         "       END AS first_user_of_contraceptive_name " +
                         "FROM kenyaemr_etl.etl_family_planning v " +
-                        "WHERE v.first_user_of_contraceptive IN ( " +
-                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), " +
-                        "    (SELECT concept_id FROM openmrs.concept WHERE uuid = '1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') " +
-                        ") " +
-                        "AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
+                        "WHERE v.first_user_of_contraceptive IN (1065, 1066) " +
+                        "  AND DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
 
 
