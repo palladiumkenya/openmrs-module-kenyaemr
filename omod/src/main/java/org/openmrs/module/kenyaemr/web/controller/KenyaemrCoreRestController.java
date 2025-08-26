@@ -3627,15 +3627,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
 	public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
 
-		if (allParams.size() != 2) {
+		if (allParams.size() != 3) {
 			return ResponseEntity.badRequest()
 					.contentType(MediaType.APPLICATION_JSON)
 					.body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
 		}
 		String identifierType = allParams.get("identifierType");
 		String identifier = allParams.get("identifierNumber");
+		String regulator = allParams.get("regulator");
 		;
-		String toReturn = getHwStatus(identifier, identifierType);
+		String toReturn = getHwStatus(identifier, identifierType, regulator);
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_JSON)
@@ -3736,7 +3737,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		return respo;
 	}
 
-	public static String getHwStatus(String identifier, String identifierType) throws IOException {
+	public static String getHwStatus(String identifier, String identifierType, String regulator) throws IOException {
 
 		GlobalProperty globalGetHRUrl = Context.getAdministrationService()
 				.getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
@@ -3748,7 +3749,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				.build();
 		Request request = new Request.Builder()
-				.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier)
+				.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier + "&regulator" + "=" + regulator)
 				.addHeader("Referer", "")
 				.addHeader("Authorization", "Bearer " + token)
 				.build();
