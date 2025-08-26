@@ -30,8 +30,15 @@
                 def ds = dataSet;
                 def col = column.name;
 				java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
-            %>
+
+				def getUniquePatientNumber = { patient ->
+					def upn = patient.identifiers.find { it.identifierType == "Unique Patient Number" }
+					return upn ? upn.identifier : ""
+				}
+
+			%>
 			<% patients.each { patient -> %>
+
 			<tr>
 				<td>
 					<img src="${ ui.resourceLink("kenyaui", "images/glyphs/patient_" + patient.gender.toLowerCase() + ".png") }" class="ke-glyph" />
@@ -40,8 +47,8 @@
 				<td>${ patient.age }</td>
 				<td>${ ageAtReportingResults.getData().get(patient.id) }</td>
 				<td>${ patient.gender.toUpperCase() }</td>
-				<td>${ patient.identifiers[0].identifier }</td>
-			    <td>${ enrollmentDates.get(patient.id) != null? (enrollmentDates.get(patient.id).value != null ?
+			<td><%= getUniquePatientNumber(patient) %></td>
+			<td>${ enrollmentDates.get(patient.id) != null? (enrollmentDates.get(patient.id).value != null ?
 						dateFormat.format(enrollmentDates.get(patient.id).value) : "") : ""  }</td>
                 <td>${ artInitializationDates.get(patient.id) != null ?
 						dateFormat.format(artInitializationDates.get(patient.id).value) : "" }</td>

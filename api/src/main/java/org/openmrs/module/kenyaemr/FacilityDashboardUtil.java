@@ -667,7 +667,7 @@ public class FacilityDashboardUtil {
 				"         LEFT JOIN (select o.patient_id,o.hiv_status_at_exit from kenyaemr_etl.etl_hei_enrollment o where o.encounter_type = 'MCHCS_HEI_COMPLETION'\n" +
 				"                                                                                                      and o.visit_date <= date('" + endDate + "')) o on o.patient_id = e.patient_id\n" +
 				"         left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
-				"                   on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"                   on e.patient_id = c.patient_id and c.program_name in ('MCH Child HEI','MCH Child')\n" +
 				"         left join kenyaemr_etl.etl_hts_test t on t.patient_id = e.patient_id\n" +
 				"WHERE d.hei_no is not null\n" +
 				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL\n" +
@@ -1028,7 +1028,7 @@ public class FacilityDashboardUtil {
 				"                     LEFT JOIN (select o.patient_id,o.hiv_status_at_exit from kenyaemr_etl.etl_hei_enrollment o where o.encounter_type = 'MCHCS_HEI_COMPLETION'\n" +
 				"                                and o.visit_date <= CURRENT_DATE) o on o.patient_id = e.patient_id\n" +
 				"                     left join kenyaemr_etl.etl_patient_program_discontinuation c\n" +
-				"                               on e.patient_id = c.patient_id and c.program_name = 'MCH Child HEI'\n" +
+				"                               on e.patient_id = c.patient_id and c.program_name in ('MCH Child HEI','MCH Child')\n" +
 				"                     left join kenyaemr_etl.etl_hts_test t on t.patient_id = e.patient_id\n" +
 				"WHERE d.hei_no is not null\n" +
 				"  AND DATE_ADD(d.dob, INTERVAL 24 MONTH) BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE\n" +
