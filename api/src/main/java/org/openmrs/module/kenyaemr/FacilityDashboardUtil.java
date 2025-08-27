@@ -1336,7 +1336,6 @@ public class FacilityDashboardUtil {
 				"  AND x.test_result >= 200\n" +
 				"  AND x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY)\n" +
 				"  AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
-				"GROUP BY DATE(x.visit_date)\n" +
 				"ORDER BY DATE(x.visit_date) ASC) a\n" +
 				"    inner join\n" +
 				"    (select t.patient_id\n" +
