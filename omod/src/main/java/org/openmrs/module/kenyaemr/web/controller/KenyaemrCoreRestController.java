@@ -3627,20 +3627,37 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/practitionersearch")
 	public ResponseEntity<String> getSHAPractitioner(@RequestParam Map<String, String> allParams) throws IOException {
 
-		if (allParams.size() != 3) {
-			return ResponseEntity.badRequest()
-					.contentType(MediaType.APPLICATION_JSON)
-					.body("{\"status\": \"Error\", \"message\": \"Exactly two identifier must be provided for the search at a time\"}");
-		}
+		GlobalProperty globalGetHWRResponseFormat = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_HEI_RESPONSE_FORMAT);
+		String gpResponseFhirFormat = globalGetHWRResponseFormat.getPropertyValue();
+	//TODO: Parameters may be 2 or 3 depending on FHIR or custom responses from FHIR
+	//		if (allParams.size() != 3) {
+	//			return ResponseEntity.badRequest()
+	//				.contentType(MediaType.APPLICATION_JSON)
+	//				.body("{\"status\": \"Error\", \"message\": \"More than two identifier must be provided for the search at a time\"}");
+	//		}
 		String identifierType = allParams.get("identifierType");
 		String identifier = allParams.get("identifierNumber");
 		String regulator = allParams.get("regulator");
-		;
 		String toReturn = getHwStatus(identifier, identifierType, regulator);
+		//TODO: Checks whether the response from HIE is custom or FHIR based
+		//TODO: To remove once we have assurance from HIE of the perpetual format
+		if (gpResponseFhirFormat.equalsIgnoreCase("false")) {
 
-		return ResponseEntity.ok()
+        //Concatenate the response with a fhirFormat object
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode toReturnCustomResponse = (ObjectNode) mapper.readTree(toReturn);
+			toReturnCustomResponse.put("fhirFormat", false);		
+		
+			return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(toReturnCustomResponse.toString());
+		} else {
+			// Returns FHIR Bundle
+			return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(toReturn);
+		}
 
 	}
 
@@ -3740,22 +3757,41 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	public static String getHwStatus(String identifier, String identifierType, String regulator) throws IOException {
 
 		GlobalProperty globalGetHRUrl = Context.getAdministrationService()
-				.getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);
+				.getGlobalPropertyObject(CommonMetadata.GP_SHA_HEALTH_WORKER_VERIFICATION_JWT_GET_END_POINT);	
 		String baseURL = globalGetHRUrl.getPropertyValue();
+
+		GlobalProperty globalGetHWRResponseFormat = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_HEI_RESPONSE_FORMAT);
+		String gpResponseFhirFormat = globalGetHWRResponseFormat.getPropertyValue();
+		
+		System.out.println("HWR endpoint ==>"+baseURL);
 		if (baseURL == null || baseURL.trim().isEmpty()) {
 			System.out.println("HWR GET endpoint configs not updated: ");
 		}
 		String token = getAuthToken();
-		OkHttpClient client = new OkHttpClient().newBuilder()
+		if (gpResponseFhirFormat.equalsIgnoreCase("false")) {
+			OkHttpClient client = new OkHttpClient().newBuilder()
 				.build();
-		Request request = new Request.Builder()
+			Request request = new Request.Builder()
 				.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier + "&regulator" + "=" + regulator)
 				.addHeader("Referer", "")
 				.addHeader("Authorization", "Bearer " + token)
 				.build();
-		Response response = client.newCall(request).execute();
-		String respo = response.body().string();
-		return respo;
+			Response response = client.newCall(request).execute();
+			String respo = response.body().string();
+			return respo;
+		}else {
+			OkHttpClient client = new OkHttpClient().newBuilder()
+				.build();
+			Request request = new Request.Builder()
+				.url(baseURL + "?identifierType" + "=" + identifierType + "&identifierNumber" + "=" + identifier)
+				.addHeader("Referer", "")
+				.addHeader("Authorization", "Bearer " + token)
+				.build();
+			Response response = client.newCall(request).execute();
+			String respo = response.body().string();
+			return respo;
+		}
 	}
 
 	/**

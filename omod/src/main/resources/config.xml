@@ -428,4 +428,11 @@
 			Populate Specific Risk Factors/Chronic Illnesses on Final Diagnosis
 		</description>
 </globalProperty>
+<globalProperty>
+		<property>kenyaemr.sha.jwt.response.fhirFormat</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Defines whether to get HIE responses in FHIR format or custom format
+		</description>
+</globalProperty>
 </module>
