@@ -44,7 +44,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                                     uuid()\n" +
                 "                              from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                              inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                              where c.patient_id is not null)\n" +
+                "                              where c.patient_id is not null AND c.relationship_type is not null)\n" +
                 "                         union all\n" +
                 "                         (select c.patient_id,\n" +
                 "                                 ifnull(c.living_with_patient,1067),\n" +
@@ -60,7 +60,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                                 uuid()\n" +
                 "                          from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                                   inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                          where c.patient_id is not null)\n" +
+                "                          where c.patient_id is not null AND c.relationship_type is not null)\n" +
                 "                         union all\n" +
                 "                         (select c.patient_id,\n" +
                 "                                 ifnull(c.pns_approach,1067),\n" +
@@ -76,7 +76,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                                 uuid()\n" +
                 "                          from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                                   inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                          where c.patient_id is not null)\n" +
+                "                          where c.patient_id is not null AND c.relationship_type is not null)\n" +
                 "                         union all\n" +
                 "                         (select c.patient_id,\n" +
                 "                                 1065,\n" +
@@ -92,7 +92,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                                 uuid()\n" +
                 "                          from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                                   inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                          where c.patient_id is not null)\n" +
+                "                          where c.patient_id is not null AND c.relationship_type is not null)\n" +
                 "             union all\n" +
                 "             (select c.patient_id,\n" +
                 "                     ifnull(c.ipv_outcome,'False'),\n" +
@@ -108,7 +108,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                     uuid()\n" +
                 "              from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                       inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "              where c.patient_id is not null);";
+                "              where c.patient_id is not null AND c.relationship_type is not null);";
 
         Context.getAdministrationService().executeSQL(insertPersonAttributes, false);
         out.println("Completed inserting person attributes for the contact");
@@ -132,7 +132,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "            uuid()\n" +
                 "     from kenyaemr_hiv_testing_patient_contact c\n" +
                 "     inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "     where c.patient_id is not null);";
+                "     where c.patient_id is not null AND c.relationship_type is not null);";
 
         Context.getAdministrationService().executeSQL(createPatientContactEncounters, false);
         out.println("Completed creating encounters for migrated patient contacts");
@@ -164,7 +164,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
                 "                                                    uuid()\n" +
                 "                                             from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                                             inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                                             where c.patient_id is not null\n" +
+                "                                             where c.patient_id is not null AND c.relationship_type is not null\n" +
                 "                                               AND NOT EXISTS (SELECT 1\n" +
                 "                                                               FROM relationship r\n" +
                 "                                                               WHERE r.person_a = c.patient_related_to\n" +
@@ -198,7 +198,7 @@ public class MigratePatientContactPersonAttributes extends AbstractChore {
         String updatePhysicalAddress = "update person_address a inner join (select patient_id, physical_address\n" +
                 "                                    from kenyaemr_hiv_testing_patient_contact c\n" +
                 "                                    inner join person p on c.patient_id = p.person_id and p.voided = 0\n" +
-                "                                    where c.patient_id is not null) c on a.person_id = c.patient_id\n" +
+                "                                    where c.patient_id is not null AND c.relationship_type is not null) c on a.person_id = c.patient_id\n" +
                 "set a.address1 = c.physical_address\n" +
                 "where a.address1 is null;";
 
