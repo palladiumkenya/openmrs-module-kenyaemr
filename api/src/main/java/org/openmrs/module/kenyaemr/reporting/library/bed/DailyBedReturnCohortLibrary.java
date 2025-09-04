@@ -53,6 +53,53 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Previous Bed Occupation Status");
         return cd;
     }
+    public CohortDefinition patientCurrentlyBedTagsOccupationStatus(String occupationStatus) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select bd.patient_id from bed_patient_assignment_map bd \n" +
+                " inner join bed_tag_map bt on bd.bed_id = bt.bed_id\n" +
+                "inner join bed ba on bd.bed_id = ba.bed_id\n" +
+                "  where date(bd.date_created) between date(:startDate) and date(:endDate)\n" +
+                " and ba.status = '"+ occupationStatus+"' \n" +
+                "GROUP BY bd.patient_id;";
+        cd.setName("Bed Tags Occupation Status");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Bed Tags Occupation Status");
+        return cd;
+    }
+
+
+    public CohortDefinition totalCurrentBedsAndBedTagsOccupiedStatus(String occupationStatus) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.setName("Total current Beds and Bed tags");
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("patientCurrentlyBedTagsOccupationStatus", ReportUtils.map(patientCurrentlyBedTagsOccupationStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("patientCurrentBedOccupationStatus", ReportUtils.map(patientCurrentBedOccupationStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("patientCurrentlyBedTagsOccupationStatus OR patientCurrentBedOccupationStatus");
+        cd.setDescription("Total current Beds and Bed tags");
+        return cd;
+    }
+
+
+    public CohortDefinition patientPreviouslyBedTagsOccupationStatus(String occupationStatus) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+
+        String sqlQuery = "select bd.patient_id from bed_patient_assignment_map bd \n" +
+                " inner join bed_tag_map bt on bd.bed_id = bt.bed_id\n" +
+                "inner join bed ba on bd.bed_id = ba.bed_id\n" +
+                "where date(bd.date_created) <= DATE_SUB(DATE(:startDate), INTERVAL 1 DAY)\n" +
+                " and ba.status = '"+ occupationStatus+"' \n" +
+                "GROUP BY bd.patient_id;";
+        cd.setName("Bed Occupation Status");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Bed Occupation Status");
+        return cd;
+    }
     public CohortDefinition patientDischargedStatus(Integer dischargeStatus) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select patient_id\n" +
@@ -136,7 +183,52 @@ public class DailyBedReturnCohortLibrary {
         cd.setDescription("Total Bed Occupation Status");
         return cd;
     }
+    public CohortDefinition currentTotalBedTags(String occupationStatus, String vacantStatus) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery =
+                "select ba.patient_id \n" +
+                "from bed_patient_assignment_map ba \n" +
+                "inner join bed_tag_map bd on ba.bed_id = bd.bed_id\n" +
+                "inner join bed bt on bd.bed_id = bt.bed_id\n" +
+                "where date(bd.date_created) between date(:startDate) and date(:endDate) \n" +
+                "and bt.status in ('" + occupationStatus + "', '" + vacantStatus + "') \n"+
+                "GROUP BY ba.patient_id;";
+        cd.setName("Total current bed tag Occupation Status");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Total current Bed tag Occupation Status");
+        return cd;
+    }
 
+    public CohortDefinition totalCurrentBedsAndBedTags(String occupationStatus, String vacantStatus) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.setName("Total current Beds and Bed tags");
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("currentTotalBeds", ReportUtils.map(currentTotalBeds(occupationStatus, vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("currentTotalBedTags", ReportUtils.map(currentTotalBedTags(occupationStatus, vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("currentTotalBeds OR currentTotalBedTags");
+        cd.setDescription("Total current Beds and Bed tags");
+        return cd;
+    }
+
+    public CohortDefinition previousTotalBedTags(String occupationStatus, String vacantStatus) {
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select ba.patient_id \n" +
+                "from bed_patient_assignment_map ba \n" +
+                "inner join bed_tag_map bt on ba.bed_id = bt.bed_id\n" +
+                "inner join bed bd on bt.bed_id = bd.bed_id\n" +
+                "where date(bd.date_created) <= DATE_SUB(DATE(:startDate), INTERVAL 1 DAY)\n" +
+                "and bd.status in ('" + occupationStatus + "', '" + vacantStatus + "') \n" +
+                "GROUP BY ba.patient_id;";
+        cd.setName("Previous Total Bed Tags Occupation Status");
+        cd.setQuery(sqlQuery);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("Previous Total Bed Tags Occupation Status");
+        return cd;
+    }
     public CohortDefinition previousTotalBeds(String occupationStatus, String vacantStatus) {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select ba.patient_id \n" +
@@ -150,6 +242,18 @@ public class DailyBedReturnCohortLibrary {
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.setDescription("Previous Total Bed Occupation Status");
+        return cd;
+    }
+
+    public CohortDefinition allPreviousTotalBedsAndBedTags(String occupationStatus, String vacantStatus) {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.setName("Previous Total Beds and Bed Tags");
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("previousTotalBeds", ReportUtils.map(previousTotalBeds(occupationStatus, vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("previousTotalBedTags", ReportUtils.map(previousTotalBedTags(occupationStatus, vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("previousTotalBeds OR previousTotalBedTags");
+        cd.setDescription("All Previous Total Beds and Bed Tags");
         return cd;
     }
     public CohortDefinition patientsAdmittedByEndOfToday(String admissionStatus) {
