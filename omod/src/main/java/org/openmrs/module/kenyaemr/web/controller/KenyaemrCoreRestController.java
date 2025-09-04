@@ -204,12 +204,16 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	public static String HIV_PROGRAM_UUID = "dfdc6d40-2f2f-463d-ba90-cc97350441a8";
 	public static String MCH_CHILD_PROGRAM_UUID = "c2ecdf11-97cd-432a-a971-cfd9bd296b83";
 	public static String MCH_MOTHER_PROGRAM_UUID = "b5d9e05f-f5ab-4612-98dd-adb75438ed34";
+	public static String MCH_ANC_PROGRAM_UUID = "72635673-0613-4259-916e-e0d5d5ef8f66";
+	public static String MCH_PNC_PROGRAM_UUID = "286598d5-1886-4f0d-9e5f-fa5473399cee";
 	public static String TB_PROGRAM_UUID = "9f144a34-3a4a-44a9-8486-6b7af6cc64f6";
 	public static String TPT_PROGRAM_UUID = "335517a1-04bc-438b-9843-1ba49fb7fcd9";
 	public static String OVC_PROGRAM_UUID = "6eda83f0-09d9-11ea-8d71-362b9e155667";
 	public static String OTZ_PROGRAM_UUID = "24d05d30-0488-11ea-8d71-362b9e155667";
 	public static String VMMC_PROGRAM_UUID = "228538f4-cad9-476b-84c3-ab0086150bcc";
 	public static String PREP_PROGRAM_UUID = "214cad1c-bb62-4d8e-b927-810a046daf62";
+	public static String NUTRITION_PROGRAM_UUID = "42b654c5-de50-4fb9-b054-1ecc2b6f266b";
+	public static String FPLANNING_PROGRAM_UUID = "9629bee6-c116-4406-9ddd-6f7c1fb4f7ea";
 	public static String KP_PROGRAM_UUID = "7447305a-18a7-11e9-ab14-d663bd873d93";
 	public static final String KP_CLIENT_ENROLMENT = "185dec84-df6f-4fc7-a370-15aa8be531ec";
 	public static final String KP_CLIENT_DISCONTINUATION = "1f76643e-2495-11e9-ab14-d663bd873d93";
