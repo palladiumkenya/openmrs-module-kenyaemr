@@ -29,6 +29,37 @@
             <version>1.25.0</version>
             <scope>compile</scope>
         </dependency>
+
+		<!-- always needed -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>kernel</artifactId>
+			<version>8.0.2</version>
+		</dependency>
+		<!-- always needed -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>io</artifactId>
+			<version>8.0.2</version>
+		</dependency>
+		<!-- always needed -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>layout</artifactId>
+			<version>8.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>barcodes</artifactId>
+			<version>8.0.2</version>
+		</dependency>
+		<!-- only needed for Asian fonts -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>font-asian</artifactId>
+			<version>8.0.2</version>
+		</dependency>
+		
     </dependencies>
     <build>
 		<pluginManagement>
