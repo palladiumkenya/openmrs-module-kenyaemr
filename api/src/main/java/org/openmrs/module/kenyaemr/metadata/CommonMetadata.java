@@ -137,6 +137,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String FLUID_INTAKE = "657bdb00-0eab-48a6-8da4-bb1644d5fd48";
 		public static final String ADR_ASSESSMENT_TOOL = "d18d6d8a-4be2-4115-ac7e-86cc0ec2b263";
 		public static final String INITIAL_NURSING_CARDEX = "3efe6966-a011-4d24-aa43-d3051bfbb8e3";
+		public static final String MCHMS_INPATIENT = "6877a5b4-441d-4dff-ada1-fcc2485c33e6";
+		public static final String MCHMS_POST_DELIVERY = "07dc609f-e607-43d6-9dc3-8bd405c4226a";
 	}
 
 	public static final class _Form {
@@ -210,6 +212,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String INITIAL_NURSING_CARDEX_FORM = "cd65f1dd-0047-4449-9c38-0710a7214c52";
 		public static final String MORGUE_DISCHARGE_FORM = "bd483dc1-9cd2-4f0e-a761-31a89b5f8bd0";
 		public static final String MORGUE_ADMISSION_FORM = "b990437a8-8dbb-4ae1-a2b4-71df0041adfa";
+		public static final String MCHMS_INPATIENT_FORM = "57b8bb54-321f-4b94-bba5-58850527bfd6";
+		public static final String MCHMS_POST_DELIVERY_FORM = "43dacebf-2412-44b6-b55a-63aff5b02fcd";
 	}
 
 	public static final class _OrderType {
@@ -384,6 +388,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("ADR Assessment Tool", "Adverse Drug Reaction Assessment Tool Clinical encounter type",
 				_EncounterType.ADR_ASSESSMENT_TOOL));
 		install(encounterType("Initial Nursing Cardex", "Initial Nursing Cardex Clinical encounter type", _EncounterType.INITIAL_NURSING_CARDEX));
+		install(encounterType("MCH Inpatient", "Inpatient encounter for a pregnant mother", _EncounterType.MCHMS_INPATIENT));
+		install(encounterType("MCH Post Delivery", "Post delivery encounter for a mother", _EncounterType.MCHMS_POST_DELIVERY));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -476,6 +482,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
 		install(form("Mortuary Discharge Form", "Form for recording deceased body discharge details ", _EncounterType.MORGUE_DISCHARGE, "1", _Form.MORGUE_DISCHARGE_FORM));
 		install(form("Mortuary Admission Form", "Form for recording deceased body admission details ", _EncounterType.MORGUE_ADMISSION, "1", _Form.MORGUE_ADMISSION_FORM));
+		install(form("Maternity Inpatient", "Form for recording maternity stay for a inpatient mother", _EncounterType.MCHMS_INPATIENT, "1.0", _Form.MCHMS_INPATIENT_FORM));
+		install(form("Post Delivery", "Form for recording post delivery stay for a inpatient mother", _EncounterType.MCHMS_POST_DELIVERY, "1.0", _Form.MCHMS_POST_DELIVERY_FORM));
 
 		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
