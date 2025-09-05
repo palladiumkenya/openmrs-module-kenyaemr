@@ -137,6 +137,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_POST_DELIVERY = "07dc609f-e607-43d6-9dc3-8bd405c4226a";
         public static final String NUTRITION_ENROLLMENT = "cff2c1c2-b5ff-4b06-a0aa-6973007b89cb";
         public static final String NUTRITION_DISCONTINUATION = "41cc14fa-6011-4939-8c2c-0d1c2554efc8";
+		public static final String NURSING_CARE_PLAN = "b6569074-3b8c-43ba-bd4a-98c445405035";
 	}
 
 	public static final class _Form {
@@ -214,6 +215,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_POST_DELIVERY_FORM = "43dacebf-2412-44b6-b55a-63aff5b02fcd";
         public static final String NUTRITION_ENROLLMENT_FORM = "849e88cc-6a78-463a-a4d2-e4e8c2f795bc";
         public static final String NUTRITION_DISCONTINUATION_FORM = "0648a046-f404-4246-806f-c9ee78232d6d";
+		public static final String NURSING_CARE_PLAN_FORM = "56b3ca43-2687-49d4-a03e-1b4329fe0f63";
 	}
 
 	public static final class _OrderType {
@@ -394,6 +396,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         install(encounterType("MCH Post Delivery", "Post delivery encounter for a mother", _EncounterType.MCHMS_POST_DELIVERY));
         install(encounterType("Nutrition Enrollment", "Enrollment into Nutrition program", _EncounterType.NUTRITION_ENROLLMENT));
         install(encounterType("Nutrition Discontinuation", "Discontinuation from Nutrition program", _EncounterType.NUTRITION_DISCONTINUATION));
+		install(encounterType("Nursing Care Plan", "Nursing care plan encounter for a inpatient", _EncounterType.NURSING_CARE_PLAN));
 
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
@@ -491,6 +494,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         install(form("Post Delivery", "Form for recording post delivery stay for a inpatient mother", _EncounterType.MCHMS_POST_DELIVERY, "1.0", _Form.MCHMS_POST_DELIVERY_FORM));
         install(form("Nutrition Enrollment", "Form for recording enrollment into nutrition program", _EncounterType.NUTRITION_ENROLLMENT, "1.0", _Form.NUTRITION_ENROLLMENT_FORM));
         install(form("Nutrition Discontinuation", "Form for recording discontinuation from nutrition program", _EncounterType.NUTRITION_DISCONTINUATION, "1.0", _Form.NUTRITION_DISCONTINUATION_FORM));
+		install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
 
         install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
