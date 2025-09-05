@@ -16,6 +16,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.customdatatype.datatype.DateDatatype;
 import org.openmrs.module.idgen.validator.LuhnMod25IdentifierValidator;
+import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.Metadata;
 import org.openmrs.module.kenyaemr.datatype.FormDatatype;
@@ -25,15 +26,7 @@ import org.springframework.stereotype.Component;
 
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.globalProperty;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.personAttributeType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.providerAttributeType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.relationshipType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.visitAttributeType;
-import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.visitType;
+import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 
 /**
  * Common metadata bundle
@@ -83,6 +76,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_INTERVENTIONS_PAGE_SIZE = "kenyaemr.sha.interventions.page.size";
 	public static final String GP_SHA_JWT_HEI_RESPONSE_FORMAT = "kenyaemr.sha.jwt.response.fhirFormat";
 
+    public static final class _Program {
+        public static final String NUTRITION = Metadata.Program.NUTRITION;
+    }
 
 	public static final class _EncounterType {
 		public static final String CONSULTATION = "465a92f2-baf8-42e9-9612-53064be868e8";
@@ -137,6 +133,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String FLUID_INTAKE = "657bdb00-0eab-48a6-8da4-bb1644d5fd48";
 		public static final String ADR_ASSESSMENT_TOOL = "d18d6d8a-4be2-4115-ac7e-86cc0ec2b263";
 		public static final String INITIAL_NURSING_CARDEX = "3efe6966-a011-4d24-aa43-d3051bfbb8e3";
+        public static final String MCHMS_INPATIENT = "6877a5b4-441d-4dff-ada1-fcc2485c33e6";
+        public static final String MCHMS_POST_DELIVERY = "07dc609f-e607-43d6-9dc3-8bd405c4226a";
+        public static final String NUTRITION_ENROLLMENT = "cff2c1c2-b5ff-4b06-a0aa-6973007b89cb";
+        public static final String NUTRITION_DISCONTINUATION = "41cc14fa-6011-4939-8c2c-0d1c2554efc8";
 	}
 
 	public static final class _Form {
@@ -210,6 +210,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String INITIAL_NURSING_CARDEX_FORM = "cd65f1dd-0047-4449-9c38-0710a7214c52";
 		public static final String MORGUE_DISCHARGE_FORM = "bd483dc1-9cd2-4f0e-a761-31a89b5f8bd0";
 		public static final String MORGUE_ADMISSION_FORM = "b990437a8-8dbb-4ae1-a2b4-71df0041adfa";
+        public static final String MCHMS_INPATIENT_FORM = "57b8bb54-321f-4b94-bba5-58850527bfd6";
+        public static final String MCHMS_POST_DELIVERY_FORM = "43dacebf-2412-44b6-b55a-63aff5b02fcd";
+        public static final String NUTRITION_ENROLLMENT_FORM = "849e88cc-6a78-463a-a4d2-e4e8c2f795bc";
+        public static final String NUTRITION_DISCONTINUATION_FORM = "0648a046-f404-4246-806f-c9ee78232d6d";
 	}
 
 	public static final class _OrderType {
@@ -322,6 +326,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	 */
 	@Override
 	public void install() {
+        install(program("Nutrition", "Nutrition program",Dictionary.NUTRITION_PROGRAM, _Program.NUTRITION));
+
 		install(encounterType("Consultation", "Collection of clinical data during the main consultation",
 				_EncounterType.CONSULTATION));
 		install(encounterType("Lab Results", "Collection of laboratory results", _EncounterType.LAB_RESULTS));
@@ -384,6 +390,11 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("ADR Assessment Tool", "Adverse Drug Reaction Assessment Tool Clinical encounter type",
 				_EncounterType.ADR_ASSESSMENT_TOOL));
 		install(encounterType("Initial Nursing Cardex", "Initial Nursing Cardex Clinical encounter type", _EncounterType.INITIAL_NURSING_CARDEX));
+        install(encounterType("MCH Inpatient", "Inpatient encounter for a pregnant mother", _EncounterType.MCHMS_INPATIENT));
+        install(encounterType("MCH Post Delivery", "Post delivery encounter for a mother", _EncounterType.MCHMS_POST_DELIVERY));
+        install(encounterType("Nutrition Enrollment", "Enrollment into Nutrition program", _EncounterType.NUTRITION_ENROLLMENT));
+        install(encounterType("Nutrition Discontinuation", "Discontinuation from Nutrition program", _EncounterType.NUTRITION_DISCONTINUATION));
+
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -476,8 +487,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
 		install(form("Mortuary Discharge Form", "Form for recording deceased body discharge details ", _EncounterType.MORGUE_DISCHARGE, "1", _Form.MORGUE_DISCHARGE_FORM));
 		install(form("Mortuary Admission Form", "Form for recording deceased body admission details ", _EncounterType.MORGUE_ADMISSION, "1", _Form.MORGUE_ADMISSION_FORM));
+        install(form("Maternity Inpatient", "Form for recording maternity stay for a inpatient mother", _EncounterType.MCHMS_INPATIENT, "1.0", _Form.MCHMS_INPATIENT_FORM));
+        install(form("Post Delivery", "Form for recording post delivery stay for a inpatient mother", _EncounterType.MCHMS_POST_DELIVERY, "1.0", _Form.MCHMS_POST_DELIVERY_FORM));
+        install(form("Nutrition Enrollment", "Form for recording enrollment into nutrition program", _EncounterType.NUTRITION_ENROLLMENT, "1.0", _Form.NUTRITION_ENROLLMENT_FORM));
+        install(form("Nutrition Discontinuation", "Form for recording discontinuation from nutrition program", _EncounterType.NUTRITION_DISCONTINUATION, "1.0", _Form.NUTRITION_DISCONTINUATION_FORM));
 
-		install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
+        install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
 				LocationDatatype.class, null, null));
 
