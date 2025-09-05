@@ -15,6 +15,41 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<!-- ===================== Configurations ===================== -->
+    <bean id="kenyaemr.nutrition.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+        <property name="targetUuid" value="${metadata.program.NUTRITION}"/>
+             <property name="eligibilityCalculation"
+                       value="org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsProgramCalculation"/>
+        <property name="defaultEnrollmentForm" ref="kenyaemr.common.form.nutrition.enrollment"/>
+        <property name="defaultCompletionForm" ref="kenyaemr.common.form.nutrition.completion"/>
+        <!--   <property name="patientForms">
+               <set>
+                   &lt;!&ndash;<ref bean="kenyaemr.mchms.form.infantFeeding"/>&ndash;&gt;
+                   <ref bean="kenyaemr.mchms.form.preventiveServices"/>
+                   <ref bean="kenyaemr.mchms.form.delivery"/>
+                   <ref bean="kenyaemr.mchms.form.discharge"/>
+               </set>
+           </property>-->
+        <property name="visitForms">
+            <set>
+                <ref bean="kenyaemr.common.form.nutrition"/>
+            </set>
+        </property>
+        <!--     <property name="reports">
+                 <set>
+                     <ref bean="kenyaemr.mchms.report.lateEnrollment"/>
+                     <ref bean="kenyaemr.mchms.report.hivTestedAtEnrollment"/>
+
+                 </set>
+             </property>
+             <property name="fragments">
+                 <map>
+                     <entry key="enrollment-summary" value="kenyaemr:program/mchms/mchmsEnrollmentSummary"/>
+                     <entry key="care-panel" value="kenyaemr:program/mchms/mchmsCarePanel"/>
+                     <entry key="completion-summary" value="kenyaemr:program/mchms/mchmsCompletionSummary"/>
+                 </map>
+             </property>-->
+        <property name="order" value="301"/>
+    </bean>
 
 	<bean id="kenyaemr.config.form" class="org.openmrs.module.kenyacore.form.FormConfiguration">
 		<property name="commonPatientForms">
@@ -42,7 +77,7 @@
 				<ref bean="kenyaemr.hiv.form.genderBasedViolenceScreening"/>
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
 				<ref bean="kenyaemr.common.form.nutrition"/>
-				<ref bean="kenyaemr.common.form.familyPlanning"/>
+			<!--	<ref bean="kenyaemr.common.form.familyPlanning"/>-->
 				<ref bean="kenyaemr.common.form.cardexNursing"/>
 				<ref bean="kenyaemr.common.form.IPDProcedure"/>
 				<ref bean="kenyaemr.common.form.postProcedure"/>
@@ -540,7 +575,7 @@
 		<property name="htmlform" value="kenyaemr:hts/hivSelfTesting.html" />
 		<property name="order" value="201095" />
 	</bean>
-
+<!--
 	<bean id="kenyaemr.common.form.familyPlanning" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="a52c57d4-110f-4879-82ae-907b0d90add6" />
 		<property name="apps">
@@ -556,7 +591,7 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:mat/formDoesNotExistOn2x.html" />
 		<property name="order" value="201099" />
-	</bean>
+	</bean>-->
 	<!-- Nutrition -->
 	<bean id="kenyaemr.common.form.nutrition" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="b8357314-0f6a-4fc9-a5b7-339f47095d62" />
@@ -668,7 +703,32 @@
 		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
 		<property name="order" value="201017" />
 	</bean>
-
+    <!--Nutrition enrollment-->
+    <bean id="kenyaemr.common.form.nutrition.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="849e88cc-6a78-463a-a4d2-e4e8c2f795bc"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <property name="order" value="201019" />
+    </bean>
+   <!--Nutrition completion-->
+    <bean id="kenyaemr.common.form.nutrition.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="0648a046-f404-4246-806f-c9ee78232d6d"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <property name="order" value="201021" />
+    </bean>
 	<!-- ===================== Reports ===================== -->
 
 <!--	<bean id="kenyaemr.common.report.etlMissedAppointments" class="org.openmrs.module.kenyacore.report.HybridReportDescriptor">

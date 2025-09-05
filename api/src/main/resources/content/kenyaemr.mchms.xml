@@ -68,6 +68,80 @@
 		<property name="order" value="300"/>
 	</bean>
 
+    <bean id="kenyaemr.fp.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+        <property name="targetUuid" value="${metadata.program.FAMILY_PLANNING}"/>
+        <property name="eligibilityCalculation"
+                  value="org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsProgramCalculation"/>
+        <property name="defaultEnrollmentForm" ref="kenyaemr.mchms.form.fp.enrollment"/>
+        <property name="defaultCompletionForm" ref="kenyaemr.mchms.form.fp.completion"/>
+        <!--<property name="patientForms">
+            <set>
+                &lt;!&ndash;<ref bean="kenyaemr.mchms.form.infantFeeding"/>&ndash;&gt;
+                <ref bean="kenyaemr.mchms.form.preventiveServices"/>
+                <ref bean="kenyaemr.mchms.form.delivery"/>
+                <ref bean="kenyaemr.mchms.form.discharge"/>
+            </set>
+        </property>-->
+        <property name="visitForms">
+            <set>
+                <ref bean="kenyaemr.mchms.form.fp"/>
+            </set>
+        </property>
+        <property name="order" value="302"/>
+    </bean>
+    <bean id="kenyaemr.antenatal.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+        <property name="targetUuid" value="${metadata.program.ANTENATAL_CARE}"/>
+        <property name="eligibilityCalculation"
+                  value="org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsProgramCalculation"/>
+        <property name="defaultEnrollmentForm" ref="kenyaemr.mchms.form.antenatal.enrollment"/>
+        <property name="defaultCompletionForm" ref="kenyaemr.mchms.form.antenatal.completion"/>
+    <!--    <property name="patientForms">
+            <set>
+                &lt;!&ndash;<ref bean="kenyaemr.mchms.form.infantFeeding"/>&ndash;&gt;
+                <ref bean="kenyaemr.mchms.form.preventiveServices"/>
+                <ref bean="kenyaemr.mchms.form.delivery"/>
+                <ref bean="kenyaemr.mchms.form.discharge"/>
+            </set>
+        </property>-->
+        <property name="visitForms">
+            <set>
+                <ref bean="kenyaemr.mchms.form.antenatalVisit"/>
+            </set>
+        </property>
+      <!--  <property name="reports">
+            <set>
+                <ref bean="kenyaemr.mchms.report.lateEnrollment"/>
+            </set>
+        </property>-->
+        <property name="order" value="303"/>
+    </bean>
+    <bean id="kenyaemr.postnatal.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+        <property name="targetUuid" value="${metadata.program.POSTNATAL_CARE}"/>
+        <property name="eligibilityCalculation"
+                  value="org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsProgramCalculation"/>
+        <property name="defaultEnrollmentForm" ref="kenyaemr.mchms.form.postnatal.enrollment"/>
+        <property name="defaultCompletionForm" ref="kenyaemr.mchms.form.postnatal.completion"/>
+      <!--  <property name="patientForms">
+            <set>
+                &lt;!&ndash;<ref bean="kenyaemr.mchms.form.infantFeeding"/>&ndash;&gt;
+                <ref bean="kenyaemr.mchms.form.preventiveServices"/>
+                <ref bean="kenyaemr.mchms.form.delivery"/>
+                <ref bean="kenyaemr.mchms.form.discharge"/>
+            </set>
+        </property>-->
+        <property name="visitForms">
+            <set>
+                <ref bean="kenyaemr.mchms.form.postnatalVisit"/>
+                <ref bean="kenyaemr.mchms.form.postnatalExamination"/>
+            </set>
+        </property>
+       <!-- <property name="reports">
+            <set>
+                <ref bean="kenyaemr.mchms.report.lateEnrollment"/>
+            </set>
+        </property>-->
+        <property name="order" value="304"/>
+    </bean>
 	<!-- ===================== Identifiers ===================== -->
 
 
@@ -87,7 +161,28 @@
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsEnrollment.html"/>
 	</bean>
-
+    <bean id="kenyaemr.mchms.form.fp.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="5a07d260-77d7-477d-8ae5-f5bc2fb4a1e5"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+    </bean>
+    <bean id="kenyaemr.mchms.form.fp.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="efc782ea-9a16-4791-824a-18be7417eda4"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+    </bean>
 	<!-- MCHMS Antenatal Visit -->
 	<bean id="kenyaemr.mchms.form.antenatalVisit" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="e8f98494-af35-4bb8-9fc7-c409c8fed843"/>
@@ -97,6 +192,7 @@
 				<ref bean="kenyaemr.app.chart"/>
 			</set>
 		</property>
+        <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsAntenatalVisit.html"/>
 		<property name="order" value="1"/>
@@ -111,11 +207,25 @@
 				<ref bean="kenyaemr.app.chart"/>
 			</set>
 		</property>
+        <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsPostnatalVisit.html"/>
 		<property name="order" value="3"/>
 	</bean>
 
+    <bean id="kenyaemr.mchms.form.postnatalExamination" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="503cc2df-1ea9-4a6e-bda1-195fc7783e59"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
+<!--        <property name="icon" value="kenyaui:forms/generic.png"/>
+        <property name="htmlform" value="kenyaemr:mchms/mchmsPostnatalVisit.html"/>
+        <property name="order" value="3"/>-->
+    </bean>
 	<!-- MCHMS Preventive Services -->
 	<bean id="kenyaemr.mchms.form.preventiveServices" class="org.openmrs.module.kenyacore.form.FormDescriptor">
 		<property name="targetUuid" value="d3ea25c7-a3e8-4f57-a6a9-e802c3565a30"/>
@@ -186,7 +296,72 @@
 		<property name="icon" value="kenyaui:forms/completion.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>
 	</bean>
-
+    <bean id="kenyaemr.mchms.form.fp" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="a52c57d4-110f-4879-82ae-907b0d90add6"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.mchms.EligibleForMchmsProgramCalculation" />
+      <!--  <property name="icon" value="kenyaui:forms/completion.png"/>
+        <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
+    </bean>
+    <bean id="kenyaemr.mchms.form.antenatal.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="b287050b-f9a5-4929-96b0-31ac602384e1"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+<!--        <property name="icon" value="kenyaui:forms/completion.png"/>
+        <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
+    </bean>
+    <bean id="kenyaemr.mchms.form.antenatal.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="38885518-c71a-4661-8edf-3db67707e1d1"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <!--        <property name="icon" value="kenyaui:forms/completion.png"/>
+                <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
+    </bean>
+    <bean id="kenyaemr.mchms.form.postnatal.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="286598d5-1886-4f0d-9e5f-fa5473399cee"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <!--        <property name="icon" value="kenyaui:forms/completion.png"/>
+                <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
+    </bean>
+    <bean id="kenyaemr.mchms.form.postnatal.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+        <property name="targetUuid" value="30db888b-d6d3-47fb-b0c9-dbdf10a57ff5"/>
+        <property name="apps">
+            <set>
+                <ref bean="kenyaemr.app.registration"/>
+                <ref bean="kenyaemr.app.intake"/>
+                <ref bean="kenyaemr.app.clinician"/>
+                <ref bean="kenyaemr.app.chart"/>
+            </set>
+        </property>
+        <!--        <property name="icon" value="kenyaui:forms/completion.png"/>
+                <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
+    </bean>
 	<!-- ===================== Reports ===================== -->
 
 	<bean id="kenyaemr.mchms.report.lateEnrollment" class="org.openmrs.module.kenyacore.report.CalculationReportDescriptor">
