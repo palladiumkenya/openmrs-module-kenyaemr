@@ -1131,7 +1131,7 @@ public class PublicHealthActionCohortLibrary {
         String sqlQuery = "SELECT e.patient_id as hei_without_pcr\n" +
                 "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
                 "         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-                "         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
+                "         LEFT JOIN (SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
                 "                   FROM kenyaemr_etl.etl_laboratory_extract x\n" +
                 "                   WHERE x.lab_test = 1030 and x.date_test_requested <= :endDate) t ON e.patient_id = t.week6pcr\n" +
                 "WHERE d.hei_no is not null AND d.DOB between DATE_SUB(date(:endDate), INTERVAL 8 WEEK) AND\n" +

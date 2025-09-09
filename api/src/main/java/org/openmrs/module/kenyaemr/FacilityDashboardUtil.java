@@ -584,11 +584,12 @@ public class FacilityDashboardUtil {
 	 */
 	public static Long getHeiSixToEightWeeksOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id))\n" +
-				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
-				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(date('" + endDate + "'), INTERVAL " + days
-				+ " DAY)) BETWEEN 6 AND 8;";
+		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_aged_6_to_8_weeks\n" +
+                "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
+                "         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
+                "WHERE d.hei_no is not null\n" +
+                "  AND d.DOB between DATE_SUB(date('" + endDate + "'), INTERVAL 8 WEEK) AND\n" +
+                "    DATE_SUB(date('" + endDate + "'), INTERVAL 6 WEEK);";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
