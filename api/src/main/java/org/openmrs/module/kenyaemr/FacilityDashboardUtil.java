@@ -867,39 +867,71 @@ public class FacilityDashboardUtil {
 	 *         - "value": The numeric count or metric from the result set.
 	 *         If the query returns no results, an empty data array is returned.
 	 */
-	private static SimpleObject getSimpleObject(String query) {
-		try {
-			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(query, true);
+    private static SimpleObject getSimpleObject(String query) {
+        try {
+            Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+            List<List<Object>> resultSet = Context.getAdministrationService().executeSQL(query, true);
 
-			List<SimpleObject> simpleObjectArrayList = new ArrayList<>();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            List<SimpleObject> simpleObjectArrayList = new ArrayList<>();
+            // Use yyyy-MM-dd format
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-			if (resultSet != null) {
-				for (List<Object> row : resultSet) {
-					if (row == null || row.isEmpty())
-						continue;
-					int value = ((Number) row.get(0)).intValue();
+            if (resultSet != null) {
+                for (List<Object> row : resultSet) {
+                    if (row == null || row.isEmpty()) continue;
 
-					if (row.size() == 2) {
-						Date date = (Date) row.get(1);
-						String day = (date != null) ? dateFormat.format(date) : "";
-						simpleObjectArrayList.add(SimpleObject.create("day", day, "value", value));
-					} else if (row.size() == 3) {
-						String grouped_tracing_status = (String) row.get(1);
-						Date sqlDate = (Date) row.get(2);
-						String day = (sqlDate != null) ? dateFormat.format(sqlDate) : "";
-						simpleObjectArrayList
-								.add(SimpleObject.create("day", day, "value", value, "group", grouped_tracing_status));
-					}
-				}
-			}
+                    SimpleObject rowObj = new SimpleObject();
+                    // Always assume first column is numeric value
+                    int value = ((Number) row.get(0)).intValue();
+                    rowObj.put("value", value);
 
-			return SimpleObject.create("data", simpleObjectArrayList);
-		} finally {
-			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-		}
-	}
+                    if (row.size() == 2) {
+                        // Case: value + day
+                        Object col = row.get(1);
+                        if (col instanceof Date) {
+                            rowObj.put("day", dateFormat.format((Date) col));
+                        } else {
+                            rowObj.put("group", col != null ? col.toString() : "");
+                        }
+                    } else if (row.size() == 3) {
+                        // Case: value + group + day
+                        Object col1 = row.get(1);
+                        Object col2 = row.get(2);
+
+                        rowObj.put("group", col1 != null ? col1.toString() : "");
+
+                        if (col2 instanceof Date) {
+                            rowObj.put("day", dateFormat.format((Date) col2));
+                        } else {
+                            rowObj.put("label2", col2 != null ? col2.toString() : "");
+                        }
+                    } else {
+                        // Fallback for >3 columns
+                        for (int i = 1; i < row.size(); i++) {
+                            Object col = row.get(i);
+                            String key = (col instanceof Date) ? "day" : "label" + i;
+                            rowObj.put(key, col != null ? (col instanceof Date ? dateFormat.format((Date) col) : col.toString()) : "");
+                        }
+                    }
+
+                    simpleObjectArrayList.add(rowObj);
+                }
+            }
+
+            return SimpleObject.create("data", simpleObjectArrayList);
+        } finally {
+            Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
+        }
+    }
+
+    /**
+     * Resolves dates: if not provided, defaults to current date
+     */
+    private static String resolveDateClause(String startDate, String endDate) {
+        String start = (startDate == null || startDate.isEmpty()) ? "CURDATE()" : "'" + startDate + "'";
+        String end   = (endDate == null || endDate.isEmpty()) ? "CURDATE()" : "'" + endDate + "'";
+        return String.format("BETWEEN DATE(%s) AND DATE(%s)", start, end);
+    }
 
 	/**
 	 * Retrieves the count of HEI (HIV-Exposed Infants) without a DNA PCR test
@@ -1382,4 +1414,139 @@ public class FacilityDashboardUtil {
 				"    ORDER BY visit_date ASC;";
 		return getSimpleObject(getVirallyUnsuppressedQuery);
 	}
+
+    // Main Dashboard indicators
+/**
+     * Retrieves a SimpleObject containing information about patients referred in within a specified date range.
+     *
+     * @param startDate the start date of the range in the format YYYY-MM-DD
+     * @param endDate the end date of the range in the format YYYY-MM-DD
+     * @return a SimpleObject containing the data of referred in patients within the specified date range
+     */
+    public static SimpleObject getGeneralOutPatientsFiveYearsAndBelow(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN person p ON e.patient_id = p.person_id AND p.voided = 0 " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN (SELECT v.visit_id FROM visit v " +
+                        "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
+                        "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
+                        "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
+                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) <= 5 " +
+                        "AND DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
+                resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    public static SimpleObject getGeneralOutPatientsAboveFiveYearsOld(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN person p ON e.patient_id = p.person_id AND p.voided = 0 " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN (SELECT v.visit_id FROM visit v " +
+                        "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
+                        "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
+                        "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
+                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) > 5 " +
+                        "AND DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
+                resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves the top ten diagnoses based on counts for a specified date range.
+     * @param startDate the start date for the date range filter in the format "yyyy-MM-dd"
+     * @param endDate the end date for the date range filter in the format "yyyy-MM-dd"
+     * @return a SimpleObject containing the ranked list of top ten diseases with their counts and corresponding diagnosis dates
+     */
+    public static SimpleObject getTopTenDiseases(String startDate, String endDate) {
+        String query = String.format(
+                "WITH ranked_diseases AS ( " +
+                        "  SELECT COUNT(DISTINCT ed.diagnosis_id) AS value, cn.name AS disease_name, DATE(ed.date_created) AS diagnosis_date, " +
+                        "         ROW_NUMBER() OVER (PARTITION BY DATE(ed.date_created) ORDER BY COUNT(DISTINCT ed.diagnosis_id) DESC) AS rn " +
+                        "  FROM encounter_diagnosis ed " +
+                        "  JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded " +
+                        "       AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
+                        "       AND cn.voided = 0 AND ed.voided = 0 " +
+                        "  WHERE DATE(ed.date_created) %s AND ed.dx_rank = 2 " +
+                        "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
+                        ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
+                        "ORDER BY diagnosis_date DESC, value DESC",
+                resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves emergency cases count along with their respective dates within the specified date range.
+     * The method queries the database for visits with a specific visit type and returns the results
+     * grouped by date.
+     * @param startDate the start date of the range for which emergency cases are to be retrieved
+     * @param endDate the end date of the range for which emergency cases are to be retrieved
+     */
+    public static SimpleObject getEmergencyCases(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT v.patient_id) AS value, DATE(v.date_started) AS day " +
+                        "FROM visit v " +
+                        "JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
+                        "WHERE vt.uuid = '0419d15f-67ad-4fd0-97a1-9b5246b2d0d7' AND v.voided = 0 " +
+                        "AND DATE(v.date_started) %s " +
+                        "GROUP BY DATE(v.date_started) ORDER BY DATE(v.date_started) DESC",
+                resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves data on patients referred out within a specified date range. The data includes
+     * the count of distinct patients referred and the corresponding encounter dates.
+     *
+     * @param startDate the start date of the date range (inclusive) in the format "yyyy-MM-dd"
+     * @param endDate the end date of the date range (inclusive) in the format "yyyy-MM-dd"
+     * @return a SimpleObject containing a list of records, where each record includes the count
+     *         of distinct patients referred out (`value`) and the corresponding encounter date (`day`)
+     */
+    public static SimpleObject getReferredOutPatients(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN obs o ON o.encounter_id = e.encounter_id " +
+                        "     AND o.concept_id = 163145 AND o.value_coded = 164407 AND o.voided = 0 " +
+                        "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime) DESC",
+                resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves a summarized object containing counts of distinct referred-in patients for each day
+     * within the specified date range. This method generates a query to count the patients who
+     * have encounters marked by specific criteria, involving a predefined form and observation concept.
+     *
+     * @param startDate the start date in the format "yyyy-MM-dd" for filtering encounters, inclusive
+     * @param endDate the end date in the format "yyyy-MM-dd" for filtering encounters, inclusive
+     * @return a SimpleObject containing the counts of distinct referred-in patients per day within
+     *         the specified date range, grouped and ordered by encounter dates
+     */
+    public static SimpleObject getReferredInPatients(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN obs o ON o.encounter_id = e.encounter_id " +
+                        "     AND o.concept_id = 160338 AND o.value_coded IN (164407, 1759) AND o.voided = 0 " +
+                        "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime) DESC",
+                resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
 }

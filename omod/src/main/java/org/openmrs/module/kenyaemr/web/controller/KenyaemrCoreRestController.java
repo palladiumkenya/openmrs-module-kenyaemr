@@ -165,6 +165,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -3962,6 +3963,44 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				"getMonthlyVirallyUnsuppressed", FacilityDashboardUtil
 						.getMonthlyVirallyUnsuppressed(startDate, endDate));
 	}
+
+    /**
+     * Retrieves the main facility dashboard data, including statistics related to general outpatients,
+     * top ten diseases, emergency cases, and referrals, for a specified date range.
+     *
+     * @param startDate optional parameter defining the start date for the data range in yyyy-MM-dd format.
+     * @param endDate optional parameter defining the end date for the data range in yyyy-MM-dd format.
+     * @return an object containing dashboard data such as general outpatients by age group, top ten diseases,
+     *         emergency cases, and referral statistics for the specified date range.
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/main-facility-dashboard")
+    @ResponseBody
+    public Object getMainFacilityDashboard(
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate) {
+
+        // Ensure default dates (today) if not provided
+        if (StringUtils.isBlank(startDate) || StringUtils.isBlank(endDate)) {
+            LocalDate today = LocalDate.now();
+            if (StringUtils.isBlank(startDate)) startDate = today.toString();
+            if (StringUtils.isBlank(endDate)) endDate = today.toString();
+        }
+
+        return SimpleObject.create(
+                "indicators", SimpleObject.create(
+                        "generalOutpatientVisits", SimpleObject.create(
+                                "childrenUnder5", FacilityDashboardUtil.getGeneralOutPatientsFiveYearsAndBelow(startDate, endDate),
+                                "adultsAbove5", FacilityDashboardUtil.getGeneralOutPatientsAboveFiveYearsOld(startDate, endDate)
+                        ),
+                        "topTenDiseases", FacilityDashboardUtil.getTopTenDiseases(startDate, endDate),
+                        "emergencyCases", FacilityDashboardUtil.getEmergencyCases(startDate, endDate),
+                        "referrals", SimpleObject.create(
+                                "in", FacilityDashboardUtil.getReferredInPatients(startDate, endDate),
+                                "out", FacilityDashboardUtil.getReferredOutPatients(startDate, endDate)
+                        )
+                )
+        );
+    }
 
 	/**
 	 * Handles a POST request to initiate a consent OTP request.
