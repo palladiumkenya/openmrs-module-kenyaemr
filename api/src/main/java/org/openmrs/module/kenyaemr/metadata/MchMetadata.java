@@ -68,6 +68,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_ANC_DISCONTINUATION_FORM= "38885518-c71a-4661-8edf-3db67707e1d1";
         public static final String MCHMS_PNC_DISCONTINUATION_FORM = "30db888b-d6d3-47fb-b0c9-dbdf10a57ff5";
         public static final String MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM = "efc782ea-9a16-4791-824a-18be7417eda4";
+		public static final String MCHMS_ANC_FOLLOWUP_FORM = "6fb1a39b-0a57-4239-afd7-a5490d281cb9";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -133,6 +134,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(form("Delivery", "MCH-MS delivery form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DELIVERY));
 		install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
 		install(form("MCH Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
+		install(form("MCH ANC Followup", "ANC Visit followup form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANC_FOLLOWUP_FORM));
 		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
 		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
 		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
