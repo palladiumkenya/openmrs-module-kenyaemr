@@ -1423,7 +1423,7 @@ public class FacilityDashboardUtil {
      * @param endDate the end date of the range in the format YYYY-MM-DD
      * @return a SimpleObject containing the data of referred in patients within the specified date range
      */
-    public static SimpleObject getGeneralOutPatientsFiveYearsAndBelow(String startDate, String endDate) {
+    public static SimpleObject getGeneralOutPatientsUnderFiveYears(String startDate, String endDate) {
         String query = String.format(
                 "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
                         "FROM encounter e " +
@@ -1433,25 +1433,7 @@ public class FacilityDashboardUtil {
                         "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
                         "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
                         "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
-                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) <= 5 " +
-                        "AND DATE(e.encounter_datetime) %s AND e.voided = 0 " +
-                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
-                resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
-        );
-        return getSimpleObject(query);
-    }
-
-    public static SimpleObject getGeneralOutPatientsAboveFiveYearsOld(String startDate, String endDate) {
-        String query = String.format(
-                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
-                        "FROM encounter e " +
-                        "JOIN person p ON e.patient_id = p.person_id AND p.voided = 0 " +
-                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
-                        "JOIN (SELECT v.visit_id FROM visit v " +
-                        "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
-                        "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
-                        "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
-                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) > 5 " +
+                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) < 5 " +
                         "AND DATE(e.encounter_datetime) %s AND e.voided = 0 " +
                         "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
                 resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
@@ -1460,21 +1442,73 @@ public class FacilityDashboardUtil {
     }
 
     /**
-     * Retrieves the top ten diagnoses based on counts for a specified date range.
-     * @param startDate the start date for the date range filter in the format "yyyy-MM-dd"
-     * @param endDate the end date for the date range filter in the format "yyyy-MM-dd"
-     * @return a SimpleObject containing the ranked list of top ten diseases with their counts and corresponding diagnosis dates
+     * Retrieves a SimpleObject containing information about patients referred in within a specified date range.
+     * @param startDate
+     * @param endDate
+     * @return
      */
-    public static SimpleObject getTopTenDiseases(String startDate, String endDate) {
+    public static SimpleObject getGeneralOutPatientsFiveYearsAndAbove(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN person p ON e.patient_id = p.person_id AND p.voided = 0 " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN (SELECT v.visit_id FROM visit v " +
+                        "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
+                        "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
+                        "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
+                        "WHERE TIMESTAMPDIFF(YEAR, p.birthdate, DATE(e.encounter_datetime)) >= 5 " +
+                        "AND DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
+                resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves the top ten diseases diagnosed in patients under five years old within a specified date range.
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static SimpleObject getTopTenDiseasesUnderFiveYearsOld(String startDate, String endDate) {
         String query = String.format(
                 "WITH ranked_diseases AS ( " +
                         "  SELECT COUNT(DISTINCT ed.diagnosis_id) AS value, cn.name AS disease_name, DATE(ed.date_created) AS diagnosis_date, " +
                         "         ROW_NUMBER() OVER (PARTITION BY DATE(ed.date_created) ORDER BY COUNT(DISTINCT ed.diagnosis_id) DESC) AS rn " +
                         "  FROM encounter_diagnosis ed " +
+                        "JOIN person p ON ed.patient_id = p.person_id AND p.voided = 0 " +
                         "  JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded " +
                         "       AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
                         "       AND cn.voided = 0 AND ed.voided = 0 " +
                         "  WHERE DATE(ed.date_created) %s AND ed.dx_rank = 2 " +
+                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) < 5 " +
+                        "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
+                        ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
+                        "ORDER BY diagnosis_date DESC, value DESC",
+                resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves the top ten diseases diagnosed in patients aged five years and above within a specified date range.
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static SimpleObject getTopTenDiseasesFiveYearsOldAndAbove(String startDate, String endDate) {
+        String query = String.format(
+                "WITH ranked_diseases AS ( " +
+                        "  SELECT COUNT(DISTINCT ed.diagnosis_id) AS value, cn.name AS disease_name, DATE(ed.date_created) AS diagnosis_date, " +
+                        "         ROW_NUMBER() OVER (PARTITION BY DATE(ed.date_created) ORDER BY COUNT(DISTINCT ed.diagnosis_id) DESC) AS rn " +
+                        "  FROM encounter_diagnosis ed " +
+                        "JOIN person p ON ed.patient_id = p.person_id AND p.voided = 0 " +
+                        "  JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded " +
+                        "       AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
+                        "       AND cn.voided = 0 AND ed.voided = 0 " +
+                        "  WHERE DATE(ed.date_created) %s AND ed.dx_rank = 2 " +
+                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) > 5 " +
                         "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
                         ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
                         "ORDER BY diagnosis_date DESC, value DESC",
@@ -1546,6 +1580,33 @@ public class FacilityDashboardUtil {
                         "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
                         "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime) DESC",
                 resolveDateClause(startDate, endDate)
+        );
+        return getSimpleObject(query);
+    }
+
+    /**
+     * Retrieves a SimpleObject containing the count of distinct admission cases and their corresponding dates
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static SimpleObject getAdmissionCases(String startDate, String endDate) {
+        String query = String.format(
+                "SELECT COUNT(DISTINCT e.patient_id) AS value, DATE(e.encounter_datetime) AS day " +
+                        "FROM encounter e " +
+                        "JOIN person p ON e.patient_id = p.person_id AND p.voided = 0 " +
+                        "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
+                        "JOIN (SELECT v.visit_id FROM visit v " +
+                        "      JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id " +
+                        "      WHERE vt.uuid = '3371a4d4-f66f-4454-a86d-92c7b3da990c' AND v.voided = 0 " +
+                        "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
+                        "      JOIN obs o on o.encounter_id = e.encounter_id " +
+                        "      and o.concept_id = 160433 " +
+                        "      and o.value_coded = 168619 " +
+                        "      and o.voided = 0 " +
+                        "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
+                        "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
+                resolveDateClause(startDate, endDate), resolveDateClause(startDate, endDate)
         );
         return getSimpleObject(query);
     }

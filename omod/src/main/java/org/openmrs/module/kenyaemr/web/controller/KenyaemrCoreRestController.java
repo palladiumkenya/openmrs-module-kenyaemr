@@ -3989,15 +3989,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
         return SimpleObject.create(
                 "indicators", SimpleObject.create(
                         "generalOutpatientVisits", SimpleObject.create(
-                                "childrenUnder5", FacilityDashboardUtil.getGeneralOutPatientsFiveYearsAndBelow(startDate, endDate),
-                                "adultsAbove5", FacilityDashboardUtil.getGeneralOutPatientsAboveFiveYearsOld(startDate, endDate)
+                                "childrenUnder5", FacilityDashboardUtil.getGeneralOutPatientsUnderFiveYears(startDate, endDate),
+                                "over5YearsOld", FacilityDashboardUtil.getGeneralOutPatientsFiveYearsAndAbove(startDate, endDate)
                         ),
-                        "topTenDiseases", FacilityDashboardUtil.getTopTenDiseases(startDate, endDate),
+                        "topTenDiseases", SimpleObject.create(
+                                "childrenUnder5", FacilityDashboardUtil.getTopTenDiseasesUnderFiveYearsOld(startDate, endDate),
+                                "over5YearsOld", FacilityDashboardUtil.getTopTenDiseasesFiveYearsOldAndAbove(startDate, endDate)
+                        ),
                         "emergencyCases", FacilityDashboardUtil.getEmergencyCases(startDate, endDate),
                         "referrals", SimpleObject.create(
                                 "in", FacilityDashboardUtil.getReferredInPatients(startDate, endDate),
                                 "out", FacilityDashboardUtil.getReferredOutPatients(startDate, endDate)
-                        )
+                        ),
+                        "admissionCases", FacilityDashboardUtil.getAdmissionCases(startDate, endDate)
                 )
         );
     }
