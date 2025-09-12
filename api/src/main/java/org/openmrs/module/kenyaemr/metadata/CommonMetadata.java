@@ -138,7 +138,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String NUTRITION_ENROLLMENT = "cff2c1c2-b5ff-4b06-a0aa-6973007b89cb";
         public static final String NUTRITION_DISCONTINUATION = "41cc14fa-6011-4939-8c2c-0d1c2554efc8";
 		public static final String NURSING_CARE_PLAN = "b6569074-3b8c-43ba-bd4a-98c445405035";
-		public static final String AEFI_INVESTIGATION = "";
+		public static final String AEFI_INVESTIGATION = "036a0ef4-8197-41ad-bfbf-802e79a14606";
 	}
 
 	public static final class _Form {
@@ -217,7 +217,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String NUTRITION_ENROLLMENT_FORM = "849e88cc-6a78-463a-a4d2-e4e8c2f795bc";
         public static final String NUTRITION_DISCONTINUATION_FORM = "0648a046-f404-4246-806f-c9ee78232d6d";
 		public static final String NURSING_CARE_PLAN_FORM = "56b3ca43-2687-49d4-a03e-1b4329fe0f63";
-		public static final String AEFI_INVESTIGATION_FORM = "";
+		public static final String AEFI_INVESTIGATION_FORM = "901e5166-0724-4a87-a8a0-60f44d5b92e7";
 	}
 
 	public static final class _OrderType {
