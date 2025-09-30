@@ -462,26 +462,11 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 				System.err.println("Get HIE IL Mediator Auth: ERROR: Request failed: " + response.code() + " - " + response.message());
 			} else {
 				System.err.println("Get HIE IL Mediator Auth: Request successful: " + response.code() + " - " + response.message());
-				//System.out.println("SMS Raw Token ==>"+response.body().string());
 				//Extract token
 				ObjectMapper mapper = new ObjectMapper();
 				JsonNode node = mapper.readTree(response.body().string());
 				 ret = node.get("access_token").asText();
-				System.out.println("Access Token ==>"+ret);
-				
-				
-				
-				
-				
-				/*String payload = response.body().string();
-				System.out.println("SMS Raw Payload ==>"+payload);
-				com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
-				System.out.println("Getting raw token");
-				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
-				System.out.println("Got raw token");
-				ret = rootNode.path("access_token").asText();
-			*/
-				System.out.println("Extracted SMS Token ==>"+ret);
+					
 				return ret;
 			}
 		} catch (Exception ex) {
