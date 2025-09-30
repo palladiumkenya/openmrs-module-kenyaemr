@@ -75,7 +75,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_JWT_AUTH_MODE = "kenyaemr.sha.jwt.auth.mode";
 	public static final String GP_SHA_INTERVENTIONS_PAGE_SIZE = "kenyaemr.sha.interventions.page.size";
 	public static final String GP_SHA_JWT_HEI_RESPONSE_FORMAT = "kenyaemr.sha.jwt.response.fhirFormat";
-
+	public static final String GP_SHA_FACILITY_REGISTRY_CODE = "kenyaemr.hie.facility.registry.code";
+	public static final String GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT = "kenyaemr.hie.il.mediator.post.api";
+	public static final String GP_HEI_OPT_SOURCE = "kenyaemr.hie.registry.otp.source";
+	
     public static final class _Program {
         public static final String NUTRITION = Metadata.Program.NUTRITION;
     }
@@ -618,6 +621,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_INTERVENTIONS_PAGE_SIZE) == null) {
 			install(globalProperty(GP_SHA_INTERVENTIONS_PAGE_SIZE, "Page size for SHA interventions per fetch", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT) == null) {
+			install(globalProperty(GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT, "HIE IL Mediator Authentication token url", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",
