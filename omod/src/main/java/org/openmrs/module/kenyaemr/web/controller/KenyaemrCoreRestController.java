@@ -3601,8 +3601,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/send-kenyaemr-sms")
-	public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
-		return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message);
+	public Object sendKenyaEmrSms(@RequestParam("message") String message, @RequestParam("phone") String phone, @RequestParam(required = false) String nationalId) {
+		return Context.getService(KenyaEmrService.class).sendKenyaEmrSms(phone, message, nationalId);
 	}
 
 	/**
