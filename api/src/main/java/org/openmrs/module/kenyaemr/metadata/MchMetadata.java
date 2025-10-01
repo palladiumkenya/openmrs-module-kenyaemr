@@ -44,6 +44,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_ANC_DISCONTINUATION = "97b3aedc-7447-4b2f-a22d-c6fdab6366b3";
         public static final String MCHMS_PNC_DISCONTINUATION = "a5e55a35-e203-480a-aae0-b0f051f84277";
         public static final String MCHMS_FAMILY_PLANNING_DISCONTINUATION = "eaf7da42-2985-41a5-a89e-eba6223ff2d6";
+		public static final String PRE_CONCEPTION_CARE = "27db32f2-cf1d-479c-91c7-b2a15fe3bb65";
     }
 
 	public static final class _Form {
@@ -69,6 +70,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_PNC_DISCONTINUATION_FORM = "30db888b-d6d3-47fb-b0c9-dbdf10a57ff5";
         public static final String MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM = "efc782ea-9a16-4791-824a-18be7417eda4";
 		public static final String MCHMS_ANC_FOLLOWUP_FORM = "6fb1a39b-0a57-4239-afd7-a5490d281cb9";
+		public static final String PRE_CONCEPTION_CARE = "2cf38f9a-f910-492b-a055-e29924e513f8";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -82,6 +84,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 		public static final String FAMILY_PLANNING = Metadata.Program.FAMILY_PLANNING;
 		public static final String ANTENATAL_CARE = Metadata.Program.ANTENATAL_CARE;
 		public static final String POSTNATAL_CARE = Metadata.Program.POSTNATAL_CARE;
+		public static final String PRE_CONCEPTION_CARE = Metadata.Program.PRE_CONCEPTION;
 	}
 
 	/**
@@ -126,6 +129,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         install(encounterType("ANC Discontinuation", "Discontinuation of Mother from ANC program", _EncounterType.MCHMS_ANC_DISCONTINUATION));
         install(encounterType("PNC Discontinuation", "Discontinuation of Mother from PNC program", _EncounterType.MCHMS_PNC_DISCONTINUATION));
         install(encounterType("Family planning Discontinuation", "Discontinuation of Mother from Family planning program", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION));
+		install(encounterType("Pre-Conception Care", "Pre-Conception Care Services", _EncounterType.PRE_CONCEPTION_CARE));
 
 		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
 		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
@@ -143,10 +147,12 @@ public class MchMetadata extends AbstractMetadataBundle {
         install(form("ANC Discontinuation", "Antenatal Care Discontinuation Form", _EncounterType.MCHMS_ANC_DISCONTINUATION, "1.0", _Form.MCHMS_ANC_DISCONTINUATION_FORM));
         install(form("PNC Discontinuation", "Postnatal Care Discontinuation Form", _EncounterType.MCHMS_PNC_DISCONTINUATION, "1.0", _Form.MCHMS_PNC_DISCONTINUATION_FORM));
         install(form("Family Planning Discontinuation", "Family Planning Discontinuation Form", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION, "1.0", _Form.MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM));
+		install(form("Pre-Conception Care", "Pre-Conception Care Form", _EncounterType.PRE_CONCEPTION_CARE, "1.0", _Form.PRE_CONCEPTION_CARE));
 
 		install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
 		install(program("Antenatal Care", "", Dictionary.ANTENATAL_PROGRAM, _Program.ANTENATAL_CARE));
 		install(program("Postnatal Care", "", Dictionary.POSTNATAL_PROGRAM, _Program.POSTNATAL_CARE));
 		install(program("Family Planning", "", Dictionary.FAMILY_PLANNING_PROGRAM, _Program.FAMILY_PLANNING));
+		install(program("Pre-Conception Care", "", Dictionary.PRE_CONCEPTION_PROGRAM, _Program.PRE_CONCEPTION_CARE));
 	}
 }
