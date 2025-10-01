@@ -447,10 +447,22 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 		if (hieILMedTokenUrl == null || hieILMedTokenUrl.trim().isEmpty()) {
 			System.out.println("HIE IL Mediator token url configs not updated: ");
 		}
+		GlobalProperty globalGetHieILMediatorClientID = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_ID);
+		String globalHieILMediatorClientID = globalGetHieILMediatorClientID.getPropertyValue();
+		if (globalHieILMediatorClientID == null || globalHieILMediatorClientID.trim().isEmpty()) {
+			System.out.println("HIE IL Mediator client ID not updated: ");
+		}
+		GlobalProperty globalGetHieILMediatorClientSecret = Context.getAdministrationService()
+			.getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET);
+		String globalHieILMediatorClientSecret = globalGetHieILMediatorClientSecret.getPropertyValue();
+		if (globalHieILMediatorClientSecret == null || globalHieILMediatorClientSecret.trim().isEmpty()) {
+			System.out.println("HIE IL Mediator client secret not updated: ");
+		}
 		try {
 			OkHttpClient client = new OkHttpClient().newBuilder().build();
 			okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/x-www-form-urlencoded");
-			okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "client_id=apisix-test-client&client_secret=rYvzoHsiWUBLbeabXYelRfvWawghOXn3&grant_type=client_credentials");
+			okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "client_id="+ globalHieILMediatorClientID +"&client_secret="+ globalHieILMediatorClientSecret +"&grant_type=client_credentials");
 			Request request = new Request.Builder()
 				.url(hieILMedTokenUrl)
 				.method("POST", body)
