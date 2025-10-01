@@ -25,5 +25,4 @@
 	<ref key="NUTRITION" uuid="504f179b-4a13-4790-9ecd-ca4963448af8" />
 	<ref key="ANTENATAL_CARE" uuid="72635673-0613-4259-916e-e0d5d5ef8f66" />
 	<ref key="POSTNATAL_CARE" uuid="286598d5-1886-4f0d-9e5f-fa5473399cee" />
-	<ref key="CHILD_WELFARE" uuid="2112ffa8-e4de-4dee-a843-90871ff996fb" />
 </refs>
