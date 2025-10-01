@@ -112,8 +112,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 				null, null, null,
 				LocationBehavior.NOT_USED, false, _PatientIdentifierType.CWC_NUMBER));
 
-		install(program("MCH - Child Services", "Treatment for children", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHCS));
-		install(program("MCH - Child Services", "Treatment for children", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHCS));
+		install(program("Child Welfare Clinic", "Treatment for children", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHCS));
 
 		///////////////////////////// MCH mother services ////////////////////////////////
 
@@ -147,7 +146,7 @@ public class MchMetadata extends AbstractMetadataBundle {
 
 		install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
 		install(program("Antenatal Care", "", Dictionary.ANTENATAL_PROGRAM, _Program.ANTENATAL_CARE));
-		install(program("Postnatal Care", "", Dictionary.POSTNATAL__PROGRAM, _Program.POSTNATAL_CARE));
+		install(program("Postnatal Care", "", Dictionary.POSTNATAL_PROGRAM, _Program.POSTNATAL_CARE));
 		install(program("Family Planning", "", Dictionary.FAMILY_PLANNING_PROGRAM, _Program.FAMILY_PLANNING));
 	}
 }
