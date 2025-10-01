@@ -3103,23 +3103,36 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
 
         return cd;
     }
+
     public CohortDefinition initialTestAtANC(){
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and v.final_test_result in ('Positive', 'Negative')\n" +
+                "  and v.hiv_test_type = 'Initial';";
+        cd.setName("initialTestAtANC");
+        cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("testedHIVBetweenMCHEnrAndStartDate",ReportUtils.map(testedHIVBetweenMCHEnrAndStartDate(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("testedHIVWithinPeriod",ReportUtils.map(testedHIVWithinPeriod(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("testedHIVWithinPeriod AND NOT testedHIVBetweenMCHEnrAndStartDate");
+        cd.setDescription("initialTestAtANC");
+
         return cd;
     }
 
     public CohortDefinition retestAtANC(){
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and v.final_test_result in ('Positive', 'Negative')\n" +
+                "  and v.hiv_test_type = 'Retest';";
+        cd.setName("retestAtANC");
+        cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("testedHIVBetweenMCHEnrAndStartDate",ReportUtils.map(testedHIVBetweenMCHEnrAndStartDate(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("testedHIVWithinPeriod",ReportUtils.map(testedHIVWithinPeriod(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("testedHIVWithinPeriod AND testedHIVBetweenMCHEnrAndStartDate");
+        cd.setDescription("retestAtANC");
+
         return cd;
     }
     public CohortDefinition testedHIVPositiveWithinPeriod(){
