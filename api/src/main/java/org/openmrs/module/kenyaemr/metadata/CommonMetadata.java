@@ -77,6 +77,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_SHA_JWT_HEI_RESPONSE_FORMAT = "kenyaemr.sha.jwt.response.fhirFormat";
 	public static final String GP_SHA_FACILITY_REGISTRY_CODE = "kenyaemr.hie.facility.registry.code";
 	public static final String GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT = "kenyaemr.hie.il.mediator.post.api";
+	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_ID = "kenyaemr.hie.il.mediator.client.id";
+	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET = "kenyaemr.hie.il.mediator.client.secret";
 	public static final String GP_HEI_OPT_SOURCE = "kenyaemr.hie.registry.otp.source";
 	
     public static final class _Program {
@@ -624,6 +626,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		}
 		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT) == null) {
 			install(globalProperty(GP_HEI_IL_MEDIATOR_TOKEN_POST_ENDPOINT, "HIE IL Mediator Authentication token url", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_ID) == null) {
+			install(globalProperty(GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_ID, "HIE IL Mediator Authentication token client id", ""));
+		}
+		if(Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET) == null) {
+			install(globalProperty(GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET, "HIE IL Mediator Authentication client secret", ""));
 		}
 
 		install(patientIdentifierType("Old Identification Number", "Identifier given out prior to OpenMRS",
