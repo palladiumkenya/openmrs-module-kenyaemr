@@ -1552,7 +1552,7 @@ public class FacilityDashboardUtil {
                         "FROM encounter e " +
                         "JOIN form f ON e.form_id = f.form_id AND f.uuid = 'e958f902-64df-4819-afd4-7fb061f59308' " +
                         "JOIN obs o ON o.encounter_id = e.encounter_id " +
-                        "     AND o.concept_id = 163145 AND o.value_coded = 164407 AND o.voided = 0 " +
+                        "     AND o.concept_id = 160433 AND o.value_coded = 1693 AND o.voided = 0 " +
                         "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
                         "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime) DESC",
                 resolveDateClause(startDate, endDate)
@@ -1602,7 +1602,7 @@ public class FacilityDashboardUtil {
                         "      AND DATE(v.date_started) %s) v ON v.visit_id = e.visit_id " +
                         "      JOIN obs o on o.encounter_id = e.encounter_id " +
                         "      and o.concept_id = 160433 " +
-                        "      and o.value_coded = 168619 " +
+                        "      and o.value_coded = 1654 " +
                         "      and o.voided = 0 " +
                         "WHERE DATE(e.encounter_datetime) %s AND e.voided = 0 " +
                         "GROUP BY DATE(e.encounter_datetime) ORDER BY DATE(e.encounter_datetime)",
