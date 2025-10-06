@@ -263,7 +263,7 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
 
         EmrReportingUtils.addRow(dsd, "HV02","AdolescentS KP at 1st ANC", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("21", "22"));
         EmrReportingUtils.addRow(dsd, "HV02", "Adolescents New HIV Positive", ReportUtils.map(moh731GreenCardIndicators.newHIVPositiveAtMCH(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("23", "24"));
-        EmrReportingUtils.addRow(dsd, "HV02", "Adolescents on HAART at 1st ANC", ReportUtils.map(moh731GreenCardIndicators.onHAARTAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("25", "26"));
+        EmrReportingUtils.addRow(dsd, "HV02", "Adolescents on HAART at 1st ANC KP", ReportUtils.map(moh731GreenCardIndicators.onHAARTAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("25", "26"));
         EmrReportingUtils.addRow(dsd, "HV02", "Adolescents started on HAART New (MCH)", ReportUtils.map(moh731GreenCardIndicators.startedHAARTAtMCH(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("27", "28"));
 
         // 2.6  Infant Prophylaxis
