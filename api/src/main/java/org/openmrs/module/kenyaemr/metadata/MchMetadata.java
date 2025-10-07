@@ -134,8 +134,8 @@ public class MchMetadata extends AbstractMetadataBundle {
         install(encounterType("PNC Discontinuation", "Discontinuation of Mother from PNC program", _EncounterType.MCHMS_PNC_DISCONTINUATION));
         install(encounterType("Family planning Discontinuation", "Discontinuation of Mother from Family planning program", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION));
 		install(encounterType("Pre-Conception Care", "Pre-Conception Care Services", _EncounterType.PRE_CONCEPTION_CARE));
-		install(encounterType("Pre-Conception Care", "Pre-Conception Care Services Enrollment", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT));
-		install(encounterType("Pre-Conception Care", "Pre-Conception Care Services Discontinuation", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION));
+		install(encounterType("Pre-Conception Care Enrollment", "Pre-Conception Care Services Enrollment", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT));
+		install(encounterType("Pre-Conception Care Discontinuation", "Pre-Conception Care Services Discontinuation", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION));
 
 		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
 		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
