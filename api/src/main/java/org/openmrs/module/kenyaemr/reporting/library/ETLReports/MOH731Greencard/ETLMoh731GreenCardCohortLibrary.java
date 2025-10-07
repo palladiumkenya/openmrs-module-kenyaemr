@@ -3020,11 +3020,28 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
     // Known Positive at 1st ANC HV02-01
     public CohortDefinition knownPositiveAtFirstANC(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select a.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit a\n" +
-                "where a.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and a.anc_visit_number = 1\n" +
-                "  and a.hiv_test_during_visit = 169173;";
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         inner join (select mch.patient_id,\n" +
+                "                            max(mch.visit_date)                                        as latest_mch_enrolment_date,\n" +
+                "                            mid(max(concat(date(mch.visit_date), mch.hiv_status)), 11) as hiv_status_at_enrolment\n" +
+                "                     from kenyaemr_etl.etl_mch_enrollment mch\n" +
+                "                     group by mch.patient_id) mch on mch.patient_id = v.patient_id\n" +
+                "         left join (select e.patient_id, max(e.visit_date) as latest_hiv_enrollment_date\n" +
+                "                    from kenyaemr_etl.etl_hiv_enrollment e\n" +
+                "                    where date(e.visit_date) < date(:endDate)\n" +
+                "                    group by e.patient_id) e on v.patient_id = e.patient_id\n" +
+                "         left join (select t.patient_id,\n" +
+                "                           max(t.visit_date)                                             as latest_hiv_test_date,\n" +
+                "                           mid(max(concat(date(t.visit_date), t.final_test_result)), 11) as test_result\n" +
+                "                    from kenyaemr_etl.etl_hts_test t\n" +
+                "                    where t.visit_date < date(:endDate)\n" +
+                "                    group by t.patient_id) t on v.patient_id = t.patient_id\n" +
+                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
+                "  and v.anc_visit_number = 1\n" +
+                "  and ((mch.latest_mch_enrolment_date > e.latest_hiv_enrollment_date or hiv_status_at_enrolment = 703 or\n" +
+                "        (mch.latest_mch_enrolment_date > t.latest_hiv_test_date and t.test_result = 'Positive')))\n" +
+                "group by v.patient_id;";
 
         cd.setName("Known Positive at First ANC");
         cd.setQuery(sqlQuery);
@@ -3093,7 +3110,7 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
                 "where v.visit_date between date(:startDate) and date(:endDate)\n" +
                 "  and v.final_test_result in ('Positive', 'Negative')\n" +
-                "  and v.hiv_test_during_visit = 164180;";
+                "  and v.hiv_test_type = 'Initial';";
         cd.setName("initialTestAtANC");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -3109,7 +3126,7 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
                 "where v.visit_date between date(:startDate) and date(:endDate)\n" +
                 "  and v.final_test_result in ('Positive', 'Negative')\n" +
-                "  and v.hiv_test_during_visit = 160530;";
+                "  and v.hiv_test_type = 'Retest';";
         cd.setName("retestAtANC");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -3295,28 +3312,6 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         return cd;
     }
 
-    /**
-     * Tested for HIV at PNC with specific timing and test type
-     * @param timing
-     * @param testType
-     * @return
-     */
-     public CohortDefinition testedHIVAtPNC(Integer timing, String testType){
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-
-        String sqlQuery = "select v.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and v.hiv_test_timing = "+timing+"\n" +
-                "  and v.hiv_test_type = '"+testType+"';";
-        cd.setName("testedHIVAtPNC");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Tested For HIV At PNC");
-
-        return cd;
-    }
     public CohortDefinition retestAtPNCWithin6Weeks(){
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -3835,12 +3830,19 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
     //On HAART at 1st ANC HV02-25, HV02-26
     public CohortDefinition totalOnHAARTAtFirstANC(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select a.patient_id\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit a\n" +
-                "where a.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and a.anc_visit_number = 1\n" +
-                "  and a.started_haart_at_anc = 160119\n" +
-                "  and a.hiv_test_during_visit = 169173;";
+        String sqlQuery =  "select e.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v on e.patient_id = v.patient_id\n" +
+                "         left join (select patient_id,\n" +
+                "                           min(date_started) as date_started_art\n" +
+                "                    from kenyaemr_etl.etl_drug_event d\n" +
+                "                    where program = 'HIV'\n" +
+                "                      and d.date_started <= date(:endDate)\n" +
+                "                    GROUP BY patient_id) d on v.patient_id = d.patient_id\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "  and v.anc_visit_number = 1\n" +
+                "  and (coalesce(date(e.ti_date_started_art), date(d.date_started_art)) < date(v.visit_date));\n";
+
         cd.setName("totalOnHAARTAtFirstANC");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -3866,10 +3868,10 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         return cd;
     }
 
-/*    *//**
+    /**
      * Started HAART at during ANC
      * @return
-     *//*
+     */
     public CohortDefinition startedHAARTAtANC() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -3877,21 +3879,6 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         cd.addSearch("givenHAARTAtANC",ReportUtils.map(givenHAARTAtANC(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("totalOnHAARTAtFirstANC",ReportUtils.map(totalOnHAARTAtFirstANC(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("givenHAARTAtANC AND NOT totalOnHAARTAtFirstANC");
-        return cd;
-    }*/
-
-    public CohortDefinition startedHAARTAtANC(){
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select a.patient_id\n" +
-                "    from kenyaemr_etl.etl_mch_antenatal_visit a\n" +
-                "    where a.visit_date between date(:startDate) and date(:endDate)\n" +
-                "    and a.started_haart_at_anc = 167790;";
-        cd.setName("startedHAARTAtLabourAndDelivery");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Started HAART At ANC");
-
         return cd;
     }
     public CohortDefinition startedHAARTAtLabourAndDelivery(){
@@ -5053,26 +5040,6 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         cd.addSearch("breastFeedingAt24Months",ReportUtils.map(breastFeedingAt24Months(), "startDate=${startDate},endDate=${endDate}"));
         cd.addSearch("exclusiveBFAt6Months6MonthCohort",ReportUtils.map(exclusiveBFAt6Months6MonthCohort(), "startDate=${startDate},endDate=${endDate}"));
         cd.setCompositionString("twentyFourMonthCohort AND breastFeedingAt24Months AND NOT exclusiveBFAt6Months6MonthCohort");
-        return cd;
-    }
-
-    /**
-     * Gets infant feeding by method
-     * @param feedingMethod
-     * @return
-     */
-    public CohortDefinition infantFeedingByMethod(Integer feedingMethod){
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  "select v.patient_id\n" +
-                "from kenyaemr_etl.etl_hei_follow_up_visit v\n" +
-                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
-                "  and v.infant_feeding = "+feedingMethod+";";
-        cd.setName("infantFeedingByMethod");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Infant feeding by method");
-
         return cd;
     }
     public CohortDefinition notBreastFeedingAt6To24Months(){
