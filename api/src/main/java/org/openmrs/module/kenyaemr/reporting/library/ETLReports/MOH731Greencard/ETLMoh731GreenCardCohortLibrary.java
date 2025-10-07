@@ -2982,7 +2982,13 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
     //First ANC visit  HV02-01
     public CohortDefinition firstANCVisitMchmsAntenatal(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery ="";
+        String sqlQuery ="select d.patient_id from\n" +
+                "         (select e.patient_id, max(e.visit_date) as latest_enrollment_date,av.visit_date as 1st_anc_visit from kenyaemr_etl.etl_mch_enrollment e\n" +
+                "       inner join\n" +
+                "        (select av.patient_id,av.visit_date as visit_date from kenyaemr_etl.etl_mch_antenatal_visit av where av.anc_visit_number = 1\n" +
+                "        and av.visit_date between date(:startDate) and date(:endDate)) av on e.patient_id = av.patient_id\n" +
+                "       group by e.patient_id\n" +
+                "       having 1st_anc_visit between date(:startDate) and date(:endDate))d;";
 
         cd.setName("First ANC Visit");
         cd.setQuery(sqlQuery);
