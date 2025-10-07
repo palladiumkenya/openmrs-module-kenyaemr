@@ -461,11 +461,6 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
         );
     }
-    public CohortIndicator testedHIVAtPNC(Integer timing, String testType) {
-        return cohortIndicator(null,
-                map(moh731Cohorts.testedHIVAtPNC(timing, testType), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
 
     public CohortIndicator reestAtPNCWithin6Weeks() {
         return cohortIndicator(null,
@@ -1188,11 +1183,6 @@ public class ETLMoh731GreenCardIndicatorLibrary {
         );
     }
 
-    public CohortIndicator infantFeedingByMethod(Integer feedingMethod) {
-        return cohortIndicator("infantFeedingByMethod",
-                map(moh731Cohorts.infantFeedingByMethod(feedingMethod), "startDate=${startDate},endDate=${endDate}")
-        );
-    }
     /**
      * Not Breastfeeding at 6-24 months
      * @return the indicator

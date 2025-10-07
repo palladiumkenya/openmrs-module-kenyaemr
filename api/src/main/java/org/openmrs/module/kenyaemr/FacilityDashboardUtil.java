@@ -1485,7 +1485,7 @@ public class FacilityDashboardUtil {
                         "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) < 5 " +
                         "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
                         ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
-                        "ORDER BY value DESC, diagnosis_date DESC LIMIT 10",
+                        "ORDER BY diagnosis_date DESC, value DESC",
                 resolveDateClause(startDate, endDate)
         );
         return getSimpleObject(query);
@@ -1511,7 +1511,7 @@ public class FacilityDashboardUtil {
                         "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) > 5 " +
                         "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
                         ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
-                        "ORDER BY value DESC, diagnosis_date DESC LIMIT 10",
+                        "ORDER BY diagnosis_date DESC, value DESC",
                 resolveDateClause(startDate, endDate)
         );
         return getSimpleObject(query);

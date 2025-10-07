@@ -1126,7 +1126,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     public CohortDefinition motherPPCAfter6weeks(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery ="select p.patient_id from kenyaemr_etl.etl_mch_postnatal_visit p where date(p.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "and (timestampdiff(WEEK,date(p.delivery_date),date(p.visit_date)) > 6 OR p.visit_timing_mother in (1723,167015)) group by p.patient_id;";
+                "and timestampdiff(WEEK,date(p.delivery_date),date(p.visit_date)) > 6 group by p.patient_id;";
         cd.setName("Mothers received PostParturm care after 6 weeks");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));

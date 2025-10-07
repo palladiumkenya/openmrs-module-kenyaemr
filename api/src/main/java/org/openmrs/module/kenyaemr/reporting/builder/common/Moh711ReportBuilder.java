@@ -18,7 +18,6 @@ import org.openmrs.module.kenyacore.report.builder.Builds;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.moh711.Moh711IndicatorLibrary;
-import org.openmrs.module.kenyaemr.reporting.library.moh717.Moh717IndicatorLibrary;
 import org.openmrs.module.kenyaemr.reporting.library.shared.common.CommonDimensionLibrary;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
@@ -56,9 +55,6 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
 
     @Autowired
     private Moh711IndicatorLibrary moh711Indicators;
-
-    @Autowired
-    private Moh717IndicatorLibrary moh717Indicators;
 
     /**
      * @see org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder#getParameters(org.openmrs.module.kenyacore.report.ReportDescriptor)
@@ -162,8 +158,8 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", map(commonDimensions.gender()));
 
-        dsd.addColumn("New ANC Clients", "", ReportUtils.map(moh717Indicators.newANCVisits(), indParams), "");
-        dsd.addColumn("Revisiting ANC Clients", "", ReportUtils.map(moh717Indicators.ancRevisits(), indParams), "");
+        dsd.addColumn("New ANC Clients", "", ReportUtils.map(moh711Indicators.noOfNewANCClients(), indParams), "");
+        dsd.addColumn("Revisiting ANC Clients", "", ReportUtils.map(moh711Indicators.noOfANCClientsRevisits(), indParams), "");
         dsd.addColumn("Clients given IPT (1st dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT1stDose(), indParams), "");
         dsd.addColumn("Clients given IPT (2nd dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT2ndDose(), indParams), "");
         dsd.addColumn("Clients given IPT (3rd dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT3rdDose(), indParams), "");

@@ -8,13 +8,10 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 package org.openmrs.module.kenyaemr.reporting.builder.hiv;
-
 import org.openmrs.module.kenyacore.report.ReportDescriptor;
 import org.openmrs.module.kenyacore.report.ReportUtils;
 import org.openmrs.module.kenyacore.report.builder.AbstractReportBuilder;
 import org.openmrs.module.kenyacore.report.builder.Builds;
-import org.openmrs.module.kenyaemr.Dictionary;
-import org.openmrs.module.kenyaemr.Metadata;
 import org.openmrs.module.kenyaemr.reporting.ColumnParameters;
 import org.openmrs.module.kenyaemr.reporting.EmrReportingUtils;
 import org.openmrs.module.kenyaemr.reporting.library.ETLReports.MOH731Greencard.ETLMoh731GreenCardIndicatorLibrary;
@@ -44,13 +41,6 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
     private ETLMoh731GreenCardIndicatorLibrary moh731GreenCardIndicators;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final Integer TESTED_HIV_AT_PNC_WITHIN_6_WEEKS = Dictionary.getConcept(Metadata.Concept.TEST_STATUS_INITIAL).getConceptId();
-    public static final Integer TESTED_HIV_AT_PNC_AFTER_6_WEEKS = Dictionary.getConcept(Metadata.Concept.RETEST).getConceptId();
-    public static final Integer EXCLUSIVE_BF_UNDER_6_MONTHS = Dictionary.getConcept(Metadata.Concept.BREASTFED_EXCLUSIVELY).getConceptId();
-    public static final Integer BF_AFTER_6_MONTHS = Dictionary.getConcept(Metadata.Concept.CURRENTLY_BREASTFEEDING).getConceptId();
-    public static final Integer NOT_BF = Dictionary.getConcept(Metadata.Concept.INFANT_NOT_BREASTFEEDING).getConceptId();
-    public static final String INITIAL_TEST = "Initial";
-    public static final String RETEST = "Retest";
 
     ColumnParameters boys_0_to_60_days = new ColumnParameters(null, "0-60 days", "gender=M|age=0-60");
     ColumnParameters boys_61_days_to_9_years = new ColumnParameters(null, "61 days-9 yrs", "gender=M|age=61-9");
@@ -237,10 +227,10 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("HV02-03", "Retest at ANC (Antenatal)", ReportUtils.map(moh731GreenCardIndicators.retestAtANC(), indParams), "");
         dsd.addColumn("HV02-04", "Initial Test at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.initialTestAtLabourAndDelivery(), indParams), "");
         dsd.addColumn("HV02-05", "Retest at Labor and Delivery", ReportUtils.map(moh731GreenCardIndicators.retestAtLabourAndDelivery(), indParams), "");
-        dsd.addColumn("HV02-06", "Initial Test at PNC <=6 Weeks)", ReportUtils.map(moh731GreenCardIndicators.testedHIVAtPNC(TESTED_HIV_AT_PNC_WITHIN_6_WEEKS, INITIAL_TEST), indParams), "");
-        dsd.addColumn("HV02-07", "PNC Retest within 6 weeks)", ReportUtils.map(moh731GreenCardIndicators.testedHIVAtPNC(TESTED_HIV_AT_PNC_WITHIN_6_WEEKS, RETEST), indParams), "");
-        dsd.addColumn("HV02-08", "PNC Initial Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.testedHIVAtPNC(TESTED_HIV_AT_PNC_AFTER_6_WEEKS, INITIAL_TEST), indParams), "");
-        dsd.addColumn("HV02-09", "PNC retest Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.testedHIVAtPNC(TESTED_HIV_AT_PNC_AFTER_6_WEEKS, INITIAL_TEST), indParams), "");
+        dsd.addColumn("HV02-06", "Initial Test at PNC <=6 Weeks)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCWithin6Weeks(), indParams), "");
+        dsd.addColumn("HV02-07", "PNC Retest within 6 weeks)", ReportUtils.map(moh731GreenCardIndicators.reestAtPNCWithin6Weeks(), indParams), "");
+        dsd.addColumn("HV02-08", "PNC Initial Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.initialTestAtPNCBtwn6WeeksAnd6Months(), indParams), "");
+        dsd.addColumn("HV02-09", "PNC retest Test >6 weeks - 6 months)", ReportUtils.map(moh731GreenCardIndicators.retestAtPNCBtwn6WeeksAnd6Months(), indParams), "");
 
         // 2.2 HIV Positive Results
         dsd.addColumn("HV02-10", "HIV positive ANC", ReportUtils.map(moh731GreenCardIndicators.hivPositiveAtANC(), indParams), "");
@@ -263,7 +253,7 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
 
         EmrReportingUtils.addRow(dsd, "HV02","AdolescentS KP at 1st ANC", ReportUtils.map(moh731GreenCardIndicators.knownPositiveAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("21", "22"));
         EmrReportingUtils.addRow(dsd, "HV02", "Adolescents New HIV Positive", ReportUtils.map(moh731GreenCardIndicators.newHIVPositiveAtMCH(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("23", "24"));
-        EmrReportingUtils.addRow(dsd, "HV02", "Adolescents on HAART at 1st ANC KP", ReportUtils.map(moh731GreenCardIndicators.onHAARTAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("25", "26"));
+        EmrReportingUtils.addRow(dsd, "HV02", "Adolescents on HAART at 1st ANC", ReportUtils.map(moh731GreenCardIndicators.onHAARTAtFirstANC(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("25", "26"));
         EmrReportingUtils.addRow(dsd, "HV02", "Adolescents started on HAART New (MCH)", ReportUtils.map(moh731GreenCardIndicators.startedHAARTAtMCH(), indParams), adolescentYoungWomenAgeDisaggregation, Arrays.asList("27", "28"));
 
         // 2.6  Infant Prophylaxis
@@ -272,9 +262,9 @@ public class Moh731ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("HV02-31", "Infant ARV Prophylaxis <=8 weeks PNC", ReportUtils.map(moh731GreenCardIndicators.infantArvProphylaxisPNCLessThan8Weeks(), indParams), "");
 
         // 2.7 Infant Feeding
-        dsd.addColumn("HV02-32", "Exclusive Breastfeeding (EBF)", ReportUtils.map(moh731GreenCardIndicators.infantFeedingByMethod(EXCLUSIVE_BF_UNDER_6_MONTHS), indParams), "");
-        dsd.addColumn("HV02-33", "Breastfeeding at 6-24 months", ReportUtils.map(moh731GreenCardIndicators.infantFeedingByMethod(BF_AFTER_6_MONTHS), indParams), "");
-        dsd.addColumn("HV02-34", "Not Breastfeeding (NBF)", ReportUtils.map(moh731GreenCardIndicators.infantFeedingByMethod(NOT_BF), indParams), "");
+        dsd.addColumn("HV02-32", "Exclusive Breastfeeding (EBF)", ReportUtils.map(moh731GreenCardIndicators.exclusiveBFAt6Months6MonthCohort(), indParams), "");
+        dsd.addColumn("HV02-33", "Breastfeeding at 6-24 months", ReportUtils.map(moh731GreenCardIndicators.breastFeedingAt6To24Months24MonthCohort(), indParams), "");
+        dsd.addColumn("HV02-34", "Not Breastfeeding (NBF)", ReportUtils.map(moh731GreenCardIndicators.notBreastFeedingAt6To24Months24MonthCohort(), indParams), "");
 
         return dsd;
     }
