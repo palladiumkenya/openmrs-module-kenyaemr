@@ -45,8 +45,8 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String MCHMS_PNC_DISCONTINUATION = "a5e55a35-e203-480a-aae0-b0f051f84277";
         public static final String MCHMS_FAMILY_PLANNING_DISCONTINUATION = "eaf7da42-2985-41a5-a89e-eba6223ff2d6";
 		public static final String PRE_CONCEPTION_CARE = "27db32f2-cf1d-479c-91c7-b2a15fe3bb65";
-		public static final String PRE_CONCEPTION_CARE_DISCONTINUATION = "c6d09e05-1f25-4164-8860-9f32c5a02df0";
-		public static final String PRE_CONCEPTION_CARE_ENROLLMENT = "c6d09e05-1f25-4164-8860-9f32c5a02df0";
+		public static final String PRE_CONCEPTION_CARE_DISCONTINUATION = "ba25f357-764b-45f7-a8d3-6c1d50325bc7";
+		public static final String PRE_CONCEPTION_CARE_ENROLLMENT = "fe44c39d-0273-412b-b1f2-eed39841bfe4";
     }
 
 	public static final class _Form {
