@@ -132,19 +132,6 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     }
 
     /**
-     * No.of Clients given IPT (1st dose)
-     * @return
-     */
-    public CohortDefinition noOfANCClientsGivenIPT1stDose() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("noOfANCClientsGivenIPT1stDoseSQL", ReportUtils.map(noOfANCClientsGivenIPT1stDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND noOfANCClientsGivenIPT1stDoseSQL");
-        return cd;
-    }
-    /**
      *No.of Clients given IPT (2nd dose) SQL
      */
     public CohortDefinition noOfANCClientsGivenIPT2ndDoseSQL() {
@@ -161,19 +148,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setDescription("No.of Clients given IPT (2nd dose)");
         return cd;
     }
-    /**
-     * No.of Clients given IPT (2nd dose)
-     * @return
-     */
-    public CohortDefinition noOfANCClientsGivenIPT2ndDose() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("noOfANCClientsGivenIPT2ndDoseSQL", ReportUtils.map(noOfANCClientsGivenIPT2ndDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND noOfANCClientsGivenIPT2ndDoseSQL");
-        return cd;
-    }
+
     /**
      *No.of Clients given IPT (3rd dose) SQL
      */
@@ -192,19 +167,6 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         return cd;
     }
 
-    /**
-     * No.of Clients given IPT (3rd dose)
-     * @return
-     */
-    public CohortDefinition noOfANCClientsGivenIPT3rdDose() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("noOfANCClientsGivenIPT3rdDoseSQL", ReportUtils.map(noOfANCClientsGivenIPT3rdDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND noOfANCClientsGivenIPT3rdDoseSQL");
-        return cd;
-    }
     /**
      *No.of Clients with Hb < 11 g/dl
      */
@@ -229,10 +191,8 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition ancClientsCompleted4Visits() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select e.patient_id from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "       inner join kenyaemr_etl.etl_mch_antenatal_visit av on e.patient_id = av.patient_id\n" +
-                "where av.visit_date between date(:startDate) and date(:endDate) and av.anc_visit_number = 4\n" +
-                "group by e.patient_id;";
+        String sqlQuery = "select av.patient_id from kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+                "where av.visit_date between date(:startDate) and date(:endDate) and av.anc_visit_number >= 4;";
         cd.setName("No.of Clients completed 4 Antenatal Visits");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -269,18 +229,6 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         return cd;
     }
 
-    /**
-     * No.of LLINs distributed to ANC clients
-     */
-    public CohortDefinition distributedLLINsToANCClients() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("distributedLLINs", ReportUtils.map(distributedLLINs(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC and distributedLLINs");
-        return cd;
-    }
     /**
      * No of clients tested for Syphillis at HTS
      * @return
@@ -415,10 +363,8 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition breastExaminationDone() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select e.patient_id from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "inner join kenyaemr_etl.etl_mch_antenatal_visit av on e.patient_id = av.patient_id\n" +
-                "where av.visit_date between date(:startDate) and date(:endDate) and av.breast_exam_done in (1115,1065)\n" +
-                "group by e.patient_id;";
+        String sqlQuery = "select av.patient_id from kenyaemr_etl.etl_mch_antenatal_visit av\n" +
+                "where av.visit_date between date(:startDate) and date(:endDate) and av.breast_exam_done in (1115,1065);";
         cd.setName("Total women done breast examination");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -502,19 +448,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setDescription("No.of clients issued with Iron");
         return cd;
     }
-    /**
-     * ANC clients issued with Iron
-     * @return
-     */
-    public CohortDefinition ancClientsIssuedWithIron() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("clientsIssuedWithIron", ReportUtils.map(clientsIssuedWithIron(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND clientsIssuedWithIron");
-        return cd;
-    }
+
     /**
      *No.of clients issued with Folic - preventive services
      */
@@ -529,19 +463,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setDescription("No.of clients issued with Folic");
         return cd;
     }
-    /**
-     * ANC clients issued with Folic acid
-     * @return
-     */
-    public CohortDefinition ancClientsIssuedWithFolic() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("clientsIssuedWithFolic", ReportUtils.map(clientsIssuedWithFolic(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND clientsIssuedWithFolic");
-        return cd;
-    }
+
     /**
      *No.of clients issued with Combined Ferrous Folate - preventive services
      */
@@ -556,19 +478,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         cd.setDescription("No.of clients issued with Combined Ferrous Folate");
         return cd;
     }
-    /**
-     * ANC clients issued with combined Ferrous Folate
-     * @return
-     */
-    public CohortDefinition ancClientsIssuedWithFerrousFolic() {
-        CompositionCohortDefinition cd = new CompositionCohortDefinition();
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.addSearch("clientsIssuedWithFerrousFolic", ReportUtils.map(clientsIssuedWithFerrousFolic(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("latestMCHEnrollmentAtANC", ReportUtils.map(latestMCHEnrollmentAtANC(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("latestMCHEnrollmentAtANC AND clientsIssuedWithFerrousFolic");
-        return cd;
-    }
+
     /**
      *No.of pregnant women presenting in ANC with complication associated with FGM
      */
@@ -1126,7 +1036,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     public CohortDefinition motherPPCAfter6weeks(){
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery ="select p.patient_id from kenyaemr_etl.etl_mch_postnatal_visit p where date(p.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "and timestampdiff(WEEK,date(p.delivery_date),date(p.visit_date)) > 6 group by p.patient_id;";
+                "and (timestampdiff(WEEK,date(p.delivery_date),date(p.visit_date)) > 6 OR p.visit_timing_mother in (1723,167015)) group by p.patient_id;";
         cd.setName("Mothers received PostParturm care after 6 weeks");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));

@@ -3890,7 +3890,7 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Started HAART At L&D");
+        cd.setDescription("Started HAART At ANC");
 
         return cd;
     }
