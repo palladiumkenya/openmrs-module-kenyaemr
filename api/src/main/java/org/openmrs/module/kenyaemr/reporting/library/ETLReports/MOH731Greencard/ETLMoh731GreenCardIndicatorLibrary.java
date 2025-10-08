@@ -461,7 +461,11 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.initialTestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
         );
     }
-
+    public CohortIndicator testedHIVAtPNC(Integer timing, String testType) {
+        return cohortIndicator(null,
+                map(moh731Cohorts.testedHIVAtPNC(timing, testType), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
     public CohortIndicator reestAtPNCWithin6Weeks() {
         return cohortIndicator(null,
                 map(moh731Cohorts.retestAtPNCWithin6Weeks(), "startDate=${startDate},endDate=${endDate}")
@@ -1192,7 +1196,11 @@ public class ETLMoh731GreenCardIndicatorLibrary {
                 map(moh731Cohorts.notBreastFeedingAt6To24Months24MonthCohort(), "startDate=${startDate},endDate=${endDate}")
         );
     }
-
+    public CohortIndicator infantFeedingByMethod(Integer feedingMethod) {
+        return cohortIndicator("infantFeedingByMethod",
+                map(moh731Cohorts.infantFeedingByMethod(feedingMethod), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
     /**
      * Pre-art
      * covers indicators HV03-013 to  HV03-015

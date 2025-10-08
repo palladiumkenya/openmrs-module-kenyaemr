@@ -44,13 +44,13 @@ public class Moh711IndicatorLibrary {
 	 * No.of Clients given IPT (1st dose)
 	 */
 	public CohortIndicator noOfANCClientsGivenIPT1stDose() {
-		return cohortIndicator("No.of Clients given IPT (1st dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT1stDose(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of Clients given IPT (1st dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT1stDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 *No.of Clients given IPT (2nd dose)
 	 */
 	public CohortIndicator noOfANCClientsGivenIPT2ndDose() {
-		return cohortIndicator("No.of Clients given IPT (2nd dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT2ndDose(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of Clients given IPT (2nd dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT2ndDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class Moh711IndicatorLibrary {
 	 * @return
 	 */
 	public CohortIndicator noOfANCClientsGivenIPT3rdDose() {
-		return cohortIndicator("No.of Clients given IPT (3rd dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT3rdDose(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of Clients given IPT (3rd dose)", ReportUtils.map(moh711Cohorts.noOfANCClientsGivenIPT3rdDoseSQL(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 *No.of Clients with Hb < 11 g/dl
@@ -82,7 +82,7 @@ public class Moh711IndicatorLibrary {
 	 *No.of LLINs distributed to ANC clients
 	 */
 	public CohortIndicator distributedLLINsToANCClients() {
-		return cohortIndicator("No.of LLINs distributed to ANC clients", ReportUtils.map(moh711Cohorts.distributedLLINsToANCClients(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of LLINs distributed to ANC clients", ReportUtils.map(moh711Cohorts.distributedLLINs(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * No.of clients Tested for Syphilis
@@ -116,7 +116,7 @@ public class Moh711IndicatorLibrary {
 	 * @return
 	 */
 	public CohortIndicator ancClientsIssuedWithIron() {
-		return cohortIndicator("No.of clients issued with Iron", ReportUtils.map(moh711Cohorts.ancClientsIssuedWithIron(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of clients issued with Iron", ReportUtils.map(moh711Cohorts.clientsIssuedWithIron(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class Moh711IndicatorLibrary {
 	 * @return
 	 */
 	public CohortIndicator ancClientsIssuedWithFolic() {
-		return cohortIndicator("No.of clients issued with Folic", ReportUtils.map(moh711Cohorts.ancClientsIssuedWithFolic(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of clients issued with Folic", ReportUtils.map(moh711Cohorts.clientsIssuedWithFolic(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class Moh711IndicatorLibrary {
 	 * @return
 	 */
 	public CohortIndicator ancClientsIssuedWithFerrousFolic() {
-		return cohortIndicator("No.of clients issued with Combined Ferrous Folate", ReportUtils.map(moh711Cohorts.ancClientsIssuedWithFerrousFolic(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of clients issued with Combined Ferrous Folate", ReportUtils.map(moh711Cohorts.clientsIssuedWithFerrousFolic(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * No.of pregnant women presenting in ANC with complication associated with FGM
