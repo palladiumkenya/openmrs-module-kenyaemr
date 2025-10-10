@@ -28,7 +28,12 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "SELECT e.patient_id FROM kenyaemr_etl.etl_clinical_encounter e WHERE e.visit_type = 'New visit' and e.visit_date BETWEEN date(:startDate) and date(:endDate);"
+                "SELECT ce.patient_id\n" +
+                        "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+                        "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
+                        "WHERE ed.dx_rank = 2 AND ce.visit_type = 'New visit'\n" +
+                        "  AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                        "  AND ed.voided = 0;"
         );
         return sql;
     }
@@ -38,7 +43,12 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "SELECT e.patient_id FROM kenyaemr_etl.etl_clinical_encounter e WHERE e.visit_type = 'Revisit' and e.visit_date BETWEEN date(:startDate) and date(:endDate);"
+                "SELECT ce.patient_id\n" +
+                        "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+                        "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
+                        "WHERE ed.dx_rank = 2 AND ce.visit_type = 'Revisit'\n" +
+                        "  AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                        "  AND ed.voided = 0;"
         );
         return sql;
     }

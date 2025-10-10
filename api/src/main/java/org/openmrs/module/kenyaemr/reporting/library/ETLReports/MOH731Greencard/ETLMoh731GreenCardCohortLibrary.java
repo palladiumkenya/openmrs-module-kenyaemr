@@ -4264,20 +4264,6 @@ public class ETLMoh731GreenCardCohortLibrary extends BaseQuery<Encounter> implem
 
         return cd;
     }
-    //Total Known Status Male	HV02-32
-  /*  public CohortDefinition totalKnownHIVStatusMale(){
-
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery =  ";";
-
-        cd.setName("totalKnownHIVStatusMale");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Total males with known HIV Status");
-
-        return cd;
-    }*/
 
     //1st ANC KP adolescents (10-19)	HV02-33
     public CohortDefinition firstANCKPAdolescents(){
