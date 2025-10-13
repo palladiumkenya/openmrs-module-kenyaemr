@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- ===================== Program ===================== -->
+
+	<bean id="kenyaemr.preconception.program" class="org.openmrs.module.kenyacore.program.ProgramDescriptor">
+		<property name="targetUuid" value="${metadata.program.PRE_CONCEPTION}" />
+		<property name="eligibilityCalculation" value="org.openmrs.module.kenyaemr.calculation.library.preconception.EligibleForPreconceptionProgramCalculation" />
+		<property name="defaultEnrollmentForm" ref="kenyaemr.preconception.form.enrollment" />
+		<property name="defaultCompletionForm" ref="kenyaemr.preconception.form.completion" />
+		<property name="visitForms">
+			<set>
+				<ref bean="kenyaemr.preconception.form.preconception"/>
+			</set>
+		</property>
+		<property name="reports">
+			<set>
+		
+			</set>
+		</property>
+		<property name="fragments">
+			<map>
+				
+			</map>
+		</property>
+		<property name="order" value="200" />
+	</bean>
+
+	<!-- ===================== Identifiers ===================== -->
+
+
+	<!-- ===================== Forms ===================== -->
+
+	<!-- Preconception Enrollment -->
+	<bean id="kenyaemr.preconception.form.enrollment" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="236161a4-29ad-4282-9829-6684aab85daa" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+	
+	</bean>
+
+	<!-- Preconception Completion -->
+	<bean id="kenyaemr.preconception.form.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="a9128c54-3a05-4d66-ba50-149565eadfd7" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/completion.png" />
+	</bean>
+
+		<!--  preconception form -->
+	<bean id="kenyaemr.preconception.form.preconception" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="2cf38f9a-f910-492b-a055-e29924e513f8" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.intake" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+	</bean>
+
+	<!-- ===================== Reports ===================== -->
+
+	
+
+	
+
+</beans>

@@ -36,7 +36,7 @@
 				<ref bean="kenyaemr.mchms.form.postnatalVisit"/>
 				<ref bean="kenyaemr.common.form.tbScreening"/>
 				<ref bean="kenyaemr.common.form.geneXpert"/>
-				<ref bean="kenyaemr.mchms.form.preconception"/>
+				
 			</set>
 		</property>
 		<property name="reports">
@@ -350,20 +350,7 @@
         <!--        <property name="icon" value="kenyaui:forms/completion.png"/>
                 <property name="htmlform" value="kenyaemr:mchms/mchmsDiscontinuation.html"/>-->
     </bean>
-	<!--  preconception form -->
-	<bean id="kenyaemr.mchms.form.preconception" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="2cf38f9a-f910-492b-a055-e29924e513f8" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.registration" />
-				<ref bean="kenyaemr.app.intake" />
-				<ref bean="kenyaemr.app.clinician" />
-				<ref bean="kenyaemr.app.chart" />
-			</set>
-		</property>
-		<property name="icon" value="kenyaui:forms/generic.png" />
-		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
-	</bean>
+
     <bean id="kenyaemr.mchms.form.postnatal.completion" class="org.openmrs.module.kenyacore.form.FormDescriptor">
         <property name="targetUuid" value="30db888b-d6d3-47fb-b0c9-dbdf10a57ff5"/>
         <property name="apps">
