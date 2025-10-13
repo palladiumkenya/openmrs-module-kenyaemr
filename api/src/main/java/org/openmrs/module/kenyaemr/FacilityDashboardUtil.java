@@ -875,6 +875,7 @@ public class FacilityDashboardUtil {
             List<SimpleObject> simpleObjectArrayList = new ArrayList<>();
             // Use yyyy-MM-dd format
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            int total = 0;
 
             if (resultSet != null) {
                 for (List<Object> row : resultSet) {
@@ -884,6 +885,7 @@ public class FacilityDashboardUtil {
                     // Always assume first column is numeric value
                     int value = ((Number) row.get(0)).intValue();
                     rowObj.put("value", value);
+                    total += value;
 
                     if (row.size() == 2) {
                         // Case: value + day
@@ -918,7 +920,7 @@ public class FacilityDashboardUtil {
                 }
             }
 
-            return SimpleObject.create("data", simpleObjectArrayList);
+            return SimpleObject.create("data", simpleObjectArrayList,"total",total);
         } finally {
             Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
         }
@@ -1467,25 +1469,33 @@ public class FacilityDashboardUtil {
 
     /**
      * Retrieves the top ten diseases diagnosed in patients under five years old within a specified date range.
+     * Day field represents the most recent date of diagnosis within the selected period, not the date of all cases
      * @param startDate
      * @param endDate
      * @return
      */
     public static SimpleObject getTopTenDiseasesUnderFiveYearsOld(String startDate, String endDate) {
         String query = String.format(
-                "WITH ranked_diseases AS ( " +
-                        "  SELECT COUNT(DISTINCT ed.diagnosis_id) AS value, cn.name AS disease_name, DATE(ed.date_created) AS diagnosis_date, " +
-                        "         ROW_NUMBER() OVER (PARTITION BY DATE(ed.date_created) ORDER BY COUNT(DISTINCT ed.diagnosis_id) DESC) AS rn " +
-                        "  FROM encounter_diagnosis ed " +
-                        "JOIN person p ON ed.patient_id = p.person_id AND p.voided = 0 " +
-                        "  JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded " +
-                        "       AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
-                        "       AND cn.voided = 0 AND ed.voided = 0 " +
-                        "  WHERE DATE(ed.date_created) %s AND ed.dx_rank = 2 " +
-                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) < 5 " +
-                        "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
-                        ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
-                        "ORDER BY diagnosis_date DESC, value DESC",
+                "SELECT\n" +
+                        "    COUNT(DISTINCT ed.diagnosis_id) AS value,\n" +
+                        "    cn.name AS `group`,\n" +
+                        "    MAX(DATE(ed.date_created)) AS day  -- optional: last occurrence date for reference\n" +
+                        "FROM encounter_diagnosis ed\n" +
+                        "         JOIN person p\n" +
+                        "              ON ed.patient_id = p.person_id\n" +
+                        "                  AND p.voided = 0\n" +
+                        "         JOIN concept_name cn\n" +
+                        "              ON cn.concept_id = ed.diagnosis_coded\n" +
+                        "                  AND cn.locale = 'en'\n" +
+                        "                  AND cn.concept_name_type = 'FULLY_SPECIFIED'\n" +
+                        "                  AND cn.voided = 0\n" +
+                        "WHERE ed.voided = 0\n" +
+                        "  AND ed.dx_rank = 2\n" +
+                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) < 5\n" +
+                        "  AND DATE(ed.date_created) %s\n" +
+                        "GROUP BY ed.diagnosis_coded, cn.name\n" +
+                        "ORDER BY value DESC\n" +
+                        "LIMIT 10;",
                 resolveDateClause(startDate, endDate)
         );
         return getSimpleObject(query);
@@ -1493,25 +1503,33 @@ public class FacilityDashboardUtil {
 
     /**
      * Retrieves the top ten diseases diagnosed in patients aged five years and above within a specified date range.
+     * Day field represents the most recent date of diagnosis within the selected period, not the date of all cases
      * @param startDate
      * @param endDate
      * @return
      */
     public static SimpleObject getTopTenDiseasesFiveYearsOldAndAbove(String startDate, String endDate) {
         String query = String.format(
-                "WITH ranked_diseases AS ( " +
-                        "  SELECT COUNT(DISTINCT ed.diagnosis_id) AS value, cn.name AS disease_name, DATE(ed.date_created) AS diagnosis_date, " +
-                        "         ROW_NUMBER() OVER (PARTITION BY DATE(ed.date_created) ORDER BY COUNT(DISTINCT ed.diagnosis_id) DESC) AS rn " +
-                        "  FROM encounter_diagnosis ed " +
-                        "JOIN person p ON ed.patient_id = p.person_id AND p.voided = 0 " +
-                        "  JOIN concept_name cn ON cn.concept_id = ed.diagnosis_coded " +
-                        "       AND cn.locale = 'en' AND cn.concept_name_type = 'FULLY_SPECIFIED' " +
-                        "       AND cn.voided = 0 AND ed.voided = 0 " +
-                        "  WHERE DATE(ed.date_created) %s AND ed.dx_rank = 2 " +
-                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) > 5 " +
-                        "  GROUP BY ed.diagnosis_coded, DATE(ed.date_created) " +
-                        ") SELECT value, disease_name, diagnosis_date FROM ranked_diseases WHERE rn <= 10 " +
-                        "ORDER BY diagnosis_date DESC, value DESC",
+                "SELECT\n" +
+                        "    COUNT(DISTINCT ed.diagnosis_id) AS value,\n" +
+                        "    cn.name AS `group`,\n" +
+                        "    MAX(DATE(ed.date_created)) AS day  -- optional: last occurrence date for reference\n" +
+                        "FROM encounter_diagnosis ed\n" +
+                        "         JOIN person p\n" +
+                        "              ON ed.patient_id = p.person_id\n" +
+                        "                  AND p.voided = 0\n" +
+                        "         JOIN concept_name cn\n" +
+                        "              ON cn.concept_id = ed.diagnosis_coded\n" +
+                        "                  AND cn.locale = 'en'\n" +
+                        "                  AND cn.concept_name_type = 'FULLY_SPECIFIED'\n" +
+                        "                  AND cn.voided = 0\n" +
+                        "WHERE ed.voided = 0\n" +
+                        "  AND ed.dx_rank = 2\n" +
+                        "  AND TIMESTAMPDIFF(YEAR, p.birthdate, DATE(ed.date_created)) > 5\n" +
+                        "  AND DATE(ed.date_created) %s\n" +
+                        "GROUP BY ed.diagnosis_coded, cn.name\n" +
+                        "ORDER BY value DESC\n" +
+                        "LIMIT 10;",
                 resolveDateClause(startDate, endDate)
         );
         return getSimpleObject(query);
