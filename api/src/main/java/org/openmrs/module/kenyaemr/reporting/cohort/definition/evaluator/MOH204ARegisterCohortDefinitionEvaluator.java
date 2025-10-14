@@ -42,21 +42,12 @@ public class MOH204ARegisterCohortDefinitionEvaluator implements EncounterQueryE
 		EncounterQueryResult queryResult = new EncounterQueryResult(definition, context);
 
 		String qry = "SELECT ce.encounter_id\n" +
-			"FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
-			"         INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = ce.patient_id AND p.voided = 0 AND\n" +
-			"                                                               TIMESTAMPDIFF(YEAR, date(p.DOB), ce.visit_date) < 5\n" +
-			"         INNER JOIN openmrs.encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
-			"WHERE date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-			"  AND ce.voided = 0\n" +
-			"  AND ce.diagnosis_category = 'New'\n" +
-			"UNION\n" +
-			"SELECT sc.encounter_id\n" +
-			"FROM kenyaemr_etl.etl_special_clinics sc\n" +
-			"         INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = sc.patient_id AND p.voided = 0 AND\n" +
-			"                                                               TIMESTAMPDIFF(YEAR, date(p.DOB), sc.visit_date) < 5\n" +
-			"         INNER JOIN openmrs.encounter_diagnosis ed ON ed.patient_id = sc.patient_id AND ed.encounter_id = sc.encounter_id\n" +
-			"WHERE date(sc.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-			"  AND sc.diagnosis_category = 'New';";
+                "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+                "         INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = ce.patient_id AND p.voided = 0 AND\n" +
+                "                                                               TIMESTAMPDIFF(YEAR, date(p.DOB), ce.visit_date) < 5\n" +
+                "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
+                "WHERE ed.dx_rank = 2 AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                "  AND ce.voided = 0;";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);
