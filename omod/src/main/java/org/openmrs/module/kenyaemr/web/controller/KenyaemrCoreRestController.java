@@ -187,6 +187,7 @@ import java.nio.file.Paths;
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
 import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
 import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentSendOTP;
+import static org.openmrs.module.kenyaemr.api.impl.KenyaEmrServiceImpl.getHIEILMediatorAuthToken;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 /**
@@ -3734,6 +3735,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
 				ret = rootNode.path("access_token").asText();
 			}
+		}else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("mediator")) {
+			// Build the Mediator request		
+			ret = getHIEILMediatorAuthToken();	
 		}
 		return ret;
 	}

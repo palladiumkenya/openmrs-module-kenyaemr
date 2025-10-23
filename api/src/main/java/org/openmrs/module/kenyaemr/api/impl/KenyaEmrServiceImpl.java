@@ -468,8 +468,7 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 				.method("POST", body)
 				.addHeader("Content-Type", "application/x-www-form-urlencoded")
 				.build();
-			Response response = client.newCall(request).execute();
-			System.out.println("AUTH Request ==>"+request.toString());
+			Response response = client.newCall(request).execute();		
 			if (!response.isSuccessful()) {
 				System.err.println("Get HIE IL Mediator Auth: ERROR: Request failed: " + response.code() + " - " + response.message());
 			} else {
@@ -477,9 +476,7 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 				//Extract token
 				ObjectMapper mapper = new ObjectMapper();
 				JsonNode node = mapper.readTree(response.body().string());
-				 ret = node.get("access_token").asText();
-					
-				return ret;
+				 ret = node.get("access_token").asText();			
 			}
 		} catch (Exception ex) {
 			System.err.println("Get HIE IL Mediator HIE Auth: ERROR: Request failed: " + ex.getMessage());
