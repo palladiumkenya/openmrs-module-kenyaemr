@@ -42,6 +42,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Base64;
 
+import static org.openmrs.module.kenyaemr.api.impl.KenyaEmrServiceImpl.getHIEILMediatorAuthToken;
 import static org.openmrs.module.kenyaemr.util.EmrUtils.getGlobalPropertyValue;
 
 
@@ -157,8 +158,7 @@ public abstract class DataHandler {
 
 		// Encode username and password for Basic Auth
 		String auth = Base64.getEncoder().encodeToString((shaJwtUsername + ":" + shaJwtPassword).getBytes());
-		//System.out.println("Encoded hie token auth : " + auth);
-
+	
 		//Config to toggle GET and POST requests
 		GlobalProperty gpHIEAuthMode = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_AUTH_MODE);
 		if (gpHIEAuthMode == null) {
@@ -173,8 +173,7 @@ public abstract class DataHandler {
 			// Execute the request
 			Response response = client.newCall(request).execute();
 			if (response.isSuccessful()) {
-				// System.out.println("Response: " + response.body().string());
-				ret = response.body().string();
+					ret = response.body().string();
 			} else {
 				System.out.println("HIE Auth Get Request failed: " + response.code() + " - " + response.message());
 			}
@@ -199,6 +198,10 @@ public abstract class DataHandler {
 				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
 				ret = rootNode.path("access_token").asText();
 			}
+		}else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("mediator")) {
+			// Build the Mediator request
+			System.out.println("Auth mode is mediator here");
+			ret = getHIEILMediatorAuthToken();
 		}
 		//System.out.println("HIE Auth Token retrieved ==>" + ret);
 		return ret;
