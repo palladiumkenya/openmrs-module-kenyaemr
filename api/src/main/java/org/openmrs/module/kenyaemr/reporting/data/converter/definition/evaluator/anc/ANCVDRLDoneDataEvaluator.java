@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCVDRLDoneDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCSyphilisTestDoneDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Evaluates Definition if test results for syphilis
  */
-@Handler(supports=ANCVDRLDoneDataDefinition.class, order=50)
+@Handler(supports= ANCSyphilisTestDoneDataDefinition.class, order=50)
 public class ANCVDRLDoneDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
@@ -35,10 +35,19 @@ public class ANCVDRLDoneDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "   (case v.syphilis_test_status when 1229 then 'Y' when 1228 then 'Y' when 1271 then 'Y' when 1402 then 'ND' else 'ND' end) as syphilis_test_status\n" +
-                "   from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "SELECT\n" +
+                "    v.encounter_id,\n" +
+                "    CASE\n" +
+                "        WHEN v.syphilis_test_status IS NOT NULL THEN 'Duo Test'\n" +
+                "        WHEN x.patient_id IS NOT NULL THEN 'VDRL'\n" +
+                "        WHEN x.patient_id IS NOT NULL AND v.syphilis_test_status IS NOT NULL THEN 'Duo Test & VDRL'\n" +
+                "        END AS syphilis\n" +
+                "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         LEFT JOIN kenyaemr_etl.etl_laboratory_extract x\n" +
+                "                   ON x.patient_id = v.patient_id\n" +
+                "                       AND DATE(x.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                       AND x.lab_test = 299\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -10,7 +10,6 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCFGMDoneDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCHepatitisBScreenedDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
@@ -37,8 +36,13 @@ public class ANCHepatitisBScreenedDataEvaluator implements EncounterDataEvaluato
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "   (case v.hepatitis_b_screening  when 703 then 'Positive' when 664 then 'Negative' when 160737 then 'Not Done' else '-' end) as hepatitis_b_screening\n" +
-                "    from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+                "       (case v.hepatitis_b_screening\n" +
+                "            when 703 then 'P'\n" +
+                "            when 664 then 'N'\n" +
+                "            when 165649 then 'I'\n" +
+                "            else 'ND' end) as hepatitis_b_screening\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -36,17 +36,10 @@ public class PNCTestThreeResultsDataEvaluator implements EncounterDataEvaluator 
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-			" CONCAT_WS('\\r\\n', v.test_3_kit_name, v.test_3_kit_lot_no, v.test_3_kit_expiry,\n" +
-			"          v.test_3_result) as Test_three_results\n" +
-			"                from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-			"                where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-			"                union\n" +
-			"                select ht.encounter_id,\n" +
-			"     CONCAT_WS('\\r\\n', ht.test_3_kit_name, ht.test_3_kit_lot_no, ht.test_3_kit_expiry,\n" +
-			"          ht.test_2_result) as Test_three_results\n" +
-			"                from kenyaemr_etl.etl_hts_test ht\n" +
-			"   join kenyaemr_etl.etl_mch_antenatal_visit anc\n" +
-			"        on anc.patient_id = ht.patient_id and anc.visit_date = ht.visit_date;";
+                "                   CONCAT_WS('\\r\\n', v.test_3_kit_name, v.test_3_kit_lot_no, v.test_3_kit_expiry,\n" +
+                "                             v.test_3_result) as Test_three_results\n" +
+                "            from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "            where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

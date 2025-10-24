@@ -14,25 +14,27 @@ import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefin
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
+import java.util.Date;
+
 /**
- * First ANC Visit Column
+ * ANC Referral reason Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class FirstANCVisitDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class ANCReasonForReferralDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public FirstANCVisitDataDefinition() {
+    public ANCReasonForReferralDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public FirstANCVisitDataDefinition(String name) {
+    public ANCReasonForReferralDataDefinition(String name) {
         super(name);
     }
 
@@ -42,6 +44,6 @@ public class FirstANCVisitDataDefinition extends BaseDataDefinition implements E
      * @see org.openmrs.module.reporting.data.DataDefinition#getDataType()
      */
     public Class<?> getDataType() {
-        return Double.class;
+        return Date.class;
     }
 }

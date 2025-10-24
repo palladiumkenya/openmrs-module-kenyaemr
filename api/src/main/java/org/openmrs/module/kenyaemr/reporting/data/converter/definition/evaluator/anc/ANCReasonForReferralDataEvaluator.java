@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCNextAppointmentDateDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCReasonForReferralDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -20,13 +20,14 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates ANC Next Appointment Date
+ * Evaluates ANC Referral reason
  */
-@Handler(supports=ANCNextAppointmentDateDataDefinition.class, order=50)
-public class ANCNextAppointmentDateDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= ANCReasonForReferralDataDefinition.class, order=50)
+public class ANCReasonForReferralDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -34,13 +35,16 @@ public class ANCNextAppointmentDateDataEvaluator implements EncounterDataEvaluat
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "v.encounter_id,\n" +
-                "v.next_appointment_date\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v;";
+        String qry = "select v.encounter_id, v.referral_reason\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where v.visit_date between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
+        queryBuilder.addParameter("endDate", endDate);
+        queryBuilder.addParameter("startDate", startDate);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;

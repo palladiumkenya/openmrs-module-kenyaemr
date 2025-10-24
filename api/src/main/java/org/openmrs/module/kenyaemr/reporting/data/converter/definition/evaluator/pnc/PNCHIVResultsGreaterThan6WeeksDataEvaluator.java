@@ -35,26 +35,10 @@ public class PNCHIVResultsGreaterThan6WeeksDataEvaluator implements EncounterDat
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select a.encounter_id,\n" +
-                "                 if(timestampdiff(WEEK, a.date_of_delivery, a.visit_date) > 6 and tested_at_pnc is not null, 'Yes',\n" +
-                "                    'No') as tested_within_6_weeks\n" +
-                "          from (select v.patient_id,\n" +
-                "                       v.encounter_id,\n" +
-                "                       coalesce(v.visit_date,t.visit_date)               as visit_date,\n" +
-                "                       coalesce(d.date_of_delivery, v.delivery_date)      as date_of_delivery,\n" +
-                "                       coalesce(v.final_test_result, t.final_test_result) as tested_at_pnc\n" +
-                "                from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-                "                         left join (select d.patient_id,\n" +
-                "                                           mid(max(concat(d.visit_date, date(d.date_of_delivery))), 11) as date_of_delivery\n" +
-                "                                    from kenyaemr_etl.etl_mchs_delivery d\n" +
-                "                                    where d.visit_date <= date(:endDate)\n" +
-                "                                    group by d.patient_id) d\n" +
-                "                                   on v.patient_id = d.patient_id\n" +
-                "                         left join (select t.encounter_id, t.patient_id, t.visit_date, t.hts_entry_point, t.final_test_result\n" +
-                "                                    from kenyaemr_etl.etl_hts_test t\n" +
-                "                                    where date(t.visit_date) between date(:startDate) and date(:endDate)) t\n" +
-                "                                   on v.patient_id = t.patient_id and v.visit_date = t.visit_date\n" +
-                "                where date(v.visit_date) between date(:startDate) and date(:endDate)) a;";
+        String qry = "select v.encounter_id,v.final_test_result\n" +
+                "            from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "            where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "and v.hiv_test_timing = 162081;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -11,7 +11,6 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCNumberDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCVisitNumberDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -21,10 +20,11 @@ import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
- * ANC Number
+ * ANC Contacts
  */
 @Handler(supports=ANCNumberDataDefinition.class, order=50)
 public class ANCNumberDataEvaluator implements EncounterDataEvaluator {
@@ -35,14 +35,18 @@ public class ANCNumberDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "  v.encounter_id,\n" +
-                "  e.anc_number\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v inner join kenyaemr_etl.etl_mch_enrollment e on v.patient_id = e.patient_id and e.date_of_discontinuation IS NULL\n" +
+        String qry = "select v.encounter_id,\n" +
+                "      max(v.anc_visit_number) as anc_contacts\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where v.visit_date between date(:startDate) and date(:endDate)\n" +
                 "GROUP BY v.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
+        Date startDate = (Date)context.getParameterValue("startDate");
+        Date endDate = (Date)context.getParameterValue("endDate");
+        queryBuilder.addParameter("endDate", endDate);
+        queryBuilder.addParameter("startDate", startDate);
         Map<Integer, Object> data = evaluationService.evaluateToMap(queryBuilder, Integer.class, Object.class, context);
         c.setData(data);
         return c;

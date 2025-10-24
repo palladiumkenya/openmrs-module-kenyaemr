@@ -35,11 +35,11 @@ public class ANCITNDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "    (case v.bed_nets when 'Yes' then 'Yes' else '' end)as bed_nets\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(visit_date) between date(:startDate) and date(:endDate)\n" +
-                "GROUP BY v.encounter_id;";
+        String qry = "select v.encounter_id, if(long_lasting_insecticidal_net is not null, 'Y', 'N') as itn\n" +
+                "from kenyaemr_etl.etl_preventive_services p\n" +
+                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                    on p.visit_date = v.visit_date and p.patient_id = v.patient_id\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

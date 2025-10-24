@@ -35,10 +35,12 @@ public class ANCBloodRhesusGroupDataEvaluator implements EncounterDataEvaluator 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "v.encounter_id,\n" +
-                "(case v.test_result when 703 then 'Positive' when 664 then 'Negative' else '' end) as test_result\n" +
-                "from kenyaemr_etl.etl_laboratory_extract v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.lab_test = 160232;";
+        String qry = "select v.encounter_id, if(x.patient_id is not null, 'Y', 'N') as tested_for_rhesus_blood_group\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         left join kenyaemr_etl.etl_laboratory_extract x on x.patient_id = v.patient_id\n" +
+                "    and date(x.date_test_requested) between date(:startDate) and date(:endDate)\n" +
+                "    and x.lab_test = 300\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

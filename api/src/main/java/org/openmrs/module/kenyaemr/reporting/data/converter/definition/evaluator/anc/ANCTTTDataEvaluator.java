@@ -35,10 +35,19 @@ public class ANCTTTDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "  v.encounter_id,\n" +
-                " (case v.TTT when 'Yes' then 'Yes' else '' end)as TTT\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "\n" +
+                "SELECT v.encounter_id,\n" +
+                "       CASE\n" +
+                "           WHEN tetanus_taxoid_1 IS NOT NULL THEN '1st Dose'\n" +
+                "           WHEN tetanus_taxoid_1 IS NOT NULL THEN '2nd Dose'\n" +
+                "           WHEN tetanus_taxoid_1 IS NOT NULL THEN '3rd Dose'\n" +
+                "           WHEN tetanus_taxoid_1 IS NOT NULL THEN '4th Dose'\n" +
+                "           WHEN tetanus_taxoid_1 IS NOT NULL THEN '5th Dose'\n" +
+                "           END AS TT\n" +
+                "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         LEFT JOIN kenyaemr_etl.etl_preventive_services s\n" +
+                "                   ON v.patient_id = s.patient_id AND v.encounter_id = s.encounter_id\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -35,8 +35,19 @@ public class ANCIPTmalariaDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select encounter_id, IPT_dose_given_anc from kenyaemr_etl.etl_mch_antenatal_visit\n" +
-                "where date(visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select max(encounter_id) as encounter_id,\n" +
+                "       mid(max(concat(visit_date, case IPT_dose_given_anc\n" +
+                "                                      when 2031578 then 1\n" +
+                "                                      when 2031580 then 2\n" +
+                "                                      when 2031581 then 3\n" +
+                "                                      when 2031582 then 4\n" +
+                "                                      when 2031583 then 5\n" +
+                "                                      when 2031584 then 'No SP, if last dose received <1 Month ago'\n" +
+                "                                      when 2031585 then 'IPTp - SP dose 6 (if no dose in past month)' END)),\n" +
+                "           11) as IPT_dose_given_anc\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit\n" +
+                "where date(visit_date) between date(:startDate) and date(:endDate)\n" +
+                "group by encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
