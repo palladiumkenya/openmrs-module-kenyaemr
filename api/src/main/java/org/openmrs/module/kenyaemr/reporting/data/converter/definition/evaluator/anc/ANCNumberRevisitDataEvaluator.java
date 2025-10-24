@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCSupplimentDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCNumberRevisitDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Evaluates  Data Definition to ANC Exercises
+ * Evaluates ANC Number Data Definition to produce a ANC Number
  */
-@Handler(supports=ANCSupplimentDataDefinition.class, order=50)
-public class ANCSupplimentDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= ANCNumberRevisitDataDefinition.class, order=50)
+public class ANCNumberRevisitDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,10 +35,26 @@ public class ANCSupplimentDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "   (case v.iron_supplement when 'Yes' then 'Yes' else '' end)as iron_supplement\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "SELECT v.encounter_id, i.anc_number\n" +
+                "FROM (\n" +
+                "         SELECT v.encounter_id, v.patient_id\n" +
+                "         FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         WHERE v.form = 'MCH ANC Followup'\n" +
+                "           AND v.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "     ) v\n" +
+                "         JOIN (\n" +
+                "    SELECT i.patient_id,\n" +
+                "           COALESCE(\n" +
+                "                   MID(MAX(CONCAT(i.visit_date, i.anc_number)), 11),\n" +
+                "                   d.national_unique_patient_identifier\n" +
+                "           ) AS anc_number\n" +
+                "    FROM kenyaemr_etl.etl_mch_antenatal_visit i\n" +
+                "             JOIN kenyaemr_etl.etl_patient_demographics d\n" +
+                "                  ON i.patient_id = d.patient_id\n" +
+                "    WHERE i.form = 'MCH Antenatal Initial Visit'\n" +
+                "    GROUP BY i.patient_id\n" +
+                "    HAVING MAX(i.visit_date) < DATE(:startDate)\n" +
+                ") i ON v.patient_id = i.patient_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

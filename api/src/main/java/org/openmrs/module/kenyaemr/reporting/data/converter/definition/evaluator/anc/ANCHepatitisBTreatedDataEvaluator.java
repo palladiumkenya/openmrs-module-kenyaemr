@@ -10,7 +10,6 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCFGMDoneDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCHepatitisBTreatedDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
@@ -37,7 +36,7 @@ public class ANCHepatitisBTreatedDataEvaluator implements EncounterDataEvaluator
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "     (case v.hepatitis_b_treatment  when 1065 then 'Yes' when 1066 then 'No' else '' end) as hepatitis_b_treatment\n" +
+                "     (case v.hepatitis_b_treatment  when 1065 then 'Y' when 1066 then 'N' else 'NA' end) as hepatitis_b_treatment\n" +
                 " from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

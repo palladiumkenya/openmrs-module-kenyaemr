@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCHIVStatusBeforeFirstANCDataDefinition;
+import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCSupplementDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- *Evaluates a ANC enrollment Data Definition to produce a KP
+ * Evaluates  Data Definition to ANC Exercises
  */
-@Handler(supports=ANCHIVStatusBeforeFirstANCDataDefinition.class, order=50)
-public class ANCHIVStatusBeforeFirstANCDataEvaluator implements EncounterDataEvaluator {
+@Handler(supports= ANCSupplementDataDefinition.class, order=50)
+public class ANCSupplementDataEvaluator implements EncounterDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
@@ -35,13 +35,17 @@ public class ANCHIVStatusBeforeFirstANCDataEvaluator implements EncounterDataEva
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "   v.encounter_id,\n" +
-                "   (case e.hiv_status when 703 then 'Known Positive' when 164142 then 'Revisit' when 1067 then 'Unknown' end) as hiv_status\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "  inner join kenyaemr_etl.etl_mch_enrollment e on v.patient_id = e.patient_id\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "GROUP BY v.encounter_id;\n";
+        String qry = "select v.encounter_id,\n" +
+                "       if(coalesce(p.iron_1, p.iron_2, p.iron_3, p.iron_4), 'Iron',\n" +
+                "          if(coalesce(p.folate_1, p.folate_2, p.folate_3, p.folate_4), 'Folate',\n" +
+                "             if(coalesce(p.folate_iron_1, p.folate_iron_2, p.folate_iron_3, p.folate_iron_4), 'Combined IFAs',\n" +
+                "                if(p.calcium, 'Calcium', if(coalesce(p.folate_1, p.folate_2, p.folate_3, p.folate_4) and\n" +
+                "                                            coalesce(p.iron_1, p.iron_2, p.iron_3, p.iron_4), 'Iron+Folate Separately',\n" +
+                "                                            null))))) as supplementation\n" +
+                "from kenyaemr_etl.etl_preventive_services p\n" +
+                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                    on p.visit_date = v.visit_date and p.patient_id = v.patient_id\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

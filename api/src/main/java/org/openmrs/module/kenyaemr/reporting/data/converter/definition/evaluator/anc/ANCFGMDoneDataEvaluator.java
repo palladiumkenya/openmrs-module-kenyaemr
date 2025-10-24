@@ -10,7 +10,6 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.anc;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCDewormedDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCFGMDoneDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
@@ -36,9 +35,14 @@ public class ANCFGMDoneDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "         (case v.fgm_done when 1065 then 'Yes' else 'No' end)as fgm_done\n" +
-                "  from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select MAX(v.encounter_id) as encounter_id,\n" +
+                "       (case MID(MAX(CONCAT(v.visit_date, v.fgm_done)), 11)\n" +
+                "            when 1065 then 'Yes'\n" +
+                "            when 1066 then 'No'\n" +
+                "           end)            as fgm_done\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "GROUP BY v.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

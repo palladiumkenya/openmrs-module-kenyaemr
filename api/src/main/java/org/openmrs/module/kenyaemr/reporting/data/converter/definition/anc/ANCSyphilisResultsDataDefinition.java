@@ -14,27 +14,25 @@ import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefin
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
-import java.util.Date;
-
 /**
- * ANC Next Appointment Date Column
+ * Syphilis results
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class ANCNextAppointmentDateDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class ANCSyphilisResultsDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public ANCNextAppointmentDateDataDefinition() {
+    public ANCSyphilisResultsDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public ANCNextAppointmentDateDataDefinition(String name) {
+    public ANCSyphilisResultsDataDefinition(String name) {
         super(name);
     }
 
@@ -44,6 +42,6 @@ public class ANCNextAppointmentDateDataDefinition extends BaseDataDefinition imp
      * @see org.openmrs.module.reporting.data.DataDefinition#getDataType()
      */
     public Class<?> getDataType() {
-        return Date.class;
+        return Double.class;
     }
 }

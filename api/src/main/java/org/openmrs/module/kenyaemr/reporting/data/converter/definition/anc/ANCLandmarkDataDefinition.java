@@ -18,21 +18,21 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  *HIV status before first ANC Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class ANCHIVStatusBeforeFirstANCDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class ANCLandmarkDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public ANCHIVStatusBeforeFirstANCDataDefinition() {
+    public ANCLandmarkDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public ANCHIVStatusBeforeFirstANCDataDefinition(String name) {
+    public ANCLandmarkDataDefinition(String name) {
         super(name);
     }
 

@@ -40,9 +40,7 @@ public class PNCCervicalCancerScreeningMethodDataEvaluator implements EncounterD
                 "            when 885 then 'Pap Smear'\n" +
                 "            when 162816 then 'VIA'\n" +
                 "            when 164977 then 'VILI'\n" +
-                "            when 159859 then 'HPV'\n" +
-                "            when 5622 then 'Other'\n" +
-                "            else '' end)\n" +
+                "            when 5622 then 'Other' end)\n" +
                 "           as cacx_method\n" +
                 "from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 

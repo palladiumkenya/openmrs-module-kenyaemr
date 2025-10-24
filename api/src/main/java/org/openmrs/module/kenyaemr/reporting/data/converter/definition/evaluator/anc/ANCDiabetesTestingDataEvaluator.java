@@ -35,9 +35,33 @@ public class ANCDiabetesTestingDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "     (case diabetes_test when 664 then 'No Diabetes' when 703 then 'Has Diabetes' when 160737 then 'Not Done' else '-' end) as diabetes_test\n" +
-                "   from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "SELECT\n" +
+                "    t.encounter_id,\n" +
+                "    t.blood_sugar\n" +
+                "FROM (\n" +
+                "         SELECT\n" +
+                "             v.encounter_id,\n" +
+                "             COALESCE(\n" +
+                "                     v.blood_glucose,\n" +
+                "                     CASE v.blood_sugar_test\n" +
+                "                         WHEN 1118 THEN 'No Diabetes'\n" +
+                "                         WHEN 1175 THEN 'Not Done'\n" +
+                "                         WHEN 0 THEN 'Has Diabetes'\n" +
+                "                         END\n" +
+                "             ) AS blood_sugar\n" +
+                "         FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "         GROUP BY v.encounter_id\n" +
+                "         UNION ALL\n" +
+                "         SELECT\n" +
+                "             v.encounter_id,\n" +
+                "             l.result_name AS blood_sugar\n" +
+                "         FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v on v.visit_date = l.visit_date and v.patient_id = l.patient_id\n" +
+                "         WHERE l.lab_test = 1000443\n" +
+                "           AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "         GROUP BY l.encounter_id\n" +
+                "     ) t;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

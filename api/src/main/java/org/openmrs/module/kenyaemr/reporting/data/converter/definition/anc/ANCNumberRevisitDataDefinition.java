@@ -18,21 +18,21 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * First ANC Visit Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class ANCVDRLDoneDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class ANCNumberRevisitDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public ANCVDRLDoneDataDefinition() {
+    public ANCNumberRevisitDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public ANCVDRLDoneDataDefinition(String name) {
+    public ANCNumberRevisitDataDefinition(String name) {
         super(name);
     }
 

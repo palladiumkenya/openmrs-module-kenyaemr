@@ -35,11 +35,21 @@ public class ANCUrinalysisDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,if(v.urine_microscopy is not null or v.urinary_albumin is not null or v.glucose_measurement is not null\n" +
-                "     or v.urine_ph is not null or v.urine_gravity is not null or v.urine_nitrite_test is not null\n" +
-                "     or v.urine_dipstick_for_blood is not null or v.urine_leukocyte_esterace_test is not null or v.urinary_ketone is not null\n" +
-                "     or v.urine_bile_pigment_test is not null or v.urine_bile_salt_test is not null or v.urine_colour is not null or v.urine_turbidity is not null,'Y','N') as urinalysis\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select v.encounter_id,\n" +
+                "       if(v.urine_microscopy is not null or v.urinary_albumin is not null or v.glucose_measurement is not null\n" +
+                "              or v.urine_ph is not null or v.urine_gravity is not null or v.urine_nitrite_test is not null\n" +
+                "              or v.urine_dipstick_for_blood is not null or v.urine_leukocyte_esterace_test is not null or\n" +
+                "          v.urinary_ketone is not null\n" +
+                "              or v.urine_bile_pigment_test is not null or v.urine_bile_salt_test is not null or\n" +
+                "          v.urine_colour is not null or v.urine_turbidity is not null, 'Y', 'N') as urinalysis\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "UNION ALL\n" +
+                "select v.encounter_id, if(l.lab_test = 1000073, 'Y', 'N') as urinalysis\n" +
+                "from kenyaemr_etl.etl_laboratory_extract l\n" +
+                "         join kenyaemr_etl.etl_mch_antenatal_visit v on l.patient_id = v.patient_id and l.visit_date = v.visit_date\n" +
+                "where DATE(l.date_test_requested) between DATE(:startDate) and DATE(:endDate)\n" +
+                "group by v.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

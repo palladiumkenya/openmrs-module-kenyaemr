@@ -35,25 +35,9 @@ public class PNCPriorKnownStatusDataEvaluator implements EncounterDataEvaluator 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select a.enc_id,\n" +
-                "       if(a.mother_hiv_status != 'Known Positive', a.pnv_status,a.mother_hiv_status) as status\n" +
-                "from (select e.mother_hiv_status, v.pnv_status, e.patient_id,v.enc_id\n" +
-                "      from (select e.patient_id,\n" +
-                "                   (case e.hiv_status\n" +
-                "                        when 1067 then 'Unknown'\n" +
-                "                        when 664 then 'Negative'\n" +
-                "                        when 703 then 'Known Positive'\n" +
-                "                       end) as mother_hiv_status\n" +
-                "            from kenyaemr_etl.etl_mch_enrollment e\n" +
-                "            where date(e.visit_date) <= date(:endDate)) e\n" +
-                "               inner join (select v.patient_id,v.encounter_id as enc_id,\n" +
-                "                                  case v.mother_hiv_status\n" +
-                "                                      when 1067 then 'Unknown'\n" +
-                "                                      when 703 then 'Positive'\n" +
-                "                                      when 664 then 'Negative' end as pnv_status\n" +
-                "                           from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-                "                           where date(v.visit_date) between date(:startDate) and date(:endDate)) v\n" +
-                "                          on v.patient_id = e.patient_id) a;";
+        String qry = "select p.encounter_id, hiv_test_type\n" +
+                "from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
+                "where date(p.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

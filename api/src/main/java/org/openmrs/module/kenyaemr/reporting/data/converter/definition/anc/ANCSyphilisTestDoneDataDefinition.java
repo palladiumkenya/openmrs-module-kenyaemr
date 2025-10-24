@@ -15,24 +15,24 @@ import org.openmrs.module.reporting.definition.configuration.ConfigurationProper
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
 /**
- * Syphilis results
+ * First ANC Visit Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class ANCVDRLResultsDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class ANCSyphilisTestDoneDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
     /**
      * Default Constructor
      */
-    public ANCVDRLResultsDataDefinition() {
+    public ANCSyphilisTestDoneDataDefinition() {
         super();
     }
 
     /**
      * Constructor to populate name only
      */
-    public ANCVDRLResultsDataDefinition(String name) {
+    public ANCSyphilisTestDoneDataDefinition(String name) {
         super(name);
     }
 

@@ -40,7 +40,8 @@ public class PNCMotherPostpartumVisitTimingDataEvaluator implements EncounterDat
 			"                                   when 162679 then 'No change,'\n" +
 			"                                   when 1721 then '10 - 14 days'\n" +
 			"                                   when 1722 then '4 - 6 weeks'\n" +
-			"                                   when 1723 then '4 - 6 Months' end) as visit_timing_mother\n" +
+			"                                   when 1723 then 'More than 6 weeks'\n" +
+			"                                   when 167015 then '4 - 6 Months' end) as visit_timing_mother\n" +
 			"from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

@@ -36,9 +36,16 @@ public class PNCNVPAndAZTForBabyGreaterThan6WeeksDataEvaluator implements Encoun
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
         String qry = "select v.encounter_id,\n" +
-                "       (case v.infant_prophylaxis_timing when 1065 then 'No' when 1066 then 'Yes' else 'NA' end) as infant_prophylaxis_timing\n" +
+                "       (case\n" +
+                "            when v.infant_prophylaxis_timing = 1066 and (v.baby_nvp_dispensed = 80586 or v.baby_azt_dispensed = 160123)\n" +
+                "                then 'Y'\n" +
+                "            when v.infant_prophylaxis_timing = 1066 and (v.baby_nvp_dispensed = 1066 or v.baby_azt_dispensed = 1066)\n" +
+                "                then 'N'\n" +
+                "            when v.infant_prophylaxis_timing = 1066 and (v.baby_nvp_dispensed = 164142 or v.baby_azt_dispensed = 164142)\n" +
+                "                then 'R'\n" +
+                "            else 'NA' end) as infant_prophylaxis_timing\n" +
                 "from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
-                "    where date(v.visit_date) between date(:startDate) and date(:endDate);";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

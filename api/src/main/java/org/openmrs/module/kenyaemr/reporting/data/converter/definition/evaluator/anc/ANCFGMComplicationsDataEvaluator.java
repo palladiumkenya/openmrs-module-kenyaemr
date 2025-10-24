@@ -11,7 +11,6 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCFGMComplicationsDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.anc.ANCFGMDoneDataDefinition;
 import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
 import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
 import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
@@ -36,9 +35,9 @@ public class ANCFGMComplicationsDataEvaluator implements EncounterDataEvaluator 
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "  (case v.fgm_complications when 122949 then 'Scarring' when 136308 then 'Keloids' when 141615 then 'Dyspaneuria' when 111633 then 'UTI' else '' end)as fgm_complications\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select v.encounter_id, v.fgm_complications\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

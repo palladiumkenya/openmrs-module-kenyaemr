@@ -35,13 +35,16 @@ public class ANCHIVTestTypeDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "       if(e.hiv_status != 703 and e.hiv_status != 164142 and v.final_test_result is not null, 'Initial',\n" +
-                "          if((e.hiv_status = 164142 or e.hiv_status = 1067) and v.final_test_result is not null, 'Retest',\n" +
-                "             null)) as test_type\n" +
+        String qry = "select max(v.encounter_id) as encounter_id,\n" +
+                "       (case mid(max(concat(v.visit_date,v.hiv_test_during_visit)),11)\n" +
+                "            when 164180 then 'Initial'\n" +
+                "            when 160530 then 'Retest'\n" +
+                "            when 169173 then 'Known positive'\n" +
+                "            when 164142 then 'Revisit'\n" +
+                "            when 1118 then 'Not done' end) as hiv_test_during_visit\n" +
                 "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "         inner join kenyaemr_etl.etl_mch_enrollment e on e.patient_id = v.patient_id\n" +
-                "where v.visit_date between date(:startDate) AND date(:endDate);";
+                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "group by v.encounter_id;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

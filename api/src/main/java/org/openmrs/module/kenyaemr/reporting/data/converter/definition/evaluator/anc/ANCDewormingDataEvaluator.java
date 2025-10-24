@@ -35,9 +35,12 @@ public class ANCDewormingDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select\n" +
-                "  v.encounter_id,coalesce(v.deworming_done_anc,v.deworming) from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "  where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select v.encounter_id,\n" +
+                "       if(p.mebendazole is not null or p.albendazole is not null, 'Y', 'N') as dewormed\n" +
+                "from kenyaemr_etl.etl_preventive_services p\n" +
+                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "                    on p.visit_date = v.visit_date and p.patient_id = v.patient_id\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

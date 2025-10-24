@@ -35,10 +35,17 @@ public class PNCHAARTForMotherWithin6WeeksDataEvaluator implements EncounterData
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select p.encounter_id,case p.mother_haart_given when 1065 then 'Yes' when 1066 then 'No' when 1175 then 'N/A' when 164142 then 'Revisit' end as mother_haart_given\n" +
-                "                     from kenyaemr_etl.etl_mch_postnatal_visit p\n" +
-                "                       where date(p.visit_date) between date(:startDate) and date(:endDate)and\n" +
-                "       timestampdiff(WEEK, date(p.delivery_date), date(p.visit_date)) between 0 and 6;";
+        String qry = "select v.encounter_id,\n" +
+                "       (case\n" +
+                "            when v.mother_haart_given = 1065 and (v.visit_timing_mother = 1721 or v.visit_timing_mother = 1722)\n" +
+                "                then 'Y'\n" +
+                "            when v.mother_haart_given = 1066 and (v.visit_timing_mother = 1721 or v.visit_timing_mother = 1722)\n" +
+                "                then 'N'\n" +
+                "            when v.mother_haart_given = 164142 and (v.visit_timing_mother = 1721 or v.visit_timing_mother = 1722)\n" +
+                "                then 'R'\n" +
+                "            else 'NA' end) as haart_for_mother_within_6_weeks\n" +
+                "from kenyaemr_etl.etl_mch_postnatal_visit v\n" +
+                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

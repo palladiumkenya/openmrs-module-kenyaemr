@@ -484,9 +484,13 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
      */
     public CohortDefinition ancClientsWithFGMRelatedComplications() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select v.patient_id from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "where v.fgm_complications in (122949,136308,141615,111633) and\n" +
-                "      v.visit_date   between date(:startDate) and date(:endDate);";
+        String sqlQuery = "select v.patient_id\n" +
+                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "where FIND_IN_SET('Scarring', v.fgm_complications) > 0\n" +
+                "   or FIND_IN_SET('Keloids', v.fgm_complications) > 0\n" +
+                "   or FIND_IN_SET('Dyspaneuria', v.fgm_complications) > 0\n" +
+                "   or FIND_IN_SET('UTI', v.fgm_complications) > 0\n" +
+                "    and v.visit_date between date(:startDate) and date(:endDate);";
         cd.setName("ancClientsWithFGMRelatedComplications");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
