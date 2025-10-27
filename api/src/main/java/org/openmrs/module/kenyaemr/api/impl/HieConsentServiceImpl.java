@@ -116,7 +116,7 @@ public class HieConsentServiceImpl {
                     System.out.println("OTP validation successfully \n" + responseBody);
                 } else {
                     responseMsg = "Failed to validate otp " + responseBody;
-                    System.err.println("Failed to validate otp \n" + responseBody);
+                    System.err.println("KenyaEMR module: Failed to validate otp \n" + responseBody);
                 }
             }
 

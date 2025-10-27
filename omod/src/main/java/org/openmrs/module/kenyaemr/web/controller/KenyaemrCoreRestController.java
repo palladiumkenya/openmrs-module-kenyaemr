@@ -50,6 +50,7 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.Program;
 import org.openmrs.Relationship;
 import org.openmrs.Visit;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
@@ -3668,10 +3669,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 	}
 
+	/**
+	 * Get the auth token (get, post or mediator type)
+	 */
 	public static String getAuthToken() throws IOException {
 		// Utility function to get auth token
 		String ret = null;
 		OkHttpClient client = new OkHttpClient();
+		Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
 		GlobalProperty globalGetJwtTokenUrl = Context.getAdministrationService()
 				.getGlobalPropertyObject(CommonMetadata.GP_SHA_JWT_TOKEN_GET_END_POINT);
 		String shaJwtTokenUrl = globalGetJwtTokenUrl.getPropertyValue();
@@ -3735,7 +3740,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(payload);
 				ret = rootNode.path("access_token").asText();
 			}
-		}else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("mediator")) {
+		} else if (gpHIEAuthMode.getPropertyValue().trim().equalsIgnoreCase("mediator")) {
 			// Build the Mediator request		
 			ret = getHIEILMediatorAuthToken();	
 		}
@@ -4025,6 +4030,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 * @throws RuntimeException if there is an error sending the OTP
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/consent-request")
+	@Authorized
 	@ResponseBody
 	public Object getConsentOTP(@RequestBody ConsentOTPRequest request) {
 		try {
@@ -4067,6 +4073,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 *                          during the request
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/validate-otp")
+	@Authorized
 	@ResponseBody
 	public Object validateOtp(@RequestBody ConsentOTPRequest request) {
 		try {
