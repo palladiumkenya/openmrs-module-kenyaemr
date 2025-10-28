@@ -3934,9 +3934,9 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				"getVirallyUnsuppressed", FacilityDashboardUtil.getVirallyUnsuppressed(startDate, endDate),
 				"getVirallyUnsuppressedWithoutEAC",
 				FacilityDashboardUtil.getVirallyUnsuppressedWithoutEAC(startDate, endDate),
-				"getHeiSixToEightWeeksOld", FacilityDashboardUtil.getHeiEightWeeksOld(startDate, endDate),
-				"getHeiSixToEightWeeksWithoutPCRResults",
-				FacilityDashboardUtil.getHeiSixToEightWeeksWithoutPCRResults(startDate, endDate),
+				"getHeiEightWeeksOld", FacilityDashboardUtil.getHeiEightWeeksOld(startDate, endDate),
+				"getHeiEightWeeksWithoutPCRResults",
+				FacilityDashboardUtil.getHeiEightWeeksWithoutPCRResults(startDate, endDate),
 				"getHei24MonthsOld", FacilityDashboardUtil.getHei24MonthsOld(startDate, endDate),
 				"getHei24MonthsWithoutDocumentedOutcome",
 				FacilityDashboardUtil.getHei24MonthsWithoutDocumentedOutcome(startDate, endDate),
@@ -3954,7 +3954,7 @@ public class KenyaemrCoreRestController extends BaseRestController {
 				FacilityDashboardUtil.getMonthlyPatientsTestedHivPositive(startDate, endDate),
 				"getMonthlyPregnantOrPostpartumClients", FacilityDashboardUtil
 						.getMonthlyPregnantOrPostpartumClients(startDate, endDate),
-				"getMonthlyHeiSixToEightWeeksOld", FacilityDashboardUtil
+				"getMonthlyHeiEightWeeksOld", FacilityDashboardUtil
 						.getMonthlyHeiEightWeeksOld(startDate, endDate),
 				"getMonthlyEligibleForVl", FacilityDashboardUtil
 						.getMonthlyEligibleForVl(startDate, endDate),
