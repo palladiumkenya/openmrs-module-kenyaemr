@@ -38,6 +38,7 @@ public class IPTMetadata extends AbstractMetadataBundle {
 		public static final String IPT_OUTCOME = "5bdd3b65-8b7b-46a0-9f7b-dfe764143848";
 		public static final String IPT_INITIATION = "61ea2a72-b0f9-47cf-ae86-443f88656acc";
 		public static final String IPT_FOLLOWUP = "9d0e4be8-ab72-4394-8df7-b509b9d45179";
+		public static final String IPT_INITIAL_FORM = "9d75d6c7-2db8-44ba-8068-f1b3601a1cb9";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -60,6 +61,7 @@ public class IPTMetadata extends AbstractMetadataBundle {
 		install(form("TPT Initiation", null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIATION));
 		install(form("TPT Outcome", null, _EncounterType.IPT_OUTCOME, "1", _Form.IPT_OUTCOME));
 		install(form("TPT FollowUp" ,null, _EncounterType.IPT_FOLLOWUP, "1", _Form.IPT_FOLLOWUP));
+		install(form("TPT Initial" ,null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIAL_FORM));
 
 		install(patientIdentifierType("Subcounty Registration Number", "Assigned to every IPT patient",
 				null, null, null,

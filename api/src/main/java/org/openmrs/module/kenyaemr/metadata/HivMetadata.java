@@ -75,6 +75,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String LAB_ORDERS_FORM_UUID = "2cdeded1-3f69-3bda-beff-1ed2ead94eaf";
 		public static final String HIGH_IIT_INTERVENTION = "6817d322-f938-4f38-8ccf-caa6fa7a499f";
 		public static final String HOME_VISIT_CHECKLIST = "ac3152de-1728-4786-828a-7fb4db0fc384";
+		public static final String HIV_INITIAL_FORM = "592fd92c-35f6-4dd8-8f0d-a401c1e5b2e2";
 
 	}
 
@@ -131,6 +132,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(form("Laboratory Test Orders", "Laboratory Test Orders", _EncounterType.LAB_ORDER, "1", _Form.LAB_ORDERS_FORM_UUID));
 		install(form("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION, "1", _Form.HIGH_IIT_INTERVENTION));
 		install(form("Home Visit Checklist", "Home Visit Checklist Form", _EncounterType.HOME_VISIT_CHECKLIST, "1", _Form.HOME_VISIT_CHECKLIST));
+		install(form("HIV Initial Visit", "HIV Initial Visit Form", _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_INITIAL_FORM));
 
 		install(patientIdentifierType("KDoD number", "Unique Id for KDoD patient", "(?i)^(KDOD)+[0-9]{4,5}$", "Must start with KDoD followed by 4-5 digit number. Example: KDoD12345 or kdod1233",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.KDoD_NUMBER));

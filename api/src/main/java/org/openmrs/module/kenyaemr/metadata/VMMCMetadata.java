@@ -40,6 +40,7 @@ public class VMMCMetadata extends AbstractMetadataBundle {
 		public static final String VMMC_MEDICAL_HISTORY_EXAMINATION_FORM = "d42aeb3d-d5d2-4338-a154-f75ddac78b59";
 		public static final String VMMC_CLIENT_FOLLOWUP_FORM = "08873f91-7161-4f90-931d-65b131f2b12b";
 		public static final String VMMC_POST_OPERATION_FORM = "620b3404-9ae5-11ec-b909-0242ac120002";
+		public static final String VMMC_INITIAL_FORM = "8afcaac3-e9db-4501-bff6-b6a41935b46e";
 	}
 
 
@@ -69,6 +70,7 @@ public class VMMCMetadata extends AbstractMetadataBundle {
 		install(form("VMMC Medical History and Physical Examination Form", null, _EncounterType.VMMC_MEDICAL_HISTORY_EXAMINATION, "1", _Form.VMMC_MEDICAL_HISTORY_EXAMINATION_FORM));
 		install(form("VMMC Client Follow-Up Form", null, _EncounterType.VMMC_CLIENT_FOLLOWUP, "1", _Form.VMMC_CLIENT_FOLLOWUP_FORM));
 		install(form("VMMC Immediate Post-Operation Assessment Form", null, _EncounterType.VMMC_POST_OPERATION, "1", _Form.VMMC_POST_OPERATION_FORM));
+		install(form("VMMC Initial Form", null, _EncounterType.VMMC_ENROLLMENT, "1", _Form.VMMC_INITIAL_FORM));
 
 		//Installing identifiers
 		install(program("VMMC", "VMMC program", _Concept.VMMC, _Program.VMMC));
