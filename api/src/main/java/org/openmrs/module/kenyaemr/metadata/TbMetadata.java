@@ -41,6 +41,7 @@ public class TbMetadata extends AbstractMetadataBundle {
 		public static final String TB_SCREENING = Metadata.Form.TB_SCREENING;
 		public static final String TB_FOLLOW_UP = "2daabb77-7ad6-4952-864b-8d23e109c69d";
 		public static final String GENE_XPERT = "f1eaceeb-c865-4e23-b68e-6523de403ac7";
+		public static final String TB_INITIAL_FORM = "6a4f7090-f496-46d2-b582-5ac7e71a16e4";
 	}
 
 	public static final class _PatientIdentifierType {
@@ -66,6 +67,7 @@ public class TbMetadata extends AbstractMetadataBundle {
 		install(form("TB Discontinuation", null, _EncounterType.TB_DISCONTINUATION, "1", _Form.TB_COMPLETION));
 		install(form("TB FollowUp" ,null, _EncounterType.TB_CONSULTATION, "1", _Form.TB_FOLLOW_UP));
 		install(form("TB GeneXpert", null, _EncounterType.TB_SCREENING, "1", _Form.GENE_XPERT));
+		install(form("TB Initial", null, _EncounterType.TB_ENROLLMENT, "1", _Form.TB_INITIAL_FORM));
 
 		install(patientIdentifierType("District Registration Number", "Assigned to every TB patient",
 				null, null, null,

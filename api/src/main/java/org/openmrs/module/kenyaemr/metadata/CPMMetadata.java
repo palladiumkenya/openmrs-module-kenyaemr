@@ -40,6 +40,7 @@ public class CPMMetadata extends AbstractMetadataBundle {
 		public static final String CPM_REFERRAL_FORM = "b1e1f6fe-1894-4d06-bd8c-2b87f7cd9577";
 		public static final String CPM_DISCONTINUATION_FORM = "d1e7ebb4-afc0-412b-a98b-6720ab1169cc";
 		public static final String CPM_SCREENING_FORM = "f7dbe6b6-2a5a-46e6-af52-45bf2962f4aa";
+		public static final String CPM_INITIAL_FORM = "bf55e6ad-096d-4223-a2bb-2aa3e3495af2";
 	}
 	/**
 	 * @see AbstractMetadataBundle#install()
@@ -57,6 +58,7 @@ public class CPMMetadata extends AbstractMetadataBundle {
 		install(form("CPM Referral Form", "Community Pharmacy Model Referral form", _EncounterType.CPM_REFERRAL_ENCOUNTER, "1", _Form.CPM_REFERRAL_FORM));
 		install(form("CPM Discontinuation Form", "Community Pharmacy Model Discontinuation  Form", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER, "1", _Form.CPM_DISCONTINUATION_FORM));
 		install(form("CPM Screening Form", "Community Pharmacy Model Screening  Form", _EncounterType.CPM_SCREENING_ENCOUNTER, "1", _Form.CPM_SCREENING_FORM));
+		install(form("CPM Screening Form", "Community Pharmacy Model Initial  Form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_INITIAL_FORM));
 	
 	}
 }

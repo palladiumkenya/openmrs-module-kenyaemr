@@ -66,6 +66,7 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		public static final String SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM = "9d21275a-7657-433a-b305-a736423cc496";
 		public static final String GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM = "a0943862-f0fe-483d-9f11-44f62abae063";
 		public static final String GBV_PEP_FOLLOWUP_FORM = "155ccbe2-a33f-4a58-8ce6-57a7372071ee";
+		public static final String GBV_INITIAL_FORM = "e182d25f-d824-4cc7-8e0c-188519c300aa";
 	}
 	/**
 	 * @see AbstractMetadataBundle#install()
@@ -104,6 +105,7 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		install(form("Sexual violence PRC Psychological Assessment 363B Form", "Sexual violence PRC Psychological Assessment 363B Form", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER, "1", _Form.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM));
 		install(form("Violence Physical and Emotional Abuse Form", "Violence Physical and Emotional Abuse Form", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER, "1", _Form.GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM));
 		install(form("Violence PEP Follow up Form", "Violence PEP Follow up Form", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER, "1", _Form.GBV_PEP_FOLLOWUP_FORM));
+		install(form("Violence Initial Form", "Violence Initial Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_INITIAL_FORM));
 
 	}
 }
