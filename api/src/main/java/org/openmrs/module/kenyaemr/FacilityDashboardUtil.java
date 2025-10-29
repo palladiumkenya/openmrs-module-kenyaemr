@@ -576,24 +576,23 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * This query counts the number of HEI 6-8 weeks old (denominator).
+	 * This query counts the number of HEI 8 weeks old (denominator).
 	 *
 	 * @param startDate the start date in "dd/MM/yyyy" format
 	 * @param endDate   the end date in "dd/MM/yyyy" format
-	 * @return the count of HEI 6-8 weeks old
+	 * @return the count of HEI 8 weeks old
 	 */
-	public static Long getHeiSixToEightWeeksOld(String startDate, String endDate) {
+	public static Long getHeiEightWeeksOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_aged_6_to_8_weeks\n" +
+		String getHeiEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_aged_8_weeks\n" +
                 "FROM kenyaemr_etl.etl_hei_enrollment e\n" +
                 "         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
                 "WHERE d.hei_no is not null\n" +
-                "  AND d.DOB between DATE_SUB(date('" + endDate + "'), INTERVAL 8 WEEK) AND\n" +
-                "    DATE_SUB(date('" + endDate + "'), INTERVAL 6 WEEK);";
+                "  AND DATE_ADD(d.DOB, INTERVAL 8 WEEK) BETWEEN DATE('" + startDate + "') AND DATE('" + endDate + "')";
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			return (Long) Context.getAdministrationService().executeSQL(getHeiSixToEightWeeksOldQuery, true).get(0)
+			return (Long) Context.getAdministrationService().executeSQL(getHeiEightWeeksOldQuery, true).get(0)
 					.get(0);
 		} finally {
 			Context.removeProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
@@ -601,16 +600,16 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * This query counts the number of HEI 6-8 weeks without DNA PCR results
+	 * This query counts the number of HEI 8 weeks without DNA PCR results
 	 * (numerator).
 	 *
 	 * @param startDate the start date in "dd/MM/yyyy" format
 	 * @param endDate   the end date in "dd/MM/yyyy" format
-	 * @return the count of HEI 6-8 weeks without DNA PCR results
+	 * @return the count of HEI 8 weeks without DNA PCR results
 	 */
-	public static Long getHeiSixToEightWeeksWithoutPCRResults(String startDate, String endDate) {
+	public static Long getHeiEightWeeksWithoutPCRResults(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String heiSixToEightWeeksWithoutPCRResultsQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_without_pcr\n" +
+		String heiEightWeeksWithoutPCRResultsQuery = "SELECT COUNT(DISTINCT(e.patient_id)) as hei_without_pcr\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
 				"         LEFT JOIN(SELECT x.patient_id week6pcr, x.test_result as week6results\n" +
@@ -622,7 +621,7 @@ public class FacilityDashboardUtil {
 
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
-			return (Long) Context.getAdministrationService().executeSQL(heiSixToEightWeeksWithoutPCRResultsQuery, true)
+			return (Long) Context.getAdministrationService().executeSQL(heiEightWeeksWithoutPCRResultsQuery, true)
 					.get(0).get(0);
 
 		} finally {
@@ -1236,24 +1235,24 @@ public class FacilityDashboardUtil {
 	}
 
 	/**
-	 * Retrieves the count of HIV-exposed infants (HEI) aged 6 to 8 weeks within a
+	 * Retrieves the count of HIV-exposed infants (HEI) aged 8 weeks within a
 	 * specified date range.
 	 *
 	 * @param startDate The start date of the period.
 	 * @param endDate   The end date of the period.
-	 * @return A {@code SimpleObject} containing the count of HEI aged 6 to 8 weeks,
+	 * @return A {@code SimpleObject} containing the count of HEI aged 8 weeks,
 	 *         grouped by visit date.
 	 */
-	public static SimpleObject getMonthlyHeiSixToEightWeeksOld(String startDate, String endDate) {
+	public static SimpleObject getMonthlyHeiEightWeeksOld(String startDate, String endDate) {
 		long days = getNumberOfDays(startDate, endDate);
-		String getHeiSixToEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei, e.visit_date as visit_date\n" +
+		String getHeiEightWeeksOldQuery = "SELECT COUNT(DISTINCT(e.patient_id)) AS hei, e.visit_date as visit_date\n" +
 				"FROM kenyaemr_etl.etl_hei_enrollment e\n" +
 				"         INNER JOIN kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id\n" +
-				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) BETWEEN 6 AND 8\n" +
+				"WHERE d.hei_no is not null AND TIMESTAMPDIFF(WEEK, d.DOB, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)) = 8\n" +
 				"GROUP BY DATE(e.visit_date)\n" +
 				"ORDER BY DATE(e.visit_date) ASC;";
 
-		return getSimpleObject(getHeiSixToEightWeeksOldQuery);
+		return getSimpleObject(getHeiEightWeeksOldQuery);
 	}
 
 	/**
