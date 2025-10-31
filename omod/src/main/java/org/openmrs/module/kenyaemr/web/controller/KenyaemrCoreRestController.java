@@ -184,6 +184,7 @@ import java.util.Map;
 import java.util.Set;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 import static org.openmrs.module.kenyaemr.FacilityDashboardUtil.*;
 import static org.openmrs.module.kenyaemr.api.impl.HieConsentServiceImpl.ConsentOTPValidation;
@@ -1824,6 +1825,53 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 		return enrollmentDetails;
 	}
+
+    /**
+      * @param patientUuid the unique identifier of the patient whose encounters need to be fetched
+     * @param formUuid the unique identifier of the form used to filter encounters
+     * @return an object containing the encounters matching the given patient and form;
+     *         returns a ResponseEntity with an appropriate error message and status if the patient or form is not found
+     */
+
+    @RequestMapping(method = RequestMethod.GET, value = "/encountersByPatientAndForm")
+    @ResponseBody
+    public Object getEncountersByPatientAndForm(@RequestParam("patientUuid") String patientUuid, @RequestParam("formUuid") String formUuid) {
+        Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+        if (patient == null) {
+            return new ResponseEntity<>("Patient not found", new HttpHeaders(), HttpStatus.NOT_FOUND);
+        }
+        Form form = Context.getFormService().getFormByUuid(formUuid);
+        if (form == null) {
+            return new ResponseEntity<>("Form not found", new HttpHeaders(), HttpStatus.NOT_FOUND);
+        }
+        EncounterService encounterService = Context.getEncounterService();
+        EncounterSearchCriteriaBuilder builder = new EncounterSearchCriteriaBuilder()
+                .setPatient(patient)
+                .setEnteredViaForms(Collections.singleton(form)).setIncludeVoided(false);
+
+        Collection<Encounter> encounters = encounterService.getEncounters(builder.createEncounterSearchCriteria());
+
+        List<SimpleObject> results = new ArrayList<>();
+        for (Encounter enc : encounters) {
+            SimpleObject obj = SimpleObject.create(
+                    "encounter", enc.getEncounterType() != null ? SimpleObject.create(
+                            "encounterDatetime", formatDate(enc.getEncounterDatetime()),
+                            "uuid", enc.getUuid(),
+                            "id", enc.getEncounterId(),
+                            "encounterType", enc.getEncounterType().getName(),
+                            "dateCreated", formatDate(enc.getDateCreated())
+                    ) : null,
+                    "form", enc.getForm() != null ? SimpleObject.create(
+                            "uuid", enc.getForm().getUuid(),
+                            "name", enc.getForm().getName()
+                    ) : null,
+                    "location", enc.getLocation() != null ? enc.getLocation().getName() : null,
+                    "creator", enc.getCreator() != null ? enc.getCreator().getId() : null
+            );
+            results.add(obj);
+        }
+        return SimpleObject.create("results", results);
+    }
 
 	/**
 	 * TODO : check performance, when AdministrationService is used, kenyaemr takes
