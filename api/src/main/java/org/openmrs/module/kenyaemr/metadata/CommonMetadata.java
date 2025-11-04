@@ -327,7 +327,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String OUTPATIENT = "3371a4d4-f66f-4454-a86d-92c7b3da990c";
 		public static final String INPATIENT = "a73e2ac6-263b-47fc-99fc-e0f2c09fc914";
 		public static final String CASUALTY = "0419d15f-67ad-4fd0-97a1-9b5246b2d0d7";
-		public static final String MORGUE = "6307dbe2-f336-4c11-a393-50c2769f455a";
+		public static final String MORTUARY = "02b67c47-6071-4091-953d-ad21452e830c";
 	}
 
 	/**
@@ -828,6 +828,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 				_VisitType.OUTPATIENT));
 		install(visitType("Inpatient", "Visit where the patient is admitted to the hospital", _VisitType.INPATIENT));
 		install(visitType("Casualty/Emergency", "Visit where the patient is admitted to the casualty/emergency department", _VisitType.CASUALTY));
+		install(visitType("Mortuary", "Visit where the body is admitted to the Mortuary", _VisitType.MORTUARY));
 		uninstall(possible(PersonAttributeType.class, "73d34479-2f9e-4de3-a5e6-1f79a17459bb"),
 				"Became patient identifier"); // National ID attribute type
 

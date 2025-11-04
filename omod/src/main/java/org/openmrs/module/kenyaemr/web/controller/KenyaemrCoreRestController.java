@@ -1851,8 +1851,22 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
         Collection<Encounter> encounters = encounterService.getEncounters(builder.createEncounterSearchCriteria());
 
+        List<Encounter> encounterList = new ArrayList<>(encounters);
+        // Sort in descending order of encounterDatetime
+        Collections.sort(encounterList, new Comparator<Encounter>() {
+            @Override
+            public int compare(Encounter e1, Encounter e2) {
+                Date d1 = e1.getEncounterDatetime();
+                Date d2 = e2.getEncounterDatetime();
+                if (d1 == null && d2 == null) return 0;
+                if (d1 == null) return 1;
+                if (d2 == null) return -1;
+                return d2.compareTo(d1);
+            }
+        });
+
         List<SimpleObject> results = new ArrayList<>();
-        for (Encounter enc : encounters) {
+        for (Encounter enc : encounterList) {
             SimpleObject obj = SimpleObject.create(
                     "encounter", enc.getEncounterType() != null ? SimpleObject.create(
                             "encounterDatetime", formatDate(enc.getEncounterDatetime()),
