@@ -4224,6 +4224,34 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		return(ret);
 	}
 
+	/**
+	 * Check the global param kenyaemr.hie.registry.otp.source to assist toggle between hie and kehmis otp source
+	 * Options hie or kehmis
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/checkotpsource")
+	@ResponseBody
+	public Object getOtpSource(HttpServletRequest request) {
+		SimpleObject ret = SimpleObject.create("otpSource", "");
+
+		try {
+			GlobalProperty gpOtpSource = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_HEI_OPT_SOURCE);
+			if(gpOtpSource != null) {
+				String stOtpSource = gpOtpSource.getPropertyValue();
+				if(stOtpSource != null) {
+					ret.put("otpSource", stOtpSource);
+				}
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("KenyaEMR module: An error occurred getting otp source");
+		}
+
+		return(ret);
+	}
+
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/adpdf/view")
 	public ResponseEntity<byte[]> viewAdrPdf(HttpServletRequest request,
