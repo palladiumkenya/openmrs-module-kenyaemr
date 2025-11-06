@@ -44,7 +44,7 @@ import org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinit
 import org.openmrs.module.reporting.data.patient.definition.PatientIdentifierDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.*;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
-import org.openmrs.module.reporting.dataset.definition.EncounterDataSetDefinition;
+import org.openmrs.module.reporting.dataset.definition.ObsDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -78,7 +78,7 @@ public class MOH240LabReportBuilder extends AbstractReportBuilder {
 	}
 
 	protected DataSetDefinition datasetColumns() {
-		EncounterDataSetDefinition dsd = new EncounterDataSetDefinition();
+		ObsDataSetDefinition dsd = new ObsDataSetDefinition();
 		dsd.setName("MOH240");
 		dsd.setDescription("OPD Lab Visit information");
 		dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
@@ -134,7 +134,7 @@ public class MOH240LabReportBuilder extends AbstractReportBuilder {
 		dsd.addColumn("Age", new AgeDataDefinition(), "");
 		dsd.addColumn("Sex", new GenderDataDefinition(), "");
 		dsd.addColumn("Telephone No", new PersonAttributeDataDefinition(phoneNumber), "");
-		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));		
+		dsd.addColumn("Visit Date", new EncounterDatetimeDataDefinition(),"", new DateConverter(ENC_DATE_FORMAT));
 		dsd.addColumn("County",new CalculationDataDefinition("County", new CountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Sub County", new CalculationDataDefinition("Subcounty", new SubCountyAddressCalculation()), "",new CalculationResultConverter());
 		dsd.addColumn("Village", new CalculationDataDefinition("Village/Estate/Landmark", new PersonAddressCalculation()), "",new RDQACalculationResultConverter());

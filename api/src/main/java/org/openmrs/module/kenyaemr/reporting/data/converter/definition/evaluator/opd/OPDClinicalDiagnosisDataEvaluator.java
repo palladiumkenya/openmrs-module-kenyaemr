@@ -11,10 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDClinicalDiagnosisDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDiagnosisDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.obs.EvaluatedObsData;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
+import org.openmrs.module.reporting.data.obs.evaluator.ObsDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -29,13 +28,13 @@ import java.util.Map;
  * MOH 240 Lab Register Register
  */
 @Handler(supports= OPDClinicalDiagnosisDataDefinition.class, order=50)
-public class OPDClinicalDiagnosisDataEvaluator implements EncounterDataEvaluator {
+public class OPDClinicalDiagnosisDataEvaluator implements ObsDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
 		String qry = "select\n" +
 			"   le.encounter_id,\n" +

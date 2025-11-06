@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
 // * OPD labs  Date sample received  Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class OPDDateSampleReceivedDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class OPDDateSampleReceivedDataDefinition extends BaseDataDefinition implements ObsDataDefinition {
 
     public static final long serialVersionUID = 1L;
 

@@ -11,10 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDDateSampleCollectedDataDefinition;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDSpecimenTypeDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.obs.EvaluatedObsData;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
+import org.openmrs.module.reporting.data.obs.evaluator.ObsDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -29,17 +28,17 @@ import java.util.Map;
  * OPD Lab Register
  */
 @Handler(supports= OPDDateSampleCollectedDataDefinition.class, order=50)
-public class OPDDateSampleCollectedDataEvaluator implements EncounterDataEvaluator {
+public class OPDDateSampleCollectedDataEvaluator implements ObsDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
-        String qry = "SELECT le.encounter_id, le.date_test_requested from kenyaemr_etl.etl_laboratory_extract le\n" +
+        String qry = "SELECT le.obs_id, le.date_test_requested from kenyaemr_etl.etl_laboratory_extract le\n" +
 			"                                inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = le.patient_id and  p.voided = 0\n" +
-			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
+			"where le.obs_id is not null and date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
