@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDLabRemarksDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.obs.EvaluatedObsData;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
+import org.openmrs.module.reporting.data.obs.evaluator.ObsDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -28,20 +28,23 @@ import java.util.Map;
  * MOH 240 Lab Register 
  */
 @Handler(supports= OPDLabRemarksDataDefinition.class, order=50)
-public class OPDLabRemarksDataEvaluator implements EncounterDataEvaluator {
+public class OPDLabRemarksDataEvaluator implements ObsDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
-		String qry = "select\n" +
-			"    le.encounter_id,\n" +
-			"    p.notes\n" +
-			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"         inner join kenyaemr_etl.etl_progress_note p on p.patient_id = le.patient_id and  date(p.visit_date) = date(le.visit_date)\n" +
-			"where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
+		String qry = "select le.obs_id,\n" +
+                "       p.notes\n" +
+                "from kenyaemr_etl.etl_laboratory_extract le\n" +
+                "         left join (select p.patient_id,p.notes\n" +
+                "                    from kenyaemr_etl.etl_progress_note p\n" +
+                "                    where date(p.visit_date) between date(:startDate) and date(:endDate)) p\n" +
+                "                   on p.patient_id = le.patient_id\n" +
+                "where date(le.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                "and obs_id is not null;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

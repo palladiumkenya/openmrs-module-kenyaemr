@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDInvestigationRequiredDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.obs.EvaluatedObsData;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
+import org.openmrs.module.reporting.data.obs.evaluator.ObsDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -28,18 +28,30 @@ import java.util.Map;
  * MOH 240 Lab Register Register
  */
 @Handler(supports= OPDInvestigationRequiredDataDefinition.class, order=50)
-public class OPDInvestigationRequiredDataEvaluator implements EncounterDataEvaluator {
+public class OPDInvestigationRequiredDataEvaluator implements ObsDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
-		String qry = "select le.encounter_id,\n" +
-			"       le.order_test_name as investigation_required\n" +
-			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"        where date(le.visit_date) between date(:startDate) and date(:endDate);";
+		String qry = "select le.obs_id,\n" +
+                "       coalesce(le.result_test_name, le.order_test_name)          as lab_test\n" +
+                "from kenyaemr_etl.etl_laboratory_extract le\n" +
+                "         left join (select ed.date_created,\n" +
+                "                           ed.dx_rank,\n" +
+                "                           ed.patient_id\n" +
+                "                    from openmrs.encounter_diagnosis ed\n" +
+                "                             inner join openmrs.concept_name cn\n" +
+                "                                        on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en' and\n" +
+                "                                           cn.concept_name_type = 'FULLY_SPECIFIED' and\n" +
+                "                                           ed.dx_rank = 1\n" +
+                "                    where date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
+                "                    GROUP by ed.patient_id, ed.date_created) dl\n" +
+                "                   on le.patient_id = dl.patient_id\n" +
+                "where date(le.date_test_requested) between date(:startDate) and date(:endDate)\n" +
+                "  and obs_id is not null;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

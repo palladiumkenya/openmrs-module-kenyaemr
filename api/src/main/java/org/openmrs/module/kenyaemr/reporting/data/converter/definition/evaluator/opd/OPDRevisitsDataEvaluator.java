@@ -10,11 +10,10 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluator.opd;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDOrderingClinicianDataDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd.OPDRevisitsDataDefinition;
-import org.openmrs.module.reporting.data.encounter.EvaluatedEncounterData;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
-import org.openmrs.module.reporting.data.encounter.evaluator.EncounterDataEvaluator;
+import org.openmrs.module.reporting.data.obs.EvaluatedObsData;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
+import org.openmrs.module.reporting.data.obs.evaluator.ObsDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -29,19 +28,22 @@ import java.util.Map;
  * OPD Lab Register
  */
 @Handler(supports= OPDRevisitsDataDefinition.class, order=50)
-public class OPDRevisitsDataEvaluator implements EncounterDataEvaluator {
+public class OPDRevisitsDataEvaluator implements ObsDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
+    public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
-        String qry = "select le.encounter_id,\n" +
-			"       if(v.visit_type = 'Revisit', 'Yes','No') as revisit\n" +
-			"from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"         left join kenyaemr_etl.etl_clinical_encounter v on v.encounter_id= le.encounter_id\n" +
-			"where date(le.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "select le.obs_id,\n" +
+                "       v.revisit\n" +
+                "from kenyaemr_etl.etl_laboratory_extract le\n" +
+                "         LEFT JOIN (select v.patient_id,if(v.visit_type = 'Revisit', 'Yes','No') as revisit\n" +
+                "                    from kenyaemr_etl.etl_clinical_encounter v\n" +
+                "                    where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "                    group by visit_date,patient_id) v ON le.patient_id = v.patient_id\n" +
+                "where date(le.visit_date) between date(:startDate) and date(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

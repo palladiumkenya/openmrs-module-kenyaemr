@@ -36,16 +36,23 @@ public class OPDClinicalDiagnosisDataEvaluator implements ObsDataEvaluator {
     public EvaluatedObsData evaluate(ObsDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedObsData c = new EvaluatedObsData(definition, context);
 
-		String qry = "select\n" +
-			"   le.encounter_id,\n" +
-			"   dl.name as clinical_diagnosis\n" +
-			" from kenyaemr_etl.etl_laboratory_extract le\n" +
-			"        inner join (select\n" +
-			"                        cn.name, ed.date_created, ed.dx_rank ,ed.patient_id\n" +
-			"                    from openmrs.encounter_diagnosis ed\n" +
-			"                             inner join openmrs.concept_name cn on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en' and ed.dx_rank = 1\n" +
-			"                                       ) dl on le.patient_id = dl.patient_id and date(dl.date_created) = date(le.visit_date)\n" +
-			"                                       and date(le.visit_Date) between date(:startDate) and date(:endDate);";
+		String qry = "select le.obs_id,\n" +
+                "       dl.name as diagnosis\n" +
+                "from kenyaemr_etl.etl_laboratory_extract le\n" +
+                "         left join (select GROUP_CONCAT(DISTINCT (cn.name) SEPARATOR '|') as name,\n" +
+                "                           ed.date_created,\n" +
+                "                           ed.dx_rank,\n" +
+                "                           ed.patient_id\n" +
+                "                    from openmrs.encounter_diagnosis ed\n" +
+                "                             inner join openmrs.concept_name cn\n" +
+                "                                        on cn.concept_id = ed.diagnosis_coded and cn.locale = 'en' and\n" +
+                "                                           cn.concept_name_type = 'FULLY_SPECIFIED' and\n" +
+                "                                           ed.dx_rank = 1\n" +
+                "                    where date(ed.date_created) between date(:startDate) and date(:endDate)\n" +
+                "                    GROUP by ed.patient_id, ed.date_created) dl\n" +
+                "                   on le.patient_id = dl.patient_id\n" +
+                "where date(le.date_test_requested) between date(:startDate) and date(:endDate)\n" +
+                "  and obs_id is not null;\n";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
