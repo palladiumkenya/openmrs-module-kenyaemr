@@ -10,7 +10,7 @@
 package org.openmrs.module.kenyaemr.reporting.data.converter.definition.opd;
 
 import org.openmrs.module.reporting.data.BaseDataDefinition;
-import org.openmrs.module.reporting.data.encounter.definition.EncounterDataDefinition;
+import org.openmrs.module.reporting.data.obs.definition.ObsDataDefinition;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
 // * OPD labs  Date sample received  Column
  */
 @Caching(strategy=ConfigurationPropertyCachingStrategy.class)
-public class OPDDateSampleReceivedDataDefinition extends BaseDataDefinition implements EncounterDataDefinition {
+public class OPDDateSampleReceivedDataDefinition extends BaseDataDefinition implements ObsDataDefinition {
 
     public static final long serialVersionUID = 1L;
 

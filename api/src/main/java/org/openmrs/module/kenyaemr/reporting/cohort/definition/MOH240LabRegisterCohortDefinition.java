@@ -9,13 +9,13 @@
  */
 package org.openmrs.module.kenyaemr.reporting.cohort.definition;
 
-import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.module.reporting.common.Localized;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationProperty;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 import org.openmrs.module.reporting.query.BaseQuery;
-import org.openmrs.module.reporting.query.encounter.definition.EncounterQuery;
+import org.openmrs.module.reporting.query.obs.definition.ObsQuery;
 
 import java.util.Date;
 
@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
 @Localized("reporting.MOH240LabRegisterCohortDefinition")
-public class MOH240LabRegisterCohortDefinition extends BaseQuery<Encounter> implements EncounterQuery {
+public class MOH240LabRegisterCohortDefinition extends BaseQuery<Obs> implements ObsQuery {
 	@ConfigurationProperty
 	private Date asOfDate;
 
