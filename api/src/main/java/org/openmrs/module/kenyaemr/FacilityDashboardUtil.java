@@ -157,7 +157,8 @@ public class FacilityDashboardUtil {
 				"                        AND t.final_test_result = 'Negative'\n" +
 				"                        AND t.hts_entry_point in (160538, 160456, 1623)) t1\n" +
 				"                    ON s.patient_id = t1.patient_id\n" +
-				"WHERE s.hts_risk_category IN ('High', 'Very high')\n" +
+				"                    INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
+				"WHERE s.hts_risk_category IN ('High', 'Very high') AND d.Gender = 'F'\n" +
 				"  AND s.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL " + days
 				+ " DAY) AND date('" + endDate + "');";
 		try {
@@ -190,11 +191,12 @@ public class FacilityDashboardUtil {
 				+ "', INTERVAL " + days + " DAY) AND date('" + endDate + "')\n" +
 				"                              AND t.final_test_result = 'Negative'\n" +
 				"                              AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
-				"                          ON s.patient_id = t.patient_id -- AND s.visit_date <= t.visit_date\n" +
-				"    where s.hts_risk_category IN ('High', 'Very high') and s.currently_on_prep in ('NO','Declined to answer')\n"
+				"                          ON s.patient_id = t.patient_id\n" +
+				"                          INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
+				"    where s.hts_risk_category IN ('High', 'Very high') and (s.currently_on_prep in ('NO', 'Declined to answer', '') OR s.currently_on_prep is null)\n"
 				+
 				"         AND s.visit_date BETWEEN DATE_SUB(date('" + endDate + "'), INTERVAL "
-				+ days + " DAY) AND date('" + endDate + "')) a\n" +
+				+ days + " DAY) AND date('" + endDate + "') AND d.Gender = 'F') a\n" +
 				"         left join (select e.patient_id,\n" +
 				"                           max(e.visit_date)                                        as latest_enrollment_date,\n"
 				+
@@ -807,8 +809,9 @@ public class FacilityDashboardUtil {
 				"                              AND t.final_test_result = 'Negative'\n" +
 				"                              AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
 				"                          ON s.patient_id = t.patient_id\n" +
-				"      where s.hts_risk_category IN ('High', 'Very high') and s.currently_on_prep in ('NO','Declined to answer')\n" +
-				"           AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE) a\n" +
+				"                          INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
+				"      where s.hts_risk_category IN ('High', 'Very high') and (s.currently_on_prep in ('NO', 'Declined to answer', '') OR s.currently_on_prep is null)\n" +
+				"           AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND CURRENT_DATE AND d.Gender = 'F') a\n" +
 				"           left join (select e.patient_id,\n" +
 				"                             max(e.visit_date)                                        as latest_enrollment_date,\n" +
 				"                             f.latest_fup_date,\n" +
