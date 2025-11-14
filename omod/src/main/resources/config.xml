@@ -37,6 +37,7 @@
 		<require_module version="${kenyaemrOrderentryVersion}">org.openmrs.module.kenyaemrorderentry</require_module>
 		<require_module version="${facilityReportingVersion}">org.openmrs.module.facilityreporting</require_module>
 		<require_module>org.bahmni.module.appointments</require_module>
+		<require_module version="${queueVersion}">org.openmrs.module.queue</require_module>
 
 	</require_modules>
 

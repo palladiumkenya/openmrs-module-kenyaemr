@@ -12,6 +12,7 @@ package org.openmrs.module.kenyaemr.advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.Visit;
 import org.openmrs.api.VisitService;
@@ -19,6 +20,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.visit.EmrVisitAssignmentHandler;
+import org.openmrs.module.queue.api.QueueEntryService;
+import org.openmrs.module.queue.api.search.QueueEntrySearchCriteria;
+import org.openmrs.module.queue.model.QueueEntry;
 import org.springframework.aop.AfterReturningAdvice;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -75,10 +79,16 @@ public class OutpatientToInpatientCheckinOnAdmission implements AfterReturningAd
                 Context.getVisitService().saveVisit(visit);
                 System.out.println("Started a new inpatient visit......");
 
-                /*  Since we want to rely on admission form once filled to check out of the OPD visit,
-                     But still we need to assign the admission encounter to the new inpatient visit
-                */
-                EmrVisitAssignmentHandler.setVisitOfEncounter(visit, enc); 
+                /*
+                 * Since we want to rely on admission form once filled to check out of the OPD
+                 * visit,
+                 * But still we need to assign the admission encounter to the new inpatient
+                 * visit
+                 */
+                EmrVisitAssignmentHandler.setVisitOfEncounter(visit, enc);
+
+                // Remove patient from the OPD queue
+                removePatientFromOpdQueue(enc.getPatient(), opdVisit);
 
             }
             // Check if the encounter has a clinical diagnosis
@@ -132,6 +142,24 @@ public class OutpatientToInpatientCheckinOnAdmission implements AfterReturningAd
                 } catch (Exception e) {
                     log.error("Error auto-populating conditions for encounter " + encounterId, e);
                 }
+            }
+        }
+
+    }
+
+    private void removePatientFromOpdQueue(Patient patient, Visit visit) {
+        QueueEntryService queueEntryService = Context.getService(QueueEntryService.class);
+        QueueEntrySearchCriteria criteria = new QueueEntrySearchCriteria();
+        criteria.setPatient(patient);
+        criteria.setVisit(visit);
+        criteria.setIsEnded(false);
+        List<QueueEntry> queueEntries = queueEntryService.getQueueEntries(criteria);
+        if (!queueEntries.isEmpty()) {
+            log.info("Removing patient " + patient.getPatientId() + " from OPD queue");
+
+            for (QueueEntry queueEntry : queueEntries) {
+                queueEntry.setEndedAt(new Date());
+                queueEntryService.saveQueueEntry(queueEntry);
             }
         }
 
