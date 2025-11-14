@@ -24,6 +24,7 @@ import org.openmrs.module.kenyaemr.datatype.LocationDatatype;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
+
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
@@ -144,6 +145,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String NUTRITION_DISCONTINUATION = "41cc14fa-6011-4939-8c2c-0d1c2554efc8";
 		public static final String NURSING_CARE_PLAN = "b6569074-3b8c-43ba-bd4a-98c445405035";
 		public static final String AEFI_INVESTIGATION = "036a0ef4-8197-41ad-bfbf-802e79a14606";
+		public static final String IN_PATIENT_ADMISSION = "e22e39fd-7db2-45e7-80f1-60fa0d5a4378";
 	}
 
 	public static final class _Form {
@@ -223,6 +225,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         public static final String NUTRITION_DISCONTINUATION_FORM = "0648a046-f404-4246-806f-c9ee78232d6d";
 		public static final String NURSING_CARE_PLAN_FORM = "56b3ca43-2687-49d4-a03e-1b4329fe0f63";
 		public static final String AEFI_INVESTIGATION_FORM = "901e5166-0724-4a87-a8a0-60f44d5b92e7";
+		public static final String IN_PATIENT_ADMISSION_FORM = "49f3686d-b83c-4263-a5a1-89040f643a78";
 	}
 
 	public static final class _OrderType {
@@ -405,7 +408,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         install(encounterType("Nutrition Discontinuation", "Discontinuation from Nutrition program", _EncounterType.NUTRITION_DISCONTINUATION));
 		install(encounterType("Nursing Care Plan", "Nursing care plan encounter for a inpatient", _EncounterType.NURSING_CARE_PLAN));
 		install(encounterType("AEFI Investigation", "AEFI Investigation encounter for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION));
-
+		install(encounterType("Admission", "Indicates that the patient has been admitted for inpatient care, and is not expected to leave the hospital unless discharged.", _EncounterType.IN_PATIENT_ADMISSION));
 
 		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
@@ -504,6 +507,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
         install(form("Nutrition Discontinuation", "Form for recording discontinuation from nutrition program", _EncounterType.NUTRITION_DISCONTINUATION, "1.0", _Form.NUTRITION_DISCONTINUATION_FORM));
 		install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
 		install(form("AEFI Investigation", "Form for recording AEFI Investigation for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION, "1.0", _Form.AEFI_INVESTIGATION_FORM));
+		install(form("In-Patient Admission Form", "Form for Inpatient Admission", _EncounterType.IN_PATIENT_ADMISSION, "1", _Form.IN_PATIENT_ADMISSION_FORM));
 
         install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",
