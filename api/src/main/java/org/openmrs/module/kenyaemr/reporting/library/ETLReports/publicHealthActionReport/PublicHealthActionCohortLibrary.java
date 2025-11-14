@@ -1216,9 +1216,10 @@ public class PublicHealthActionCohortLibrary {
                 "                             AND t.final_test_result = 'Negative'\n" +
                 "                             AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
                 "                          ON s.patient_id = t.patient_id\n" +
+                "                          INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
                 "      where s.hts_risk_category IN ('High', 'Very high')\n" +
-                "        and s.currently_on_prep in ('NO', 'Declined to answer')\n" +
-                "        AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE) a\n" +
+                "        and (s.currently_on_prep in ('NO', 'Declined to answer', '') OR s.currently_on_prep is null)\n" +
+                "        AND s.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE AND d.Gender = 'F') a\n" +
                 "         left join (select e.patient_id,\n" +
                 "                           max(e.visit_date)                                        as latest_enrollment_date,\n" +
                 "                           f.latest_fup_date,\n" +
@@ -1285,9 +1286,10 @@ public class PublicHealthActionCohortLibrary {
                 "                             AND t.final_test_result = 'Negative'\n" +
                 "                             AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
                 "                          ON s.patient_id = t.patient_id\n" +
+                "                          INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
                 "      where s.hts_risk_category IN ('High', 'Very high')\n" +
-                "        and s.currently_on_prep in ('NO', 'Declined to answer')\n" +
-                "        AND s.visit_date BETWEEN date(:startDate) AND date(:endDate)) a\n" +
+                "        and (s.currently_on_prep in ('NO', 'Declined to answer', '') OR s.currently_on_prep is null)\n" +
+                "        AND s.visit_date BETWEEN date(:startDate) AND date(:endDate) AND d.Gender = 'F') a\n" +
                 "         left join (select e.patient_id,\n" +
                 "                           max(e.visit_date)                                        as latest_enrollment_date,\n" +
                 "                           f.latest_fup_date,\n" +
