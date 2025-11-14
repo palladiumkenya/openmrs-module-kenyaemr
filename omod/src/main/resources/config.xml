@@ -66,7 +66,7 @@
 
 	<advice>
 		<point>org.openmrs.api.EncounterService</point>
-		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.OutpatientToInpatientCheckinOnAdmissionRequest</class>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.advice.OutpatientToInpatientCheckinOnAdmission</class>
 	</advice>
 
 	<messages>

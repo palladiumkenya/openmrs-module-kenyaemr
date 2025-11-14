@@ -207,7 +207,7 @@ public class EmrVisitAssignmentHandler extends BaseEncounterVisitHandler impleme
 	 * @param visit the visit
 	 * @param encounter the encounter
 	 */
-	protected static void setVisitOfEncounter(Visit visit, Encounter encounter) {
+	public static void setVisitOfEncounter(Visit visit, Encounter encounter) {
 		// Remove from old visit
 		if (encounter.getVisit() != null) {
 			encounter.getVisit().getEncounters().remove(encounter);

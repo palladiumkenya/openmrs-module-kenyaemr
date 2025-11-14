@@ -12,13 +12,13 @@ package org.openmrs.module.kenyaemr.advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
-import org.openmrs.Obs;
 import org.openmrs.User;
 import org.openmrs.Visit;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.visit.EmrVisitAssignmentHandler;
 import org.springframework.aop.AfterReturningAdvice;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -27,15 +27,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
- * Automates the process of checking out a patient from OPD and starting an inpatient visit
+ * Automates the process of checking out a patient from OPD and starting an
+ * inpatient visit on admission form submission
  */
-public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterReturningAdvice {
+public class OutpatientToInpatientCheckinOnAdmission implements AfterReturningAdvice {
 
     private Log log = LogFactory.getLog(this.getClass());
     public static final String INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT = "160433AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static final String INPATIENT_ADMISSION_ANSWER_CONCEPT = "1654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    public static final String INPATIENT_ADMISSION_FORM = "49f3686d-b83c-4263-a5a1-89040f643a78";
 
     String conditionsConfig = Context.getAdministrationService().getGlobalProperty("kenyaemr.conditions.config");
     Set<Integer> CONDITIONS_CONCEPTS = new HashSet<>();
@@ -44,38 +45,47 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
             for (String id : conditionsConfig.split("\\s*,\\s*")) {
                 try {
                     CONDITIONS_CONCEPTS.add(Integer.parseInt(id));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
     }
+
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
 
         if (method.getName().equals("saveEncounter")) {
             Encounter enc = (Encounter) args[0];
             VisitService visitService = Context.getVisitService();
-            if (enc != null && enc.getVisit() != null && enc.getVisit().getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT) && enc.getForm() != null && CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid())) {
-                for (Obs o : enc.getAllObs()) {
-                    if (o.getConcept().getUuid().equals(INPATIENT_ADMISSION_REQUEST_QUESTION_CONCEPT) && o.getValueCoded().getUuid().equals(INPATIENT_ADMISSION_ANSWER_CONCEPT)) {
-                        // end the OPD visit
-                        Visit opdVisit = enc.getVisit();
-                        opdVisit.setStopDatetime(new Date());
-                        visitService.saveVisit(opdVisit);
+            if (enc != null && enc.getVisit() != null
+                    && enc.getVisit().getVisitType().getUuid().equals(CommonMetadata._VisitType.OUTPATIENT)
+                    && enc.getForm() != null && INPATIENT_ADMISSION_FORM.equalsIgnoreCase(enc.getForm().getUuid())) {
 
-                        Visit visit = new Visit();
-                        visit.setStartDatetime(new Date());
-                        visit.setLocation(enc.getLocation());
-                        visit.setPatient(enc.getPatient());
-                        visit.setVisitType(visitService.getVisitTypeByUuid(CommonMetadata._VisitType.INPATIENT));
-                        Context.getVisitService().saveVisit(visit);
-                        System.out.println("Started a new inpatient visit......");
-                        break;
-                    }
-                }
+                // end the OPD visit
+                Visit opdVisit = enc.getVisit();
+                opdVisit.setStopDatetime(new Date());
+                visitService.saveVisit(opdVisit);
+
+                Visit visit = new Visit();
+                visit.setStartDatetime(new Date());
+                visit.setLocation(enc.getLocation());
+                visit.setPatient(enc.getPatient());
+                visit.setVisitType(visitService.getVisitTypeByUuid(CommonMetadata._VisitType.INPATIENT));
+                enc.setVisit(visit);
+                Context.getVisitService().saveVisit(visit);
+                System.out.println("Started a new inpatient visit......");
+
+                /*  Since we want to rely on admission form once filled to check out of the OPD visit,
+                     But still we need to assign the admission encounter to the new inpatient visit
+                */
+                EmrVisitAssignmentHandler.setVisitOfEncounter(visit, enc); 
+
             }
             // Check if the encounter has a clinical diagnosis
 
-            if (enc != null && enc.getForm() != null && (CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid()) || HivMetadata._Form.HIV_GREEN_CARD.equalsIgnoreCase(enc.getForm().getUuid()))) {
+            if (enc != null && enc.getForm() != null
+                    && (CommonMetadata._Form.CLINICAL_ENCOUNTER.equalsIgnoreCase(enc.getForm().getUuid())
+                            || HivMetadata._Form.HIV_GREEN_CARD.equalsIgnoreCase(enc.getForm().getUuid()))) {
                 Integer encounterId = enc.getEncounterId();
                 Integer patientId = enc.getPatient().getId();
                 User creator = enc.getCreator();
@@ -84,7 +94,8 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
                 // Query to fetch diagnoses from encounter_diagnosis table
                 String diagnosisQuery = String.format(
                         "SELECT diagnosis_coded FROM encounter_diagnosis " +
-                                "WHERE encounter_id = %d AND voided = 0", encounterId);
+                                "WHERE encounter_id = %d AND voided = 0",
+                        encounterId);
                 try {
                     List<List<Object>> diagnosisResults = Context.getAdministrationService()
                             .executeSQL(diagnosisQuery, true);
@@ -112,8 +123,7 @@ public class OutpatientToInpatientCheckinOnAdmissionRequest implements AfterRetu
                                             new java.sql.Timestamp(now.getTime()).toString(),
                                             new java.sql.Timestamp(now.getTime()).toString(),
                                             creator.getUserId(),
-                                            UUID.randomUUID().toString()
-                                    );
+                                            UUID.randomUUID().toString());
                                     Context.getAdministrationService().executeSQL(insertConditionQuery, false);
                                 }
                             }
