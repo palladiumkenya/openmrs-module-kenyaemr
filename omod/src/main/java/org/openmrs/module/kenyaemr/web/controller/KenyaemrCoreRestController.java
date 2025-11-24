@@ -4323,4 +4323,30 @@ public class KenyaemrCoreRestController extends BaseRestController {
 					.body(errorMessage.getBytes());
 		}
 	}
+	/**
+	 * Check the global param kenyaemr.hie.login.otp to toggle between requiring OTP at login
+	 * Options true or false
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/requireLoginOtp")
+	@ResponseBody
+	public Object requireLoginOtp() {
+		SimpleObject ret = SimpleObject.create("loginOtp", "");
+
+		try {
+			GlobalProperty gpLoginOtp = Context.getAdministrationService().getGlobalPropertyObject(CommonMetadata.GP_LOGIN_OTP_REQUIREMENT);
+			if(gpLoginOtp != null) {
+				String stLoginOtp = gpLoginOtp.getPropertyValue();
+				if(stLoginOtp != null) {
+					ret.put("loginOtp", stLoginOtp);
+				}
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("KenyaEMR module: An error occurred getting login Otp requirement");
+		}
+
+		return(ret);
+	}
 }

@@ -81,6 +81,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_ID = "kenyaemr.hie.il.mediator.client.id";
 	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET = "kenyaemr.hie.il.mediator.client.secret";
 	public static final String GP_HEI_OPT_SOURCE = "kenyaemr.hie.registry.otp.source";
+	public static final String GP_LOGIN_OTP_REQUIREMENT = "kenyaemr.hie.login.otp";
 	
     public static final class _Program {
         public static final String NUTRITION = Metadata.Program.NUTRITION;

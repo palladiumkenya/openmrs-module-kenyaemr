@@ -436,4 +436,13 @@
 			Defines whether to get HIE responses in FHIR format or custom format
 		</description>
 </globalProperty>
+<globalProperty>
+		<property>kenyaemr.hie.login.otp</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Toggle between mandatory user otp confirmation at login: Options true or false
+		</description>
+	</globalProperty>
+	
 </module>
+        
