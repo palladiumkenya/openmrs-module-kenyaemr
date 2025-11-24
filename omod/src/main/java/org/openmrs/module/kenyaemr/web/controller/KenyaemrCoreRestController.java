@@ -4324,14 +4324,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		}
 	}
 	/**
-	 * Check the global param kenyaemr.hie.login.otp to toggle between reuiring OTP at login
+	 * Check the global param kenyaemr.hie.login.otp to toggle between requiring OTP at login
 	 * Options true or false
-	 * @param request
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/requireLoginOtp")
 	@ResponseBody
-	public Object requireLoginOtp(HttpServletRequest request) {
+	public Object requireLoginOtp() {
 		SimpleObject ret = SimpleObject.create("loginOtp", "");
 
 		try {
