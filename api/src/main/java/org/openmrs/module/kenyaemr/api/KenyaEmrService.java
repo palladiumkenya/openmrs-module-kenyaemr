@@ -109,4 +109,7 @@ public interface KenyaEmrService extends OpenmrsService {
 	public List<SimpleObject> search(String sqlQuery, Map<String, String[]> params);
 
 	public SimpleObject sendKenyaEmrSms(String recipient, String message, String nationalId);
+	
+	public SimpleObject sendPalKehmisSms(String recipient, String message);
 }
+
