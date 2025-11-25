@@ -443,6 +443,13 @@
 			Toggle between mandatory user otp confirmation at login: Options true or false
 		</description>
 	</globalProperty>
+<globalProperty>
+		<property>kenyaemr.pal.kehmis.sms.url</property>
+		<defaultValue>https://sms-service.kenyahmis.org/api/sender</defaultValue>
+		<description>
+			URL for palladiums PAL_KEHMIS sms service
+		</description>
+</globalProperty>
 	
 </module>
         

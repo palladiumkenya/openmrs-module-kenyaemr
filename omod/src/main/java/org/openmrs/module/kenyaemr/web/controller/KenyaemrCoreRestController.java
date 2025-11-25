@@ -4349,4 +4349,13 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 		return(ret);
 	}
+	/**
+	 * Endpoint for palladium kehmis sms service
+	 * @param message and phone
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/send-palkehmis-sms")
+	public Object sendPalKehmisSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
+		return Context.getService(KenyaEmrService.class).sendPalKehmisSms(phone, message);
+	}
 }

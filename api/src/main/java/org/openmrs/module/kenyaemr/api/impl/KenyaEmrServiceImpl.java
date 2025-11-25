@@ -484,4 +484,56 @@ public class KenyaEmrServiceImpl extends BaseOpenmrsService implements KenyaEmrS
 		}
 		return (ret);
 	}
+	/**
+	 * Implementation for palladium kehmis sms service
+	 * @param message 
+	 * @param recipient 
+	 * @return
+	 */
+	@Override
+	public SimpleObject sendPalKehmisSms(String recipient, String message) {
+		SimpleObject response = new SimpleObject();
+				try {
+					response.add("response", _PalKehmisSmsService(recipient, message));
+				} catch (Exception e) {
+					response.add("response", "Failed to send SMS " + e.getMessage());
+					throw new RuntimeException(e);
+				}
+
+		return response;
+	}
+	public static String _PalKehmisSmsService(String recipient, String message) throws Exception {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		String responseMsg = null;
+		try {
+			AdministrationService administrationService = Context.getAdministrationService();
+			HttpPost postRequest = new HttpPost(administrationService.getGlobalProperty("kenyaemr.pal.kehmis.sms.url"));
+			postRequest.setHeader("api-token", administrationService.getGlobalProperty("kenyaemr.sms.apiToken"));
+			JSONObject json = new JSONObject();
+			json.put("destination", recipient);
+			json.put("msg", message);
+			json.put("sender_id", administrationService.getGlobalProperty("kenyaemr.sms.senderId"));
+			json.put("gateway", administrationService.getGlobalProperty("kenyaemr.sms.gateway") );
+
+			StringEntity entity = new StringEntity(json.toString());
+			postRequest.setEntity(entity);
+			postRequest.setHeader("Content-Type", "application/json");
+
+			try (CloseableHttpResponse response = httpClient.execute(postRequest)) {
+				int statusCode = response.getStatusLine().getStatusCode();
+				String responseBody = EntityUtils.toString(response.getEntity());
+
+				if (statusCode == 200) {
+					responseMsg = "SMS sent successfully" + responseBody;
+					System.out.println("SMS sent successfully \n" + responseBody);
+				} else {
+					responseMsg = "Failed to send SMS " + responseBody;
+					System.err.println("Failed to send SMS \n" + responseBody);
+				}
+			}
+		} finally {
+			httpClient.close();
+		}
+		return responseMsg;
+	}
 }
