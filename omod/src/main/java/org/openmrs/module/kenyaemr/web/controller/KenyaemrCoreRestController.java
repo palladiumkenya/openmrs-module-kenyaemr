@@ -79,7 +79,9 @@ import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.DwapiMetricsUtil;
 import org.openmrs.module.kenyaemr.EmrConstants;
 import org.openmrs.module.kenyaemr.FacilityDashboardUtil;
+import org.openmrs.module.kenyaemr.api.AdverseDrugReactionEmailService;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
+import org.openmrs.module.kenyaemr.api.dto.EmailRequestDto;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllCd4CountCalculation;
 import org.openmrs.module.kenyaemr.calculation.library.hiv.AllVlCountCalculation;
@@ -114,6 +116,7 @@ import org.openmrs.module.kenyaemr.metadata.OTZMetadata;
 import org.openmrs.module.kenyaemr.metadata.OVCMetadata;
 import org.openmrs.module.kenyaemr.metadata.TbMetadata;
 import org.openmrs.module.kenyaemr.metadata.VMMCMetadata;
+import org.openmrs.module.kenyaemr.model.AdverseDrugReactionEmailLog;
 import org.openmrs.module.kenyaemr.model.ConsentOTPRequest;
 import org.openmrs.module.kenyaemr.nupi.UpiUtilsDataExchange;
 import org.openmrs.module.kenyaemr.regimen.RegimenConfiguration;
@@ -4410,4 +4413,42 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	public Object sendPalKehmisSms(@RequestParam("message") String message, @RequestParam("phone") String phone) {
 		return Context.getService(KenyaEmrService.class).sendPalKehmisSms(phone, message);
 	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/send-adr-email")
+	@ResponseBody
+	public ResponseEntity<?> sendMail(@RequestBody EmailRequestDto request) {
+
+        AdverseDrugReactionEmailService service =
+                Context.getService(AdverseDrugReactionEmailService.class);
+
+        try {
+            service.sendReport(
+                    request.getPatientUuid(),
+                    request.getEncounterUuid(),
+                    request.getRecipientEmail()
+            );
+
+            return ResponseEntity.ok(
+                    new SimpleResponse("success", "Email sent successfully")
+            );
+
+        } catch (Exception exe) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SimpleResponse("error",
+                          "This report has already been sent for this encounter."));
+
+        } 
+		
+    }
+	 public static class SimpleResponse {
+        public String status;
+        public String message;
+
+        public SimpleResponse(String status, String message) {
+            this.status = status;
+            this.message = message;
+        }
+    }
 }
+

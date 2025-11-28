@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.kenyaemr.model">
+
+    <class name="AdverseDrugReactionEmailLog" table="adr_report_email_log">
+        
+        <id name="id" column="adr_report_email_log_id">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" not-null="true"/>
+        
+        <many-to-one name="encounter" class="org.openmrs.Encounter" column="encounter_id" not-null="true"/>
+        
+        <many-to-one name="user" class="org.openmrs.User" column="sent_by_user_id" not-null="true"/>
+        
+        <property name="dateSent" column="date_sent" type="timestamp" not-null="true"/>
+        
+        <property name="recipientEmail" column="recipient_email" type="string" length="255" not-null="true"/>
+        
+        <property name="status" column="status" type="string" length="50"/>
+
+    </class>
+
+</hibernate-mapping>
