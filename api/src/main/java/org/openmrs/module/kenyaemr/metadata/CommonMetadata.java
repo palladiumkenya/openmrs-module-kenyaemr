@@ -686,7 +686,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(patientIdentifierType("Social Health Insurance Number", "Social Health Insurance Number", "",
 				"Allows for alphanumeric format",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SOCIAL_HEALTH_INSURANCE_NUMBER));
-		install(patientIdentifierType("Social Health Authority Identification Number",
+		install(patientIdentifierType("CR Number",
 				"Social Health Authority Unique Identification Number", "", "Allows for alphanumeric format",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.SHA_UNIQUE_IDENTIFICATION_NUMBER));
 		install(patientIdentifierType("Publication Number",
