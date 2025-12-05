@@ -155,9 +155,9 @@ public class MchMetadata extends AbstractMetadataBundle {
         install(form("Family Planning Discontinuation", "Family Planning Discontinuation Form", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION, "1.0", _Form.MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM));
 		install(form("Pre-Conception Care", "Pre-Conception Care Form", _EncounterType.PRE_CONCEPTION_CARE, "1.0", _Form.PRE_CONCEPTION_CARE));
 		install(form("Pre-Conception Care Enrollment", "Pre-Conception Care Enrollment Form", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT, "1.0", _Form.PRE_CONCEPTION_CARE_ENROLLMENT_FORM));
-		install(form("Pre-Conception Care DIscontinuation", "Pre-Conception Care Discontinuation Form", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION, "1.0", _Form.PRE_CONCEPTION_CARE_DISCONTINUATION_FORM));
-
-		install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
+		install(form("Pre-Conception Care Discontinuation", "Pre-Conception Care Discontinuation Form", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION, "1.0", _Form.PRE_CONCEPTION_CARE_DISCONTINUATION_FORM));
+        //We will not install the MCH mother services program as it is retired through initializer.
+		//install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
 		install(program("Antenatal Care", "", Dictionary.ANTENATAL_PROGRAM, _Program.ANTENATAL_CARE));
 		install(program("Postnatal Care", "", Dictionary.POSTNATAL_PROGRAM, _Program.POSTNATAL_CARE));
 		install(program("Family Planning", "", Dictionary.FAMILY_PLANNING_PROGRAM, _Program.FAMILY_PLANNING));
