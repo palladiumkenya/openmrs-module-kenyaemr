@@ -358,110 +358,110 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 * @param patientUuid
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
-	@ResponseBody
-	@Cacheable(value = "patientFlagCache", key = "#patientUuid")
-	public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid,
-			@SpringBean CalculationManager calculationManager) {
-		if (StringUtils.isBlank(patientUuid)) {
-			return new ResponseEntity<Object>("You must specify patientUuid in the request!",
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-
-		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-		// ProgramWorkflowService service = Context.getProgramWorkflowService();
-		// List<PatientProgram> programEnrolmentHistory =
-		// service.getPatientPrograms(patient, null, null, null, null, null, false);
-
-		if (patient == null) {
-			return new ResponseEntity<Object>("The provided patient was not found in the system!",
-					new HttpHeaders(), HttpStatus.NOT_FOUND);
-		}
-
-		Map<String, String> patientFlagsMap = new HashMap<>();
-		ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
-
-		// TODO: Consider flags categorization for a patient who is not in any program
-		// TODO: Commenting this to allow patients not enrolled in any programs to see
-		// flags focussing on facility wide implementation
-		// if (programEnrolmentHistory.size() < 1) {
-		// flagsObj.put("results", JsonNodeFactory.instance.arrayNode()); // return an
-		// empty list
-		// return flagsObj.toString();
-		// }
-
-		CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
-		Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
-		List<String> patientFlagsToRefreshOnEveryRequest = Arrays.asList(
-				"EligibleForIDSRSymptomsFlagsCalculation");
-		calculationManager.refresh();
-
-		/**
-		 * The patientFlagCache is implemented using a map of property and value pair.
-		 * For flags, the property (the key), is the simple name of the flags
-		 * calculation
-		 * We append a special property of lastUpdated to keep track of the last updated
-		 * time.
-		 * We can use the property to check if certain flags need refresh or not
-		 * We only want to refresh flags which can change in the course of a visit
-		 */
-		if (patientFlagCache != null && patientFlagCache.get(patientUuid) != null) {
-			patientFlagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid)
-					.get();
-			for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
-
-				if (!(calc instanceof PatientFlagCalculation)
-						|| !patientFlagsToRefreshOnEveryRequest.contains(calc.getClass().getSimpleName())) {
-					continue;
-				}
-
-				try {
-					CalculationResult result = Context.getService(PatientCalculationService.class)
-							.evaluate(patient.getId(), calc);
-					if (result != null && (Boolean) result.getValue()) {
-						patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
-					}
-				} catch (Exception ex) {
-					System.out.println("Error evaluating " + ex.getMessage());
-					log.error("Error evaluating " + calc.getClass(), ex);
-				}
-			}
-			patientFlagsMap.put("lastUpdated", Instant.now().toString());
-			patientFlagCache.put(patient.getUuid(), patientFlagsMap);
-
-			flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
-			return flagsObj.toString();
-		}
-
-		// define a hashmap of flag name and value for ease of update in other parts of
-		// the code
-		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
-
-			if (!(calc instanceof PatientFlagCalculation)) { // we are only interested in flags calculation
-				continue;
-			}
-
-			try {
-				CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(),
-						calc);
-				if (result != null && (Boolean) result.getValue()) {
-					patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
-				}
-			} catch (Exception ex) {
-				System.out.println("Error evaluating " + ex.getMessage());
-				log.error("Error evaluating " + calc.getClass(), ex);
-			}
-		}
-
-		// add last update timestamp
-		if (patientFlagCache != null) {
-			patientFlagsMap.put("lastUpdated", Instant.now().toString());
-			patientFlagCache.put(patient.getUuid(), patientFlagsMap);
-		}
-		flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
-		return flagsObj.toString();
-
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
+//	@ResponseBody
+//	@Cacheable(value = "patientFlagCache", key = "#patientUuid")
+//	public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid,
+//			@SpringBean CalculationManager calculationManager) {
+//		if (StringUtils.isBlank(patientUuid)) {
+//			return new ResponseEntity<Object>("You must specify patientUuid in the request!",
+//					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+//		}
+//
+//		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+//		// ProgramWorkflowService service = Context.getProgramWorkflowService();
+//		// List<PatientProgram> programEnrolmentHistory =
+//		// service.getPatientPrograms(patient, null, null, null, null, null, false);
+//
+//		if (patient == null) {
+//			return new ResponseEntity<Object>("The provided patient was not found in the system!",
+//					new HttpHeaders(), HttpStatus.NOT_FOUND);
+//		}
+//
+//		Map<String, String> patientFlagsMap = new HashMap<>();
+//		ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
+//
+//		// TODO: Consider flags categorization for a patient who is not in any program
+//		// TODO: Commenting this to allow patients not enrolled in any programs to see
+//		// flags focussing on facility wide implementation
+//		// if (programEnrolmentHistory.size() < 1) {
+//		// flagsObj.put("results", JsonNodeFactory.instance.arrayNode()); // return an
+//		// empty list
+//		// return flagsObj.toString();
+//		// }
+//
+//		CacheManager cacheManager = Context.getRegisteredComponent("apiCacheManager", CacheManager.class);
+//		Cache patientFlagCache = cacheManager.getCache("patientFlagCache");
+//		List<String> patientFlagsToRefreshOnEveryRequest = Arrays.asList(
+//				"EligibleForIDSRSymptomsFlagsCalculation");
+//		calculationManager.refresh();
+//
+//		/**
+//		 * The patientFlagCache is implemented using a map of property and value pair.
+//		 * For flags, the property (the key), is the simple name of the flags
+//		 * calculation
+//		 * We append a special property of lastUpdated to keep track of the last updated
+//		 * time.
+//		 * We can use the property to check if certain flags need refresh or not
+//		 * We only want to refresh flags which can change in the course of a visit
+//		 */
+//		if (patientFlagCache != null && patientFlagCache.get(patientUuid) != null) {
+//			patientFlagsMap = (HashMap<String, String>) cacheManager.getCache("patientFlagCache").get(patientUuid)
+//					.get();
+//			for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
+//
+//				if (!(calc instanceof PatientFlagCalculation)
+//						|| !patientFlagsToRefreshOnEveryRequest.contains(calc.getClass().getSimpleName())) {
+//					continue;
+//				}
+//
+//				try {
+//					CalculationResult result = Context.getService(PatientCalculationService.class)
+//							.evaluate(patient.getId(), calc);
+//					if (result != null && (Boolean) result.getValue()) {
+//						patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
+//					}
+//				} catch (Exception ex) {
+//					System.out.println("Error evaluating " + ex.getMessage());
+//					log.error("Error evaluating " + calc.getClass(), ex);
+//				}
+//			}
+//			patientFlagsMap.put("lastUpdated", Instant.now().toString());
+//			patientFlagCache.put(patient.getUuid(), patientFlagsMap);
+//
+//			flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
+//			return flagsObj.toString();
+//		}
+//
+//		// define a hashmap of flag name and value for ease of update in other parts of
+//		// the code
+//		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
+//
+//			if (!(calc instanceof PatientFlagCalculation)) { // we are only interested in flags calculation
+//				continue;
+//			}
+//
+//			try {
+//				CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(),
+//						calc);
+//				if (result != null && (Boolean) result.getValue()) {
+//					patientFlagsMap.put(calc.getClass().getSimpleName(), calc.getFlagMessage());
+//				}
+//			} catch (Exception ex) {
+//				System.out.println("Error evaluating " + ex.getMessage());
+//				log.error("Error evaluating " + calc.getClass(), ex);
+//			}
+//		}
+//
+//		// add last update timestamp
+//		if (patientFlagCache != null) {
+//			patientFlagsMap.put("lastUpdated", Instant.now().toString());
+//			patientFlagCache.put(patient.getUuid(), patientFlagsMap);
+//		}
+//		flagsObj.put("results", composePatientFlagsFromMap(patientFlagsMap));
+//		return flagsObj.toString();
+//
+//	}
 
 	/**
 	 * Prepares an array of flags from Patient flags map
@@ -482,7 +482,44 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		}
 		return flags;
 	}
+	
+	//Removing cache
+	@RequestMapping(method = RequestMethod.GET, value = "/flags") // gets all flags for a patient
+	@ResponseBody
+	public Object getAllPatientFlags(HttpServletRequest request, @RequestParam("patientUuid") String patientUuid, @SpringBean CalculationManager calculationManager) {
+		if (StringUtils.isBlank(patientUuid)) {
+			return new ResponseEntity<Object>("You must specify patientUuid in the request!",
+				new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
 
+		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+		ObjectNode flagsObj = JsonNodeFactory.instance.objectNode();
+
+		if (patient == null) {
+			return new ResponseEntity<Object>("The provided patient was not found in the system!",
+				new HttpHeaders(), HttpStatus.NOT_FOUND);
+		}
+		calculationManager.refresh();
+		ArrayNode flags = JsonNodeFactory.instance.arrayNode();
+		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {
+
+			try {
+				CalculationResult result = Context.getService(PatientCalculationService.class).evaluate(patient.getId(), calc);
+				if (result != null && (Boolean) result.getValue()) {
+					flags.add(calc.getFlagMessage());
+				}
+			}
+			catch (Exception ex) {
+				log.error("Error evaluating " + calc.getClass(), ex);
+				return new ResponseEntity<Object>("ERROR EVALUATING!"+ calc.getFlagMessage(),
+					new HttpHeaders(), HttpStatus.NOT_FOUND);
+			}
+		}
+		flagsObj.put("results", flags);
+
+		return flagsObj.toString();
+
+	}
 	/**
 	 * Returns custom patient object
 	 *
