@@ -227,6 +227,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String NURSING_CARE_PLAN_FORM = "56b3ca43-2687-49d4-a03e-1b4329fe0f63";
 		public static final String AEFI_INVESTIGATION_FORM = "901e5166-0724-4a87-a8a0-60f44d5b92e7";
 		public static final String IN_PATIENT_ADMISSION_FORM = "49f3686d-b83c-4263-a5a1-89040f643a78";
+		public static final String SURGICAL_SAFETY_CHECKLIST_SIGN_IN_FORM = "2061790f-815e-43a9-8a1e-dae9e4956c2a";
+		public static final String SURGICAL_SAFETY_CHECKLIST_SIGN_OUT_FORM = "982af61b-fd51-474c-85d2-0459b7e3640b";
+		public static final String SURGICAL_SAFETY_CHECKLIST_TIME_OUT_FORM = "923411a3-4aae-4242-ba85-bb5b5176e6b1";
 	}
 
 	public static final class _OrderType {
@@ -457,9 +460,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(form("Oncology Form", "Form for Oncology", _EncounterType.ONCOLOGY, "1", _Form.ONCOLOGY_FORM));
 		install(form("Physiotherapy Form", "Form for Physiotherapy", _EncounterType.PHYSIOTHERAPY, "1",
 				_Form.PHYSIOTHERAPY_FORM));
-		install(form("GOPC Form", "Form for Oncology", _EncounterType.GOPC, "1", _Form.GOPC_FORM));
-		install(form("MOPC Form", "Form for Oncology", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
-		install(form("SOPC Form", "Form for Oncology", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
+		install(form("GOPC Form", "Form for GOPC", _EncounterType.GOPC, "1", _Form.GOPC_FORM));
+		install(form("MOPC Form", "Form for MOPC", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
+		install(form("SOPC Form", "Form for SOPC", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
+		install(form("Surgical Safety Checklist (Sign In) Form", "Form for Surgical Safety Checklist (Sign In)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_IN_FORM));
+		install(form("Surgical Safety Checklist (Sign Out) Form", "Form for Surgical Safety Checklist (Sign Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_OUT_FORM));
+		install(form("Surgical Safety Checklist (Time Out) Form", "Form for Surgical Safety Checklist (Time Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_TIME_OUT_FORM));
 		install(form("Family Planning", "Form for family planning", _EncounterType.FAMILY_PLANNING, "1",
 				_Form.FAMILY_PLANNING));
 		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
