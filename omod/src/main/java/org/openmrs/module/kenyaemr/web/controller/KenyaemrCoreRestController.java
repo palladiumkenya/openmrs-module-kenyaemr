@@ -285,6 +285,8 @@ public class KenyaemrCoreRestController extends BaseRestController {
 
 			FormManager formManager = CoreContext.getInstance().getManager(FormManager.class);
 			List<FormDescriptor> uncompletedFormDescriptors = formManager.getAllUncompletedFormsForVisit(patientVisit);
+			formManager.getCommonFormsForPatient(null, patient);
+			List<FormDescriptor> commonFormDescriptors = formManager.getCommonFormsForPatient(null, patient);
 
 			if (!uncompletedFormDescriptors.isEmpty()) {
 
@@ -321,6 +323,19 @@ public class KenyaemrCoreRestController extends BaseRestController {
 					formList.add(discharge);
 				}
 			}
+
+			//We want to show patient forms that can be filled multiple times per visit eg IPD forms
+			if(!commonFormDescriptors.isEmpty()) {
+
+				for (FormDescriptor descriptor : commonFormDescriptors) {
+					if (!descriptor.getTarget().getRetired().booleanValue()) {
+						ObjectNode formObj = generateFormDescriptorPayload(descriptor);
+						formObj.put("formCategory", "common");
+						formList.add(formObj);
+					}
+					System.out.println("Common Form Descriptor UUID: " + descriptor.getTarget().getUuid());
+				}
+			}	
 		}
 
 		// Show available forms for retrospective data entry

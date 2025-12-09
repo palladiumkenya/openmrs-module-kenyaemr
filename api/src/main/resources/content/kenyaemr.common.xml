@@ -57,6 +57,13 @@
 				<ref bean="kenyaemr.common.form.hivFamilyHistory" />
 				<ref bean="kenyaemr.common.form.obstetricHistory" />
 				<!--<ref bean="kenyaemr.common.form.medicalAndSurgicalHistory" />-->
+				<ref bean="kenyaemr.common.form.progressNote" />
+				<ref bean="kenyaemr.common.form.cardexNursing"/>
+				<ref bean="kenyaemr.common.form.IPDProcedure"/>
+				<ref bean="kenyaemr.common.form.postProcedure"/>
+				<ref bean="kenyaemr.common.form.preOperative"/>
+				<ref bean="kenyaemr.common.form.doctorsNote"/>
+				<ref bean="kenyaemr.common.form.fluidIntake"/>
 			</set>
 		</property>
 		<property name="commonVisitForms">
@@ -67,7 +74,7 @@
 				<ref bean="kenyaemr.common.form.labResults" />
 				<ref bean="kenyaemr.common.form.tbScreening" />
 				<!--<ref bean="kenyaemr.common.form.otherMedications" />-->
-				<ref bean="kenyaemr.common.form.progressNote" />
+				
 				<ref bean="kenyaemr.common.form.htsinitialtest"/>
 				<ref bean="kenyaemr.common.form.htsconfirmatorytest"/>
 				<ref bean="kenyaemr.common.form.htsLinkage"/>
@@ -78,10 +85,7 @@
 				<ref bean="kenyaemr.common.form.hivSelfTesting"/>
 				<ref bean="kenyaemr.common.form.nutrition"/>
 			<!--	<ref bean="kenyaemr.common.form.familyPlanning"/>-->
-				<ref bean="kenyaemr.common.form.cardexNursing"/>
-				<ref bean="kenyaemr.common.form.IPDProcedure"/>
-				<ref bean="kenyaemr.common.form.postProcedure"/>
-				<ref bean="kenyaemr.common.form.preOperative"/>
+				
 				<ref bean="kenyaemr.common.form.ADRAssessmentTool"/>
 
 				<!--<ref bean="kenyaemr_knh_testing.common.form.inpatientCareForm"/>-->
@@ -666,6 +670,64 @@
 		<property name="icon" value="kenyaui:forms/generic.png" />
 		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
 		<property name="order" value="200014" />
+	</bean>
+
+	<!-- Doctors Note Form -->
+	<bean id="kenyaemr.common.form.doctorsNote" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="87379b0a-738b-4799-9736-cdac614cee2a" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<!-- Nutrition reference here is just a place holder -->
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200015" />
+	</bean>
+	<!-- Fluid Intake Form -->
+	<bean id="kenyaemr.common.form.fluidIntake" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="657bdb00-0eab-48a6-8da4-bb1644d5fd48" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<!-- Nutrition reference here is just a place holder -->
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200015" />
+	</bean>
+
+	<!-- Fluid Intake Form -->
+	<bean id="kenyaemr.common.form.fluidIntake" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="657bdb00-0eab-48a6-8da4-bb1644d5fd48" />
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.registration" />
+				<ref bean="kenyaemr.app.clinician" />
+				<ref bean="kenyaemr.app.chart" />
+				<ref bean="kenyaemr.app.hts" />
+				<ref bean="kenyaemr.app.prep" />
+				<ref bean="kenyaemr.app.counselling" />
+			</set>
+		</property>
+		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
+		<property name="icon" value="kenyaui:forms/generic.png" />
+		<!-- Nutrition reference here is just a place holder -->
+		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
+		<property name="order" value="200015" />
 	</bean>
 	<!-- PreOperative Checklist Form -->
 	<bean id="kenyaemr.common.form.preOperative" class="org.openmrs.module.kenyacore.form.FormDescriptor">

@@ -28,6 +28,7 @@
 				<ref bean="kenyaemr.mchms.form.preventiveServices"/>
 				<ref bean="kenyaemr.mchms.form.delivery"/>
 				<ref bean="kenyaemr.mchms.form.discharge"/>
+				<ref bean="kenyaemr.mchms.form.partograph"/>
 			</set>
 		</property>
 		<property name="visitForms">
@@ -211,6 +212,20 @@
         <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
 		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="htmlform" value="kenyaemr:mchms/mchmsPostnatalVisit.html"/>
+		<property name="order" value="3"/>
+	</bean>
+
+	<!-- Partograph form -->
+	<bean id="kenyaemr.mchms.form.partograph" class="org.openmrs.module.kenyacore.form.FormDescriptor">
+		<property name="targetUuid" value="3791e5b7-2cdc-44fc-982b-a81135367c96"/>
+		<property name="apps">
+			<set>
+				<ref bean="kenyaemr.app.clinician"/>
+				<ref bean="kenyaemr.app.chart"/>
+			</set>
+		</property>
+        <property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibleForFamilyPlanningCalculation" />
+		<property name="icon" value="kenyaui:forms/generic.png"/>
 		<property name="order" value="3"/>
 	</bean>
 
