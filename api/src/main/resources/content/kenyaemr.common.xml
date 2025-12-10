@@ -692,27 +692,7 @@
 	</bean>
 	<!-- Fluid Intake Form -->
 	<bean id="kenyaemr.common.form.fluidIntake" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="657bdb00-0eab-48a6-8da4-bb1644d5fd48" />
-		<property name="apps">
-			<set>
-				<ref bean="kenyaemr.app.registration" />
-				<ref bean="kenyaemr.app.clinician" />
-				<ref bean="kenyaemr.app.chart" />
-				<ref bean="kenyaemr.app.hts" />
-				<ref bean="kenyaemr.app.prep" />
-				<ref bean="kenyaemr.app.counselling" />
-			</set>
-		</property>
-		<property name="showIfCalculation" value="org.openmrs.module.kenyaemr.calculation.library.EligibilityToShowInPatientForms" />
-		<property name="icon" value="kenyaui:forms/generic.png" />
-		<!-- Nutrition reference here is just a place holder -->
-		<property name="htmlform" value="kenyaemr:nutritionFormDoesNotExistOn2x.html" />
-		<property name="order" value="200015" />
-	</bean>
-
-	<!-- Fluid Intake Form -->
-	<bean id="kenyaemr.common.form.fluidIntake" class="org.openmrs.module.kenyacore.form.FormDescriptor">
-		<property name="targetUuid" value="657bdb00-0eab-48a6-8da4-bb1644d5fd48" />
+		<property name="targetUuid" value="b4bfa7a3-f6ed-4339-a4ec-b076463c0696" />
 		<property name="apps">
 			<set>
 				<ref bean="kenyaemr.app.registration" />
