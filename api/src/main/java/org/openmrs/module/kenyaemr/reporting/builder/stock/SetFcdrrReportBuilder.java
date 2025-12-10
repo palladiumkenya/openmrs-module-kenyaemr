@@ -42,7 +42,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int RITONAVIR_100MG = 2103;
 	static final int RITONAVIR_100MG_ORAL = 2105;
 	static final int TENOFOVIR_300MG = 2153;
-	static final int TENOFOVIR_EMTRICITABINE_300_200MG = 2236;
+	static final int TENOFOVIR_EMTRICITABINE_300_200MG = 73091;
 	static final int TENOFOVIR_LAMIVUDINE_300_300MG = 2235;
 	static final int TENOFOVIR_LAMIVUDINE_EFAVIRENZ_300_300_400MG = 7223;
 	static final int ZIDOVUDINE_300MG = 2209;
@@ -70,7 +70,7 @@ public class SetFcdrrReportBuilder extends AbstractReportBuilder {
 	static final int ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE = 1817;
 	static final int ZIDOVUDINE_LAMIVUDINE_300_150MG = 1818;
 	static final int DAPSONE_100_150MG = 1571;
-	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_500MG = 2240;
+	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_300_300_500MG = 169361;
 	static final int TENOFOVIR_LAMIVUDINE_DOLUTEGRAVIR_FCD_300_300_500MG = 7958;
 	static final int NEVIRAPINE_200MG = 1941;
 	static final int ZIDOVUDINE_LAMIVUDINE_NEVIRAPINE_60_30_50MG = 1821;
