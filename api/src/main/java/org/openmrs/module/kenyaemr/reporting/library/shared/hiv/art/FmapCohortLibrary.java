@@ -261,11 +261,11 @@ public class FmapCohortLibrary {
 
 	public CohortDefinition infantBreastfeedingPC8Regimen() {
 		String sqlQuery = "SELECT hv.patient_id\n" +
-			"      FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
-			"      INNER JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
-			"WHERE (hv.nvp_given = 86663 OR  hv.ctx_given = 80586)\n" +
-			"  AND hv.infant_feeding IN (5526,5632)\n" +			
-			"  AND date(hv.visit_date) BETWEEN date(:startDate) and date(:endDate);";
+                "FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
+                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d ON d.patient_id = hv.patient_id\n" +
+                "WHERE (hv.nvp_given IN (80586, 86663) OR hv.ctx_given IN (80586, 86663))\n" +
+                "  AND hv.infant_feeding IN (5526, 5632)\n" +
+                "  AND DATE(hv.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("latestGreenCardWeight");
 		cd.setQuery(sqlQuery);
@@ -276,12 +276,12 @@ public class FmapCohortLibrary {
 	}
 
 	public CohortDefinition infantNotBreastfeedingPC7Regimen() {
-		String sqlQuery = "SELECT hv.patient_id\n" +
-			"      FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
-			"      INNER JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
-			"WHERE (hv.nvp_given = 86663 OR  hv.ctx_given = 80586)\n" +
-			"  AND hv.infant_feeding IN (164478,1595)\n" +			
-			"  AND date(hv.visit_date) BETWEEN date(:startDate) and date(:endDate);";
+        String sqlQuery = "SELECT hv.patient_id\n" +
+                "FROM kenyaemr_etl.etl_hei_follow_up_visit hv\n" +
+                "LEFT JOIN kenyaemr_etl.etl_patient_demographics d on d.patient_id = hv.patient_id\n" +
+                "WHERE (hv.nvp_given IN (80586, 86663) OR hv.ctx_given IN (80586, 86663))\n" +
+                "  AND hv.infant_feeding IN (164478, 1595)\n" +
+                "  AND DATE(hv.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("infantProphylaxisNotBreastFeeding");
 		cd.setQuery(sqlQuery);
@@ -428,4 +428,108 @@ public class FmapCohortLibrary {
 		cd.setDescription("otherPrepRegimenPrepType");
 		return cd;
 	}
+    public CohortDefinition hepb1aRegimen() {
+        String sql = "select d.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics d\n" +
+                "  left join (\n" +
+                "    select de.patient_id, upper(trim(mid(max(concat(date(de.date_started), de.regimen)), 11))) as regimen\n" +
+                "    from kenyaemr_etl.etl_drug_event de\n" +
+                "    where date(de.date_started) between date(:startDate) and date(:endDate)\n" +
+                "    group by de.patient_id\n" +
+                "  ) de on d.patient_id = de.patient_id\n" +
+                "where de.patient_id is not null\n" +
+                "  and de.regimen in ('TDF/3TC','TDF/3TC(PREFERRED)','TDF 3TC')\n" +
+                "group by d.patient_id;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("hepb1aRegimen");
+        cd.setQuery(sql);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HepB patients on TDF+3TC");
+        return cd;
+    }
+
+    public CohortDefinition hepb1bRegimen() {
+        String sql = "select d.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics d\n" +
+                "  left join (\n" +
+                "    select de.patient_id, upper(trim(mid(max(concat(date(de.date_started), de.regimen)), 11))) as regimen\n" +
+                "    from kenyaemr_etl.etl_drug_event de\n" +
+                "    where date(de.date_started) between date(:startDate) and date(:endDate)\n" +
+                "    group by de.patient_id\n" +
+                "  ) de on d.patient_id = de.patient_id\n" +
+                "where de.patient_id is not null\n" +
+                "  and de.regimen in ('TDF/FTC','TDF/FTC(PREFERRED)','TDF FTC')\n" +
+                "group by d.patient_id;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("hepb1bRegimen");
+        cd.setQuery(sql);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HepB patients on TDF+FTC");
+        return cd;
+    }
+
+    public CohortDefinition hepb1cRegimen() {
+        String sql = "select d.patient_id\n" +
+                "from kenyaemr_etl.etl_patient_demographics d\n" +
+                "  left join (\n" +
+                "    select de.patient_id, upper(trim(mid(max(concat(date(de.date_started), de.regimen)), 11))) as regimen\n" +
+                "    from kenyaemr_etl.etl_drug_event de\n" +
+                "    where date(de.date_started) between date(:startDate) and date(:endDate)\n" +
+                "    group by de.patient_id\n" +
+                "  ) de on d.patient_id = de.patient_id\n" +
+                "where de.patient_id is not null\n" +
+                "  and de.regimen not in ('','TDF/3TC','TDF/3TC(PREFERRED)','TDF/FTC','TDF/FTC(PREFERRED)')\n" +
+                "group by d.patient_id;";
+        SqlCohortDefinition cd = new SqlCohortDefinition();
+        cd.setName("hepb1cRegimen");
+        cd.setQuery(sql);
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.setDescription("HepB patients on other HepB regimens");
+        return cd;
+    }
+
+    public CohortDefinition hepb1aHivNegative() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("hepb1a", ReportUtils.map(hepb1aRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(hepb1a AND NOT txcurr)");
+        return cd;
+    }
+
+    public CohortDefinition hepb1bHivNegative() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("hepb1b", ReportUtils.map(hepb1bRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(hepb1b AND NOT txcurr)");
+        return cd;
+    }
+
+    public CohortDefinition hepb1cHivNegative() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("hepb1c", ReportUtils.map(hepb1cRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("(hepb1c AND NOT txcurr)");
+        return cd;
+    }
+    public CohortDefinition hepb1TotalHivNegative() {
+        CompositionCohortDefinition cd = new CompositionCohortDefinition();
+        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addSearch("hepb1a", ReportUtils.map(hepb1aRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("hepb1b", ReportUtils.map(hepb1bRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("hepb1c", ReportUtils.map(hepb1cRegimen(), "startDate=${startDate},endDate=${endDate}"));
+        cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("((hepb1a OR hepb1b OR hepb1c) AND NOT txcurr)");
+        return cd;
+    }
+
 }

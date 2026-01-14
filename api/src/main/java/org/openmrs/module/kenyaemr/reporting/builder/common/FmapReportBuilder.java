@@ -292,6 +292,10 @@ public class FmapReportBuilder extends AbstractReportBuilder {
 		cohortDsd.addColumn("PRP1D", "Dapivirine ring", ReportUtils.map(fmapIndicators.dapivirinePrepType(), indParams),"");
 		cohortDsd.addColumn("PRP1E", "Cabotegravir", ReportUtils.map(fmapIndicators.cabotegravirPrepType(), indParams),"");
 		cohortDsd.addColumn("PRP1X", "Others", ReportUtils.map(fmapIndicators.otherPrepRegimenPrepType(), indParams),"");
+		cohortDsd.addColumn("HPB1A", "TDF + 3TC (HIV-ve HepB patients)", ReportUtils.map(fmapIndicators.hepb1aHivNegative(), indParams),"");
+		cohortDsd.addColumn("HPB1B", "HepB patients on TDF+FTC", ReportUtils.map(fmapIndicators.hepb1bHivNegative(), indParams),"");
+		cohortDsd.addColumn("HPB1C", "Any other HEP B regimens", ReportUtils.map(fmapIndicators.hepb1cHivNegative(), indParams),"");
+		cohortDsd.addColumn("TOTAL_HPB1", "Total Hepatitis B Patients", ReportUtils.map(fmapIndicators.hepb1TotalHivNegative(), indParams),"");
 
 		return cohortDsd;
 	}
