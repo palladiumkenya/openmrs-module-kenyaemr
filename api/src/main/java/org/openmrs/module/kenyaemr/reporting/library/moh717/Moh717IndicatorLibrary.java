@@ -26,8 +26,8 @@ public class Moh717IndicatorLibrary {
         this.moh717CohortLibrary = moh717CohortLibrary;
     }
 
-    public CohortIndicator getPatientsWithNewClinicalEncounterWithinReportingPeriod() {
-        return cohortIndicator("All Patients with new clinical encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithNewClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator getPatientsClinicalEncounterWithinReportingPeriod(String ageString, char gender, String visitType) {
+        return cohortIndicator("All Patients with new clinical encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithClinicalEncounterWithinReportingPeriod(ageString, gender, visitType), "startDate=${startDate},endDate=${endDate}"));
     }
 
     public CohortIndicator getPatientsWithReturnClinicalEncounterWithinReportingPeriod() {
@@ -140,11 +140,11 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator specialClinics(String specialClinicFormUuid) {
         return cohortIndicator("Special Clinics", ReportUtils.map(moh717CohortLibrary.specialClinics(specialClinicFormUuid), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator orthopaedicTraumaServices(String orthopedicFormUuid,String traumaServiceList, int visitType) {
-        return cohortIndicator("Orthopaedic Trauma Services", ReportUtils.map(moh717CohortLibrary.orthopaedicTraumaServices(orthopedicFormUuid,traumaServiceList,visitType), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator orthopaedicTraumaServices(String orthopedicFormUuid,String traumaServiceList, int visitType, String ageStr) {
+        return cohortIndicator("Orthopaedic Trauma Services", ReportUtils.map(moh717CohortLibrary.orthopaedicTraumaServices(orthopedicFormUuid,traumaServiceList,visitType, ageStr), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator orthopaedicRemovalServices(String orthopedicFormUuid,String removalsList) {
-        return cohortIndicator("Orthopaedic Removal Services", ReportUtils.map(moh717CohortLibrary.orthopaedicRemovalServices(orthopedicFormUuid,removalsList), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator orthopaedicRemovalServices(String orthopedicFormUuid,String removalsList, String ageStr) {
+        return cohortIndicator("Orthopaedic Removal Services", ReportUtils.map(moh717CohortLibrary.orthopaedicRemovalServices(orthopedicFormUuid,removalsList, ageStr), "startDate=${startDate},endDate=${endDate}"));
     }
     public CohortIndicator inpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardType) {
         return cohortIndicator("In-patient discharges", ReportUtils.map(moh717CohortLibrary.inpatientDischarges(cured, leftAgainstMedicalAdvise,wardType), "startDate=${startDate},endDate=${endDate}"));
@@ -158,10 +158,10 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator otherInpatientExitStatus(int dischargeReason, String wardTypeList) {
         return cohortIndicator("Other in-patient exit reason", ReportUtils.map(moh717CohortLibrary.otherInpatientExitStatus(dischargeReason,wardTypeList), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator stdWardsAdmissions(String wardType) {
-        return cohortIndicator("stdWardsAdmissions", ReportUtils.map(moh717CohortLibrary.stdWardsAdmissions(wardType), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator stdWardsAdmissions(String wardType, String ageStr) {
+        return cohortIndicator("stdWardsAdmissions", ReportUtils.map(moh717CohortLibrary.stdWardsAdmissions(wardType, ageStr), "startDate=${startDate},endDate=${endDate}"));
     }
-    public CohortIndicator otherWardsAdmissions(String wardTypeList) {
-        return cohortIndicator("otherWardsAdmissions", ReportUtils.map(moh717CohortLibrary.otherWardsAdmissions(wardTypeList), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator otherWardsAdmissions(String wardTypeList, String ageStr) {
+        return cohortIndicator("otherWardsAdmissions", ReportUtils.map(moh717CohortLibrary.otherWardsAdmissions(wardTypeList, ageStr), "startDate=${startDate},endDate=${endDate}"));
     }
 }

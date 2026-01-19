@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.clinicianWorkload.TriageDateDataDefinition;
-import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
-import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
+import org.openmrs.module.reporting.data.visit.EvaluatedVisitData;
+import org.openmrs.module.reporting.data.visit.definition.VisitDataDefinition;
+import org.openmrs.module.reporting.data.visit.evaluator.VisitDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,13 +27,13 @@ import java.util.Map;
  * Evaluates a TriageDateDataDefinition
  */
 @Handler(supports = TriageDateDataDefinition.class, order = 50)
-public class TriageDateDataEvaluator implements PersonDataEvaluator {
+public class TriageDateDataEvaluator implements VisitDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
+    public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
         String qry = "WITH filtered_patients AS (SELECT patient_id\n" +
                 "                           FROM kenyaemr_etl.etl_patient_demographics\n" +
@@ -54,7 +54,7 @@ public class TriageDateDataEvaluator implements PersonDataEvaluator {
                 "                                  LEFT JOIN checked_in v ON v.patient_id = t.patient_id AND v.visit_id = t.visit_id\n" +
                 "                         WHERE t.voided = 0\n" +
                 "                           AND t.visit_date BETWEEN :startDate AND :endDate)\n" +
-                "SELECT v.patient_id,\n" +
+                "SELECT v.visit_id,\n" +
                 "       IFNULL(t.triage_date, 'Not Done') AS triage_date\n" +
                 "FROM checked_in v\n" +
                 "         JOIN filtered_patients fp ON fp.patient_id = v.patient_id\n" +

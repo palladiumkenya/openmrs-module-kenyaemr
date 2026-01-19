@@ -14,7 +14,6 @@ import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
-import org.openmrs.module.reporting.indicator.SqlIndicator;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -22,18 +21,19 @@ import java.util.Date;
 @Component
 public class Moh717CohortLibrary {
 
-    public CohortDefinition getPatientsWithNewClinicalEncounterWithinReportingPeriod() {
+    public CohortDefinition getPatientsWithClinicalEncounterWithinReportingPeriod(String ageString, char gender, String visitType) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Patients with new encounters within date period");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "SELECT ce.patient_id\n" +
+                "SELECT ce.encounter_id\n" +
                         "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+                        "INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = ce.patient_id AND p.voided = 0 AND TIMESTAMPDIFF(YEAR, date(p.DOB), ce.visit_date) "+ageString+" AND p.gender = '"+gender+"'\n" +
                         "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
-                        "WHERE ed.dx_rank = 2 AND ce.visit_type = 'New visit'\n" +
+                        "WHERE ed.dx_rank = 2 AND ce.visit_type = '"+visitType+"'\n" +
                         "  AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-                        "  AND ed.voided = 0;"
+                        "  AND ed.voided = 0 group by ce.encounter_id;"
         );
         return sql;
     }
@@ -43,12 +43,12 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "SELECT ce.patient_id\n" +
+                "SELECT ce.encounter_id\n" +
                         "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
                         "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
                         "WHERE ed.dx_rank = 2 AND ce.visit_type = 'Revisit'\n" +
                         "  AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
-                        "  AND ed.voided = 0;"
+                        "  AND ed.voided = 0 group by ce.encounter_id;"
         );
         return sql;
     }
@@ -59,7 +59,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number = 1 and form = 'MCH Antenatal Initial Visit';"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number = 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -70,7 +70,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and form = 'MCH ANC Followup' and v.anc_visit_number > 1;"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number > 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -81,7 +81,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.pnc_visit_no = 1;"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.pnc_visit_no = 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -92,7 +92,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.pnc_visit_no > 1;"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_postnatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.pnc_visit_no > 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -101,8 +101,8 @@ public class Moh717CohortLibrary {
         sql.setName("Patients with Family planning visits");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select v.patient_id from kenyaemr_etl.etl_family_planning v where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "and v.type_of_visit_for_method = "+visitType+";");
+        sql.setQuery("select v.encounter_id from kenyaemr_etl.etl_family_planning v where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
+                "and v.type_of_visit_for_method = "+visitType+" group by v.encounter_id;");
         return sql;
     }
 
@@ -112,7 +112,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_hei_follow_up_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.revisit_this_year = 164180;"
+                "select v.encounter_id from kenyaemr_etl.etl_hei_follow_up_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.revisit_this_year = 164180 group by v.encounter_id;"
         );
         return sql;
     }
@@ -123,7 +123,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.patient_id from kenyaemr_etl.etl_hei_follow_up_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.revisit_this_year = 160530;"
+                "select v.encounter_id from kenyaemr_etl.etl_hei_follow_up_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.revisit_this_year = 160530 group by v.encounter_id;"
         );
         return sql;
     }
@@ -133,7 +133,7 @@ public class Moh717CohortLibrary {
         sql.setName("Normal Deliveries");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where d.mode_of_delivery = 1170 and d.visit_date between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where d.mode_of_delivery = 1170 and d.visit_date between date(:startDate) and date(:endDate) ;");
         return sql;
     }
     public CohortDefinition caesareanSections() {
@@ -157,7 +157,7 @@ public class Moh717CohortLibrary {
         sql.setName("Assisted vaginal Deliveries");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_delivery d where d.mode_of_delivery = 118159 and d.visit_date between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from kenyaemr_etl.etl_mchs_delivery d where d.mode_of_delivery = 118159 and d.visit_date between date(:startDate) and date(:endDate) group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition bornBeforeArrival() {
@@ -228,7 +228,7 @@ public class Moh717CohortLibrary {
         sql.setName("Total Discharges");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from kenyaemr_etl.etl_mchs_discharge d where d.visit_date between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from kenyaemr_etl.etl_mchs_discharge d where d.visit_date between date(:startDate) and date(:endDate) group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition laboratoryTests() {
@@ -236,7 +236,7 @@ public class Moh717CohortLibrary {
         sql.setName("Number of Laboratory tests");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select encounter_id from kenyaemr_etl.etl_laboratory_extract x where x.visit_date between date(:startDate) and date(:endDate);");
+        sql.setQuery("select encounter_id from kenyaemr_etl.etl_laboratory_extract x where x.visit_date between date(:startDate) and date(:endDate) group by x.encounter_id;");
         return sql;
     }
 
@@ -245,7 +245,7 @@ public class Moh717CohortLibrary {
         sql.setName("Number of imagings and xrays");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select o.encounter_id from orders o where o.order_type_id = 4 and o.concept_id in ("+xrayAndImaging+") and o.voided = 0 and date(o.date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select o.encounter_id from orders o where o.order_type_id = 4 and o.concept_id in ("+xrayAndImaging+") and o.voided = 0 and date(o.date_activated) between date(:startDate) and date(:endDate) group by o.encounter_id;");
         return sql;
     }
     public CohortDefinition specialClinic(String clinicFormUUID, int visitType) {
@@ -253,7 +253,7 @@ public class Moh717CohortLibrary {
         sql.setName("Special Clinic");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+clinicFormUUID+"' and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate);");
+        sql.setQuery("select s.encounter_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+clinicFormUUID+"' and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate) group by s.encounter_id;");
         return sql;
     }
     public CohortDefinition otherSpecialClinics(String clinicsFormUUIDS, int visitType) {
@@ -261,16 +261,7 @@ public class Moh717CohortLibrary {
         sql.setName("Other Special Clinics");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid in ("+clinicsFormUUIDS+") and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate);");
-        return sql;
-    }
-    public CohortDefinition totalAmountCollected() {
-        SqlCohortDefinition sql = new SqlCohortDefinition();
-        sql.setName("Total Amount Collected");
-        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select CAST(IFNULL(sum(ifnull(r.total_sales,0)),0) AS SIGNED) as total_amount_collected from kenyaemr_etl.etl_daily_revenue_summary r\n" +
-                "where date(transaction_date) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select s.encounter_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid in ("+clinicsFormUUIDS+") and s.visit_type = "+visitType+" and s.visit_date between date(:startDate) and date(:endDate) group by s.encounter_id;");
         return sql;
     }
 
@@ -288,7 +279,7 @@ public class Moh717CohortLibrary {
         sql.setName("Dental visits");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select c.patient_id from kenyaemr_etl.etl_special_clinics c where c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+" and date(c.visit_date) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select c.encounter_id from kenyaemr_etl.etl_special_clinics c where c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+" and date(c.visit_date) between date(:startDate) and date(:endDate) group by c.encounter_id;");
         return sql;
     }
 
@@ -297,8 +288,8 @@ public class Moh717CohortLibrary {
         sql.setName("Dental Fillings");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
-                "         where concept_id in ("+fillingsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+";");
+        sql.setQuery("select d.encounter_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "         where concept_id in ("+fillingsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+" group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition dentalExtractions(String extractionsList,int visitType) {
@@ -306,8 +297,8 @@ public class Moh717CohortLibrary {
         sql.setName("Dental extractions");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
-                "where concept_id in ("+extractionsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+";");
+        sql.setQuery("select d.encounter_id from orders d inner join kenyaemr_etl.etl_special_clinics c on d.patient_id = c.patient_id and date(c.visit_date) = date(d.date_created)\n" +
+                "where concept_id in ("+extractionsList+") and d.voided = 0 and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and date(c.visit_date) between date(:startDate) and date(:endDate) and c.special_clinic_form_uuid = 'a3c01460-c346-4f3d-a627-5c7de9494ba0' and c.visit_type = "+visitType+" group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition dentalAttendances(String fillingsList, String extractionsList, int visitType) {
@@ -326,7 +317,7 @@ public class Moh717CohortLibrary {
         sql.setName("Dressings");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+dressingsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from orders d where d.concept_id in ("+dressingsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
         return sql;
     }
     public CohortDefinition removalOfStitches(String removalOfStitchesList) {
@@ -334,7 +325,7 @@ public class Moh717CohortLibrary {
         sql.setName("Removal of Stitches");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+removalOfStitchesList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from orders d where d.concept_id in ("+removalOfStitchesList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate) group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition injections(String injectionsList) {
@@ -342,7 +333,7 @@ public class Moh717CohortLibrary {
         sql.setName("Injections");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+injectionsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from orders d where d.concept_id in ("+injectionsList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate) group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition stitching(String stitchingList) {
@@ -350,7 +341,7 @@ public class Moh717CohortLibrary {
         sql.setName("stitching");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select d.patient_id from orders d where d.concept_id in ("+stitchingList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate);");
+        sql.setQuery("select d.encounter_id from orders d where d.concept_id in ("+stitchingList+") and d.order_type_id = 4 and d.fulfiller_status = 'COMPLETED' and d.voided = 0 and date(d.date_activated) between date(:startDate) and date(:endDate) group by d.encounter_id;");
         return sql;
     }
     public CohortDefinition revisitTBClinic() {
@@ -358,14 +349,14 @@ public class Moh717CohortLibrary {
         sql.setName("Revisiting TB Clinic");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select e.patient_id\n" +
+        sql.setQuery("select f.latest_visit_encounter\n" +
                 "from kenyaemr_etl.etl_tb_enrollment e\n" +
-                "         inner join (select f.patient_id, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
-                "                     from kenyaemr_etl.etl_tb_follow_up_visit f\n" +
+                "         inner join (select f.patient_id,max(f.encounter_id) as latest_visit_encounter, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
+                "                     from kenyaemr_etl.etl_tb_follow_up_visit f where date(f.visit_date) < date(:endDate)\n" +
                 "                     group by f.patient_id) f on e.patient_id = f.patient_id\n" +
                 "where f.latest_visit between date(:startDate) and date(:endDate)\n" +
                 "  and f.first_visit < date(:startDate)\n" +
-                "  and e.visit_date < date(:startDate);");
+                "  and e.visit_date < date(:startDate) group by f.latest_visit_encounter;");
         return sql;
     }
     public CohortDefinition newOnCCClinic() {
@@ -381,14 +372,14 @@ public class Moh717CohortLibrary {
         sql.setName("Revisiting CCC Clinic");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select e.patient_id\n" +
+        sql.setQuery("select e.encounter_id\n" +
                 "from kenyaemr_etl.etl_hiv_enrollment e\n" +
                 "         inner join (select f.patient_id, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
                 "                     from kenyaemr_etl.etl_patient_hiv_followup f\n" +
                 "                     group by f.patient_id) f on e.patient_id = f.patient_id\n" +
                 "where f.latest_visit between date(:startDate) and date(:endDate)\n" +
                 "  and f.first_visit < date(:startDate)\n" +
-                "  and e.visit_date < date(:startDate);");
+                "  and e.visit_date < date(:startDate) group by e.encounter_id;");
         return sql;
     }
     public CohortDefinition specialClinics(String specialClinicFormUuid) {
@@ -396,32 +387,34 @@ public class Moh717CohortLibrary {
         sql.setName("specialClinics");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select s.patient_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+specialClinicFormUuid+"' and s.visit_date between date(:startDate) and date(:endDate)");
+        sql.setQuery("select s.encounter_id from kenyaemr_etl.etl_special_clinics s where s.special_clinic_form_uuid = '"+specialClinicFormUuid+"' and s.visit_date between date(:startDate) and date(:endDate) group by s.encounter_id");
         return sql;
     }
-    public CohortDefinition orthopaedicTraumaServices(String orthopedicFormUuid, String traumaServicesList, int visitType) {
+    public CohortDefinition orthopaedicTraumaServices(String orthopedicFormUuid, String traumaServicesList, int visitType, String ageStr) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("orthopaedicTraumaServices");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select o.patient_id from openmrs.orders o\n" +
+        sql.setQuery("select o.encounter_id from orders o\n" +
                 "         inner join kenyaemr_etl.etl_special_clinics s\n" +
                 "                    on o.patient_id = s.patient_id and o.order_type_id = 4 and date(o.date_activated) = s.visit_date\n" +
-                "where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"'\n" +
+                "          inner join kenyaemr_etl.etl_patient_demographics d on o.patient_id = d.patient_id\n" +
+                "where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"' and TIMESTAMPDIFF(YEAR, d.DOB, s.visit_date) "+ageStr+"\n" +
                 "  and s.visit_type = "+visitType+"\n" +
-                "  and o.concept_id in ("+traumaServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
+                "  and o.concept_id in ("+traumaServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate) group by o.encounter_id;");
         return sql;
     }
-    public CohortDefinition orthopaedicRemovalServices(String orthopedicFormUuid,String removalServicesList) {
+    public CohortDefinition orthopaedicRemovalServices(String orthopedicFormUuid,String removalServicesList, String ageStr) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("orthopaedicRemovalServices");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select o.patient_id from openmrs.orders o\n" +
+        sql.setQuery("select o.encounter_id from orders o\n" +
                 "                         inner join kenyaemr_etl.etl_special_clinics s\n" +
                 "                                    on o.patient_id = s.patient_id and o.order_type_id = 4 and date(o.date_activated) = s.visit_date\n" +
-                "                where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"'\n" +
-                "                  and o.concept_id in ("+removalServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate);");
+                "                         inner join kenyaemr_etl.etl_patient_demographics d on o.patient_id = d.patient_id\n" +
+                "                where s.special_clinic_form_uuid = '"+orthopedicFormUuid+"' and TIMESTAMPDIFF(YEAR, d.DOB, s.visit_date) "+ageStr+"\n" +
+                "                  and o.concept_id in ("+removalServicesList+") and o.voided = 0 and s.visit_date between date(:startDate) and date(:endDate) group by o.encounter_id;");
         return sql;
     }
 
@@ -430,15 +423,15 @@ public class Moh717CohortLibrary {
         sql.setName("curedDischarges");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+cured+" and t.uuid = '"+wardType+"';");
+                "where b.discharge_status = "+cured+" and t.uuid = '"+wardType+"' group by b.encounter_id;");
         return sql;
     }
     public CohortDefinition leftAgainstMedicalAdviseDischarges(int leftAgainstMedicalAdvise,String wardType) {
@@ -446,15 +439,15 @@ public class Moh717CohortLibrary {
         sql.setName("leftAgainstMedicalAdviseDischarges");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid = '"+wardType+"';");
+                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid = '"+wardType+"' group by b.encounter_id;");
         return sql;
     }
     public CohortDefinition inpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardType) {
@@ -471,15 +464,15 @@ public class Moh717CohortLibrary {
         sql.setName("leftAgainstMedicalAdviseDischargesOtherWards");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+cured+" and t.uuid in ("+wardTypeList+");");
+                "where b.discharge_status = "+cured+" and t.uuid in ("+wardTypeList+") group by b.encounter_id;");
         return sql;
     }
     public CohortDefinition leftAgainstMedicalAdviseDischargesOtherWards(int leftAgainstMedicalAdvise,String wardTypeList) {
@@ -487,15 +480,15 @@ public class Moh717CohortLibrary {
         sql.setName("leftAgainstMedicalAdviseDischargesOtherWards");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid in ("+wardTypeList+");");
+                "where b.discharge_status = "+leftAgainstMedicalAdvise+" and t.uuid in ("+wardTypeList+") group by b.encounter_id;");
         return sql;
     }
     public CohortDefinition otherInpatientDischarges(int cured, int leftAgainstMedicalAdvise,String wardTypeList) {
@@ -512,15 +505,15 @@ public class Moh717CohortLibrary {
         sql.setName("inpatientExitStatus");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = "+dischargeReason+" and t.uuid = '"+wardType+"';");
+                "where b.discharge_status = "+dischargeReason+" and t.uuid = '"+wardType+"' group by b.encounter_id;");
         return sql;
     }
     public CohortDefinition otherInpatientExitStatus(int dischargeReason, String wardTypeList) {
@@ -528,48 +521,52 @@ public class Moh717CohortLibrary {
         sql.setName("otherInpatientExitStatus");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
+                "         inner join (select p.patient_id,d.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id, d.discharge_status\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
                 "                              inner join kenyaemr_etl.etl_inpatient_discharge d on p.patient_id = d.patient_id and date(p.date_started) = d.visit_date) b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where b.discharge_status = " + dischargeReason + " and t.uuid in (" + wardTypeList + ");");
+                "where b.discharge_status = " + dischargeReason + " and t.uuid in (" + wardTypeList + ") group by b.encounter_id;");
         return sql;
     }
-        public CohortDefinition stdWardsAdmissions(String wardType) {
+        public CohortDefinition stdWardsAdmissions(String wardType, String ageStr) {
             SqlCohortDefinition sql = new SqlCohortDefinition();
             sql.setName("stdWardsAdmissions");
             sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
             sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-            sql.setQuery("select b.patient_id\n" +
+            sql.setQuery("select b.encounter_id\n" +
                     "from location_tag_map ltm\n" +
                     "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                    "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
+                    "         inner join (select p.patient_id,a.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
                     "                     from bed_patient_assignment_map p\n" +
                     "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
-                    "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)) b\n" +
+                    "                              inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = p.patient_id\n" +
+                    "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)\n" +
+                    "                              where TIMESTAMPDIFF(YEAR, d.DOB, date(a.admission_date)) "+ageStr+") b\n" +
                     "                    on ltm.location_id = b.location_id\n" +
-                    "where t.uuid = '"+wardType+"';");
+                    "where t.uuid = '"+wardType+"' group by b.encounter_id;");
             return sql;
     }
 
-    public CohortDefinition otherWardsAdmissions(String wardTypeList) {
+    public CohortDefinition otherWardsAdmissions(String wardTypeList, String ageStr) {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("otherWardsAdmissions");
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
-        sql.setQuery("select b.patient_id\n" +
+        sql.setQuery("select b.encounter_id\n" +
                 "from location_tag_map ltm\n" +
                 "         inner join openmrs.location_tag t on ltm.location_tag_id = t.location_tag_id\n" +
-                "         inner join (select p.patient_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
+                "         inner join (select p.patient_id,a.encounter_id, p.bed_id, p.date_started, p.date_stopped, m.location_id\n" +
                 "                     from bed_patient_assignment_map p\n" +
                 "                              inner join bed_location_map m on p.bed_id = m.bed_id\n" +
-                "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)) b\n" +
+                "                               inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = p.patient_id\n" +
+                "                              inner join kenyaemr_etl.etl_inpatient_admission a on p.patient_id = a.patient_id and date(p.date_started) = date(a.admission_date)\n" +
+                "                              where TIMESTAMPDIFF(YEAR, d.DOB, date(a.admission_date)) "+ageStr+") b\n" +
                 "                    on ltm.location_id = b.location_id\n" +
-                "where t.uuid in ("+wardTypeList+");");
+                "where t.uuid in ("+wardTypeList+") group by b.encounter_id;");
         return sql;
     }
 }

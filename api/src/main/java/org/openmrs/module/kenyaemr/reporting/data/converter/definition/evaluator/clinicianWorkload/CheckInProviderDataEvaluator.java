@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.clinicianWorkload.CheckinProviderDataDefinition;
-import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
-import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
+import org.openmrs.module.reporting.data.visit.EvaluatedVisitData;
+import org.openmrs.module.reporting.data.visit.definition.VisitDataDefinition;
+import org.openmrs.module.reporting.data.visit.evaluator.VisitDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,13 +27,13 @@ import java.util.Map;
  * Evaluates a CheckinProviderDataDefinition
  */
 @Handler(supports = CheckinProviderDataDefinition.class, order = 50)
-public class CheckInProviderDataEvaluator implements PersonDataEvaluator {
+public class CheckInProviderDataEvaluator implements VisitDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
+    public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
         String qry = "WITH filtered_patients AS (\n" +
                 "    SELECT\n" +
@@ -62,7 +62,7 @@ public class CheckInProviderDataEvaluator implements PersonDataEvaluator {
                 "           AND DATE(v.date_started) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
                 "     )\n" +
                 "SELECT\n" +
-                "    v.patient_id,\n" +
+                "    v.visit_id,\n" +
                 "    v.checked_in_by\n" +
                 "FROM checked_in v\n" +
                 "         JOIN filtered_patients fp ON fp.patient_id = v.patient_id\n" +

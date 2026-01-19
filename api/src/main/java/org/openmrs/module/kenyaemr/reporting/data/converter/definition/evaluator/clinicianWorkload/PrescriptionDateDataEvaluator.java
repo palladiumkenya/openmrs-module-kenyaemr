@@ -11,9 +11,9 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.evaluato
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.data.converter.definition.clinicianWorkload.PrescriptionDateDataDefinition;
-import org.openmrs.module.reporting.data.person.EvaluatedPersonData;
-import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
-import org.openmrs.module.reporting.data.person.evaluator.PersonDataEvaluator;
+import org.openmrs.module.reporting.data.visit.EvaluatedVisitData;
+import org.openmrs.module.reporting.data.visit.definition.VisitDataDefinition;
+import org.openmrs.module.reporting.data.visit.evaluator.VisitDataEvaluator;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
@@ -27,13 +27,13 @@ import java.util.Map;
  * Evaluates a PrescriptionDateDataDefinition
  */
 @Handler(supports = PrescriptionDateDataDefinition.class, order = 50)
-public class PrescriptionDateDataEvaluator implements PersonDataEvaluator {
+public class PrescriptionDateDataEvaluator implements VisitDataEvaluator {
 
     @Autowired
     private EvaluationService evaluationService;
 
-    public EvaluatedPersonData evaluate(PersonDataDefinition definition, EvaluationContext context) throws EvaluationException {
-        EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
+    public EvaluatedVisitData evaluate(VisitDataDefinition definition, EvaluationContext context) throws EvaluationException {
+        EvaluatedVisitData c = new EvaluatedVisitData(definition, context);
 
         String qry = "WITH filtered_patients AS (\n" +
                 "    SELECT patient_id\n" +
@@ -63,7 +63,7 @@ public class PrescriptionDateDataEvaluator implements PersonDataEvaluator {
                 "         WHERE do.visit_date BETWEEN :startDate AND :endDate\n" +
                 "     )\n" +
                 "SELECT\n" +
-                "   v.patient_id,\n" +
+                "   v.visit_id,\n" +
                 "    IFNULL(p.prescription_date,'Not Done') AS prescription_date\n" +
                 "FROM checked_in v\n" +
                 "         JOIN filtered_patients fp ON fp.patient_id = v.patient_id\n" +

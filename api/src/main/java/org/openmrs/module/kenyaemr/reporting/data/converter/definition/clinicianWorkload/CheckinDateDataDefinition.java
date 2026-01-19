@@ -11,6 +11,7 @@ package org.openmrs.module.kenyaemr.reporting.data.converter.definition.clinicia
 
 import org.openmrs.module.reporting.data.BaseDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.PersonDataDefinition;
+import org.openmrs.module.reporting.data.visit.definition.VisitDataDefinition;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
 
@@ -18,7 +19,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Checkin Date Data Definition Column
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-public class CheckinDateDataDefinition extends BaseDataDefinition implements PersonDataDefinition {
+public class CheckinDateDataDefinition extends BaseDataDefinition implements VisitDataDefinition {
 
     public static final long serialVersionUID = 1L;
 
