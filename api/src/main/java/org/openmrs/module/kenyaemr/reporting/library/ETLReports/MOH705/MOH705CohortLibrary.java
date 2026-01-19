@@ -92,7 +92,7 @@ public class MOH705CohortLibrary {
 
 		String sqlQuery = "SELECT ce.patient_id FROM kenyaemr_etl.etl_clinical_encounter ce inner join encounter_diagnosis x on ce.patient_id = x.patient_id and ce.encounter_id = x.encounter_id\n" +
 				"  INNER JOIN kenyaemr_etl.etl_patient_demographics d on ce.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
-				"    WHERE x.diagnosis_coded NOT in ("+diagnosisList+") and x.dx_rank = 2 and date(x.date_created) between date(:startDate) and date(:endDate);\n";
+				"    WHERE x.diagnosis_coded NOT in ("+diagnosisList+") and x.dx_rank = 2 and ce.diagnosis_category = 'New' and date(x.date_created) between date(:startDate) and date(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("allOtherDiseasesUnderFive");
 		cd.setQuery(sqlQuery);
@@ -110,7 +110,7 @@ public class MOH705CohortLibrary {
 	public CohortDefinition allOtherDiseasesAboveFive(String age, String  diagnosisList) {
 		String sqlQuery = "SELECT ce.patient_id FROM kenyaemr_etl.etl_clinical_encounter ce inner join encounter_diagnosis x on ce.patient_id = x.patient_id and ce.encounter_id = x.encounter_id\n" +
 				"INNER JOIN kenyaemr_etl.etl_patient_demographics d on ce.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
-			    "WHERE x.diagnosis_coded NOT in ("+diagnosisList+") and x.dx_rank = 2 and date(x.date_created) between date(:startDate) and date(:endDate);\n";
+			    "WHERE x.diagnosis_coded NOT in ("+diagnosisList+") and x.dx_rank = 2 and ce.diagnosis_category = 'New' and date(x.date_created) between date(:startDate) and date(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("allOtherDiseasesAboveFive");
 		cd.setQuery(sqlQuery);
@@ -127,7 +127,7 @@ public class MOH705CohortLibrary {
 	public CohortDefinition newAttendances(String age) {
 		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v " +
 				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON v.patient_id = d.patient_id " +
-				"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id " +
+				"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id" +
 				"WHERE timestampdiff(YEAR, date(d.dob), date(:endDate)) " + age + " " +
 				"AND v.visit_type = 'New visit' " +
 				"AND ed.dx_rank = 2 " +
@@ -150,7 +150,7 @@ public class MOH705CohortLibrary {
 	public CohortDefinition reAttendances(String age) {
 		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v " +
 				"INNER JOIN kenyaemr_etl.etl_patient_demographics d ON v.patient_id = d.patient_id " +
-				"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id " +
+				"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id" +
 				"WHERE timestampdiff(YEAR, date(d.dob), date(:endDate)) " + age + " " +
 				"AND v.visit_type = 'Revisit' " +
 				"AND ed.dx_rank = 2 " +
@@ -172,7 +172,8 @@ public class MOH705CohortLibrary {
 	public CohortDefinition referralsFromOtherFacilities(String age) {
 		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v\n" +
 			"INNER JOIN kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
-			"WHERE v.referral_to = 'This health facility' and date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id\n" +
+			"WHERE v.referral_to = 'This health facility' and ed.dx_rank = 2 and v.diagnosis_category = 'New' and date(v.visit_date) between date(:startDate) and date(:endDate);";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("referralsFromOther");
 		cd.setQuery(sqlQuery);
@@ -189,7 +190,8 @@ public class MOH705CohortLibrary {
 	public CohortDefinition referralsToOtherFacilities(String age) {
 		String sqlQuery = "SELECT v.patient_id FROM kenyaemr_etl.etl_clinical_encounter v\n" +
 			"INNER JOIN kenyaemr_etl.etl_patient_demographics d on v.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
-			"WHERE v.referral_to = 'Other health facility' and date(v.visit_date) between date(:startDate) and date(:endDate);";
+			"INNER JOIN encounter_diagnosis ed ON v.patient_id = ed.patient_id AND v.encounter_id = ed.encounter_id\n" +
+			"WHERE v.referral_to = 'Other health facility' and ed.dx_rank = 2 and v.diagnosis_category = 'New' and date(v.visit_date) between date(:startDate) and date(:endDate);";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("referralsToOther");
 		cd.setQuery(sqlQuery);
@@ -209,7 +211,7 @@ public class MOH705CohortLibrary {
 		String sqlQuery = "SELECT x.patient_id FROM encounter_diagnosis x\n" +
 			"  INNER JOIN kenyaemr_etl.etl_patient_demographics d on x.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
 			"  INNER JOIN kenyaemr_etl.etl_clinical_encounter v on x.encounter_id = v.encounter_id and v.patient_outcome = 159\n" +
-			"    WHERE x.diagnosis_coded in ("+diagnosisList+") and date(x.date_created) between date(:startDate) and date(:endDate);\n";
+			"  WHERE x.diagnosis_coded in ("+diagnosisList+") and date(x.date_created) between date(:startDate) and date(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("deathDueToRoadTrafficInjuries");
 		cd.setQuery(sqlQuery);
@@ -228,8 +230,8 @@ public class MOH705CohortLibrary {
 
 		String sqlQuery = "SELECT x.patient_id FROM encounter_diagnosis x\n" +
 			"  INNER JOIN kenyaemr_etl.etl_patient_demographics d on x.patient_id = d.patient_id and timestampdiff(YEAR, date(d.dob),date(:endDate)) "+ age +"\n" +
-			"  INNER JOIN kenyaemr_etl.etl_clinical_encounter v on x.encounter_id = v.encounter_id and v.patient_outcome != 159\n" +
-			"    WHERE x.diagnosis_coded in ("+diagnosisList+") and date(x.date_created) between date(:startDate) and date(:endDate);\n";
+			"  INNER JOIN kenyaemr_etl.etl_clinical_encounter v on v.patient_id = x.patient_id and x.encounter_id = v.encounter_id and v.patient_outcome != 159\n" +
+			"    WHERE x.diagnosis_coded in ("+diagnosisList+") and x.dx_rank = 2 and v.diagnosis_category = 'New' and date(x.date_created) between date(:startDate) and date(:endDate);\n";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("roadTrafficInjuries");
 		cd.setQuery(sqlQuery);
@@ -246,9 +248,17 @@ public class MOH705CohortLibrary {
 	 */
 	public CohortDefinition patientLabTests(List<Integer> labTestList) {
 		String labTest = String.valueOf(labTestList).replaceAll("\\[", "(").replaceAll("\\]",")");
-		String sqlQuery = "select x.patient_id from kenyaemr_etl.etl_laboratory_extract x\n" +
-			" inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = x.patient_id and  p.voided = 0\n" +
-			"where x.lab_test in " + labTest + " and date(visit_date) between date(:startDate) and date(:endDate);";
+		String sqlQuery = "select x.patient_id\n" +
+				"from kenyaemr_etl.etl_laboratory_extract x\n" +
+				"         inner join kenyaemr_etl.etl_patient_demographics p on p.patient_id = x.patient_id and p.voided = 0\n" +
+				"         inner join (select v.patient_id, v.encounter_id, v.visit_date\n" +
+				"                     from kenyaemr_etl.etl_clinical_encounter v\n" +
+				"                              inner join encounter_diagnosis ed\n" +
+				"                                         on v.patient_id = ed.patient_id and v.encounter_id = ed.encounter_id and ed.dx_rank = 2\n" +
+				"                     where v.diagnosis_category = 'New') v\n" +
+				"                    on v.patient_id = x.patient_id and v.visit_date = x.date_test_requested\n" +
+				"where x.lab_test in "+labTest+" date(x.date_test_requested) between date(:startDate) and date(:endDate)\n" +
+				"group by lab_test;";
 		SqlCohortDefinition cd = new SqlCohortDefinition();
 		cd.setName("patientsLabTest");
 		cd.setQuery(sqlQuery);
