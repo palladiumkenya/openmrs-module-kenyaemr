@@ -52,6 +52,14 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     static final int NEW_VISIT = 164180, RE_ATT= 160530, FP_RE_ATT = 164142;
     static final int CURED = 162677, DECEASED = 159, ABSCONDED = 160431, LEFT_AGAINST_MEDICAL_ADVISE = 1694, REFERRED_OUT = 164165;
     static final int CASH_PAYMENT_MODE = 168883, MOBILE_MONEY_PAYMENT_MODE = 168885, INSURANCE_PAYMENT_MODE = 168886;
+    static final char MALE = 'M';
+    static final char FEMALE = 'F';
+    static final String UNDER_5_YEARS = "<5";
+    static final String BTWN_5_AND_59_YEARS = "BETWEEN 5 AND 59";
+    static final String _5_YEARS_AND_ABOVE = ">=5";
+    static final String _60_YEARS_AND_ABOVE = "BETWEEN 5 AND 59";
+    static final String NEW_VISIT_STR = "New visit";
+    static final String RE_ATT_STR = "Revisit";
 
     static final String MEDICAL_WARD = "efa4143f-c6ae-44b5-8ce5-45cbdbbda934";
     static final String MATERNITY_WARD = "b95dd376-fa35-40a6-b140-d144c5f22f62";
@@ -762,11 +770,27 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("gender", map(commonDimensionLibrary.gender(), ""));
         dsd.addDimension("state", map(commonDimensionLibrary.newOrRevisits(), "startDate=${startDate},endDate=${endDate}"));
 
-        EmrReportingUtils.addRow(dsd, "General OP New", "",
-                ReportUtils.map(moh717IndicatorLibrary.getPatientsWithNewClinicalEncounterWithinReportingPeriod(), indParams), moh717Disaggregations, Arrays.asList("01", "02", "03", "04", "05","06"));
+        dsd.addColumn( "General OP New (Male <5)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(UNDER_5_YEARS, MALE, NEW_VISIT_STR), indParams),"");
+        dsd.addColumn( "General OP New (Female <5)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(UNDER_5_YEARS, FEMALE, NEW_VISIT_STR), indParams),"");
+        dsd.addColumn( "General OP New (Male 5-59)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, MALE, NEW_VISIT_STR), indParams),"");
+        dsd.addColumn( "General OP New (Female 5-59)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, FEMALE, NEW_VISIT_STR), indParams),"");
 
-        EmrReportingUtils.addRow(dsd, "General OP RE-ATT", "",
-                ReportUtils.map(moh717IndicatorLibrary.getPatientsWithReturnClinicalEncounterWithinReportingPeriod(), indParams), moh717Disaggregations, Arrays.asList("01", "02", "03", "04", "05","06"));
+        dsd.addColumn( "General OP RE-ATT (Male <5)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(UNDER_5_YEARS, MALE, RE_ATT_STR), indParams),"");
+        dsd.addColumn( "General OP RE-ATT (Female <5)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(UNDER_5_YEARS, FEMALE, RE_ATT_STR), indParams),"");
+        dsd.addColumn( "General OP RE-ATT (Male 5-59)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, MALE, RE_ATT_STR), indParams),"");
+        dsd.addColumn( "General OP RE-ATT (Female 5-59)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, FEMALE, RE_ATT_STR), indParams),"");
+        dsd.addColumn( "General OP New (60+)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(_60_YEARS_AND_ABOVE, FEMALE, RE_ATT_STR), indParams),"");
+        dsd.addColumn( "General OP RE-ATT (60+)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(_60_YEARS_AND_ABOVE, FEMALE, RE_ATT_STR), indParams),"");
 
         dsd.addColumn("New CWC Visits", "",
                 ReportUtils.map(moh717IndicatorLibrary.newCWCVisits(), indParams), "");
@@ -853,14 +877,21 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Computerized Tomography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(computerizedTomographyList), indParams), "");
         dsd.addColumn( "Mammography", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(mammographyList), indParams), "");
         dsd.addColumn( "Obstetric ultrasound", "", ReportUtils.map(moh717IndicatorLibrary.xrayAndImaging(obstetricUltrasoundList), indParams), "");
-        EmrReportingUtils.addRow(dsd, "Casts Fixed (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,NEW_VISIT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Casts Fixed (Revisit)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,RE_ATT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Tractions Fixed (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,tractionsFixedList,NEW_VISIT), indParams),under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Closed Reductions (New)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,NEW_VISIT), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Closed Reductions (Revisit)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,RE_ATT), indParams),under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Cast Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Tractions Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,tractionRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "Ex Fixator Removal", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        dsd.addColumn( "Casts Fixed (New Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,NEW_VISIT, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn( "Casts Fixed (New 5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,NEW_VISIT, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn( "Casts Fixed (Revisit Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,RE_ATT, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn( "Casts Fixed (Revisit 5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,castsFixedList,RE_ATT, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn( "Tractions Fixed (New Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,tractionsFixedList,NEW_VISIT,UNDER_5_YEARS), indParams),"");
+        dsd.addColumn( "Tractions Fixed (New 5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,tractionsFixedList,NEW_VISIT,_5_YEARS_AND_ABOVE), indParams),"");
+        dsd.addColumn( "Closed Reductions (New Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,NEW_VISIT,UNDER_5_YEARS), indParams), "");
+        dsd.addColumn( "Closed Reductions (New 5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,NEW_VISIT,_5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn( "Closed Reductions (Revisit Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,RE_ATT,UNDER_5_YEARS), indParams),"");
+        dsd.addColumn( "Closed Reductions (Revisit 5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicTraumaServices(ORTHOPEDIC_FORM,closedReductionsList,RE_ATT,_5_YEARS_AND_ABOVE), indParams),"");
+        dsd.addColumn( "Cast Removal (Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList,UNDER_5_YEARS), indParams), "");
+        dsd.addColumn( "Cast Removal (5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,castRemovalList,_5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn( "Tractions Removal (Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,tractionRemovalList,UNDER_5_YEARS), indParams), "");
+        dsd.addColumn( "Tractions Removal (5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,tractionRemovalList,_5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn( "Ex Fixator Removal (5+)", "", ReportUtils.map(moh717IndicatorLibrary.orthopaedicRemovalServices(ORTHOPEDIC_FORM,exFixatorRemovalList,_5_YEARS_AND_ABOVE), indParams), "");
 
         // In-patient
         // Discharges
@@ -928,20 +959,34 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn( "Referrals Out of the Facility (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherInpatientExitStatus(REFERRED_OUT,EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), "");
 
         // Admissions
-        EmrReportingUtils.addRow(dsd,"Admissions (Medical)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MEDICAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Surgical)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(SURGICAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Obst And Gyn)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(OBST_GYN_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Paediatrics)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PAEDIATRICS_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Maternity)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MATERNITY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Eye)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(EYE_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Nursery And Newborn)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(NURSERY_NEW_BORN_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Orthopaedic)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ORTHOPAEDIC_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Isolation)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ISOLATION_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Amenity)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(AMENITY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Psychiatry)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PSYCHIATRY_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (ICU)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ICU_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Renal)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(RENAL_WARD), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd,"Admissions (Other Wards)", "", ReportUtils.map(moh717IndicatorLibrary.otherWardsAdmissions(EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST)), indParams), under5AndAboveDisaggregations, Arrays.asList("01", "02", "03"));
+        dsd.addColumn("Admissions (Medical Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MEDICAL_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Medical 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MEDICAL_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Surgical Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(SURGICAL_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Surgical 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(SURGICAL_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Obst And Gyn Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(OBST_GYN_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Obst And Gyn 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(OBST_GYN_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Paediatrics Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PAEDIATRICS_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Paediatrics 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PAEDIATRICS_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Maternity Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MATERNITY_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Maternity 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(MATERNITY_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Eye Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(EYE_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Eye 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(EYE_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Nursery And Newborn Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(NURSERY_NEW_BORN_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Nursery And Newborn 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(NURSERY_NEW_BORN_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Orthopaedic Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ORTHOPAEDIC_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Orthopaedic 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ORTHOPAEDIC_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Isolation Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ISOLATION_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Isolation 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ISOLATION_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Amenity Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(AMENITY_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Amenity 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(AMENITY_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Psychiatry Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PSYCHIATRY_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Psychiatry 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(PSYCHIATRY_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (ICU Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ICU_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (ICU 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(ICU_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Renal Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(RENAL_WARD, UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Renal 5+)", "", ReportUtils.map(moh717IndicatorLibrary.stdWardsAdmissions(RENAL_WARD, _5_YEARS_AND_ABOVE), indParams), "");
+        dsd.addColumn("Admissions (Other Wards Under 5)", "", ReportUtils.map(moh717IndicatorLibrary.otherWardsAdmissions(EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST), UNDER_5_YEARS), indParams), "");
+        dsd.addColumn("Admissions (Other Wards 5+)", "", ReportUtils.map(moh717IndicatorLibrary.otherWardsAdmissions(EmrUtils.formatListWithQuotes(OTHER_WARDS_LIST), _5_YEARS_AND_ABOVE), indParams), "");
 
         return dsd;
     }

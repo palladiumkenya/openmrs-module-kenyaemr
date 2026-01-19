@@ -11,20 +11,19 @@ package org.openmrs.module.kenyaemr.reporting.cohort.definition.evaluator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Cohort;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.ClinicianWorkloadCohortDefinition;
-import org.openmrs.module.reporting.cohort.EvaluatedCohort;
-import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
-import org.openmrs.module.reporting.cohort.definition.evaluator.CohortDefinitionEvaluator;
+import org.openmrs.module.reporting.common.ObjectUtil;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
+import org.openmrs.module.reporting.query.visit.VisitQueryResult;
+import org.openmrs.module.reporting.query.visit.definition.VisitQuery;
+import org.openmrs.module.reporting.query.visit.evaluator.VisitQueryEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ import java.util.List;
  * This cohort definition is used to find patients who have been checked in within a period
  */
 @Handler(supports = {ClinicianWorkloadCohortDefinition.class})
-public class ClinicianWorkloadCohortDefinitionEvaluator implements CohortDefinitionEvaluator {
+public class ClinicianWorkloadCohortDefinitionEvaluator implements VisitQueryEvaluator {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
@@ -40,14 +39,10 @@ public class ClinicianWorkloadCohortDefinitionEvaluator implements CohortDefinit
 	EvaluationService evaluationService;
 
     @Override
-    public EvaluatedCohort evaluate(CohortDefinition cohortDefinition, EvaluationContext context) throws EvaluationException {
+    public VisitQueryResult evaluate(VisitQuery visitQuery, EvaluationContext context) throws EvaluationException {
 
-		ClinicianWorkloadCohortDefinition definition = (ClinicianWorkloadCohortDefinition) cohortDefinition;
-
-        if (definition == null)
-            return null;
-
-		Cohort newCohort = new Cohort();
+		context = ObjectUtil.nvl(context, new EvaluationContext());
+		VisitQueryResult queryResult = new VisitQueryResult(visitQuery, context);
 
 		String qry="WITH filtered_patients AS (SELECT openmrs_id, patient_id\n" +
 				"                           FROM kenyaemr_etl.etl_patient_demographics\n" +
@@ -57,7 +52,7 @@ public class ClinicianWorkloadCohortDefinitionEvaluator implements CohortDefinit
 				"                             JOIN filtered_patients p ON p.patient_id = v.patient_id\n" +
 				"                    WHERE v.voided = 0\n" +
 				"                      AND date(v.date_started) between date(:startDate) and date(:endDate))\n" +
-				"SELECT v.patient_id\n" +
+				"SELECT v.visit_id\n" +
 				"FROM filtered_patients fp\n" +
 				"         INNER JOIN checked_in v ON v.patient_id = fp.patient_id\n" +
 				"WHERE v.checkin_date between date(:startDate) and date(:endDate);";
@@ -69,8 +64,8 @@ public class ClinicianWorkloadCohortDefinitionEvaluator implements CohortDefinit
 		builder.addParameter("startDate", startDate);
 		builder.addParameter("endDate", endDate);
 
-		List<Integer> ptIds = evaluationService.evaluateToList(builder, Integer.class, context);
-		newCohort.setMemberIds(new HashSet<Integer>(ptIds));
-		return new EvaluatedCohort(newCohort, definition, context);
+		List<Integer> results = evaluationService.evaluateToList(builder, Integer.class, context);
+		queryResult.getMemberIds().addAll(results);
+		return queryResult;
     }
 }

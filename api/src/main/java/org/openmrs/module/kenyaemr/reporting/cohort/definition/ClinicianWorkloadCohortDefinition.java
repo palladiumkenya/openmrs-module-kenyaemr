@@ -9,16 +9,18 @@
  */
 package org.openmrs.module.kenyaemr.reporting.cohort.definition;
 
-import org.openmrs.module.reporting.cohort.definition.BaseCohortDefinition;
+import org.openmrs.Visit;
 import org.openmrs.module.reporting.common.Localized;
 import org.openmrs.module.reporting.definition.configuration.ConfigurationPropertyCachingStrategy;
 import org.openmrs.module.reporting.evaluation.caching.Caching;
+import org.openmrs.module.reporting.query.BaseQuery;
+import org.openmrs.module.reporting.query.visit.definition.VisitQuery;
 
 /**
  * EvaluatesClinicianWorkloadCohortDefinition cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
 @Localized("reporting.ClinicianWorkloadCohortDefinition")
-public class ClinicianWorkloadCohortDefinition extends BaseCohortDefinition {
+public class ClinicianWorkloadCohortDefinition extends BaseQuery<Visit> implements VisitQuery {
 
 }

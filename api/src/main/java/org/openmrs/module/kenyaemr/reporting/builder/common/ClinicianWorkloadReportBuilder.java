@@ -38,7 +38,7 @@ import org.openmrs.module.reporting.data.person.definition.ConvertedPersonDataDe
 import org.openmrs.module.reporting.data.person.definition.GenderDataDefinition;
 import org.openmrs.module.reporting.data.person.definition.PreferredNameDataDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
-import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
+import org.openmrs.module.reporting.dataset.definition.VisitDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
@@ -69,7 +69,7 @@ public class ClinicianWorkloadReportBuilder extends AbstractReportBuilder {
     }
 
     protected DataSetDefinition datasetColumns() {
-        PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+        VisitDataSetDefinition dsd = new VisitDataSetDefinition();
         dsd.setName("providerWorkload");
         dsd.setDescription("Provider workload information");
         dsd.addSortCriteria("Visit Date", SortCriteria.SortDirection.ASC);
