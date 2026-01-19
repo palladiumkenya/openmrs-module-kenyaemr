@@ -59,7 +59,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number = 1 and form = 'MCH Antenatal Initial Visit group by v.encounter_id';"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number = 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -70,7 +70,7 @@ public class Moh717CohortLibrary {
         sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
         sql.addParameter(new Parameter("endDate", "End Date", Date.class));
         sql.setQuery(
-                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and form = 'MCH ANC Followup' and v.anc_visit_number > 1 group by v.encounter_id;"
+                "select v.encounter_id from kenyaemr_etl.etl_mch_antenatal_visit v where date(v.visit_date) between date(:startDate) and date(:endDate) and v.anc_visit_number > 1 group by v.encounter_id;"
         );
         return sql;
     }
@@ -352,11 +352,11 @@ public class Moh717CohortLibrary {
         sql.setQuery("select f.latest_visit_encounter\n" +
                 "from kenyaemr_etl.etl_tb_enrollment e\n" +
                 "         inner join (select f.patient_id,max(f.encounter_id) as latest_visit_encounter, min(f.visit_date) as first_visit, max(f.visit_date) as latest_visit\n" +
-                "                     from kenyaemr_etl.etl_tb_follow_up_visit f\n" +
+                "                     from kenyaemr_etl.etl_tb_follow_up_visit f where date(f.visit_date) < date(:endDate)\n" +
                 "                     group by f.patient_id) f on e.patient_id = f.patient_id\n" +
                 "where f.latest_visit between date(:startDate) and date(:endDate)\n" +
                 "  and f.first_visit < date(:startDate)\n" +
-                "  and e.visit_date < date(:startDate) group by f.encounter_id;");
+                "  and e.visit_date < date(:startDate) group by f.latest_visit_encounter;");
         return sql;
     }
     public CohortDefinition newOnCCClinic() {
