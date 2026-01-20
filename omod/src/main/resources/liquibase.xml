@@ -495,6 +495,50 @@
 		</sql>
 	</changeSet>
 
+    <!--Creating adr report email log table-->
+	<changeSet author="makombe" id="${project.parent.artifactId}-20251120-1020">
+		<preConditions onFail="MARK_RAN">
+		<not>
+			<tableExists tableName="adr_report_email_log" />
+		</not>
+		</preConditions>
+		<comment>
+				Creating the adr_report_email_log table
+			</comment>
+		<createTable tableName="adr_report_email_log">
+		<column autoIncrement="true" name="adr_report_email_log_id" type="INT">
+			<constraints nullable="false" primaryKey="true" />
+		</column>
+		<column name="patient_id" type="INT">
+			<constraints nullable="false" />
+		</column>
+		<column name="encounter_id" type="INT">
+			<constraints nullable="false" />
+		</column>
+		<column name="sent_by_user_id" type="INT">
+		<constraints nullable="false" />
+		</column>
+		<column name="date_sent" type="DATETIME">
+			<constraints nullable="false" />
+		</column>  
+		<column name="recipient_email" type="VARCHAR(255)">
+			<constraints nullable="false" />
+		</column>
+		<column name="status" type="VARCHAR(500)">
+		</column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="fk_adr_log_patient"
+			baseTableName="adr_report_email_log" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+		<addForeignKeyConstraint constraintName="fk_adr_log_user"
+			baseTableName="adr_report_email_log" baseColumnNames="sent_by_user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="fk_adr_log_encounter"
+			baseTableName="adr_report_email_log" baseColumnNames="encounter_id"
+			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+  </changeSet>
+
 </databaseChangeLog>
 
 

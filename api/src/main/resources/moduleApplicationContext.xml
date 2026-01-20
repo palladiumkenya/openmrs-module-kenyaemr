@@ -11,9 +11,8 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:p="http://www.springframework.org/schema/p"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<!-- ===================== Content ===================== -->
 
@@ -116,7 +115,7 @@
 		<constructor-arg value="510" />
 	</bean>
 
-		<bean id="kenyaemr.app.directory" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+	<bean id="kenyaemr.app.directory" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
 		<constructor-arg value="kenyaemr.directory" />
 		<constructor-arg value="Directory" />
 		<constructor-arg value="kenyaemr/directory/directoryHome.page" />
@@ -166,35 +165,48 @@
 			<map>
 				<entry key="Urine Tests">
 					<list>
-						<bean parent="TestDefinition" p:concept="302AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- URINALYSIS -->
-						<bean parent="TestDefinition" p:concept="45AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- URINE PREGNANCY TEST -->
+						<bean parent="TestDefinition" p:concept="302AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- URINALYSIS -->
+						<bean parent="TestDefinition" p:concept="45AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- URINE PREGNANCY TEST -->
 					</list>
 				</entry>
 				<entry key="Blood Tests">
 					<list>
-						<bean parent="TestDefinition" p:concept="21AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- HAEMOGLOBIN -->
-						<bean parent="TestDefinition" p:concept="1319AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- LYMPHOCYTE COUNT -->
+						<bean parent="TestDefinition" p:concept="21AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- HAEMOGLOBIN -->
+						<bean parent="TestDefinition" p:concept="1319AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- LYMPHOCYTE COUNT -->
 						<!-- Missing: Serum Cryptococcal Antigen -->
 						<!--<bean parent="TestDefinition" p:concept="856AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />&lt;!&ndash; HIV VIRAL LOAD &ndash;&gt;-->
-						<bean parent="TestDefinition" p:concept="855AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- ERYTHROCYTE SEDIMENTATION RATE -->
-						<bean parent="TestDefinition" p:concept="857AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- BLOOD UREA NITROGEN -->
+						<bean parent="TestDefinition" p:concept="855AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- ERYTHROCYTE SEDIMENTATION RATE -->
+						<bean parent="TestDefinition" p:concept="857AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- BLOOD UREA NITROGEN -->
 					</list>
 				</entry>
 				<entry key="Biochemistry">
 					<list>
-						<bean parent="TestDefinition" p:concept="1012AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- SERUM LACTATE -->
-						<bean parent="TestDefinition" p:concept="887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- SERUM GLUCOSE -->
-						<bean parent="TestDefinition" p:concept="654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- SERUM GLUTAMIC-PYRUVIC TRANSAMINASE -->
-						<bean parent="TestDefinition" p:concept="790AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- SERUM CREATININE -->
+						<bean parent="TestDefinition" p:concept="1012AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- SERUM LACTATE -->
+						<bean parent="TestDefinition" p:concept="887AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- SERUM GLUCOSE -->
+						<bean parent="TestDefinition" p:concept="654AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- SERUM GLUTAMIC-PYRUVIC TRANSAMINASE -->
+						<bean parent="TestDefinition" p:concept="790AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- SERUM CREATININE -->
 						<!-- Missing: Lipid profile -->
-						<bean parent="TestDefinition" p:concept="1299AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- AMYLASE -->
+						<bean parent="TestDefinition" p:concept="1299AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- AMYLASE -->
 					</list>
 				</entry>
 				<entry key="Parasitology and Microbiology">
 					<list>
-						<bean parent="TestDefinition" p:concept="304AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- STOOL EXAM -->
+						<bean parent="TestDefinition" p:concept="304AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- STOOL EXAM -->
 						<!-- Missing: Stool Cultures -->
-						<bean parent="TestDefinition" p:concept="32AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" /><!-- MALARIAL SMEAR -->
+						<bean parent="TestDefinition" p:concept="32AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<!-- MALARIAL SMEAR -->
 					</list>
 				</entry>
 			</map>
@@ -211,7 +223,9 @@
 			<bean class="org.openmrs.module.kenyaemr.api.impl.KenyaEmrServiceImpl">
 				<property name="kenyaEmrDAO">
 					<bean class="org.openmrs.module.kenyaemr.api.db.hibernate.HibernateKenyaEmrDAO">
-						<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+						<property name="sessionFactory">
+							<ref bean="sessionFactory"/>
+						</property>
 					</bean>
 				</property>
 			</bean>
@@ -224,6 +238,23 @@
 		</property>
 	</bean>
 
+	<bean id="adrEmailLogDao" class="org.openmrs.module.kenyaemr.api.db.hibernate.HibernateAdrEmailLogDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<bean id="adverseDrugReactionEmailService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager"/>
+		<property name="target">
+			<bean class="org.openmrs.module.kenyaemr.api.impl.AdverseDrugReactionEmailServiceImpl">
+				<property name="adrEmailLogDao" ref="adrEmailLogDao"/>
+			</bean>
+		</property>
+		<property name="preInterceptors" ref="serviceInterceptors"/>
+		<property name="transactionAttributeSource" ref="transactionAttributeSource"/>
+	</bean>
+
+
+
 	<!-- Register service with OpenMRS -->
 
 	<bean parent="serviceContext">
@@ -231,6 +262,14 @@
 			<list>
 				<value>org.openmrs.module.kenyaemr.api.KenyaEmrService</value>
 				<ref bean="kenyaEmrService"/>
+			</list>
+		</property>
+	</bean>
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.kenyaemr.api.AdverseDrugReactionEmailService</value>
+				<ref bean="adverseDrugReactionEmailService"/>
 			</list>
 		</property>
 	</bean>

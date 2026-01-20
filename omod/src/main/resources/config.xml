@@ -51,7 +51,7 @@
 	</aware_of_modules>-->
 
 	<!--<aware_of_modules>-->
-		<!--<aware_of_module version="${prepVersion}">org.openmrs.module.prep</aware_of_module>-->
+	<!--<aware_of_module version="${prepVersion}">org.openmrs.module.prep</aware_of_module>-->
 	<!--</aware_of_modules>-->
 
 	<activator>org.openmrs.module.kenyaemr.EmrActivator</activator>
@@ -392,34 +392,34 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-	<property>kenyaemr.hie.claim.response.url</property>
-	<defaultValue>https://apistg.safaricom.co.ke/hie/api/v1/status/ClaimResponse</defaultValue>
-	<description>
+		<property>kenyaemr.hie.claim.response.url</property>
+		<defaultValue>https://apistg.safaricom.co.ke/hie/api/v1/status/ClaimResponse</defaultValue>
+		<description>
 		Url to check submitted claim status/response from HIE
-	</description>
-</globalProperty>
-<globalProperty>
+		</description>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.hie.claim.response.source</property>
 		<defaultValue>hie</defaultValue>
 		<description>
 			Defines whether to check claims status from HIE directly or KeHMIS payment aggregator: Options hie or aggregator
 		</description>
-</globalProperty>
-<globalProperty>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.hie.claim.callback.url</property>
 		<defaultValue>https://billing.kenyahmis.org/api/hie/claim</defaultValue>
 		<description>
 			URL pointing to the payments aggregator that acts as HIE claims callback endpoint
 		</description>
-</globalProperty>
-<globalProperty>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.hie.registry.otp.source</property>
 		<defaultValue>hie</defaultValue>
 		<description>
 			Defines whether to get otp confirmation messages from HIE or KeHMIS : Options hie or kehmis
 		</description>
-</globalProperty>
-<globalProperty>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.conditions.config</property>
 		<defaultValue>114662,115728,149019,117789,117855,2005642,127417, 2008582, 136373,145438, 119692,118631,126513,116004, 128653, 128825, 115968, 113701, 115986, 2003295, 128788, 113744, 116017, 116041, 113689,
 			128988, 2003169, 129069, 113763, 128781,2003211, 116049, 116066, 128955, 113712, 2003278, 157622, 126901,1295,2010623,115115,142474, 2004524, 134721, 2004525, 2004526,2004527, 2004325, 2004326, 2004327, 2004329,2004330, 2004331, 2004332,2004335,121610, 2010615, 125971,
@@ -428,28 +428,65 @@
 		<description>
 			Populate Specific Risk Factors/Chronic Illnesses on Final Diagnosis
 		</description>
-</globalProperty>
-<globalProperty>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.sha.jwt.response.fhirFormat</property>
 		<defaultValue>false</defaultValue>
 		<description>
 			Defines whether to get HIE responses in FHIR format or custom format
 		</description>
-</globalProperty>
-<globalProperty>
+	</globalProperty>
+	<globalProperty>
 		<property>kenyaemr.hie.login.otp</property>
 		<defaultValue>false</defaultValue>
 		<description>
 			Toggle between mandatory user otp confirmation at login: Options true or false
 		</description>
 	</globalProperty>
-<globalProperty>
+	<globalProperty>
 		<property>kenyaemr.pal.kehmis.sms.url</property>
 		<defaultValue>https://sms-service.kenyahmis.org/api/sender</defaultValue>
 		<description>
 			URL for palladiums PAL_KEHMIS sms service
 		</description>
-</globalProperty>
-	
+	</globalProperty>
+
+	<globalProperty>
+		<property>mail.smtp.host</property>
+		<defaultValue></defaultValue>
+		<description>
+			Defines the SMTP host for sending emails
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>mail.smtp.port</property>
+		<defaultValue></defaultValue>
+		<description>
+			Defines the SMTP port for sending emails
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>mail.smtp.username</property>
+		<defaultValue></defaultValue>
+		<description>
+			Defines the SMTP username for sending emails
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>mail.smtp.password</property>
+		<defaultValue></defaultValue>
+		<description>
+			Defines the SMTP password for sending emails
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>mail.from</property>
+		<defaultValue></defaultValue>
+		<description>
+			Defines the email address from which emails are sent
+		</description>
+	</globalProperty>
+
 </module>
         
