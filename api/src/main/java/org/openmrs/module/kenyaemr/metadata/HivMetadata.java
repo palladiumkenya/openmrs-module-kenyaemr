@@ -59,7 +59,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String CLINICAL_ENCOUNTER_HIV_ADDENDUM = "bd598114-4ef4-47b1-a746-a616180ccfc0";
 		public static final String FAMILY_HISTORY = Metadata.Form.HIV_FAMILY_HISTORY;
 		public static final String HIV_DISCONTINUATION = "e3237ede-fa70-451f-9e6c-0908bc39f8b9";
-		public static final String HIV_ENROLLMENT = "e4b506c1-7379-42b6-a374-284469cba8da";
+		public static final String HIV_ENROLLMENT = "592fd92c-35f6-4dd8-8f0d-a401c1e5b2e2";
 		public static final String MOH_257_FACE_PAGE = "47814d87-2e53-45b1-8d05-ac2e944db64c";
 		public static final String MOH_257_ARV_THERAPY = "8f5b3ba5-1677-450f-8445-33b9a38107ae";
 		public static final String MOH_257_VISIT_SUMMARY = "23b4ebbd-29ad-455e-be0e-04aa6bc30798";
@@ -75,7 +75,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		public static final String LAB_ORDERS_FORM_UUID = "2cdeded1-3f69-3bda-beff-1ed2ead94eaf";
 		public static final String HIGH_IIT_INTERVENTION = "6817d322-f938-4f38-8ccf-caa6fa7a499f";
 		public static final String HOME_VISIT_CHECKLIST = "ac3152de-1728-4786-828a-7fb4db0fc384";
-		public static final String HIV_INITIAL_FORM = "592fd92c-35f6-4dd8-8f0d-a401c1e5b2e2";
+		public static final String HIV_INITIAL_FORM = "e4b506c1-7379-42b6-a374-284469cba8da";
 
 	}
 
@@ -132,7 +132,7 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(form("Laboratory Test Orders", "Laboratory Test Orders", _EncounterType.LAB_ORDER, "1", _Form.LAB_ORDERS_FORM_UUID));
 		install(form("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION, "1", _Form.HIGH_IIT_INTERVENTION));
 		install(form("Home Visit Checklist", "Home Visit Checklist Form", _EncounterType.HOME_VISIT_CHECKLIST, "1", _Form.HOME_VISIT_CHECKLIST));
-		install(form("HIV Initial Visit", "HIV Initial Visit Form", _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_INITIAL_FORM));
+		install(form("HIV Initial Form", "HIV Initial Visit Form", _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_INITIAL_FORM));
 
 		install(patientIdentifierType("KDoD number", "Unique Id for KDoD patient", "(?i)^(KDOD)+[0-9]{4,5}$", "Must start with KDoD followed by 4-5 digit number. Example: KDoD12345 or kdod1233",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.KDoD_NUMBER));
