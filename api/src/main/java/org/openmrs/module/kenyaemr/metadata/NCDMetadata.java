@@ -14,7 +14,11 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * OTZ metadata bundle
@@ -22,6 +26,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 @Requires({ CommonMetadata.class })
 public class NCDMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(NCDMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String NCD_INITIAL = "dfcbe5d0-1afb-48a0-8f1e-5e5988b11f15";
@@ -54,10 +60,16 @@ public class NCDMetadata extends AbstractMetadataBundle {
 		install(encounterType("NCD Followup", "NCD followup encounter", _EncounterType.NCD_FOLLOWUP));
 		install(encounterType("NCD Discontinuation", "NCD program discontinuation encounter", _EncounterType.NCD_DISCONTINUATION));
 
-		install(form("NCD Enrollment Form", null, _EncounterType.NCD_INITIAL, "1", _Form.NCD_INITIAL_FORM));
-		install(form("NCD Followup Form", null, _EncounterType.NCD_FOLLOWUP, "1", _Form.NCD_FOLLOWUP_FORM));
-		install(form("NCD Discontinuation Form", null, _EncounterType.NCD_DISCONTINUATION, "1", _Form.NCD_DISCONTINUATION_FORM));
-
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== NCDMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("NCD Enrollment Form", null, _EncounterType.NCD_INITIAL, "1", _Form.NCD_INITIAL_FORM));
+			install(form("NCD Followup Form", null, _EncounterType.NCD_FOLLOWUP, "1", _Form.NCD_FOLLOWUP_FORM));
+			install(form("NCD Discontinuation Form", null, _EncounterType.NCD_DISCONTINUATION, "1", _Form.NCD_DISCONTINUATION_FORM));
+		} else {
+			logger.info("=== NCDMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(program("NCD", "NCD program", _Concept.NCD, _Program.NCD));
 

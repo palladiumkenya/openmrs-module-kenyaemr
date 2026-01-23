@@ -24,8 +24,12 @@ import org.openmrs.module.kenyaemr.datatype.LocationDatatype;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
+
 
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 
@@ -34,6 +38,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
  */
 @Component
 public class CommonMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(CommonMetadata.class);
 
 	public static final String GP_CLIENT_VERIFICATION_USE_EMR_PROXY = "kenyaemr.client.registry.use.emr.proxy";
 	public static final String GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL = "kenyaemr.client.registry.emr.verification.proxy.url";
@@ -82,7 +88,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET = "kenyaemr.hie.il.mediator.client.secret";
 	public static final String GP_HEI_OPT_SOURCE = "kenyaemr.hie.registry.otp.source";
 	public static final String GP_LOGIN_OTP_REQUIREMENT = "kenyaemr.hie.login.otp";
-	public static final String GP_ENABLE_FORMS = "kenyaemr.enable.forms";
+	public static final String GP_ENABLE_FORMS = MetadataUtils.GP_ENABLE_FORMS;
 	
     public static final class _Program {
         public static final String NUTRITION = Metadata.Program.NUTRITION;
@@ -338,21 +344,6 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MORTUARY = "02b67c47-6071-4091-953d-ad21452e830c";
 	}
 
-	/**
-	 * Checks if forms should be installed based on the global property.
-	 * If the global property doesn't exist, defaults to true for backward compatibility.
-	 * 
-	 * @return true if forms should be installed, false otherwise
-	 */
-	private boolean shouldInstallForms() {
-		AdministrationService administrationService = Context.getAdministrationService();
-		org.openmrs.GlobalProperty gp = administrationService.getGlobalPropertyObject(GP_ENABLE_FORMS);
-		if (gp == null || gp.getPropertyValue() == null) {
-			// Default to true if property doesn't exist (backward compatibility)
-			return true;
-		}
-		return gp.getPropertyValue().trim().equalsIgnoreCase("true");
-	}
 
 	/**
 	 * @see org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle#install()
@@ -431,7 +422,10 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("AEFI Investigation", "AEFI Investigation encounter for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION));
 		install(encounterType("Admission", "Indicates that the patient has been admitted for inpatient care, and is not expected to leave the hospital unless discharged.", _EncounterType.IN_PATIENT_ADMISSION));
 
-		if (shouldInstallForms()) {
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== Installing forms because shouldInstallForms() returned true ===");
 			install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
 			install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
 			install(form("Obstetric History", null, _EncounterType.REGISTRATION, "1", _Form.OBSTETRIC_HISTORY));
@@ -533,6 +527,8 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
 			install(form("AEFI Investigation", "Form for recording AEFI Investigation for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION, "1.0", _Form.AEFI_INVESTIGATION_FORM));
 			install(form("In-Patient Admission Form", "Form for Inpatient Admission", _EncounterType.IN_PATIENT_ADMISSION, "1", _Form.IN_PATIENT_ADMISSION_FORM));
+		} else {
+			logger.info("=== SKIPPING form installation because shouldInstallForms() returned false ===");
 		}
 
         install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,

@@ -15,7 +15,11 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * GBV metadata bundle
@@ -23,6 +27,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 @Requires({ CommonMetadata.class })
 public class GBVMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(GBVMetadata.class);
 
 	public static final class _Program {
 
@@ -91,21 +97,28 @@ public class GBVMetadata extends AbstractMetadataBundle {
 		install(encounterType("Violence Physical and Emotional Abuse", "Violence Physical and Emotional Abuse Encounter", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER));
 		install(encounterType("Violence PEP Follow up Encounter", "Violence PEP Follow up Encounter", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER));
 
-		install(form("Violence Enrollment Form", "Gender Based Violence Enrollment Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_ENROLLMENT_FORM));
-		install(form("Violence Trauma Counselling Form", "Gender Based Violence Trauma Counselling Form", _EncounterType.GBV_TRAUMA_COUNSELLING_ENCOUNTER, "1", _Form.GBV_TRAUMA_COUNSELLING_FORM));
-		install(form("Violence Discontinuation Form", "Gender Based Violence Discontinuation Form", _EncounterType.GBV_DISCONTINUATION_ENCOUNTER, "1", _Form.GBV_DISCONTINUATION_FORM));
-		install(form("Violence Community Linkage Form", "Gender Based Violence Community Linkage Form", _EncounterType.GBV_COMMUNITY_LINKAGE_ENCOUNTER, "1", _Form.GBV_COMMUNITY_LINKAGE_FORM));
-		install(form("Violence Legal Form", "Gender Based Violence Legal Form", _EncounterType.GBV_LEGAL_ENCOUNTER, "1", _Form.GBV_LEGAL_FORM));
-		install(form("Violence Perpetrator Details Form", "Gender Based Violence Perpetrator Details Form", _EncounterType.GBV_PERPETRATOR_DETAILS_ENCOUNTER, "1", _Form.GBV_PERPETRATOR_DETAILS_FORM));
-		install(form("Violence Consent Form", "Gender Based Violence Consent Form", _EncounterType.GBV_CONSENT_ENCOUNTER, "1", _Form.GBV_CONSENT_FORM));
-		install(form("PEP Management Non OCN Form", "Gender Based Violence PEP Management Non OCN Form", _EncounterType.PEP_MANAGEMENT_NON_OCN_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_NON_OCN_FORM));
-		install(form("PEP Management OCN Form", "Post Exposure Prophylaxis Management OCN Form", _EncounterType.PEP_MANAGEMENT_OCN_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_OCN_FORM));
-		install(form("PEP Management Survivor Form", "Post Exposure Prophylaxis Management Survivor Form", _EncounterType.PEP_MANAGEMENT_SURVIVOR_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_SURVIVOR_FORM));
-		install(form("Sexual violence Post Rape Care 363A Form", "Sexual violence Post Rape Care 363A Form", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER, "1", _Form.SGBV_POST_RAPE_CARE_PART_A_FORM));
-		install(form("Sexual violence PRC Psychological Assessment 363B Form", "Sexual violence PRC Psychological Assessment 363B Form", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER, "1", _Form.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM));
-		install(form("Violence Physical and Emotional Abuse Form", "Violence Physical and Emotional Abuse Form", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER, "1", _Form.GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM));
-		install(form("Violence PEP Follow up Form", "Violence PEP Follow up Form", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER, "1", _Form.GBV_PEP_FOLLOWUP_FORM));
-		install(form("Violence Initial Form", "Violence Initial Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== GBVMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("Violence Enrollment Form", "Gender Based Violence Enrollment Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_ENROLLMENT_FORM));
+			install(form("Violence Trauma Counselling Form", "Gender Based Violence Trauma Counselling Form", _EncounterType.GBV_TRAUMA_COUNSELLING_ENCOUNTER, "1", _Form.GBV_TRAUMA_COUNSELLING_FORM));
+			install(form("Violence Discontinuation Form", "Gender Based Violence Discontinuation Form", _EncounterType.GBV_DISCONTINUATION_ENCOUNTER, "1", _Form.GBV_DISCONTINUATION_FORM));
+			install(form("Violence Community Linkage Form", "Gender Based Violence Community Linkage Form", _EncounterType.GBV_COMMUNITY_LINKAGE_ENCOUNTER, "1", _Form.GBV_COMMUNITY_LINKAGE_FORM));
+			install(form("Violence Legal Form", "Gender Based Violence Legal Form", _EncounterType.GBV_LEGAL_ENCOUNTER, "1", _Form.GBV_LEGAL_FORM));
+			install(form("Violence Perpetrator Details Form", "Gender Based Violence Perpetrator Details Form", _EncounterType.GBV_PERPETRATOR_DETAILS_ENCOUNTER, "1", _Form.GBV_PERPETRATOR_DETAILS_FORM));
+			install(form("Violence Consent Form", "Gender Based Violence Consent Form", _EncounterType.GBV_CONSENT_ENCOUNTER, "1", _Form.GBV_CONSENT_FORM));
+			install(form("PEP Management Non OCN Form", "Gender Based Violence PEP Management Non OCN Form", _EncounterType.PEP_MANAGEMENT_NON_OCN_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_NON_OCN_FORM));
+			install(form("PEP Management OCN Form", "Post Exposure Prophylaxis Management OCN Form", _EncounterType.PEP_MANAGEMENT_OCN_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_OCN_FORM));
+			install(form("PEP Management Survivor Form", "Post Exposure Prophylaxis Management Survivor Form", _EncounterType.PEP_MANAGEMENT_SURVIVOR_ENCOUNTER, "1", _Form.PEP_MANAGEMENT_SURVIVOR_FORM));
+			install(form("Sexual violence Post Rape Care 363A Form", "Sexual violence Post Rape Care 363A Form", _EncounterType.SGBV_POST_RAPE_CARE_PART_A_ENCOUNTER, "1", _Form.SGBV_POST_RAPE_CARE_PART_A_FORM));
+			install(form("Sexual violence PRC Psychological Assessment 363B Form", "Sexual violence PRC Psychological Assessment 363B Form", _EncounterType.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_ENCOUNTER, "1", _Form.SGBV_PSYCHOLOGICAL_ASSESSMENT_PART_B_FORM));
+			install(form("Violence Physical and Emotional Abuse Form", "Violence Physical and Emotional Abuse Form", _EncounterType.GBV_PHYSICAL_EMOTIONAL_ABUSE_ENCOUNTER, "1", _Form.GBV_PHYSICAL_EMOTIONAL_ABUSE_FORM));
+			install(form("Violence PEP Follow up Form", "Violence PEP Follow up Form", _EncounterType.GBV_PEP_FOLLOWUP_ENCOUNTER, "1", _Form.GBV_PEP_FOLLOWUP_FORM));
+			install(form("Violence Initial Form", "Violence Initial Form", _EncounterType.GBV_ENROLLMENT_ENCOUNTER, "1", _Form.GBV_INITIAL_FORM));
+		} else {
+			logger.info("=== GBVMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 	}
 }

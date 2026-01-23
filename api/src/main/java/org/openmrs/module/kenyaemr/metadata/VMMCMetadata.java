@@ -9,13 +9,15 @@
  */
 package org.openmrs.module.kenyaemr.metadata;
 
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.module.kenyaemr.Metadata;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * VMMC metadata bundle
@@ -23,6 +25,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 @Requires({ CommonMetadata.class })
 public class VMMCMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(VMMCMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String VMMC_DISCONTINUATION = "4f02dfed-a2ec-40c2-b546-85dab5831871";
@@ -64,13 +68,20 @@ public class VMMCMetadata extends AbstractMetadataBundle {
 		install(encounterType("VMMC Client Follow up", "VMMC Client Follow up", _EncounterType.VMMC_CLIENT_FOLLOWUP));
 		install(encounterType("VMMC Immediate Post-Operation Assessment", "VMMC Immediate Post-Operation Assessment", _EncounterType.VMMC_POST_OPERATION));
 
-		install(form("VMMC Enrollment Form", null, _EncounterType.VMMC_ENROLLMENT, "1", _Form.VMMC_ENROLLMENT_FORM));
-		install(form("VMMC Discontinuation Form", null, _EncounterType.VMMC_DISCONTINUATION, "1", _Form.VMMC_DISCONTINUATION_FORM));
-		install(form("VMMC Circumcision Procedure Form", null, _EncounterType.VMMC_PROCEDURE, "1", _Form.VMMC_PROCEDURE_FORM));
-		install(form("VMMC Medical History and Physical Examination Form", null, _EncounterType.VMMC_MEDICAL_HISTORY_EXAMINATION, "1", _Form.VMMC_MEDICAL_HISTORY_EXAMINATION_FORM));
-		install(form("VMMC Client Follow-Up Form", null, _EncounterType.VMMC_CLIENT_FOLLOWUP, "1", _Form.VMMC_CLIENT_FOLLOWUP_FORM));
-		install(form("VMMC Immediate Post-Operation Assessment Form", null, _EncounterType.VMMC_POST_OPERATION, "1", _Form.VMMC_POST_OPERATION_FORM));
-		install(form("VMMC Initial Form", null, _EncounterType.VMMC_ENROLLMENT, "1", _Form.VMMC_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== VMMCMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("VMMC Enrollment Form", null, _EncounterType.VMMC_ENROLLMENT, "1", _Form.VMMC_ENROLLMENT_FORM));
+			install(form("VMMC Discontinuation Form", null, _EncounterType.VMMC_DISCONTINUATION, "1", _Form.VMMC_DISCONTINUATION_FORM));
+			install(form("VMMC Circumcision Procedure Form", null, _EncounterType.VMMC_PROCEDURE, "1", _Form.VMMC_PROCEDURE_FORM));
+			install(form("VMMC Medical History and Physical Examination Form", null, _EncounterType.VMMC_MEDICAL_HISTORY_EXAMINATION, "1", _Form.VMMC_MEDICAL_HISTORY_EXAMINATION_FORM));
+			install(form("VMMC Client Follow-Up Form", null, _EncounterType.VMMC_CLIENT_FOLLOWUP, "1", _Form.VMMC_CLIENT_FOLLOWUP_FORM));
+			install(form("VMMC Immediate Post-Operation Assessment Form", null, _EncounterType.VMMC_POST_OPERATION, "1", _Form.VMMC_POST_OPERATION_FORM));
+			install(form("VMMC Initial Form", null, _EncounterType.VMMC_ENROLLMENT, "1", _Form.VMMC_INITIAL_FORM));
+		} else {
+			logger.info("=== VMMCMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		//Installing identifiers
 		install(program("VMMC", "VMMC program", _Concept.VMMC, _Program.VMMC));

@@ -14,7 +14,11 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * OTZ metadata bundle
@@ -22,6 +26,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 @Requires({ CommonMetadata.class })
 public class OTZMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(OTZMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String OTZ_DISCONTINUATION = "162382b8-0464-11ea-9a9f-362b9e155667";
@@ -54,10 +60,16 @@ public class OTZMetadata extends AbstractMetadataBundle {
 		install(encounterType("OTZ Discontinuation", "Discontinuation from OTZ program", _EncounterType.OTZ_DISCONTINUATION));
 		install(encounterType("OTZ Activity", "Consultation in OTZ Program", _EncounterType.OTZ_ACTIVITY));
 
-		install(form("OTZ Enrollment Form", null, _EncounterType.OTZ_ENROLLMENT, "1", _Form.OTZ_ENROLLMENT_FORM));
-		install(form("OTZ Discontinuation Form", null, _EncounterType.OTZ_DISCONTINUATION, "1", _Form.OTZ_DISCONTINUATION_FORM));
-		install(form("OTZ Activity Form" ,null, _EncounterType.OTZ_ACTIVITY, "1", _Form.OTZ_ACTIVITY_FORM));
-
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== OTZMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("OTZ Enrollment Form", null, _EncounterType.OTZ_ENROLLMENT, "1", _Form.OTZ_ENROLLMENT_FORM));
+			install(form("OTZ Discontinuation Form", null, _EncounterType.OTZ_DISCONTINUATION, "1", _Form.OTZ_DISCONTINUATION_FORM));
+			install(form("OTZ Activity Form" ,null, _EncounterType.OTZ_ACTIVITY, "1", _Form.OTZ_ACTIVITY_FORM));
+		} else {
+			logger.info("=== OTZMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(program("OTZ", "OTZ program", _Concept.OTZ, _Program.OTZ));
 
