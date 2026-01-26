@@ -57,7 +57,7 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
     static final String UNDER_5_YEARS = "<5";
     static final String BTWN_5_AND_59_YEARS = "BETWEEN 5 AND 59";
     static final String _5_YEARS_AND_ABOVE = ">=5";
-    static final String _60_YEARS_AND_ABOVE = "BETWEEN 5 AND 59";
+    static final String _60_YEARS_AND_ABOVE = ">=60";
     static final String NEW_VISIT_STR = "New visit";
     static final String RE_ATT_STR = "Revisit";
 
@@ -778,7 +778,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, MALE, NEW_VISIT_STR), indParams),"");
         dsd.addColumn( "General OP New (Female 5-59)", "",
                 ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, FEMALE, NEW_VISIT_STR), indParams),"");
-
+        dsd.addColumn( "General OP New (60+)", "",
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriodAged60AndAbove(_60_YEARS_AND_ABOVE, NEW_VISIT_STR), indParams),"");
         dsd.addColumn( "General OP RE-ATT (Male <5)", "",
                 ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(UNDER_5_YEARS, MALE, RE_ATT_STR), indParams),"");
         dsd.addColumn( "General OP RE-ATT (Female <5)", "",
@@ -787,10 +788,8 @@ public class MOH717ReportBuilder extends AbstractReportBuilder {
                 ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, MALE, RE_ATT_STR), indParams),"");
         dsd.addColumn( "General OP RE-ATT (Female 5-59)", "",
                 ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(BTWN_5_AND_59_YEARS, FEMALE, RE_ATT_STR), indParams),"");
-        dsd.addColumn( "General OP New (60+)", "",
-                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(_60_YEARS_AND_ABOVE, FEMALE, RE_ATT_STR), indParams),"");
         dsd.addColumn( "General OP RE-ATT (60+)", "",
-                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriod(_60_YEARS_AND_ABOVE, FEMALE, RE_ATT_STR), indParams),"");
+                ReportUtils.map(moh717IndicatorLibrary.getPatientsClinicalEncounterWithinReportingPeriodAged60AndAbove(_60_YEARS_AND_ABOVE, RE_ATT_STR), indParams),"");
 
         dsd.addColumn("New CWC Visits", "",
                 ReportUtils.map(moh717IndicatorLibrary.newCWCVisits(), indParams), "");

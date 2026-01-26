@@ -42,7 +42,7 @@ public class ANCRegisterCohortDefinitionEvaluator implements EncounterQueryEvalu
 
 		String qry = "SELECT v.encounter_id\n" +
 				"from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-				"where date(v.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
+				"where v.anc_visit_number >= 1 and date(v.visit_date) BETWEEN date(:startDate) AND date(:endDate);";
 
 		SqlQueryBuilder builder = new SqlQueryBuilder();
 		builder.append(qry);

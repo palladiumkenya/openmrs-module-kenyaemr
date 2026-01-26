@@ -29,6 +29,9 @@ public class Moh717IndicatorLibrary {
     public CohortIndicator getPatientsClinicalEncounterWithinReportingPeriod(String ageString, char gender, String visitType) {
         return cohortIndicator("All Patients with new clinical encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithClinicalEncounterWithinReportingPeriod(ageString, gender, visitType), "startDate=${startDate},endDate=${endDate}"));
     }
+    public CohortIndicator getPatientsClinicalEncounterWithinReportingPeriodAged60AndAbove(String ageString, String visitType) {
+        return cohortIndicator("All Patients with new clinical encounters within period Aged 60+", ReportUtils.map(moh717CohortLibrary.getPatientsClinicalEncounterWithinReportingPeriodAged60AndAbove(ageString, visitType), "startDate=${startDate},endDate=${endDate}"));
+    }
 
     public CohortIndicator getPatientsWithReturnClinicalEncounterWithinReportingPeriod() {
         return cohortIndicator("All Patients with return encounters within period", ReportUtils.map(moh717CohortLibrary.getPatientsWithReturnClinicalEncounterWithinReportingPeriod(), "startDate=${startDate},endDate=${endDate}"));

@@ -63,7 +63,7 @@ public class CaseSurveillanceReportBuilder extends AbstractReportBuilder {
         cohortDsd.addColumn("HEI (6-8 weeks) without DNA PCR results", "", ReportUtils.map(publicHealthActionIndicatorLibrary.heiSixToEightWeeksMissingPCRTestsCs(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("HEI (24 months) without a final documented outcome", "", ReportUtils.map(publicHealthActionIndicatorLibrary.hei24MonthsUndocumentedOutcomeCs(), "startDate=${startDate},endDate=${endDate}"), "");
         cohortDsd.addColumn("Delayed viral load testing (Visited facility were eligible for vl but sample not taken)", "", ReportUtils.map(publicHealthActionIndicatorLibrary.delayedVLTestingZeroGracePeriod(), "startDate=${startDate},endDate=${endDate}"), "");
-        cohortDsd.addColumn("Virally Unsuppressed without Enhanced Adherence Counselling", "(No EAC past 2 weeks)", ReportUtils.map(publicHealthActionIndicatorLibrary.txCUrrUnsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"), "");
+        cohortDsd.addColumn("Virally Unsuppressed without Enhanced Adherence Counselling", "(No EAC past 2 weeks)", ReportUtils.map(publicHealthActionIndicatorLibrary.txCUrrUnsuppressedWithoutEACs(), "startDate=${startDate},endDate=${endDate}"), "");
 
         return cohortDsd;
 

@@ -30,16 +30,17 @@ public class Moh711IndicatorLibrary {
 	 * No.of New ANC Clients (First ANC visit)
 	 * @return the indicator
 	 */
-	public CohortIndicator noOfNewANCClients() {
-		return cohortIndicator("Number of new ANC clients (First ANC Visit)", map(moh711Cohorts.noOfANCClients(), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator newANCVisits() {
+		return cohortIndicator("Number of new ANC clients (First ANC Visit)", map(moh711Cohorts.newANCVisits(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
-	 * No.of revisiting ANC Clients
+	 * No.of New ANC Clients (First ANC visit)
 	 * @return the indicator
 	 */
-	public CohortIndicator noOfANCClientsRevisits() {
-		return cohortIndicator("Number of revisiting ANC clients", ReportUtils.map(moh711Cohorts.noOfANCClientsRevisits(), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator ancRevisitClients() {
+		return cohortIndicator("Number of revisiting ANC clients", map(moh711Cohorts.ancRevisitClients(), "startDate=${startDate},endDate=${endDate}"));
 	}
+
 	/**
 	 * No.of Clients given IPT (1st dose)
 	 */
@@ -66,11 +67,27 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator noOfANCClientsLowHB() {
 		return cohortIndicator("No.of Clients with Hb < 11 g/dl", ReportUtils.map(moh711Cohorts.noOfANCClientsLowHB(), "startDate=${startDate},endDate=${endDate}"));
 	}
+
+	/**
+	 * Clients with 1st ANC Contact within 12 weeks
+	 * @return
+	 */
+	public CohortIndicator no1stANCContactWithin12Weeks() {
+		return cohortIndicator("Clients with 1st ANC Contact within 12 weeks", ReportUtils.map(moh711Cohorts.no1stANCContactWithin12Weeks(), "startDate=${startDate},endDate=${endDate}"));
+	}
+
 	/**
 	 *No.of Clients completed 4 Antenatal Visits
 	 */
 	public CohortIndicator ancClientsCompleted4Visits() {
 		return cohortIndicator("No.of Clients completed 4 Antenatal Visits", ReportUtils.map(moh711Cohorts.ancClientsCompleted4Visits(), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	/**
+	 *No.of Clients completed 4 Antenatal Visits
+	 */
+	public CohortIndicator ancClientsCompleted8Visits() {
+		return cohortIndicator("No.of Clients completed 8 Antenatal Visits", ReportUtils.map(moh711Cohorts.ancClientsCompleted8Visits(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 *No.LLINs distributed to under 1 year
@@ -82,7 +99,7 @@ public class Moh711IndicatorLibrary {
 	 *No.of LLINs distributed to ANC clients
 	 */
 	public CohortIndicator distributedLLINsToANCClients() {
-		return cohortIndicator("No.of LLINs distributed to ANC clients", ReportUtils.map(moh711Cohorts.distributedLLINs(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of LLINs distributed to ANC clients", ReportUtils.map(moh711Cohorts.distributedLLINsANCClients(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * No.of clients Tested for Syphilis
@@ -94,7 +111,7 @@ public class Moh711IndicatorLibrary {
 	 *No.of clients Tested Positive for Syphilis
 	 */
 	public CohortIndicator ancClientsTestedSyphillisPositive() {
-		return cohortIndicator("No.of clients Tested Positive for Syphilis", ReportUtils.map(moh711Cohorts.ancClientsTestedSyphillisPositive(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No.of clients Tested Positive for Syphilis", ReportUtils.map(moh711Cohorts.ancClientsTestedPositiveForSyphillis(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 *Total women done breast examination
@@ -143,12 +160,6 @@ public class Moh711IndicatorLibrary {
 	}
 
 	/**
-	 * No.screened for cacx during ANC
-	 */
-	public CohortIndicator cacxScreened() {
-		return cohortIndicator("No.screened for cacx during ANC", map(moh711Cohorts.cacxScreened(), "startDate=${startDate},endDate=${endDate}"));
-	}
-	/**
 	 * No.screened for cacx VIA/VILI positive
 	 */
 	public CohortIndicator viaViliPositive() {
@@ -158,7 +169,11 @@ public class Moh711IndicatorLibrary {
 	 * No.screened for cacx HPV positive
 	 */
 	public CohortIndicator hpvPositive() {
-		return cohortIndicator("No.screened for cacx during ANC", map(moh711Cohorts.hpvPositive(), "startDate=${startDate},endDate=${endDate}"));
+		return cohortIndicator("No. HPV Positive", map(moh711Cohorts.hpvPositive(), "startDate=${startDate},endDate=${endDate}"));
+	}
+
+	public CohortIndicator papsmearPositive() {
+		return cohortIndicator("Pap Smear positive result", map(moh711Cohorts.papsmearPositive(), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * No.screened for cacx has suspicious cancer lessions
@@ -181,8 +196,8 @@ public class Moh711IndicatorLibrary {
 	/**
 	 * No. HIV Positive mothers screened for cacx
 	 */
-	public CohortIndicator cacxScreenedAndHIVPositive() {
-		return cohortIndicator("No. HIV Positive mothers screened for cacx", map(moh711Cohorts.cacxScreenedAndHIVPositive(), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator cacxScreenedAndHIVPositive(String papSmearScr, String viaviliScr, String hpvScr) {
+		return cohortIndicator("No. HIV Positive mothers screened for cacx", map(moh711Cohorts.cacxScreenedAndHIVPositive(papSmearScr, viaviliScr, hpvScr), "startDate=${startDate},endDate=${endDate}"));
 	}
 
 	public CohortIndicator screenedForBreastCancer() {
@@ -291,44 +306,27 @@ public class Moh711IndicatorLibrary {
 	 * No.Screened for Pap smear
 	 * @return the indicator
 	 */
-	public CohortIndicator cacxScreenedWithPapMethod(String[] indicatorVal, Integer conceptId) {
-		return cohortIndicator("No.Screened for Pap smear", map(moh711Cohorts.cacxScreenedWithPAPMethodAtANC(indicatorVal,conceptId), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator cacxScreenedByVIAVILIHPVMethods(String method1, String method2) {
+		return cohortIndicator("No.Screened for Cancer", map(moh711Cohorts.cacxScreenedByVIAVILIHPVMethods(method1, method2), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator cacxScreenedPAPSmearMethod(String method) {
+		return cohortIndicator("No.Screened for Cancer", map(moh711Cohorts.cacxScreenedPAPSmearMethod(method), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * No.Screened for Hpv
 	 * @return the indicator
 	 */
-	public CohortIndicator cacxScreenedWithHpvMethod(String[] indicatorVal, Integer conceptId) {
-		return cohortIndicator("No.Screened for Hpv", map(moh711Cohorts.cacxScreenedWithHPVMethodAtANC(indicatorVal,conceptId), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator cacxScreenedWithHpvMethod(String method) {
+		return cohortIndicator("No.Screened for Hpv", map(moh711Cohorts.cacxScreenedWithHpvMethod(method), "startDate=${startDate},endDate=${endDate}"));
 	}
 	/**
 	 * Normal Deliveries
 	 * @return the indicator
 	 */
-	public CohortIndicator normalDelivery(Integer mode) {
+	public CohortIndicator deliveryMethod(Integer mode) {
 		return cohortIndicator("Normal Deliveries", ReportUtils.map(moh711Cohorts.deliveryMethod(mode), "startDate=${startDate},endDate=${endDate}"));
 	}
-	/**
-	 * Caesarean Section
-	 * @return the indicator
-	 */
-	public CohortIndicator caesareanSection(Integer mode) {
-		return cohortIndicator("Caesarean Sections", ReportUtils.map(moh711Cohorts.deliveryMethod(mode), "startDate=${startDate},endDate=${endDate}"));
-	}
-	/**
-	 * Breech Delivery
-	 * @return the indicator
-	 */
-	public CohortIndicator breechDelivery(Integer mode) {
-		return cohortIndicator("Breech Delivery", ReportUtils.map(moh711Cohorts.deliveryMethod(mode),"startDate=${startDate},endDate=${endDate}"));
-	}
-	/**
-	 * Assisted Vaginal Deliveries (Vacuum Extraction)
-	 * @return the indicator
-	 */
-	public CohortIndicator assistedVaginalDelivery(Integer mode) {
-		return cohortIndicator("Assisted Vaginal Deliveries (Vacuum Extraction)", ReportUtils.map(moh711Cohorts.deliveryMethod(mode), "startDate=${startDate},endDate=${endDate}"));
-	}
+
 	/**
 	 * Number of Live births
 	 * @return the indicator
@@ -662,14 +660,6 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator clientonTbTreatment() {
 		return cohortIndicator("Total Number already on TB treatment", ReportUtils.map(moh711Cohorts.clientOnTbTreatment(), "startDate=${startDate},endDate=${endDate}"));
 	}
-	/**
-	 * Total Number of people not screened
-	 * @return
-	 */
-	public CohortIndicator clientTbNotScreened() {
-		return cohortIndicator("Total Number of people not screened", ReportUtils.map(moh711Cohorts.clientsNotScreenedForTB(), "startDate=${startDate},endDate=${endDate}"));
-	}
-
 	public CohortIndicator totalSgbvSurvivors() {
 		return cohortIndicator("SGBV survivors (Rape, attempted rape, defilement and assault)", ReportUtils.map(moh711Cohorts.totalSgbvSurvivors(), "startDate=${startDate},endDate=${endDate}"));
 	}
@@ -707,6 +697,9 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator contraceptiveMethodByVisitType(int contraceptiveMethod, int visitType) {
 		return cohortIndicator("Contraceptive method by visit type", ReportUtils.map(moh711Cohorts.contraceptiveMethodByVisitType(contraceptiveMethod, visitType), "startDate=${startDate},endDate=${endDate}"));
 	}
+	public CohortIndicator contraceptiveByMethod(int contraceptiveMethod) {
+		return cohortIndicator("Contraceptive By method", ReportUtils.map(moh711Cohorts.contraceptiveByMethod(contraceptiveMethod), "startDate=${startDate},endDate=${endDate}"));
+	}
 
 	public CohortIndicator maleAndFemaleCondomsByVisitType(int visitType) {
 		return cohortIndicator("Given male and female condoms", ReportUtils.map(moh711Cohorts.maleAndFemaleCondomsByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
@@ -729,8 +722,8 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator implantRemoval() {
 		return cohortIndicator("IUCD removal", ReportUtils.map(moh711Cohorts.implantRemoval(), "startDate=${startDate},endDate=${endDate}"));
 	}
-	public CohortIndicator receivingFamilyPlanningServicesByVisitType(int visitType) {
-		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.receivingFamilyPlanningServicesByVisitType(visitType), "startDate=${startDate},endDate=${endDate}"));
+	public CohortIndicator receivingFamilyPlanningServicesByVisitType(int visitType, int insertionType) {
+		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.receivingFamilyPlanningServicesByVisitType(visitType, insertionType), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator postPartumFP(int postPartum) {
 		return cohortIndicator("Received FP services", ReportUtils.map(moh711Cohorts.postPartumFP(postPartum), "startDate=${startDate},endDate=${endDate}"));
@@ -750,7 +743,15 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator schizopherniaAndPsychoticDisorder() {
 		return cohortIndicator("Schizophernia and Psychotic Disorder", ReportUtils.map(moh711Cohorts.schizopherniaAndPsychoticDisorder(), "startDate=${startDate},endDate=${endDate}"));
 	}
-
+	public CohortIndicator psychoSocialAssessmentsAndInvestigation() {
+		return cohortIndicator("Psycho-Social Assessments And Investigation", ReportUtils.map(moh711Cohorts.psychoSocialAssessmentsAndInvestigation(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator psychoSocialRehabilitation() {
+		return cohortIndicator("Psycho-Social Rehabilitation", ReportUtils.map(moh711Cohorts.psychoSocialRehabilitation(), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator outreachServicesAndHealthTalks() {
+		return cohortIndicator("Outreach Services and Health Talks", ReportUtils.map(moh711Cohorts.outreachServicesAndHealthTalks(), "startDate=${startDate},endDate=${endDate}"));
+	}
 	public CohortIndicator psychoReferrals() {
 		return cohortIndicator("psychoReferrals", ReportUtils.map(moh711Cohorts.psychoReferrals(), "startDate=${startDate},endDate=${endDate}"));
 	}
