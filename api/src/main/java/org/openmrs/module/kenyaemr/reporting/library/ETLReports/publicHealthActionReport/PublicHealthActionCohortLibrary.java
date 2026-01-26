@@ -907,7 +907,7 @@ public class PublicHealthActionCohortLibrary {
      * @return the indicator
      */
 
-    public CohortDefinition unsuppressedWithoutEACCs() {
+    public CohortDefinition unsuppressedWithoutEACs() {
         String sqlQuery = "SELECT\n" +
                 "    b.patient_id AS unsuppressed_no_eac\n" +
                 "FROM (\n" +
@@ -941,37 +941,25 @@ public class PublicHealthActionCohortLibrary {
                 "      AND e.visit_date <= DATE(:endDate)\n" +
                 ");";
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("allSuppressedWithoutEACCs");
+        cd.setName("allSuppressedWithoutEACs");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
         return cd;
     }
-	/**
-	 * Number of Tx Curr patients with unsuppressed VL result without Enhanced Adherence Counseling
-	 * @return the indicator
-	 */
-	public CohortDefinition txCUrrUnsuppressedWithoutEAC() {
-		CompositionCohortDefinition cd = new CompositionCohortDefinition();
-		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-		cd.addSearch("unsuppressedWithoutEAC", ReportUtils.map(unsuppressedWithoutEAC(), "startDate=${startDate},endDate=${endDate}"));
-		cd.setCompositionString("txcurr and unsuppressedWithoutEAC");
-		return cd;
-	}
+
     /**
      * Number of Tx Curr patients with unsuppressed VL result without Enhanced Adherence Counseling Case surverillance
      * @return the indicator
      */
-    public CohortDefinition txCUrrUnsuppressedWithoutEACCs() {
+    public CohortDefinition txCUrrUnsuppressedWithoutEACs() {
         CompositionCohortDefinition cd = new CompositionCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cd.addSearch("txcurr", ReportUtils.map(datimCohortLibrary.currentlyOnArt(), "startDate=${startDate},endDate=${endDate}"));
-        cd.addSearch("unsuppressedWithoutEACCs", ReportUtils.map(unsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"));
-        cd.setCompositionString("txcurr and unsuppressedWithoutEACCs");
+        cd.addSearch("unsuppressedWithoutEACs", ReportUtils.map(unsuppressedWithoutEACs(), "startDate=${startDate},endDate=${endDate}"));
+        cd.setCompositionString("txcurr and unsuppressedWithoutEACs");
         return cd;
     }
 

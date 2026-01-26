@@ -71,13 +71,6 @@ public class PublicHealthActionIndicatorLibrary {
     public CohortIndicator unsuppressedWithoutValidVL() {
         return cohortIndicator("Unsuppressed VL result", ReportUtils.map(cohortLibrary.unsuppressedWithoutValidVL(), "startDate=${startDate},endDate=${endDate}"));
     }
-	/**
-	 * Number of patients with unsuppressed VL result without Enhanced Adherence Counseling
-	 * @return the indicator
-	 */
-	public CohortIndicator txCUrrUnsuppressedWithoutEAC() {
-		return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEAC(), "startDate=${startDate},endDate=${endDate}"));
-	}
 
     public CohortIndicator delayedVLTestingZeroGracePeriod() {
         return cohortIndicator("Tx Curr Due for VL sample not taken", ReportUtils.map(cohortLibrary.delayedVLTestingZeroGracePeriod(), "startDate=${startDate},endDate=${endDate}"));
@@ -87,8 +80,8 @@ public class PublicHealthActionIndicatorLibrary {
      * Tx Curr with unsuppressed VL without EAC
      * @return
      */
-    public CohortIndicator txCUrrUnsuppressedWithoutEACCs() {
-        return cohortIndicator("Tx Curr with unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEACCs(), "startDate=${startDate},endDate=${endDate}"));
+    public CohortIndicator txCUrrUnsuppressedWithoutEACs() {
+        return cohortIndicator("Tx Curr with unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEACs(), "startDate=${startDate},endDate=${endDate}"));
     }
     /**
      * Number of undocumented LTFU patients
