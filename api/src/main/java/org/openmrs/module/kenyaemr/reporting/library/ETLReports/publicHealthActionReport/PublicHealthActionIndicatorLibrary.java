@@ -79,9 +79,6 @@ public class PublicHealthActionIndicatorLibrary {
 		return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.txCUrrUnsuppressedWithoutEAC(), "startDate=${startDate},endDate=${endDate}"));
 	}
 
-    public CohortIndicator delayedVLTesting() {
-        return cohortIndicator("Tx Curr Unsuppressed VL without EAC", ReportUtils.map(cohortLibrary.delayedVLTesting(), "startDate=${startDate},endDate=${endDate}"));
-    }
     public CohortIndicator delayedVLTestingZeroGracePeriod() {
         return cohortIndicator("Tx Curr Due for VL sample not taken", ReportUtils.map(cohortLibrary.delayedVLTestingZeroGracePeriod(), "startDate=${startDate},endDate=${endDate}"));
     }

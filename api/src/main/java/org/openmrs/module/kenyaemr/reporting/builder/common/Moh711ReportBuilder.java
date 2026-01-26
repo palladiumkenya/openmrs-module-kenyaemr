@@ -44,13 +44,18 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
     protected static final Log log = LogFactory.getLog(Moh711ReportBuilder.class);
 
     static final String[] HPV_TEST_SCREENING = {"HPV Test","HPV"};
-    static final String[] PAP_SMEAR_SCREENING = {"Pap Smear"};
+    static final String PAP_SMEAR_SCREENING = "Pap Smear";
+    static final String HPV_SCREENING = "HPV";
+    static final String VIA_VILI_SCREENING = "VIA";
 
     static final int NEW_VISIT = 164180, RE_VISIT= 164142, PROGESTIN_ONLY_PILLS = 159784, COMBINED_ORAL_CONTRACEPTIVE_PILL = 159783, EMERGENCY_CONTRACEPTIVE_PILL = 160570, DMPA_IM = 907, DMPA_SC = 79494, MALE_CONDOMS = 164813, FEMALE_CONDOMS = 164814,
-    IMPLANT_1_ROD = 76022, IMPLANT_2_RODS = 162422, HORMONAL_IUCD = 165464, NON_HORMONAL_IUCD = 162794, BTL = 1472, VASECTOMY = 1489, POSTPARTUM_WITHIN_48_HRS = 162253, POSTPARTUM_3_DAYS_TO_6_WEEKS = 167722, POST_ABORTION_FP = 164820, FIRST_INSERTION = 164180, RE_INSERTION = 1000049;
+    IMPLANT_1_ROD = 76022, IMPLANT_2_RODS = 162422, HORMONAL_IUCD = 165464, NON_HORMONAL_IUCD = 162794, BTL = 1472, VASECTOMY = 1489, POSTPARTUM_WITHIN_48_HRS = 162253, POSTPARTUM_3_DAYS_TO_6_WEEKS = 167722, POST_ABORTION_FP = 164820, FIRST_INSERTION = 164180, RE_INSERTION = 1000049, REMOVAL = 164161;
     //Disorders
     static final int NEUROLOGICAL = 161102, PERIPHERAL_NERVE = 117569, POST_TRAUMATIC = 162045, DEGENERATIVE_ORTHOPEDIC = 142648, CARDIO_RESPIRATORY = 141964, PRENATAL_PHYSIOTHERAPY = 2002192, POSTNATAL_PHYSIOTHERAPY = 168812;
-
+    //Deliveries
+    static final int NORMAL_DELIVERY = 1170, CAESAREAN_SECTION = 1171, BREECH_DELIVERY = 1172, ASSISTED_VAGINAL_DELIVERY = 118159;
+    //Life Status
+    static final int ALIVE = 160429, DEAD = 134612;
     @Autowired
     private CommonDimensionLibrary commonDimensions;
 
@@ -162,20 +167,22 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", map(commonDimensions.gender()));
 
-        dsd.addColumn("New ANC Clients", "", ReportUtils.map(moh717Indicators.newANCVisits(), indParams), "");
-        dsd.addColumn("Revisiting ANC Clients", "", ReportUtils.map(moh717Indicators.ancRevisits(), indParams), "");
+        dsd.addColumn("New ANC Clients", "", ReportUtils.map(moh711Indicators.newANCVisits(), indParams), "");
+        dsd.addColumn("Revisiting ANC Clients", "", ReportUtils.map(moh711Indicators.ancRevisitClients(), indParams), "");
         dsd.addColumn("Clients given IPT (1st dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT1stDose(), indParams), "");
         dsd.addColumn("Clients given IPT (2nd dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT2ndDose(), indParams), "");
         dsd.addColumn("Clients given IPT (3rd dose)", "", ReportUtils.map(moh711Indicators.noOfANCClientsGivenIPT3rdDose(), indParams), "");
         dsd.addColumn("Clients with Hb less than 11 g per dl", "", ReportUtils.map(moh711Indicators.noOfANCClientsLowHB(), indParams), "");
+        dsd.addColumn("Clients with 1st ANC Contact within 12 weeks", "", ReportUtils.map(moh711Indicators.no1stANCContactWithin12Weeks(), indParams), "");
         dsd.addColumn("Clients completed 4 Antenatal Visits", "", ReportUtils.map(moh711Indicators.ancClientsCompleted4Visits(), indParams), "");
+        dsd.addColumn("Clients completed 8 Antenatal Visits", "", ReportUtils.map(moh711Indicators.ancClientsCompleted8Visits(), indParams), "");
         dsd.addColumn("LLINs distributed to under 1 year", "", ReportUtils.map(moh711Indicators.distributedLLINsUnder1Year(), indParams), "");
         dsd.addColumn("LLINs distributed to ANC clients", "", ReportUtils.map(moh711Indicators.distributedLLINsToANCClients(), indParams), "");
 
         dsd.addColumn("Clients tested for Syphilis", "", ReportUtils.map(moh711Indicators.ancClientsTestedForSyphillis(), indParams), "");
         dsd.addColumn("Clients tested Positive for Syphilis", "", ReportUtils.map(moh711Indicators.ancClientsTestedSyphillisPositive(), indParams), "");
         dsd.addColumn("Total women done breast examination", "", ReportUtils.map(moh711Indicators.breastExaminationDone(), indParams), "");
-        EmrReportingUtils.addRow(dsd, "ANC1", "Presenting with pregnancy at 1st ANC Visit", ReportUtils.map(moh711Indicators.noOfNewANCClients(), indParams), ancAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "ANC1", "Presenting with pregnancy at 1st ANC Visit", ReportUtils.map(moh711Indicators.newANCVisits(), indParams), ancAgeDisaggregations, Arrays.asList("01", "02", "03"));
         dsd.addColumn("Women presenting with pregnancy at 1ST ANC in the First Trimeseter(<= 12 Weeks)", "", ReportUtils.map(moh711Indicators.presentingPregnancy1stANC1stTrimester(), indParams), "");
         dsd.addColumn("Clients issued with Iron", "", ReportUtils.map(moh711Indicators.ancClientsIssuedWithIron(), indParams), "");
         dsd.addColumn("Clients issued with Folic", "", ReportUtils.map(moh711Indicators.ancClientsIssuedWithFolic(), indParams), "");
@@ -197,15 +204,16 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addDimension("age", ReportUtils.map(commonDimensions.moh745AgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
-        EmrReportingUtils.addRow(dsd, "ANC_CACX", "No.of Client receiving VIA /VILI /HPV VILI / HPV", ReportUtils.map(moh711Indicators.cacxScreened(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "CACX_Pap_Smear", "No.Screened for Pap smear", ReportUtils.map(moh711Indicators.cacxScreenedWithPapMethod(PAP_SMEAR_SCREENING, 885), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "CACX_HPV", "No.Screened for HPV test", ReportUtils.map(moh711Indicators.cacxScreenedWithHpvMethod(HPV_TEST_SCREENING, 159895), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "CACX_VIA_VILI_HPV", "No.of Client receiving VIA /VILI /HPV VILI / HPV", ReportUtils.map(moh711Indicators.cacxScreenedByVIAVILIHPVMethods(VIA_VILI_SCREENING,HPV_SCREENING), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "CACX_Pap_Smear", "No.Screened for Pap smear", ReportUtils.map(moh711Indicators.cacxScreenedPAPSmearMethod(PAP_SMEAR_SCREENING), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "CACX_HPV", "No.Screened for HPV test", ReportUtils.map(moh711Indicators.cacxScreenedWithHpvMethod(HPV_SCREENING), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "VIA_VILI", "Number of clients with Positive VIA/VILI result", ReportUtils.map(moh711Indicators.viaViliPositive(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "Pap_Smear", "Number of clients with Positive Pap smear result", ReportUtils.map(moh711Indicators.papsmearPositive(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "HPV", "Number of clients with Positive HPV result", ReportUtils.map(moh711Indicators.hpvPositive(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Suspicious_CACX_Lessions", "Number of clients with suspicious cancer lesions", ReportUtils.map(moh711Indicators.suspiciousCancerLessions(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Cryotherapy", "Number of clients treated using Cryotherapy", ReportUtils.map(moh711Indicators.treatedUsingCyrotherapy(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "LEEP", "Number of clients treated using LEEP", ReportUtils.map(moh711Indicators.treatedUsingLEEP(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
-        EmrReportingUtils.addRow(dsd, "HIV+_CACX_Screened", "Number of HIV positive clients screened", ReportUtils.map(moh711Indicators.cacxScreenedAndHIVPositive(), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
+        EmrReportingUtils.addRow(dsd, "HIV+_CACX_Screened", "Number of HIV positive clients screened", ReportUtils.map(moh711Indicators.cacxScreenedAndHIVPositive(PAP_SMEAR_SCREENING,VIA_VILI_SCREENING,HPV_SCREENING), indParams), cacxScreeningAgeDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Screened_for_Breast_Cancer", "Number of women screened for breast cancer", ReportUtils.map(moh711Indicators.screenedForBreastCancer(), indParams), breastCancerDisaggregations, Arrays.asList("01", "02", "03"));
         EmrReportingUtils.addRow(dsd, "Screened_for_Colorectal_Cancer", "Number screened for colorectal cancer", ReportUtils.map(moh711Indicators.screenedForColorectalCancer(), indParams), colorectalCancerDisaggregations, Arrays.asList("01", "02"));
         return dsd;
@@ -255,10 +263,14 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addDimension("age", ReportUtils.map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
         dsd.addDimension("gender", ReportUtils.map(commonDimensions.gender()));
 
-        dsd.addColumn("Normal Deliveries", "", ReportUtils.map(moh711Indicators.normalDelivery(1170), indParams), "");
-        dsd.addColumn("Caesarean Sections", "", ReportUtils.map(moh711Indicators.caesareanSection(1171), indParams), "");
-        dsd.addColumn("Breech Delivery", "", ReportUtils.map(moh711Indicators.breechDelivery(1172), indParams), "");
-        dsd.addColumn("Assisted Vaginal Deliveries (Vacuum Extraction)", "", ReportUtils.map(moh711Indicators.assistedVaginalDelivery(118159), indParams), "");
+        dsd.addColumn("Normal Deliveries", "", ReportUtils.map(moh711Indicators.deliveryMethod(NORMAL_DELIVERY), indParams), "");
+        dsd.addColumn("Caesarean Sections", "", ReportUtils.map(moh711Indicators.deliveryMethod(CAESAREAN_SECTION), indParams), "");
+        dsd.addColumn("Breech Delivery", "", ReportUtils.map(moh711Indicators.deliveryMethod(BREECH_DELIVERY), indParams), "");
+        dsd.addColumn("Assisted Vaginal Deliveries (Vacuum Extraction)", "", ReportUtils.map(moh711Indicators.deliveryMethod(ASSISTED_VAGINAL_DELIVERY), indParams), "");
+
+        dsd.addColumn("Number of Mothers given uterotonics-oxytocin", "", ReportUtils.map(moh711Indicators.clientsGivenUterotonics(), indParams), "");
+        dsd.addColumn("Number of Mothers given uterotonics-carbatosin", "", ReportUtils.map(moh711Indicators.clientsGivenCarbatosin(), indParams), "");
+
         dsd.addColumn("Live Births", "", ReportUtils.map(moh711Indicators.liveBirths(), indParams), "");
         dsd.addColumn("Low birth weight Babies (below 2500 grams)", "", ReportUtils.map(moh711Indicators.lowBirthWeight(), indParams), "");
         dsd.addColumn("Births with deformities", "", ReportUtils.map(moh711Indicators.deformities(), indParams), "");
@@ -277,22 +289,20 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Neonatal Deaths", "Death 0-28 days", ReportUtils.map(moh711Indicators.perinatalDeathWithin0To28Days(), indParams), "");
         EmrReportingUtils.addRow(dsd, "Maternal deaths", "", ReportUtils.map(moh711Indicators.maternalDeath(), indParams), maternalAgeDisaggregations, Arrays.asList("01", "02", "03", "04"));
         dsd.addColumn("Maternal deaths audited within 7 days", "", ReportUtils.map(moh711Indicators.maternalDeathAuditedWithin7Days(), indParams), "");
-        dsd.addColumn("Ante Partum Haemorrhage(APH) Alive", "", ReportUtils.map(moh711Indicators.antePartumHaemorrhage(160429), indParams), "");
-        dsd.addColumn("Ante Partum Haemorrhage(APH) Dead", "", ReportUtils.map(moh711Indicators.antePartumHaemorrhage(134612), indParams), "");
-        dsd.addColumn("Post Partum Haemorrhage(PPH) Alive", "", ReportUtils.map(moh711Indicators.postPartumHaemorrhage(160429), indParams), "");
-        dsd.addColumn("Post Partum Haemorrhage(PPH) Dead", "", ReportUtils.map(moh711Indicators.postPartumHaemorrhage(134612), indParams), "");
-        dsd.addColumn("Eclampsia Alive", "", ReportUtils.map(moh711Indicators.eclampsia(160429), indParams), "");
-        dsd.addColumn("Eclampsia Dead", "", ReportUtils.map(moh711Indicators.eclampsia(134612), indParams), "");
-        dsd.addColumn("Ruptured Uterus Alive", "", ReportUtils.map(moh711Indicators.rupturedUterus(160429), indParams), "");
-        dsd.addColumn("Ruptured Uterus Dead", "", ReportUtils.map(moh711Indicators.rupturedUterus(134612), indParams), "");
-        dsd.addColumn("Obstructed Labour Alive", "", ReportUtils.map(moh711Indicators.obstructedLabour(160429), indParams), "");
-        dsd.addColumn("Obstructed Labour Dead", "", ReportUtils.map(moh711Indicators.obstructedLabour(134612), indParams), "");
-        dsd.addColumn("Sepsis Alive", "", ReportUtils.map(moh711Indicators.sepsis(160429), indParams), "");
-        dsd.addColumn("Sepsis Dead", "", ReportUtils.map(moh711Indicators.sepsis(134612), indParams), "");
+        dsd.addColumn("Ante Partum Haemorrhage(APH) Alive", "", ReportUtils.map(moh711Indicators.antePartumHaemorrhage(ALIVE), indParams), "");
+        dsd.addColumn("Ante Partum Haemorrhage(APH) Dead", "", ReportUtils.map(moh711Indicators.antePartumHaemorrhage(DEAD), indParams), "");
+        dsd.addColumn("Post Partum Haemorrhage(PPH) Alive", "", ReportUtils.map(moh711Indicators.postPartumHaemorrhage(ALIVE), indParams), "");
+        dsd.addColumn("Post Partum Haemorrhage(PPH) Dead", "", ReportUtils.map(moh711Indicators.postPartumHaemorrhage(DEAD), indParams), "");
+        dsd.addColumn("Eclampsia Alive", "", ReportUtils.map(moh711Indicators.eclampsia(ALIVE), indParams), "");
+        dsd.addColumn("Eclampsia Dead", "", ReportUtils.map(moh711Indicators.eclampsia(DEAD), indParams), "");
+        dsd.addColumn("Ruptured Uterus Alive", "", ReportUtils.map(moh711Indicators.rupturedUterus(ALIVE), indParams), "");
+        dsd.addColumn("Ruptured Uterus Dead", "", ReportUtils.map(moh711Indicators.rupturedUterus(DEAD), indParams), "");
+        dsd.addColumn("Obstructed Labour Alive", "", ReportUtils.map(moh711Indicators.obstructedLabour(ALIVE), indParams), "");
+        dsd.addColumn("Obstructed Labour Dead", "", ReportUtils.map(moh711Indicators.obstructedLabour(DEAD), indParams), "");
+        dsd.addColumn("Sepsis Alive", "", ReportUtils.map(moh711Indicators.sepsis(ALIVE), indParams), "");
+        dsd.addColumn("Sepsis Dead", "", ReportUtils.map(moh711Indicators.sepsis(DEAD), indParams), "");
         //dsd.addColumn("Number of Mothers with delivery complications associated with FGM", "Alive", ReportUtils.map(moh711Indicators.ancClientsWithFGMRelatedComplications(), indParams), "");
         //dsd.addColumn("Number of Mothers with delivery complications associated with FGM", "Dead", ReportUtils.map(moh711Indicators.ancClientsWithFGMRelatedComplications(), indParams), "");
-        dsd.addColumn("Number of Mothers given uterotonics-oxytocin", "", ReportUtils.map(moh711Indicators.clientsGivenUterotonics(), indParams), "");
-        dsd.addColumn("Number of Mothers given uterotonics-carbatosin", "", ReportUtils.map(moh711Indicators.clientsGivenCarbatosin(), indParams), "");
 
         return dsd;
     }
@@ -345,7 +355,7 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total Number of people screened", "", ReportUtils.map(moh711Indicators.clientTbScreening(), indParams), "");
         dsd.addColumn("Total Number of presumptive TB cases", "", ReportUtils.map(moh711Indicators.clientWithPresumptiveTb(), indParams), "");
         dsd.addColumn("Total Number already on TB treatment", "", ReportUtils.map(moh711Indicators.clientonTbTreatment(), indParams), "");
-        dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientTbNotScreened(), indParams), "");
+       // dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientTbNotScreened(), indParams), "");
 
         return dsd;
     }
@@ -380,11 +390,11 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addDimension("age", map(commonDimensions.datimFineAgeGroups(), "onDate=${endDate}"));
         dsd.addColumn("First ever users of contraceptive", "", ReportUtils.map(moh711Indicators.firstUsersOfContraceptives(), indParams), "");
-        dsd.addColumn("Progestin only pills (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(PROGESTIN_ONLY_PILLS, NEW_VISIT), indParams), "");
-        dsd.addColumn("Progestin only pills (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(PROGESTIN_ONLY_PILLS, RE_VISIT), indParams), "");
+        dsd.addColumn("Progestin only pills (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(PROGESTIN_ONLY_PILLS, FIRST_INSERTION), indParams), "");
+        dsd.addColumn("Progestin only pills (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByServiceType(PROGESTIN_ONLY_PILLS, RE_INSERTION), indParams), "");
         dsd.addColumn("Combined Oral Contraceptive pills (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(COMBINED_ORAL_CONTRACEPTIVE_PILL, NEW_VISIT), indParams), "");
         dsd.addColumn("Combined Oral Contraceptive pills (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(COMBINED_ORAL_CONTRACEPTIVE_PILL,RE_VISIT), indParams), "");
-        dsd.addColumn("Emergency contraceptive pill", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(EMERGENCY_CONTRACEPTIVE_PILL, NEW_VISIT), indParams), "");
+        dsd.addColumn("Emergency contraceptive pill", "", ReportUtils.map(moh711Indicators.contraceptiveByMethod(EMERGENCY_CONTRACEPTIVE_PILL), indParams), "");
         dsd.addColumn("DMPA-IM (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_IM, NEW_VISIT), indParams), "");
         dsd.addColumn("DMPA-IM (Revisit)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_IM,RE_VISIT), indParams), "");
         dsd.addColumn("DMPA-SC (New)", "", ReportUtils.map(moh711Indicators.contraceptiveMethodByVisitType(DMPA_SC, NEW_VISIT), indParams), "");
@@ -411,8 +421,8 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
          dsd.addColumn("IUCD Removal", "", ReportUtils.map(moh711Indicators.iucdRemoval(), indParams), "");
         //Only new
         dsd.addColumn("Implant Removal", "", ReportUtils.map(moh711Indicators.implantRemoval(), indParams), "");
-        EmrReportingUtils.addRow(dsd, "Receiving FP services (New)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(NEW_VISIT), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
-        EmrReportingUtils.addRow(dsd, "Receiving FP services (Revisit)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(RE_VISIT), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Receiving FP services (New)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(NEW_VISIT, FIRST_INSERTION), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
+        EmrReportingUtils.addRow(dsd, "Receiving FP services (Revisit)", "", ReportUtils.map(moh711Indicators.receivingFamilyPlanningServicesByVisitType(RE_VISIT, RE_INSERTION), indParams), familyPlanningAgeDisaggregation,Arrays.asList("01","02","03","04"));
         dsd.addColumn("Receiving immediate postpartum FP (within 48 hrs)", "", ReportUtils.map(moh711Indicators.postPartumFP(POSTPARTUM_WITHIN_48_HRS), indParams), "");
         dsd.addColumn("Receiving immediate postpartum FP (3 days to 6 weeks)", "", ReportUtils.map(moh711Indicators.postPartumFP(POSTPARTUM_3_DAYS_TO_6_WEEKS), indParams), "");
         dsd.addColumn("Receiving post abortion FP Method", "", ReportUtils.map(moh711Indicators.postPartumFP(POST_ABORTION_FP), indParams), "");
@@ -431,6 +441,9 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Bipolar disorder", "", ReportUtils.map(moh711Indicators.bipolarDisorder(), indParams), "");
         dsd.addColumn("Depression", "", ReportUtils.map(moh711Indicators.depression(), indParams), "");
         dsd.addColumn("Schizophernia and psychotic disorder", "", ReportUtils.map(moh711Indicators.schizopherniaAndPsychoticDisorder(), indParams), "");
+        dsd.addColumn("Psycho-Social Assessments and Investigation", "", ReportUtils.map(moh711Indicators.psychoSocialAssessmentsAndInvestigation(), indParams), "");
+        dsd.addColumn("Psycho-Social rehabilitation", "", ReportUtils.map(moh711Indicators.psychoSocialRehabilitation(), indParams), "");
+        dsd.addColumn("Outreach services and Health Talks", "", ReportUtils.map(moh711Indicators.outreachServicesAndHealthTalks(), indParams), "");
         dsd.addColumn("Psychiatric referrals", "", ReportUtils.map(moh711Indicators.psychoReferrals(), indParams), "");
 
         return dsd;

@@ -37,6 +37,23 @@ public class Moh717CohortLibrary {
         );
         return sql;
     }
+
+    public CohortDefinition getPatientsClinicalEncounterWithinReportingPeriodAged60AndAbove(String ageString, String visitType) {
+        SqlCohortDefinition sql = new SqlCohortDefinition();
+        sql.setName("Patients with new encounters within date period");
+        sql.addParameter(new Parameter("startDate", "Start Date", Date.class));
+        sql.addParameter(new Parameter("endDate", "End Date", Date.class));
+        sql.setQuery(
+                "SELECT ce.encounter_id\n" +
+                        "FROM kenyaemr_etl.etl_clinical_encounter ce\n" +
+                        "INNER JOIN kenyaemr_etl.etl_patient_demographics p ON p.patient_id = ce.patient_id AND p.voided = 0 AND TIMESTAMPDIFF(YEAR, date(p.DOB), ce.visit_date) "+ageString+" \n" +
+                        "         INNER JOIN encounter_diagnosis ed ON ed.patient_id = ce.patient_id AND ed.encounter_id = ce.encounter_id\n" +
+                        "WHERE ed.dx_rank = 2 AND ce.visit_type = '"+visitType+"'\n" +
+                        "  AND date(ce.visit_date) BETWEEN date(:startDate) AND date(:endDate)\n" +
+                        "  AND ed.voided = 0 group by ce.encounter_id;"
+        );
+        return sql;
+    }
     public CohortDefinition getPatientsWithReturnClinicalEncounterWithinReportingPeriod() {
         SqlCohortDefinition sql = new SqlCohortDefinition();
         sql.setName("Patients with return encounters within date period");
