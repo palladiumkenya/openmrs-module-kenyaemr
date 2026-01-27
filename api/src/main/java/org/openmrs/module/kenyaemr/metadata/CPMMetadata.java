@@ -15,7 +15,11 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * CPM metadata bundle
@@ -23,6 +27,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 @Requires({ CommonMetadata.class })
 public class CPMMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(CPMMetadata.class);
 
 	public static final class _Program {
 		public static final String CPM = Metadata.Program.CPM;		
@@ -54,11 +60,18 @@ public class CPMMetadata extends AbstractMetadataBundle {
 		install(encounterType("CPM Discontinuation Encounter", "CPM Discontinuation Encounter", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER));		
 		install(encounterType("CPM Screening Encounter", "CPM Screening Encounter", _EncounterType.CPM_SCREENING_ENCOUNTER));		
 
-		install(form("CPM Enrollment Form", "Community Pharmacy Model Enrollment form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_ENROLLMENT_FORM));
-		install(form("CPM Referral Form", "Community Pharmacy Model Referral form", _EncounterType.CPM_REFERRAL_ENCOUNTER, "1", _Form.CPM_REFERRAL_FORM));
-		install(form("CPM Discontinuation Form", "Community Pharmacy Model Discontinuation  Form", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER, "1", _Form.CPM_DISCONTINUATION_FORM));
-		install(form("CPM Screening Form", "Community Pharmacy Model Screening  Form", _EncounterType.CPM_SCREENING_ENCOUNTER, "1", _Form.CPM_SCREENING_FORM));
-		install(form("CPM Initial Form", "Community Pharmacy Model Initial  Form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== CPMMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("CPM Enrollment Form", "Community Pharmacy Model Enrollment form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_ENROLLMENT_FORM));
+			install(form("CPM Referral Form", "Community Pharmacy Model Referral form", _EncounterType.CPM_REFERRAL_ENCOUNTER, "1", _Form.CPM_REFERRAL_FORM));
+			install(form("CPM Discontinuation Form", "Community Pharmacy Model Discontinuation  Form", _EncounterType.CPM_DISCONTINUATION_ENCOUNTER, "1", _Form.CPM_DISCONTINUATION_FORM));
+			install(form("CPM Screening Form", "Community Pharmacy Model Screening  Form", _EncounterType.CPM_SCREENING_ENCOUNTER, "1", _Form.CPM_SCREENING_FORM));
+			install(form("CPM Initial Form", "Community Pharmacy Model Initial  Form", _EncounterType.CPM_ENROLLMENT_ENCOUNTER, "1", _Form.CPM_INITIAL_FORM));
+		} else {
+			logger.info("=== CPMMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 	
 	}
 }

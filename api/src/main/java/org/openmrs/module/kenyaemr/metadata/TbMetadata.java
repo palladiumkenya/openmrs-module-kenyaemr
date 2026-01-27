@@ -16,10 +16,14 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * TB metadata bundle
@@ -27,6 +31,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
 @Component
 @Requires({ CommonMetadata.class })
 public class TbMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(TbMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String TB_DISCONTINUATION = "d3e3d723-7458-4b4e-8998-408e8a551a84";
@@ -62,12 +68,19 @@ public class TbMetadata extends AbstractMetadataBundle {
 		install(encounterType("TB Discontinuation", "Discontinuation from TB program", _EncounterType.TB_DISCONTINUATION));
 		install(encounterType("TB FollowUp", "Consultation in TB Program", _EncounterType.TB_CONSULTATION));
 
-		install(form("TB Screening", null, _EncounterType.TB_SCREENING, "1", _Form.TB_SCREENING));
-		install(form("TB Enrollment", null, _EncounterType.TB_ENROLLMENT, "1", _Form.TB_ENROLLMENT));
-		install(form("TB Discontinuation", null, _EncounterType.TB_DISCONTINUATION, "1", _Form.TB_COMPLETION));
-		install(form("TB FollowUp" ,null, _EncounterType.TB_CONSULTATION, "1", _Form.TB_FOLLOW_UP));
-		install(form("TB GeneXpert", null, _EncounterType.TB_SCREENING, "1", _Form.GENE_XPERT));
-		install(form("TB Initial", null, _EncounterType.TB_ENROLLMENT, "1", _Form.TB_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== TbMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("TB Screening", null, _EncounterType.TB_SCREENING, "1", _Form.TB_SCREENING));
+			install(form("TB Enrollment", null, _EncounterType.TB_ENROLLMENT, "1", _Form.TB_ENROLLMENT));
+			install(form("TB Discontinuation", null, _EncounterType.TB_DISCONTINUATION, "1", _Form.TB_COMPLETION));
+			install(form("TB FollowUp" ,null, _EncounterType.TB_CONSULTATION, "1", _Form.TB_FOLLOW_UP));
+			install(form("TB GeneXpert", null, _EncounterType.TB_SCREENING, "1", _Form.GENE_XPERT));
+			install(form("TB Initial", null, _EncounterType.TB_ENROLLMENT, "1", _Form.TB_INITIAL_FORM));
+		} else {
+			logger.info("=== TbMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(patientIdentifierType("District Registration Number", "Assigned to every TB patient",
 				null, null, null,

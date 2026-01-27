@@ -24,8 +24,12 @@ import org.openmrs.module.kenyaemr.datatype.LocationDatatype;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
+
 
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 
@@ -34,6 +38,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
  */
 @Component
 public class CommonMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(CommonMetadata.class);
 
 	public static final String GP_CLIENT_VERIFICATION_USE_EMR_PROXY = "kenyaemr.client.registry.use.emr.proxy";
 	public static final String GP_CLIENT_VERIFICATION_EMR_VERIFICATION_PROXY_URL = "kenyaemr.client.registry.emr.verification.proxy.url";
@@ -82,6 +88,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 	public static final String GP_HEI_IL_MEDIATOR_TOKEN_CLIENT_SECRET = "kenyaemr.hie.il.mediator.client.secret";
 	public static final String GP_HEI_OPT_SOURCE = "kenyaemr.hie.registry.otp.source";
 	public static final String GP_LOGIN_OTP_REQUIREMENT = "kenyaemr.hie.login.otp";
+	public static final String GP_ENABLE_FORMS = MetadataUtils.GP_ENABLE_FORMS;
 	
     public static final class _Program {
         public static final String NUTRITION = Metadata.Program.NUTRITION;
@@ -337,6 +344,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String MORTUARY = "02b67c47-6071-4091-953d-ad21452e830c";
 	}
 
+
 	/**
 	 * @see org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle#install()
 	 */
@@ -414,107 +422,114 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("AEFI Investigation", "AEFI Investigation encounter for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION));
 		install(encounterType("Admission", "Indicates that the patient has been admitted for inpatient care, and is not expected to leave the hospital unless discharged.", _EncounterType.IN_PATIENT_ADMISSION));
 
-		install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
-		install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
-		install(form("Obstetric History", null, _EncounterType.REGISTRATION, "1", _Form.OBSTETRIC_HISTORY));
-		install(form("Medications", "Recording of non-regimen medications", _EncounterType.CONSULTATION, "1",
-				_Form.OTHER_MEDICATIONS));
-		install(form("Progress Note", "For additional information - mostly complaints and examination findings.",
-				_EncounterType.CONSULTATION, "1", _Form.PROGRESS_NOTE));
-		install(form("Surgical and Medical History", null, _EncounterType.REGISTRATION, "1",
-				_Form.SURGICAL_AND_MEDICAL_HISTORY));
-		install(form("Triage", null, _EncounterType.TRIAGE, "1", _Form.TRIAGE));
-		install(form("Generalized Anxiety Disorder Assessment",
-				"Anxiety Screening using Generalized Anxiety Disorder Assessment (GAD-7)", _EncounterType.GAD_7, "1",
-				_Form.GAD_7));
-		install(form("HTS Initial Form", "Form for HTS testing services ", _EncounterType.HTS, "1",
-				_Form.HTS_INITIAL_TEST));
-		install(form("HTS Retest Form", "Form for HTS retest Services", _EncounterType.HTS, "1",
-				_Form.HTS_CONFIRMATORY_TEST));
-		install(form("HTS Linkage Form", "Form for HTS linkage", _EncounterType.HTS, "1", _Form.HTS_LINKAGE));
-		install(form("Contact Listing Form", "Lists all contacts for a patient", _EncounterType.HTS, "1",
-				_Form.CONTACT_LISTING));
-		install(form("Registration Form", "Initial data collection for a patient/client, not specific to any program",
-				_EncounterType.REGISTRATION, "1", _Form.BASIC_REGISTRATION));
-		install(form("Drug Regimen Editor", null, _EncounterType.DRUG_REGIMEN_EDITOR, "1", _Form.DRUG_REGIMEN_EDITOR));
-		install(form("HTS Client Tracing Form", "Form for tracing hts clients", _EncounterType.HTS, "1",
-				_Form.HTS_CLIENT_TRACING));
-		install(form("HTS Client Referral Form", "Form for HTS linkage referral", _EncounterType.HTS, "1",
-				_Form.HTS_REFERRAL));
-		install(form("Cervical Cancer Screening Form", "Form for Cervical Cancer Screening",
-				_EncounterType.CACX_SCREENING, "1", _Form.CACX_SCREENING_FORM));
-		install(form("Cervical Cancer Assessment Form", "Form for Cervical Cancer Assessment",
-				_EncounterType.CACX_SCREENING, "1", _Form.CACX_ASSESSMENT_FORM));
-		install(form("Cancer Screening and early diagnosis", "Form Cancer Screening and early diagnosis",
-				_EncounterType.ONCOLOGY_SCREENING, "1", _Form.ONCOLOGY_SCREENING_FORM));
-		install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1",
-				_Form.HIV_SELF_TESTING));
-		install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1",
-				_Form.ILI_SURVEILLANCE_FORM));
-		install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1",
-				_Form.SARI_SURVEILLANCE_FORM));
-		install(form("Nutrition Form", "Form for Nutrition", _EncounterType.NUTRITION, "1", _Form.NUTRITION));
-		install(form("Audiology", "Form for Audiology", _EncounterType.AUDIOLOGY, "1", _Form.AUDIOLOGY_FORM));
-		install(form("Psychiatric Form", "Form for Psychiatric", _EncounterType.PSYCHIATRIC, "1",
-				_Form.PSYCHIATRIC_FORM));
-		install(form("Oncology Form", "Form for Oncology", _EncounterType.ONCOLOGY, "1", _Form.ONCOLOGY_FORM));
-		install(form("Physiotherapy Form", "Form for Physiotherapy", _EncounterType.PHYSIOTHERAPY, "1",
-				_Form.PHYSIOTHERAPY_FORM));
-		install(form("GOPC Form", "Form for GOPC", _EncounterType.GOPC, "1", _Form.GOPC_FORM));
-		install(form("MOPC Form", "Form for MOPC", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
-		install(form("SOPC Form", "Form for SOPC", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
-		install(form("Surgical Safety Checklist (Sign In) Form", "Form for Surgical Safety Checklist (Sign In)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_IN_FORM));
-		install(form("Surgical Safety Checklist (Sign Out) Form", "Form for Surgical Safety Checklist (Sign Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_OUT_FORM));
-		install(form("Surgical Safety Checklist (Time Out) Form", "Form for Surgical Safety Checklist (Time Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_TIME_OUT_FORM));
-		install(form("Family Planning", "Form for family planning", _EncounterType.FAMILY_PLANNING, "1",
-				_Form.FAMILY_PLANNING));
-		install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
-		install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter",
-				_EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
-		install(form("Speech and Language Therapy Clinical Form",
-				"Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1",
-				_Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
-		install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
-				_Form.DIABETIC_CLINICAL_FORM));
-		install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
-		install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
-		install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
-		install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
-		install(form("Neurology Clinical Form", "Form for Neurology clinical encounter", _EncounterType.NEUROLOGY, "1", _Form.NEUROLOGY_CLINICAL_FORM));
-		install(form("Post-Mortem Clinical Form", "Form for Morgue clinical encounter", _EncounterType.POST_MORTEM, "1", _Form.POST_MORTEM_CLINICAL_FORM));
-		install(form("ENT Clinical Form", "Form for ENT clinical encounter", _EncounterType.CONSULTATION, "1", _Form.EAR_NOSE_THROAT_CLINICAL_FORM));
-		install(form("Orthopaedic Clinical Form", "Form for Orthopaedic clinical encounter", _EncounterType.CONSULTATION, "1", _Form.ORTHOPAEDIC_CLINICAL_FORM));
-		install(form("Occupational Therapy Clinical Form", "Form for Occupational therapy encounter", _EncounterType.CONSULTATION, "1", _Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM));
-		install(form("Obstetric History Form", "Form for Obstetric History", _EncounterType.CONSULTATION, "1", _Form.OBSTETRIC_HISTORY_FORM));
-		install(form("Ophthamology Clinical Form", "Form for Ophthamology encounter ", _EncounterType.CONSULTATION, "1", _Form.OPHTHAMOLOGY_CLINICAL_FORM));
-		install(form("Gastroenterology Clinical Form", "Form for Gastroenterology encounter ", _EncounterType.CONSULTATION, "1", _Form.GASTROENTEROLOGY_CLINICAL_FORM));
-		install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
-		install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
-		install(form("Dental Clinical Form", "Form for Dental encounter ", _EncounterType.CONSULTATION, "1", _Form.DENTAL_CLINICAL_FORM));
-		install(form("Infectious Disease Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.INFECTIOUS_DISEASE, "1", _Form.INFECTIOUS_DISEASE_CLINICAL_FORM));
-		install(form("IPD Procedure Clinical Form", "Form for Inpatient procedure clinical encounter", _EncounterType.IPD_PROCEDURE, "1", _Form.IPD_PROCEDURE_FORM));
-		install(form("Doctor's Note Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.DOCTORS_NOTE, "1", _Form.DOCTORS_NOTE_FORM));
-		install(form("Nursing Cardex Clinical Form", "Form for Cardex plan clinical encounter", _EncounterType.NURSING_CARDEX, "1", _Form.NURSING_CARDEX_FORM));
-		install(form("Pre-Operation Checklist Clinical Form", "Form for Pre-procedure checklist clinical encounter", _EncounterType.PRE_OPERATION_CHECKLIST, "1", _Form.PRE_OPERATION_CHECKLIST_FORM));
-		install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
-		install(form("Newborn Admission Clinical Form", "Form for Newborn admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
-		install(form("Plastic Surgery Clinical Form", "Form for Plastic surgery clinical encounter", _EncounterType.PLASTIC_SURGERY, "1", _Form.PLASTIC_SURGERY_FORM));
-		install(form("Inpatient Discharge Clinical Form", "Form for Inpatient Discharge clinical encounter", _EncounterType.IPD_DISCHARGE, "1", _Form.IPD_DISCHARGE_FORM));
-		install(form("Leprosy Initial Clinical Form", "Form for Leprosy Initial contact clinical encounter", _EncounterType.LEPROSY_INITIAL, "1", _Form.LEPROSY_INITIAL_FORM));
-		install(form("Leprosy Followup Clinical Form", "Form for Leprosy Followup contact clinical encounter", _EncounterType.LEPROSY_FOLLOWUP, "1", _Form.LEPROSY_FOLLOWUP_FORM));
-		install(form("Leprosy Postoperative Clinical Form", "Form for Leprosy Postoperative clinical encounter", _EncounterType.LEPROSY_POSTOPERATIVE, "1", _Form.LEPROSY_FOLLOWUP_FORM));
-		install(form("Fluid Intake and Output Clinical Form", "Form for Fluid Intake and Output recording clinical encounter", _EncounterType.FLUID_INTAKE, "1", _Form.FLUID_INTAKE_FORM));
-		install(form("ADR Assessment Tool Form", "Form for Adverse Drug Reaction Assessment Tool", _EncounterType.ADR_ASSESSMENT_TOOL, "1", _Form.ADR_ASSESSMENT_TOOL_FORM));
-		install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
-		install(form("Mortuary Discharge Form", "Form for recording deceased body discharge details ", _EncounterType.MORGUE_DISCHARGE, "1", _Form.MORGUE_DISCHARGE_FORM));
-		install(form("Mortuary Admission Form", "Form for recording deceased body admission details ", _EncounterType.MORGUE_ADMISSION, "1", _Form.MORGUE_ADMISSION_FORM));
-        install(form("Maternity Inpatient", "Form for recording maternity stay for a inpatient mother", _EncounterType.MCHMS_INPATIENT, "1.0", _Form.MCHMS_INPATIENT_FORM));
-        install(form("Post Delivery", "Form for recording post delivery stay for a inpatient mother", _EncounterType.MCHMS_POST_DELIVERY, "1.0", _Form.MCHMS_POST_DELIVERY_FORM));
-        install(form("Nutrition Enrollment", "Form for recording enrollment into nutrition program", _EncounterType.NUTRITION_ENROLLMENT, "1.0", _Form.NUTRITION_ENROLLMENT_FORM));
-        install(form("Nutrition Discontinuation", "Form for recording discontinuation from nutrition program", _EncounterType.NUTRITION_DISCONTINUATION, "1.0", _Form.NUTRITION_DISCONTINUATION_FORM));
-		install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
-		install(form("AEFI Investigation", "Form for recording AEFI Investigation for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION, "1.0", _Form.AEFI_INVESTIGATION_FORM));
-		install(form("In-Patient Admission Form", "Form for Inpatient Admission", _EncounterType.IN_PATIENT_ADMISSION, "1", _Form.IN_PATIENT_ADMISSION_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== Installing forms because shouldInstallForms() returned true ===");
+			install(form("Clinical Encounter", null, _EncounterType.CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER));
+			install(form("Lab Results", null, _EncounterType.LAB_RESULTS, "1", _Form.LAB_RESULTS));
+			install(form("Obstetric History", null, _EncounterType.REGISTRATION, "1", _Form.OBSTETRIC_HISTORY));
+			install(form("Medications", "Recording of non-regimen medications", _EncounterType.CONSULTATION, "1",
+					_Form.OTHER_MEDICATIONS));
+			install(form("Progress Note", "For additional information - mostly complaints and examination findings.",
+					_EncounterType.CONSULTATION, "1", _Form.PROGRESS_NOTE));
+			install(form("Surgical and Medical History", null, _EncounterType.REGISTRATION, "1",
+					_Form.SURGICAL_AND_MEDICAL_HISTORY));
+			install(form("Triage", null, _EncounterType.TRIAGE, "1", _Form.TRIAGE));
+			install(form("Generalized Anxiety Disorder Assessment",
+					"Anxiety Screening using Generalized Anxiety Disorder Assessment (GAD-7)", _EncounterType.GAD_7, "1",
+					_Form.GAD_7));
+			install(form("HTS Initial Form", "Form for HTS testing services ", _EncounterType.HTS, "1",
+					_Form.HTS_INITIAL_TEST));
+			install(form("HTS Retest Form", "Form for HTS retest Services", _EncounterType.HTS, "1",
+					_Form.HTS_CONFIRMATORY_TEST));
+			install(form("HTS Linkage Form", "Form for HTS linkage", _EncounterType.HTS, "1", _Form.HTS_LINKAGE));
+			install(form("Contact Listing Form", "Lists all contacts for a patient", _EncounterType.HTS, "1",
+					_Form.CONTACT_LISTING));
+			install(form("Registration Form", "Initial data collection for a patient/client, not specific to any program",
+					_EncounterType.REGISTRATION, "1", _Form.BASIC_REGISTRATION));
+			install(form("Drug Regimen Editor", null, _EncounterType.DRUG_REGIMEN_EDITOR, "1", _Form.DRUG_REGIMEN_EDITOR));
+			install(form("HTS Client Tracing Form", "Form for tracing hts clients", _EncounterType.HTS, "1",
+					_Form.HTS_CLIENT_TRACING));
+			install(form("HTS Client Referral Form", "Form for HTS linkage referral", _EncounterType.HTS, "1",
+					_Form.HTS_REFERRAL));
+			install(form("Cervical Cancer Screening Form", "Form for Cervical Cancer Screening",
+					_EncounterType.CACX_SCREENING, "1", _Form.CACX_SCREENING_FORM));
+			install(form("Cervical Cancer Assessment Form", "Form for Cervical Cancer Assessment",
+					_EncounterType.CACX_SCREENING, "1", _Form.CACX_ASSESSMENT_FORM));
+			install(form("Cancer Screening and early diagnosis", "Form Cancer Screening and early diagnosis",
+					_EncounterType.ONCOLOGY_SCREENING, "1", _Form.ONCOLOGY_SCREENING_FORM));
+			install(form("HIV Self Test Form", "Form for HIV self testing services ", _EncounterType.HIV_SELF_TEST, "1",
+					_Form.HIV_SELF_TESTING));
+			install(form("ILI Surveillance Form", "Form for ILI Surveillance", _EncounterType.ILI_SURVEILLANCE, "1",
+					_Form.ILI_SURVEILLANCE_FORM));
+			install(form("SARI Surveillance Form", "Form for SARI Surveillance", _EncounterType.SARI_SURVEILLANCE, "1",
+					_Form.SARI_SURVEILLANCE_FORM));
+			install(form("Nutrition Form", "Form for Nutrition", _EncounterType.NUTRITION, "1", _Form.NUTRITION));
+			install(form("Audiology", "Form for Audiology", _EncounterType.AUDIOLOGY, "1", _Form.AUDIOLOGY_FORM));
+			install(form("Psychiatric Form", "Form for Psychiatric", _EncounterType.PSYCHIATRIC, "1",
+					_Form.PSYCHIATRIC_FORM));
+			install(form("Oncology Form", "Form for Oncology", _EncounterType.ONCOLOGY, "1", _Form.ONCOLOGY_FORM));
+			install(form("Physiotherapy Form", "Form for Physiotherapy", _EncounterType.PHYSIOTHERAPY, "1",
+					_Form.PHYSIOTHERAPY_FORM));
+			install(form("GOPC Form", "Form for GOPC", _EncounterType.GOPC, "1", _Form.GOPC_FORM));
+			install(form("MOPC Form", "Form for MOPC", _EncounterType.MOPC, "1", _Form.MOPC_FORM));
+			install(form("SOPC Form", "Form for SOPC", _EncounterType.SOPC, "1", _Form.SOPC_FORM));
+			install(form("Surgical Safety Checklist (Sign In) Form", "Form for Surgical Safety Checklist (Sign In)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_IN_FORM));
+			install(form("Surgical Safety Checklist (Sign Out) Form", "Form for Surgical Safety Checklist (Sign Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_SIGN_OUT_FORM));
+			install(form("Surgical Safety Checklist (Time Out) Form", "Form for Surgical Safety Checklist (Time Out)", _EncounterType.SOPC, "1", _Form.SURGICAL_SAFETY_CHECKLIST_TIME_OUT_FORM));
+			install(form("Family Planning", "Form for family planning", _EncounterType.FAMILY_PLANNING, "1",
+					_Form.FAMILY_PLANNING));
+			install(form("POPC Form", "Form for Oncology", _EncounterType.POPC, "1", _Form.POPC_FORM));
+			install(form("Maxillofacial Clinical Form", "Form for Maxillofacial clinical encounter",
+					_EncounterType.MAXILLOFACIAL, "1", _Form.MAXILLOFACIAL_CLINICAL_FORM));
+			install(form("Speech and Language Therapy Clinical Form",
+					"Form for Speech and Language Therapy clinical encounter", _EncounterType.SPEECHANDLANGUAGE, "1",
+					_Form.SPEECH_AND_LANGAUGE_THERAPY_CLINICAL_FORM));
+			install(form("Diabetic Clinical Form", "Form for Diabetic Consultattion clinical encounter", _EncounterType.DIABETICCONSULTATION, "1", 
+					_Form.DIABETIC_CLINICAL_FORM));
+			install(form("Adverse Drug Reaction Clinical Form", "Form for Adverse Drug Reaction and Pharmacovigilance clinical encounter", _EncounterType.ADVERSEDRUGREACTION, "1", _Form.ADVERSE_DRUG_REACTION_FORM));
+			install(form("Dermatology Clinical Form", "Form for Dermatology clinical encounter", _EncounterType.DERMATOLOGY, "1", _Form.DERMATOLOGY_CLINICAL_FORM));
+			install(form("Urology Clinical Form", "Form for Urology clinical encounter", _EncounterType.UROLOGY, "1", _Form.UROLOGY_CLINICAL_FORM));
+			install(form("Hearing Screening Clinical Form", "Form for Hearing screening clinical encounter", _EncounterType.HEARING_SCREENING, "1", _Form.HEARING_SCREENING_CLINICAL_FORM));
+			install(form("Neurology Clinical Form", "Form for Neurology clinical encounter", _EncounterType.NEUROLOGY, "1", _Form.NEUROLOGY_CLINICAL_FORM));
+			install(form("Post-Mortem Clinical Form", "Form for Morgue clinical encounter", _EncounterType.POST_MORTEM, "1", _Form.POST_MORTEM_CLINICAL_FORM));
+			install(form("ENT Clinical Form", "Form for ENT clinical encounter", _EncounterType.CONSULTATION, "1", _Form.EAR_NOSE_THROAT_CLINICAL_FORM));
+			install(form("Orthopaedic Clinical Form", "Form for Orthopaedic clinical encounter", _EncounterType.CONSULTATION, "1", _Form.ORTHOPAEDIC_CLINICAL_FORM));
+			install(form("Occupational Therapy Clinical Form", "Form for Occupational therapy encounter", _EncounterType.CONSULTATION, "1", _Form.OCCUPATIONAL_THERAPY_CLINICAL_FORM));
+			install(form("Obstetric History Form", "Form for Obstetric History", _EncounterType.CONSULTATION, "1", _Form.OBSTETRIC_HISTORY_FORM));
+			install(form("Ophthamology Clinical Form", "Form for Ophthamology encounter ", _EncounterType.CONSULTATION, "1", _Form.OPHTHAMOLOGY_CLINICAL_FORM));
+			install(form("Gastroenterology Clinical Form", "Form for Gastroenterology encounter ", _EncounterType.CONSULTATION, "1", _Form.GASTROENTEROLOGY_CLINICAL_FORM));
+			install(form("Fertility Clinical Form", "Form for Fertility encounter ", _EncounterType.CONSULTATION, "1", _Form.FERTILITY_CLINICAL_FORM));
+			install(form("Cardiology Clinical Form", "Form for Cardiology encounter ", _EncounterType.CONSULTATION, "1", _Form.CARDIOLOGY_CLINICAL_FORM));
+			install(form("Dental Clinical Form", "Form for Dental encounter ", _EncounterType.CONSULTATION, "1", _Form.DENTAL_CLINICAL_FORM));
+			install(form("Infectious Disease Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.INFECTIOUS_DISEASE, "1", _Form.INFECTIOUS_DISEASE_CLINICAL_FORM));
+			install(form("IPD Procedure Clinical Form", "Form for Inpatient procedure clinical encounter", _EncounterType.IPD_PROCEDURE, "1", _Form.IPD_PROCEDURE_FORM));
+			install(form("Doctor's Note Clinical Form", "Form for Infectious disease clinical encounter", _EncounterType.DOCTORS_NOTE, "1", _Form.DOCTORS_NOTE_FORM));
+			install(form("Nursing Cardex Clinical Form", "Form for Cardex plan clinical encounter", _EncounterType.NURSING_CARDEX, "1", _Form.NURSING_CARDEX_FORM));
+			install(form("Pre-Operation Checklist Clinical Form", "Form for Pre-procedure checklist clinical encounter", _EncounterType.PRE_OPERATION_CHECKLIST, "1", _Form.PRE_OPERATION_CHECKLIST_FORM));
+			install(form("Post Operation Clinical Form", "Form for post operation clinical encounter", _EncounterType.POST_OPERATION, "1", _Form.POST_OPERATION_FORM));
+			install(form("Newborn Admission Clinical Form", "Form for Newborn admission clinical encounter", _EncounterType.NEW_BORN_ADMISSION, "1", _Form.NEW_BORN_ADMISSION_FORM));
+			install(form("Plastic Surgery Clinical Form", "Form for Plastic surgery clinical encounter", _EncounterType.PLASTIC_SURGERY, "1", _Form.PLASTIC_SURGERY_FORM));
+			install(form("Inpatient Discharge Clinical Form", "Form for Inpatient Discharge clinical encounter", _EncounterType.IPD_DISCHARGE, "1", _Form.IPD_DISCHARGE_FORM));
+			install(form("Leprosy Initial Clinical Form", "Form for Leprosy Initial contact clinical encounter", _EncounterType.LEPROSY_INITIAL, "1", _Form.LEPROSY_INITIAL_FORM));
+			install(form("Leprosy Followup Clinical Form", "Form for Leprosy Followup contact clinical encounter", _EncounterType.LEPROSY_FOLLOWUP, "1", _Form.LEPROSY_FOLLOWUP_FORM));
+			install(form("Leprosy Postoperative Clinical Form", "Form for Leprosy Postoperative clinical encounter", _EncounterType.LEPROSY_POSTOPERATIVE, "1", _Form.LEPROSY_FOLLOWUP_FORM));
+			install(form("Fluid Intake and Output Clinical Form", "Form for Fluid Intake and Output recording clinical encounter", _EncounterType.FLUID_INTAKE, "1", _Form.FLUID_INTAKE_FORM));
+			install(form("ADR Assessment Tool Form", "Form for Adverse Drug Reaction Assessment Tool", _EncounterType.ADR_ASSESSMENT_TOOL, "1", _Form.ADR_ASSESSMENT_TOOL_FORM));
+			install(form("Initial Nursing Cardex Form", "Form for capturing patient history by ward round nurse", _EncounterType.INITIAL_NURSING_CARDEX, "1", _Form.INITIAL_NURSING_CARDEX_FORM));
+			install(form("Mortuary Discharge Form", "Form for recording deceased body discharge details ", _EncounterType.MORGUE_DISCHARGE, "1", _Form.MORGUE_DISCHARGE_FORM));
+			install(form("Mortuary Admission Form", "Form for recording deceased body admission details ", _EncounterType.MORGUE_ADMISSION, "1", _Form.MORGUE_ADMISSION_FORM));
+			install(form("Maternity Inpatient", "Form for recording maternity stay for a inpatient mother", _EncounterType.MCHMS_INPATIENT, "1.0", _Form.MCHMS_INPATIENT_FORM));
+			install(form("Post Delivery", "Form for recording post delivery stay for a inpatient mother", _EncounterType.MCHMS_POST_DELIVERY, "1.0", _Form.MCHMS_POST_DELIVERY_FORM));
+			install(form("Nutrition Enrollment", "Form for recording enrollment into nutrition program", _EncounterType.NUTRITION_ENROLLMENT, "1.0", _Form.NUTRITION_ENROLLMENT_FORM));
+			install(form("Nutrition Discontinuation", "Form for recording discontinuation from nutrition program", _EncounterType.NUTRITION_DISCONTINUATION, "1.0", _Form.NUTRITION_DISCONTINUATION_FORM));
+			install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
+			install(form("AEFI Investigation", "Form for recording AEFI Investigation for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION, "1.0", _Form.AEFI_INVESTIGATION_FORM));
+			install(form("In-Patient Admission Form", "Form for Inpatient Admission", _EncounterType.IN_PATIENT_ADMISSION, "1", _Form.IN_PATIENT_ADMISSION_FORM));
+		} else {
+			logger.info("=== SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
         install(globalProperty(EmrConstants.GP_DEFAULT_LOCATION,
 				"The facility for which this installation is configured",

@@ -18,11 +18,15 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.globalProperty;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * HIV metadata bundle
@@ -30,6 +34,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
 @Component
 @Requires({ CommonMetadata.class })
 public class HivMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(HivMetadata.class);
 
 	public static final String MODULE_ID = "kenyaemr";
 	public static final String LDL_DEFAULT_VALUE = MODULE_ID + ".LDL_default_value";
@@ -113,26 +119,33 @@ public class HivMetadata extends AbstractMetadataBundle {
 		install(encounterType("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION));
 		install(encounterType("Home Visit Checklist", "Home Visit Checklist", _EncounterType.HOME_VISIT_CHECKLIST));
 
-		install(form("HIV Enrollment", null, _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_ENROLLMENT));
-		install(form("Clinical Encounter - HIV addendum", null, _EncounterType.HIV_CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER_HIV_ADDENDUM));
-		install(form("Family History", null, CommonMetadata._EncounterType.REGISTRATION, "1", _Form.FAMILY_HISTORY));
-		install(form("MOH 257 Face Page", null, _EncounterType.HIV_ENROLLMENT, "1", _Form.MOH_257_FACE_PAGE));
-		install(form("MOH 257 ARV Therapy", null, _EncounterType.HIV_CONSULTATION, "1", _Form.MOH_257_ARV_THERAPY));
-		install(form("MOH 257 Visit Summary", null, _EncounterType.HIV_CONSULTATION, "1", _Form.MOH_257_VISIT_SUMMARY));
-		install(form("HIV Discontinuation", null, _EncounterType.HIV_DISCONTINUATION, "1", _Form.HIV_DISCONTINUATION));
-		install(form("HIV Green Card", "Green Card Form", _EncounterType.HIV_CONSULTATION, "1", _Form.HIV_GREEN_CARD));
-		install(form("ART Fast Track", "ART Fast Track Form", _EncounterType.ART_REFILL, "1", _Form.FAST_TRACK));
-		install(form("Family and Partner Testing Results", "Family and Partner Testing for HIV Negative Patients", _EncounterType.FAMILY_AND_PARTNER_TESTING, "1", _Form.FAMILY_TESTING_FORM_FOR_NEGATIVE_CLIENTS));
-		install(form("Drug Order", "Drug Order", _EncounterType.DRUG_ORDER, "1", _Form.DRUG_ORDER));
-		install(form("ART Preparation", "ART Preparation", _EncounterType.ART_PREPARATION, "1", _Form.TREATMENT_PREPARATION));
-		install(form("Violence Screening", "Violence Screening", _EncounterType.GENDER_BASED_VIOLENCE, "1", _Form.GBV_SCREENING));
-		install(form("Alcohol and Drug Abuse Screening(CAGE-AID/CRAFFT)", "Alcohol and Drug Abuse Screening", _EncounterType.ALCOHOL_AND_DRUGS_ABUSE, "1", _Form.ALCOHOL_AND_DRUGS_SCREENING));
-		install(form("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE, "1", _Form.ENHANCED_ADHERENCE_SCREENING));
-		install(form("CCC Defaulter Tracing", "Defaulter Tracing Form", _EncounterType.CCC_DEFAULTER_TRACING, "1", _Form.CCC_DEFAULTER_TRACING));
-		install(form("Laboratory Test Orders", "Laboratory Test Orders", _EncounterType.LAB_ORDER, "1", _Form.LAB_ORDERS_FORM_UUID));
-		install(form("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION, "1", _Form.HIGH_IIT_INTERVENTION));
-		install(form("Home Visit Checklist", "Home Visit Checklist Form", _EncounterType.HOME_VISIT_CHECKLIST, "1", _Form.HOME_VISIT_CHECKLIST));
-		install(form("HIV Initial Form", "HIV Initial Visit Form", _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== HivMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("HIV Enrollment", null, _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_ENROLLMENT));
+			install(form("Clinical Encounter - HIV addendum", null, _EncounterType.HIV_CONSULTATION, "1", _Form.CLINICAL_ENCOUNTER_HIV_ADDENDUM));
+			install(form("Family History", null, CommonMetadata._EncounterType.REGISTRATION, "1", _Form.FAMILY_HISTORY));
+			install(form("MOH 257 Face Page", null, _EncounterType.HIV_ENROLLMENT, "1", _Form.MOH_257_FACE_PAGE));
+			install(form("MOH 257 ARV Therapy", null, _EncounterType.HIV_CONSULTATION, "1", _Form.MOH_257_ARV_THERAPY));
+			install(form("MOH 257 Visit Summary", null, _EncounterType.HIV_CONSULTATION, "1", _Form.MOH_257_VISIT_SUMMARY));
+			install(form("HIV Discontinuation", null, _EncounterType.HIV_DISCONTINUATION, "1", _Form.HIV_DISCONTINUATION));
+			install(form("HIV Green Card", "Green Card Form", _EncounterType.HIV_CONSULTATION, "1", _Form.HIV_GREEN_CARD));
+			install(form("ART Fast Track", "ART Fast Track Form", _EncounterType.ART_REFILL, "1", _Form.FAST_TRACK));
+			install(form("Family and Partner Testing Results", "Family and Partner Testing for HIV Negative Patients", _EncounterType.FAMILY_AND_PARTNER_TESTING, "1", _Form.FAMILY_TESTING_FORM_FOR_NEGATIVE_CLIENTS));
+			install(form("Drug Order", "Drug Order", _EncounterType.DRUG_ORDER, "1", _Form.DRUG_ORDER));
+			install(form("ART Preparation", "ART Preparation", _EncounterType.ART_PREPARATION, "1", _Form.TREATMENT_PREPARATION));
+			install(form("Violence Screening", "Violence Screening", _EncounterType.GENDER_BASED_VIOLENCE, "1", _Form.GBV_SCREENING));
+			install(form("Alcohol and Drug Abuse Screening(CAGE-AID/CRAFFT)", "Alcohol and Drug Abuse Screening", _EncounterType.ALCOHOL_AND_DRUGS_ABUSE, "1", _Form.ALCOHOL_AND_DRUGS_SCREENING));
+			install(form("Enhanced Adherence Screening", "Enhanced Adherence Screening", _EncounterType.ENHANCED_ADHERENCE, "1", _Form.ENHANCED_ADHERENCE_SCREENING));
+			install(form("CCC Defaulter Tracing", "Defaulter Tracing Form", _EncounterType.CCC_DEFAULTER_TRACING, "1", _Form.CCC_DEFAULTER_TRACING));
+			install(form("Laboratory Test Orders", "Laboratory Test Orders", _EncounterType.LAB_ORDER, "1", _Form.LAB_ORDERS_FORM_UUID));
+			install(form("High IIT Intervention", "High IIT Intervention", _EncounterType.HIGH_IIT_INTERVENTION, "1", _Form.HIGH_IIT_INTERVENTION));
+			install(form("Home Visit Checklist", "Home Visit Checklist Form", _EncounterType.HOME_VISIT_CHECKLIST, "1", _Form.HOME_VISIT_CHECKLIST));
+			install(form("HIV Initial Form", "HIV Initial Visit Form", _EncounterType.HIV_ENROLLMENT, "1", _Form.HIV_INITIAL_FORM));
+		} else {
+			logger.info("=== HivMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(patientIdentifierType("KDoD number", "Unique Id for KDoD patient", "(?i)^(KDOD)+[0-9]{4,5}$", "Must start with KDoD followed by 4-5 digit number. Example: KDoD12345 or kdod1233",
 				null, LocationBehavior.NOT_USED, false, _PatientIdentifierType.KDoD_NUMBER));

@@ -14,10 +14,14 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.globalProperty;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * HIV metadata bundle
@@ -25,6 +29,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
 @Component
 @Requires({ CommonMetadata.class })
 public class MATMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(MATMetadata.class);
 
 	public static final class _Program {
 		public static final String MAT = "4b898e20-9b2d-11ee-b9d1-0242ac120002";
@@ -69,15 +75,22 @@ public class MATMetadata extends AbstractMetadataBundle {
 		install(encounterType("MAT Psychosocial intake and followup", "MAT Clinical Encounter", _EncounterType.MAT_PSYCHO_SOCIAL_INTAKE_AND_FOLLOWUP_ENCOUNTER));
 		install(encounterType("MAT Transit/Referral Encounter", "MAT Clinical Encounter", _EncounterType.MAT_TRANSIT_ENCOUNTER));
 
-		install(form("MAT Clinical form", null, _EncounterType.MAT_CLINICAL_ENCOUNTER, "1", _Form.MAT_CLINICAL_ENCOUNTER));
-		install(form("MAT Cessation form", null, _EncounterType.MAT_CESSATION_ENCOUNTER, "1", _Form.MAT_CESSATION));
-		install(form("MAT Clinical eligibility assessment", null, _EncounterType.MAT_CLINICAL_ELIGIBILITY_ASSESSMENT_AND_REFERRAL_ENCOUNTER, "1", _Form.MAT_CLINICAL_ELIGIBILITY_ASSESSMENT_AND_REFERRAL));
-		install(form("MAT Discontinuation form", null, _EncounterType.MAT_DISCONTINUATION_ENCOUNTER, "1", _Form.MAT_DISCONTINUATION));
-		install(form("MAT Initial registration form", "", _EncounterType.MAT_INITIAL_REGISTRATION_ENCOUNTER, "1", _Form.MAT_INITIAL_REGISTRATION_FORM));
-		install(form("MAT Treatment form", "", _EncounterType.MAT_TREATMENT_ENCOUNTER, "1", _Form.MAT_TREATMENT_FORM));
-		install(form("MAT Psychiatric intake and followup form", null, _EncounterType.MAT_PSYCHIATRIC_INTAKE_AND_FOLLOWUP_ENCOUNTER, "1", _Form.MAT_PSYCHIATRIC_INTAKE_AND_FOLLOWUP_FORM));
-		install(form("MAT Psychosocial intake and followup form", null, _EncounterType.MAT_PSYCHO_SOCIAL_INTAKE_AND_FOLLOWUP_ENCOUNTER, "1", _Form.MAT_PSYCHO_SOCIAL_INTAKE_AND_FOLLOWUP_FORM));
-		install(form("MAT Transit/Referral form", null, _EncounterType.MAT_TRANSIT_ENCOUNTER, "1", _Form.MAT_TRANSIT_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== MATMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("MAT Clinical form", null, _EncounterType.MAT_CLINICAL_ENCOUNTER, "1", _Form.MAT_CLINICAL_ENCOUNTER));
+			install(form("MAT Cessation form", null, _EncounterType.MAT_CESSATION_ENCOUNTER, "1", _Form.MAT_CESSATION));
+			install(form("MAT Clinical eligibility assessment", null, _EncounterType.MAT_CLINICAL_ELIGIBILITY_ASSESSMENT_AND_REFERRAL_ENCOUNTER, "1", _Form.MAT_CLINICAL_ELIGIBILITY_ASSESSMENT_AND_REFERRAL));
+			install(form("MAT Discontinuation form", null, _EncounterType.MAT_DISCONTINUATION_ENCOUNTER, "1", _Form.MAT_DISCONTINUATION));
+			install(form("MAT Initial registration form", "", _EncounterType.MAT_INITIAL_REGISTRATION_ENCOUNTER, "1", _Form.MAT_INITIAL_REGISTRATION_FORM));
+			install(form("MAT Treatment form", "", _EncounterType.MAT_TREATMENT_ENCOUNTER, "1", _Form.MAT_TREATMENT_FORM));
+			install(form("MAT Psychiatric intake and followup form", null, _EncounterType.MAT_PSYCHIATRIC_INTAKE_AND_FOLLOWUP_ENCOUNTER, "1", _Form.MAT_PSYCHIATRIC_INTAKE_AND_FOLLOWUP_FORM));
+			install(form("MAT Psychosocial intake and followup form", null, _EncounterType.MAT_PSYCHO_SOCIAL_INTAKE_AND_FOLLOWUP_ENCOUNTER, "1", _Form.MAT_PSYCHO_SOCIAL_INTAKE_AND_FOLLOWUP_FORM));
+			install(form("MAT Transit/Referral form", null, _EncounterType.MAT_TRANSIT_ENCOUNTER, "1", _Form.MAT_TRANSIT_FORM));
+		} else {
+			logger.info("=== MATMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 	}
 }

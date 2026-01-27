@@ -16,10 +16,14 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * MCH metadata bundle
@@ -27,6 +31,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
 @Component
 @Requires({CommonMetadata.class})
 public class MchMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(MchMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String MCHCS_CONSULTATION = "bcc6da85-72f2-4291-b206-789b8186a021";
@@ -104,12 +110,19 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(encounterType("MCH Child Immunization", "Record of child immunizations", _EncounterType.MCHCS_IMMUNIZATION));
 		install(encounterType("MCH Child Discontinuation", "Discontinuation of child from MCH program", _EncounterType.MCHCS_DISCONTINUATION));
 
-		install(form("Mch Child Enrolment Form", "MCH-CS Enrollment form", _EncounterType.MCHCS_ENROLLMENT, "2.0", _Form.MCHCS_ENROLLMENT));
-		install(form("Child Welfare Services Discontinuation", "MCH-CS discontinuation form", _EncounterType.MCHCS_DISCONTINUATION, "2.0", _Form.MCHCS_DISCONTINUATION));
-		install(form("Child Welfare Clinic", "CWC-CS follow up form", _EncounterType.MCHCS_CONSULTATION, "2.0", _Form.MCHCS_FOLLOW_UP));
-		install(form("Immunization", "CWC-CS immunization form", _EncounterType.MCHCS_IMMUNIZATION, "2.0", _Form.MCHCS_IMMUNIZATION));
-		install(form("Child HEI outcomes", "MCH-CS HEI exit form", _EncounterType.MCHCS_HEI_COMPLETION, "1.0", _Form.MCHCS_HEI_COMPLETION));
-		install(form("Postnatal Newborn Examination Form", "Form for examining a newborn baby", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHCS_POSTNATAL_NEWBORN_EXAMINATION));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== MchMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("Mch Child Enrolment Form", "MCH-CS Enrollment form", _EncounterType.MCHCS_ENROLLMENT, "2.0", _Form.MCHCS_ENROLLMENT));
+			install(form("Child Welfare Services Discontinuation", "MCH-CS discontinuation form", _EncounterType.MCHCS_DISCONTINUATION, "2.0", _Form.MCHCS_DISCONTINUATION));
+			install(form("Child Welfare Clinic", "CWC-CS follow up form", _EncounterType.MCHCS_CONSULTATION, "2.0", _Form.MCHCS_FOLLOW_UP));
+			install(form("Immunization", "CWC-CS immunization form", _EncounterType.MCHCS_IMMUNIZATION, "2.0", _Form.MCHCS_IMMUNIZATION));
+			install(form("Child HEI outcomes", "MCH-CS HEI exit form", _EncounterType.MCHCS_HEI_COMPLETION, "1.0", _Form.MCHCS_HEI_COMPLETION));
+			install(form("Postnatal Newborn Examination Form", "Form for examining a newborn baby", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHCS_POSTNATAL_NEWBORN_EXAMINATION));
+		} else {
+			logger.info("=== MchMetadata: SKIPPING child service form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(patientIdentifierType("HEI ID Number", "Assigned to a child patient when enrolling into HEI",
 				null, null, null,
@@ -137,25 +150,30 @@ public class MchMetadata extends AbstractMetadataBundle {
 		install(encounterType("Pre-Conception Care Enrollment", "Pre-Conception Care Services Enrollment", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT));
 		install(encounterType("Pre-Conception Care Discontinuation", "Pre-Conception Care Services Discontinuation", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION));
 
-		install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
-		install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
-		install(form("MCH Postnatal Visit", "MCH postnatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_POSTNATAL_VISIT));
-		install(form("Delivery", "MCH-MS delivery form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DELIVERY));
-		install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
-		install(form("MCH Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
-		install(form("MCH ANC Followup", "ANC Visit followup form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANC_FOLLOWUP_FORM));
-		//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
-		install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
-		install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
-        install(form("ANC Enrollment", "Antenatal Care Enrollment Form", _EncounterType.MCHMS_ANC_ENROLLMENT, "1.0", _Form.MCHMS_ANC_ENROLLMENT_FORM));
-        install(form("PNC Enrollment", "Postnatal Care Enrollment Form", _EncounterType.MCHMS_PNC_ENROLLMENT, "1.0", _Form.MCHMS_PNC_ENROLLMENT_FORM));
-        install(form("Family Planning Enrollment", "Family Planning Enrollment Form", _EncounterType.MCHMS_FAMILY_PLANNING_ENROLLMENT, "1.0", _Form.MCHMS_FAMILY_PLANNING_ENROLLMENT_FORM));
-        install(form("ANC Discontinuation", "Antenatal Care Discontinuation Form", _EncounterType.MCHMS_ANC_DISCONTINUATION, "1.0", _Form.MCHMS_ANC_DISCONTINUATION_FORM));
-        install(form("PNC Discontinuation", "Postnatal Care Discontinuation Form", _EncounterType.MCHMS_PNC_DISCONTINUATION, "1.0", _Form.MCHMS_PNC_DISCONTINUATION_FORM));
-        install(form("Family Planning Discontinuation", "Family Planning Discontinuation Form", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION, "1.0", _Form.MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM));
-		install(form("Pre-Conception Care", "Pre-Conception Care Form", _EncounterType.PRE_CONCEPTION_CARE, "1.0", _Form.PRE_CONCEPTION_CARE));
-		install(form("Pre-Conception Care Enrollment", "Pre-Conception Care Enrollment Form", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT, "1.0", _Form.PRE_CONCEPTION_CARE_ENROLLMENT_FORM));
-		install(form("Pre-Conception Care Discontinuation", "Pre-Conception Care Discontinuation Form", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION, "1.0", _Form.PRE_CONCEPTION_CARE_DISCONTINUATION_FORM));
+		if (installForms) {
+			logger.info("=== MchMetadata: Installing mother service forms because shouldInstallForms() returned true ===");
+			install(form("MCH-MS Enrollment", "MCH-MS Enrollment", _EncounterType.MCHMS_ENROLLMENT, "1.0", _Form.MCHMS_ENROLLMENT));
+			install(form("MCH Antenatal Visit", "MCH antenatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANTENATAL_VISIT));
+			install(form("MCH Postnatal Visit", "MCH postnatal visit form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_POSTNATAL_VISIT));
+			install(form("Delivery", "MCH-MS delivery form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DELIVERY));
+			install(form("Discharge", "MCH-MS discharge form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_DISCHARGE));
+			install(form("MCH Partograph", "MCH-MS labour form", _EncounterType.MCHMS_PARTOGRAPH, "1.0", _Form.MCHMS_PARTOGRAPH));
+			install(form("MCH ANC Followup", "ANC Visit followup form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_ANC_FOLLOWUP_FORM));
+			//install(form("Infant Feeding", "MCH-MS infant feeding form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_INFANT_FEEDING));
+			install(form("Preventive Services", "MCH-MS preventive services form", _EncounterType.MCHMS_CONSULTATION, "1.0", _Form.MCHMS_PREVENTIVE_SERVICES));
+			install(form("MCH-MS Discontinuation", "MCH-MS discontinuation form", _EncounterType.MCHMS_DISCONTINUATION, "1.0", _Form.MCHMS_DISCONTINUATION));
+			install(form("ANC Enrollment", "Antenatal Care Enrollment Form", _EncounterType.MCHMS_ANC_ENROLLMENT, "1.0", _Form.MCHMS_ANC_ENROLLMENT_FORM));
+			install(form("PNC Enrollment", "Postnatal Care Enrollment Form", _EncounterType.MCHMS_PNC_ENROLLMENT, "1.0", _Form.MCHMS_PNC_ENROLLMENT_FORM));
+			install(form("Family Planning Enrollment", "Family Planning Enrollment Form", _EncounterType.MCHMS_FAMILY_PLANNING_ENROLLMENT, "1.0", _Form.MCHMS_FAMILY_PLANNING_ENROLLMENT_FORM));
+			install(form("ANC Discontinuation", "Antenatal Care Discontinuation Form", _EncounterType.MCHMS_ANC_DISCONTINUATION, "1.0", _Form.MCHMS_ANC_DISCONTINUATION_FORM));
+			install(form("PNC Discontinuation", "Postnatal Care Discontinuation Form", _EncounterType.MCHMS_PNC_DISCONTINUATION, "1.0", _Form.MCHMS_PNC_DISCONTINUATION_FORM));
+			install(form("Family Planning Discontinuation", "Family Planning Discontinuation Form", _EncounterType.MCHMS_FAMILY_PLANNING_DISCONTINUATION, "1.0", _Form.MCHMS_FAMILY_PLANNING_DISCONTINUATION_FORM));
+			install(form("Pre-Conception Care", "Pre-Conception Care Form", _EncounterType.PRE_CONCEPTION_CARE, "1.0", _Form.PRE_CONCEPTION_CARE));
+			install(form("Pre-Conception Care Enrollment", "Pre-Conception Care Enrollment Form", _EncounterType.PRE_CONCEPTION_CARE_ENROLLMENT, "1.0", _Form.PRE_CONCEPTION_CARE_ENROLLMENT_FORM));
+			install(form("Pre-Conception Care Discontinuation", "Pre-Conception Care Discontinuation Form", _EncounterType.PRE_CONCEPTION_CARE_DISCONTINUATION, "1.0", _Form.PRE_CONCEPTION_CARE_DISCONTINUATION_FORM));
+		} else {
+			logger.info("=== MchMetadata: SKIPPING mother service form installation because shouldInstallForms() returned false ===");
+		}
         //We will not install the MCH mother services program as it is retired through initializer.
 		//install(program("MCH - Mother Services", "Treatment for mothers", Dictionary.MATERNAL_AND_CHILD_HEALTH_PROGRAM, _Program.MCHMS));
 		install(program("Antenatal Care", "", Dictionary.ANTENATAL_PROGRAM, _Program.ANTENATAL_CARE));

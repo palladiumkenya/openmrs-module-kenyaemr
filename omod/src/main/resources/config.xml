@@ -488,5 +488,13 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+	<property>kenyaemr.enable.forms</property>
+	<defaultValue>true</defaultValue>
+	<description>
+		Defines whether to enable forms installation, default is true. This is used to enable/disable forms installation during module installation.
+	</description>
+	</globalProperty>
+
 </module>
         

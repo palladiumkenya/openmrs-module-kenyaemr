@@ -16,10 +16,14 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 
 /**
  * TPT metadata bundle
@@ -27,6 +31,8 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.program;
 @Component
 @Requires({ CommonMetadata.class })
 public class IPTMetadata extends AbstractMetadataBundle {
+
+	private static final Logger logger = LoggerFactory.getLogger(IPTMetadata.class);
 
 	public static final class _EncounterType {
 		public static final String IPT_OUTCOME = "bb77c683-2144-48a5-a011-66d904d776c9";
@@ -58,10 +64,17 @@ public class IPTMetadata extends AbstractMetadataBundle {
 		install(encounterType("IPT Outcome", "Discontinuation from IPT", _EncounterType.IPT_OUTCOME));
 		install(encounterType("IPT FollowUp", "Follow up in IPT", _EncounterType.IPT_FOLLOWUP));
 
-		install(form("TPT Initiation", null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIATION));
-		install(form("TPT Outcome", null, _EncounterType.IPT_OUTCOME, "1", _Form.IPT_OUTCOME));
-		install(form("TPT FollowUp" ,null, _EncounterType.IPT_FOLLOWUP, "1", _Form.IPT_FOLLOWUP));
-		install(form("TPT Initial" ,null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIAL_FORM));
+		boolean installForms = shouldInstallForms();
+		
+		if (installForms) {
+			logger.info("=== IPTMetadata: Installing forms because shouldInstallForms() returned true ===");
+			install(form("TPT Initiation", null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIATION));
+			install(form("TPT Outcome", null, _EncounterType.IPT_OUTCOME, "1", _Form.IPT_OUTCOME));
+			install(form("TPT FollowUp" ,null, _EncounterType.IPT_FOLLOWUP, "1", _Form.IPT_FOLLOWUP));
+			install(form("TPT Initial" ,null, _EncounterType.IPT_INITIATION, "1", _Form.IPT_INITIAL_FORM));
+		} else {
+			logger.info("=== IPTMetadata: SKIPPING form installation because shouldInstallForms() returned false ===");
+		}
 
 		install(patientIdentifierType("Subcounty Registration Number", "Assigned to every IPT patient",
 				null, null, null,
