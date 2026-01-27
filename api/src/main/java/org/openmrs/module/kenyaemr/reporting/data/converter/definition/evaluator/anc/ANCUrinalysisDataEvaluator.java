@@ -35,21 +35,36 @@ public class ANCUrinalysisDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "       if(v.urine_microscopy is not null or v.urinary_albumin is not null or v.glucose_measurement is not null\n" +
-                "              or v.urine_ph is not null or v.urine_gravity is not null or v.urine_nitrite_test is not null\n" +
-                "              or v.urine_dipstick_for_blood is not null or v.urine_leukocyte_esterace_test is not null or\n" +
-                "          v.urinary_ketone is not null\n" +
-                "              or v.urine_bile_pigment_test is not null or v.urine_bile_salt_test is not null or\n" +
-                "          v.urine_colour is not null or v.urine_turbidity is not null, 'Y', 'N') as urinalysis\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "UNION ALL\n" +
-                "select v.encounter_id, if(l.lab_test = 1000073, 'Y', 'N') as urinalysis\n" +
-                "from kenyaemr_etl.etl_laboratory_extract l\n" +
-                "         join kenyaemr_etl.etl_mch_antenatal_visit v on l.patient_id = v.patient_id and l.visit_date = v.visit_date\n" +
-                "where DATE(l.date_test_requested) between DATE(:startDate) and DATE(:endDate)\n" +
-                "group by v.encounter_id;";
+        String qry = "SELECT\n" +
+                "    v.encounter_id,\n" +
+                "    IF(\n" +
+                "            (\n" +
+                "                v.urine_microscopy IS NOT NULL\n" +
+                "                    OR v.urinary_albumin IS NOT NULL\n" +
+                "                    OR v.glucose_measurement IS NOT NULL\n" +
+                "                    OR v.urine_ph IS NOT NULL\n" +
+                "                    OR v.urine_gravity IS NOT NULL\n" +
+                "                    OR v.urine_nitrite_test IS NOT NULL\n" +
+                "                    OR v.urine_dipstick_for_blood IS NOT NULL\n" +
+                "                    OR v.urine_leukocyte_esterace_test IS NOT NULL\n" +
+                "                    OR v.urinary_ketone IS NOT NULL\n" +
+                "                    OR v.urine_bile_pigment_test IS NOT NULL\n" +
+                "                    OR v.urine_bile_salt_test IS NOT NULL\n" +
+                "                    OR v.urine_colour IS NOT NULL\n" +
+                "                    OR v.urine_turbidity IS NOT NULL\n" +
+                "                )\n" +
+                "                OR EXISTS (\n" +
+                "                SELECT 1\n" +
+                "                FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "                WHERE l.patient_id = v.patient_id\n" +
+                "                  AND DATE(l.visit_date) = DATE(v.visit_date)\n" +
+                "                  AND l.lab_test = '1000073'\n" +
+                "                  AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "            ),\n" +
+                "            'Y', 'N'\n" +
+                "    ) AS urinalysis\n" +
+                "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

@@ -35,11 +35,36 @@ public class ANCHaemoglobinDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select MAX(v.encounter_id) as encounter_id,\n" +
-                "     MID(MAX(CONCAT(v.visit_date, v.hemoglobin)), 11) as hemoglobin\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate)\n" +
-                "GROUP BY v.encounter_id;";
+        String qry = "WITH lab AS (\n" +
+                "    SELECT\n" +
+                "        l.patient_id,\n" +
+                "        DATE(l.visit_date) AS visit_date,\n" +
+                "        l.test_result AS lab_test_result,\n" +
+                "        ROW_NUMBER() OVER (\n" +
+                "            PARTITION BY l.patient_id, DATE(l.visit_date)\n" +
+                "            ORDER BY l.date_test_result_received DESC, l.date_test_requested DESC\n" +
+                "            ) AS rn\n" +
+                "    FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "    WHERE l.lab_test = '21'\n" +
+                "      AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "),\n" +
+                "     anc AS (\n" +
+                "         SELECT\n" +
+                "             v.encounter_id,\n" +
+                "             v.patient_id,\n" +
+                "             DATE(v.visit_date) AS visit_date,\n" +
+                "             v.hemoglobin AS anc_hemoglobin\n" +
+                "         FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "     )\n" +
+                "SELECT\n" +
+                "    a.encounter_id,\n" +
+                "    COALESCE(lo.lab_test_result, a.anc_hemoglobin, 'ND') AS hemoglobin\n" +
+                "FROM anc a\n" +
+                "         LEFT JOIN lab lo\n" +
+                "                   ON lo.patient_id = a.patient_id\n" +
+                "                       AND lo.visit_date  = a.visit_date\n" +
+                "                       AND lo.rn = 1;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

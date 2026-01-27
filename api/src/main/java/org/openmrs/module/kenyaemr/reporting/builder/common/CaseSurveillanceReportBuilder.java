@@ -56,6 +56,7 @@ public class CaseSurveillanceReportBuilder extends AbstractReportBuilder {
         cohortDsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         cohortDsd.setName("caseSurveillance");
+
         cohortDsd.setDescription("Case Surveillance Report");
 
         cohortDsd.addColumn("HIV+ and NOT Linked", "", ReportUtils.map(publicHealthActionIndicatorLibrary.notLinked(), "startDate=${startDate},endDate=${endDate}"), "");

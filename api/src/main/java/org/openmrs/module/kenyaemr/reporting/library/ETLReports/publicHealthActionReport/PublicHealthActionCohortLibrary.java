@@ -726,28 +726,6 @@ public class PublicHealthActionCohortLibrary {
     }
 
     /**
-     * Ever enrolled Clients without NUPI
-     * @return
-     */
-    public CohortDefinition clientsWithoutNUPI() {
-        String sqlQuery = "select enr.patient_id from kenyaemr_etl.etl_hiv_enrollment enr\n" +
-                "  join kenyaemr_etl.etl_patient_demographics dm on dm.patient_id =enr.patient_id\n" +
-                "  left join\n" +
-                "  (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation\n" +
-                "  where date(visit_date) <= date(:endDate) and program_name='HIV'\n" +
-                "  group by patient_id\n" +
-                "  ) d on d.patient_id = enr.patient_id\n" +
-                "where dm.national_unique_patient_identifier is null and d.patient_id is null;";
-        SqlCohortDefinition cd = new SqlCohortDefinition();
-        cd.setName("clientsWithoutNUPI");
-        cd.setQuery(sqlQuery);
-        cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-        cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-        cd.setDescription("Clients without NUPI");
-        return cd;
-    }
-
-    /**
      * Ever enrolled Clients NUPI
      * @return
      */
@@ -876,32 +854,6 @@ public class PublicHealthActionCohortLibrary {
         cd.setCompositionString("txcurr AND covidVaccineAgeCohort AND NOT covid19AssessedPatients");
         return cd;
     }
-
-	/**
-	 * Number of patients with unsuppressed VL result without Enhanced Adherence Counseling
-	 * @return the indicator
-	 */
-
-	public CohortDefinition unsuppressedWithoutEAC() {
-		String sqlQuery = "select b.patient_id as unsuppressed_no_eac\n" +
-			"from (select x.patient_id as patient_id,DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)\n" +
-			"      from kenyaemr_etl.etl_laboratory_extract x\n" +
-			"      where x.lab_test = 856\n" +
-			"        and test_result >= 200\n" +
-			"        and x.date_test_result_received BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY) AND DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)) b\n" +
-			"         left join (select e.patient_id, e.visit_date as eac_date\n" +
-			"                    from kenyaemr_etl.etl_enhanced_adherence e\n" +
-			"                    where e.visit_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY) AND CURRENT_DATE) e\n" +
-			"                   on b.patient_id = e.patient_id\n" +
-			"where e.patient_id is null;\n";
-		SqlCohortDefinition cd = new SqlCohortDefinition();
-		cd.setName("allSuppressedWithoutEAC");
-		cd.setQuery(sqlQuery);
-		cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-		cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-		cd.setDescription("Patients with unsuppressed without Enhanced Adherence Counseling");
-		return cd;
-	}
     /**
      * Number of patients with unsuppressed VL result without Enhanced Adherence Counseling
      * @return the indicator
