@@ -796,26 +796,26 @@ public class CommonMetadata extends AbstractMetadataBundle {
 
 		// Provider attribute types.
 		install(providerAttributeType("Primary Facility", "Default facility for a provider", LocationDatatype.class, "",
-				0, 9999, _ProviderAttributeType.PRIMARY_FACILITY));
+				0, 1, _ProviderAttributeType.PRIMARY_FACILITY));
 		install(providerAttributeType("Practising License Number", "Provider Practising License Number",
-				FreeTextDatatype.class, "", 0, 9999, _ProviderAttributeType.LICENSE_NUMBER));
+				FreeTextDatatype.class, "", 0, 1, _ProviderAttributeType.LICENSE_NUMBER));
 		install(providerAttributeType("License Expiry Date", "Provider Practising License Expiry Date",
-				DateDatatype.class, "", 0, 9999, _ProviderAttributeType.LICENSE_EXPIRY_DATE));
+				DateDatatype.class, "", 0, 1, _ProviderAttributeType.LICENSE_EXPIRY_DATE));
 		install(providerAttributeType("Provider National Id Number", "Provider National Id Number",
-				FreeTextDatatype.class, "", 0, 9999, _ProviderAttributeType.NATIONAL_ID));
-		install(providerAttributeType("License Body", "", FreeTextDatatype.class, "", 0, 9999,
+				FreeTextDatatype.class, "", 0, 1, _ProviderAttributeType.NATIONAL_ID));
+		install(providerAttributeType("License Body", "", FreeTextDatatype.class, "", 0, 1,
 				_ProviderAttributeType.LICENSE_BODY));
-		install(providerAttributeType("Provider HIE FHIR Reference", "", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider HIE FHIR Reference", "", FreeTextDatatype.class, "", 0, 1,
 				_ProviderAttributeType.PROVIDER_HIE_FHIR_REFERENCE));
-		install(providerAttributeType("Provider Qualification", "", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider Qualification", "", FreeTextDatatype.class, "", 0, 1,
 			_ProviderAttributeType.PROVIDER_QUALIFICATION));
-		install(providerAttributeType("Provider Address", "", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider Address", "", FreeTextDatatype.class, "", 0, 1,
 			_ProviderAttributeType.PROVIDER_ADDRESS));
-		install(providerAttributeType("Provider Telephone", "", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider Telephone", "", FreeTextDatatype.class, "", 0, 1,
 			_ProviderAttributeType.PROVIDER_TELEPHONE));
-		install(providerAttributeType("Provider passport number", "Provider passport number", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider passport number", "Provider passport number", FreeTextDatatype.class, "", 0, 1,
 			_ProviderAttributeType.PROVIDER_PASSPORT_NUMBER));
-		install(providerAttributeType("Provider unique identifier", "Provider unique identifier", FreeTextDatatype.class, "", 0, 9999,
+		install(providerAttributeType("Provider unique identifier", "Provider unique identifier", FreeTextDatatype.class, "", 0, 1,
 			_ProviderAttributeType.PROVIDER_UNIQUE_IDENTIFIER));
 
 		install(relationshipType("Guardian", "Dependant", "One that guards, watches over, or protects",
