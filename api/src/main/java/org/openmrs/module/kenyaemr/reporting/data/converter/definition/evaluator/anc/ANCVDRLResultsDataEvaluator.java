@@ -35,18 +35,34 @@ public class ANCVDRLResultsDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT\n" +
+        String qry = "WITH lab AS (\n" +
+                "    SELECT\n" +
+                "        l.patient_id,\n" +
+                "        DATE(l.visit_date) AS visit_date,\n" +
+                "        l.result_name,\n" +
+                "        ROW_NUMBER() OVER (\n" +
+                "            PARTITION BY l.patient_id, DATE(l.visit_date)\n" +
+                "            ORDER BY l.date_test_result_received DESC, l.date_test_requested DESC\n" +
+                "            ) AS rn\n" +
+                "    FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "    WHERE l.lab_test = '299'\n" +
+                "      AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ")\n" +
+                "SELECT\n" +
                 "    v.encounter_id,\n" +
-                "    CASE COALESCE(v.syphilis_test_status,x.test_result)\n" +
-                "        WHEN 1229 THEN 'Non-Reactive'\n" +
-                "        WHEN 1228 THEN 'Reactive'\n" +
-                "        WHEN 1304 THEN 'Inconclusive'\n" +
-                "        END AS syphilis\n" +
+                "    COALESCE(\n" +
+                "            CASE lo.result_name WHEN 'REACTIVE' THEN 'P' WHEN 'NON-REACTIVE' THEN 'N' END,\n" +
+                "                    CASE v.syphilis_test_status\n" +
+                "                        WHEN 1229 THEN 'N'\n" +
+                "                        WHEN 1228 THEN 'P'\n" +
+                "                        ELSE 'NA'\n" +
+                "                        END\n" +
+                "    ) AS vdrl_results\n" +
                 "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "         LEFT JOIN kenyaemr_etl.etl_laboratory_extract x\n" +
-                "                   ON x.patient_id = v.patient_id\n" +
-                "                       AND DATE(x.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "                       AND x.lab_test = 299\n" +
+                "         LEFT JOIN lab lo\n" +
+                "                   ON lo.patient_id = v.patient_id\n" +
+                "                       AND lo.visit_date = DATE(v.visit_date)\n" +
+                "                       AND lo.rn = 1\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

@@ -38,15 +38,26 @@ public class ANCVDRLDoneDataEvaluator implements EncounterDataEvaluator {
         String qry = "SELECT\n" +
                 "    v.encounter_id,\n" +
                 "    CASE\n" +
+                "        WHEN v.syphilis_test_status IS NOT NULL AND COALESCE(l.has_vdrl, 0) = 1 THEN 'Duo Test & VDRL'\n" +
                 "        WHEN v.syphilis_test_status IS NOT NULL THEN 'Duo Test'\n" +
-                "        WHEN x.patient_id IS NOT NULL THEN 'VDRL'\n" +
-                "        WHEN x.patient_id IS NOT NULL AND v.syphilis_test_status IS NOT NULL THEN 'Duo Test & VDRL'\n" +
+                "        WHEN COALESCE(l.has_vdrl, 0) = 1 THEN 'VDRL'\n" +
                 "        END AS syphilis\n" +
                 "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "         LEFT JOIN kenyaemr_etl.etl_laboratory_extract x\n" +
-                "                   ON x.patient_id = v.patient_id\n" +
-                "                       AND DATE(x.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "                       AND x.lab_test = 299\n" +
+                "         LEFT JOIN (\n" +
+                "    SELECT\n" +
+                "        x.encounter_id,\n" +
+                "        x.patient_id,\n" +
+                "        DATE(x.date_test_requested) AS test_date,\n" +
+                "        1 AS has_vdrl\n" +
+                "    FROM kenyaemr_etl.etl_laboratory_extract x\n" +
+                "    WHERE x.lab_test = 299\n" +
+                "      AND DATE(x.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "    GROUP BY x.encounter_id, x.patient_id, DATE(x.date_test_requested)\n" +
+                ") l\n" +
+                "                   ON (\n" +
+                "                       (l.encounter_id IS NOT NULL AND l.encounter_id = v.encounter_id)\n" +
+                "                           OR (l.encounter_id IS NULL AND l.patient_id = v.patient_id AND l.test_date = DATE(v.visit_date))\n" +
+                "                       )\n" +
                 "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();

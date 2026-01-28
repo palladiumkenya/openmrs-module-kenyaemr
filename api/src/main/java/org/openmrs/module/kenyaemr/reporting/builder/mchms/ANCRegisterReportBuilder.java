@@ -287,7 +287,7 @@ public class ANCRegisterReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Haemoglobin", ancHaemoglobinDataDefinition, paramMapping);
         dsd.addColumn("Diabetes testing", ancDiabetesTestingDefinition, paramMapping);
         dsd.addColumn("Urinalysis", ancUrinalysisDataDefinition, paramMapping);
-        dsd.addColumn("VDRL Done", ancSyphilisResultsDataDefinition, paramMapping);
+        dsd.addColumn("VDRL Done", ancSyphilisTestDoneDataDefinition, paramMapping);
         dsd.addColumn("VDRL Results", ancSyphilisResultsDataDefinition, paramMapping);
         dsd.addColumn("HIV Testing", ancHIVTestTypeDataDefinition, paramMapping);
         dsd.addColumn("HIV Test One", ancHIVTestOneDataDefinition, paramMapping);

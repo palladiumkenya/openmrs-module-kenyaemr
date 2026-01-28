@@ -35,33 +35,38 @@ public class ANCDiabetesTestingDataEvaluator implements EncounterDataEvaluator {
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "SELECT\n" +
-                "    t.encounter_id,\n" +
-                "    t.blood_sugar\n" +
-                "FROM (\n" +
-                "         SELECT\n" +
-                "             v.encounter_id,\n" +
-                "             COALESCE(\n" +
-                "                     v.blood_glucose,\n" +
-                "                     CASE v.blood_sugar_test\n" +
-                "                         WHEN 1118 THEN 'No Diabetes'\n" +
-                "                         WHEN 1175 THEN 'Not Done'\n" +
-                "                         WHEN 0 THEN 'Has Diabetes'\n" +
-                "                         END\n" +
-                "             ) AS blood_sugar\n" +
-                "         FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "         WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "         GROUP BY v.encounter_id\n" +
-                "         UNION ALL\n" +
-                "         SELECT\n" +
-                "             v.encounter_id,\n" +
-                "             l.result_name AS blood_sugar\n" +
-                "         FROM kenyaemr_etl.etl_laboratory_extract l\n" +
-                "         inner join kenyaemr_etl.etl_mch_antenatal_visit v on v.visit_date = l.visit_date and v.patient_id = l.patient_id\n" +
-                "         WHERE l.lab_test = 1000443\n" +
-                "           AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
-                "         GROUP BY l.encounter_id\n" +
-                "     ) t;";
+        String qry = "WITH lab AS (\n" +
+                "    SELECT\n" +
+                "        l.patient_id,\n" +
+                "        DATE(l.visit_date) AS visit_date,\n" +
+                "        l.result_name,\n" +
+                "        ROW_NUMBER() OVER (\n" +
+                "            PARTITION BY l.patient_id, DATE(l.visit_date)\n" +
+                "            ORDER BY l.date_test_result_received DESC, l.date_test_requested DESC\n" +
+                "            ) AS rn\n" +
+                "    FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "    WHERE l.lab_test = '1000443'\n" +
+                "      AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                ")\n" +
+                "SELECT\n" +
+                "    v.encounter_id,\n" +
+                "    COALESCE(\n" +
+                "            if(lo.result_name > 11.1, '>11.1 mmol/L',if(lo.result_name <= 11.1, '<=11.1 mmol/L',lo.result_name)) ,\n" +
+                "            COALESCE(\n" +
+                "                    v.blood_glucose,\n" +
+                "                    CASE v.blood_sugar_test\n" +
+                "                        WHEN 1118 THEN 'No Diabetes'\n" +
+                "                        WHEN 1175 THEN 'Not Done'\n" +
+                "                        WHEN 119481 THEN 'Has Diabetes'\n" +
+                "                        END\n" +
+                "            )\n" +
+                "    ) AS blood_sugar\n" +
+                "FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         LEFT JOIN lab lo\n" +
+                "                   ON lo.patient_id = v.patient_id\n" +
+                "                       AND lo.visit_date = DATE(v.visit_date)\n" +
+                "                       AND lo.rn = 1\n" +
+                "WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate);";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);

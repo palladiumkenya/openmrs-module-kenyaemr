@@ -35,14 +35,46 @@ public class ANCHepatitisBScreenedDataEvaluator implements EncounterDataEvaluato
     public EvaluatedEncounterData evaluate(EncounterDataDefinition definition, EvaluationContext context) throws EvaluationException {
         EvaluatedEncounterData c = new EvaluatedEncounterData(definition, context);
 
-        String qry = "select v.encounter_id,\n" +
-                "       (case v.hepatitis_b_screening\n" +
-                "            when 703 then 'P'\n" +
-                "            when 664 then 'N'\n" +
-                "            when 165649 then 'I'\n" +
-                "            else 'ND' end) as hepatitis_b_screening\n" +
-                "from kenyaemr_etl.etl_mch_antenatal_visit v\n" +
-                "where date(v.visit_date) between date(:startDate) and date(:endDate);";
+        String qry = "WITH lab AS (\n" +
+                "    SELECT\n" +
+                "        l.patient_id,\n" +
+                "        DATE(l.visit_date) AS visit_date,\n" +
+                "        CASE l.test_result\n" +
+                "            WHEN 664 THEN 'N'\n" +
+                "            WHEN 703 THEN 'P'\n" +
+                "            WHEN 1138 THEN 'I'\n" +
+                "            ELSE NULL\n" +
+                "            END AS lab_test_result,\n" +
+                "        ROW_NUMBER() OVER (\n" +
+                "            PARTITION BY l.patient_id, DATE(l.visit_date)\n" +
+                "            ORDER BY l.date_test_result_received DESC, l.date_test_requested DESC\n" +
+                "            ) AS rn\n" +
+                "    FROM kenyaemr_etl.etl_laboratory_extract l\n" +
+                "    WHERE l.lab_test = '159430'\n" +
+                "      AND DATE(l.date_test_requested) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "),\n" +
+                "     anc AS (\n" +
+                "         SELECT\n" +
+                "             v.encounter_id,\n" +
+                "             v.patient_id,\n" +
+                "             DATE(v.visit_date) AS visit_date,\n" +
+                "             CASE v.hepatitis_b_screening\n" +
+                "                 WHEN 703 THEN 'P'\n" +
+                "                 WHEN 664 THEN 'N'\n" +
+                "                 WHEN 165649 THEN 'I'\n" +
+                "                 ELSE NULL\n" +
+                "                 END AS anc_test_result\n" +
+                "         FROM kenyaemr_etl.etl_mch_antenatal_visit v\n" +
+                "         WHERE DATE(v.visit_date) BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "     )\n" +
+                "SELECT\n" +
+                "    a.encounter_id,\n" +
+                "    COALESCE(lo.lab_test_result, a.anc_test_result, 'ND') AS HepB_Screening\n" +
+                "FROM anc a\n" +
+                "         LEFT JOIN lab lo\n" +
+                "                   ON lo.patient_id = a.patient_id\n" +
+                "                       AND lo.visit_date  = a.visit_date\n" +
+                "                       AND lo.rn = 1;";
 
         SqlQueryBuilder queryBuilder = new SqlQueryBuilder();
         queryBuilder.append(qry);
