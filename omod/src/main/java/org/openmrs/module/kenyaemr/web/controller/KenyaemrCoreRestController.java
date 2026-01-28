@@ -3931,7 +3931,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 * It reads the mapping file from the OpenMRS app directory.
 	 * The file must be a json file named local_concept_mapping.
 	 * The file content is a JSON array of mappings
-	 *
 	 * @return
 	 * @throws IOException
 	 */
@@ -3942,9 +3941,11 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		ObjectMapper mapper = new ObjectMapper();
 		ConceptService conceptService = Context.getConceptService();
 		ArrayNode mappingEntries = null;
+		System.out.println("Starting the concept mapping task");
+		//String conceptMapping = "icd11ConceptsMapper/icd11mapper.json";		
+		String conceptMapping = "icd11ConceptsMapper/phcShaDiagnosisMapper.json";
 
-		File conceptMappingFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "local_concept_mapping.json");
-		if (!conceptMappingFile.exists()) {
+		if (conceptMapping == null) {
 			responseObject.put("status", "Error");
 			responseObject.put("message", "Concept mapping file not found!");
 			return responseObject;
@@ -3953,53 +3954,51 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		 * Sample conceptMappingFile content
 		 * ----------------------
 		 * [
-		 * {
-		 * "DiagnosisName": "Headache, not elsewhere classified",
-		 * "ConceptId": "139084",
-		 * "ICD11Code": "8A8Z"
-		 * }
+		 *   {
+		 *       "DiagnosisName": "Headache, not elsewhere classified",
+		 *       "ConceptId": "139084",
+		 *       "ICD11Code": "8A8Z"
+		 *   }
 		 * ]
 		 */
-		String conceptMapping = FileUtils.readFileToString(conceptMappingFile, "UTF-8");
-
+		System.out.println("Concept mapping file found");
+		ArrayNode icd11conceptMap = icd11ConceptMappingFile(conceptMapping);
 		try {
-			System.out.println("Starting the concept mapping task");
-			mappingEntries = (ArrayNode) mapper.readTree(conceptMapping);
+			System.out.println("Starting concept mapping");
+			mappingEntries = (ArrayNode) mapper.readTree(icd11conceptMap.toString());
 			if (mappingEntries != null) {
-				System.out.println("Concept mapping file found");
 				ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
-				ConceptSource icd11Who = conceptService.getConceptSourceByName("ICD-11-WHO");
+				ConceptSource phcShaClaimable = conceptService.getConceptSourceByName("ICD-11-WHO");
 				int counter = 0;
-				for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext();) {
+				for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext(); ) {
 					ObjectNode node = (ObjectNode) it.next();
 
 					Integer conceptId = node.get("ConceptId").asInt();
 					String icd11Code = node.get("ICD11Code").asText();
 					String icd11Name = "";// TODO: add reference name
 
-					Concept concept = conceptService.getConcept(conceptId);
+					//  Concept concept = conceptService.getConcept(conceptId);
+					Concept concept = conceptService.getConceptByMapping(icd11Code,"SHA PHC Claimable");
 					if (concept == null) {
+						System.out.println("SHA PHC Claimable concept mapping not found");
 						continue; // just skip
 					}
-					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code,
-							icd11Who) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, icd11Who)
-									: new ConceptReferenceTerm(icd11Who, icd11Code, icd11Name);
+					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code, phcShaClaimable) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, phcShaClaimable) : new ConceptReferenceTerm(phcShaClaimable, icd11Code, icd11Name);
 					ConceptMap conceptMap = new ConceptMap();
 					conceptMap.setConceptMapType(sameAs);
 					conceptMap.setConceptReferenceTerm(referenceTerm);
-					if (concept.getConceptMappings().stream()
-							.anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code)
-									&& cMap.getConceptReferenceTerm().getConceptSource().equals(icd11Who))) {
-						continue; // skip existing mappings
-					}
-					concept.addConceptMapping(conceptMap);
-					conceptService.saveConcept(concept);
-					counter++;
-					if ((counter % 200) == 0) {
-						Context.flushSession();
-						Context.clearSession();
-						counter = 0;
-						System.out.println("Concept mapping: Flushing session....");
+					if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code) && cMap.getConceptReferenceTerm().getConceptSource().equals(phcShaClaimable))) {
+//                        continue; // skip existing mappings
+//                    }
+						concept.addConceptMapping(conceptMap);
+						conceptService.saveConcept(concept);
+						counter++;
+						if ((counter % 200) == 0) {
+							Context.flushSession();
+							Context.clearSession();
+							counter = 0;
+							System.out.println("Concept mapping: Flushing session....");
+						}
 					}
 				}
 			}
@@ -4014,6 +4013,25 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		return responseObject.toString();
 
 	}
+
+	/**
+	 * Reads a json file with ICD11 concept mappings
+	 * The file is a json array
+	 * @param fileName
+	 * @return
+	 */
+	public static ArrayNode icd11ConceptMappingFile(String fileName) {
+		InputStream stream = KenyaemrCoreRestController.class.getClassLoader().getResourceAsStream(fileName);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ArrayNode result = mapper.readValue(stream, ArrayNode.class);
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 	/**
 	 * Generates Facility Dashboard
