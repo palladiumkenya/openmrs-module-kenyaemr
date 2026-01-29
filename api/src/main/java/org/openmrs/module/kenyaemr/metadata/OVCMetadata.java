@@ -15,6 +15,7 @@ import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.springframework.stereotype.Component;
 
+import static org.openmrs.module.kenyaemr.metadata.MetadataUtils.shouldInstallForms;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.encounterType;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.form;
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.patientIdentifierType;
@@ -66,9 +67,11 @@ public class OVCMetadata extends AbstractMetadataBundle {
 		install(encounterType("OVC Enrollment", "Enrollment onto OVC program", _EncounterType.OVC_ENROLLMENT));
 		install(encounterType("OVC Discontinuation", "Discontinuation from OVC program", _EncounterType.OVC_DISCONTINUATION));
 
-		install(form("OVC Enrollment Form", null, _EncounterType.OVC_ENROLLMENT, "1", _Form.OVC_ENROLLMENT_FORM));
-		install(form("OVC Discontinuation Form", null, _EncounterType.OVC_DISCONTINUATION, "1", _Form.OVC_DISCONTINUATION_FORM));
-
+		boolean installForms = shouldInstallForms();
+		if(installForms) {
+			install(form("OVC Discontinuation Form", null, _EncounterType.OVC_DISCONTINUATION, "1", _Form.OVC_DISCONTINUATION_FORM));
+			install(form("OVC Enrollment Form", null, _EncounterType.OVC_ENROLLMENT, "1", _Form.OVC_ENROLLMENT_FORM));
+		}
 
 		//Installing identifiers
 
