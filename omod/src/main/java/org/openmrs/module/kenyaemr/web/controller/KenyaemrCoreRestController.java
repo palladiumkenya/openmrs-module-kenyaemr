@@ -3934,15 +3934,14 @@ public class KenyaemrCoreRestController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/processicd11mapping")
+	@RequestMapping(method = RequestMethod.GET, value = "/processPHCmapping")
 	@ResponseBody
-	public Object processICD11ConceptMapping() throws IOException {
+	public Object processPHCConceptMapping() throws IOException {
 		ObjectNode responseObject = JsonNodeFactory.instance.objectNode();
 		ObjectMapper mapper = new ObjectMapper();
 		ConceptService conceptService = Context.getConceptService();
 		ArrayNode mappingEntries = null;
 		System.out.println("Starting the concept mapping task");
-		//String conceptMapping = "icd11ConceptsMapper/icd11mapper.json";		
 		String conceptMapping = "icd11ConceptsMapper/phcShaDiagnosisMapper.json";
 
 		if (conceptMapping == null) {
@@ -3968,37 +3967,34 @@ public class KenyaemrCoreRestController extends BaseRestController {
 			mappingEntries = (ArrayNode) mapper.readTree(icd11conceptMap.toString());
 			if (mappingEntries != null) {
 				ConceptMapType sameAs = conceptService.getConceptMapTypeByUuid(ConceptMapType.SAME_AS_MAP_TYPE_UUID);
-				ConceptSource phcShaClaimable = conceptService.getConceptSourceByName("ICD-11-WHO");
+				ConceptSource phcConceptSource = conceptService.getConceptSourceByName("SHA PHC");
 				int counter = 0;
 				for (Iterator<JsonNode> it = mappingEntries.iterator(); it.hasNext(); ) {
 					ObjectNode node = (ObjectNode) it.next();
 
-					Integer conceptId = node.get("ConceptId").asInt();
-					String icd11Code = node.get("ICD11Code").asText();
+					Integer conceptId = node.get("conceptId").asInt();
+					String phcCode = node.get("phcCode").asText();
 					String icd11Name = "";// TODO: add reference name
 
-					//  Concept concept = conceptService.getConcept(conceptId);
-					Concept concept = conceptService.getConceptByMapping(icd11Code,"SHA PHC Claimable");
+					Concept concept = conceptService.getConcept(conceptId);
 					if (concept == null) {
-						System.out.println("SHA PHC Claimable concept mapping not found");
 						continue; // just skip
 					}
-					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(icd11Code, phcShaClaimable) != null ? conceptService.getConceptReferenceTermByCode(icd11Code, phcShaClaimable) : new ConceptReferenceTerm(phcShaClaimable, icd11Code, icd11Name);
+					ConceptReferenceTerm referenceTerm = conceptService.getConceptReferenceTermByCode(phcCode, phcConceptSource) != null ? conceptService.getConceptReferenceTermByCode(phcCode, phcConceptSource) : new ConceptReferenceTerm(phcConceptSource, phcCode, icd11Name);
 					ConceptMap conceptMap = new ConceptMap();
 					conceptMap.setConceptMapType(sameAs);
 					conceptMap.setConceptReferenceTerm(referenceTerm);
-					if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(icd11Code) && cMap.getConceptReferenceTerm().getConceptSource().equals(phcShaClaimable))) {
-//                        continue; // skip existing mappings
-//                    }
-						concept.addConceptMapping(conceptMap);
-						conceptService.saveConcept(concept);
-						counter++;
-						if ((counter % 200) == 0) {
-							Context.flushSession();
-							Context.clearSession();
-							counter = 0;
-							System.out.println("Concept mapping: Flushing session....");
-						}
+					if (concept.getConceptMappings().stream().anyMatch(cMap -> cMap.getConceptReferenceTerm().getCode().equals(phcCode) && cMap.getConceptReferenceTerm().getConceptSource().equals(phcConceptSource))) {
+						continue; // skip existing mappings
+					}
+					concept.addConceptMapping(conceptMap);
+					conceptService.saveConcept(concept);
+					counter++;
+					if ((counter % 200) == 0) {
+						Context.flushSession();
+						Context.clearSession();
+						counter = 0;
+						System.out.println("Concept mapping: Flushing session....");
 					}
 				}
 			}
@@ -4031,7 +4027,6 @@ public class KenyaemrCoreRestController extends BaseRestController {
 		}
 		return null;
 	}
-
 
 	/**
 	 * Generates Facility Dashboard
