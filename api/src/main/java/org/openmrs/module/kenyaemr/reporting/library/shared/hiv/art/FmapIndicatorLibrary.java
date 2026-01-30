@@ -81,4 +81,21 @@ public class FmapIndicatorLibrary {
 		return cohortIndicator("AZT+NVP Not BreastFeeding",map(fmapCohortLibrary.otherPrepRegimenPrepType(), "startDate=${startDate},endDate=${endDate}")
 		);
 	}
+    public CohortIndicator hepb1aHivNegative() {
+        return cohortIndicator("HepB patients on TDF+3TC",map(fmapCohortLibrary.hepb1aHivNegative(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hepb1bHivNegative() {
+        return cohortIndicator("HepB patients on TDF+FTC",map(fmapCohortLibrary.hepb1bHivNegative(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hepb1cHivNegative() {
+        return cohortIndicator("HepB patients on other HepB regimens",map(fmapCohortLibrary.hepb1cHivNegative(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+    public CohortIndicator hepb1TotalHivNegative() {
+        return cohortIndicator("Total HepB Patients",map(fmapCohortLibrary.hepb1TotalHivNegative(), "startDate=${startDate},endDate=${endDate}")
+        );
+    }
+
 }
