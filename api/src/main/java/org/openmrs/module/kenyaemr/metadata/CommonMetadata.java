@@ -154,6 +154,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String NURSING_CARE_PLAN = "b6569074-3b8c-43ba-bd4a-98c445405035";
 		public static final String AEFI_INVESTIGATION = "036a0ef4-8197-41ad-bfbf-802e79a14606";
 		public static final String IN_PATIENT_ADMISSION = "e22e39fd-7db2-45e7-80f1-60fa0d5a4378";
+		public static final String MORTALITY  = "d5a9963b-5656-4c20-9b6b-1a195650c8d8";
 	}
 
 	public static final class _Form {
@@ -421,6 +422,7 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("Nursing Care Plan", "Nursing care plan encounter for a inpatient", _EncounterType.NURSING_CARE_PLAN));
 		install(encounterType("AEFI Investigation", "AEFI Investigation encounter for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION));
 		install(encounterType("Admission", "Indicates that the patient has been admitted for inpatient care, and is not expected to leave the hospital unless discharged.", _EncounterType.IN_PATIENT_ADMISSION));
+		install(encounterType("Mortality", "Records patient death details including date, time, cause of death", _EncounterType.MORTALITY));
 
 		boolean installForms = shouldInstallForms();
 		
