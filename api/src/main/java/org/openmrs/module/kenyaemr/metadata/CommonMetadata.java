@@ -155,6 +155,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String AEFI_INVESTIGATION = "036a0ef4-8197-41ad-bfbf-802e79a14606";
 		public static final String IN_PATIENT_ADMISSION = "e22e39fd-7db2-45e7-80f1-60fa0d5a4378";
 		public static final String MORTALITY  = "d5a9963b-5656-4c20-9b6b-1a195650c8d8";
+		public static final String ATP_DISCLOSURE_READINESS_ASSESSMENT = "e016fcd1-08ad-4504-9d95-6e220d97f37c";
+		public static final String ATP_TAKING_CHARGE_TRACKING = "07c3d8c4-6fc7-4bdd-a0d9-626d030dc41f";
+		public static final String ATP_TRANSITION_READINESS = "2f184ba2-7582-411f-95d0-9cba4023dd46";
 	}
 
 	public static final class _Form {
@@ -238,6 +241,9 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		public static final String SURGICAL_SAFETY_CHECKLIST_SIGN_IN_FORM = "2061790f-815e-43a9-8a1e-dae9e4956c2a";
 		public static final String SURGICAL_SAFETY_CHECKLIST_SIGN_OUT_FORM = "982af61b-fd51-474c-85d2-0459b7e3640b";
 		public static final String SURGICAL_SAFETY_CHECKLIST_TIME_OUT_FORM = "923411a3-4aae-4242-ba85-bb5b5176e6b1";
+		public static final String ATP__DISCLOSURE_READINESS_ASSESSMENT_FORM = "d11c340d-defb-443f-b7de-e81dc87060a4";
+		public static final String ATP_TAKING_CHARGE_TRACKING_FORM = "a4276b08-5bf1-402a-bb6a-0b2e54b41d67";
+		public static final String ATP_TRANSITION_READINESS_ASS_FORM = "f4237de5-355a-4437-a09b-3e164719ae9c";
 	}
 
 	public static final class _OrderType {
@@ -423,6 +429,12 @@ public class CommonMetadata extends AbstractMetadataBundle {
 		install(encounterType("AEFI Investigation", "AEFI Investigation encounter for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION));
 		install(encounterType("Admission", "Indicates that the patient has been admitted for inpatient care, and is not expected to leave the hospital unless discharged.", _EncounterType.IN_PATIENT_ADMISSION));
 		install(encounterType("Mortality", "Records patient death details including date, time, cause of death", _EncounterType.MORTALITY));
+		install(encounterType("ATP Disclosure Readiness Assessment", "ATP Disclosure Readiness Assessment", _EncounterType.ATP_DISCLOSURE_READINESS_ASSESSMENT));
+		install(encounterType("ATP Taking Charge Tracking", "ATP Taking Charge Tracking", _EncounterType.ATP_TAKING_CHARGE_TRACKING));
+		install(encounterType("ATP Transition Readiness Assessment", "ATP Transition Readiness Assessment", _EncounterType.ATP_TRANSITION_READINESS));
+
+
+
 
 		boolean installForms = shouldInstallForms();
 		
@@ -529,6 +541,11 @@ public class CommonMetadata extends AbstractMetadataBundle {
 			install(form("Nursing Care Plan", "Form for recording care plans that nurses develop for a inpatient", _EncounterType.NURSING_CARE_PLAN, "1.0", _Form.NURSING_CARE_PLAN_FORM));
 			install(form("AEFI Investigation", "Form for recording AEFI Investigation for a patient with adverse vaccine reaction", _EncounterType.AEFI_INVESTIGATION, "1.0", _Form.AEFI_INVESTIGATION_FORM));
 			install(form("In-Patient Admission Form", "Form for Inpatient Admission", _EncounterType.IN_PATIENT_ADMISSION, "1", _Form.IN_PATIENT_ADMISSION_FORM));
+			install(form("ATP Disclosure Readiness Assessment", "ATP Disclosure Readiness Assessment", _EncounterType.ATP_DISCLOSURE_READINESS_ASSESSMENT, "1", _Form.ATP__DISCLOSURE_READINESS_ASSESSMENT_FORM));
+			install(form("ATP Taking Charge Tracking Form", "ATP Taking Charge Tracking Form", _EncounterType.ATP_TAKING_CHARGE_TRACKING, "1", _Form.ATP_TAKING_CHARGE_TRACKING_FORM));
+			install(form("ATP Transition Readiness Assessment Form", "ATP Transition Readiness Assessment Form", _EncounterType.ATP_TRANSITION_READINESS, "1", _Form.ATP_TRANSITION_READINESS_ASS_FORM));
+
+
 		} else {
 			logger.info("=== SKIPPING form installation because shouldInstallForms() returned false ===");
 		}
