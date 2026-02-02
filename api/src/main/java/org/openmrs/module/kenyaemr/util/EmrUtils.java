@@ -41,6 +41,7 @@ import org.openmrs.util.PrivilegeConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Relationship;
+import org.apache.commons.logging.Log;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -64,9 +65,11 @@ public class EmrUtils {
 	public static String GP_2X_FORMS_WHITELIST = "kenyaemr.2.x.forms.whitelist";
 	private static final String DEFAULT_GLOBAL_PROPERTY_KEY = "facility.mflcode";
 	private static final AdministrationService administrationService = Context.getAdministrationService();
-	public static final Integer LOCATION_ID = Integer.parseInt(administrationService.getGlobalProperty("kenyaemr.defaultLocation"));
+	public static String GP_DEFAULT_LOCATION = "kenyaemr.defaultLocation";
+
 	/**
 	 * Checks whether a date has any time value
+	 * 
 	 * @param date the date
 	 * @return true if the date has time
 	 * @should return true only if date has time
@@ -74,11 +77,13 @@ public class EmrUtils {
 	public static boolean dateHasTime(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		return cal.get(Calendar.HOUR) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0 || cal.get(Calendar.MILLISECOND) != 0;
+		return cal.get(Calendar.HOUR) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0
+				|| cal.get(Calendar.MILLISECOND) != 0;
 	}
 
 	/**
 	 * Checks if a given date is today
+	 * 
 	 * @param date the date
 	 * @return true if date is today
 	 */
@@ -88,21 +93,26 @@ public class EmrUtils {
 
 	/**
 	 * Converts a WHO stage concept to a WHO stage number
+	 * 
 	 * @param c the WHO stage concept
 	 * @return the WHO stage number (null if the concept isn't a WHO stage)
 	 */
 	public static Integer whoStage(Concept c) {
 		if (c != null) {
-			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_ADULT)) || c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_PEDS))) {
+			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_ADULT))
+					|| c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_1_PEDS))) {
 				return 1;
 			}
-			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_ADULT)) || c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_PEDS))) {
+			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_ADULT))
+					|| c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_2_PEDS))) {
 				return 2;
 			}
-			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_ADULT)) || c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_PEDS))) {
+			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_ADULT))
+					|| c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_3_PEDS))) {
 				return 3;
 			}
-			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_ADULT)) || c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_PEDS))) {
+			if (c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_ADULT))
+					|| c.equals(Dictionary.getConcept(Dictionary.WHO_STAGE_4_PEDS))) {
 				return 4;
 			}
 		}
@@ -111,6 +121,7 @@ public class EmrUtils {
 
 	/**
 	 * Parses a CSV list of strings, returning all trimmed non-empty values
+	 * 
 	 * @param csv the CSV string
 	 * @return the concepts
 	 */
@@ -129,6 +140,7 @@ public class EmrUtils {
 
 	/**
 	 * Parses a CSV list of concept ids, UUIDs or mappings
+	 * 
 	 * @param csv the CSV string
 	 * @return the concepts
 	 */
@@ -139,8 +151,7 @@ public class EmrUtils {
 		for (String identifier : identifiers) {
 			if (StringUtils.isNumeric(identifier)) {
 				concepts.add(Context.getConceptService().getConcept(Integer.valueOf(identifier)));
-			}
-			else {
+			} else {
 				concepts.add(Dictionary.getConcept(identifier));
 			}
 		}
@@ -149,6 +160,7 @@ public class EmrUtils {
 
 	/**
 	 * Unlike in OpenMRS core, a user can only be one provider in KenyaEMR
+	 * 
 	 * @param user the user
 	 * @return the provider or null
 	 */
@@ -159,41 +171,48 @@ public class EmrUtils {
 	}
 
 	/**
-	 * Finds the last encounter during the program enrollment with the given encounter type
+	 * Finds the last encounter during the program enrollment with the given
+	 * encounter type
 	 *
 	 * @param type the encounter type
 	 *
 	 * @return the encounter
 	 */
 	public static Encounter lastEncounter(Patient patient, EncounterType type) {
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, null, Collections.singleton(type), null, null, null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, null,
+				Collections.singleton(type), null, null, null, false);
 		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 
 	public static Encounter lastEncounter(Patient patient, EncounterType type, Form form) {
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, Collections.singleton(form), Collections.singleton(type), null, null, null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null,
+				Collections.singleton(form), Collections.singleton(type), null, null, null, false);
 		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 
 	public static Encounter lastEncounter(Patient patient, EncounterType type, List<Form> forms) {
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, forms, Collections.singleton(type), null, null, null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, forms,
+				Collections.singleton(type), null, null, null, false);
 		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 
 	public static List<Encounter> AllEncounters(Patient patient, EncounterType type, Form form) {
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, Collections.singleton(form), Collections.singleton(type), null, null, null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null,
+				Collections.singleton(form), Collections.singleton(type), null, null, null, false);
 		return encounters;
 	}
 
 	/**
-	 * Finds the first encounter during the program enrollment with the given encounter type
+	 * Finds the first encounter during the program enrollment with the given
+	 * encounter type
 	 *
 	 * @param type the encounter type
 	 *
 	 * @return the encounter
 	 */
 	public static Encounter firstEncounter(Patient patient, EncounterType type) {
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, null, Collections.singleton(type), null, null, null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, null,
+				Collections.singleton(type), null, null, null, false);
 		return encounters.size() > 0 ? encounters.get(0) : null;
 	}
 
@@ -210,19 +229,17 @@ public class EmrUtils {
 			forms.add(form);
 		}
 		EncounterService encounterService = Context.getEncounterService();
-		List<Encounter> encounters = encounterService.getEncounters
-				(
-						patient,
-						null,
-						null,
-						null,
-						forms,
-						Collections.singleton(encounterType),
-						null,
-						null,
-						null,
-						false
-				);
+		List<Encounter> encounters = encounterService.getEncounters(
+				patient,
+				null,
+				null,
+				null,
+				forms,
+				Collections.singleton(encounterType),
+				null,
+				null,
+				null,
+				false);
 		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 
@@ -243,10 +260,10 @@ public class EmrUtils {
 		}
 
 		List<DrugOrder> drugOrdersOnly = new ArrayList<DrugOrder>();
-		for (Order o:allDrugOrders) {
+		for (Order o : allDrugOrders) {
 			DrugOrder order = null;
 			if (o.getOrderType().equals(drugOrderType)) {
-				order = (DrugOrder)o;
+				order = (DrugOrder) o;
 				drugOrdersOnly.add(order);
 			}
 
@@ -259,7 +276,7 @@ public class EmrUtils {
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode conf = (ArrayNode) mapper.readTree(mappingString);
 
-		for (Iterator<JsonNode> it = conf.iterator(); it.hasNext(); ) {
+		for (Iterator<JsonNode> it = conf.iterator(); it.hasNext();) {
 			ObjectNode node = (ObjectNode) it.next();
 			if (node.get("reportName").asText().equals(reportName)) {
 				return node;
@@ -283,6 +300,7 @@ public class EmrUtils {
 
 	/**
 	 * a helper method that checks if an encounter has obs for a concept
+	 * 
 	 * @param enc
 	 * @param question
 	 * @return
@@ -329,10 +347,12 @@ public class EmrUtils {
 	/**
 	 * A temporary solution for whitelisting forms to show in 2.x
 	 * TODO: retire this once all forms are fully moved to o3
+	 * 
 	 * @return
 	 */
 	public static List<String> getFormsToShowInLegacyUI() {
-		GlobalProperty gpFormsWhitelist = Context.getAdministrationService().getGlobalPropertyObject(GP_2X_FORMS_WHITELIST);
+		GlobalProperty gpFormsWhitelist = Context.getAdministrationService()
+				.getGlobalPropertyObject(GP_2X_FORMS_WHITELIST);
 
 		String formsWhiteList = "";
 		List<String> formsList = new ArrayList<String>();
@@ -345,10 +365,12 @@ public class EmrUtils {
 		return formsList;
 
 	}
-	public static Date getLatestAppointmentDateForService (Integer patientId, Integer appointmentServiceId) {
+
+	public static Date getLatestAppointmentDateForService(Integer patientId, Integer appointmentServiceId) {
 		Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		Date appointmentDate = null;
-		String sql = "SELECT MAX(start_date_time) AS appointment_date FROM patient_appointment WHERE" + " patient_id =" + patientId + " AND appointment_service_id =" +appointmentServiceId;
+		String sql = "SELECT MAX(start_date_time) AS appointment_date FROM patient_appointment WHERE" + " patient_id ="
+				+ patientId + " AND appointment_service_id =" + appointmentServiceId;
 		String lastAppointmentDate = null;
 		try {
 			List<List<Object>> result = Context.getAdministrationService().executeSQL(sql, true);
@@ -358,12 +380,12 @@ public class EmrUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(lastAppointmentDate != null) {
-			LocalDateTime localDateTime = LocalDateTime.parse(lastAppointmentDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		if (lastAppointmentDate != null) {
+			LocalDateTime localDateTime = LocalDateTime.parse(lastAppointmentDate,
+					DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			appointmentDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
 		}
-
 
 		return appointmentDate;
 	}
@@ -371,6 +393,7 @@ public class EmrUtils {
 	/**
 	 * Helper method that receives a List of Strings and returns a String
 	 * of comma-separated and single-quoted input list elements
+	 * 
 	 * @param list
 	 * @return
 	 */
@@ -384,6 +407,7 @@ public class EmrUtils {
 
 	/**
 	 * Helper method for getting mfl code for a facility
+	 * 
 	 * @return
 	 */
 	public static String getMFLCode() {
@@ -408,7 +432,8 @@ public class EmrUtils {
 			log.error("Error retrieving MFL Code: {}", e);
 		}
 
-		// Return the global property MFL code if available, otherwise fallback to default
+		// Return the global property MFL code if available, otherwise fallback to
+		// default
 		return globalPropertyMflCode != null ? globalPropertyMflCode : defaultMflCode;
 	}
 
@@ -428,7 +453,6 @@ public class EmrUtils {
 			Context.addProxyPrivilege(PrivilegeConstants.GET_LOCATIONS);
 			Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
 			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
-			String GP_DEFAULT_LOCATION = "kenyaemr.defaultLocation";
 			GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(GP_DEFAULT_LOCATION);
 			var2 = gp != null ? (Location) gp.getValue() : null;
 		} finally {
@@ -437,6 +461,27 @@ public class EmrUtils {
 			Context.removeProxyPrivilege(PrivilegeConstants.MANAGE_LOCATIONS);
 		}
 		return var2;
+	}
+
+	/**
+	 * Safely resolve default location ID from global property
+	 * 
+	 * @return Integer location id or null if missing/invalid
+	 */
+	public static Integer getDefaultLocationId() {
+		String value = Context.getAdministrationService().getGlobalProperty(GP_DEFAULT_LOCATION);
+
+		if (StringUtils.isBlank(value)) {
+			log.error("Location global property is not set or empty", null);
+			return null;
+		}
+
+		try {
+			return Integer.valueOf(value.trim());
+		} catch (NumberFormatException e) {
+			log.error("Invalid value for {}: {}", e);
+			return null;
+		}
 	}
 
 }
