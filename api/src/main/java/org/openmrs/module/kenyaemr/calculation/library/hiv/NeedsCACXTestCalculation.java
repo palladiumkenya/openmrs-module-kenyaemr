@@ -87,10 +87,12 @@ public class NeedsCACXTestCalculation extends AbstractPatientCalculation impleme
                 List<Encounter> cacxScreeningEncounters = Context.getEncounterService().getEncounters(patientService.getPatient(ptId), null,
                         null, null, Arrays.asList(cacxScreeningForm, oncologyScreeningForm), null, null, null, null, false);
 
+                boolean hasScreeningEncounter = cacxScreeningEncounters != null && !cacxScreeningEncounters.isEmpty();
+
                 // Without prior cervical cancer test
-                if (cacxScreeningEncounters.size() == 0 && !pregnantWomen.contains(ptId)) {
-                    // no cervical cancer screening done
-                    needsCacxTest = true;
+                if (!hasScreeningEncounter) {
+                    // no cervical cancer screening done -> flag only if NOT pregnant
+                    needsCacxTest = !pregnantWomen.contains(ptId);
                 } else {
                     // in case there are more than one, we pick the last one
                     Encounter lastCacxScreeningEnc = cacxScreeningEncounters.get(cacxScreeningEncounters.size() - 1);

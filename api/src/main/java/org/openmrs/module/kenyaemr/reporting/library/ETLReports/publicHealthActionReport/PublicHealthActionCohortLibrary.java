@@ -1277,20 +1277,29 @@ public class PublicHealthActionCohortLibrary {
         String sqlQuery = "SELECT a.patient_id high_risk_not_on_PrEP\n" +
                 "FROM (SELECT s.patient_id\n" +
                 "      FROM kenyaemr_etl.etl_hts_eligibility_screening s\n" +
-                "               INNER JOIN (SELECT t.patient_id,\n" +
-                "                                  t.final_test_result,\n" +
-                "                                  t.hts_entry_point,\n" +
-                "                                  t.visit_date\n" +
-                "                           from kenyaemr_etl.etl_hts_test t\n" +
-                "                           WHERE t.visit_date BETWEEN date(:startDate) AND date(:endDate)\n" +
-                "                             AND t.final_test_result = 'Negative'\n" +
-                "                             AND t.hts_entry_point in (160538, 160456, 1623)) t\n" +
-                "                          ON s.patient_id = t.patient_id\n" +
-                "                          INNER JOIN kenyaemr_etl.etl_patient_demographics d ON s.patient_id = d.patient_id\n" +
-                "      where s.hts_risk_category IN ('High', 'Very high')\n" +
-                "        and (s.currently_on_prep in ('NO', 'Declined to answer', '') OR s.currently_on_prep is null)\n" +
-                "        AND s.visit_date BETWEEN date(:startDate) AND date(:endDate) AND d.Gender = 'F') a\n" +
-                "         left join (select e.patient_id,\n" +
+                "               INNER JOIN (SELECT t.patient_id, t.final_test_result, t.visit_date\n" +
+                "                           FROM kenyaemr_etl.etl_hts_test t\n" +
+                "                           WHERE t.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "                             AND t.final_test_result = 'Negative') t\n" +
+                "                          ON t.patient_id = s.patient_id\n" +
+                "                              -- enforce order: screening must be before (or same day as) HTS test\n" +
+                "                              AND s.visit_date <= t.visit_date\n" +
+                "               INNER JOIN kenyaemr_etl.etl_prep_behaviour_risk_assessment r\n" +
+                "                          ON r.patient_id = s.patient_id\n" +
+                "                              AND r.willing_to_take_prep = 'Yes'\n" +
+                "               INNER JOIN kenyaemr_etl.etl_patient_demographics d\n" +
+                "                          ON d.patient_id = s.patient_id\n" +
+                "      WHERE s.hts_risk_category IN ('High', 'Very high')\n" +
+                "        AND (s.pregnant = 'YES' OR s.breastfeeding_mother = 'YES')\n" +
+                "        AND s.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate)\n" +
+                "        AND d.Gender = 'F'\n" +
+                "        -- enforce: all three events occur within the same 3-day window\n" +
+                "        AND TIMESTAMPDIFF(\n" +
+                "                    DAY,\n" +
+                "                    LEAST(s.visit_date, t.visit_date, r.visit_date),\n" +
+                "                    GREATEST(s.visit_date, t.visit_date, r.visit_date)\n" +
+                "            ) <= 3) a\n" +
+                "         LEFT JOIN (select e.patient_id,\n" +
                 "                           max(e.visit_date)                                        as latest_enrollment_date,\n" +
                 "                           f.latest_fup_date,\n" +
                 "                           greatest(ifnull(f.latest_fup_app_date, '0000-00-00'),\n" +
@@ -1329,8 +1338,8 @@ public class PublicHealthActionCohortLibrary {
                 "                       and date(latest_appointment_date) >= date(latest_visit_date)\n" +
                 "                       and ((latest_enrollment_date >= d.latest_disc_date\n" +
                 "                        and latest_appointment_date > d.latest_disc_date) or d.disc_patient is null)) b\n" +
-                "                   on a.patient_id = b.patient_id\n" +
-                "where b.patient_id is null;";
+                "                   ON a.patient_id = b.patient_id\n" +
+                "WHERE b.patient_id IS NULL;";
         SqlCohortDefinition cd = new SqlCohortDefinition();
         cd.setName("pregnantPostPartumNotLinkedToPrep");
         cd.setQuery(sqlQuery);
