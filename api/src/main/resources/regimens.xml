@@ -254,7 +254,7 @@
                 <component drugCode="DRV" />
                 <component drugCode="RTV" />
             </regimen>
-            <regimen name="TDF/3TC/RAL/DRV/r" conceptRef="9b9817dd-4c84-4093-95c3-690d65d24b99" orderSetRef="edce1cbc-32b5-11ea-978f-2e728ce88125');">
+            <regimen name="TDF/3TC/RAL/DRV/r" conceptRef="9b9817dd-4c84-4093-95c3-690d65d24b99" orderSetRef="edce1cbc-32b5-11ea-978f-2e728ce88125'">
                 <component drugCode="TDF" />
                 <component drugCode="3TC" />
                 <component drugCode="RAL" />
