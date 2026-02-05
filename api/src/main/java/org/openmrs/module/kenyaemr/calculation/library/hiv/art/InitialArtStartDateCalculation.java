@@ -33,7 +33,7 @@ import java.util.Map;
  * Calculates the date on which a patient first started ART
  */
 public class InitialArtStartDateCalculation extends BaseEmrCalculation {
-	static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy");
+	static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 	/**
 	 * @see org.openmrs.calculation.patient.PatientCalculation#evaluate(java.util.Collection, java.util.Map, org.openmrs.calculation.patient.PatientCalculationContext)
 	 * @should return null for patients who have not started ART
