@@ -355,7 +355,7 @@ public class Moh711ReportBuilder extends AbstractReportBuilder {
         dsd.addColumn("Total Number of people screened", "", ReportUtils.map(moh711Indicators.clientTbScreening(), indParams), "");
         dsd.addColumn("Total Number of presumptive TB cases", "", ReportUtils.map(moh711Indicators.clientWithPresumptiveTb(), indParams), "");
         dsd.addColumn("Total Number already on TB treatment", "", ReportUtils.map(moh711Indicators.clientonTbTreatment(), indParams), "");
-        dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientTbNotScreened(), indParams), "");
+        dsd.addColumn("Total Number of people not screened", "", ReportUtils.map(moh711Indicators.clientNotScreenedTB(), indParams), "");
 
         return dsd;
     }

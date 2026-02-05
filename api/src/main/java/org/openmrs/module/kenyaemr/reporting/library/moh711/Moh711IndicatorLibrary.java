@@ -165,6 +165,10 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator viaViliPositive() {
 		return cohortIndicator("No.screened for cacx during ANC", map(moh711Cohorts.viaViliPositive(), "startDate=${startDate},endDate=${endDate}"));
 	}
+
+	public CohortIndicator clientNotScreenedTB() {
+		return cohortIndicator("No. Not screened for TB", map(moh711Cohorts.clientTbNotScreenedTBForm(), "startDate=${startDate},endDate=${endDate}"));
+	}
 	/**
 	 * No.screened for cacx HPV positive
 	 */
