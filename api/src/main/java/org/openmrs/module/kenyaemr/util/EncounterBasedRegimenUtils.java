@@ -38,7 +38,7 @@ import java.util.TreeMap;
 
 public class EncounterBasedRegimenUtils {
 
-    static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy");
+    static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 
     public static List<SimpleObject> getRegimenHistoryFromObservations (Patient patient, String category) {
 
