@@ -175,6 +175,7 @@ public class Moh711IndicatorLibrary {
 	public CohortIndicator papsmearPositive() {
 		return cohortIndicator("Pap Smear positive result", map(moh711Cohorts.papsmearPositive(), "startDate=${startDate},endDate=${endDate}"));
 	}
+
 	/**
 	 * No.screened for cacx has suspicious cancer lessions
 	 */

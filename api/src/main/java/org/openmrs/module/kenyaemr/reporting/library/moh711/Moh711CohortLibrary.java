@@ -656,6 +656,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
 
         return cd;
     }
+
     /**
      * Treated for CACX uisng Cyrotherapy
      * @return
@@ -670,25 +671,29 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
                 "               'Cryotherapy performed (single Visit)', \n" +
                 "               'Cryotherapy performed (SVA)', \n" +
                 "               'Cryotherapy performed', \n" +
-                "               'Cryotherapy performed (previously postponed)' \n" +
+                "               'Cryotherapy performed (previously postponed)', \n" +
+                "               'Cryotherapy' \n" +
                 "             ) \n" +
                 "          OR s.hpv_treatment_method IN ( \n" +
                 "               'Cryotherapy performed (single Visit)', \n" +
                 "               'Cryotherapy performed (SVA)', \n" +
                 "               'Cryotherapy performed', \n" +
-                "               'Cryotherapy performed (previously postponed)' \n" +
+                "               'Cryotherapy performed (previously postponed)', \n" +
+                "               'Cryotherapy' \n" +
                 "             ) \n" +
                 "          OR s.pap_smear_treatment_method IN ( \n" +
                 "               'Cryotherapy performed (single Visit)', \n" +
                 "               'Cryotherapy performed (SVA)', \n" +
                 "               'Cryotherapy performed', \n" +
-                "               'Cryotherapy performed (previously postponed)' \n" +
+                "               'Cryotherapy performed (previously postponed)', \n" +
+                "               'Cryotherapy' \n" +
                 "             ) \n" +
                 "          OR s.via_vili_treatment_method IN ( \n" +
                 "               'Cryotherapy performed (single Visit)', \n" +
                 "               'Cryotherapy performed (SVA)', \n" +
                 "               'Cryotherapy performed', \n" +
-                "               'Cryotherapy performed (previously postponed)' \n" +
+                "               'Cryotherapy performed (previously postponed)', \n" +
+                "               'Cryotherapy' \n" +
                 "             ) \n" +
                 "        );";
         cd.setName("Treated for CACX uisng Cyrotherapy");
@@ -2304,7 +2309,7 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "SELECT p.patient_id\n" +
                 "FROM kenyaemr_etl.etl_psychiatry p\n" +
-                "WHERE FIND_IN_SET('Substance Abuse Counseling', REPLACE(p.counselling_prescribed, ', ', ',')) > 0\n" +
+                "WHERE p.screened_for_alcohol_abuse = 1065\n" +
                 "  AND p.visit_date BETWEEN DATE(:startDate) AND DATE(:endDate);";
         cd.setName("alcoholAndDrugAbuse");
         cd.setQuery(sqlQuery);
@@ -2316,8 +2321,11 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     }
     public CohortDefinition depression() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
-        String sqlQuery = "select p.patient_id from kenyaemr_etl.etl_psychiatry p inner join kenyaemr_etl.etl_allergy_chronic_illness c\n" +
-                "on p.patient_id = c.patient_id where c.complaint =119537 and p.visit_date between date(:startDate) and date(:endDate);";
+        String sqlQuery = "select p.patient_id\n" +
+                "              from encounter_diagnosis d\n" +
+                "                       inner join kenyaemr_etl.etl_psychiatry p on d.patient_id = p.patient_id and d.encounter_id = p.encounter_id and d.voided = 0\n" +
+                "              where d.diagnosis_coded in (2019974,166673,2014092,2019974,2019975,2019976,2019977,2019979,134079)\n" +
+                "                and p.visit_date between date(:startDate) and date(:endDate) and d.dx_rank = 2;";
         cd.setName("depression");
         cd.setQuery(sqlQuery);
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -2330,9 +2338,89 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     public CohortDefinition bipolarDisorder() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select p.patient_id\n" +
-                "from openmrs.encounter_diagnosis d\n" +
-                "         inner join kenyaemr_etl.etl_psychiatry p on d.patient_id = p.patient_id and d.voided = 0\n" +
-                "where d.diagnosis_coded = 121131\n" +
+                "from kenyaemr_etl.etl_psychiatry p\n" +
+                "         inner join encounter_diagnosis d\n" +
+                "                    on d.patient_id = p.patient_id and d.encounter_id = p.encounter_id and d.voided = 0\n" +
+                "where d.diagnosis_coded in (155302,\n" +
+                "                            152046,\n" +
+                "                            147312,\n" +
+                "                            147311,\n" +
+                "                            147310,\n" +
+                "                            147309,\n" +
+                "                            147308,\n" +
+                "                            147307,\n" +
+                "                            147306,\n" +
+                "                            121134,\n" +
+                "                            115924,\n" +
+                "                            115922,\n" +
+                "                            147305,\n" +
+                "                            115734,\n" +
+                "                            110987,\n" +
+                "                            121131,\n" +
+                "                            147304,\n" +
+                "                            147303,\n" +
+                "                            121126,\n" +
+                "                            120674,\n" +
+                "                            113015,\n" +
+                "                            121123,\n" +
+                "                            115768,\n" +
+                "                            115725,\n" +
+                "                            152601,\n" +
+                "                            147302,\n" +
+                "                            147301,\n" +
+                "                            147300,\n" +
+                "                            147299,\n" +
+                "                            147298,\n" +
+                "                            147297,\n" +
+                "                            147296,\n" +
+                "                            147295,\n" +
+                "                            147294,\n" +
+                "                            121125,\n" +
+                "                            147293,\n" +
+                "                            147292,\n" +
+                "                            147291,\n" +
+                "                            147290,\n" +
+                "                            147289,\n" +
+                "                            121121,\n" +
+                "                            147288,\n" +
+                "                            147287,\n" +
+                "                            147286,\n" +
+                "                            147285,\n" +
+                "                            147284,\n" +
+                "                            147283,\n" +
+                "                            2005377,\n" +
+                "                            2005412,\n" +
+                "                            2005378,\n" +
+                "                            2005382,\n" +
+                "                            2005384,\n" +
+                "                            2005383,\n" +
+                "                            2005386,\n" +
+                "                            2005385,\n" +
+                "                            2005387,\n" +
+                "                            2005381,\n" +
+                "                            2005380,\n" +
+                "                            2005379,\n" +
+                "                            2005389,\n" +
+                "                            2005388,\n" +
+                "                            2005394,\n" +
+                "                            2005391,\n" +
+                "                            2005390,\n" +
+                "                            2005392,\n" +
+                "                            2005393,\n" +
+                "                            2005396,\n" +
+                "                            2005397,\n" +
+                "                            2005399,\n" +
+                "                            2005401,\n" +
+                "                            2005400,\n" +
+                "                            2005403,\n" +
+                "                            2005402,\n" +
+                "                            2005404,\n" +
+                "                            2005398,\n" +
+                "                            2005408,\n" +
+                "                            2005406,\n" +
+                "                            2005405,\n" +
+                "                            2005407,\n" +
+                "                            2005410) and d.dx_rank = 2\n" +
                 "  and p.visit_date between date(:startDate) and date(:endDate);";
         cd.setName("bipolarDisorder");
         cd.setQuery(sqlQuery);
@@ -2345,9 +2433,29 @@ public CohortDefinition latestMCHEnrollmentAtANC() {
     public CohortDefinition schizopherniaAndPsychoticDisorder() {
         SqlCohortDefinition cd = new SqlCohortDefinition();
         String sqlQuery = "select p.patient_id\n" +
-                "from openmrs.encounter_diagnosis d\n" +
-                "         inner join kenyaemr_etl.etl_psychiatry p on d.patient_id = p.patient_id and d.voided = 0\n" +
-                "where d.diagnosis_coded = 113550\n" +
+                "from kenyaemr_etl.etl_psychiatry p\n" +
+                "         inner join encounter_diagnosis d\n" +
+                "                    on d.patient_id = p.patient_id and d.encounter_id = p.encounter_id and d.voided = 0\n" +
+                "where d.diagnosis_coded in (113155,\n" +
+                "                            2005374,\n" +
+                "                            2004796,\n" +
+                "                            2004797,\n" +
+                "                            2004799,\n" +
+                "                            2004798,\n" +
+                "                            2004800,\n" +
+                "                            2004802,\n" +
+                "                            2004781,\n" +
+                "                            2004783,\n" +
+                "                            2004786,\n" +
+                "                            2004784,\n" +
+                "                            2004788,\n" +
+                "                            2004789,\n" +
+                "                            2004791,\n" +
+                "                            2004794,\n" +
+                "                            2004792,\n" +
+                "                            2004795\n" +
+                "    )\n" +
+                "  and d.dx_rank = 2\n" +
                 "  and p.visit_date between date(:startDate) and date(:endDate);";
         cd.setName("schizopherniaAndPsychoticDisorder");
         cd.setQuery(sqlQuery);
