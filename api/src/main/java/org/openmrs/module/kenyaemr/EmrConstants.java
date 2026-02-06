@@ -74,6 +74,7 @@ public class EmrConstants {
 	public static final String DEFAULT_EXTERNAL_HELP_URL = "/help";
 
 	public static final String GP_CONFIGURE_FACILITY_LIST_REFRESH_ON_STARTUP = "kenyaemr.refresh.facility.metadata";
+	public static final String GP_MASTER_FACILITY_CODE_DATATYPE_CONFIG = "kenyaemr.location.master.facility.code.DatatypeConfig";
 	//Dental filling
 	public static final String TEMP_FILLING_PER_TOOTH = "1000342";
 	public static final String COMPOSITE_FILLING = "1000306";
