@@ -25,7 +25,6 @@ import org.openmrs.module.metadatadeploy.bundle.Requires;
 import org.openmrs.module.metadatadeploy.source.ObjectSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.openmrs.GlobalProperty;
 
 import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.locationAttributeType;
 
@@ -38,9 +37,6 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 
 	@Autowired
 	private LocationMflSynchronization mflSynchronization;
-	AdministrationService administrationService = Context.getAdministrationService();
-	GlobalProperty masterFacilityCodePattern = administrationService.getGlobalPropertyObject(EmrConstants.GP_MASTER_FACILITY_CODE_DATATYPE_CONFIG);
-
 
 	public static final class _Location {
 		public static final String UNKNOWN = "8d6c993e-c2cc-11de-8d13-0010c6dffd0f";
@@ -58,7 +54,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 	 */
 	@Override
 	public void install() throws Exception {
-		
+		AdministrationService administrationService = Context.getAdministrationService();
 		final String refreshConfig = (administrationService.getGlobalProperty(EmrConstants.GP_CONFIGURE_FACILITY_LIST_REFRESH_ON_STARTUP));
 
 		if (StringUtils.isNotEmpty(refreshConfig) && refreshConfig.equalsIgnoreCase("true")) {
@@ -71,8 +67,6 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		uninstall(possible(Form.class, "8e1ec5d4-4810-466a-9c90-b801bae9d063"), "SHA Facility expiry date Attribute type deprecated. Now saving in a file");
 	}
 
-	
-
 	/**
 	 * Provides an install method we can use from unit tests when we don't want to sync the entire facility list
 	 * @param full whether or not to run the facility sync
@@ -81,7 +75,7 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 	public void install(boolean full) throws Exception {
 		install(locationAttributeType(
 				"Master Facility Code", "Unique facility code allocated by the Ministry of Health",
-				RegexValidatedTextDatatype.class, masterFacilityCodePattern.getPropertyValue(), 0, 1,
+				RegexValidatedTextDatatype.class, "\\d{5}", 0, 1,
 				_LocationAttributeType.MASTER_FACILITY_CODE
 		));
 
