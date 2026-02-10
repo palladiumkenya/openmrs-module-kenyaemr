@@ -860,36 +860,25 @@ public class PublicHealthActionCohortLibrary {
      */
 
     public CohortDefinition unsuppressedWithoutEACs() {
-        String sqlQuery = "SELECT\n" +
-                "    b.patient_id AS unsuppressed_no_eac\n" +
+        String sqlQuery = "SELECT vl.patient_id as vl_unsuppressed_without_eac_numerator\n" +
                 "FROM (\n" +
-                "         SELECT\n" +
-                "             x.patient_id,\n" +
-                "             COALESCE(\n" +
-                "                     x.date_test_result_received,\n" +
-                "                     x.previous_date_test_requested,\n" +
-                "                     x.base_viral_load_test_date\n" +
-                "             ) AS vl_effective_date,\n" +
-                "             COALESCE(\n" +
-                "                     x.vl_result,\n" +
-                "                     x.previous_test_result,\n" +
-                "                     x.base_viral_load_test_result\n" +
-                "             ) AS vl_effective_result\n" +
+                "         SELECT x.patient_id,\n" +
+                "                COALESCE(x.date_test_result_received, x.previous_date_test_requested, x.base_viral_load_test_date) as vl_effective_date,\n" +
+                "                COALESCE(x.vl_result, x.previous_test_result, x.base_viral_load_test_result) AS vl_effective_result\n" +
                 "         FROM kenyaemr_etl.etl_viral_load_validity_tracker x\n" +
                 "         WHERE x.lab_test = 856\n" +
                 "           AND x.order_reason NOT IN (2001236, 162080)\n" +
-                "     ) b\n" +
-                "WHERE b.vl_effective_date IS NOT NULL\n" +
-                "  AND b.vl_effective_result IS NOT NULL\n" +
-                "  AND b.vl_effective_result >= 200\n" +
-                "  -- At least 14 days have elapsed since high VL results were received\n" +
-                "  AND DATE(:endDate) >= DATE_ADD(b.vl_effective_date, INTERVAL 14 DAY)\n" +
-                "  -- No enhanced adherence record following the high VL\n" +
-                "  AND NOT EXISTS (\n" +
+                "           AND COALESCE(x.vl_result, x.previous_test_result, x.base_viral_load_test_result) >= 200\n" +
+                "           AND COALESCE(x.date_test_result_received, x.previous_date_test_requested, x.base_viral_load_test_date)\n" +
+                "             BETWEEN DATE_SUB(DATE_SUB(date(:endDate), INTERVAL 14 DAY), INTERVAL DATEDIFF(date(:endDate),date(:startDate)) DAY)\n" +
+                "             AND DATE_SUB(date(:endDate), INTERVAL 14 DAY)\n" +
+                "     ) vl\n" +
+                "WHERE NOT EXISTS (\n" +
+                "    -- Exclude patients who received EAC after high VL\n" +
                 "    SELECT 1\n" +
                 "    FROM kenyaemr_etl.etl_enhanced_adherence e\n" +
-                "    WHERE e.patient_id = b.patient_id\n" +
-                "      AND e.visit_date > b.vl_effective_date\n" +
+                "    WHERE e.patient_id = vl.patient_id\n" +
+                "      AND e.visit_date > vl.vl_effective_date\n" +
                 "      AND e.visit_date <= DATE(:endDate)\n" +
                 ");";
         SqlCohortDefinition cd = new SqlCohortDefinition();
