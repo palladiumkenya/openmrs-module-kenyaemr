@@ -495,6 +495,28 @@
 		Defines whether to enable forms installation, default is true. This is used to enable/disable forms installation during module installation.
 	</description>
 	</globalProperty>
+	<globalProperty>
+		<property>nlmis.base.url</property>
+		<defaultValue>https://integration-layer.apeiro-digital.com/endPoint</defaultValue>
+		<description>
+		   Base URL for NLIMS integration
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>nlmis.requisition.submit.endpoint</property>
+		<defaultValue>/api/hmis-requisition/submit</defaultValue>
+		<description>
+		   Endpoint URL for submitting requisitions to NLIMS
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>nlmis.oauth.token</property>
+		<defaultValue></defaultValue>
+		<description>
+		   OAuth token for NLIMS integration
+		</description>
+	</globalProperty>
 
 </module>
         
