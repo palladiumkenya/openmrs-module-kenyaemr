@@ -90,14 +90,24 @@ public class DailyBedReturnReportBuilder extends AbstractHybridReportBuilder {
         dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
         dsd.addColumn("Current Bed Occupation", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentBedOccupationStatus(OCCUPIED), indParams), "");
         dsd.addColumn("Current Bed vacant Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentBedOccupationStatus(AVAILABLE), indParams), "");
+        dsd.addColumn("Current Bed Tags Occupation", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentlyBedTagsOccupationStatus(OCCUPIED), indParams), "");
+        dsd.addColumn("Current Bed Tags Vacant", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentlyBedTagsOccupationStatus(AVAILABLE), indParams), "");
         dsd.addColumn("Previous Bed Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviousBedOccupationStatus(OCCUPIED), indParams), "");
         dsd.addColumn("Previous Bed vacant Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviousBedOccupationStatus(AVAILABLE), indParams), "");
+        dsd.addColumn("Previous Bed Tag Occupation", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviouslyBedTagsOccupationStatus(OCCUPIED), indParams), "");
+        dsd.addColumn("Previous Bed Tag Vacant", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviouslyBedTagsOccupationStatus(AVAILABLE), indParams), "");
         dsd.addColumn("Current Total Beds", "", ReportUtils.map(dailyBedReturnCohortLibrary.currentTotalBeds(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("Current Total Beds Tags", "", ReportUtils.map(dailyBedReturnCohortLibrary.currentTotalBedTags(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("All Total current Beds and Bed tags", "", ReportUtils.map(dailyBedReturnCohortLibrary.totalCurrentBedsAndBedTags(OCCUPIED,AVAILABLE), indParams), "");
         dsd.addColumn("Previous Total Beds", "", ReportUtils.map(dailyBedReturnCohortLibrary.previousTotalBeds(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("All Previous Total Beds and Bed Tags", "", ReportUtils.map(dailyBedReturnCohortLibrary.allPreviousTotalBedsAndBedTags(OCCUPIED,AVAILABLE), indParams), "");
+        dsd.addColumn("Previous Total Beds Tags", "", ReportUtils.map(dailyBedReturnCohortLibrary.previousTotalBedTags(OCCUPIED,AVAILABLE), indParams), "");
         dsd.addColumn("Patient Admissions Today", "", ReportUtils.map(dailyBedReturnCohortLibrary.patientsAdmittedByEndOfToday(ADMISSION_UUID), indParams), "");
         dsd.addColumn("Total Patients by End of Reporting Period", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsByEndOfReportingPeriod(ADMISSION_UUID,OCCUPIED), indParams), "");
         dsd.addColumn("Total Patients Discharged today", "",ReportUtils.map(dailyBedReturnCohortLibrary.patientsDischargedByEndOfToday(), indParams), "");
         dsd.addColumn("Total Patients in Ward", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalPatientsRemainingInWardByEndOfReportingPeriod(ADMISSION_UUID), indParams), "");
+        dsd.addColumn("Total current Occupied Beds and Bed tags", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalCurrentBedsAndBedTagsOccupiedStatus(OCCUPIED), indParams), "");
+        dsd.addColumn("Total current Vacant Beds and Bed tags", "",ReportUtils.map(dailyBedReturnCohortLibrary.totalCurrentBedsAndBedTagsOccupiedStatus(AVAILABLE), indParams), "");
 
         return dsd;
     }

@@ -30,12 +30,33 @@ public class DailyBedReturnIndicatorLibrary {
 	public CohortIndicator patientPreviousBedOccupationStatus( String occupationStatus) {
 		return cohortIndicator("Previous Bed Occupation Status", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviousBedOccupationStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
+	public CohortIndicator patientCurrentlyBedTagsOccupationStatus( String occupationStatus) {
+		return cohortIndicator("Currently Bed Tags Occupation Status", ReportUtils.map(dailyBedReturnCohortLibrary.patientCurrentlyBedTagsOccupationStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator totalCurrentBedsAndBedTagsOccupiedStatus( String occupationStatus) {
+		return cohortIndicator("Total current Beds and Bed tags", ReportUtils.map(dailyBedReturnCohortLibrary.totalCurrentBedsAndBedTagsOccupiedStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator patientPreviouslyBedTagsOccupationStatus( String occupationStatus) {
+		return cohortIndicator("Currently Bed Tags Occupation Status", ReportUtils.map(dailyBedReturnCohortLibrary.patientPreviouslyBedTagsOccupationStatus(occupationStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
 
 	public CohortIndicator currentTotalBeds( String occupationStatus,String vacantStatus) {
 		return cohortIndicator("Total beds Current count", ReportUtils.map(dailyBedReturnCohortLibrary.currentTotalBeds(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
+	public CohortIndicator currentTotalBedTags( String occupationStatus,String vacantStatus) {
+		return cohortIndicator("Total beds Tags Current count", ReportUtils.map(dailyBedReturnCohortLibrary.currentTotalBedTags(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator totalCurrentBedsAndBedTags( String occupationStatus,String vacantStatus) {
+		return cohortIndicator("All Total current Beds and Bed tags", ReportUtils.map(dailyBedReturnCohortLibrary.totalCurrentBedsAndBedTags(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
 	public CohortIndicator previousTotalBeds( String occupationStatus, String vacantStatus) {
 		return cohortIndicator("Total beds previous count", ReportUtils.map(dailyBedReturnCohortLibrary.previousTotalBeds(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator allPreviousTotalBedsAndBedTags( String occupationStatus, String vacantStatus) {
+		return cohortIndicator("All Previous Total Beds and Bed Tags", ReportUtils.map(dailyBedReturnCohortLibrary.allPreviousTotalBedsAndBedTags(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
+	}
+	public CohortIndicator previousTotalBedTags( String occupationStatus, String vacantStatus) {
+		return cohortIndicator("Total beds tags previous count", ReportUtils.map(dailyBedReturnCohortLibrary.previousTotalBedTags(occupationStatus,vacantStatus), "startDate=${startDate},endDate=${endDate}"));
 	}
 	public CohortIndicator patientDischargedStatus(Integer dischargeStatus) {
 		return cohortIndicator("Discharged Status", ReportUtils.map(dailyBedReturnCohortLibrary.patientDischargedStatus(dischargeStatus), "startDate=${startDate},endDate=${endDate}"));
